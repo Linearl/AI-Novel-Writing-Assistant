@@ -1,0 +1,50 @@
+{
+  "route": "req",
+  "status": "success",
+  "timestamp": "2026-06-26T00:00:00Z",
+  "reqType": "用户界面和体验",
+  "categoryCode": 3002,
+  "complexity": "medium",
+  "skipClarification": true,
+  "skipDesign": false,
+  "artifacts": [
+    {
+      "kind": "document",
+      "path": "REQ-3002.md",
+      "description": "需求工作副本"
+    },
+    {
+      "kind": "document",
+      "path": "REQ-3002-original.md",
+      "description": "需求原始冻结副本"
+    },
+    {
+      "kind": "document",
+      "path": "design.md",
+      "description": "方案设计"
+    },
+    {
+      "kind": "document",
+      "path": "tasks.md",
+      "description": "任务拆解"
+    },
+    {
+      "kind": "document",
+      "path": "decision_log.md",
+      "description": "决策日志"
+    }
+  ],
+  "unresolvedItems": [],
+  "assumptions": [
+    "DirectorEventProjectionService 的 inventory 已包含 missingArtifactTypes，只需透传",
+    "产物类型不超过 15 种，映射表可穷举",
+    "前端 DirectorRuntimeProjectionCard 可以内联新组件，无需独立文件"
+  ],
+  "blockingReasons": [],
+  "handoff": {
+    "from": "req",
+    "to": "dev",
+    "ticketType": "req_to_dev",
+    "readyForDev": true
+  }
+}

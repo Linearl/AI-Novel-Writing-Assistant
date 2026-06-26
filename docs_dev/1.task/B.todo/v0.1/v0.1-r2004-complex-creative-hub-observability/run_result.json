@@ -1,0 +1,37 @@
+{
+  "status": "requirements_ready",
+  "route": "req",
+  "timestamp": "2026-06-27T00:00:00Z",
+  "taskPath": "docs_dev/1.task/B.todo/v0.1/v0.1-r2004-complex-creative-hub-observability",
+  "reqId": "2004",
+  "title": "Creative Hub Agent 执行可观测性增强",
+  "category": "2xxx-核心功能开发",
+  "complexity": "complex",
+  "skipClarification": true,
+  "skipDesign": false,
+  "artifacts": [
+    { "path": "docs_dev/1.task/B.todo/v0.1/v0.1-r2004-complex-creative-hub-observability/REQ-2004.md", "kind": "requirements" },
+    { "path": "docs_dev/1.task/B.todo/v0.1/v0.1-r2004-complex-creative-hub-observability/design.md", "kind": "design" },
+    { "path": "docs_dev/1.task/B.todo/v0.1/v0.1-r2004-complex-creative-hub-observability/tasks.md", "kind": "tasks" }
+  ],
+  "unresolved_items": [],
+  "assumptions": [
+    "AgentTraceStore 已正确记录所有 Run/Step 数据",
+    "SSE 帧传输链路稳定，新增 optional 字段不会影响现有帧解析",
+    "CreativeHubSidebar 有足够的空间容纳新增的 Tab",
+    "DirectorLlmUsageRecord 表数据完整且可查询"
+  ],
+  "blocking_reasons": [],
+  "decisions": [
+    { "id": "D1", "point": "步骤面板放在右侧栏而非底部" },
+    { "id": "D2", "point": "SSE 帧增强而非新增帧类型" },
+    { "id": "D3", "point": "token 数据分两阶段获取" },
+    { "id": "D4", "point": "错误分类基于 errorCode 字段" },
+    { "id": "D5", "point": "不新建追踪表，复用 AgentTraceStore" }
+  ],
+  "handoff": {
+    "from": "req",
+    "to": "dev",
+    "ticketPath": "docs_dev/1.task/B.todo/v0.1/v0.1-r2004-complex-creative-hub-observability/README.md"
+  }
+}

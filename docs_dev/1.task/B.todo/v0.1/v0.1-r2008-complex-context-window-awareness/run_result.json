@@ -1,0 +1,37 @@
+{
+  "status": "requirements_ready",
+  "route": "req",
+  "timestamp": "2026-06-27T00:00:00Z",
+  "taskPath": "docs_dev/1.task/B.todo/v0.1/v0.1-r2008-complex-context-window-awareness",
+  "reqId": "2008",
+  "title": "模型上下文窗口配置与自动压缩",
+  "category": "2xxx-核心功能开发",
+  "complexity": "complex",
+  "skipClarification": true,
+  "skipDesign": false,
+  "artifacts": [
+    { "path": "docs_dev/1.task/B.todo/v0.1/v0.1-r2008-complex-context-window-awareness/REQ-2008.md", "kind": "requirements" },
+    { "path": "docs_dev/1.task/B.todo/v0.1/v0.1-r2008-complex-context-window-awareness/design.md", "kind": "design" },
+    { "path": "docs_dev/1.task/B.todo/v0.1/v0.1-r2008-complex-context-window-awareness/tasks.md", "kind": "tasks" }
+  ],
+  "unresolved_items": [],
+  "assumptions": [
+    "字符数/4 的 token 估算精度足够用于压缩决策",
+    "行级截断在 v1 阶段可接受，后续可升级为 AI 摘要",
+    "1M 上下文 Checkbox 默认勾选，覆盖长篇小说写作场景",
+    "压缩操作的性能开销可接受（O(n) 估算 + O(n) 截断）"
+  ],
+  "blocking_reasons": [],
+  "decisions": [
+    { "id": "D1", "point": "1M 上下文 Checkbox 默认勾选" },
+    { "id": "D2", "point": "行级截断而非 AI 摘要" },
+    { "id": "D3", "point": "预留 30% 给输出" },
+    { "id": "D4", "point": "四阶段渐进式压缩" },
+    { "id": "D5", "point": "压缩阈值 85% / 目标 40%" }
+  ],
+  "handoff": {
+    "from": "req",
+    "to": "dev",
+    "ticketPath": "docs_dev/1.task/B.todo/v0.1/v0.1-r2008-complex-context-window-awareness/README.md"
+  }
+}
