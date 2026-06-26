@@ -216,6 +216,7 @@ function DesktopNovelEditView(props: NovelEditViewProps) {
                   <DialogTitle>导出项目内容</DialogTitle>
                   <DialogDescription>
                     当前步骤会按你正在查看的工作台导出；整本书会把项目设定、故事规划、角色、卷规划、拆章、章节和质量修复资产一起导出。
+                    如果只需要导出正文，请在小说列表页导出。
                   </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 md:grid-cols-2">
