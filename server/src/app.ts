@@ -245,7 +245,7 @@ function scheduleLogRetentionCleanup(): void {
 }
 
 function initializeBackgroundServices(): BackgroundServicesHandle {
-  ragServices.ragWorker.start();
+  void ragServices.ragWorker.start();
   novelSideEffectWorker.start();
   const directorWorker = new DirectorWorker();
   void directorWorker.start().catch((error) => {

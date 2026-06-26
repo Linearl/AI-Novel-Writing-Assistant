@@ -1,5 +1,6 @@
 import { ragConfig } from "../../config/rag";
 import { RagIndexService, RagJobCancelledError } from "./RagIndexService";
+import { getRagRuntimeSettings } from "../settings/RagRuntimeSettingsService";
 
 function backoffMs(attempt: number): number {
   const factor = Math.min(Math.max(attempt, 1), 6);
@@ -34,10 +35,27 @@ export class RagWorker {
     console.warn(`[RAG][Worker] ${message}`);
   }
 
-  start(): void {
-    if (!ragConfig.enabled || this.timer) {
+  /**
+   * Start the worker polling loop.
+   *
+   * When called without an explicit `enabled` argument (boot path), reads the
+   * runtime setting from the database so that a UI-configured `rag.enabled`
+   * toggle takes effect even when the env var was originally `false`.
+   *
+   * When called with an explicit boolean (settings-save path), uses that
+   * value directly — the caller already resolved the current setting.
+   */
+  async start(enabled?: boolean): Promise<void> {
+    if (this.timer) {
       return;
     }
+
+    const shouldStart = enabled ?? (await getRagRuntimeSettings()).enabled;
+    if (!shouldStart) {
+      this.logInfo("Worker start skipped — RAG is disabled.");
+      return;
+    }
+
     this.logInfo("Worker started.", {
       pollMs: ragConfig.workerPollMs,
       maxAttempts: ragConfig.workerMaxAttempts,

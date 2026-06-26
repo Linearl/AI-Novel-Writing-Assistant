@@ -364,7 +364,7 @@ router.put(
       ]);
 
       if (runtimeResult.settings.enabled) {
-        ragServices.ragWorker.start();
+        void ragServices.ragWorker.start(true);
       } else {
         ragServices.ragWorker.stop();
       }
