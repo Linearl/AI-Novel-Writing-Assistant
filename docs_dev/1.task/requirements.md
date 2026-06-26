@@ -30,6 +30,9 @@ description: "需求任务总清单（SSOT）"
 | 2010 | 步骤 6 右侧边栏折叠 | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2010-simple-chapter-execution-sidebar-collapse/README.md` |  |
 | 2011 | 暗色主题（夜间模式） | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2011-simple-dark-mode/README.md` |  |
 | 2012 | 暂停后调整自动导演高级设置面板 | p1 | 📋 待办 | 诊断报告 2026-06-26-自动导演全自动模式能力诊断 | 0.1 | 2026-06-26 | - | `B.todo/v0.1-r2012-medium-runtime-param-adjust-during-pause/README.md` | 任务中心增加编辑高级设置入口，模型档次和 artifactSyncMode 前端暴露 |
+| 2015 | User Directed Chapter Repair | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2015-medium-user-directed-chapter-repair/README.md` |  |
+| 2016 | Director Failed Retry Entry | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2016-medium-director-failed-retry-entry/README.md` |  |
+| 2017 | Chapter Token Budget Dynamic | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2017-medium-chapter-token-budget-dynamic/README.md` |  |
 | 2013 | Director Failed Retry Entry | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2013-medium-director-failed-retry-entry/README.md` |  |
 | 2014 | Chapter Token Budget Dynamic | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2014-medium-chapter-token-budget-dynamic/README.md` |  |
 
@@ -40,6 +43,7 @@ description: "需求任务总清单（SSOT）"
 | 3001 | Task Batch Archive | p4 | ✅ 已完成 | - | 0.1 | - | - | `B.todo/v0.1-r3001-medium-task-batch-archive/README.md` |  |
 | 3002 | 导演进度规划资源缺失 Checklist 可视化 | p4 | ✅ 已完成 | - | 0.1 | - | - | `B.todo/v0.1-r3002-medium-director-planning-checklist/README.md` |  |
 | 3003 | 小说项目对话存档 | p4 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r3003-medium-novel-conversation-archive/README.md` |  |
+| 3005 | Novel Conversation Archive | p4 | 📋 待办 | - | 0.1 | 2026-06-26T00:00:00.000Z | 2026-06-26T00:00:00.000Z | `B.todo/v0.1-r3005-medium-novel-conversation-archive/README.md` |  |
 | 3004 | Novel Conversation Archive | p4 | 📋 待办 | - | 0.1 | 2026-06-26T00:00:00.000Z | 2026-06-26T00:00:00.000Z | `B.todo/v0.1-r3004-medium-novel-conversation-archive/README.md` |  |
 
 ---
@@ -64,9 +68,13 @@ description: "需求任务总清单（SSOT）"
 | 2010 | 步骤 6 右侧边栏折叠 | `B.todo/v0.1-r2010-simple-chapter-execution-sidebar-collapse/README.md` |
 | 2011 | 暗色主题（夜间模式） | `B.todo/v0.1-r2011-simple-dark-mode/README.md` |
 | 2012 | 暂停后调整自动导演高级设置面板 | `B.todo/v0.1-r2012-medium-runtime-param-adjust-during-pause/README.md` |
+| 2015 | User Directed Chapter Repair | `B.todo/v0.1-r2015-medium-user-directed-chapter-repair/README.md` |
+| 2016 | Director Failed Retry Entry | `B.todo/v0.1-r2016-medium-director-failed-retry-entry/README.md` |
+| 2017 | Chapter Token Budget Dynamic | `B.todo/v0.1-r2017-medium-chapter-token-budget-dynamic/README.md` |
+| 3003 | 小说项目对话存档 | `B.todo/v0.1-r3003-medium-novel-conversation-archive/README.md` |
+| 3005 | Novel Conversation Archive | `B.todo/v0.1-r3005-medium-novel-conversation-archive/README.md` |
 | 2013 | Director Failed Retry Entry | `B.todo/v0.1-r2013-medium-director-failed-retry-entry/README.md` |
 | 2014 | Chapter Token Budget Dynamic | `B.todo/v0.1-r2014-medium-chapter-token-budget-dynamic/README.md` |
-| 3003 | 小说项目对话存档 | `B.todo/v0.1-r3003-medium-novel-conversation-archive/README.md` |
 | 3004 | Novel Conversation Archive | `B.todo/v0.1-r3004-medium-novel-conversation-archive/README.md` |
 
 ### 4.4 ✅ 已完成

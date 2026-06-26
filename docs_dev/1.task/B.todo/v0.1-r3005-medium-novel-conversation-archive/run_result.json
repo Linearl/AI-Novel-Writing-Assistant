@@ -1,0 +1,33 @@
+{
+  "status": "requirements_ready",
+  "route": "req",
+  "reqId": "REQ-3005",
+  "complexity": "medium",
+  "version": "v0.1",
+  "taskPath": "docs_dev/1.task/B.todo/v0.1/v0.1-r3005-medium-novel-conversation-archive",
+  "createdAt": "2026-06-26T00:00:00.000Z",
+  "updatedAt": "2026-06-26T00:00:00.000Z",
+  "artifacts": {
+    "readme": "./README.md",
+    "requirements": "./REQ-3005.md",
+    "requirementsOriginal": "./REQ-3005-original.md",
+    "design": "./design.md",
+    "tasks": "./tasks.md",
+    "decisionLog": "./decision_log.md",
+    "runResult": "./run_result.json"
+  },
+  "requirementsStatus": "approved",
+  "taskStatus": "📋 待办",
+  "phase": {
+    "current": "requirements_ready",
+    "phases": {
+      "0-preparation": "done",
+      "1-backend-api": "todo",
+      "2-frontend": "todo",
+      "3-verification": "todo",
+      "4-closeout": "todo"
+    }
+  },
+  "blockingReasons": [],
+  "notes": "六件套已生成，待执行 dev 路由开始开发"
+}

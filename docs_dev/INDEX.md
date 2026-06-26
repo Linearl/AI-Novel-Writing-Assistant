@@ -19,6 +19,7 @@ description: "docs 目录索引（自动生成）"
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
 | [1.task\README.md](./1.task\README.md) | > 由 `init` 路由扫描 `1.task/B.todo/` 和 `1.task/B.2.done/` 自动生成。 | - |
+| [1.task\requirements.bak.1782487827450.md](./1.task\requirements.bak.1782487827450.md) | 需求任务总清单（SSOT） | 需求任务总清单（SSOT） |
 | [1.task\requirements.md](./1.task\requirements.md) | 需求任务总清单（SSOT） | 需求任务总清单（SSOT） |
 
 ## 1.task\B.todo
@@ -38,49 +39,49 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1-r2012-medium-runtime-param-adjust-during-pause\REQ-2012.md](./1.task\B.todo\v0.1-r2012-medium-runtime-param-adjust-during-pause\REQ-2012.md) | REQ-2012 暂停后调整自动导演高级设置面板 | REQ-2012 暂停后调整自动导演高级设置面板 |
 | [1.task\B.todo\v0.1-r2012-medium-runtime-param-adjust-during-pause\tasks.md](./1.task\B.todo\v0.1-r2012-medium-runtime-param-adjust-during-pause\tasks.md) | REQ-2012 任务拆解 | REQ-2012 任务拆解 |
 
-## 1.task\B.todo\v0.1-r2012-medium-user-directed-chapter-repair
+## 1.task\B.todo\v0.1-r2015-medium-user-directed-chapter-repair
 
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
-| [1.task\B.todo\v0.1-r2012-medium-user-directed-chapter-repair\decision_log.md](./1.task\B.todo\v0.1-r2012-medium-user-directed-chapter-repair\decision_log.md) | REQ-2012 决策日志 | REQ-2012 决策日志 |
-| [1.task\B.todo\v0.1-r2012-medium-user-directed-chapter-repair\design.md](./1.task\B.todo\v0.1-r2012-medium-user-directed-chapter-repair\design.md) | REQ-2012 用户指导式章节修复方案设计 | REQ-2012 用户指导式章节修复方案设计 |
-| [1.task\B.todo\v0.1-r2012-medium-user-directed-chapter-repair\README.md](./1.task\B.todo\v0.1-r2012-medium-user-directed-chapter-repair\README.md) | REQ-2012 用户指导式章节修复任务总线 | REQ-2012 用户指导式章节修复任务总线 |
-| [1.task\B.todo\v0.1-r2012-medium-user-directed-chapter-repair\REQ-2012-original.md](./1.task\B.todo\v0.1-r2012-medium-user-directed-chapter-repair\REQ-2012-original.md) | REQ-2012 用户指导式章节修复 | REQ-2012 用户指导式章节修复 |
-| [1.task\B.todo\v0.1-r2012-medium-user-directed-chapter-repair\REQ-2012.md](./1.task\B.todo\v0.1-r2012-medium-user-directed-chapter-repair\REQ-2012.md) | REQ-2012 用户指导式章节修复 | REQ-2012 用户指导式章节修复 |
-| [1.task\B.todo\v0.1-r2012-medium-user-directed-chapter-repair\tasks.md](./1.task\B.todo\v0.1-r2012-medium-user-directed-chapter-repair\tasks.md) | REQ-2012 用户指导式章节修复任务拆解 | REQ-2012 用户指导式章节修复任务拆解 |
+| [1.task\B.todo\v0.1-r2015-medium-user-directed-chapter-repair\decision_log.md](./1.task\B.todo\v0.1-r2015-medium-user-directed-chapter-repair\decision_log.md) | REQ-2015 决策日志 | REQ-2015 决策日志 |
+| [1.task\B.todo\v0.1-r2015-medium-user-directed-chapter-repair\design.md](./1.task\B.todo\v0.1-r2015-medium-user-directed-chapter-repair\design.md) | REQ-2015 用户指导式章节修复方案设计 | REQ-2015 用户指导式章节修复方案设计 |
+| [1.task\B.todo\v0.1-r2015-medium-user-directed-chapter-repair\README.md](./1.task\B.todo\v0.1-r2015-medium-user-directed-chapter-repair\README.md) | REQ-2015 用户指导式章节修复任务总线 | REQ-2015 用户指导式章节修复任务总线 |
+| [1.task\B.todo\v0.1-r2015-medium-user-directed-chapter-repair\REQ-2015-original.md](./1.task\B.todo\v0.1-r2015-medium-user-directed-chapter-repair\REQ-2015-original.md) | REQ-2015 用户指导式章节修复 | REQ-2015 用户指导式章节修复 |
+| [1.task\B.todo\v0.1-r2015-medium-user-directed-chapter-repair\REQ-2015.md](./1.task\B.todo\v0.1-r2015-medium-user-directed-chapter-repair\REQ-2015.md) | REQ-2015 用户指导式章节修复 | REQ-2015 用户指导式章节修复 |
+| [1.task\B.todo\v0.1-r2015-medium-user-directed-chapter-repair\tasks.md](./1.task\B.todo\v0.1-r2015-medium-user-directed-chapter-repair\tasks.md) | REQ-2015 用户指导式章节修复任务拆解 | REQ-2015 用户指导式章节修复任务拆解 |
 
-## 1.task\B.todo\v0.1-r2013-medium-director-failed-retry-entry
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1-r2013-medium-director-failed-retry-entry\decision_log.md](./1.task\B.todo\v0.1-r2013-medium-director-failed-retry-entry\decision_log.md) | REQ-2013 决策留痕 | REQ-2013 决策留痕 |
-| [1.task\B.todo\v0.1-r2013-medium-director-failed-retry-entry\design.md](./1.task\B.todo\v0.1-r2013-medium-director-failed-retry-entry\design.md) | REQ-2013 方案设计 | REQ-2013 方案设计 |
-| [1.task\B.todo\v0.1-r2013-medium-director-failed-retry-entry\README.md](./1.task\B.todo\v0.1-r2013-medium-director-failed-retry-entry\README.md) | REQ-2013 自动导演失败状态重试入口缺失 | REQ-2013 自动导演失败状态重试入口缺失 |
-| [1.task\B.todo\v0.1-r2013-medium-director-failed-retry-entry\REQ-2013-original.md](./1.task\B.todo\v0.1-r2013-medium-director-failed-retry-entry\REQ-2013-original.md) | REQ-2013 自动导演失败状态重试入口缺失 — 原始需求冻结副本 | REQ-2013 自动导演失败状态重试入口缺失 — 原始需求冻结副本 |
-| [1.task\B.todo\v0.1-r2013-medium-director-failed-retry-entry\REQ-2013.md](./1.task\B.todo\v0.1-r2013-medium-director-failed-retry-entry\REQ-2013.md) | REQ-2013 自动导演失败状态重试入口缺失 — 需求工作副本 | REQ-2013 自动导演失败状态重试入口缺失 — 需求工作副本 |
-| [1.task\B.todo\v0.1-r2013-medium-director-failed-retry-entry\tasks.md](./1.task\B.todo\v0.1-r2013-medium-director-failed-retry-entry\tasks.md) | REQ-2013 任务拆解 | REQ-2013 任务拆解 |
-
-## 1.task\B.todo\v0.1-r2014-medium-chapter-token-budget-dynamic
+## 1.task\B.todo\v0.1-r2016-medium-director-failed-retry-entry
 
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
-| [1.task\B.todo\v0.1-r2014-medium-chapter-token-budget-dynamic\decision_log.md](./1.task\B.todo\v0.1-r2014-medium-chapter-token-budget-dynamic\decision_log.md) | REQ-2014 决策留痕 | REQ-2014 决策留痕 |
-| [1.task\B.todo\v0.1-r2014-medium-chapter-token-budget-dynamic\design.md](./1.task\B.todo\v0.1-r2014-medium-chapter-token-budget-dynamic\design.md) | REQ-2014 方案设计 | REQ-2014 方案设计 |
-| [1.task\B.todo\v0.1-r2014-medium-chapter-token-budget-dynamic\README.md](./1.task\B.todo\v0.1-r2014-medium-chapter-token-budget-dynamic\README.md) | REQ-2014 单章 Token 预算动态化 —— 按字数计算阈值 | REQ-2014 单章 Token 预算动态化 —— 按字数计算阈值 |
-| [1.task\B.todo\v0.1-r2014-medium-chapter-token-budget-dynamic\REQ-2014-original.md](./1.task\B.todo\v0.1-r2014-medium-chapter-token-budget-dynamic\REQ-2014-original.md) | REQ-2014 单章 Token 预算动态化 — 原始需求冻结副本 | REQ-2014 单章 Token 预算动态化 — 原始需求冻结副本 |
-| [1.task\B.todo\v0.1-r2014-medium-chapter-token-budget-dynamic\REQ-2014.md](./1.task\B.todo\v0.1-r2014-medium-chapter-token-budget-dynamic\REQ-2014.md) | REQ-2014 单章 Token 预算动态化 — 需求工作副本 | REQ-2014 单章 Token 预算动态化 — 需求工作副本 |
-| [1.task\B.todo\v0.1-r2014-medium-chapter-token-budget-dynamic\tasks.md](./1.task\B.todo\v0.1-r2014-medium-chapter-token-budget-dynamic\tasks.md) | REQ-2014 任务拆解 | REQ-2014 任务拆解 |
+| [1.task\B.todo\v0.1-r2016-medium-director-failed-retry-entry\decision_log.md](./1.task\B.todo\v0.1-r2016-medium-director-failed-retry-entry\decision_log.md) | REQ-2016 决策留痕 | REQ-2016 决策留痕 |
+| [1.task\B.todo\v0.1-r2016-medium-director-failed-retry-entry\design.md](./1.task\B.todo\v0.1-r2016-medium-director-failed-retry-entry\design.md) | REQ-2016 方案设计 | REQ-2016 方案设计 |
+| [1.task\B.todo\v0.1-r2016-medium-director-failed-retry-entry\README.md](./1.task\B.todo\v0.1-r2016-medium-director-failed-retry-entry\README.md) | REQ-2016 自动导演失败状态重试入口缺失 | REQ-2016 自动导演失败状态重试入口缺失 |
+| [1.task\B.todo\v0.1-r2016-medium-director-failed-retry-entry\REQ-2016-original.md](./1.task\B.todo\v0.1-r2016-medium-director-failed-retry-entry\REQ-2016-original.md) | REQ-2016 自动导演失败状态重试入口缺失 — 原始需求冻结副本 | REQ-2016 自动导演失败状态重试入口缺失 — 原始需求冻结副本 |
+| [1.task\B.todo\v0.1-r2016-medium-director-failed-retry-entry\REQ-2016.md](./1.task\B.todo\v0.1-r2016-medium-director-failed-retry-entry\REQ-2016.md) | REQ-2016 自动导演失败状态重试入口缺失 — 需求工作副本 | REQ-2016 自动导演失败状态重试入口缺失 — 需求工作副本 |
+| [1.task\B.todo\v0.1-r2016-medium-director-failed-retry-entry\tasks.md](./1.task\B.todo\v0.1-r2016-medium-director-failed-retry-entry\tasks.md) | REQ-2016 任务拆解 | REQ-2016 任务拆解 |
 
-## 1.task\B.todo\v0.1-r3004-medium-novel-conversation-archive
+## 1.task\B.todo\v0.1-r2017-medium-chapter-token-budget-dynamic
 
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
-| [1.task\B.todo\v0.1-r3004-medium-novel-conversation-archive\decision_log.md](./1.task\B.todo\v0.1-r3004-medium-novel-conversation-archive\decision_log.md) | REQ-3004 决策日志 | REQ-3004 决策日志 |
-| [1.task\B.todo\v0.1-r3004-medium-novel-conversation-archive\design.md](./1.task\B.todo\v0.1-r3004-medium-novel-conversation-archive\design.md) | REQ-3004 小说项目对话存档——设计方案 | REQ-3004 小说项目对话存档——设计方案 |
-| [1.task\B.todo\v0.1-r3004-medium-novel-conversation-archive\README.md](./1.task\B.todo\v0.1-r3004-medium-novel-conversation-archive\README.md) | REQ-3004 小说项目对话存档——为创作工作台新增对话存档 Tab | REQ-3004 小说项目对话存档——为创作工作台新增对话存档 Tab |
-| [1.task\B.todo\v0.1-r3004-medium-novel-conversation-archive\REQ-3004-original.md](./1.task\B.todo\v0.1-r3004-medium-novel-conversation-archive\REQ-3004-original.md) | REQ-3004 小说项目对话存档——原始需求冻结副本 | REQ-3004 小说项目对话存档——原始需求冻结副本 |
-| [1.task\B.todo\v0.1-r3004-medium-novel-conversation-archive\REQ-3004.md](./1.task\B.todo\v0.1-r3004-medium-novel-conversation-archive\REQ-3004.md) | REQ-3004 小说项目对话存档——需求文档 | REQ-3004 小说项目对话存档——需求文档 |
-| [1.task\B.todo\v0.1-r3004-medium-novel-conversation-archive\tasks.md](./1.task\B.todo\v0.1-r3004-medium-novel-conversation-archive\tasks.md) | REQ-3004 任务拆解 | REQ-3004 任务拆解 |
+| [1.task\B.todo\v0.1-r2017-medium-chapter-token-budget-dynamic\decision_log.md](./1.task\B.todo\v0.1-r2017-medium-chapter-token-budget-dynamic\decision_log.md) | REQ-2017 决策留痕 | REQ-2017 决策留痕 |
+| [1.task\B.todo\v0.1-r2017-medium-chapter-token-budget-dynamic\design.md](./1.task\B.todo\v0.1-r2017-medium-chapter-token-budget-dynamic\design.md) | REQ-2017 方案设计 | REQ-2017 方案设计 |
+| [1.task\B.todo\v0.1-r2017-medium-chapter-token-budget-dynamic\README.md](./1.task\B.todo\v0.1-r2017-medium-chapter-token-budget-dynamic\README.md) | REQ-2017 单章 Token 预算动态化 —— 按字数计算阈值 | REQ-2017 单章 Token 预算动态化 —— 按字数计算阈值 |
+| [1.task\B.todo\v0.1-r2017-medium-chapter-token-budget-dynamic\REQ-2017-original.md](./1.task\B.todo\v0.1-r2017-medium-chapter-token-budget-dynamic\REQ-2017-original.md) | REQ-2017 单章 Token 预算动态化 — 原始需求冻结副本 | REQ-2017 单章 Token 预算动态化 — 原始需求冻结副本 |
+| [1.task\B.todo\v0.1-r2017-medium-chapter-token-budget-dynamic\REQ-2017.md](./1.task\B.todo\v0.1-r2017-medium-chapter-token-budget-dynamic\REQ-2017.md) | REQ-2017 单章 Token 预算动态化 — 需求工作副本 | REQ-2017 单章 Token 预算动态化 — 需求工作副本 |
+| [1.task\B.todo\v0.1-r2017-medium-chapter-token-budget-dynamic\tasks.md](./1.task\B.todo\v0.1-r2017-medium-chapter-token-budget-dynamic\tasks.md) | REQ-2017 任务拆解 | REQ-2017 任务拆解 |
+
+## 1.task\B.todo\v0.1-r3005-medium-novel-conversation-archive
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.1-r3005-medium-novel-conversation-archive\decision_log.md](./1.task\B.todo\v0.1-r3005-medium-novel-conversation-archive\decision_log.md) | REQ-3005 决策日志 | REQ-3005 决策日志 |
+| [1.task\B.todo\v0.1-r3005-medium-novel-conversation-archive\design.md](./1.task\B.todo\v0.1-r3005-medium-novel-conversation-archive\design.md) | REQ-3005 小说项目对话存档——设计方案 | REQ-3005 小说项目对话存档——设计方案 |
+| [1.task\B.todo\v0.1-r3005-medium-novel-conversation-archive\README.md](./1.task\B.todo\v0.1-r3005-medium-novel-conversation-archive\README.md) | REQ-3005 小说项目对话存档——为创作工作台新增对话存档 Tab | REQ-3005 小说项目对话存档——为创作工作台新增对话存档 Tab |
+| [1.task\B.todo\v0.1-r3005-medium-novel-conversation-archive\REQ-3005-original.md](./1.task\B.todo\v0.1-r3005-medium-novel-conversation-archive\REQ-3005-original.md) | REQ-3005 小说项目对话存档——原始需求冻结副本 | REQ-3005 小说项目对话存档——原始需求冻结副本 |
+| [1.task\B.todo\v0.1-r3005-medium-novel-conversation-archive\REQ-3005.md](./1.task\B.todo\v0.1-r3005-medium-novel-conversation-archive\REQ-3005.md) | REQ-3005 小说项目对话存档——需求文档 | REQ-3005 小说项目对话存档——需求文档 |
+| [1.task\B.todo\v0.1-r3005-medium-novel-conversation-archive\tasks.md](./1.task\B.todo\v0.1-r3005-medium-novel-conversation-archive\tasks.md) | REQ-3005 任务拆解 | REQ-3005 任务拆解 |
 
 ## 1.task\B.todo\v0.1\v0.1-r2001-complex-import-from-export
 
