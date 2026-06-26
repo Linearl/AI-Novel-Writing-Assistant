@@ -1,299 +1,299 @@
-# Safety Rules
-<!-- Parent: (root, no parent) -->
-<!-- Generated: 2026-06-26 | Updated: 2026-06-26 -->
+# 安全规则
+<!-- 父级: (根级，无父级) -->
+<!-- 生成: 2026-06-26 | 更新: 2026-06-26 -->
 
-## Project Snapshot
+## 项目概况
 
-- **Name**: AI Novel Writing Assistant v2 (`ai-novel-writing-assistant-v2`)
-- **Type**: pnpm workspace monorepo (4 packages declared, 3 currently present)
-- **Active packages**: `@ai-novel/shared`, `@ai-novel/server`, `@ai-novel/desktop`
-- **Missing package**: `client/` referenced in `pnpm-workspace.yaml` but absent from disk — flag before adding client-only scripts
-- **License**: AGPL-3.0-only
-- **Runtime**: Node 20.19+ / 22.12+ / 24+, pnpm 10.6+
-- **Mainframe**: Express + Prisma (server), React + Vite (client), Electron (desktop)
-- **AI stack**: LangChain 1.x + LangGraph 1.x, structured-output / JSON-repair contracts in `server/src/llm/`
-- **Database**: SQLite (dev) / PostgreSQL (prod) via Prisma 7
-- **Vector DB**: Qdrant (per `infra/docker-compose.qdrant.yml`)
-- **Primary product**: 面向完全不懂写作的新手,以"AI 导演式"工作流帮助用户完成整本长篇小说
-- **Current product priorities**: 稳定 auto-director 恢复 + 章节生产链 + 保持新手完成率为最高目标
+- **名称**: AI 小说创作助手 v2 (`ai-novel-writing-assistant-v2`)
+- **类型**: pnpm workspace monorepo（声明 4 个子包，当前实际 3 个）
+- **活跃包**: `@ai-novel/shared`、`@ai-novel/server`、`@ai-novel/desktop`
+- **缺失包**: `client/` 在 `pnpm-workspace.yaml` 中声明但磁盘上不存在 — 添加 client 专用脚本前需确认
+- **许可证**: AGPL-3.0-only
+- **运行时**: Node 20.19+ / 22.12+ / 24+，pnpm 10.6+
+- **主框架**: Express + Prisma（server），React + Vite（client），Electron（desktop）
+- **AI 栈**: LangChain 1.x + LangGraph 1.x，structured-output / JSON-repair 契约位于 `server/src/llm/`
+- **数据库**: SQLite（开发）/ PostgreSQL（生产）通过 Prisma 7
+- **向量数据库**: Qdrant（配置见 `infra/docker-compose.qdrant.yml`）
+- **核心产品**: 面向完全不懂写作的新手，以"AI 导演式"工作流帮助用户完成整本长篇小说
+- **当前产品优先级**: 稳定 auto-director 恢复 + 章节生产链 + 保持新手完成率为最高目标
 
-## Data Protection (Highest Priority)
+## 数据保护（最高优先级）
 
-- Never execute any destructive data operation without a verified backup first.
-- Destructive operations include (but are not limited to): deleting database files, `prisma migrate reset`, `db reset`, truncation, dropping tables, or any command that can remove existing data.
-- Before any such operation, require:
-  - explicit user approval for the destructive step;
-  - a completed backup with a concrete backup path;
-  - a quick restore validation (or at minimum a backup file existence/size check).
-- If backup is missing or unverified, stop and do not proceed.
+- 未经过验证的备份，绝不能执行任何破坏性数据操作。
+- 破坏性操作包括（但不限于）：删除数据库文件、`prisma migrate reset`、`db reset`、截断表、删除表，或任何可能移除现有数据的命令。
+- 执行任何此类操作前，必须：
+  - 获得用户对破坏性步骤的明确批准；
+  - 完成备份并确认具体的备份路径；
+  - 进行快速恢复验证（或至少检查备份文件的存在和大小）。
+- 如果备份缺失或未验证，立即停止，不得继续。
 
-## AI-First System Rules (Highest Priority)
+## AI-First 系统规则（最高优先级）
 
-- This project is an AI-native application. For intent recognition, task classification, planning, routing, tool selection, and similar decision-making paths, AI-based structured understanding must be the primary implementation.
-- Do not implement product-facing core behavior with fixed keyword matching, hard-coded regex routing, manual branch tables, or any non-AI fallback path when the problem is intended to be handled by AI.
-- If AI intent recognition fails, treat it as an AI capability/problem to be fixed. Do not add fallback matching to hide the miss.
-- Fixed judgments are only allowed as:
-  - input validation or safety guards;
-  - deterministic post-processing of already-structured AI output.
-- When adding a new capability, first extend the AI schema / structured output / tool contract. Do not patch behavior by stacking special-case string rules.
+- 本项目是 AI 原生应用。对于意图识别、任务分类、规划、路由、工具选择等决策路径，必须以 AI 结构化理解为主要实现方式。
+- 当问题本应由 AI 处理时，不得使用固定关键词匹配、硬编码 regex 路由、手写分支表或任何非 AI fallback 路径来实现面向产品的核心行为。
+- 如果 AI 意图识别失败，应视为 AI 能力/问题来修复，不得添加 fallback 匹配来掩盖遗漏。
+- 固定判断仅允许用于：
+  - 输入校验或安全守卫；
+  - 对已结构化 AI 输出的确定性后处理。
+- 添加新能力时，应先扩展 AI schema / 结构化输出 / 工具契约，不得通过堆叠特殊字符串规则来修补行为。
 
-## Auto-Director Quality Gate Rules (Highest Priority)
+## Auto-Director 质量门规则（最高优先级）
 
-- Chapter audit, acceptance, and quality-loop results must not automatically block the global auto-director or full-book execution chain.
-- Non-global chapter quality problems, including `local_patch_plan`, `continue_with_warning`, `patchable_obligation_gap`, `draft_obligation_unmet`, recoverable repair failures, and `defer_and_continue` quality debt, must be recorded as chapter-level quality debt or local repair guidance and allow the remaining chapter range to continue.
-- Only an explicit `stop_for_replan`, `replan_required`, `recommendedAction=replan`, unrecoverable generation failure with no usable chapter content, or a runtime safety/data integrity failure may stop the global chain.
-- Do not route local audit issues into `replanAlertDetails`, `PIPELINE_REPLAN_REQUIRED`, or the `replan_required` checkpoint unless the structured AI/runtime decision explicitly says the neighboring chapter plan must stop for replan.
-- If local repair has already been attempted and residual issues remain but the chapter has usable content, prefer degraded finalization plus quality debt over failing the whole auto-director task.
-- UI, task projection, and recovery logic must preserve this distinction: local quality debt is a visible warning and follow-up item, not a failed auto-director workflow.
-- Book-level auto-director projections with `failed`, `blocked`, or `waiting_recovery` status and a latest task must remain visible in AI cockpit, task drawer, and recovery entrypoints even when the URL does not include `directorTaskId`; `workspaceTaskId` is a manual workspace lane and must never be used as a substitute director task id.
+- 章节审核、验收和质量循环结果不得自动阻断全局 auto-director 或全书执行链。
+- 非全局的章节质量问题，包括 `local_patch_plan`、`continue_with_warning`、`patchable_obligation_gap`、`draft_obligation_unmet`、可恢复的修复失败和 `defer_and_continue` 质量债务，必须记录为章节级质量债务或本地修复指导，并允许剩余章节范围继续执行。
+- 只有明确的 `stop_for_replan`、`replan_required`、`recommendedAction=replan`、无可用章节内容的不可恢复生成失败，或运行时安全/数据完整性失败才能停止全局链。
+- 除非结构化 AI/运行时决策明确表示相邻章节计划必须停止重规划，否则不得将本地审核问题路由到 `replanAlertDetails`、`PIPELINE_REPLAN_REQUIRED` 或 `replan_required` 检查点。
+- 如果本地修复已尝试但仍有残留问题，而章节有可用内容，优先采用降级定稿加质量债务，而非让整个 auto-director 任务失败。
+- UI、任务投影和恢复逻辑必须保留此区分：本地质量债务是可见警告和后续跟进项，不是失败的 auto-director 工作流。
+- 带有 `failed`、`blocked` 或 `waiting_recovery` 状态且有最新任务的书级 auto-director 投影，必须在 AI 驾驶舱、任务抽屉和恢复入口中保持可见，即使 URL 中不包含 `directorTaskId`；`workspaceTaskId` 是手动工作区通道，绝不能用作替代的 director 任务 ID。
 
-## Product Context (Highest Priority)
+## 产品上下文（最高优先级）
 
-- The primary target users of this project are complete writing beginners who do not understand fiction craft, structure, or novel production workflows.
-- The product should help these users finish a full novel through AI guidance, AI-first decision support, or fully automated planning when appropriate.
-- When making product, UX, planning, or agent behavior decisions, optimize for:
-  - low cognitive load;
-  - strong step-by-step guidance;
-  - clear defaults and automatic recommendations;
-  - end-to-end completion of a full-length novel, not just isolated writing assistance.
-- Do not assume the primary user can manually repair structure, pacing, character arcs, or chapter planning without substantial AI support.
-- If there is a tradeoff between expert-oriented flexibility and beginner completion rate, prefer the path that better helps a novice user successfully produce a complete novel.
+- 本项目的主要目标用户是完全不懂小说写作技巧、结构或小说生产工作流的写作新手。
+- 产品应通过 AI 指导、AI 优先的决策支持，或在适当时全自动规划，帮助这些用户完成一本完整长篇小说。
+- 在做产品、UX、规划或代理行为决策时，应优化：
+  - 低认知负荷；
+  - 强大的分步指导；
+  - 清晰的默认值和自动推荐；
+  - 完成整本长篇小说的端到端体验，而非孤立的写作辅助。
+- 不要假设主要用户能在没有大量 AI 支持的情况下手动修复结构、节奏、人物弧线或章节规划。
+- 如果专家导向的灵活性与新手完成率之间存在取舍，优先选择更能帮助新手用户成功产出完整小说的路径。
 
-## UI Copy Rules
+## UI 文案规则
 
-- All user-facing UI copy must explain the function from the user's perspective: what the user can do, what the system is helping with, or what the next step is.
-- Do not write UI copy as implementation commentary, migration commentary, refactor commentary, or change-history commentary.
-- Avoid product-facing copy that uses process/meta wording such as `现在`, `不再`, `已经`, `之前`, `原本`, `迁回`, `升级为`, or similar "we changed this" narration when the text is visible to end users.
-- Prefer direct task wording such as:
-  - entry point guidance;
-  - action guidance;
-  - expected effect;
-  - current selection or current result.
-- If a workflow belongs in another module, explain the correct user entry point directly, for example "从小说基础信息设置书级默认写法", rather than "书级默认写法已经迁回小说页".
-- Before finishing UI work, review newly added copy and rewrite any sentence that sounds like it is talking to the developer or describing the modification process.
+- 所有面向用户的 UI 文案必须从用户视角说明功能：用户可以做什么、系统在帮助什么、下一步是什么。
+- 不得将 UI 文案写成实现说明、迁移说明、重构说明或变更历史说明。
+- 避免面向产品的文案使用过程性/元叙事措辞，如"现在已经"、"不再"、"已经"、"之前"、"原本"、"迁回"、"升级为"等，当文本对终端用户可见时。
+- 优先使用直接的任务措辞，例如：
+  - 入口引导；
+  - 操作引导；
+  - 预期效果；
+  - 当前选择或当前结果。
+- 如果工作流属于另一个模块，直接说明正确的用户入口，例如"从小说基础信息设置书级默认写法"，而不是"书级默认写法已经迁回小说页"。
+- 完成 UI 工作前，检查新增文案并重写任何听起来像在对开发者说话或描述修改过程的句子。
 
-## Architecture Rules
+## 架构规则
 
-- If a single source file becomes too long, it must be split into functional modules.
-- Preferred threshold: keep a single source file around 600 lines.
-- Floating range: 500-700 lines is acceptable when module cohesion is still clear and the file is not becoming hard to maintain.
-- Hard threshold: when a source file exceeds 700 lines, refactoring and modularization are mandatory before continuing feature expansion.
-- Long-file splitting must improve module boundaries, not merely reduce line count.
-- Before splitting a long file, list its responsibilities and separate business rules, application orchestration, persistence/external adapters, and HTTP/API mapping.
-- Do not split an oversized file by adding loose same-level files such as generic `helper`, `utils`, `shared`, or `runtime` files without clear module ownership.
-- Extracted files must move into an explicit responsibility folder such as `domain/`, `application/`, `infrastructure/`, or `http/`, or into an existing business-stage folder with the same clarity of ownership.
-- If a directory contains more than 12 `.ts` files, create or use a lower-level module directory before adding more peer files.
-- If more than 4 files share the same feature prefix, for example `novelDirector*`, converge them into a dedicated feature directory instead of continuing the prefix-based flat layout.
-- A `utils`, `helpers`, or `shared` file that grows beyond 300 lines or is depended on by more than 3 modules must be promoted into an owned service, policy, adapter, or domain module.
-- After a split, outside modules should consume the capability through the module facade or `index.ts`; avoid deep imports into another module's internal files.
-- If a split affects workflows, prompt/runtime contracts, automatic director chains, chapter execution chains, or other major novel-production links, add or update the module README or boundary notes before continuing feature expansion.
-- For server-side architecture convergence, keep the current `server/src` structure runnable while gradually moving toward clear top-level ownership: `app/` for startup and route mounting, `platform/` for db/llm/events/runtime/config infrastructure, and `modules/` for product capabilities.
-- Server business modules should be organized around the novel completion workflow when applicable: `setup`, `planning`, `production`, `director`, `characters`, `state`, and `export`.
-- High-density server directories should be reduced incrementally. `routes` should converge into module-owned `http/` entrypoints, `services/novel` should keep only facades and stable shared entrypoints at its root, and `services/novel/director` should converge into owned submodules such as `commands`, `runtime`, `state`, `automation`, `projections`, `recovery`, and `phases`.
-- Each architecture cleanup phase should move only one coherent subsystem, preserve compatibility exports where needed, check dependency direction, and run targeted TypeScript or service-level verification before the phase is considered complete.
+- 单个源文件过长时必须拆分为功能模块。
+- 推荐阈值：单个源文件保持在约 600 行。
+- 浮动范围：500-700 行在模块内聚性清晰且文件未变得难以维护时可接受。
+- 硬性阈值：源文件超过 700 行时，必须在继续功能扩展前进行重构和模块化。
+- 长文件拆分必须改善模块边界，而非仅仅减少行数。
+- 拆分长文件前，列出其职责并分离业务规则、应用编排、持久化/外部适配器和 HTTP/API 映射。
+- 不得通过添加无明确模块归属的松散同级文件（如通用的 `helper`、`utils`、`shared` 或 `runtime` 文件）来拆分过长文件。
+- 提取的文件必须移入明确的责任文件夹，如 `domain/`、`application/`、`infrastructure/` 或 `http/`，或移入具有相同归属清晰度的现有业务阶段文件夹。
+- 目录中 `.ts` 文件超过 12 个时，必须创建或使用下级模块目录，而不是继续添加同级文件。
+- 超过 4 个文件共享相同功能前缀时（如 `novelDirector*`），收敛到专门的功能目录，而非继续前缀式的扁平布局。
+- 超过 300 行或被超过 3 个模块依赖的 `utils`、`helpers` 或 `shared` 文件，必须提升为有归属的服务、策略、适配器或领域模块。
+- 拆分后，外部模块应通过模块 facade 或 `index.ts` 消费能力；避免深导入其他模块的内部文件。
+- 如果拆分影响工作流、prompt/运行时契约、auto-director 链、章节执行链或其他主要小说生产链路，在继续功能扩展前必须添加或更新模块 README 或边界说明。
+- 服务端架构收敛方向：保持当前 `server/src` 结构可运行，同时逐步向清晰的顶层归属迁移：`app/`（启动和路由挂载）、`platform/`（db/llm/events/runtime/config 基础设施）和 `modules/`（产品能力）。
+- 服务端业务模块应在适用时围绕小说完成工作流组织：`setup`、`planning`、`production`、`director`、`characters`、`state` 和 `export`。
+- 高密度服务端目录应增量缩减。`routes` 应收敛到模块自有的 `http/` 入口，`services/novel` 根目录应只保留 facade 和稳定的共享入口，`services/novel/director` 应收敛到自有子模块，如 `commands`、`runtime`、`state`、`automation`、`projections`、`recovery` 和 `phases`。
+- 每个架构清理阶段应只迁移一个连贯的子系统，在需要时保留兼容性导出，检查依赖方向，并在阶段完成前运行针对性的 TypeScript 或服务级验证。
 
-## Project Development Wiki Rules
+## 项目开发 Wiki 规则
 
-This project must continuously maintain a development wiki for architecture decisions, workflow rules, module boundaries, runtime contracts, debugging lessons, and product design rationale.
+本项目必须持续维护开发 Wiki，涵盖架构决策、工作流规则、模块边界、运行时契约、调试经验和产品设计原理。
 
-The wiki is not a record of "what changed". It should help future developers and AI agents understand why the system is designed this way and how it should be maintained.
+Wiki 不是"改了什么"的记录。它应该帮助未来的开发者和 AI 代理理解系统为何这样设计以及应如何维护。
 
-### What Should Be Documented
+### 应记录什么
 
-Document stable knowledge such as:
+记录稳定知识，例如：
 
-- Design boundaries for core modules such as auto-director, chapter production, Creative Hub, task center, RAG, and Prompt Registry.
-- Important architecture decisions and their reasons.
-- Runtime state contracts, stage transition rules, recovery rules, retry rules, and failure-handling rules.
-- AI invocation conventions such as Prompt Schema, structured output, JSON repair, and context assembly.
-- Module ownership, dependency direction, and boundaries that forbid cross-layer calls.
-- Repeated failure modes, debugging conclusions, and recommended diagnosis paths.
-- Product principles and UX decisions that help beginners complete a full novel.
+- 核心模块的设计边界，如 auto-director、章节生产、Creative Hub、任务中心、RAG 和 Prompt Registry。
+- 重要架构决策及其原因。
+- 运行时状态契约、阶段转换规则、恢复规则、重试规则和失败处理规则。
+- AI 调用约定，如 Prompt Schema、结构化输出、JSON 修复和上下文组装。
+- 模块归属、依赖方向和禁止跨层调用的边界。
+- 反复出现的失败模式、调试结论和推荐诊断路径。
+- 帮助新手完成完整小说的产品原则和 UX 决策。
 
-### What Should Not Be Documented
+### 不应记录什么
 
-Do not add wiki entries for:
+不添加以下 Wiki 条目：
 
-- Tiny changes with no long-term value.
-- Per-commit file modification lists.
-- Temporary TODOs.
-- Pure release-note content.
-- Implementation details that are likely to be discarded soon.
-- Narration that only says what changed in the current task.
+- 没有长期价值的小改动。
+- 按提交的文件修改列表。
+- 临时 TODO。
+- 纯 release note 内容。
+- 可能很快被丢弃的实现细节。
+- 仅叙述当前任务改了什么的内容。
 
-### Wiki Writing Rules
+### Wiki 编写规则
 
-- Use Chinese by default unless the surrounding document is clearly English-only.
-- Write for future developers and future AI agents.
-- Explain the reason behind a decision, not just the decision itself.
-- Prefer sections such as `Background / Decision / Current Rule / Examples / Failure Modes / Related Modules / Source Documents`.
-- Keep entries stable, clear, and actionable.
-- Avoid vague wording such as "optimize later", "handle properly", or "improve this".
-- If a rule affects auto-director, chapter production, Prompt, RAG, task state, or frontend projection, state the affected scope explicitly.
+- 默认使用中文，除非周围文档明显是纯英文。
+- 为未来的开发者和未来的 AI 代理编写。
+- 解释决策背后的原因，而非仅记录决策本身。
+- 优先使用以下章节结构：`背景 / 决策 / 当前规则 / 示例 / 失败模式 / 相关模块 / 来源文档`。
+- 保持条目稳定、清晰、可操作。
+- 避免模糊措辞，如"后续优化"、"妥善处理"或"改进此处"。
+- 如果规则影响 auto-director、章节生产、Prompt、RAG、任务状态或前端投影，需明确说明影响范围。
 
-### Recommended Locations
+### 推荐存放位置
 
-- `docs/wiki/architecture/`: architecture design, module boundaries, dependency direction.
-- `docs/wiki/workflows/`: auto-director, chapter production, recovery chain, task center, and other workflows.
-- `docs/wiki/prompts/`: Prompt Registry, structured output, JSON repair, schema conventions.
-- `docs/wiki/rag/`: embedding, vector retrieval, context assembly, knowledge-base rules.
-- `docs/wiki/debugging/`: recurring failures, diagnosis paths, recovery methods.
-- `docs/wiki/product/`: beginner-first decisions, full-novel completion, UX rationale.
+- `docs/wiki/architecture/`：架构设计、模块边界、依赖方向。
+- `docs/wiki/workflows/`：auto-director、章节生产、恢复链、任务中心等工作流。
+- `docs/wiki/prompts/`：Prompt Registry、结构化输出、JSON 修复、schema 约定。
+- `docs/wiki/rag/`：embedding、向量检索、上下文组装、知识库规则。
+- `docs/wiki/debugging/`：反复出现的失败、诊断路径、恢复方法。
+- `docs/wiki/product/`：新手优先决策、完整小说完成、UX 原理。
 
-### When To Update The Wiki
+### 何时更新 Wiki
 
-Before completing any of the following, check whether the work produced stable wiki-worthy knowledge:
+完成以下任何一项前，检查工作是否产出了稳定的、值得 Wiki 记录的知识：
 
-- A development phase.
-- A significant bug fix.
-- An architecture adjustment.
-- A core workflow change.
-- A change to Prompt Schema, runtime state, task recovery, or the chapter production chain.
-- A commit, push, or PR.
+- 一个开发阶段。
+- 一个重要的 bug 修复。
+- 一次架构调整。
+- 一个核心工作流变更。
+- Prompt Schema、运行时状态、任务恢复或章节生产链的变更。
+- 一次提交、推送或 PR。
 
-If stable knowledge was introduced or clarified, update the relevant wiki page before the phase is considered complete.
+如果引入或澄清了稳定知识，在阶段完成前更新相关 Wiki 页面。
 
-If no wiki update is needed, explicitly state that the change has no long-term wiki value and should remain only in code or release notes.
+如果不需要 Wiki 更新，明确说明该变更没有长期 Wiki 价值，应仅保留在代码或 release notes 中。
 
-### Wiki And Release Notes Boundary
+### Wiki 与 Release Notes 边界
 
-- Wiki records durable project knowledge.
-- Release Notes record user-visible product changes.
-- README latest update only shows the latest public-facing summary.
-- Do not write the wiki as a changelog.
-- Do not copy release notes into the wiki.
-- If a change affects both user behavior and long-term architecture, update both release notes and the relevant wiki page.
+- Wiki 记录持久的项目知识。
+- Release Notes 记录用户可见的产品变更。
+- README 最新更新仅显示最新的面向用户的摘要。
+- 不要把 Wiki 写成变更日志。
+- 不要把 release notes 复制到 Wiki。
+- 如果变更同时影响用户行为和长期架构，同时更新 release notes 和相关 Wiki 页面。
 
-### Novel Production Wiki Priority
+### 小说生产 Wiki 优先级
 
-These areas have the highest priority for wiki accumulation:
+以下领域的 Wiki 积累优先级最高：
 
-1. Auto-director runtime, recovery, checkpoints, and resume behavior.
-2. Chapter production chain, including draft generation, review, repair, save, and retry rules.
-3. Runtime state contracts between backend, task center, and frontend projections.
-4. Prompt Registry rules, structured output schemas, and JSON repair boundaries.
-5. Creative Hub boundaries: what it can create, when it should hand off to auto-director, and when it should avoid becoming general chat.
-6. RAG and context assembly rules for worldbuilding, characters, chapters, style, and continuity.
-7. Beginner-first product decisions that reduce cognitive load and help users complete a full novel.
+1. Auto-director 运行时、恢复、检查点和恢复行为。
+2. 章节生产链，包括草稿生成、审核、修复、保存和重试规则。
+3. 后端、任务中心和前端投影之间的运行时状态契约。
+4. Prompt Registry 规则、结构化输出 schema 和 JSON 修复边界。
+5. Creative Hub 边界：它能创建什么、何时应交给 auto-director、何时应避免变成通用聊天。
+6. 世界观、角色、章节、风格和连贯性的 RAG 和上下文组装规则。
+7. 减少认知负荷并帮助用户完成完整小说的新手优先产品决策。
 
-## Agent Collaboration Rules
+## 代理协作规则
 
-- The project allows subagents to assist with development, investigation, verification, and documentation work when the active tool environment and higher-priority instructions permit it.
-- Use subagents for well-scoped parallel work such as independent codebase exploration, focused implementation slices, documentation audits, or non-blocking verification.
-- When delegating implementation, assign clear ownership of files or modules. Subagents must not revert or overwrite changes made by others.
-- Do not use subagents to bypass project safety rules, data protection rules, branch workflow, prompt governance, or release-note / wiki requirements.
-- Do not delegate destructive operations, database resets, migrations with data-loss risk, public release uploads, or branch promotion decisions.
-- Integrate subagent output through normal review: inspect the diff, confirm it matches the current product and architecture rules, run or reuse appropriate verification, and document residual risk.
+- 项目允许子代理在活动工具环境和更高优先级指令允许时协助开发、调查、验证和文档工作。
+- 使用子代理处理范围明确的并行工作，如独立代码库探索、聚焦的实现切片、文档审计或非阻塞验证。
+- 委托实现时，分配明确的文件或模块所有权。子代理不得回退或覆盖他人所做的更改。
+- 不得使用子代理绕过项目安全规则、数据保护规则、分支工作流、prompt 治理或 release note / Wiki 要求。
+- 不得委托破坏性操作、数据库重置、有数据丢失风险的迁移、公开发布上传或分支提升决策。
+- 通过正常审查集成子代理输出：检查 diff，确认它符合当前产品和架构规则，运行或复用适当的验证，并记录残留风险。
 
-## Verification Reuse Rules
+## 验证复用规则
 
-- Prefer targeted verification that matches the actual change scope.
-- For UI-facing project modifications, do not run browser, screenshot, Playwright, visual, or manual interaction verification by default; the user will perform UI acceptance testing. Use code-level checks such as typecheck or focused tests when they fit the change, and clearly state that UI verification is left to the user.
-- If a recent build, typecheck, packaging check, or test run already covers the same code paths after the relevant files last changed, do not repeat the same expensive verification by default.
-- Before reusing recent verification, confirm the evidence is recent, tied to the same branch or commit range, and not invalidated by subsequent changes.
-- Build commands can take significant time. Avoid repeated `pnpm build`, `pnpm typecheck`, desktop packaging, or full test-suite runs when the current diff is documentation-only or already covered by a recent successful run.
-- If verification is reused instead of rerun, state exactly what prior check is being trusted and why it still applies.
-- If no suitable recent verification exists, or the change touches runtime contracts, prompt schemas, task recovery, database behavior, packaging, or cross-module product flow, run the narrowest sufficient check and document any skipped broader checks.
+- 优先使用与实际变更范围匹配的针对性验证。
+- 对面向 UI 的项目修改，默认不运行浏览器、截图、Playwright、视觉或手动交互验证；用户将进行 UI 验收测试。在适当时使用代码级检查（如 typecheck 或针对性测试），并明确说明 UI 验证留给用户。
+- 如果近期的构建、typecheck、打包检查或测试运行已覆盖相同代码路径（在相关文件最后变更之后），默认不重复执行相同的昂贵验证。
+- 复用近期验证前，确认证据是近期的、关联到同一分支或提交范围，且未被后续变更使失效。
+- 构建命令可能耗时较长。当当前 diff 仅涉及文档或已被近期成功运行覆盖时，避免重复执行 `pnpm build`、`pnpm typecheck`、桌面打包或完整测试套件运行。
+- 如果复用验证而非重新运行，准确说明信任了哪个先前检查以及为何仍然适用。
+- 如果没有合适的近期验证，或变更涉及运行时契约、prompt schema、任务恢复、数据库行为、打包或跨模块产品流，运行最窄范围的充分检查，并记录任何跳过的更广泛检查。
 
-## Development Branch Workflow
+## 开发分支工作流
 
-- When developing a new feature that may affect the end-to-end product flow, default workflow, shared contracts, or other major system links, do not develop directly on `main`.
-- In these cases, first create or switch to a dedicated feature development branch, complete implementation and functional verification there, then merge into the pre-release `beta` branch for integration verification. Merge back to `main` only after `beta` has been tested and stable enough for release.
-- For phased development, making an intentional commit after each completed development phase is mandatory. A phase is complete when its scope is coherent, the relevant verification has passed or the remaining verification gap is explicitly documented, and the working tree contains only that phase's intended changes.
-- This phase-completion commit rule also applies to small isolated fixes, documentation-only updates, workflow-rule updates, and low-risk UI polish unless the user explicitly says not to commit yet.
-- Before each phase commit, inspect the Git scope and follow the README Release Notes Workflow when the phase has user-facing impact. If the diff is purely internal, document that release notes were intentionally skipped.
-- After the feature branch has been successfully merged into `beta` and no longer needs follow-up work, clean up that development branch so old feature branches do not accumulate indefinitely.
-- This rule applies in particular to changes that touch cross-stage workflows, shared runtime/prompting/context contracts, automatic director chains, chapter execution chains, data migration behavior, or other changes that can impact the overall chain.
-- Small isolated fixes, copy changes, low-risk UI polish, or documentation-only updates can still be handled without requiring a separate feature development branch unless the user explicitly asks otherwise. If the change is release-facing, still prefer passing through `beta` before `main`.
+- 开发可能影响端到端产品流、默认工作流、共享契约或其他主要系统链路的新功能时，不得直接在 `main` 上开发。
+- 此类情况应先创建或切换到专门的功能开发分支，在该分支完成实现和功能验证，然后合并到预发布 `beta` 分支进行集成验证。仅在 `beta` 测试稳定并适合发布后才合并回 `main`。
+- 分阶段开发时，在每个完成的开发阶段后进行有意识的提交是强制性的。当阶段范围连贯、相关验证已通过或剩余验证差距已明确记录、且工作树仅包含该阶段的预期变更时，阶段即为完成。
+- 此阶段完成提交规则也适用于小型独立修复、仅文档更新、工作流规则更新和低风险 UI 润色，除非用户明确表示暂不提交。
+- 每次阶段提交前，检查 Git 范围，当阶段有面向用户的影响时遵循 README Release Notes 工作流。如果 diff 纯属内部，记录有意跳过 release notes。
+- 功能分支成功合并到 `beta` 且不再需要后续工作后，清理该开发分支，避免旧功能分支无限期积累。
+- 此规则尤其适用于涉及跨阶段工作流、共享运行时/prompting/上下文契约、auto-director 链、章节执行链、数据迁移行为或其他可能影响整体链路的变更。
+- 小型独立修复、文案变更、低风险 UI 润色或仅文档更新仍可在不创建专门功能分支的情况下处理，除非用户明确要求。如果变更面向发布，仍优先通过 `beta` 再到 `main`。
 
-### Pre-release Beta Branch Workflow
+### 预发布 Beta 分支工作流
 
-- Use `beta` as the stable pre-release integration branch between feature development branches and `main`.
-- The normal release path is: feature branch -> self-test / targeted verification -> merge into `beta` -> integration testing / regression checks / packaging verification -> merge into `main` -> public release or packaging upload.
-- `main` is the stable release branch. Do not merge a feature branch directly into `main` when the change affects product flow, shared contracts, runtime behavior, data migration, desktop packaging, or other end-to-end links.
-- `beta` should represent the next candidate release. Keep it buildable, runnable, and suitable for acceptance testing; do not use it as a dumping ground for unfinished experiments.
-- If multiple feature branches are merged into `beta`, test the combined behavior on `beta` before promoting the batch to `main`, especially around automatic director flow, chapter execution, prompt/runtime contracts, migrations, and desktop startup or packaging.
-- If `beta` validation fails, fix the issue on the original feature branch when the fault is isolated, or on a short-lived `beta-fix` branch when the failure is caused by integration between multiple features. Merge the fix back into `beta` and rerun the failed checks before promoting.
-- Only promote `beta` to `main` when the release candidate has passed the required functional checks, build checks, and any packaging verification relevant to the release. After promotion, keep `beta` aligned with `main` so the next pre-release cycle starts from the released state.
-- For urgent production hotfixes, it is acceptable to branch from `main`, verify narrowly, merge back to `main`, and then immediately merge or cherry-pick the hotfix into `beta` so the pre-release branch does not lose the production fix.
-- Public desktop packaging and release upload should be performed from `main` or from a release tag created after `beta` has been promoted to `main`, not directly from a feature branch or an unverified `beta` state.
-- The branch name is `beta`. Do not create a separate `bate` branch; if such a typo branch appears, migrate any useful work to `beta` and remove the typo branch after confirming nothing is lost.
+- 使用 `beta` 作为功能开发分支和 `main` 之间的稳定预发布集成分支。
+- 正常发布路径：功能分支 -> 自测 / 针对性验证 -> 合并到 `beta` -> 集成测试 / 回归检查 / 打包验证 -> 合并到 `main` -> 公开发布或打包上传。
+- `main` 是稳定发布分支。当变更影响产品流、共享契约、运行时行为、数据迁移、桌面打包或其他端到端链路时，不得将功能分支直接合并到 `main`。
+- `beta` 应代表下一个候选发布。保持其可构建、可运行且适合验收测试；不要将其用作未完成实验的倾倒场。
+- 如果多个功能分支合并到 `beta`，在将批次提升到 `main` 前，在 `beta` 上测试组合行为，特别是 auto-director 流、章节执行、prompt/运行时契约、迁移和桌面启动或打包方面。
+- 如果 `beta` 验证失败，在故障隔离时在原功能分支修复，或在由多特性集成引起时在短生命周期的 `beta-fix` 分支上修复。将修复合并回 `beta` 并重新运行失败检查后再提升。
+- 仅在候选发布通过了所需的功能检查、构建检查和与发布相关的打包验证后，才将 `beta` 提升到 `main`。提升后，保持 `beta` 与 `main` 对齐，以便下一个预发布周期从已发布状态开始。
+- 对于紧急生产热修复，可从 `main` 分支，窄范围验证，合并回 `main`，然后立即将热修复合并或 cherry-pick 到 `beta`，以免预发布分支丢失生产修复。
+- 公开桌面打包和发布上传应从 `main` 或从 `beta` 提升到 `main` 后创建的发布标签执行，不得直接从功能分支或未验证的 `beta` 状态执行。
+- 分支名为 `beta`。不要创建单独的 `bate` 分支；如果出现此类拼写错误分支，将有用工作迁移到 `beta` 并在确认无丢失后删除拼写错误分支。
 
-### Desktop Branch Completion Workflow
+### 桌面分支完成工作流
 
-- Desktop feature development on `desktop-dev` is considered complete. Do not start new desktop feature work directly on `desktop-dev` unless the user explicitly reopens desktopization as an active development phase.
-- Treat `desktop-dev` as a completion candidate that must move through stabilization, pre-release verification, and branch retirement.
-- Before promoting desktop work, sync any required stable changes from `main` into `desktop-dev` when they affect shared contracts, runtime/state logic, build/dependency setup, desktop startup, packaging, or release verification.
-- Run desktop-focused verification on `desktop-dev` first, including development startup, first-run configuration, core web flow compatibility, build checks, and packaging checks relevant to the target release.
-- After `desktop-dev` passes its focused verification, merge it into `beta` for combined pre-release testing with the rest of the next release candidate.
-- Do not promote desktop work from `desktop-dev` directly to `main`. `beta` must pass integration testing and release packaging verification before the desktop work reaches `main`.
-- If `beta` exposes desktop integration failures, fix them on a short-lived desktop stabilization branch or directly on `desktop-dev` if the desktop branch has not yet been retired, then merge the fix back into `beta` and rerun the failed checks.
-- Once `beta` has been promoted to `main` and the released `main` contains the completed desktop work, retire `desktop-dev` so future desktop changes follow the normal feature branch -> `beta` -> `main` workflow.
-- After retirement, `desktop-dev` should not be reused as a long-lived integration branch. Create short-lived feature branches for future desktop fixes or improvements, and promote them through `beta`.
+- `desktop-dev` 上的桌面功能开发已完成。除非用户明确重新开启桌面化作为活跃开发阶段，否则不要直接在 `desktop-dev` 上开始新的桌面功能工作。
+- 将 `desktop-dev` 视为必须经过稳定化、预发布验证和分支退役的完成候选。
+- 提升桌面工作前，当共享契约、运行时/状态逻辑、构建/依赖设置、桌面启动、打包或发布验证受到影响时，从 `main` 同步所需的稳定变更到 `desktop-dev`。
+- 先在 `desktop-dev` 上运行桌面聚焦验证，包括开发启动、首次运行配置、核心 Web 流兼容性、构建检查和与目标发布相关的打包检查。
+- `desktop-dev` 通过聚焦验证后，将其合并到 `beta` 进行与其余下一个候选发布的组合预发布测试。
+- 不得将桌面工作从 `desktop-dev` 直接提升到 `main`。`beta` 必须通过集成测试和发布打包验证后，桌面工作才能到达 `main`。
+- 如果 `beta` 暴露桌面集成失败，在短生命周期的桌面稳定分支上修复（如果桌面分支尚未退役也可直接在 `desktop-dev` 上），然后将修复合并回 `beta` 并重新运行失败检查。
+- `beta` 提升到 `main` 且已发布的 `main` 包含完成的桌面工作后，退役 `desktop-dev`，以便未来的桌面变更遵循正常的功能分支 -> `beta` -> `main` 工作流。
+- 退役后，`desktop-dev` 不应再作为长期集成分支使用。为未来的桌面修复或改进创建短生命周期的功能分支，并通过 `beta` 提升。
 
-## Desktop Packaging Upload Rules
+## 桌面打包上传规则
 
-- Public desktop package upload to GitHub Releases is allowed only when the release version is driven by `desktop/package.json` and the Git tag is exactly `vX.Y.Z`.
-- Before any public desktop upload, verify that `desktop/package.json` `version` is a stable semver like `0.2.3`, with no `desktop-` prefix, no `-r1` style suffix, and no branch-only naming mixed into the version field.
-- The pushed release tag must match `desktop/package.json` exactly after adding the `v` prefix. Example: `desktop/package.json` is `0.2.3`, then the only allowed public release tag is `v0.2.3`.
-- Do not use `desktop-vX.Y.Z-rN`, `desktop-v*`, branch names, workflow dispatch on `main`, or any other non-matching ref as the identifier for a public desktop GitHub Release upload.
-- If a build is triggered manually or from a non-matching tag, treat it as verification or packaging only. It must not be treated as a valid public release upload.
-- If the required `vX.Y.Z` tag and `desktop/package.json` version are not aligned, stop before upload, fix the version/tag pair first, and then rerun the release flow.
-- When packaging is requested and there is no explicit, current, repo-specific knowledge that local packaging is required, prefer triggering the GitHub-side packaging workflow rather than inventing local packaging steps.
-- Do not run local desktop packaging just to guess the release process. Local packaging is appropriate only when the user explicitly asks for local artifacts, the task is packaging verification, or the relevant docs/scripts clearly require local staging.
-- GitHub-side packaging still must obey the version/tag rules above. If the correct workflow, tag, branch, or version is unclear, stop and verify the release identifier before triggering packaging.
+- 公开桌面包上传到 GitHub Releases 仅在发布版本由 `desktop/package.json` 驱动且 Git 标签恰好为 `vX.Y.Z` 时允许。
+- 任何公开桌面上传前，验证 `desktop/package.json` 的 `version` 是稳定的 semver（如 `0.2.3`），无 `desktop-` 前缀、无 `-r1` 风格后缀、无仅分支命名混入版本字段。
+- 推送的发布标签在添加 `v` 前缀后必须与 `desktop/package.json` 完全匹配。例如：`desktop/package.json` 为 `0.2.3`，则唯一允许的公开发布标签是 `v0.2.3`。
+- 不得使用 `desktop-vX.Y.Z-rN`、`desktop-v*`、分支名、对 `main` 的 workflow dispatch 或任何其他不匹配的 ref 作为公开桌面 GitHub Release 上传的标识符。
+- 如果构建手动触发或从不匹配的标签触发，将其视为验证或打包，不得视为有效的公开发布上传。
+- 如果所需的 `vX.Y.Z` 标签和 `desktop/package.json` 版本未对齐，在上传前停止，先修复版本/标签对，然后重新运行发布流程。
+- 当请求打包且没有明确的、当前的、仓库特定的知识表明需要本地打包时，优先触发 GitHub 侧的打包工作流，而不是发明本地打包步骤。
+- 不要仅为了猜测发布流程而运行本地桌面打包。本地打包仅在用户明确请求本地产物、任务是打包验证或相关文档/脚本明确要求本地暂存时适用。
+- GitHub 侧打包仍需遵守上述版本/标签规则。如果正确的工作流、标签、分支或版本不明确，在触发打包前停止并验证发布标识符。
 
-## Prompt Governance
+## Prompt 治理
 
-- `server/src/prompting/` is the only allowed entrypoint for adding new product-level prompts.
-- Any new product-facing prompt must be implemented as a `PromptAsset` under `server/src/prompting/prompts/<family>/`.
-- Any new product-facing prompt must be registered in `server/src/prompting/registry.ts` with explicit `id`, `version`, `taskType`, `mode`, `contextPolicy`, and `outputSchema` when structured.
-- Do not add new business prompts by inlining `systemPrompt` / `userPrompt` inside service files and calling `invokeStructuredLlm`.
-- Do not add new business prompts by calling raw `getLLM()` from service code unless the flow is an approved exception below.
-- When touching an existing unregistered prompt path, default to migrating that prompt into `server/src/prompting/` instead of extending the old inline implementation.
-- Approved exceptions are limited to:
-  - JSON repair inside `server/src/llm/structuredInvoke.ts`
-  - connectivity / probe prompts such as `server/src/llm/connectivity.ts`
-  - phase-two flow adapters in `graphs/*`, `routes/chat.ts`, `services/novel/runtime/*`, and other stream bridge code explicitly kept outside the registry for now
-- For naming and registration workflow, follow `server/src/prompting/README.md`.
+- `server/src/prompting/` 是添加新产品级 prompt 的唯一允许入口。
+- 任何新的面向产品的 prompt 必须作为 `PromptAsset` 实现在 `server/src/prompting/prompts/<family>/` 下。
+- 任何新的面向产品的 prompt 必须在 `server/src/prompting/registry.ts` 中注册，带明确的 `id`、`version`、`taskType`、`mode`、`contextPolicy`，以及在结构化时的 `outputSchema`。
+- 不得通过在 service 文件中内联 `systemPrompt` / `userPrompt` 然后调用 `invokeStructuredLlm` 来添加新的业务 prompt。
+- 不得通过从 service 代码调用原始 `getLLM()` 来添加新的业务 prompt，除非是下方已批准的例外。
+- 触及现有未注册 prompt 路径时，默认将该 prompt 迁移到 `server/src/prompting/`，而非扩展旧的内联实现。
+- 已批准的例外仅限于：
+  - `server/src/llm/structuredInvoke.ts` 内部的 JSON 修复
+  - `server/src/llm/connectivity.ts` 等连接性/探测 prompt
+  - `graphs/*`、`routes/chat.ts`、`services/novel/runtime/*` 和其他明确暂时保留在注册表外的流式桥接代码中的阶段二流适配器
+- 命名和注册工作流参考 `server/src/prompting/README.md`。
 
-## README Release Notes Workflow
+## README Release Notes 工作流
 
-- Before any commit, push, or PR step in this repository, use the `readme-release-updater` skill from `${CODEX_HOME:-~/.codex}/skills/readme-release-updater` to inspect the Git scope, summarize the user-visible changes, update `docs/releases/release-notes.md`, and refresh `README.md` `## 最新更新` when applicable.
-- If the `readme-release-updater` skill does not exist in the expected Codex skills directory, create it first before any commit, push, or PR step instead of skipping the workflow.
-- When creating that skill, place it under `${CODEX_HOME:-~/.codex}/skills/readme-release-updater/` with a `SKILL.md` that explicitly instructs the agent to:
-  - inspect the pending Git scope for the intended commit, push, or PR, including enough status/diff context to understand the user-visible change;
-  - decide whether the diff has clear user-facing impact or is purely internal;
-  - update `docs/releases/release-notes.md` as the canonical full history, preserving older entries and merging multiple updates for the same date under one date heading;
-  - refresh `README.md` `## 最新更新` so it shows only the newest merged date block plus a link to `docs/releases/release-notes.md`, instead of accumulating historical sections;
-  - write release summaries from the user's perspective, focusing on visible capabilities, workflow improvements, and product behavior rather than file paths, refactors, or test-only details;
-  - skip noisy release-note edits when the current diff is purely internal and clearly say that no user-facing release note update is needed.
-- The `readme-release-updater` skill should also tell the agent to keep the repository's date-based release format, for example `### 2026-04-07`, and not introduce semantic versions unless the user explicitly requests a versioning transition.
-- If the skill is newly created in another terminal, verify that its `SKILL.md` contains the workflow above before continuing with the Git write step.
-- When the user asks to commit or push code, inspect the Git scope for that push and update `docs/releases/release-notes.md` first, then sync `README.md` before the Git write step if the change set has clear user-facing impact.
-- `docs/releases/release-notes.md` is the complete user-facing update history and should preserve older entries.
-- `README.md` is only the latest update surface and must keep a link to `docs/releases/release-notes.md`; do not let `README.md` accumulate multiple historical date blocks.
-- When a new update is recorded, keep full history in `docs/releases/release-notes.md` and make `README.md` show only the newest merged date block plus the history link.
-- If multiple user-visible updates are recorded on the same date, merge them under the same date heading in `docs/releases/release-notes.md`; `README.md` should keep only that date's latest merged summary.
-- If the current diff is purely internal and has no clear user-facing impact, state that explicitly and skip both release-note updates instead of forcing a noisy entry.
-- Write both release-note surfaces from the user's perspective: describe capabilities, workflow improvements, and visible product behavior instead of file names, route names, service names, tests, or refactor details.
+- 在本仓库的任何提交、推送或 PR 步骤之前，使用 `${CODEX_HOME:-~/.codex}/skills/readme-release-updater` 中的 `readme-release-updater` 技能检查 Git 范围、总结用户可见变更、更新 `docs/releases/release-notes.md`，并在适用时刷新 `README.md` 的 `## 最新更新`。
+- 如果 `readme-release-updater` 技能在预期的 Codex 技能目录中不存在，在任何提交、推送或 PR 步骤之前先创建它，而不是跳过工作流。
+- 创建该技能时，将其放在 `${CODEX_HOME:-~/.codex}/skills/readme-release-updater/` 下，包含一个 `SKILL.md`，明确指示代理：
+  - 检查预期提交、推送或 PR 的待处理 Git 范围，包括足够的 status/diff 上下文以理解用户可见变更；
+  - 判断 diff 是否有明确的面向用户影响或纯属内部；
+  - 更新 `docs/releases/release-notes.md` 作为规范的完整历史，保留旧条目并将同一天的多个更新合并到同一日期标题下；
+  - 刷新 `README.md` 的 `## 最新更新` 使其仅显示最新的合并日期块加指向 `docs/releases/release-notes.md` 的链接，而非累积历史章节；
+  - 从用户视角编写发布摘要，关注可见功能、工作流改进和产品行为，而非文件路径、重构或仅测试细节；
+  - 当前 diff 纯属内部且无明确面向用户影响时，跳过嘈杂的 release note 编辑，并明确说明无需面向用户的 release note 更新。
+- `readme-release-updater` 技能还应告诉代理保持仓库的基于日期的发布格式，例如 `### 2026-04-07`，除非用户明确请求版本化过渡，否则不引入语义版本号。
+- 如果技能在另一个终端新创建，在继续 Git 写步骤前验证其 `SKILL.md` 包含上述工作流。
+- 当用户要求提交或推送代码时，检查该推送的 Git 范围并先更新 `docs/releases/release-notes.md`，然后在 Git 写步骤前同步 `README.md`（如果变更集有明确面向用户影响）。
+- `docs/releases/release-notes.md` 是完整的面向用户的更新历史，应保留旧条目。
+- `README.md` 仅是最新更新表面，必须保持指向 `docs/releases/release-notes.md` 的链接；不要让 `README.md` 累积多个历史日期块。
+- 记录新更新时，在 `docs/releases/release-notes.md` 中保留完整历史，`README.md` 仅显示最新的合并日期块加历史链接。
+- 如果同一天记录了多个用户可见更新，在 `docs/releases/release-notes.md` 中将它们合并到同一日期标题下；`README.md` 应仅保留该日期的最新合并摘要。
+- 如果当前 diff 纯属内部且无明确面向用户影响，明确说明并跳过两个 release note 更新，而非强制添加嘈杂条目。
+- 从用户视角编写两个 release note 表面：描述功能、工作流改进和可见产品行为，而非文件名、路由名、服务名、测试或重构细节。
 
-## Release Identification Rules
+## 发布标识规则
 
-- For now, this project continues to use `date-based` release/update identification. Do not introduce formal semantic version numbers unless the user explicitly decides to switch.
-- `docs/releases/release-notes.md`, `README.md` `## 最新更新`, release summaries, and other user-facing update records should continue to use the existing date-first format, for example: `### 2026-04-07`.
-- Keep the date as the primary update identifier until the product workflow, information architecture, and release cadence are stable enough to justify a formal versioning system.
-- If multiple user-visible updates are recorded on the same date, keep them under the same date heading in `docs/releases/release-notes.md` and distinguish them by clear summary text instead of inventing temporary version numbers.
+- 目前，本项目继续使用基于日期的发布/更新标识。除非用户明确决定切换，否则不引入正式的语义版本号。
+- `docs/releases/release-notes.md`、`README.md` 的 `## 最新更新`、发布摘要和其他面向用户的更新记录应继续使用现有的日期优先格式，例如：`### 2026-04-07`。
+- 在产品工作流、信息架构和发布节奏稳定到足以证明正式版本化系统的合理性之前，保持日期作为主要更新标识符。
+- 如果同一天记录了多个用户可见更新，在 `docs/releases/release-notes.md` 中将它们保持在同一日期标题下，通过清晰的摘要文本区分，而非发明临时版本号。
 
-## Current Product Priorities
+## 当前产品优先级
 
-1. Stabilize auto-director recovery and chapter production chain.
-2. Keep beginner-first full-novel completion as the main product goal.
-3. Avoid introducing new workflow branches unless they simplify the main production path.
-4. Prefer fixing runtime contracts, prompt schemas, and state projections before adding UI-only patches.
-5. Do not expand Creative Hub into a general chat tool unless it directly supports novel completion.
+1. 稳定 auto-director 恢复和章节生产链。
+2. 保持新手优先的完整小说完成作为主要产品目标。
+3. 避免引入新的工作流分支，除非它们简化主要生产路径。
+4. 优先修复运行时契约、prompt schema 和状态投影，而非添加仅 UI 的补丁。
+5. 不得将 Creative Hub 扩展为通用聊天工具，除非它直接支持小说完成。
 
-### Future Versioning Transition
+### 未来版本化过渡
 
-- When the user later decides the product is stable enough for formal versions, versioning can transition from `date-only` to `version number + date`.
-- Until that explicit transition happens, do not add `v0.x.y`, tags, or release naming conventions into README, changelog, or other product-facing release notes by default.
+- 当用户后续认为产品足够稳定可以使用正式版本时，版本化可从仅日期过渡到版本号 + 日期。
+- 在明确的过渡发生前，不要默认在 README、变更日志或其他面向用户的发布 notes 中添加 `v0.x.y`、标签或发布命名约定。

@@ -162,6 +162,10 @@ infra/           Docker Compose（Qdrant 等）
 - LangChain `^1.2.28`，LangGraph `^1.2.0`
 - Electron `^35.7.5`（desktop 包）
 
+## 安全与协作规则
+
+- 完整安全规则、数据保护、AI-First 约束、架构规则、分支工作流等见 [`AGENTS.md`](AGENTS.md)
+
 ## 详细文档
 
 - 架构决策与 Wiki：`docs/wiki/`
