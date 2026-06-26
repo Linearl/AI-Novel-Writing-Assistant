@@ -14,9 +14,17 @@ description: "需求任务总清单（SSOT）"
 
 ## 统计
 
-- **待办任务**: 0
+- **待办任务**: 4
 - **已完成**: 0
-- **总计**: 0
+- **总计**: 4
 
 ---
+
+## 2xxx 核心功能开发
+
+| 编号 | 标题 | 优先级 | 状态 | 版本 | 路径 |
+| --- | --- | --- | --- | --- | --- |
+| REQ-2001 | REQ-2001 从导出文件导入创建新书 | p? | ❓ requirements_ready | v0.1 | [详情](docs_dev\1.task\B.todo\v0.1\v0.1-r2001-complex-import-from-export) |
+| REQ-2002 | REQ-2002 流式生成死循环检测与提前打断 | p? | ❓ requirements_ready | v0.1 | [详情](docs_dev\1.task\B.todo\v0.1\v0.1-r2002-complex-streaming-loop-detector) |
+| REQ-2003 | REQ-2003 章节细化同步后状态重置修复 | p? | ❓ requirements_ready | v0.1 | [详情](docs_dev\1.task\B.todo\v0.1\v0.1-r2003-simple-chapter-sync-status-reset) |
 
