@@ -1,0 +1,96 @@
+version: "1.0"
+base_profile: default
+
+project:
+  name: ai-novel
+  type: fullstack
+  docs_language: zh
+  description: >
+    AI 小说写作助手。pnpm monorepo(client/server/shared/desktop)。
+    业务侧文档在 docs/(architecture/design/plans/releases/wiki/checkpoints/superpowers),
+    与 ll-workflow-core 默认的编号化体系不一致。
+    解决方案:在仓库内新建 docs_dev/ 作为 ll-workflow-core 的工作区,
+    走 default profile 的编号化结构(0.version_plan/1.task/2.tech/...),
+    与业务 docs/ 完全隔离。docs/ 保持现状不被 ll-workflow-core 触碰。
+
+slots:
+  # worktree 池(项目根的 worktree/.slots.json,默认 profile 的槽位)
+  worktree_root: "${ workspace_root }/worktree"
+  worktree_slots_json: "${ workspace_root }/worktree/.slots.json"
+
+  # ===== docs_dev/ 全部业务槽位 =====
+  docs_root: "${ target_dev_dir }/docs_dev"
+  docs_index: "${ target_dev_dir }/docs_dev/INDEX.md"
+  docs_readme: "${ target_dev_dir }/docs_dev/README.md"
+
+  # 任务管理(编号化)
+  task_inactive_root: "${ target_dev_dir }/docs_dev/1.task/A.inactive"
+  task_todo_root: "${ target_dev_dir }/docs_dev/1.task/B.todo"
+  task_todo_version_root: "${ target_dev_dir }/docs_dev/1.task/B.todo/${ version }"
+  task_done_root: "${ target_dev_dir }/docs_dev/1.task/B.2.done"
+  task_done_version_root: "${ target_dev_dir }/docs_dev/1.task/B.2.done/${ version }"
+  task_paused_root: "${ target_dev_dir }/docs_dev/1.task/B.1.paused"
+  task_cancelled_root: "${ target_dev_dir }/docs_dev/1.task/B.3.cancelled"
+  task_requirements_index: "${ target_dev_dir }/docs_dev/1.task/requirements.md"
+  task_readme_index: "${ target_dev_dir }/docs_dev/1.task/README.md"
+  task_template_root: "${ target_dev_dir }/docs_dev/1.task/template"
+  todolist_root: "${ target_dev_dir }/docs_dev/1.task/todolist"
+
+  # 版本计划 / 周报 / 测试
+  version_plan_root: "${ target_dev_dir }/docs_dev/0.version_plan"
+  changelog_root: "${ target_dev_dir }/docs_dev/6.changelog"
+  weekly_root: "${ target_dev_dir }/docs_dev/7.weekly"
+  test_root: "${ target_dev_dir }/docs_dev/8.test"
+
+  # 技术文档(2.tech 编号化)
+  tech_api_root: "${ target_dev_dir }/docs_dev/2.tech/api"
+  tech_architecture_root: "${ target_dev_dir }/docs_dev/2.tech/architecture"
+  tech_database_root: "${ target_dev_dir }/docs_dev/2.tech/database"
+  tech_development_root: "${ target_dev_dir }/docs_dev/2.tech/development"
+  tech_guide_root: "${ target_dev_dir }/docs_dev/2.tech/guide"
+  tech_specification_root: "${ target_dev_dir }/docs_dev/2.tech/specification"
+  tech_user_guide_root: "${ target_dev_dir }/docs_dev/2.tech/user_guide"
+  guide_root: "${ target_dev_dir }/docs_dev/2.tech/guide"
+
+  # 分析 / 诊断
+  analysis_diagnosis_root: "${ target_dev_dir }/docs_dev/3.analysis/diagnosis"
+  analysis_diagnosis_active: "${ target_dev_dir }/docs_dev/3.analysis/diagnosis/01-active"
+  analysis_diagnosis_outdated: "${ target_dev_dir }/docs_dev/3.analysis/diagnosis/02-outdated"
+  analysis_report_root: "${ target_dev_dir }/docs_dev/3.analysis/report"
+  analysis_evidence_root: "${ target_dev_dir }/docs_dev/3.analysis/evidence"
+
+  # 治理
+  governance_handoff_root: "${ target_dev_dir }/docs_dev/4.misc/handoff"
+  governance_json_evidence_root: "${ target_dev_dir }/docs_dev/3.analysis/evidence/${ version }"
+  governance_learning_backflow_root: "${ target_dev_dir }/docs_dev/7.weekly"
+
+  # git 提交 / 杂项
+  git_commit_root: "${ target_dev_dir }/docs_dev/5.git-commit"
+  misc_root: "${ target_dev_dir }/docs_dev/4.misc"
+
+workflows:
+  init:
+    import_source: "${ target_dev_dir }/docs/legacy"
+    import_strategy: copy
+  branch:
+    max_parallel_slots: 3
+  aud:
+    scope: quick
+
+aliases:
+  - name: "建文档"
+    maps_to: init
+  - name: "做需求"
+    maps_to: req
+  - name: "开发"
+    maps_to: dev
+  - name: "审计"
+    maps_to: aud
+  - name: "健康检查"
+    maps_to: hchk
+  - name: "配置审计"
+    maps_to: haud
+  - name: "文档保鲜"
+    maps_to: df
+  - name: "生成测试"
+    maps_to: gt
