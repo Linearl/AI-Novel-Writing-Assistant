@@ -29,6 +29,8 @@ description: "需求任务总清单（SSOT）"
 | 2009 | 模型路由设置页厂商筛选 | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2009-simple-model-provider-filter/README.md` |  |
 | 2010 | 步骤 6 右侧边栏折叠 | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2010-simple-chapter-execution-sidebar-collapse/README.md` |  |
 | 2011 | 暗色主题（夜间模式） | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2011-simple-dark-mode/README.md` |  |
+| 2013 | Director Failed Retry Entry | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2013-medium-director-failed-retry-entry/README.md` |  |
+| 2014 | Chapter Token Budget Dynamic | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2014-medium-chapter-token-budget-dynamic/README.md` |  |
 
 ### 3.2 用户界面和体验任务（3xxx）
 
@@ -59,6 +61,8 @@ description: "需求任务总清单（SSOT）"
 | 2009 | 模型路由设置页厂商筛选 | `B.todo/v0.1-r2009-simple-model-provider-filter/README.md` |
 | 2010 | 步骤 6 右侧边栏折叠 | `B.todo/v0.1-r2010-simple-chapter-execution-sidebar-collapse/README.md` |
 | 2011 | 暗色主题（夜间模式） | `B.todo/v0.1-r2011-simple-dark-mode/README.md` |
+| 2013 | Director Failed Retry Entry | `B.todo/v0.1-r2013-medium-director-failed-retry-entry/README.md` |
+| 2014 | Chapter Token Budget Dynamic | `B.todo/v0.1-r2014-medium-chapter-token-budget-dynamic/README.md` |
 | 3003 | 小说项目对话存档 | `B.todo/v0.1-r3003-medium-novel-conversation-archive/README.md` |
 
 ### 4.4 ✅ 已完成
