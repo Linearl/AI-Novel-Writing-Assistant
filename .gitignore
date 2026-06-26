@@ -39,3 +39,8 @@ server/prisma-diff-migrations-to-schema.sql
 .spec-workflow/
 .codex-backups/
 .cursor/
+
+# Local staging / restore artifacts
+temp/_restore/
+client/.env
+server/.env
