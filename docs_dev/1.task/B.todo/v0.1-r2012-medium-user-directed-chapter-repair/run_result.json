@@ -1,5 +1,5 @@
 {
-  "reqId": "REQ-2005",
+  "reqId": "REQ-2012",
   "status": "requirements_ready",
   "complexity": "medium",
   "reqType": "core_feature",
@@ -7,12 +7,30 @@
   "skipClarification": false,
   "skipDesign": false,
   "artifacts": [
-    { "path": "docs_dev/1.task/B.todo/v0.1-r2005-medium-user-directed-chapter-repair/README.md", "kind": "document" },
-    { "path": "docs_dev/1.task/B.todo/v0.1-r2005-medium-user-directed-chapter-repair/REQ-2005.md", "kind": "document" },
-    { "path": "docs_dev/1.task/B.todo/v0.1-r2005-medium-user-directed-chapter-repair/REQ-2005-original.md", "kind": "document" },
-    { "path": "docs_dev/1.task/B.todo/v0.1-r2005-medium-user-directed-chapter-repair/tasks.md", "kind": "document" },
-    { "path": "docs_dev/1.task/B.todo/v0.1-r2005-medium-user-directed-chapter-repair/design.md", "kind": "document" },
-    { "path": "docs_dev/1.task/B.todo/v0.1-r2005-medium-user-directed-chapter-repair/decision_log.md", "kind": "document" }
+    {
+      "path": "docs_dev/1.task/B.todo/v0.1-r2012-medium-user-directed-chapter-repair/README.md",
+      "kind": "document"
+    },
+    {
+      "path": "docs_dev/1.task/B.todo/v0.1-r2012-medium-user-directed-chapter-repair/REQ-2012.md",
+      "kind": "document"
+    },
+    {
+      "path": "docs_dev/1.task/B.todo/v0.1-r2012-medium-user-directed-chapter-repair/REQ-2012-original.md",
+      "kind": "document"
+    },
+    {
+      "path": "docs_dev/1.task/B.todo/v0.1-r2012-medium-user-directed-chapter-repair/tasks.md",
+      "kind": "document"
+    },
+    {
+      "path": "docs_dev/1.task/B.todo/v0.1-r2012-medium-user-directed-chapter-repair/design.md",
+      "kind": "document"
+    },
+    {
+      "path": "docs_dev/1.task/B.todo/v0.1-r2012-medium-user-directed-chapter-repair/decision_log.md",
+      "kind": "document"
+    }
   ],
   "unresolved_items": [],
   "assumptions": [

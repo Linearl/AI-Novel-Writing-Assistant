@@ -1,8 +1,8 @@
 ---
-description: "REQ-2007 单章 Token 预算动态化 —— 按字数计算阈值"
+description: "REQ-2014 单章 Token 预算动态化 —— 按字数计算阈值"
 ---
 
-# REQ-2007 单章 Token 预算动态化
+# REQ-2014 单章 Token 预算动态化
 
 > 创建日期：2026-06-26
 > 目标版本：0.1
@@ -36,8 +36,8 @@ description: "REQ-2007 单章 Token 预算动态化 —— 按字数计算阈值
 | 文件 | 说明 |
 | ---- | ---- |
 | `README.md` | 本任务总线 |
-| `REQ-2007-original.md` | 需求原始冻结副本 |
-| `REQ-2007.md` | 需求工作副本 |
+| `REQ-2014-original.md` | 需求原始冻结副本 |
+| `REQ-2014.md` | 需求工作副本 |
 | `tasks.md` | 任务拆解 |
 | `design.md` | 方案设计 |
 | `decision_log.md` | 决策留痕 |

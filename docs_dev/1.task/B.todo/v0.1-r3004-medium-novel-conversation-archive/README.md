@@ -1,5 +1,5 @@
 ---
-description: "REQ-3003 小说项目对话存档——为创作工作台新增对话存档 Tab"
+description: "REQ-3004 小说项目对话存档——为创作工作台新增对话存档 Tab"
 status: requirements_ready
 created: "2026-06-26"
 updated: "2026-06-26"
@@ -8,15 +8,15 @@ reqId: "3003"
 complexity: medium
 ---
 
-# REQ-3003 小说项目对话存档
+# REQ-3004 小说项目对话存档
 
 ## 六件套
 
 | 文件 | 状态 | 用途 |
 | --- | --- | --- |
 | [README.md](README.md) | ✅ | 任务总线（本文件） |
-| [REQ-3003.md](REQ-3003.md) | ✅ | 需求文档（工作副本） |
-| [REQ-3003-original.md](REQ-3003-original.md) | ✅ | 原始需求冻结副本 |
+| [REQ-3004.md](REQ-3004.md) | ✅ | 需求文档（工作副本） |
+| [REQ-3004-original.md](REQ-3004-original.md) | ✅ | 原始需求冻结副本 |
 | [design.md](design.md) | ✅ | 方案设计 |
 | [tasks.md](tasks.md) | ✅ | 任务拆解 |
 | [decision_log.md](decision_log.md) | ✅ | 决策留痕 |
