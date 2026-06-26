@@ -10,21 +10,44 @@ description: "需求任务总清单（SSOT）"
 > 查询可用编号：`node scripts/req-sync.js next --category <N>`
 > 查询编号详情：`node scripts/req-sync.js query REQ-XXXX`
 
+## 3. 📚 全量任务清单（按类别）
+
+> 说明：本章是唯一全量清单，不保留"旧编号"列。
+
+### 3.1 核心功能开发任务（2xxx）
+
+| 编号 | 任务标题 | 优先级 | 当前状态 | 来源层 | 目标版本 | 开始日期 | 完成日期 | 详情文档 | 备注 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2001 | 从导出文件导入创建新书 | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2001-complex-import-from-export/README.md` |  |
+| 2002 | 流式生成死循环检测与提前打断 | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2002-complex-streaming-loop-detector/README.md` |  |
+| 2003 | 章节细化同步后状态重置修复 | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2003-simple-chapter-sync-status-reset/README.md` |  |
+| 2004 | Creative Hub Agent 执行可观测性增强 | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2004-complex-creative-hub-observability/README.md` |  |
+
+### 3.2 用户界面和体验任务（3xxx）
+
+| 编号 | 任务标题 | 优先级 | 当前状态 | 来源层 | 目标版本 | 开始日期 | 完成日期 | 详情文档 | 备注 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 3001 | Task Batch Archive | p4 | ✅ 已完成 | - | 0.1 | - | - | `B.todo/v0.1-r3001-medium-task-batch-archive/README.md` |  |
+
 ---
 
-## 统计
+## 4. 📍 任务清单视图（按状态）
 
-- **待办任务**: 4
-- **已完成**: 0
-- **总计**: 4
+> 说明：用于快速看板，不替代第 3 章全量清单。
+
+### 4.2 📋 待办
+
+| 编号 | 任务标题 | 文档 |
+| --- | --- | --- |
+| 2001 | 从导出文件导入创建新书 | `B.todo/v0.1-r2001-complex-import-from-export/README.md` |
+| 2002 | 流式生成死循环检测与提前打断 | `B.todo/v0.1-r2002-complex-streaming-loop-detector/README.md` |
+| 2003 | 章节细化同步后状态重置修复 | `B.todo/v0.1-r2003-simple-chapter-sync-status-reset/README.md` |
+| 2004 | Creative Hub Agent 执行可观测性增强 | `B.todo/v0.1-r2004-complex-creative-hub-observability/README.md` |
+
+### 4.4 ✅ 已完成
+
+| 编号 | 任务标题 | 文档 |
+| --- | --- | --- |
+| 3001 | Task Batch Archive | `B.todo/v0.1-r3001-medium-task-batch-archive/README.md` |
 
 ---
-
-## 2xxx 核心功能开发
-
-| 编号 | 标题 | 优先级 | 状态 | 版本 | 路径 |
-| --- | --- | --- | --- | --- | --- |
-| REQ-2001 | REQ-2001 从导出文件导入创建新书 | p? | ❓ requirements_ready | v0.1 | [详情](docs_dev\1.task\B.todo\v0.1\v0.1-r2001-complex-import-from-export) |
-| REQ-2002 | REQ-2002 流式生成死循环检测与提前打断 | p? | ❓ requirements_ready | v0.1 | [详情](docs_dev\1.task\B.todo\v0.1\v0.1-r2002-complex-streaming-loop-detector) |
-| REQ-2003 | REQ-2003 章节细化同步后状态重置修复 | p? | ❓ requirements_ready | v0.1 | [详情](docs_dev\1.task\B.todo\v0.1\v0.1-r2003-simple-chapter-sync-status-reset) |
-
