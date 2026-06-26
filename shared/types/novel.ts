@@ -999,6 +999,7 @@ export interface ModelRouteConfig {
   model: string;
   temperature: number;
   maxTokens?: number | null;
+  contextWindow?: number | null;
   requestProtocol?: ModelRouteRequestProtocol;
   structuredResponseFormat?: ModelRouteStructuredResponseFormat;
 }

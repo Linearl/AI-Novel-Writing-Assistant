@@ -102,6 +102,18 @@ export default function ModelRouteFields({
         />
       </div>
 
+      <div className="space-y-1">
+        <div className="text-xs text-muted-foreground">上下文窗口（Token）</div>
+        <Input
+          value={draft.contextWindow ?? ""}
+          placeholder="默认 1048576（1M）"
+          onChange={(event) => {
+            const v = event.target.value.trim();
+            onPatch({ contextWindow: v === "" ? null : Number(v) });
+          }}
+        />
+      </div>
+
       {showProtocolFields ? (
         <div className="space-y-1">
           <div className="text-xs text-muted-foreground">请求协议</div>

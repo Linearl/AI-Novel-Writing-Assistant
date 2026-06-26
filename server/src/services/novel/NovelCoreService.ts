@@ -95,6 +95,14 @@ export class NovelCoreService {
     return this.crudService.deleteChapter(novelId, chapterId);
   }
 
+  async softDeleteChapter(novelId: string, chapterId: string) {
+    return this.crudService.softDeleteChapter(novelId, chapterId);
+  }
+
+  async restoreChapter(novelId: string, chapterId: string) {
+    return this.crudService.restoreChapter(novelId, chapterId);
+  }
+
   async listCharacters(novelId: string) {
     return this.characterService.listCharacters(novelId);
   }

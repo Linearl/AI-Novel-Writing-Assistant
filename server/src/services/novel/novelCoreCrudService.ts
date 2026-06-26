@@ -514,4 +514,36 @@ export class NovelCoreCrudService {
       throw new Error("章节不存在");
     }
   }
+
+  /** 软删除：设置 deletedAt 时间戳 */
+  async softDeleteChapter(novelId: string, chapterId: string) {
+    const chapter = await prisma.chapter.findFirst({
+      where: { id: chapterId, novelId, deletedAt: null },
+      select: { id: true, title: true, order: true, content: true },
+    });
+    if (!chapter) {
+      throw new Error("章节不存在或已被删除。");
+    }
+    const updated = await prisma.chapter.update({
+      where: { id: chapterId },
+      data: { deletedAt: new Date() },
+      select: { deletedAt: true },
+    });
+    return { success: true, deletedAt: updated.deletedAt, chapter };
+  }
+
+  /** 恢复已软删除的章节 */
+  async restoreChapter(novelId: string, chapterId: string) {
+    const found = await prisma.chapter.findFirst({
+      where: { id: chapterId, novelId, deletedAt: { not: null } },
+      select: { id: true },
+    });
+    if (!found) {
+      throw new Error("未找到已删除的章节。");
+    }
+    return prisma.chapter.update({
+      where: { id: chapterId },
+      data: { deletedAt: null },
+    });
+  }
 }

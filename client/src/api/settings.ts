@@ -126,6 +126,7 @@ export interface ModelRoutesResponse {
     model: string;
     temperature: number;
     maxTokens: number | null;
+    contextWindow: number | null;
     requestProtocol: ModelRouteRequestProtocol;
     structuredResponseFormat: ModelRouteStructuredResponseFormat;
   }>;
@@ -172,6 +173,7 @@ export interface StructuredFallbackSettings {
   model: string;
   temperature: number;
   maxTokens: number | null;
+  contextWindow: number | null;
 }
 
 export interface AutoDirectorChannelConfig {

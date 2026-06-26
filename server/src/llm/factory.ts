@@ -63,6 +63,7 @@ export interface ResolvedLLMClientOptions {
   apiKey?: string;
   baseURL: string;
   maxTokens?: number;
+  contextWindow: number;
   timeoutMs?: number;
   concurrencyLimit: number;
   requestIntervalMs: number;
@@ -327,6 +328,7 @@ export async function resolveLLMClientOptions(
     apiKey,
     baseURL,
     maxTokens: effectiveMaxTokens,
+    contextWindow: 1048576,
     timeoutMs,
     concurrencyLimit,
     requestIntervalMs,

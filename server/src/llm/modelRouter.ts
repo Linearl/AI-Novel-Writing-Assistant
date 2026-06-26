@@ -46,6 +46,7 @@ export interface ResolvedModel {
   model: string;
   temperature: number;
   maxTokens?: number;
+  contextWindow: number;
   requestProtocol: ModelRouteRequestProtocol;
   structuredResponseFormat: ModelRouteStructuredResponseFormat;
   routeKey: ModelRouteTaskType | "default";
@@ -63,6 +64,7 @@ const DEFAULT_ROUTES: Record<ModelRouteTaskType | "default", Omit<ResolvedModel,
     provider: "deepseek",
     model: PROVIDERS.deepseek.defaultModel,
     temperature: 0.3,
+    contextWindow: 1048576,
     requestProtocol: "auto",
     structuredResponseFormat: "auto",
   },
@@ -70,6 +72,7 @@ const DEFAULT_ROUTES: Record<ModelRouteTaskType | "default", Omit<ResolvedModel,
     provider: "deepseek",
     model: PROVIDERS.deepseek.defaultModel,
     temperature: 0.8,
+    contextWindow: 1048576,
     requestProtocol: "auto",
     structuredResponseFormat: "auto",
   },
@@ -77,6 +80,7 @@ const DEFAULT_ROUTES: Record<ModelRouteTaskType | "default", Omit<ResolvedModel,
     provider: "deepseek",
     model: PROVIDERS.deepseek.defaultModel,
     temperature: 0.2,
+    contextWindow: 1048576,
     requestProtocol: "auto",
     structuredResponseFormat: "auto",
   },
@@ -84,6 +88,7 @@ const DEFAULT_ROUTES: Record<ModelRouteTaskType | "default", Omit<ResolvedModel,
     provider: "deepseek",
     model: PROVIDERS.deepseek.defaultModel,
     temperature: 0.2,
+    contextWindow: 1048576,
     requestProtocol: "auto",
     structuredResponseFormat: "auto",
   },
@@ -91,6 +96,7 @@ const DEFAULT_ROUTES: Record<ModelRouteTaskType | "default", Omit<ResolvedModel,
     provider: "deepseek",
     model: PROVIDERS.deepseek.defaultModel,
     temperature: 0.1,
+    contextWindow: 1048576,
     requestProtocol: "auto",
     structuredResponseFormat: "auto",
   },
@@ -98,6 +104,7 @@ const DEFAULT_ROUTES: Record<ModelRouteTaskType | "default", Omit<ResolvedModel,
     provider: "deepseek",
     model: PROVIDERS.deepseek.defaultModel,
     temperature: 0.4,
+    contextWindow: 1048576,
     requestProtocol: "auto",
     structuredResponseFormat: "auto",
   },
@@ -105,6 +112,7 @@ const DEFAULT_ROUTES: Record<ModelRouteTaskType | "default", Omit<ResolvedModel,
     provider: "deepseek",
     model: PROVIDERS.deepseek.defaultModel,
     temperature: 0.2,
+    contextWindow: 1048576,
     requestProtocol: "auto",
     structuredResponseFormat: "auto",
   },
@@ -112,6 +120,7 @@ const DEFAULT_ROUTES: Record<ModelRouteTaskType | "default", Omit<ResolvedModel,
     provider: "deepseek",
     model: PROVIDERS.deepseek.defaultModel,
     temperature: 0.1,
+    contextWindow: 1048576,
     requestProtocol: "auto",
     structuredResponseFormat: "auto",
   },
@@ -119,6 +128,7 @@ const DEFAULT_ROUTES: Record<ModelRouteTaskType | "default", Omit<ResolvedModel,
     provider: "deepseek",
     model: PROVIDERS.deepseek.defaultModel,
     temperature: 0.2,
+    contextWindow: 1048576,
     requestProtocol: "auto",
     structuredResponseFormat: "auto",
   },
@@ -126,6 +136,7 @@ const DEFAULT_ROUTES: Record<ModelRouteTaskType | "default", Omit<ResolvedModel,
     provider: "deepseek",
     model: PROVIDERS.deepseek.defaultModel,
     temperature: 0.2,
+    contextWindow: 1048576,
     requestProtocol: "auto",
     structuredResponseFormat: "auto",
   },
@@ -133,6 +144,7 @@ const DEFAULT_ROUTES: Record<ModelRouteTaskType | "default", Omit<ResolvedModel,
     provider: "deepseek",
     model: PROVIDERS.deepseek.defaultModel,
     temperature: 0.7,
+    contextWindow: 1048576,
     requestProtocol: "auto",
     structuredResponseFormat: "auto",
   },
@@ -140,6 +152,7 @@ const DEFAULT_ROUTES: Record<ModelRouteTaskType | "default", Omit<ResolvedModel,
     provider: "deepseek",
     model: PROVIDERS.deepseek.defaultModel,
     temperature: 0.7,
+    contextWindow: 1048576,
     requestProtocol: "auto",
     structuredResponseFormat: "auto",
   },
@@ -282,11 +295,14 @@ export async function resolveModel(
         requestProtocol: "requestProtocol" in row ? row.requestProtocol : null,
         structuredResponseFormat: "structuredResponseFormat" in row ? row.structuredResponseFormat : null,
       });
+      const defaultCw = isBuiltInProvider(provider) ? PROVIDERS[provider].defaultContextWindow : undefined;
+      const contextWindow = row.contextWindow ?? defaultCw ?? 1048576;
       const resolved: ResolvedModel = {
         provider,
         model: row.model,
         temperature: row.temperature,
         maxTokens: normalizeMaxTokens(provider, row.maxTokens ?? undefined),
+        contextWindow,
         ...routePreferences,
         routeKey: normalizedTaskType,
         routeDegraded: false,
@@ -299,6 +315,7 @@ export async function resolveModel(
 
   return applyOverrides({
     ...base,
+    contextWindow: base.contextWindow ?? 1048576,
     routeKey: normalizedTaskType,
     routeDegraded: normalizedTaskType !== "default"
       && STRICT_ROUTE_TASK_TYPES.has(normalizedTaskType),
@@ -311,6 +328,7 @@ export async function listModelRouteConfigs(): Promise<Array<{
   model: string;
   temperature: number;
   maxTokens: number | null;
+  contextWindow: number | null;
   requestProtocol: ModelRouteRequestProtocol;
   structuredResponseFormat: ModelRouteStructuredResponseFormat;
 }>> {
@@ -330,6 +348,7 @@ export async function listModelRouteConfigs(): Promise<Array<{
         model: r.model,
         temperature: r.temperature,
         maxTokens: normalizeMaxTokens(provider, r.maxTokens ?? undefined) ?? null,
+        contextWindow: r.contextWindow ?? null,
         ...routePreferences,
       };
     });
@@ -345,6 +364,7 @@ export async function upsertModelRouteConfig(
     model: string;
     temperature?: number;
     maxTokens?: number | null;
+    contextWindow?: number | null;
     requestProtocol?: string | null;
     structuredResponseFormat?: string | null;
   },
@@ -367,6 +387,7 @@ export async function upsertModelRouteConfig(
       model: data.model,
       temperature: data.temperature ?? 0.7,
       maxTokens: normalizedMaxTokens,
+      contextWindow: data.contextWindow ?? null,
       requestProtocol,
       structuredResponseFormat,
     },
@@ -375,6 +396,7 @@ export async function upsertModelRouteConfig(
       model: data.model,
       temperature: data.temperature ?? 0.7,
       maxTokens: normalizedMaxTokens,
+      contextWindow: data.contextWindow ?? null,
       requestProtocol,
       structuredResponseFormat,
     },

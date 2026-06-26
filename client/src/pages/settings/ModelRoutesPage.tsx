@@ -170,6 +170,7 @@ export default function ModelRoutesPage() {
       model: route?.model ?? "",
       temperature: route?.temperature != null ? String(route.temperature) : "0.7",
       maxTokens: route?.maxTokens != null ? String(route.maxTokens) : "",
+      contextWindow: route?.contextWindow ?? null,
       requestProtocol: route?.requestProtocol ?? "auto",
       structuredResponseFormat: route?.structuredResponseFormat ?? "auto",
     };
@@ -184,6 +185,7 @@ export default function ModelRoutesPage() {
       model: defaultModel,
       temperature: "0.7",
       maxTokens: "",
+      contextWindow: null,
       requestProtocol: "auto",
       structuredResponseFormat: "auto",
     };
@@ -234,6 +236,7 @@ export default function ModelRoutesPage() {
       model: structuredFallback?.model ?? "deepseek-chat",
       temperature: structuredFallback != null ? String(structuredFallback.temperature) : "0.2",
       maxTokens: structuredFallback?.maxTokens != null ? String(structuredFallback.maxTokens) : "",
+      contextWindow: structuredFallback?.contextWindow ?? null,
       requestProtocol: "auto",
       structuredResponseFormat: "auto",
     };

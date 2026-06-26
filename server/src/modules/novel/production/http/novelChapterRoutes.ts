@@ -12,6 +12,8 @@ interface RegisterNovelChapterRoutesInput {
     | "createChapter"
     | "updateChapter"
     | "deleteChapter"
+    | "softDeleteChapter"
+    | "restoreChapter"
     | "ensureChapterExecutionContract"
   >;
   idParamsSchema: z.ZodType<{ id: string }>;
@@ -89,11 +91,26 @@ export function registerNovelChapterRoutes(input: RegisterNovelChapterRoutesInpu
   router.delete("/:id/chapters/:chapterId", validate({ params: chapterParamsSchema }), async (req, res, next) => {
     try {
       const { id, chapterId } = req.params as z.infer<typeof chapterParamsSchema>;
-      await novelService.deleteChapter(id, chapterId);
+      const data = await novelService.softDeleteChapter(id, chapterId);
       res.status(200).json({
         success: true,
-        message: "Chapter deleted.",
-      } satisfies ApiResponse<null>);
+        data,
+        message: "Chapter soft-deleted.",
+      } satisfies ApiResponse<typeof data>);
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  router.post("/:id/chapters/:chapterId/restore", validate({ params: chapterParamsSchema }), async (req, res, next) => {
+    try {
+      const { id, chapterId } = req.params as z.infer<typeof chapterParamsSchema>;
+      const data = await novelService.restoreChapter(id, chapterId);
+      res.status(200).json({
+        success: true,
+        data,
+        message: "Chapter restored.",
+      } satisfies ApiResponse<typeof data>);
     } catch (error) {
       next(error);
     }

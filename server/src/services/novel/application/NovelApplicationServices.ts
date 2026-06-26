@@ -119,6 +119,14 @@ export class DefaultNovelApplicationServices {
     return this.core.deleteChapter(...args);
   }
 
+  softDeleteChapter(...args: Parameters<NovelCoreService["softDeleteChapter"]>) {
+    return this.core.softDeleteChapter(...args);
+  }
+
+  restoreChapter(...args: Parameters<NovelCoreService["restoreChapter"]>) {
+    return this.core.restoreChapter(...args);
+  }
+
   listCharacters(...args: Parameters<NovelCoreService["listCharacters"]>) {
     return this.core.listCharacters(...args);
   }

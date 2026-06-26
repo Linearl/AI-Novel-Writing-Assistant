@@ -14,6 +14,7 @@ export interface RouteDraft {
   model: string;
   temperature: string;
   maxTokens: string;
+  contextWindow: number | null;
   requestProtocol: ModelRouteRequestProtocol;
   structuredResponseFormat: ModelRouteStructuredResponseFormat;
 }
@@ -31,6 +32,7 @@ export interface RouteSavePayload {
   model: string;
   temperature: number;
   maxTokens?: number | null;
+  contextWindow?: number | null;
   requestProtocol: ModelRouteRequestProtocol;
   structuredResponseFormat: ModelRouteStructuredResponseFormat;
 }
@@ -83,6 +85,7 @@ export function buildRouteSavePayload(taskType: ModelRouteTaskType, draft: Route
     model: draft.model,
     temperature: parseTemperature(draft.temperature, 0.7),
     maxTokens: parseMaxTokens(draft.maxTokens),
+    contextWindow: draft.contextWindow,
     requestProtocol: draft.requestProtocol,
     structuredResponseFormat: draft.structuredResponseFormat,
   };
@@ -96,6 +99,7 @@ export function isSameRouteDraft(draft: RouteDraft, route: SavedModelRoute | und
     && draft.model.trim() === route.model
     && parseTemperature(draft.temperature, 0.7) === route.temperature
     && parseMaxTokens(draft.maxTokens) === route.maxTokens
+    && draft.contextWindow === route.contextWindow
     && draft.requestProtocol === route.requestProtocol
     && draft.structuredResponseFormat === route.structuredResponseFormat;
 }
