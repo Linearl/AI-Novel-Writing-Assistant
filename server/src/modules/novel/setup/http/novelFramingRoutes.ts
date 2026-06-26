@@ -14,7 +14,7 @@ const llmGenerateSchema = z.object({
 
 const framingSuggestSchema = llmGenerateSchema.extend({
   title: z.string().trim().max(120).optional(),
-  description: z.string().trim().max(2000).optional(),
+  description: z.string().trim().max(30000).optional(),
   genreLabel: z.string().trim().max(120).optional(),
   styleTone: z.string().trim().max(120).optional(),
 }).refine((value) => Boolean(value.title?.trim() || value.description?.trim()), {

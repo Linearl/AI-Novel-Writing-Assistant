@@ -388,7 +388,7 @@ export const volumeGenerateSchema = llmGenerateSchema.extend({
 });
 
 export const outlineGenerateSchema = llmGenerateSchema.extend({
-  initialPrompt: z.string().trim().max(2000).optional(),
+  initialPrompt: z.string().trim().max(30000).optional(),
 });
 
 export const structuredOutlineSchema = llmGenerateSchema.extend({
