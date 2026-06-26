@@ -33,6 +33,7 @@ description: "需求任务总清单（SSOT）"
 | 2015 | User Directed Chapter Repair | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2015-medium-user-directed-chapter-repair/README.md` |  |
 | 2016 | Director Failed Retry Entry | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2016-medium-director-failed-retry-entry/README.md` |  |
 | 2017 | Chapter Token Budget Dynamic | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2017-medium-chapter-token-budget-dynamic/README.md` |  |
+| 2018 | 小说项目风险管理系统 | p3 | 📋 待办 | 用户需求 | 0.1 | 2026-06-26 | 2026-06-26 | `B.todo/v0.1/v0.1-r2018-medium-novel-risk-management/README.md` | 风险记录、面板、回溯、评估与导出 |
 | 2013 | Director Failed Retry Entry | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2013-medium-director-failed-retry-entry/README.md` |  |
 | 2014 | Chapter Token Budget Dynamic | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2014-medium-chapter-token-budget-dynamic/README.md` |  |
 
@@ -71,6 +72,7 @@ description: "需求任务总清单（SSOT）"
 | 2015 | User Directed Chapter Repair | `B.todo/v0.1-r2015-medium-user-directed-chapter-repair/README.md` |
 | 2016 | Director Failed Retry Entry | `B.todo/v0.1-r2016-medium-director-failed-retry-entry/README.md` |
 | 2017 | Chapter Token Budget Dynamic | `B.todo/v0.1-r2017-medium-chapter-token-budget-dynamic/README.md` |
+| 2018 | 小说项目风险管理系统 | `B.todo/v0.1/v0.1-r2018-medium-novel-risk-management/README.md` |
 | 3003 | 小说项目对话存档 | `B.todo/v0.1-r3003-medium-novel-conversation-archive/README.md` |
 | 3005 | Novel Conversation Archive | `B.todo/v0.1-r3005-medium-novel-conversation-archive/README.md` |
 | 2013 | Director Failed Retry Entry | `B.todo/v0.1-r2013-medium-director-failed-retry-entry/README.md` |
