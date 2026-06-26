@@ -41,6 +41,7 @@ server/prisma-diff-migrations-to-schema.sql
 .cursor/
 
 # Local staging / restore artifacts
+temp/
 temp/_restore/
 client/.env
 server/.env
