@@ -196,6 +196,7 @@ export interface OutlineTabViewProps {
   draftText: string;
   volumes: VolumePlan[];
   onVolumeFieldChange: (volumeId: string, field: keyof Pick<VolumePlan, "title" | "summary" | "openingHook" | "mainPromise" | "primaryPressureSource" | "coreSellingPoint" | "escalationMode" | "protagonistChange" | "midVolumeRisk" | "climax" | "payoffType" | "nextVolumeHook" | "resetPoint">, value: string) => void;
+  onVolumeTargetChapterCountChange?: (volumeId: string, value: number | null) => void;
   onOpenPayoffsChange: (volumeId: string, value: string) => void;
   onAddVolume: () => void;
   onRemoveVolume: (volumeId: string) => void;

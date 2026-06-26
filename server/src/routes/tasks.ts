@@ -254,4 +254,38 @@ router.post("/:kind/:id/archive", validate({ params: taskParamsSchema }), async 
   }
 });
 
+const batchArchiveBodySchema = z.object({
+  tasks: z.array(z.object({
+    kind: kindSchema,
+    id: z.string().trim().min(1),
+  })).min(1).max(80),
+});
+
+router.post("/batch-archive",
+  validate({ body: batchArchiveBodySchema }),
+  async (req, res) => {
+    const { tasks } = req.body as z.infer<typeof batchArchiveBodySchema>;
+    const results = [];
+    for (const task of tasks) {
+      try {
+        await taskCenterService.archiveTask(task.kind, task.id);
+        results.push({ kind: task.kind, id: task.id, status: "success" as const });
+      } catch (error) {
+        results.push({
+          kind: task.kind,
+          id: task.id,
+          status: "failed" as const,
+          error: error instanceof Error ? error.message : "Unknown error",
+        });
+      }
+    }
+    const summary = {
+      total: results.length,
+      succeeded: results.filter((r) => r.status === "success").length,
+      failed: results.filter((r) => r.status === "failed").length,
+    };
+    res.json({ success: true, data: { results, summary } });
+  },
+);
+
 export default router;

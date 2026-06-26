@@ -110,3 +110,28 @@ export interface RecoverableTaskSummary {
 export interface RecoverableTaskListResponse {
   items: RecoverableTaskSummary[];
 }
+
+export interface BatchArchiveTaskItem {
+  kind: TaskKind;
+  id: string;
+}
+
+export interface BatchArchiveRequest {
+  tasks: BatchArchiveTaskItem[];
+}
+
+export interface BatchArchiveResultItem {
+  kind: TaskKind;
+  id: string;
+  status: "success" | "failed";
+  error?: string;
+}
+
+export interface BatchArchiveResponse {
+  results: BatchArchiveResultItem[];
+  summary: {
+    total: number;
+    succeeded: number;
+    failed: number;
+  };
+}

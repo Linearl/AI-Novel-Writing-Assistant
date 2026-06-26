@@ -865,6 +865,7 @@ export interface VolumePlan {
   status: string;
   sourceVersionId?: string | null;
   chapters: VolumeChapterPlan[];
+  targetChapterCount?: number | null;
   createdAt: string;
   updatedAt: string;
 }

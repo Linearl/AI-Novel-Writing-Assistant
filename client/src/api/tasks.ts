@@ -1,6 +1,7 @@
 import type { ApiResponse } from "@ai-novel/shared/types/api";
 import type { DirectorCommandAcceptedResponse } from "@ai-novel/shared/types/directorRuntime";
 import type {
+  BatchArchiveResponse,
   RecoverableTaskListResponse,
   TaskOverviewSummary,
   TaskKind,
@@ -88,6 +89,14 @@ export async function cancelTask(kind: TaskKind, id: string) {
 
 export async function archiveTask(kind: TaskKind, id: string) {
   const { data } = await apiClient.post<ApiResponse<UnifiedTaskDetail | null>>(`/tasks/${kind}/${id}/archive`, {});
+  return data;
+}
+
+export async function batchArchiveTasks(tasks: Array<{ kind: TaskKind; id: string }>) {
+  const { data } = await apiClient.post<ApiResponse<BatchArchiveResponse>>(
+    "/tasks/batch-archive",
+    { tasks },
+  );
   return data;
 }
 

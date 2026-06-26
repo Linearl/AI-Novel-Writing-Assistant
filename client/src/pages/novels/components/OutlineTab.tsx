@@ -172,6 +172,7 @@ export default function OutlineTab(props: OutlineTabViewProps) {
     draftText,
     volumes,
     onVolumeFieldChange,
+    onVolumeTargetChapterCountChange,
     onOpenPayoffsChange,
     onAddVolume,
     onRemoveVolume,
@@ -733,6 +734,24 @@ export default function OutlineTab(props: OutlineTabViewProps) {
                     <label className="space-y-1 text-sm">
                       <span className="text-xs text-muted-foreground">卷间重置点</span>
                       <textarea className="min-h-[84px] w-full rounded-md border bg-background p-2" value={selectedVolume.resetPoint ?? ""} onChange={(event) => onVolumeFieldChange(selectedVolume.id, "resetPoint", event.target.value)} />
+                    </label>
+                    <label className="space-y-1 text-sm md:col-span-1">
+                      <span className="text-xs text-muted-foreground">目标章节数（留空=自动分配）</span>
+                      <input
+                        type="number"
+                        min={3}
+                        max={50}
+                        className="w-full rounded-md border bg-background p-2"
+                        value={selectedVolume.targetChapterCount ?? ""}
+                        placeholder="自动"
+                        onChange={(event) => {
+                          const v = event.target.value.trim();
+                          const parsed = v === "" ? null : Number(v);
+                          if (onVolumeTargetChapterCountChange) {
+                            onVolumeTargetChapterCountChange(selectedVolume.id, parsed);
+                          }
+                        }}
+                      />
                     </label>
                     <label className="space-y-1 text-sm md:col-span-2">
                       <span className="text-xs text-muted-foreground">本卷未兑现事项</span>
