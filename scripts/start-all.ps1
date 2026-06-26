@@ -365,8 +365,11 @@ function Start-DevSuite {
     }
     Write-Ok "server healthy: http://127.0.0.1:$DevServerPort/api/health"
 
-    # 3. client (5173)
+    # 3. client (5173) — PORT must be set so Vite proxy targets the dev server, not :3000
+    $savedPort = $env:PORT
+    $env:PORT = "$DevServerPort"
     Start-DevProcess -Name "client" -Command "pnpm --filter @ai-novel/client dev"
+    $env:PORT = $savedPort
     Write-Info "waiting for client 5173..."
     $ok = $false
     for ($i = 0; $i -lt 30; $i++) {
