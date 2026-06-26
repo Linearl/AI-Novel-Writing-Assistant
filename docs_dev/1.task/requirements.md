@@ -22,12 +22,21 @@ description: "需求任务总清单（SSOT）"
 | 2002 | 流式生成死循环检测与提前打断 | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2002-complex-streaming-loop-detector/README.md` |  |
 | 2003 | 章节细化同步后状态重置修复 | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2003-simple-chapter-sync-status-reset/README.md` |  |
 | 2004 | Creative Hub Agent 执行可观测性增强 | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2004-complex-creative-hub-observability/README.md` |  |
+| 2005 | 步骤 6 新建章节删除与误操作恢复 | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2005-medium-user-directed-chapter-repair/README.md` |  |
+| 2006 | 步骤 4 每卷章节数手动调整 | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2006-medium-director-failed-retry-entry/README.md` |  |
+| 2007 | 节奏板重新生成时注入历史上下文 | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2007-medium-chapter-token-budget-dynamic/README.md` |  |
+| 2008 | 模型上下文窗口配置与自动压缩 | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2008-complex-context-window-awareness/README.md` |  |
+| 2009 | 模型路由设置页厂商筛选 | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2009-simple-model-provider-filter/README.md` |  |
+| 2010 | 步骤 6 右侧边栏折叠 | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2010-simple-chapter-execution-sidebar-collapse/README.md` |  |
+| 2011 | 暗色主题（夜间模式） | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2011-simple-dark-mode/README.md` |  |
 
 ### 3.2 用户界面和体验任务（3xxx）
 
 | 编号 | 任务标题 | 优先级 | 当前状态 | 来源层 | 目标版本 | 开始日期 | 完成日期 | 详情文档 | 备注 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 3001 | Task Batch Archive | p4 | ✅ 已完成 | - | 0.1 | - | - | `B.todo/v0.1-r3001-medium-task-batch-archive/README.md` |  |
+| 3002 | 导演进度规划资源缺失 Checklist 可视化 | p4 | ✅ 已完成 | - | 0.1 | - | - | `B.todo/v0.1-r3002-medium-director-planning-checklist/README.md` |  |
+| 3003 | 小说项目对话存档 | p4 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r3003-medium-novel-conversation-archive/README.md` |  |
 
 ---
 
@@ -43,11 +52,20 @@ description: "需求任务总清单（SSOT）"
 | 2002 | 流式生成死循环检测与提前打断 | `B.todo/v0.1-r2002-complex-streaming-loop-detector/README.md` |
 | 2003 | 章节细化同步后状态重置修复 | `B.todo/v0.1-r2003-simple-chapter-sync-status-reset/README.md` |
 | 2004 | Creative Hub Agent 执行可观测性增强 | `B.todo/v0.1-r2004-complex-creative-hub-observability/README.md` |
+| 2005 | 步骤 6 新建章节删除与误操作恢复 | `B.todo/v0.1-r2005-medium-user-directed-chapter-repair/README.md` |
+| 2006 | 步骤 4 每卷章节数手动调整 | `B.todo/v0.1-r2006-medium-director-failed-retry-entry/README.md` |
+| 2007 | 节奏板重新生成时注入历史上下文 | `B.todo/v0.1-r2007-medium-chapter-token-budget-dynamic/README.md` |
+| 2008 | 模型上下文窗口配置与自动压缩 | `B.todo/v0.1-r2008-complex-context-window-awareness/README.md` |
+| 2009 | 模型路由设置页厂商筛选 | `B.todo/v0.1-r2009-simple-model-provider-filter/README.md` |
+| 2010 | 步骤 6 右侧边栏折叠 | `B.todo/v0.1-r2010-simple-chapter-execution-sidebar-collapse/README.md` |
+| 2011 | 暗色主题（夜间模式） | `B.todo/v0.1-r2011-simple-dark-mode/README.md` |
+| 3003 | 小说项目对话存档 | `B.todo/v0.1-r3003-medium-novel-conversation-archive/README.md` |
 
 ### 4.4 ✅ 已完成
 
 | 编号 | 任务标题 | 文档 |
 | --- | --- | --- |
 | 3001 | Task Batch Archive | `B.todo/v0.1-r3001-medium-task-batch-archive/README.md` |
+| 3002 | 导演进度规划资源缺失 Checklist 可视化 | `B.todo/v0.1-r3002-medium-director-planning-checklist/README.md` |
 
 ---
