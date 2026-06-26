@@ -143,6 +143,10 @@ infra/           Docker Compose（Qdrant 等）
 
 所有面向用户的 UI 文案必须从用户视角说明功能，禁止使用"现在已经""不再""迁回"等实现叙述式文案。
 
+### Issue 文档
+
+当用户说"提 issue"时，针对当前问题编写分析文档，放到 `docs_dev/4.misc/issues/` 目录下。文档应包含：问题描述、根因分析、复现步骤、修复方案、变更文件。面向上游作者，简洁明了。
+
 ## 测试
 
 - Server 使用 Node.js 内置 test runner，测试文件在 `server/tests/`
