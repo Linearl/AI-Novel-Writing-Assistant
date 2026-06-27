@@ -94,6 +94,7 @@ export interface VolumeGenerateOptions {
   chapterTaskSheetQualityMode?: ChapterTaskSheetQualityMode;
   signal?: AbortSignal;
   persistIntermediateDocuments?: boolean;
+  referenceExisting?: boolean;
   onPhaseStart?: (event: VolumeGenerationPhaseEvent) => void | Promise<void>;
   onIntermediateDocument?: (event: VolumeIntermediateDocumentEvent) => void | Promise<void>;
 }

@@ -81,7 +81,9 @@ export async function generateBeatSheet(params: {
   const generated = await runStructuredPrompt({
     asset: volumeBeatSheetPrompt,
     promptInput,
-    contextBlocks: buildVolumeBeatSheetContextBlocks(promptInput),
+    contextBlocks: buildVolumeBeatSheetContextBlocks(promptInput, {
+      referenceExisting: options.referenceExisting,
+    }),
     options: {
       provider: options.provider,
       model: options.model,

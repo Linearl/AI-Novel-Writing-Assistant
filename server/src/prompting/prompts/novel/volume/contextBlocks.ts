@@ -147,8 +147,11 @@ export function buildVolumeSkeletonContextBlocks(input: VolumeSkeletonPromptInpu
   ].filter((block): block is PromptContextBlock => Boolean(block));
 }
 
-export function buildVolumeBeatSheetContextBlocks(input: VolumeBeatSheetPromptInput): PromptContextBlock[] {
-  return [
+export function buildVolumeBeatSheetContextBlocks(
+  input: VolumeBeatSheetPromptInput,
+  options?: { referenceExisting?: boolean },
+): PromptContextBlock[] {
+  const blocks: Array<PromptContextBlock | null> = [
     createContextBlock({
       id: "book_contract",
       group: "book_contract",
@@ -195,7 +198,45 @@ export function buildVolumeBeatSheetContextBlocks(input: VolumeBeatSheetPromptIn
       content: `Future soft summary:\n${buildSoftFutureVolumeSummary(input.workspace.volumes, input.targetVolume.id)}`,
     }),
     guidanceBlock(input.guidance),
-  ].filter((block): block is PromptContextBlock => Boolean(block));
+  ];
+
+  // Append existing beat sheet and chapter details as reference context when regenerating
+  if (options?.referenceExisting) {
+    const existingBeatSheet = input.workspace.beatSheets?.find(
+      (bs: { volumeId?: string }) => bs.volumeId === input.targetVolume.id,
+    );
+    if (existingBeatSheet?.beats?.length) {
+      const summary = existingBeatSheet.beats
+        .map((b: { title?: string; chapterSpanHint?: string; summary?: string }, i: number) =>
+          `${i + 1}. ${b.title ?? "untitled"} (${b.chapterSpanHint ?? "?"}): ${b.summary ?? ""}`.slice(0, 200),
+        )
+        .join("\n");
+      blocks.push(createContextBlock({
+        id: "existing_beat_sheet",
+        group: "reference",
+        priority: 60,
+        content: `Previous beat sheet:\n${summary}`,
+      }));
+    }
+    const refinedChapters = input.targetVolume.chapters?.filter(
+      (ch: { taskSheet?: string | null; purpose?: string | null }) => ch.taskSheet?.trim() || ch.purpose?.trim(),
+    );
+    if (refinedChapters?.length) {
+      const summary = refinedChapters
+        .map((ch: { purpose?: string | null; taskSheet?: string | null; title?: string }, i: number) =>
+          `${i + 1}. ${ch.title ?? ""}: purpose=${(ch.purpose ?? "").slice(0, 80)}; taskSheet=${(ch.taskSheet ?? "").slice(0, 80)}`.slice(0, 250),
+        )
+        .join("\n");
+      blocks.push(createContextBlock({
+        id: "existing_chapter_details",
+        group: "reference",
+        priority: 55,
+        content: `Existing chapter refinements:\n${summary}`,
+      }));
+    }
+  }
+
+  return blocks.filter((block): block is PromptContextBlock => Boolean(block));
 }
 
 export function buildVolumeChapterListContextBlocks(input: VolumeChapterListPromptInput): PromptContextBlock[] {

@@ -9,6 +9,11 @@ import {
   formatChapterTaskSheetQualityFailure,
 } from "@ai-novel/shared/types/chapterTaskSheetQuality";
 import { prisma } from "../../../db/prisma";
+
+/** 判断章节是否已细化（有执行合同） */
+function hasExecutionContract(chapter: { taskSheet?: string | null; sceneCards?: string | null }): boolean {
+  return Boolean(chapter.taskSheet?.trim() || chapter.sceneCards?.trim());
+}
 import type { VolumeUpdateReason } from "../../../events";
 import {
   buildVolumeSyncPlan,
@@ -119,6 +124,9 @@ export class VolumeChapterSyncService {
             mustAvoid: item.chapter.mustAvoid ?? null,
             taskSheet: item.chapter.taskSheet?.trim() || null,
             sceneCards: item.chapter.sceneCards ?? null,
+            chapterStatus: hasExecutionContract(item.chapter)
+              ? "pending_generation"
+              : "unplanned",
           },
         });
         item.chapter.chapterId = created.id;
@@ -141,7 +149,9 @@ export class VolumeChapterSyncService {
             ...(!item.preserveWorkflowState
               ? {
                 generationState: "planned",
-                chapterStatus: "unplanned",
+                chapterStatus: hasExecutionContract(item.chapter)
+                  ? "pending_generation"
+                  : "unplanned",
               }
               : {}),
             ...(item.clearContent ? { content: "" } : {}),
