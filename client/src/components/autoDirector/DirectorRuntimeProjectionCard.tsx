@@ -1,4 +1,5 @@
 import type {
+  DirectorArtifactType,
   DirectorPolicyMode,
   DirectorRuntimeProjection,
   DirectorRuntimeProjectionStatus,
@@ -14,6 +15,24 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+
+const ARTIFACT_TYPE_LABELS: Record<string, string> = {
+  book_contract: "书级合约",
+  story_macro: "故事宏观规划",
+  character_cast: "角色阵容",
+  volume_strategy: "卷战略",
+  chapter_task_sheet: "章节任务单",
+  chapter_draft: "章节正文",
+  audit_report: "审校报告",
+  repair_ticket: "修复工单",
+  reader_promise: "读者承诺",
+  character_governance_state: "角色治理状态",
+  world_skeleton: "世界骨架",
+  source_knowledge_pack: "源知识包",
+  chapter_retention_contract: "章节保留合约",
+  continuity_state: "连续性状态",
+  rolling_window_review: "滚动窗口复盘",
+};
 
 interface DirectorRuntimeProjectionCardProps {
   projection: DirectorRuntimeProjection | null | undefined;
@@ -276,6 +295,22 @@ export default function DirectorRuntimeProjectionCard({
             </Badge>
           ))}
         </div>
+      ) : null}
+
+      {projection.missingArtifactTypes && projection.missingArtifactTypes.length > 0 && !compact ? (
+        <details className="mt-2">
+          <summary className="cursor-pointer text-xs text-amber-600">
+            缺少 {projection.missingArtifactTypes.length} 项规划资源 ▸
+          </summary>
+          <div className="mt-1 space-y-1 pl-2">
+            {projection.missingArtifactTypes.map((type) => (
+              <div key={type} className="flex items-center gap-2 text-xs text-muted-foreground">
+                <span className="inline-block h-2 w-2 rounded-full bg-amber-400" />
+                {ARTIFACT_TYPE_LABELS[type] ?? type}
+              </div>
+            ))}
+          </div>
+        </details>
       ) : null}
 
       {progressBreakdown && !compact ? (

@@ -602,6 +602,7 @@ export interface DirectorRuntimeProjection {
   stepUsage?: DirectorStepUsageSummary[];
   promptUsage?: DirectorPromptUsageSummary[];
   circuitBreaker?: DirectorCircuitBreakerState | null;
+  missingArtifactTypes?: DirectorArtifactType[];
 }
 
 export interface DirectorRuntimeEventHistoryResponse {

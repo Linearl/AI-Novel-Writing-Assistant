@@ -10,7 +10,7 @@ export type NovelWorkspaceFlowTab =
   | "chapter"
   | "pipeline";
 
-export type NovelWorkspaceTab = NovelWorkspaceFlowTab | "history";
+export type NovelWorkspaceTab = NovelWorkspaceFlowTab | "history" | "conversations";
 
 export const NOVEL_WORKSPACE_FLOW_STEPS: Array<{ key: NovelWorkspaceFlowTab; label: string }> = [
   { key: "basic", label: "项目设定" },
@@ -22,8 +22,9 @@ export const NOVEL_WORKSPACE_FLOW_STEPS: Array<{ key: NovelWorkspaceFlowTab; lab
   { key: "pipeline", label: "质量修复" },
 ];
 
-export const NOVEL_WORKSPACE_TOOL_TABS: Array<{ key: Extract<NovelWorkspaceTab, "history">; label: string }> = [
+export const NOVEL_WORKSPACE_TOOL_TABS: Array<{ key: Extract<NovelWorkspaceTab, "history" | "conversations">; label: string }> = [
   { key: "history", label: "版本历史" },
+  { key: "conversations", label: "对话存档" },
 ];
 
 const NOVEL_WORKSPACE_TAB_SET = new Set<NovelWorkspaceTab>([

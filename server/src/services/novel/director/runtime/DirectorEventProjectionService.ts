@@ -769,6 +769,9 @@ export class DirectorEventProjectionService {
       blockingObligations: qualityRootCause.blockingObligations,
       qualityDebtSummary,
       qualityBudgetSummary,
+      missingArtifactTypes: inventory && inventory.missingArtifactTypes.length > 0
+        ? inventory.missingArtifactTypes
+        : undefined,
       policyMode: snapshot.policy.mode,
       updatedAt: snapshot.updatedAt,
       recentEvents,
