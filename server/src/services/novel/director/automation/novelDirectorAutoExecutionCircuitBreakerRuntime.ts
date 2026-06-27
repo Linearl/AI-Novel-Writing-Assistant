@@ -132,6 +132,21 @@ export async function resolveUsageCircuitBreaker(input: {
   const shouldOpenChapterBudgetBreaker = largestChapterUsage
     ? activeBudgetChapterIds.size === 0 || activeBudgetChapterIds.has(largestChapterUsage.chapterId)
     : false;
+
+  // Fetch chapter targetWordCount for dynamic budget
+  let chapterTargetWordCount: number | null = null;
+  if (largestChapterUsage?.chapterId) {
+    try {
+      const chapter = await (await import("../../../../db/prisma")).prisma.chapter.findUnique({
+        where: { id: largestChapterUsage.chapterId },
+        select: { targetWordCount: true },
+      });
+      chapterTargetWordCount = chapter?.targetWordCount ?? null;
+    } catch {
+      // ignore
+    }
+  }
+
   const chapterBudgetBreaker = largestChapterUsage && shouldOpenChapterBudgetBreaker
     ? recordChapterUsageBudgetExceededSignal({
       previous: input.autoExecution.circuitBreaker,
@@ -142,6 +157,7 @@ export async function resolveUsageCircuitBreaker(input: {
         ? input.autoExecution.nextChapterOrder
         : null,
       nodeKey: largestChapterUsage.nodeKey ?? "chapter_execution_node",
+      targetWordCount: chapterTargetWordCount,
     })
     : null;
   if (chapterBudgetBreaker) {

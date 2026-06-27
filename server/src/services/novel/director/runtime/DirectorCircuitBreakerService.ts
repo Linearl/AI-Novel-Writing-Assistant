@@ -9,13 +9,21 @@ export const DIRECTOR_CIRCUIT_BREAKER_THRESHOLDS = {
   patchFailureOpenAt: 3,
   replanLoopOpenAt: 3,
   modelFailureOpenAt: 3,
-  // A chapter with one normal repair cycle costs ~55-60k tokens (write + accept×2 + patch
-  // + timeline + artifact_delta). 80k allows up to two repair cycles before triggering.
-  // Anything beyond two repairs per chapter is genuinely abnormal and warrants a pause.
-  chapterTotalTokenLimit: 80_000,
+  chapterTotalTokenLimitBase: 120_000,
+  chapterTotalTokenLimitMultiplier: 20,
   singleStepTotalTokenLimit: 150_000,
   usageAnomalyOpenAt: 2,
 } as const;
+
+/** 动态计算单章 token 预算：MAX(20 × targetWordCount, 120_000) */
+export function computeChapterTotalTokenLimit(targetWordCount?: number | null): number {
+  const base = DIRECTOR_CIRCUIT_BREAKER_THRESHOLDS.chapterTotalTokenLimitBase;
+  const multiplier = DIRECTOR_CIRCUIT_BREAKER_THRESHOLDS.chapterTotalTokenLimitMultiplier;
+  if (typeof targetWordCount === "number" && targetWordCount > 0) {
+    return Math.max(targetWordCount * multiplier, base);
+  }
+  return base;
+}
 
 export function isDirectorCircuitBreakerOpen(
   state: DirectorCircuitBreakerState | null | undefined,
@@ -262,24 +270,47 @@ export function recordChapterUsageBudgetExceededSignal(input: {
   chapterId?: string | null;
   chapterOrder?: number | null;
   nodeKey?: string | null;
+  targetWordCount?: number | null;
 }): DirectorCircuitBreakerState | null {
-  if (input.totalTokens < DIRECTOR_CIRCUIT_BREAKER_THRESHOLDS.chapterTotalTokenLimit) {
+  const limit = computeChapterTotalTokenLimit(input.targetWordCount);
+  if (input.totalTokens < limit) {
     return null;
   }
   if (input.usageRecordId && input.previous?.lastUsageRecordId === input.usageRecordId) {
     return input.previous ?? null;
   }
+  const previousCount = input.previous?.reason === "usage_anomaly"
+    ? input.previous?.usageAnomalyCount ?? 0
+    : 0;
+  const usageAnomalyCount = previousCount + 1;
+  const message = `单章 AI 用量达到 ${input.totalTokens} Tokens（阈值 ${limit}），已暂停以避免继续异常消耗。`;
+
+  // Progressive: first time records but does NOT open breaker
+  if (usageAnomalyCount < DIRECTOR_CIRCUIT_BREAKER_THRESHOLDS.usageAnomalyOpenAt) {
+    return {
+      status: "closed",
+      reason: "usage_anomaly",
+      message,
+      chapterId: input.chapterId ?? null,
+      chapterOrder: input.chapterOrder ?? null,
+      nodeKey: input.nodeKey ?? "chapter_execution_node",
+      patchFailureCount: input.previous?.patchFailureCount ?? 0,
+      replanLoopCount: input.previous?.replanLoopCount ?? 0,
+      modelFailureCount: input.previous?.modelFailureCount ?? 0,
+      usageAnomalyCount,
+      lastUsageRecordId: input.usageRecordId ?? null,
+      lastEventAt: new Date().toISOString(),
+    };
+  }
+  // Second consecutive hit: open breaker
   return openDirectorCircuitBreaker({
     reason: "usage_anomaly",
-    message: `单章 AI 用量达到 ${input.totalTokens} Tokens，已暂停以避免继续异常消耗。`,
+    message,
     previous: input.previous,
     chapterId: input.chapterId,
     chapterOrder: input.chapterOrder,
     nodeKey: input.nodeKey ?? "chapter_execution_node",
-    usageAnomalyCount: Math.max(
-      DIRECTOR_CIRCUIT_BREAKER_THRESHOLDS.usageAnomalyOpenAt,
-      (input.previous?.usageAnomalyCount ?? 0) + 1,
-    ),
+    usageAnomalyCount,
     lastUsageRecordId: input.usageRecordId ?? null,
   });
 }
