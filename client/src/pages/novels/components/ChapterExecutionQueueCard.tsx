@@ -39,7 +39,7 @@ export default function ChapterExecutionQueueCard(props: ChapterExecutionQueueCa
   } = props;
 
   return (
-    <Card className="h-full overflow-hidden border-border/70 lg:sticky lg:top-4">
+    <Card className="flex h-full flex-col overflow-hidden border-border/70 lg:sticky lg:top-4">
       <CardHeader className="gap-3 border-b bg-gradient-to-b from-muted/30 to-background pb-4">
         <div className="space-y-1">
           <CardTitle className="text-base">章节队列</CardTitle>
@@ -67,7 +67,7 @@ export default function ChapterExecutionQueueCard(props: ChapterExecutionQueueCa
           </div>
         </div>
       </CardHeader>
-      <CardContent className="flex h-full min-h-0 flex-col pt-4">
+      <CardContent className="flex min-h-0 flex-1 flex-col pt-4">
         <div className="min-h-0 flex-1 space-y-3 overflow-y-auto pr-1">
           {chapters.length === 0 ? (
             <div className="rounded-xl border border-dashed p-4 text-xs leading-6 text-muted-foreground">
