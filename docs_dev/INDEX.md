@@ -19,7 +19,6 @@ description: "docs 目录索引（自动生成）"
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
 | [1.task\README.md](./1.task\README.md) | > 由 `init` 路由扫描 `1.task/B.todo/` 和 `1.task/B.2.done/` 自动生成。 | - |
-| [1.task\requirements.bak.1782487827450.md](./1.task\requirements.bak.1782487827450.md) | 需求任务总清单（SSOT） | 需求任务总清单（SSOT） |
 | [1.task\requirements.md](./1.task\requirements.md) | 需求任务总清单（SSOT） | 需求任务总清单（SSOT） |
 
 ## 1.task\B.todo
