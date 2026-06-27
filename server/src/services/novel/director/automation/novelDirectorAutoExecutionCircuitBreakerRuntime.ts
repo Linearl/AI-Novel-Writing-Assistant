@@ -36,8 +36,9 @@ import {
 } from "../runtime/DirectorQualityLoopBudgetLedgerService";
 import { directorAutomationLedgerEventService } from "../runtime/DirectorAutomationLedgerEventService";
 import { directorUsageTelemetryQueryService } from "../runtime/DirectorUsageTelemetryQueryService";
-import { isDirectorDebugLogEnabled } from "@/config/directorDebug";
-import { saveDirectorDebugLog } from "../debug/directorDebugLogger";
+import { isDirectorDebugLogEnabled, getDirectorDebugDetailLevel } from "@/config/directorDebug";
+import { saveDirectorDebugBrief, saveDirectorDebugDetail } from "../debug/directorDebugLogger";
+import { directorDebugBuffer } from "../debug/directorDebugBuffer";
 
 type AutomationLedgerEventPort = Pick<
   typeof directorAutomationLedgerEventService,
@@ -119,8 +120,14 @@ export async function stopAutoExecutionForCircuitBreaker(
   });
 
   if (isDirectorDebugLogEnabled()) {
-    saveDirectorDebugLog({
-      timestamp: new Date().toISOString(),
+    const buffered = directorDebugBuffer.flush(input.taskId);
+    const logDir = "server/logs/director-debug";
+    const timestamp = new Date().toISOString();
+    const detailLevel = getDirectorDebugDetailLevel();
+
+    // 写入简要日志，获取详细日志的文件名
+    saveDirectorDebugBrief({
+      timestamp,
       taskId: input.taskId,
       novelId: input.novelId,
       chapterId: input.circuitBreaker.chapterId ?? null,
@@ -129,7 +136,28 @@ export async function stopAutoExecutionForCircuitBreaker(
       recentLlmUsage: [],
       errorStack: null,
       config: DIRECTOR_CIRCUIT_BREAKER_THRESHOLDS,
-    }, "server/logs/director-debug").catch(() => {});
+      detailLevel,
+      summary: {
+        totalLlmCalls: buffered?.llmCalls.length ?? 0,
+        totalTokens: buffered?.llmCalls.reduce((sum, call) => sum + call.tokenUsage.totalTokens, 0) ?? 0,
+        repairAttempts: buffered?.repairAttempts.length ?? 0,
+        lastAuditPassed: buffered?.auditResults[buffered.auditResults.length - 1]?.passed ?? false,
+      },
+    }, logDir).then((detailFilename) => {
+      if (buffered) {
+        return saveDirectorDebugDetail({
+          timestamp,
+          taskId: input.taskId,
+          novelId: input.novelId,
+          chapterId: input.circuitBreaker.chapterId ?? null,
+          detailLevel,
+          llmCallHistory: buffered.llmCalls,
+          contentSnapshots: buffered.contentSnapshots,
+          repairAttempts: buffered.repairAttempts,
+          auditResults: buffered.auditResults,
+        }, logDir, detailFilename);
+      }
+    }).catch(() => {});
   }
 }
 
