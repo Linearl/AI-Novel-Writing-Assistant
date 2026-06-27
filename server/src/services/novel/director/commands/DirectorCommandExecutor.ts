@@ -166,6 +166,7 @@ export class DirectorCommandExecutor {
           patch: {
             mayOverwriteUserContent: request.mayOverwriteUserContent,
             allowExpensiveReview: request.allowExpensiveReview,
+            autoRepair: request.autoRepair,
             modelTier: request.modelTier,
           },
         });

@@ -95,6 +95,7 @@ export class ChapterRepairStreamRuntime {
         model: options.model,
         temperature: options.temperature,
         repairMode: options.repairMode,
+        userInstruction: options.userInstruction,
       },
     });
 

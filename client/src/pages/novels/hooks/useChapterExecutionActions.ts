@@ -19,7 +19,7 @@ interface UseChapterExecutionActionsArgs {
   reviewIssues: ReviewIssue[];
   onGenerateChapter: () => void;
   onReviewChapter: (kind: "continuity" | "character_consistency" | "pacing") => void;
-  onStartRepair: (issues: ReviewIssue[]) => void;
+  onStartRepair: (issues: ReviewIssue[], userInstruction?: string) => void;
   onMessage: (message: string) => void;
   isGeneratingChapter: boolean;
   isRepairingChapter: boolean;
@@ -29,6 +29,7 @@ interface UseChapterExecutionActionsArgs {
 type ExecutionContractActionKind = "taskSheet" | "sceneCards" | null;
 type RepairActionKind =
   | "autoRepair"
+  | "guidedRepair"
   | "expand"
   | "compress"
   | "strengthenConflict"
@@ -273,6 +274,18 @@ export function useChapterExecutionActions({
     onMessage("已触发自动修复。");
   };
 
+  const guidedRepair = (userInstruction: string) => {
+    if (!ensureChapter()) {
+      return;
+    }
+    setRepairActionKind("guidedRepair");
+    const issues = reviewIssues.length > 0
+      ? reviewIssues
+      : [buildRepairIssue("coherence", "按用户指导修复章节问题。", "用户指导修复")];
+    onStartRepair(issues, userInstruction);
+    onMessage("已触发按指导修复。");
+  };
+
   const strengthenConflict = () => {
     if (!ensureChapter()) {
       return;
@@ -347,6 +360,7 @@ export function useChapterExecutionActions({
     checkCharacterConsistency,
     checkPacing,
     autoRepair,
+    guidedRepair,
     strengthenConflict,
     enhanceEmotion,
     unifyStyle,

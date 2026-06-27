@@ -2481,6 +2481,7 @@ export default function NovelEdit() {
     onCheckCharacterConsistency: chapterExecutionActions.checkCharacterConsistency,
     onCheckPacing: chapterExecutionActions.checkPacing,
     onAutoRepair: chapterExecutionActions.autoRepair,
+    onGuidedRepair: chapterExecutionActions.guidedRepair,
     onStrengthenConflict: chapterExecutionActions.strengthenConflict,
     onEnhanceEmotion: chapterExecutionActions.enhanceEmotion,
     onUnifyStyle: chapterExecutionActions.unifyStyle,

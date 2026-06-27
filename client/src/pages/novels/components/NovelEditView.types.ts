@@ -344,6 +344,7 @@ export interface ChapterTabViewProps {
   onCheckCharacterConsistency: () => void;
   onCheckPacing: () => void;
   onAutoRepair: () => void;
+  onGuidedRepair: (userInstruction: string) => void;
   onStrengthenConflict: () => void;
   onEnhanceEmotion: () => void;
   onUnifyStyle: () => void;
@@ -353,7 +354,7 @@ export interface ChapterTabViewProps {
   isGeneratingSceneCards: boolean;
   isSummarizingChapter: boolean;
   reviewActionKind?: "full_audit" | "continuity" | "character_consistency" | "pacing" | null;
-  repairActionKind?: "autoRepair" | "expand" | "compress" | "strengthenConflict" | "enhanceEmotion" | "unifyStyle" | "addDialogue" | "addDescription" | null;
+  repairActionKind?: "autoRepair" | "guidedRepair" | "expand" | "compress" | "strengthenConflict" | "enhanceEmotion" | "unifyStyle" | "addDialogue" | "addDescription" | null;
   generationActionKind?: "rewrite" | null;
   isReviewingChapter: boolean;
   isRepairingChapter: boolean;

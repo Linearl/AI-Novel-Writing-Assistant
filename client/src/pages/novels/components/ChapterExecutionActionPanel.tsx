@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { SSEFrame } from "@ai-novel/shared/types/api";
 import type { ChapterRuntimePackage } from "@ai-novel/shared/types/chapterRuntime";
 import type { AuditReport, Chapter, StoryStateSnapshot } from "@ai-novel/shared/types/novel";
@@ -5,6 +6,7 @@ import { Link } from "react-router-dom";
 import AiButton from "@/components/common/AiButton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import RepairProgressDialog from "./RepairProgressDialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ChapterExecutionStatusFlow from "./ChapterExecutionStatusFlow";
 import {
@@ -49,6 +51,7 @@ interface ChapterExecutionActionPanelProps {
   onCheckCharacterConsistency: () => void;
   onCheckPacing: () => void;
   onAutoRepair: () => void;
+  onGuidedRepair: (userInstruction: string) => void;
   onStrengthenConflict: () => void;
   onEnhanceEmotion: () => void;
   onUnifyStyle: () => void;
@@ -58,7 +61,7 @@ interface ChapterExecutionActionPanelProps {
   isGeneratingSceneCards: boolean;
   isSummarizingChapter: boolean;
   reviewActionKind?: "full_audit" | "continuity" | "character_consistency" | "pacing" | null;
-  repairActionKind?: "autoRepair" | "expand" | "compress" | "strengthenConflict" | "enhanceEmotion" | "unifyStyle" | "addDialogue" | "addDescription" | null;
+  repairActionKind?: "autoRepair" | "guidedRepair" | "expand" | "compress" | "strengthenConflict" | "enhanceEmotion" | "unifyStyle" | "addDialogue" | "addDescription" | null;
   generationActionKind?: "rewrite" | null;
   isReviewingChapter: boolean;
   isRepairingChapter: boolean;
@@ -67,6 +70,8 @@ interface ChapterExecutionActionPanelProps {
   isRunningFullAudit: boolean;
   isStreaming: boolean;
   streamingChapterId?: string | null;
+  repairStreamContent?: string;
+  isRepairStreaming?: boolean;
   repairStreamingChapterId?: string | null;
   chapterAuditReports: AuditReport[];
   chapterRuntimePackage?: ChapterRuntimePackage | null;
@@ -168,6 +173,70 @@ function resolvePrimaryAction(params: {
   };
 }
 
+function GuidedRepairButton({
+  disabled,
+  isRepairing,
+  onSubmit,
+}: {
+  disabled: boolean;
+  isRepairing: boolean;
+  onSubmit: (instruction: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [instruction, setInstruction] = useState("");
+
+  if (!open) {
+    return (
+      <AiButton
+        className="w-full"
+        variant="outline"
+        onClick={() => setOpen(true)}
+        disabled={disabled}
+      >
+        {isRepairing ? "正在按指导修复..." : "按指导修复"}
+      </AiButton>
+    );
+  }
+
+  return (
+    <div className="space-y-2 rounded-lg border bg-background p-3">
+      <div className="text-xs font-medium text-muted-foreground">输入修改方向或具体要求</div>
+      <textarea
+        className="w-full rounded-md border bg-background px-3 py-2 text-sm resize-none"
+        rows={3}
+        placeholder="例：把第3段的打斗场面写得更紧张一些，增加感官描写"
+        value={instruction}
+        onChange={(e) => setInstruction(e.target.value)}
+        maxLength={4000}
+      />
+      <div className="flex gap-2">
+        <AiButton
+          size="sm"
+          variant="secondary"
+          disabled={!instruction.trim() || disabled}
+          onClick={() => {
+            onSubmit(instruction.trim());
+            setOpen(false);
+            setInstruction("");
+          }}
+        >
+          开始修复
+        </AiButton>
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={() => {
+            setOpen(false);
+            setInstruction("");
+          }}
+        >
+          取消
+        </Button>
+      </div>
+    </div>
+  );
+}
+
 export default function ChapterExecutionActionPanel(props: ChapterExecutionActionPanelProps) {
   const {
     novelId,
@@ -191,6 +260,7 @@ export default function ChapterExecutionActionPanel(props: ChapterExecutionActio
     onCheckCharacterConsistency,
     onCheckPacing,
     onAutoRepair,
+    onGuidedRepair,
     onStrengthenConflict,
     onEnhanceEmotion,
     onUnifyStyle,
@@ -209,6 +279,8 @@ export default function ChapterExecutionActionPanel(props: ChapterExecutionActio
     isRunningFullAudit,
     isStreaming,
     streamingChapterId,
+    repairStreamContent,
+    isRepairStreaming,
     repairStreamingChapterId,
     chapterAuditReports,
     chapterRuntimePackage,
@@ -224,6 +296,7 @@ export default function ChapterExecutionActionPanel(props: ChapterExecutionActio
   const isExecutionContractPending = isGeneratingTaskSheet || isGeneratingSceneCards;
   const runtimePackage = chapterRuntimePackage?.chapterId === selectedChapter?.id ? chapterRuntimePackage : null;
   const displayedStatus = selectedChapter ? resolveDisplayedChapterStatus(selectedChapter) : undefined;
+  const [repairProgressOpen, setRepairProgressOpen] = useState(false);
 
   const selectedChapterLabel = selectedChapter
     ? `第${selectedChapter.order}章 ${selectedChapter.title || "未命名章节"}`
@@ -273,6 +346,7 @@ export default function ChapterExecutionActionPanel(props: ChapterExecutionActio
   );
 
   return (
+    <>
     <Card className="self-start overflow-hidden border-border/70 lg:sticky lg:top-4">
       <CardHeader className="gap-3 border-b bg-gradient-to-b from-muted/30 to-background pb-4">
         <div className="space-y-1">
@@ -319,6 +393,18 @@ export default function ChapterExecutionActionPanel(props: ChapterExecutionActio
             {showQuickRepairAction ? (
               <AiButton className="w-full" variant="secondary" onClick={onAutoRepair} disabled={!selectedChapter || isSelectedChapterRepairing}>
                 {isSelectedChapterRepairing && repairActionKind === "autoRepair" ? "正在自动修复..." : "自动修复问题"}
+              </AiButton>
+            ) : null}
+            {showQuickRepairAction ? (
+              <GuidedRepairButton
+                disabled={!selectedChapter || isSelectedChapterRepairing}
+                isRepairing={isSelectedChapterRepairing && repairActionKind === "guidedRepair"}
+                onSubmit={(instruction) => onGuidedRepair(instruction)}
+              />
+            ) : null}
+            {isSelectedChapterRepairing ? (
+              <AiButton className="w-full" variant="ghost" onClick={() => setRepairProgressOpen(true)}>
+                查看修复详情
               </AiButton>
             ) : null}
           </div>
@@ -466,5 +552,13 @@ export default function ChapterExecutionActionPanel(props: ChapterExecutionActio
         </details>
       </CardContent>
     </Card>
+    <RepairProgressDialog
+      open={repairProgressOpen}
+      onOpenChange={setRepairProgressOpen}
+      streamContent={repairStreamContent ?? ""}
+      isStreaming={!!isRepairStreaming}
+      onAbort={() => setRepairProgressOpen(false)}
+    />
+    </>
   );
 }

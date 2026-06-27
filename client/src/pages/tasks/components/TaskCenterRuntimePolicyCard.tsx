@@ -51,6 +51,8 @@ export default function TaskCenterRuntimePolicyCard({
   const [selectedMode, setSelectedMode] = useState<DirectorPolicyMode>(currentMode);
   const [allowExpensiveReview, setAllowExpensiveReview] = useState(false);
   const [mayOverwriteUserContent, setMayOverwriteUserContent] = useState(false);
+  const [autoRepair, setAutoRepair] = useState(true);
+  const [modelTier, setModelTier] = useState<"cheap_fast" | "balanced" | "high_quality">("balanced");
   const selectedOption = useMemo(
     () => POLICY_OPTIONS.find((item) => item.value === selectedMode) ?? POLICY_OPTIONS[2],
     [selectedMode],
@@ -60,6 +62,8 @@ export default function TaskCenterRuntimePolicyCard({
       mode: selectedMode,
       allowExpensiveReview,
       mayOverwriteUserContent,
+      autoRepair,
+      modelTier,
     }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: queryKeys.tasks.directorRuntime(taskId) });
@@ -74,7 +78,9 @@ export default function TaskCenterRuntimePolicyCard({
     setSelectedMode(currentMode);
     setAllowExpensiveReview(Boolean(snapshot?.policy.allowExpensiveReview));
     setMayOverwriteUserContent(Boolean(snapshot?.policy.mayOverwriteUserContent));
-  }, [currentMode, snapshot?.policy.allowExpensiveReview, snapshot?.policy.mayOverwriteUserContent]);
+    setAutoRepair(snapshot?.policy.autoRepair !== false);
+    setModelTier(snapshot?.policy.modelTier ?? "balanced");
+  }, [currentMode, snapshot?.policy.allowExpensiveReview, snapshot?.policy.mayOverwriteUserContent, snapshot?.policy.autoRepair, snapshot?.policy.modelTier]);
 
   if (!snapshot) {
     return null;
@@ -132,6 +138,32 @@ export default function TaskCenterRuntimePolicyCard({
             </span>
           </span>
         </label>
+        <label className="flex items-start gap-2 text-sm">
+          <input
+            type="checkbox"
+            className="mt-1"
+            checked={autoRepair}
+            onChange={(event) => setAutoRepair(event.target.checked)}
+          />
+          <span>
+            <span className="block font-medium">自动修复章节问题</span>
+            <span className="block text-xs leading-5 text-muted-foreground">
+              审校发现问题时自动启动修复流程，无需手动确认。
+            </span>
+          </span>
+        </label>
+      </div>
+      <div className="mt-3 space-y-2 rounded-md border bg-background/70 p-3">
+        <div className="text-sm font-medium">模型质量偏好</div>
+        <select
+          className="w-full rounded-md border bg-background px-3 py-2 text-sm"
+          value={modelTier}
+          onChange={(event) => setModelTier(event.target.value as "cheap_fast" | "balanced" | "high_quality")}
+        >
+          <option value="cheap_fast">经济模式（快速、低成本）</option>
+          <option value="balanced">均衡模式</option>
+          <option value="high_quality">高质量模式（更慢、更高成本）</option>
+        </select>
       </div>
       <div className="mt-3 flex flex-wrap gap-2">
         <Button
@@ -143,6 +175,8 @@ export default function TaskCenterRuntimePolicyCard({
               selectedMode === snapshot.policy.mode
               && allowExpensiveReview === Boolean(snapshot.policy.allowExpensiveReview)
               && mayOverwriteUserContent === Boolean(snapshot.policy.mayOverwriteUserContent)
+              && autoRepair === (snapshot.policy.autoRepair !== false)
+              && modelTier === (snapshot.policy.modelTier ?? "balanced")
             )
           }
         >

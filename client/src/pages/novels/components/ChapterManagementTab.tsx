@@ -50,6 +50,7 @@ export default function ChapterManagementTab(props: ChapterTabViewProps) {
     onCheckCharacterConsistency,
     onCheckPacing,
     onAutoRepair,
+    onGuidedRepair,
     onStrengthenConflict,
     onEnhanceEmotion,
     onUnifyStyle,
@@ -341,6 +342,7 @@ export default function ChapterManagementTab(props: ChapterTabViewProps) {
                   onCheckCharacterConsistency={onCheckCharacterConsistency}
                   onCheckPacing={onCheckPacing}
                   onAutoRepair={onAutoRepair}
+              onGuidedRepair={onGuidedRepair}
                   onStrengthenConflict={onStrengthenConflict}
                   onEnhanceEmotion={onEnhanceEmotion}
                   onUnifyStyle={onUnifyStyle}

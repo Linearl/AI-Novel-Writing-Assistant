@@ -15,6 +15,7 @@ export interface ChapterRepairExecutionOptions {
   model?: string;
   temperature?: number;
   repairMode?: PatchRepairMode;
+  userInstruction?: string;
 }
 
 export interface PrepareChapterRepairExecutionInput {
@@ -40,6 +41,7 @@ export interface ChapterHeavyRepairPromptRequest {
     issuesJson: string;
     ragContext: string;
     modeHint: string;
+    userInstruction?: string;
   };
   contextBlocks?: ReturnType<typeof buildChapterRepairContextBlocks>;
   options: {
@@ -293,6 +295,7 @@ export async function prepareChapterRepairExecution(
             issuesJson: buildRepairIssuesPayload(issues, input.runtimePackage),
             ragContext: buildRepairRagContext(input),
             modeHint,
+            userInstruction: input.options.userInstruction,
           },
           contextBlocks: resolveRepairContext(input)
             ? buildChapterRepairContextBlocks(resolveRepairContext(input) as ChapterRepairContext)
@@ -328,6 +331,7 @@ export async function prepareChapterRepairExecution(
         issuesJson: buildRepairIssuesPayload(issues, input.runtimePackage),
         ragContext: buildRepairRagContext(input),
         modeHint,
+        userInstruction: input.options.userInstruction,
       },
       contextBlocks: resolveRepairContext(input)
         ? buildChapterRepairContextBlocks(resolveRepairContext(input) as ChapterRepairContext)

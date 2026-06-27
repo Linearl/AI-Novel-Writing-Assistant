@@ -23,7 +23,7 @@ import {
 } from "@/api/novelDirector";
 import { queryKeys } from "@/api/queryKeys";
 import { getStyleProfiles } from "@/api/styleEngine";
-import { getTaskDetail } from "@/api/tasks";
+import { getTaskDetail, retryTask } from "@/api/tasks";
 import { Button } from "@/components/ui/button";
 import {
   AppDialogContent,
@@ -483,6 +483,37 @@ export default function NovelAutoDirectorDialog({
     },
   });
 
+  const retryMutation = useMutation({
+    mutationFn: async (resume: boolean) => {
+      const taskId = directorTask?.id || workflowTaskId;
+      if (!taskId) {
+        throw new Error("当前没有可重试的自动导演任务。");
+      }
+      return retryTask("novel_workflow", taskId, { resume });
+    },
+    onSuccess: async (response) => {
+      const nextWorkflowTaskId = response.data?.id ?? directorTask?.id ?? workflowTaskId;
+      if (nextWorkflowTaskId && nextWorkflowTaskId !== workflowTaskId) {
+        setWorkflowTaskId(nextWorkflowTaskId);
+        onWorkflowTaskChange?.(nextWorkflowTaskId);
+      }
+      await Promise.allSettled([
+        queryClient.invalidateQueries({ queryKey: ["tasks"] }),
+        ...(nextWorkflowTaskId ? [
+          queryClient.invalidateQueries({ queryKey: queryKeys.tasks.detail("novel_workflow", nextWorkflowTaskId) }),
+          queryClient.invalidateQueries({ queryKey: queryKeys.tasks.directorTaskSnapshot(nextWorkflowTaskId) }),
+          queryClient.invalidateQueries({ queryKey: queryKeys.tasks.directorRuntime(nextWorkflowTaskId) }),
+        ] : []),
+      ]);
+      setDialogMode("execution_progress");
+      setExecutionError("");
+      toast.success("自动导演任务已重新启动。");
+    },
+    onError: (error) => {
+      toast.error(error instanceof Error ? error.message : "重试自动导演失败。");
+    },
+  });
+
   const togglePreset = (preset: DirectorCorrectionPreset) => {
     setSelectedPresets((prev) => toggleDirectorCorrectionPreset(prev, preset));
   };
@@ -664,6 +695,9 @@ export default function NovelAutoDirectorDialog({
                 onConfirmAndContinue={() => continueMutation.mutate()}
                 isConfirmingAndContinuing={continueMutation.isPending}
                 onOpenTaskCenter={handleOpenTaskCenter}
+                onRetry={() => retryMutation.mutate(false)}
+                onRetryWithResume={() => retryMutation.mutate(true)}
+                retryPending={retryMutation.isPending}
               />
           )}
         </AppDialogContent>

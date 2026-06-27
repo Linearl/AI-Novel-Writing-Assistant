@@ -162,7 +162,7 @@ export function useNovelEditChapterRuntime({
     setChapterOperationMessage("已停止当前章节修复，你可以先查看当前修复结果，再决定是否继续。");
   };
 
-  const startChapterRepair = (issues: ReviewIssue[]) => {
+  const startChapterRepair = (issues: ReviewIssue[], userInstruction?: string) => {
     if (!selectedChapterId) {
       setChapterOperationMessage("请先选择章节。");
       return;
@@ -179,6 +179,7 @@ export function useNovelEditChapterRuntime({
       model: llm.model,
       reviewIssues: issues,
       auditIssueIds: openAuditIssueIds,
+      ...(userInstruction ? { userInstruction } : {}),
     });
   };
 

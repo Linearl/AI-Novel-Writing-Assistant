@@ -28,6 +28,7 @@ export interface ChapterRepairPromptInput {
   issuesJson: string;
   ragContext: string;
   modeHint?: string;
+  userInstruction?: string;
 }
 
 export const chapterSummaryPrompt: PromptAsset<
@@ -254,6 +255,11 @@ export const chapterRepairPrompt: PromptAsset<ChapterRepairPromptInput, string, 
       "【检索补充】",
       input.ragContext || "none",
       "",
+      ...(input.userInstruction ? [
+        "【用户修改指导】",
+        input.userInstruction,
+        "",
+      ] : []),
       "请直接输出修复后的完整章节正文。",
     ].join("\n")),
   ],

@@ -15,6 +15,7 @@ import type { UnifiedTaskDetail } from "@ai-novel/shared/types/task";
 import { getNovelDetail, getNovelQualityReport, getNovelVolumeWorkspace } from "@/api/novel";
 import { getDirectorBookAutomationProjection, getDirectorRuntimeProjection, getDirectorTaskSnapshot } from "@/api/novelDirector";
 import { continueNovelWorkflow, getActiveAutoDirectorTask } from "@/api/novelWorkflow";
+import { retryTask } from "@/api/tasks";
 import { queryKeys } from "@/api/queryKeys";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/toast";
@@ -426,6 +427,27 @@ export default function NovelWorkspaceRail(props: NovelWorkspaceRailProps) {
     },
   });
 
+  const retryDirectorMutation = useMutation({
+    mutationFn: async (resume: boolean) => {
+      if (!activeTask?.id) {
+        throw new Error("当前没有可重试的自动导演任务。");
+      }
+      return retryTask("novel_workflow", activeTask.id, { resume });
+    },
+    onSuccess: async () => {
+      await Promise.allSettled([
+        queryClient.invalidateQueries({ queryKey: queryKeys.novels.autoDirectorTask(novelId) }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.novels.directorBookAutomation(novelId) }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.detail("novel_workflow", activeTask?.id ?? "") }),
+        queryClient.invalidateQueries({ queryKey: ["tasks"] }),
+      ]);
+      toast.success("自动导演任务已重新启动。");
+    },
+    onError: (error) => {
+      toast.error(error instanceof Error ? error.message : "重试自动导演失败。");
+    },
+  });
+
   return (
     <>
       <aside
@@ -632,6 +654,9 @@ export default function NovelWorkspaceRail(props: NovelWorkspaceRailProps) {
               onConfirmAndContinue={() => continueDirectorMutation.mutate()}
               isConfirmingAndContinuing={continueDirectorMutation.isPending}
               onOpenTaskCenter={openTaskCenter}
+              onRetry={() => retryDirectorMutation.mutate(false)}
+              onRetryWithResume={() => retryDirectorMutation.mutate(true)}
+              retryPending={retryDirectorMutation.isPending}
             />
           </div>
         </DialogContent>

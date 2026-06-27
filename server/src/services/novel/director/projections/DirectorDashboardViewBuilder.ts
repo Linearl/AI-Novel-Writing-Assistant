@@ -290,8 +290,11 @@ function buildActions(mode: DirectorDashboardMode): {
   }
   if (mode === "failed") {
     return {
-      primaryAction: action("open_task_center", "查看执行详情", "primary"),
-      secondaryActions: [action("resume_from_checkpoint", "从最近进度恢复", "secondary")],
+      primaryAction: action("retry", "重试任务", "primary"),
+      secondaryActions: [
+        action("resume_from_checkpoint", "从最近进度恢复", "secondary"),
+        action("open_task_center", "查看执行详情", "secondary"),
+      ],
     };
   }
   if (mode === "recovering") {

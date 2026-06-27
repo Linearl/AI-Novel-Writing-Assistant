@@ -12,6 +12,7 @@ export function buildDefaultDirectorPolicy(
     mayOverwriteUserContent: false,
     maxAutoRepairAttempts: 1,
     allowExpensiveReview: false,
+    autoRepair: true,
     modelTier: "balanced",
     updatedAt: new Date().toISOString(),
   };

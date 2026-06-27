@@ -40,6 +40,9 @@ interface NovelAutoDirectorProgressPanelProps {
   onConfirmAndContinue?: () => void;
   isConfirmingAndContinuing?: boolean;
   onOpenTaskCenter: () => void;
+  onRetry?: () => void;
+  onRetryWithResume?: () => void;
+  retryPending?: boolean;
 }
 
 type DirectorStepVisualStatus = "pending" | "running" | "completed" | "failed";
@@ -319,6 +322,9 @@ export default function NovelAutoDirectorProgressPanel({
   onConfirmAndContinue,
   isConfirmingAndContinuing = false,
   onOpenTaskCenter,
+  onRetry,
+  onRetryWithResume,
+  retryPending = false,
 }: NovelAutoDirectorProgressPanelProps) {
   const taskChapterTitleWarning = resolveChapterTitleWarning(task);
   const chapterTitleRepairMutation = useDirectorChapterTitleRepair();
@@ -438,11 +444,20 @@ export default function NovelAutoDirectorProgressPanel({
         variant: dashboardAction.emphasis === "primary" ? ("default" as const) : ("outline" as const),
       };
     }
-    if (dashboardAction.type === "resume_from_checkpoint" || dashboardAction.type === "retry") {
+    if (dashboardAction.type === "retry") {
       return {
-        label: dashboardAction.label,
-        onClick: onOpenTaskCenter,
+        label: retryPending ? "重试中..." : dashboardAction.label,
+        onClick: onRetry ?? onOpenTaskCenter,
+        variant: dashboardAction.emphasis === "primary" ? ("default" as const) : ("outline" as const),
+        disabled: retryPending,
+      };
+    }
+    if (dashboardAction.type === "resume_from_checkpoint") {
+      return {
+        label: retryPending ? "恢复中..." : dashboardAction.label,
+        onClick: onRetryWithResume ?? onRetry ?? onOpenTaskCenter,
         variant: "outline" as const,
+        disabled: retryPending,
       };
     }
     return null;

@@ -350,6 +350,7 @@ export interface DirectorRuntimePolicySnapshot {
   mayOverwriteUserContent: boolean;
   maxAutoRepairAttempts: 1;
   allowExpensiveReview: boolean;
+  autoRepair: boolean;
   modelTier: "cheap_fast" | "balanced" | "high_quality";
   updatedAt: string;
 }
@@ -358,6 +359,7 @@ export interface DirectorRuntimePolicyUpdateRequest {
   mode: DirectorPolicyMode;
   mayOverwriteUserContent?: boolean;
   allowExpensiveReview?: boolean;
+  autoRepair?: boolean;
   modelTier?: DirectorRuntimePolicySnapshot["modelTier"];
 }
 
