@@ -40,7 +40,27 @@ function clearStaleOptimizeCache(rootDir: string): void {
 
 function resolveDevProxyTarget(): string {
   const configuredHost = process.env.HOST?.trim();
-  const port = Number(process.env.PORT ?? 3000);
+
+  // 优先从环境变量读取，否则从 server/.env 文件读取 PORT。
+  // server 通过 dotenv 加载 server/.env，但 Vite 进程不会自动加载它，
+  // 导致 process.env.PORT 未定义时回退到 3000，而 server 实际监听 3100。
+  let port = Number(process.env.PORT);
+  if (!Number.isFinite(port) || port <= 0) {
+    try {
+      const serverEnvPath = path.resolve(__dirname, "../server/.env");
+      const serverEnvContent = fs.readFileSync(serverEnvPath, "utf8");
+      const portMatch = serverEnvContent.match(/^PORT\s*=\s*(\d+)/m);
+      if (portMatch) {
+        port = Number(portMatch[1]);
+      }
+    } catch {
+      // server/.env 不存在或不可读，使用默认值
+    }
+  }
+  if (!Number.isFinite(port) || port <= 0) {
+    port = 3000;
+  }
+
   const targetHost = configuredHost && !["0.0.0.0", "::"].includes(configuredHost)
     ? configuredHost
     : "127.0.0.1";
