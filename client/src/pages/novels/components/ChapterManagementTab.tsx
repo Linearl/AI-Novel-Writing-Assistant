@@ -1,4 +1,6 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -104,6 +106,17 @@ export default function ChapterManagementTab(props: ChapterTabViewProps) {
   const [assetTab, setAssetTab] = useState<AssetTabKey>("content");
   const [queueFilter, setQueueFilter] = useState<QueueFilterKey>("all");
   const [rightRailTab, setRightRailTab] = useState<"insights" | "reference" | "agent">("insights");
+  const [rightRailCollapsed, setRightRailCollapsed] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return localStorage.getItem("ai-novel.chapter-execution.right-rail.collapsed") === "true";
+  });
+  const toggleRightRail = useCallback(() => {
+    setRightRailCollapsed((prev) => {
+      const next = !prev;
+      localStorage.setItem("ai-novel.chapter-execution.right-rail.collapsed", String(next));
+      return next;
+    });
+  }, []);
 
   const openAuditIssues = useMemo(
     () => chapterAuditReports.flatMap((report) => report.issues.filter((issue) => issue.status === "open").map((issue) => ({
@@ -174,7 +187,15 @@ export default function ChapterManagementTab(props: ChapterTabViewProps) {
           </div>
         ) : null}
 
-        <div className="flex flex-col gap-4 xl:grid xl:h-[calc(100dvh-8rem)] xl:grid-cols-[300px_minmax(0,1fr)_332px] xl:items-stretch">
+        <div
+          className={cn(
+            "flex flex-col gap-4 xl:grid xl:h-[calc(100dvh-8rem)] xl:items-stretch",
+            rightRailCollapsed
+              ? "xl:grid-cols-[300px_minmax(0,1fr)_40px]"
+              : "xl:grid-cols-[300px_minmax(0,1fr)_332px]",
+            "transition-[grid-template-columns] duration-200 ease-in-out",
+          )}
+        >
           <div className="h-full min-h-0">
             <ChapterExecutionQueueCard
               chapters={filteredChapters}
@@ -223,11 +244,32 @@ export default function ChapterManagementTab(props: ChapterTabViewProps) {
               }}
               className="flex h-full min-h-0 flex-col"
             >
-              <TabsList className="grid h-auto w-full shrink-0 grid-cols-3 rounded-xl bg-muted/50 p-1.5">
-                <TabsTrigger value="insights" className="rounded-lg px-3 py-2 text-sm">动态栏</TabsTrigger>
-                <TabsTrigger value="reference" className="rounded-lg px-3 py-2 text-sm">资料诊断</TabsTrigger>
-                <TabsTrigger value="agent" className="rounded-lg px-3 py-2 text-sm">AI 执行台</TabsTrigger>
+              <TabsList
+                className={cn(
+                  "h-auto w-full shrink-0 rounded-xl bg-muted/50 p-1.5",
+                  rightRailCollapsed ? "flex" : "grid grid-cols-4",
+                )}
+              >
+                <button
+                  onClick={toggleRightRail}
+                  className="flex h-full w-8 shrink-0 items-center justify-center rounded-lg hover:bg-muted"
+                  title={rightRailCollapsed ? "展开侧栏" : "折叠侧栏"}
+                >
+                  {rightRailCollapsed ? (
+                    <ChevronLeft className="h-4 w-4" />
+                  ) : (
+                    <ChevronRight className="h-4 w-4" />
+                  )}
+                </button>
+                {!rightRailCollapsed && (
+                  <>
+                    <TabsTrigger value="insights" className="rounded-lg px-3 py-2 text-sm">动态栏</TabsTrigger>
+                    <TabsTrigger value="reference" className="rounded-lg px-3 py-2 text-sm">资料诊断</TabsTrigger>
+                    <TabsTrigger value="agent" className="rounded-lg px-3 py-2 text-sm">AI 执行台</TabsTrigger>
+                  </>
+                )}
               </TabsList>
+              {!rightRailCollapsed && (<>
               <TabsContent value="insights" className="mt-3 min-h-0 flex-1">
                 <ChapterExecutionInsightsSidebar
                   selectedChapter={selectedChapter}
@@ -327,6 +369,7 @@ export default function ChapterManagementTab(props: ChapterTabViewProps) {
                   repairStreamingChapterId={repairStreamingChapterId}
                 />
               </TabsContent>
+              </>)}
             </Tabs>
           </div>
         </div>

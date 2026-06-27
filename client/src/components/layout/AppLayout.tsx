@@ -1,4 +1,5 @@
 import { Suspense, useEffect, useMemo, useState } from "react";
+import { ThemeProvider } from "next-themes";
 import { matchPath, Outlet, useLocation } from "react-router-dom";
 import AppRouteFallback from "./AppRouteFallback";
 import DesktopModelSetupGate from "./DesktopModelSetupGate";
@@ -102,6 +103,7 @@ export default function AppLayout() {
   }
 
   return (
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
     <TaskRecoveryProvider>
       <div className="min-h-screen bg-background">
         <LLMSelectionBootstrap />
@@ -136,5 +138,6 @@ export default function AppLayout() {
         <TaskRecoveryDialog />
       </div>
     </TaskRecoveryProvider>
+    </ThemeProvider>
   );
 }

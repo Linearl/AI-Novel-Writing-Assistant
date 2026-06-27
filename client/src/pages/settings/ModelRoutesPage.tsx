@@ -13,6 +13,7 @@ import {
 } from "@/api/settings";
 import { queryKeys } from "@/api/queryKeys";
 import { Badge } from "@/components/ui/badge";
+import { isRunnableProviderConfig } from "@/lib/llmSelection";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
@@ -115,7 +116,12 @@ export default function ModelRoutesPage() {
   const modelRouteConnectivity = modelRouteConnectivityQuery.data?.data;
   const structuredFallback = structuredFallbackQuery.data?.data;
   const taskTypes = modelRoutes?.taskTypes ?? [];
-  const providerOptions = useMemo(() => providerConfigs.map((item) => item.provider), [providerConfigs]);
+  const providerOptions = useMemo(() => {
+    const runnable = providerConfigs.filter(isRunnableProviderConfig).map((item) => item.provider);
+    const existingProviders = (modelRoutes?.routes ?? []).map((r) => r.provider);
+    const protectedProviders = existingProviders.filter((p) => !runnable.includes(p));
+    return [...runnable, ...protectedProviders];
+  }, [providerConfigs, modelRoutes?.routes]);
   const routeMap = useMemo(() => new Map((modelRoutes?.routes ?? []).map((item) => [item.taskType, item])), [modelRoutes?.routes]);
   const connectivityMap = useMemo(
     () => new Map((modelRouteConnectivity?.statuses ?? []).map((item) => [item.taskType, item])),
