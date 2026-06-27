@@ -21,6 +21,7 @@ import { registerNovelWorldSliceRoutes } from "../setup/http/novelWorldSliceRout
 import novelChapterSummaryRouter from "../production/http/novelChapterSummary";
 import novelDecisionsRouter from "../state/http/novelDecisions";
 import { createNovelImportRoutes } from "./novelImportRoutes";
+import { createNovelRiskRoutes } from "../risk/http/novelRiskRoutes";
 import type { NovelHttpServices } from "./novelHttpServices";
 import {
   aiRevisionPreviewSchema,
@@ -224,4 +225,5 @@ export function registerNovelHttpRoutes(router: Router, services: NovelHttpServi
   router.use(novelDecisionsRouter);
   router.use(novelChapterSummaryRouter);
   router.use(createNovelImportRoutes());
+  router.use(createNovelRiskRoutes());
 }

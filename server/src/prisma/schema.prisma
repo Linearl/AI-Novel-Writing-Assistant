@@ -399,6 +399,7 @@ model Novel {
   sideEffectJobs     NovelSideEffectJob[]
   novelWorld         NovelWorld?
   factEntries        NovelFactEntry[]
+  risks              NovelRisk[]
   createdAt          DateTime    @default(now())
   updatedAt         DateTime    @updatedAt
 
@@ -521,6 +522,7 @@ model Chapter {
   characterResourceEvents CharacterResourceEvent[]
   artifactSyncCheckpoints ChapterArtifactSyncCheckpoint[]
   volumeChapterPlans VolumeChapterPlan[]
+  risks           NovelRisk[]
   createdAt       DateTime               @default(now())
   updatedAt       DateTime               @updatedAt
   deletedAt       DateTime?
@@ -3396,4 +3398,49 @@ model ComicBatchJob {
   @@index([projectId, createdAt])
   @@index([episodeId, status])
   @@index([type, status])
+}
+
+model NovelRisk {
+  id              String   @id @default(cuid())
+  novelId         String
+  type            String   @default("quality")
+  severity        String   @default("medium")
+  status          String   @default("open")
+  title           String
+  description     String?
+  chapterId       String?
+  chapterRange    String?
+  volumeId        String?
+  impactAssessment String?
+  triggerSource   String?
+  sourceMetadata  String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  resolvedAt      DateTime?
+  reopenedAt      DateTime?
+  reopenedCount   Int      @default(0)
+  exportedAt      DateTime?
+
+  novel          Novel           @relation(fields: [novelId], references: [id], onDelete: Cascade)
+  chapter        Chapter?        @relation(fields: [chapterId], references: [id], onDelete: SetNull)
+  auditLogs      RiskAuditLog[]
+
+  @@index([novelId, status])
+  @@index([novelId, type])
+  @@index([chapterId])
+}
+
+model RiskAuditLog {
+  id          String   @id @default(cuid())
+  riskId      String
+  action      String   @default("created")
+  actor       String   @default("system")
+  comment     String?
+  prevStatus  String?
+  newStatus   String?
+  createdAt   DateTime @default(now())
+
+  risk        NovelRisk @relation(fields: [riskId], references: [id], onDelete: Cascade)
+
+  @@index([riskId])
 }

@@ -197,6 +197,7 @@ export interface DirectorAutoExecutionPlan {
   autoReview?: boolean;
   autoRepair?: boolean;
   artifactSyncMode?: ArtifactSyncMode;
+  pipelineMode?: "batch" | "pipeline";
 }
 
 export interface DirectorFullBookAutopilotContract {
@@ -282,6 +283,13 @@ export interface DirectorAutoExecutionState extends DirectorAutoExecutionPlan {
   pipelineStatus?: PipelineJobStatus | null;
   qualityRepairRisk?: DirectorQualityRepairRisk | null;
   circuitBreaker?: DirectorCircuitBreakerState | null;
+  pipelineMode?: "batch" | "pipeline";
+  pipelineState?: {
+    refinementProgress: { total: number; completed: number; currentChapterId?: string | null };
+    writingProgress: { total: number; completed: number; currentChapterId?: string | null };
+    blockedChapterId?: string | null;
+    blockingReason?: "quality_review" | "manual_approval" | null;
+  };
 }
 
 export type DirectorQualityRepairRiskLevel = "low" | "large_scope" | "replan";

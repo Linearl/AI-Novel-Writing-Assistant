@@ -15,6 +15,7 @@ export interface DirectorAutoExecutionDraftState {
   volumeOrder: string;
   autoReview: boolean;
   autoRepair: boolean;
+  pipelineMode: "batch" | "pipeline";
 }
 
 const DEFAULT_DIRECTOR_AUTO_EXECUTION_DRAFT: DirectorAutoExecutionDraftState = {
@@ -24,6 +25,7 @@ const DEFAULT_DIRECTOR_AUTO_EXECUTION_DRAFT: DirectorAutoExecutionDraftState = {
   volumeOrder: "1",
   autoReview: true,
   autoRepair: true,
+  pipelineMode: "batch",
 };
 
 type DirectorAutoExecutionPlanUsage = "new_book" | "takeover";
@@ -107,6 +109,7 @@ export function normalizeDirectorAutoExecutionDraftState(
       volumeOrder: DEFAULT_DIRECTOR_AUTO_EXECUTION_DRAFT.volumeOrder,
       autoReview: plan.autoReview ?? true,
       autoRepair: plan.autoReview === false ? false : (plan.autoRepair ?? true),
+      pipelineMode: plan.pipelineMode ?? "batch",
     };
   }
   if (plan?.mode === "chapter_range") {
@@ -119,6 +122,7 @@ export function normalizeDirectorAutoExecutionDraftState(
       volumeOrder: DEFAULT_DIRECTOR_AUTO_EXECUTION_DRAFT.volumeOrder,
       autoReview: plan.autoReview ?? true,
       autoRepair: plan.autoReview === false ? false : (plan.autoRepair ?? true),
+      pipelineMode: plan.pipelineMode ?? "batch",
     };
   }
   if (plan?.mode === "volume") {
@@ -129,6 +133,7 @@ export function normalizeDirectorAutoExecutionDraftState(
       volumeOrder: String(normalizePositiveInteger(plan.volumeOrder, 1)),
       autoReview: plan.autoReview ?? true,
       autoRepair: plan.autoReview === false ? false : (plan.autoRepair ?? true),
+      pipelineMode: plan.pipelineMode ?? "batch",
     };
   }
   return {
@@ -151,6 +156,7 @@ export function buildDirectorAutoExecutionPlanFromDraft(
       mode: "book",
       autoReview: draft.autoReview,
       autoRepair: draft.autoReview ? draft.autoRepair : false,
+    pipelineMode: draft.pipelineMode,
     };
   }
   if (draft.mode === "chapter_range") {
@@ -165,6 +171,7 @@ export function buildDirectorAutoExecutionPlanFromDraft(
       endOrder,
       autoReview: draft.autoReview,
       autoRepair: draft.autoReview ? draft.autoRepair : false,
+    pipelineMode: draft.pipelineMode,
     };
   }
   if (draft.mode === "volume") {
@@ -173,6 +180,7 @@ export function buildDirectorAutoExecutionPlanFromDraft(
       volumeOrder: options?.usage === "new_book" ? 1 : normalizePositiveInteger(draft.volumeOrder, 1),
       autoReview: draft.autoReview,
       autoRepair: draft.autoReview ? draft.autoRepair : false,
+    pipelineMode: draft.pipelineMode,
     };
   }
   const endOrder = clampChapterOrder(normalizePositiveInteger(draft.endOrder, 10), options?.maxChapterCount);
@@ -182,6 +190,7 @@ export function buildDirectorAutoExecutionPlanFromDraft(
     endOrder,
     autoReview: draft.autoReview,
     autoRepair: draft.autoReview ? draft.autoRepair : false,
+    pipelineMode: draft.pipelineMode,
   };
 }
 
@@ -369,6 +378,20 @@ export function DirectorAutoExecutionPlanFields({
             disabled={!draft.autoReview}
             onCheckedChange={(checked) => onChange({ autoRepair: checked })}
             aria-label="切换审核后是否自动修复"
+          />
+        </div>
+
+        <div className="mt-4 flex items-start justify-between gap-3">
+          <div className="min-w-0 space-y-1">
+            <div className="text-sm font-medium text-foreground">流水线执行模式</div>
+            <div className={`text-xs leading-5 text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>
+              开启后，章节细化与写作交错执行（细化第N+1章的同时写作第N章），提升并行效率。关闭时为传统批量模式。
+            </div>
+          </div>
+          <Switch
+            checked={draft.pipelineMode === "pipeline"}
+            onCheckedChange={(checked) => onChange({ pipelineMode: checked ? "pipeline" : "batch" })}
+            aria-label="切换流水线执行模式"
           />
         </div>
       </div>
