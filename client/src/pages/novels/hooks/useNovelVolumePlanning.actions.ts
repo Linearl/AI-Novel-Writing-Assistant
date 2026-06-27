@@ -22,6 +22,7 @@ export interface VolumeGenerationPayload {
   detailMode?: ChapterDetailMode;
   draftVolumesOverride?: VolumePlan[];
   suppressSuccessMessage?: boolean;
+  referenceExisting?: boolean;
 }
 
 export function startStrategyGenerationAction(params: {
@@ -93,6 +94,7 @@ export function startBeatSheetGenerationAction(params: {
   beatSheets: VolumeBeatSheet[];
   ensureCharacterGuard: () => boolean;
   setStructuredMessage: (value: string) => void;
+  referenceExisting?: boolean;
   generate: (payload: VolumeGenerationPayload) => void;
 }): void {
   const targetVolume = params.normalizedVolumeDraft.find((volume) => volume.id === params.volumeId);
@@ -121,6 +123,7 @@ export function startBeatSheetGenerationAction(params: {
   params.generate({
     scope: "beat_sheet",
     targetVolumeId: params.volumeId,
+    referenceExisting: params.referenceExisting,
   });
 }
 

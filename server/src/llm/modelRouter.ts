@@ -295,8 +295,7 @@ export async function resolveModel(
         requestProtocol: "requestProtocol" in row ? row.requestProtocol : null,
         structuredResponseFormat: "structuredResponseFormat" in row ? row.structuredResponseFormat : null,
       });
-      const defaultCw = isBuiltInProvider(provider) ? PROVIDERS[provider].defaultContextWindow : undefined;
-      const contextWindow = row.contextWindow ?? defaultCw ?? 1048576;
+      const contextWindow = row.contextWindow ?? 1048576;
       const resolved: ResolvedModel = {
         provider,
         model: row.model,

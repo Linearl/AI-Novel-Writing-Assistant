@@ -1,0 +1,52 @@
+{
+  "status": "done",
+  "route": "req",
+  "timestamp": "2026-06-27T14:53:52.183Z",
+  "taskPath": "docs_dev/1.task/B.todo/v0.1/v0.1-r2009-simple-model-provider-filter",
+  "reqId": "2009",
+  "title": "模型路由设置页厂商筛选",
+  "category": "2xxx-核心功能开发",
+  "complexity": "simple",
+  "skipClarification": true,
+  "skipDesign": false,
+  "artifacts": [
+    {
+      "path": "docs_dev/1.task/B.todo/v0.1/v0.1-r2009-simple-model-provider-filter/REQ-2009.md",
+      "kind": "requirements"
+    },
+    {
+      "path": "docs_dev/1.task/B.todo/v0.1/v0.1-r2009-simple-model-provider-filter/design.md",
+      "kind": "design"
+    },
+    {
+      "path": "docs_dev/1.task/B.todo/v0.1/v0.1-r2009-simple-model-provider-filter/tasks.md",
+      "kind": "tasks"
+    }
+  ],
+  "unresolved_items": [],
+  "assumptions": [
+    "isRunnableProviderConfig() 过滤逻辑已完备且经过验证",
+    "/settings/api-keys 返回的 isConfigured/isActive 字段准确",
+    "已有路由引用的厂商可通过 routes 列表获取"
+  ],
+  "blocking_reasons": [],
+  "decisions": [
+    {
+      "id": "D1",
+      "point": "复用 isRunnableProviderConfig 而非新增过滤"
+    },
+    {
+      "id": "D2",
+      "point": "客户端过滤而非服务端"
+    },
+    {
+      "id": "D3",
+      "point": "保护已有路由引用"
+    }
+  ],
+  "handoff": {
+    "from": "req",
+    "to": "dev",
+    "ticketPath": "docs_dev/1.task/B.todo/v0.1/v0.1-r2009-simple-model-provider-filter/README.md"
+  }
+}

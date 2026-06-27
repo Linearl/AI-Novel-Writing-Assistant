@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import AiButton from "@/components/common/AiButton";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -50,6 +50,7 @@ export default function StructuredBeatSheetCard(props: StructuredBeatSheetCardPr
   } = props;
 
   const hasExistingBeatSheet = Boolean(selectedBeatSheet);
+  const [referenceExisting, setReferenceExisting] = useState(true);
   const volumeTitle = selectedVolume.title?.trim() || `第${selectedVolume.sortOrder}卷`;
   const volumeSummary = selectedVolume.mainPromise?.trim()
     || selectedVolume.summary?.trim()
@@ -66,13 +67,25 @@ export default function StructuredBeatSheetCard(props: StructuredBeatSheetCardPr
             <CardTitle className="text-base">当前卷节奏</CardTitle>
             <div className="text-sm text-muted-foreground">先看当前聚焦区间，再在下方按节奏分组的章节导航里切换节奏并选章细化。</div>
           </div>
-          <AiButton
-            variant="outline"
-            onClick={() => onGenerateBeatSheet(selectedVolume.id)}
-            disabled={isGeneratingBeatSheet || !readiness.canGenerateBeatSheet}
-          >
-            {generateButtonLabel}
-          </AiButton>
+          <div className="flex flex-col items-end gap-2">
+            {hasExistingBeatSheet ? (
+              <label className="flex items-center gap-2 text-xs text-muted-foreground">
+                <input
+                  type="checkbox"
+                  checked={referenceExisting}
+                  onChange={(e) => setReferenceExisting(e.target.checked)}
+                />
+                <span>参考已有章节剧情</span>
+              </label>
+            ) : null}
+            <AiButton
+              variant="outline"
+              onClick={() => onGenerateBeatSheet(selectedVolume.id, { referenceExisting })}
+              disabled={isGeneratingBeatSheet || !readiness.canGenerateBeatSheet}
+            >
+              {generateButtonLabel}
+            </AiButton>
+          </div>
         </div>
       </CardHeader>
       <CardContent>

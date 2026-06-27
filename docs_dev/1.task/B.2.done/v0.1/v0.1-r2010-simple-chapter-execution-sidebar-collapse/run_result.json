@@ -1,0 +1,52 @@
+{
+  "status": "done",
+  "route": "req",
+  "timestamp": "2026-06-27T14:53:52.390Z",
+  "taskPath": "docs_dev/1.task/B.todo/v0.1/v0.1-r2010-simple-chapter-execution-sidebar-collapse",
+  "reqId": "2010",
+  "title": "步骤6右侧边栏折叠",
+  "category": "2xxx-核心功能开发",
+  "complexity": "simple",
+  "skipClarification": true,
+  "skipDesign": false,
+  "artifacts": [
+    {
+      "path": "docs_dev/1.task/B.todo/v0.1/v0.1-r2010-simple-chapter-execution-sidebar-collapse/REQ-2010.md",
+      "kind": "requirements"
+    },
+    {
+      "path": "docs_dev/1.task/B.todo/v0.1/v0.1-r2010-simple-chapter-execution-sidebar-collapse/design.md",
+      "kind": "design"
+    },
+    {
+      "path": "docs_dev/1.task/B.todo/v0.1/v0.1-r2010-simple-chapter-execution-sidebar-collapse/tasks.md",
+      "kind": "tasks"
+    }
+  ],
+  "unresolved_items": [],
+  "assumptions": [
+    "CSS transition 支持 grid-template-columns 动画",
+    "仅修改 ChapterManagementTab.tsx 一个文件",
+    "移动端不需要折叠功能（已是单栏堆叠）"
+  ],
+  "blocking_reasons": [],
+  "decisions": [
+    {
+      "id": "D1",
+      "point": "Grid 列从 332px 缩到 40px 而非 0px"
+    },
+    {
+      "id": "D2",
+      "point": "折叠按钮放在 Tab 栏最左侧"
+    },
+    {
+      "id": "D3",
+      "point": "localStorage 持久化"
+    }
+  ],
+  "handoff": {
+    "from": "req",
+    "to": "dev",
+    "ticketPath": "docs_dev/1.task/B.todo/v0.1/v0.1-r2010-simple-chapter-execution-sidebar-collapse/README.md"
+  }
+}

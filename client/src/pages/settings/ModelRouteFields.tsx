@@ -103,15 +103,16 @@ export default function ModelRouteFields({
       </div>
 
       <div className="space-y-1">
-        <div className="text-xs text-muted-foreground">上下文窗口（Token）</div>
-        <Input
-          value={draft.contextWindow ?? ""}
-          placeholder="默认 1048576（1M）"
-          onChange={(event) => {
-            const v = event.target.value.trim();
-            onPatch({ contextWindow: v === "" ? null : Number(v) });
-          }}
-        />
+        <label className="flex items-center gap-2 text-xs text-muted-foreground">
+          <input
+            type="checkbox"
+            checked={(draft.contextWindow ?? 0) <= 262144}
+            onChange={(event) => {
+              onPatch({ contextWindow: event.target.checked ? 256000 : null });
+            }}
+          />
+          <span>使用 256K 上下文窗口（默认 1M）</span>
+        </label>
       </div>
 
       {showProtocolFields ? (

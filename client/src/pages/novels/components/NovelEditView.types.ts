@@ -253,7 +253,7 @@ export interface StructuredTabViewProps extends Omit<
   rebalanceDecisions: VolumeRebalanceDecision[];
   draftText: string;
   isGeneratingBeatSheet: boolean;
-  onGenerateBeatSheet: (volumeId: string) => void;
+  onGenerateBeatSheet: (volumeId: string, options?: { referenceExisting?: boolean }) => void;
   isGeneratingChapterList: boolean;
   generatingChapterListVolumeId: string;
   generatingChapterListBeatKey: string;

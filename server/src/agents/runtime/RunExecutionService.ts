@@ -4,6 +4,23 @@ import { AgentTraceStore } from "../traceStore";
 import { getAgentToolDefinition } from "../toolRegistry";
 import { composeAssistantMessage } from "./answerComposer";
 import { applyToolResultContext, resolveToolInput } from "./executionContext";
+
+const TOOL_CALL_LOOP_THRESHOLD = Number(process.env.TOOL_CALL_LOOP_THRESHOLD) || 3;
+
+function stableStringify(value: unknown): string {
+  if (value === null || value === undefined || typeof value !== "object") {
+    return JSON.stringify(value);
+  }
+  if (Array.isArray(value)) {
+    return `[${value.map(stableStringify).join(",")}]`;
+  }
+  const entries = Object.entries(value as Record<string, unknown>).sort(([a], [b]) => a.localeCompare(b));
+  return `{${entries.map(([k, v]) => `${JSON.stringify(k)}:${stableStringify(v)}`).join(",")}}`;
+}
+
+function buildToolCallKey(call: ToolCall): string {
+  return `${call.tool}:${stableStringify(call.input)}`;
+}
 import {
   APPROVAL_TTL_MS,
   MAX_TOOL_RETRIES,
@@ -274,6 +291,7 @@ export class RunExecutionService {
     const allResults: ToolExecutionResult[] = [];
     let currentContext = { ...context };
     let waitingForApproval = false;
+    const toolCallHistory = new Map<string, number>();
     for (let actionIndex = 0; actionIndex < plannedActions.length; actionIndex += 1) {
       const action = plannedActions[actionIndex];
       await this.store.updateRun(runId, {
@@ -311,6 +329,32 @@ export class RunExecutionService {
             }),
             error: message,
             errorCode: "PERMISSION_DENIED",
+            provider: context.provider,
+            model: context.model,
+          });
+          await failRun(runId, message, action.agent, callbacks);
+          return this.getRunDetailOrThrow(runId, message);
+        }
+
+        // Tool call loop detection
+        const callKey = buildToolCallKey({ ...call, input: resolvedInput });
+        const callCount = (toolCallHistory.get(callKey) ?? 0) + 1;
+        toolCallHistory.set(callKey, callCount);
+        if (callCount >= TOOL_CALL_LOOP_THRESHOLD) {
+          const message = `工具 ${call.tool} 已使用相同参数调用 ${callCount} 次，疑似陷入循环。请换一种方式完成任务，例如使用不同的工具、修改参数、或向用户说明情况。`;
+          await this.store.addStep({
+            runId,
+            agentName: action.agent,
+            stepType: "tool_result",
+            status: "failed",
+            inputJson: safeJson({
+              tool: call.tool,
+              reason: call.reason,
+              loopDetection: true,
+              callCount,
+            }),
+            error: message,
+            errorCode: "LOOP_DETECTED",
             provider: context.provider,
             model: context.model,
           });

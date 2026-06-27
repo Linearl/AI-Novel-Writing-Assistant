@@ -18,22 +18,23 @@ description: "需求任务总清单（SSOT）"
 
 | 编号 | 任务标题 | 优先级 | 当前状态 | 来源层 | 目标版本 | 开始日期 | 完成日期 | 详情文档 | 备注 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 2001 | 从导出文件导入创建新书 | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2001-complex-import-from-export/README.md` |  |
-| 2002 | 流式生成死循环检测与提前打断 | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2002-complex-streaming-loop-detector/README.md` |  |
-| 2003 | 章节细化同步后状态重置修复 | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2003-simple-chapter-sync-status-reset/README.md` |  |
-| 2004 | Creative Hub Agent 执行可观测性增强 | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2004-complex-creative-hub-observability/README.md` |  |
-| 2005 | 步骤 6 新建章节删除与误操作恢复 | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2005-medium-user-directed-chapter-repair/README.md` |  |
-| 2006 | 步骤 4 每卷章节数手动调整 | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2006-medium-director-failed-retry-entry/README.md` |  |
-| 2007 | 节奏板重新生成时注入历史上下文 | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2007-medium-chapter-token-budget-dynamic/README.md` |  |
-| 2008 | 模型上下文窗口配置与自动压缩 | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2008-complex-context-window-awareness/README.md` |  |
-| 2009 | 模型路由设置页厂商筛选 | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2009-simple-model-provider-filter/README.md` |  |
-| 2010 | 步骤 6 右侧边栏折叠 | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2010-simple-chapter-execution-sidebar-collapse/README.md` |  |
-| 2011 | 暗色主题（夜间模式） | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2011-simple-dark-mode/README.md` |  |
-| 2012 | 暂停后调整自动导演高级设置面板 | p1 | 📋 待办 | 诊断报告 2026-06-26-自动导演全自动模式能力诊断 | 0.1 | 2026-06-26 | - | `B.todo/v0.1-r2012-medium-runtime-param-adjust-during-pause/README.md` | 任务中心增加编辑高级设置入口，模型档次和 artifactSyncMode 前端暴露 |
-| 2015 | User Directed Chapter Repair | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2015-medium-user-directed-chapter-repair/README.md` |  |
-| 2016 | Director Failed Retry Entry | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2016-medium-director-failed-retry-entry/README.md` |  |
-| 2017 | Chapter Token Budget Dynamic | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2017-medium-chapter-token-budget-dynamic/README.md` |  |
+| 2001 | 从导出文件导入创建新书 | p3 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r2001-complex-import-from-export/README.md` |  |
+| 2002 | 流式生成死循环检测与提前打断 | p3 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r2002-complex-streaming-loop-detector/README.md` |  |
+| 2003 | 章节细化同步后状态重置修复 | p3 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r2003-simple-chapter-sync-status-reset/README.md` |  |
+| 2004 | Creative Hub Agent 执行可观测性增强 | p3 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r2004-complex-creative-hub-observability/README.md` |  |
+| 2005 | 步骤 6 新建章节删除与误操作恢复 | p3 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r2005-simple-chapter-delete-and-undo/README.md` |  |
+| 2006 | 步骤 4 每卷章节数手动调整 | p3 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r2006-simple-volume-chapter-count-config/README.md` |  |
+| 2007 | 节奏板重新生成时注入历史上下文 | p3 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r2007-simple-beat-sheet-regen-context-injection/README.md` |  |
+| 2008 | 模型上下文窗口配置与自动压缩 | p3 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r2008-complex-context-window-awareness/README.md` |  |
+| 2009 | 模型路由设置页厂商筛选 | p3 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r2009-simple-model-provider-filter/README.md` |  |
+| 2010 | 步骤 6 右侧边栏折叠 | p3 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r2010-simple-chapter-execution-sidebar-collapse/README.md` |  |
+| 2011 | 暗色主题（夜间模式） | p3 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r2011-simple-dark-mode/README.md` |  |
+| 2012 | 暂停后调整自动导演高级设置面板 | p1 | ✅ 已完成 | 诊断报告 2026-06-26-自动导演全自动模式能力诊断 | 0.1 | 2026-06-26 | - | `B.2.done/v0.1-r2012-medium-runtime-param-adjust-during-pause/README.md` | 任务中心增加编辑高级设置入口，模型档次和 artifactSyncMode 前端暴露 |
+| 2015 | User Directed Chapter Repair | p3 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r2015-medium-user-directed-chapter-repair/README.md` |  |
+| 2016 | Director Failed Retry Entry | p3 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r2016-medium-director-failed-retry-entry/README.md` |  |
+| 2017 | Chapter Token Budget Dynamic | p3 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r2017-medium-chapter-token-budget-dynamic/README.md` |  |
 | 2018 | 小说项目风险管理系统 | p3 | 📋 待办 | 用户需求 | 0.1 | 2026-06-26 | 2026-06-26 | `B.todo/v0.1/v0.1-r2018-medium-novel-risk-management/README.md` | 风险记录、面板、回溯、评估与导出 |
+| 2019 | Tool Call Loop Detection | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2019-medium-tool-call-loop-detection/README.md` |  |
 | 2013 | Director Failed Retry Entry | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2013-medium-director-failed-retry-entry/README.md` |  |
 | 2014 | Chapter Token Budget Dynamic | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2014-medium-chapter-token-budget-dynamic/README.md` |  |
 
@@ -41,10 +42,10 @@ description: "需求任务总清单（SSOT）"
 
 | 编号 | 任务标题 | 优先级 | 当前状态 | 来源层 | 目标版本 | 开始日期 | 完成日期 | 详情文档 | 备注 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 3001 | Task Batch Archive | p4 | ✅ 已完成 | - | 0.1 | - | - | `B.todo/v0.1-r3001-medium-task-batch-archive/README.md` |  |
-| 3002 | 导演进度规划资源缺失 Checklist 可视化 | p4 | ✅ 已完成 | - | 0.1 | - | - | `B.todo/v0.1-r3002-medium-director-planning-checklist/README.md` |  |
-| 3003 | 小说项目对话存档 | p4 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r3003-medium-novel-conversation-archive/README.md` |  |
-| 3005 | Novel Conversation Archive | p4 | 📋 待办 | - | 0.1 | 2026-06-26T00:00:00.000Z | 2026-06-26T00:00:00.000Z | `B.todo/v0.1-r3005-medium-novel-conversation-archive/README.md` |  |
+| 3001 | Task Batch Archive | p4 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r3001-medium-task-batch-archive/README.md` |  |
+| 3002 | 导演进度规划资源缺失 Checklist 可视化 | p4 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r3002-medium-director-planning-checklist/README.md` |  |
+| 3003 | 小说项目对话存档 | p4 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r3003-medium-repair-progress-dialog/README.md` |  |
+| 3005 | Novel Conversation Archive | p4 | ✅ 已完成 | - | 0.1 | 2026-06-26T00:00:00.000Z | 2026-06-26T00:00:00.000Z | `B.2.done/v0.1-r3005-medium-novel-conversation-archive/README.md` |  |
 | 3004 | Novel Conversation Archive | p4 | 📋 待办 | - | 0.1 | 2026-06-26T00:00:00.000Z | 2026-06-26T00:00:00.000Z | `B.todo/v0.1-r3004-medium-novel-conversation-archive/README.md` |  |
 
 ---
@@ -57,24 +58,8 @@ description: "需求任务总清单（SSOT）"
 
 | 编号 | 任务标题 | 文档 |
 | --- | --- | --- |
-| 2001 | 从导出文件导入创建新书 | `B.todo/v0.1-r2001-complex-import-from-export/README.md` |
-| 2002 | 流式生成死循环检测与提前打断 | `B.todo/v0.1-r2002-complex-streaming-loop-detector/README.md` |
-| 2003 | 章节细化同步后状态重置修复 | `B.todo/v0.1-r2003-simple-chapter-sync-status-reset/README.md` |
-| 2004 | Creative Hub Agent 执行可观测性增强 | `B.todo/v0.1-r2004-complex-creative-hub-observability/README.md` |
-| 2005 | 步骤 6 新建章节删除与误操作恢复 | `B.todo/v0.1-r2005-medium-user-directed-chapter-repair/README.md` |
-| 2006 | 步骤 4 每卷章节数手动调整 | `B.todo/v0.1-r2006-medium-director-failed-retry-entry/README.md` |
-| 2007 | 节奏板重新生成时注入历史上下文 | `B.todo/v0.1-r2007-medium-chapter-token-budget-dynamic/README.md` |
-| 2008 | 模型上下文窗口配置与自动压缩 | `B.todo/v0.1-r2008-complex-context-window-awareness/README.md` |
-| 2009 | 模型路由设置页厂商筛选 | `B.todo/v0.1-r2009-simple-model-provider-filter/README.md` |
-| 2010 | 步骤 6 右侧边栏折叠 | `B.todo/v0.1-r2010-simple-chapter-execution-sidebar-collapse/README.md` |
-| 2011 | 暗色主题（夜间模式） | `B.todo/v0.1-r2011-simple-dark-mode/README.md` |
-| 2012 | 暂停后调整自动导演高级设置面板 | `B.todo/v0.1-r2012-medium-runtime-param-adjust-during-pause/README.md` |
-| 2015 | User Directed Chapter Repair | `B.todo/v0.1-r2015-medium-user-directed-chapter-repair/README.md` |
-| 2016 | Director Failed Retry Entry | `B.todo/v0.1-r2016-medium-director-failed-retry-entry/README.md` |
-| 2017 | Chapter Token Budget Dynamic | `B.todo/v0.1-r2017-medium-chapter-token-budget-dynamic/README.md` |
 | 2018 | 小说项目风险管理系统 | `B.todo/v0.1/v0.1-r2018-medium-novel-risk-management/README.md` |
-| 3003 | 小说项目对话存档 | `B.todo/v0.1-r3003-medium-novel-conversation-archive/README.md` |
-| 3005 | Novel Conversation Archive | `B.todo/v0.1-r3005-medium-novel-conversation-archive/README.md` |
+| 2019 | Tool Call Loop Detection | `B.todo/v0.1-r2019-medium-tool-call-loop-detection/README.md` |
 | 2013 | Director Failed Retry Entry | `B.todo/v0.1-r2013-medium-director-failed-retry-entry/README.md` |
 | 2014 | Chapter Token Budget Dynamic | `B.todo/v0.1-r2014-medium-chapter-token-budget-dynamic/README.md` |
 | 3004 | Novel Conversation Archive | `B.todo/v0.1-r3004-medium-novel-conversation-archive/README.md` |
@@ -83,7 +68,24 @@ description: "需求任务总清单（SSOT）"
 
 | 编号 | 任务标题 | 文档 |
 | --- | --- | --- |
-| 3001 | Task Batch Archive | `B.todo/v0.1-r3001-medium-task-batch-archive/README.md` |
-| 3002 | 导演进度规划资源缺失 Checklist 可视化 | `B.todo/v0.1-r3002-medium-director-planning-checklist/README.md` |
+| 2001 | 从导出文件导入创建新书 | `B.2.done/v0.1-r2001-complex-import-from-export/README.md` |
+| 2002 | 流式生成死循环检测与提前打断 | `B.2.done/v0.1-r2002-complex-streaming-loop-detector/README.md` |
+| 2003 | 章节细化同步后状态重置修复 | `B.2.done/v0.1-r2003-simple-chapter-sync-status-reset/README.md` |
+| 2004 | Creative Hub Agent 执行可观测性增强 | `B.2.done/v0.1-r2004-complex-creative-hub-observability/README.md` |
+| 2005 | 步骤 6 新建章节删除与误操作恢复 | `B.2.done/v0.1-r2005-simple-chapter-delete-and-undo/README.md` |
+| 2006 | 步骤 4 每卷章节数手动调整 | `B.2.done/v0.1-r2006-simple-volume-chapter-count-config/README.md` |
+| 2007 | 节奏板重新生成时注入历史上下文 | `B.2.done/v0.1-r2007-simple-beat-sheet-regen-context-injection/README.md` |
+| 2008 | 模型上下文窗口配置与自动压缩 | `B.2.done/v0.1-r2008-complex-context-window-awareness/README.md` |
+| 2009 | 模型路由设置页厂商筛选 | `B.2.done/v0.1-r2009-simple-model-provider-filter/README.md` |
+| 2010 | 步骤 6 右侧边栏折叠 | `B.2.done/v0.1-r2010-simple-chapter-execution-sidebar-collapse/README.md` |
+| 2011 | 暗色主题（夜间模式） | `B.2.done/v0.1-r2011-simple-dark-mode/README.md` |
+| 2012 | 暂停后调整自动导演高级设置面板 | `B.2.done/v0.1-r2012-medium-runtime-param-adjust-during-pause/README.md` |
+| 2015 | User Directed Chapter Repair | `B.2.done/v0.1-r2015-medium-user-directed-chapter-repair/README.md` |
+| 2016 | Director Failed Retry Entry | `B.2.done/v0.1-r2016-medium-director-failed-retry-entry/README.md` |
+| 2017 | Chapter Token Budget Dynamic | `B.2.done/v0.1-r2017-medium-chapter-token-budget-dynamic/README.md` |
+| 3001 | Task Batch Archive | `B.2.done/v0.1-r3001-medium-task-batch-archive/README.md` |
+| 3002 | 导演进度规划资源缺失 Checklist 可视化 | `B.2.done/v0.1-r3002-medium-director-planning-checklist/README.md` |
+| 3003 | 小说项目对话存档 | `B.2.done/v0.1-r3003-medium-repair-progress-dialog/README.md` |
+| 3005 | Novel Conversation Archive | `B.2.done/v0.1-r3005-medium-novel-conversation-archive/README.md` |
 
 ---

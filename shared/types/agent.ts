@@ -54,6 +54,7 @@ export type AgentToolErrorCode =
   | "APPROVAL_REQUIRED"
   | "CONFLICT"
   | "TIMEOUT"
+  | "LOOP_DETECTED"
   | "INTERNAL";
 
 export interface AgentPlanContextNeed {

@@ -117,11 +117,8 @@ export default function ModelRoutesPage() {
   const structuredFallback = structuredFallbackQuery.data?.data;
   const taskTypes = modelRoutes?.taskTypes ?? [];
   const providerOptions = useMemo(() => {
-    const runnable = providerConfigs.filter(isRunnableProviderConfig).map((item) => item.provider);
-    const existingProviders = (modelRoutes?.routes ?? []).map((r) => r.provider);
-    const protectedProviders = existingProviders.filter((p) => !runnable.includes(p));
-    return [...runnable, ...protectedProviders];
-  }, [providerConfigs, modelRoutes?.routes]);
+    return providerConfigs.filter(isRunnableProviderConfig).map((item) => item.provider);
+  }, [providerConfigs]);
   const routeMap = useMemo(() => new Map((modelRoutes?.routes ?? []).map((item) => [item.taskType, item])), [modelRoutes?.routes]);
   const connectivityMap = useMemo(
     () => new Map((modelRouteConnectivity?.statuses ?? []).map((item) => [item.taskType, item])),

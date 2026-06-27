@@ -226,7 +226,7 @@ export function useNovelVolumePlanning({
     });
   };
 
-  const startBeatSheetGeneration = (volumeId: string) => {
+  const startBeatSheetGeneration = (volumeId: string, options?: { referenceExisting?: boolean }) => {
     startBeatSheetGenerationAction({
       volumeId,
       normalizedVolumeDraft,
@@ -234,6 +234,7 @@ export function useNovelVolumePlanning({
       beatSheets,
       ensureCharacterGuard,
       setStructuredMessage,
+      referenceExisting: options?.referenceExisting,
       generate: (payload) => generateMutation.mutate(payload),
     });
   };

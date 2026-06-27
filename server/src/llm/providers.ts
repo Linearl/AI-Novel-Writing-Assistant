@@ -28,7 +28,6 @@ export const PROVIDERS: Record<BuiltinLLMProvider, ProviderConfig> = {
     envBaseURLKey: "DEEPSEEK_BASE_URL",
     envModelKey: "DEEPSEEK_MODEL",
     maxTokens: 8192,
-    defaultContextWindow: 65536,
   },
   siliconflow: {
     name: "SiliconFlow",
@@ -51,7 +50,6 @@ export const PROVIDERS: Record<BuiltinLLMProvider, ProviderConfig> = {
     envKey: "OPENAI_API_KEY",
     envBaseURLKey: "OPENAI_BASE_URL",
     envModelKey: "OPENAI_MODEL",
-    defaultContextWindow: 128000,
   },
   anthropic: {
     name: "Anthropic",
@@ -64,7 +62,6 @@ export const PROVIDERS: Record<BuiltinLLMProvider, ProviderConfig> = {
     envKey: "ANTHROPIC_API_KEY",
     envBaseURLKey: "ANTHROPIC_BASE_URL",
     envModelKey: "ANTHROPIC_MODEL",
-    defaultContextWindow: 200000,
   },
   grok: {
     name: "Grok",
@@ -89,7 +86,6 @@ export const PROVIDERS: Record<BuiltinLLMProvider, ProviderConfig> = {
     envKey: "KIMI_API_KEY",
     envBaseURLKey: "KIMI_BASE_URL",
     envModelKey: "KIMI_MODEL",
-    defaultContextWindow: 128000,
   },
   minimax: {
     name: "MiniMax",
@@ -134,7 +130,6 @@ export const PROVIDERS: Record<BuiltinLLMProvider, ProviderConfig> = {
     envKey: "GEMINI_API_KEY",
     envBaseURLKey: "GEMINI_BASE_URL",
     envModelKey: "GEMINI_MODEL",
-    defaultContextWindow: 1048576,
   },
   ollama: {
     name: "Ollama",

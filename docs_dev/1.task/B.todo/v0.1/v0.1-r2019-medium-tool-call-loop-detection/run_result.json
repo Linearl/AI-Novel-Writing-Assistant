@@ -1,0 +1,16 @@
+{
+  "reqId": "2019",
+  "version": "0.1",
+  "status": "todo",
+  "timestamp": "2026-06-27T21:45:00+08:00",
+  "summary": "REQ-2019 重复工具调用循环检测 — 任务包创建完成，待开发",
+  "artifacts": [
+    "README.md",
+    "REQ-2019.md",
+    "REQ-2019-original.md",
+    "tasks.md",
+    "design.md",
+    "decision_log.md",
+    "run_result.json"
+  ]
+}
