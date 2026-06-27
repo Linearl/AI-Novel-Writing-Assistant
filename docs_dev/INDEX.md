@@ -49,6 +49,39 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1\v0.1-r2019-medium-tool-call-loop-detection\REQ-2019.md](./1.task\B.todo\v0.1\v0.1-r2019-medium-tool-call-loop-detection\REQ-2019.md) | REQ-2019 重复工具调用循环检测 | REQ-2019 重复工具调用循环检测 |
 | [1.task\B.todo\v0.1\v0.1-r2019-medium-tool-call-loop-detection\tasks.md](./1.task\B.todo\v0.1\v0.1-r2019-medium-tool-call-loop-detection\tasks.md) | REQ-2019 任务拆解 | REQ-2019 任务拆解 |
 
+## 1.task\B.todo\v0.1\v0.1-r2020-medium-chapter-pipeline-execution-mode
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.1\v0.1-r2020-medium-chapter-pipeline-execution-mode\decision_log.md](./1.task\B.todo\v0.1\v0.1-r2020-medium-chapter-pipeline-execution-mode\decision_log.md) | REQ-2020 decision_log: 自动导演流水线执行模式决策日志 | REQ-2020 decision_log: 自动导演流水线执行模式决策日志 |
+| [1.task\B.todo\v0.1\v0.1-r2020-medium-chapter-pipeline-execution-mode\design.md](./1.task\B.todo\v0.1\v0.1-r2020-medium-chapter-pipeline-execution-mode\design.md) | REQ-2020 design: 自动导演流水线执行模式技术设计 | REQ-2020 design: 自动导演流水线执行模式技术设计 |
+| [1.task\B.todo\v0.1\v0.1-r2020-medium-chapter-pipeline-execution-mode\README.md](./1.task\B.todo\v0.1\v0.1-r2020-medium-chapter-pipeline-execution-mode\README.md) | REQ-2020: 自动导演流水线执行模式 | REQ-2020: 自动导演流水线执行模式 |
+| [1.task\B.todo\v0.1\v0.1-r2020-medium-chapter-pipeline-execution-mode\REQ-2020-original.md](./1.task\B.todo\v0.1\v0.1-r2020-medium-chapter-pipeline-execution-mode\REQ-2020-original.md) | REQ-2020-original: 自动导演流水线执行模式（原始冻结副本） | REQ-2020-original: 自动导演流水线执行模式（原始冻结副本） |
+| [1.task\B.todo\v0.1\v0.1-r2020-medium-chapter-pipeline-execution-mode\REQ-2020.md](./1.task\B.todo\v0.1\v0.1-r2020-medium-chapter-pipeline-execution-mode\REQ-2020.md) | REQ-2020: 自动导演流水线执行模式（章节细化与写作交错执行） | REQ-2020: 自动导演流水线执行模式（章节细化与写作交错执行） |
+| [1.task\B.todo\v0.1\v0.1-r2020-medium-chapter-pipeline-execution-mode\tasks.md](./1.task\B.todo\v0.1\v0.1-r2020-medium-chapter-pipeline-execution-mode\tasks.md) | REQ-2020 tasks: 自动导演流水线执行模式任务清单 | REQ-2020 tasks: 自动导演流水线执行模式任务清单 |
+
+## 1.task\B.todo\v0.1\v0.1-r2021-simple-director-debug-log
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.1\v0.1-r2021-simple-director-debug-log\decision_log.md](./1.task\B.todo\v0.1\v0.1-r2021-simple-director-debug-log\decision_log.md) | 质量修复阶段调试日志保存 — 决策日志 | 质量修复阶段调试日志保存 — 决策日志 |
+| [1.task\B.todo\v0.1\v0.1-r2021-simple-director-debug-log\design.md](./1.task\B.todo\v0.1\v0.1-r2021-simple-director-debug-log\design.md) | 质量修复阶段调试日志保存 — 设计文档 | 质量修复阶段调试日志保存 — 设计文档 |
+| [1.task\B.todo\v0.1\v0.1-r2021-simple-director-debug-log\README.md](./1.task\B.todo\v0.1\v0.1-r2021-simple-director-debug-log\README.md) | 质量修复阶段调试日志保存 — 任务包概览 | 质量修复阶段调试日志保存 — 任务包概览 |
+| [1.task\B.todo\v0.1\v0.1-r2021-simple-director-debug-log\REQ-2021-original.md](./1.task\B.todo\v0.1\v0.1-r2021-simple-director-debug-log\REQ-2021-original.md) | 小说项目风险管理系统 — 原始需求冻结副本 | 小说项目风险管理系统 — 原始需求冻结副本 |
+| [1.task\B.todo\v0.1\v0.1-r2021-simple-director-debug-log\REQ-2021.md](./1.task\B.todo\v0.1\v0.1-r2021-simple-director-debug-log\REQ-2021.md) | 质量修复阶段调试日志保存 — 需求工作副本 | 质量修复阶段调试日志保存 — 需求工作副本 |
+| [1.task\B.todo\v0.1\v0.1-r2021-simple-director-debug-log\tasks.md](./1.task\B.todo\v0.1\v0.1-r2021-simple-director-debug-log\tasks.md) | 质量修复阶段调试日志保存 — 任务拆解 | 质量修复阶段调试日志保存 — 任务拆解 |
+
+## 1.task\B.todo\v0.1\v0.1-r2022-complex-director-debug-log-enhanced
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.1\v0.1-r2022-complex-director-debug-log-enhanced\decision_log.md](./1.task\B.todo\v0.1\v0.1-r2022-complex-director-debug-log-enhanced\decision_log.md) | REQ-2022 质量修复阶段调试日志增强 — 决策日志 | REQ-2022 质量修复阶段调试日志增强 — 决策日志 |
+| [1.task\B.todo\v0.1\v0.1-r2022-complex-director-debug-log-enhanced\design.md](./1.task\B.todo\v0.1\v0.1-r2022-complex-director-debug-log-enhanced\design.md) | REQ-2022 质量修复阶段调试日志增强 — 设计文档 | REQ-2022 质量修复阶段调试日志增强 — 设计文档 |
+| [1.task\B.todo\v0.1\v0.1-r2022-complex-director-debug-log-enhanced\README.md](./1.task\B.todo\v0.1\v0.1-r2022-complex-director-debug-log-enhanced\README.md) | REQ-2022 质量修复阶段调试日志增强——任务包概览 | REQ-2022 质量修复阶段调试日志增强——任务包概览 |
+| [1.task\B.todo\v0.1\v0.1-r2022-complex-director-debug-log-enhanced\REQ-2022-original.md](./1.task\B.todo\v0.1\v0.1-r2022-complex-director-debug-log-enhanced\REQ-2022-original.md) | REQ-2022 质量修复阶段调试日志增强 — 需求原始冻结副本 | REQ-2022 质量修复阶段调试日志增强 — 需求原始冻结副本 |
+| [1.task\B.todo\v0.1\v0.1-r2022-complex-director-debug-log-enhanced\REQ-2022.md](./1.task\B.todo\v0.1\v0.1-r2022-complex-director-debug-log-enhanced\REQ-2022.md) | REQ-2022 质量修复阶段调试日志增强 — 需求工作副本 | REQ-2022 质量修复阶段调试日志增强 — 需求工作副本 |
+| [1.task\B.todo\v0.1\v0.1-r2022-complex-director-debug-log-enhanced\tasks.md](./1.task\B.todo\v0.1\v0.1-r2022-complex-director-debug-log-enhanced\tasks.md) | REQ-2022 质量修复阶段调试日志增强 — 任务拆解 | REQ-2022 质量修复阶段调试日志增强 — 任务拆解 |
+
 ## 1.task\template
 
 | 文件 | 标题 | 描述 |

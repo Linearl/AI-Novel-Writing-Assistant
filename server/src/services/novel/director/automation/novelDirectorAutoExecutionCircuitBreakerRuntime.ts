@@ -25,6 +25,7 @@ import {
   recordReplanLoopSignal,
   recordUsageAnomalySignal,
   withCircuitBreakerState,
+  DIRECTOR_CIRCUIT_BREAKER_THRESHOLDS,
 } from "../runtime/DirectorCircuitBreakerService";
 import {
   buildDirectorQualityLoopBudgetWindow,
@@ -35,6 +36,8 @@ import {
 } from "../runtime/DirectorQualityLoopBudgetLedgerService";
 import { directorAutomationLedgerEventService } from "../runtime/DirectorAutomationLedgerEventService";
 import { directorUsageTelemetryQueryService } from "../runtime/DirectorUsageTelemetryQueryService";
+import { isDirectorDebugLogEnabled } from "@/config/directorDebug";
+import { saveDirectorDebugLog } from "../debug/directorDebugLogger";
 
 type AutomationLedgerEventPort = Pick<
   typeof directorAutomationLedgerEventService,
@@ -114,6 +117,20 @@ export async function stopAutoExecutionForCircuitBreaker(
     isBackgroundRunning: false,
     resumeStage: input.resumeStage ?? "pipeline",
   });
+
+  if (isDirectorDebugLogEnabled()) {
+    saveDirectorDebugLog({
+      timestamp: new Date().toISOString(),
+      taskId: input.taskId,
+      novelId: input.novelId,
+      chapterId: input.circuitBreaker.chapterId ?? null,
+      autoExecution: structuredClone(input.autoExecution),
+      circuitBreaker: structuredClone(input.circuitBreaker),
+      recentLlmUsage: [],
+      errorStack: null,
+      config: DIRECTOR_CIRCUIT_BREAKER_THRESHOLDS,
+    }, "server/logs/director-debug").catch(() => {});
+  }
 }
 
 export async function resolveUsageCircuitBreaker(input: {

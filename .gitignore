@@ -46,6 +46,9 @@ temp/_restore/
 client/.env
 server/.env
 
+# Runtime debug logs
+server/logs/
+
 # ll-workflow-core worktree pool
 # 池追踪文件 (.slots.json) 要追踪, 槽位目录由 git worktree 自己管理
 # 但如果意外在 worktree/ 下创建了非 worktree 的临时文件, 也忽略掉
