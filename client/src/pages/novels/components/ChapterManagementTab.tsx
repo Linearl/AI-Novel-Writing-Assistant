@@ -356,6 +356,8 @@ export default function ChapterManagementTab(props: ChapterTabViewProps) {
                   generationActionKind={generationActionKind}
                   isReviewingChapter={isReviewingChapter}
                   isRepairingChapter={isRepairingChapter}
+                  repairStreamContent={repairStreamContent}
+                  isRepairStreaming={isRepairStreaming}
                   isGeneratingChapterPlan={isGeneratingChapterPlan}
                   isReplanningChapter={isReplanningChapter}
                   isRunningFullAudit={isRunningFullAudit}
