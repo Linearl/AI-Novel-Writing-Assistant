@@ -164,6 +164,7 @@ export function useCreativeHubRuntime({
   const [isRunning, setIsRunning] = useState(false);
   const [runArtifacts, setRunArtifacts] = useState<CreativeHubRunArtifacts[]>([]);
   const [threadStateLoaded, setThreadStateLoaded] = useState(false);
+  const [trackerFrames, setTrackerFrames] = useState<CreativeHubStreamFrame[]>([]);
   const isThreadReady = threadId.trim().length > 0;
 
   useEffect(() => {
@@ -232,6 +233,13 @@ export function useCreativeHubRuntime({
             break;
           }
           onEvent?.(frame);
+          if (
+            frame.event === "creative_hub/tool_call" ||
+            frame.event === "creative_hub/tool_result" ||
+            frame.event === "creative_hub/run_status"
+          ) {
+            setTrackerFrames((prev) => [...prev, frame]);
+          }
           if (frame.event === "metadata" && typeof frame.data === "object" && frame.data && "checkpointId" in frame.data) {
             const nextCheckpointId = typeof frame.data.checkpointId === "string"
               ? frame.data.checkpointId
@@ -315,6 +323,7 @@ export function useCreativeHubRuntime({
     try {
       sendInFlightRef.current = true;
       setRunArtifacts([]);
+      setTrackerFrames([]);
       currentRunIdRef.current = null;
       debugEntrySeqRef.current = 0;
       setIsRunning(true);
@@ -426,6 +435,7 @@ export function useCreativeHubRuntime({
     }
     setInterrupt(undefined);
     setRunArtifacts([]);
+    setTrackerFrames([]);
     setThreadStateLoaded(false);
     currentRunIdRef.current = null;
     debugEntrySeqRef.current = 0;
@@ -460,5 +470,6 @@ export function useCreativeHubRuntime({
     latestTurnSummary: threadStateLoaded
       ? (runArtifacts[runArtifacts.length - 1]?.turnSummary ?? null) as CreativeHubTurnSummary | null
       : undefined,
+    trackerFrames,
   };
 }

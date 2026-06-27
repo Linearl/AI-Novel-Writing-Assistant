@@ -174,7 +174,15 @@ export interface AgentApprovalDecisionInput {
 
 export interface AgentRuntimeCallbacks {
   onReasoning?: (content: string) => void;
-  onToolCall?: (payload: { runId: string; stepId: string; toolName: AgentToolName; inputSummary: string }) => void;
+  onToolCall?: (payload: {
+    runId: string;
+    stepId: string;
+    toolName: AgentToolName;
+    inputSummary: string;
+    model?: string;
+    stepSeq?: number;
+    totalSteps?: number;
+  }) => void;
   onToolResult?: (payload: {
     runId: string;
     stepId: string;
@@ -183,6 +191,9 @@ export interface AgentRuntimeCallbacks {
     success: boolean;
     output?: Record<string, unknown>;
     errorCode?: AgentToolErrorCode;
+    durationMs?: number;
+    tokenUsage?: { prompt?: number; completion?: number; total?: number };
+    costUsd?: number;
   }) => void;
   onApprovalRequired?: (payload: {
     runId: string;
@@ -196,6 +207,9 @@ export interface AgentRuntimeCallbacks {
     runId: string;
     status: AgentRun["status"];
     message?: string;
+    currentStepName?: string;
+    currentStepSeq?: number;
+    completedSteps?: number;
   }) => void;
 }
 

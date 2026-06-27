@@ -8,11 +8,13 @@ import type {
   CreativeHubThread,
   CreativeHubTurnSummary,
 } from "@ai-novel/shared/types/creativeHub";
+import type { CreativeHubStreamFrame } from "@ai-novel/shared/types/api";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import CreativeHubNovelSetupCard from "./CreativeHubNovelSetupCard";
+import CreativeHubRunTracker from "./CreativeHubRunTracker";
 import NovelProductionStarterCard from "./NovelProductionStarterCard";
 
 interface CreativeHubSidebarProps {
@@ -37,6 +39,8 @@ interface CreativeHubSidebarProps {
   onQuickAction?: (prompt: string) => void;
   onCreateNovel?: (title: string) => void;
   onStartProduction?: (prompt: string) => void;
+  trackerFrames?: CreativeHubStreamFrame[];
+  isRunning?: boolean;
 }
 
 function bindingValue(value: string | null | undefined): string {
@@ -218,6 +222,8 @@ export default function CreativeHubSidebar({
   onQuickAction,
   onCreateNovel,
   onStartProduction,
+  trackerFrames,
+  isRunning,
 }: CreativeHubSidebarProps) {
   const [novelTitleDraft, setNovelTitleDraft] = useState("");
   const currentNovelTitle = novels.find((item) => item.id === bindings.novelId)?.title ?? null;
@@ -271,6 +277,12 @@ export default function CreativeHubSidebar({
             </div>
           </div>
         </div>
+
+        {trackerFrames && trackerFrames.length > 0 ? (
+          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
+            <CreativeHubRunTracker frames={trackerFrames} isRunning={!!isRunning} />
+          </div>
+        ) : null}
 
         <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
           <div className="mb-2 text-xs font-medium text-slate-500">资源绑定</div>

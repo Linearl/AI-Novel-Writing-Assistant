@@ -31,9 +31,30 @@ export type CreativeHubStreamFrame =
   | { event: "messages/partial"; data: CreativeHubMessage[] }
   | { event: "messages/complete"; data: CreativeHubMessage[] }
   | { event: "metadata"; data: Record<string, unknown> }
-  | { event: "creative_hub/run_status"; data: { runId?: string; status: string; message?: string } }
+  | {
+    event: "creative_hub/run_status";
+    data: {
+      runId?: string;
+      status: string;
+      message?: string;
+      currentStepName?: string;
+      currentStepSeq?: number;
+      completedSteps?: number;
+    };
+  }
   | { event: "creative_hub/turn_summary"; data: CreativeHubTurnSummary }
-  | { event: "creative_hub/tool_call"; data: { runId?: string; stepId?: string; toolName: string; inputSummary: string } }
+  | {
+    event: "creative_hub/tool_call";
+    data: {
+      runId?: string;
+      stepId?: string;
+      toolName: string;
+      inputSummary: string;
+      model?: string;
+      stepSeq?: number;
+      totalSteps?: number;
+    };
+  }
   | {
     event: "creative_hub/tool_result";
     data: {
@@ -44,6 +65,9 @@ export type CreativeHubStreamFrame =
       success: boolean;
       output?: Record<string, unknown>;
       errorCode?: string;
+      durationMs?: number;
+      tokenUsage?: { prompt?: number; completion?: number; total?: number };
+      costUsd?: number;
     };
   }
   | { event: "creative_hub/interrupt"; data: CreativeHubInterrupt }

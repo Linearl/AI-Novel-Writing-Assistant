@@ -477,6 +477,8 @@ export default function CreativeHubPage() {
             onQuickAction={(prompt) => void handleQuickAction(prompt)}
             onCreateNovel={(title) => void handleCreateNovelQuickAction(title)}
             onStartProduction={(prompt) => void handleQuickAction(prompt)}
+            trackerFrames={runtimeState.trackerFrames}
+            isRunning={runtimeState.isRunning}
           />
         </div>
       </div>

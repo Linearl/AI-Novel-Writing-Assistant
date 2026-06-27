@@ -107,6 +107,7 @@ export class RunExecutionService {
       stepId: callStep.id,
       toolName: call.tool,
       inputSummary: call.reason,
+      model: context.model,
     });
     const definition = getAgentToolDefinition(call.tool);
 
@@ -145,6 +146,11 @@ export class RunExecutionService {
         outputSummary: summary,
         success: true,
         output: parsedOutput,
+        durationMs: resultStep.durationMs ?? undefined,
+        tokenUsage: resultStep.tokenUsageJson
+          ? (JSON.parse(resultStep.tokenUsageJson) as { prompt?: number; completion?: number; total?: number })
+          : undefined,
+        costUsd: resultStep.costUsd ?? undefined,
       });
       return {
         tool: call.tool,
@@ -181,6 +187,11 @@ export class RunExecutionService {
         outputSummary: message,
         success: false,
         errorCode: code,
+        durationMs: resultStep.durationMs ?? undefined,
+        tokenUsage: resultStep.tokenUsageJson
+          ? (JSON.parse(resultStep.tokenUsageJson) as { prompt?: number; completion?: number; total?: number })
+          : undefined,
+        costUsd: resultStep.costUsd ?? undefined,
       });
       return {
         tool: call.tool,
