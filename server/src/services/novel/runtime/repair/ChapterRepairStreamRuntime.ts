@@ -158,7 +158,10 @@ export class ChapterRepairStreamRuntime {
       }));
     }
 
-    const fallbackReview = await this.deps.reviewChapterAfterRepair(novelId, chapterId, options);
+    const fallbackReview = await this.deps.reviewChapterAfterRepair(novelId, chapterId, {
+      ...options,
+      directorDebugTaskId: options.directorDebugTaskId,
+    });
     return fallbackReview.issues;
   }
 
@@ -205,6 +208,7 @@ export class ChapterRepairStreamRuntime {
       model: input.options.model,
       temperature: input.options.temperature,
       content: repairedContent,
+      directorDebugTaskId: input.options.directorDebugTaskId,
     });
     if (isPass(review.score)) {
       await prisma.chapter.update({

@@ -9,6 +9,7 @@ import type { AutoDirectorAction } from "@ai-novel/shared/types/autoDirectorFoll
 import AICockpit from "@/components/autoDirector/AICockpit";
 import LLMSelector from "@/components/common/LLMSelector";
 import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -272,6 +273,8 @@ export default function NovelTaskDrawer({
   retryWithTaskModelPending = false,
   capabilities,
   onOpenFullTaskCenter,
+  pipelineMode = "batch",
+  onPipelineModeChange,
 }: NovelTaskDrawerState) {
   const milestones = Array.isArray(task?.meta.milestones)
     ? task.meta.milestones as NovelWorkflowMilestone[]
@@ -476,6 +479,24 @@ export default function NovelTaskDrawer({
                 <section className="space-y-3">
                   <div className="text-sm font-medium text-foreground">推进方式</div>
                   <TaskCenterRuntimePolicyCard taskId={task.id} snapshot={runtimeSnapshot} />
+                </section>
+              ) : null}
+
+              {task ? (
+                <section className="space-y-3 rounded-2xl border border-border/70 bg-muted/15 p-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0 space-y-1">
+                      <div className="text-sm font-medium text-foreground">流水线执行模式</div>
+                      <div className="text-xs leading-5 text-muted-foreground">
+                        开启后，章节细化与写作交错执行（细化第N+1章的同时写作第N章），提升并行效率。关闭时为传统批量模式。
+                      </div>
+                    </div>
+                    <Switch
+                      checked={pipelineMode === "pipeline"}
+                      onCheckedChange={(checked) => onPipelineModeChange?.(checked ? "pipeline" : "batch")}
+                      aria-label="切换流水线执行模式"
+                    />
+                  </div>
                 </section>
               ) : null}
 

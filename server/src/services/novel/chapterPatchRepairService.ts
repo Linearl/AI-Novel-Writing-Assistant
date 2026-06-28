@@ -9,6 +9,8 @@ import {
 import { runStructuredPrompt } from "../../prompting/core/promptRunner";
 import { buildChapterRepairContextBlocks } from "../../prompting/prompts/novel/chapterLayeredContext";
 import { chapterPatchRepairPrompt } from "../../prompting/prompts/novel/chapterPatchRepair.prompts";
+import { isDirectorDebugLogEnabled } from "../../config/directorDebug";
+import { directorDebugBuffer } from "./director/debug/directorDebugBuffer";
 
 export type PatchRepairMode =
   | "detect_only"
@@ -32,6 +34,8 @@ export interface ChapterPatchRepairInput {
   model?: string;
   temperature?: number;
   repairMode?: PatchRepairMode;
+  /** REQ-2022: 关联自动执行 taskId，用于 debug buffer 采集 */
+  directorDebugTaskId?: string;
 }
 
 export interface ChapterPatchRepairResult {
@@ -67,8 +71,12 @@ export class ChapterPatchRepairService {
     const contextBlocks = repairContext
       ? buildChapterRepairContextBlocks(repairContext)
       : undefined;
+    const taskId = input.directorDebugTaskId;
+    const debugEnabled = Boolean(taskId) && isDirectorDebugLogEnabled();
+    const repairStartMs = debugEnabled ? Date.now() : 0;
     let generated: { output: ChapterPatchRepairPlan };
     try {
+      const llmStartMs = debugEnabled ? Date.now() : 0;
       generated = await runStructuredPrompt({
         asset: chapterPatchRepairPrompt,
         promptInput: {
@@ -89,10 +97,36 @@ export class ChapterPatchRepairService {
           triggerReason: input.repairMode ?? "patch_first",
         },
       });
+      if (debugEnabled && taskId) {
+        const llmEndMs = Date.now();
+        try {
+          directorDebugBuffer.recordLlmCall(taskId, {
+            timestamp: new Date().toISOString(),
+            prompt: JSON.stringify({ asset: "chapterPatchRepair", issues: input.issues.length }).slice(0, 200),
+            completion: JSON.stringify(generated.output).slice(0, 200),
+            toolCalls: [],
+            tokenUsage: { promptTokens: 0, completionTokens: 0, totalTokens: 0 },
+            durationMs: llmEndMs - llmStartMs,
+          });
+        } catch { /* fire-and-forget */ }
+      }
     } catch (error) {
       const message = error instanceof Error && error.message.trim()
         ? error.message.trim()
         : String(error);
+      if (debugEnabled && taskId) {
+        try {
+          directorDebugBuffer.recordRepairAttempt(taskId, {
+            strategy: input.repairMode ?? "patch",
+            inputSummary: `${input.issues.length} issues`,
+            outputSummary: "",
+            success: false,
+            failureReason: message,
+            timestamp: new Date().toISOString(),
+            durationMs: Date.now() - repairStartMs,
+          });
+        } catch { /* fire-and-forget */ }
+      }
       throw new ChapterPatchRepairFailedError(`局部补丁计划未通过结构校验：${message}`);
     }
 
@@ -101,6 +135,19 @@ export class ChapterPatchRepairService {
       applied = applyChapterPatchRepairPlan(input.content, generated.output);
     } catch (error) {
       const message = formatPatchRepairApplyError(error);
+      if (debugEnabled && taskId) {
+        try {
+          directorDebugBuffer.recordRepairAttempt(taskId, {
+            strategy: input.repairMode ?? "patch",
+            inputSummary: `${input.issues.length} issues`,
+            outputSummary: "",
+            success: false,
+            failureReason: message,
+            timestamp: new Date().toISOString(),
+            durationMs: Date.now() - repairStartMs,
+          });
+        } catch { /* fire-and-forget */ }
+      }
       throw new ChapterPatchRepairFailedError(
         `局部补丁计划不可安全应用：${message}`,
         generated.output,
@@ -110,7 +157,33 @@ export class ChapterPatchRepairService {
       const reason = applied.failures.map((failure) => `${failure.patchId}: ${failure.reason}`).join("；")
         || generated.output.escalationReason
         || "局部补丁没有产生有效正文变化。";
+      if (debugEnabled && taskId) {
+        try {
+          directorDebugBuffer.recordRepairAttempt(taskId, {
+            strategy: input.repairMode ?? "patch",
+            inputSummary: `${input.issues.length} issues`,
+            outputSummary: "",
+            success: false,
+            failureReason: reason,
+            timestamp: new Date().toISOString(),
+            durationMs: Date.now() - repairStartMs,
+          });
+        } catch { /* fire-and-forget */ }
+      }
       throw new ChapterPatchRepairFailedError(reason, generated.output, applied);
+    }
+
+    if (debugEnabled && taskId) {
+      try {
+        directorDebugBuffer.recordRepairAttempt(taskId, {
+          strategy: input.repairMode ?? "patch",
+          inputSummary: `${input.issues.length} issues`,
+          outputSummary: applied.appliedPatchIds.join(","),
+          success: true,
+          timestamp: new Date().toISOString(),
+          durationMs: Date.now() - repairStartMs,
+        });
+      } catch { /* fire-and-forget */ }
     }
 
     return {

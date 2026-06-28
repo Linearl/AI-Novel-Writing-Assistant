@@ -17,6 +17,8 @@ import { runStructuredPrompt } from "../../prompting/core/promptRunner";
 import { auditChapterLightPrompt, auditChapterPrompt } from "../../prompting/prompts/audit/audit.prompts";
 import type { LightAuditOutput } from "./auditSchemas";
 import { resolveAuditChapterContextBlocks } from "./auditPromptContext";
+import { isDirectorDebugLogEnabled } from "../../config/directorDebug";
+import { directorDebugBuffer } from "../novel/director/debug/directorDebugBuffer";
 
 interface AuditOptions {
   provider?: LLMProvider;
@@ -26,6 +28,8 @@ interface AuditOptions {
   contextPackage?: GenerationContextPackage;
   lengthControl?: ChapterRuntimePackage["lengthControl"];
   skipPayoffLedgerSync?: boolean;
+  /** REQ-2022: 关联自动执行 taskId，用于 debug buffer 采集 */
+  directorDebugTaskId?: string;
 }
 
 interface AuditIssueOutput {
@@ -346,6 +350,9 @@ export class AuditService {
         contextPackage: options.contextPackage,
         ragContext,
       });
+      const taskId = options.directorDebugTaskId;
+      const debugEnabled = Boolean(taskId) && isDirectorDebugLogEnabled();
+      const llmStartMs = debugEnabled ? Date.now() : 0;
       const result = await runStructuredPrompt({
         asset: auditChapterPrompt,
         promptInput: {
@@ -367,6 +374,18 @@ export class AuditService {
           triggerReason: requestedTypes.join(","),
         },
       });
+      if (debugEnabled && taskId) {
+        try {
+          directorDebugBuffer.recordLlmCall(taskId, {
+            timestamp: new Date().toISOString(),
+            prompt: JSON.stringify({ asset: "auditChapter", requestedTypes, novelTitle, chapterTitle }).slice(0, 200),
+            completion: JSON.stringify(result.output).slice(0, 200),
+            toolCalls: [],
+            tokenUsage: { promptTokens: 0, completionTokens: 0, totalTokens: 0 },
+            durationMs: Date.now() - llmStartMs,
+          });
+        } catch { /* fire-and-forget */ }
+      }
       return result.output;
     } catch {
       return parseLegacyReviewOutput(content);

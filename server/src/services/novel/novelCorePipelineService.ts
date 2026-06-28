@@ -678,6 +678,12 @@ export class NovelCorePipelineService {
             prefetchVolumeService.ensureChapterExecutionContract(nId, cId, opts),
         });
         const isAutopilotMode = runtimePayload.controlPolicy?.advanceMode === "full_book_autopilot";
+        const isPipelineMode = runtimePayload.pipelineMode === "pipeline";
+
+        // pipeline 模式下的交错执行状态
+        let activePrefetchPromise: Promise<unknown> | null = null;
+        let pipelineRefinementTotal = 0;
+        let pipelineRefinementCompleted = 0;
 
         for (let chapterIndex = 0; chapterIndex < chaptersToProcess.length; chapterIndex++) {
           const chapter = chaptersToProcess[chapterIndex];
@@ -847,7 +853,52 @@ export class NovelCorePipelineService {
           // 当前章 finalize 完成后（factLedger 已写入），后台触发下一章的 task sheet 生成。
           // fire-and-forget：预取失败不影响当前流水线，下一章正式组装时会重试。
           const nextChapter = chaptersToProcess[chapterIndex + 1];
-          if (nextChapter && isAutopilotMode) {
+
+          if (isPipelineMode && nextChapter) {
+            // pipeline 模式：预取 N+1 章的 chapter detail bundle，同时跟踪进度
+            pipelineRefinementTotal += 1;
+            const prefetchPromise = prefetchJITService.ensureExecutionReady(novelId, nextChapter.id)
+              .then(() => {
+                pipelineRefinementCompleted += 1;
+                logPipelineInfo("pipeline 模式：N+1 章细化完成", {
+                  jobId,
+                  nextChapterId: nextChapter.id,
+                  nextChapterOrder: nextChapter.order,
+                });
+              })
+              .catch((error) => {
+                logPipelineInfo("pipeline 模式：N+1 章细化失败（非阻断，下一章将在组装时重试）", {
+                  jobId,
+                  nextChapterId: nextChapter.id,
+                  nextChapterOrder: nextChapter.order,
+                  error: error instanceof Error ? error.message : String(error),
+                });
+                pipelineRefinementCompleted += 1;
+              });
+            activePrefetchPromise = prefetchPromise;
+            // 更新 pipelineState 供前端心跳展示
+            await this.updateJobSafe(jobId, {
+              heartbeatAt: new Date(),
+              payload: this.stringifyPipelinePayload({
+                ...runtimePayload,
+                qualityAlertDetails,
+                replanAlertDetails,
+                recoverableRepairDetails,
+                pipelineState: {
+                  refinementProgress: {
+                    total: pipelineRefinementTotal,
+                    completed: pipelineRefinementCompleted,
+                    currentChapterId: nextChapter.id,
+                  },
+                  writingProgress: {
+                    total: totalCount,
+                    completed: completed + 1,
+                    currentChapterId: nextChapter.id,
+                  },
+                },
+              }),
+            });
+          } else if (nextChapter && (isAutopilotMode || isPipelineMode)) {
             void prefetchJITService.ensureExecutionReady(novelId, nextChapter.id).catch((error) => {
               logPipelineInfo("N+1 JIT 预取失败（非阻断，下一章将在组装时重试）", {
                 jobId,
@@ -856,6 +907,12 @@ export class NovelCorePipelineService {
                 error: error instanceof Error ? error.message : String(error),
               });
             });
+          }
+
+          // pipeline 模式：在处理下一章前，等待当前章的预取完成以实现交错
+          if (isPipelineMode && activePrefetchPromise) {
+            await activePrefetchPromise.catch(() => {});
+            activePrefetchPromise = null;
           }
 
           completed += 1;

@@ -11,6 +11,7 @@ import {
   DIRECTOR_CANDIDATE_SETUP_STEPS,
   extractDirectorTaskSeedPayloadFromMeta,
 } from "@ai-novel/shared/types/novelDirector";
+import { Badge } from "@/components/ui/badge";
 import type { UnifiedTaskDetail } from "@ai-novel/shared/types/task";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -18,7 +19,6 @@ import {
 } from "@/api/novelDirector";
 import { queryKeys } from "@/api/queryKeys";
 import DirectorRuntimeProjectionCard from "@/components/autoDirector/DirectorRuntimeProjectionCard";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import AITakeoverContainer, { type AITakeoverMode } from "@/components/workflow/AITakeoverContainer";
 import {
@@ -526,6 +526,44 @@ export default function NovelAutoDirectorProgressPanel({
                 <Badge key={tag} variant="secondary">{tag}</Badge>
               ))}
             </div>
+          </div>
+        ) : null}
+
+        {displayState?.pipelineMode === "pipeline" ? (
+          <div className="mt-4 rounded-xl border border-sky-300/60 bg-sky-50/40 p-3 dark:border-sky-700/50 dark:bg-sky-950/15">
+            <div className="flex items-center justify-between gap-2">
+              <div className="text-sm font-medium text-foreground">\u6d41\u6c34\u7ebf\u6267\u884c\u6a21\u5f0f</div>
+              <Badge variant="secondary">\u4ea4\u9519\u6267\u884c\u4e2d</Badge>
+            </div>
+            {displayState.pipelineState ? (
+              <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                <div className="rounded-lg border border-border/70 bg-background/80 p-3">
+                  <div className="text-xs text-muted-foreground">\u7ec6\u5316\u8fdb\u5ea6</div>
+                  <div className="mt-1 text-sm font-medium text-foreground">
+                    {displayState.pipelineState.refinementProgress.completed} / {displayState.pipelineState.refinementProgress.total}
+                  </div>
+                  {displayState.pipelineState.refinementProgress.currentChapterId ? (
+                    <div className="mt-1 text-[11px] text-muted-foreground">\u5f53\u524d\u7ae0\u8282 {displayState.pipelineState.refinementProgress.currentChapterId.slice(0, 8)}</div>
+                  ) : null}
+                </div>
+                <div className="rounded-lg border border-border/70 bg-background/80 p-3">
+                  <div className="text-xs text-muted-foreground">\u5199\u4f5c\u8fdb\u5ea6</div>
+                  <div className="mt-1 text-sm font-medium text-foreground">
+                    {displayState.pipelineState.writingProgress.completed} / {displayState.pipelineState.writingProgress.total}
+                  </div>
+                  {displayState.pipelineState.writingProgress.currentChapterId ? (
+                    <div className="mt-1 text-[11px] text-muted-foreground">\u5f53\u524d\u7ae0\u8282 {displayState.pipelineState.writingProgress.currentChapterId.slice(0, 8)}</div>
+                  ) : null}
+                </div>
+              </div>
+            ) : (
+              <div className="mt-2 text-xs text-muted-foreground">\u7b49\u5f85\u6d41\u6c34\u7ebf\u72b6\u6001\u66f4\u65b0...</div>
+            )}
+            {displayState.pipelineState?.blockedChapterId ? (
+              <div className="mt-2 rounded-lg border border-amber-300/40 bg-amber-50/30 px-3 py-2 text-xs text-amber-900 dark:text-amber-200">
+                \u5f53\u524d\u963b\u585e\uff1a{displayState.pipelineState.blockingReason === "quality_review" ? "\u8d28\u91cf\u5ba1\u6838" : "\u7b49\u5f85\u4eba\u5de5\u786e\u8ba4"}
+              </div>
+            ) : null}
           </div>
         ) : null}
 

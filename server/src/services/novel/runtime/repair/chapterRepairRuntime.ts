@@ -16,6 +16,8 @@ export interface ChapterRepairExecutionOptions {
   temperature?: number;
   repairMode?: PatchRepairMode;
   userInstruction?: string;
+  /** REQ-2022: 关联自动执行 taskId，用于 debug buffer 采集 */
+  directorDebugTaskId?: string;
 }
 
 export interface PrepareChapterRepairExecutionInput {
@@ -223,6 +225,7 @@ export async function prepareChapterRepairExecution(
         temperature: input.options.temperature,
         repairMode: activeRepairMode,
         modeHint,
+        directorDebugTaskId: input.options.directorDebugTaskId,
       });
       return {
         kind: "patched",
@@ -260,6 +263,7 @@ export async function prepareChapterRepairExecution(
           temperature: input.options.temperature,
           repairMode: looseAnchorMode,
           modeHint: looseAnchorHint,
+          directorDebugTaskId: input.options.directorDebugTaskId,
         });
         return {
           kind: "patched",

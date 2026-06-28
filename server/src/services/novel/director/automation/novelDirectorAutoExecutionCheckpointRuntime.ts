@@ -20,6 +20,7 @@ import {
 import { buildDirectorSessionState } from "../runtime/novelDirectorHelpers";
 import { PIPELINE_REPLAN_NOTICE_CODE, parsePipelinePayload } from "../../pipelineJobState";
 import { buildDirectorQualityRepairRisk } from "../phases/novelDirectorQualityRepairRisk";
+import { novelRiskService } from "../../risk/NovelRiskService";
 
 export type AutoExecutionResumeStage = "chapter" | "pipeline";
 
@@ -220,6 +221,30 @@ export async function resolveQualityRepairNoticeAction(
     remainingChapterCount: input.autoExecution.remainingChapterCount ?? 0,
     totalChapterCount: input.range.totalChapterCount,
   });
+
+  // fire-and-forget: auto-create NovelRisk record from quality repair risk
+  if (qualityRepairRisk.riskLevel !== "low" || (qualityRepairRisk.affectedChapterCount ?? 0) > 0) {
+    const riskSeverity = qualityRepairRisk.riskLevel === "replan"
+      ? "high"
+      : qualityRepairRisk.riskLevel === "large_scope"
+        ? "medium"
+        : "low";
+    const riskType = qualityRepairRisk.noticeCode === PIPELINE_REPLAN_NOTICE_CODE ? "continuity" : "quality";
+    novelRiskService.createRisk({
+      novelId: input.novelId,
+      type: riskType as "quality" | "continuity",
+      severity: riskSeverity as "low" | "medium" | "high",
+      title: qualityRepairRisk.reason.slice(0, 200),
+      description: `风险等级: ${qualityRepairRisk.riskLevel}, 修复模式: ${qualityRepairRisk.repairMode ?? "自动"}, 影响章节数: ${qualityRepairRisk.affectedChapterCount ?? 0}, 剩余章节数: ${qualityRepairRisk.remainingChapterCount ?? 0}`,
+      triggerSource: "auto_director_quality_repair",
+      sourceMetadata: {
+        noticeCode: qualityRepairRisk.noticeCode,
+        riskLevel: qualityRepairRisk.riskLevel,
+        repairMode: qualityRepairRisk.repairMode,
+        autoContinuable: qualityRepairRisk.autoContinuable,
+      },
+    }).catch(() => { /* fire-and-forget, never block main flow */ });
+  }
   const checkpointState = {
     ...input.autoExecution,
     pipelineJobId: input.pipelineJobId,

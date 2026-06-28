@@ -273,6 +273,8 @@ export function buildDirectorDisplayState(input: {
   currentFactStepLabel?: string | null;
   factStep: FactStepStateLike;
   chapterProgress?: DirectorChapterExecutionProgressSummary | null;
+  pipelineMode?: "batch" | "pipeline";
+  pipelineState?: DirectorDisplayState["pipelineState"];
 }): DirectorDisplayState {
   const isLiveRunning = hasLiveRuntimeProgress(input.task, input.projection);
   const needsRecovery = Boolean(input.task.pendingManualRecovery) && !isLiveRunning;
@@ -333,5 +335,7 @@ export function buildDirectorDisplayState(input: {
     isLiveRunning,
     needsRecovery,
     steps: buildSteps(stage.key, mode),
+    pipelineMode: input.pipelineMode,
+    pipelineState: input.pipelineState,
   };
 }

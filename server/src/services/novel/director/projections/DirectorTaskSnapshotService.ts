@@ -241,6 +241,8 @@ export class DirectorTaskSnapshotService {
       currentFactStepLabel: factStep?.module.label ?? null,
       factStep,
       chapterProgress: state.chapterProgress ?? null,
+      pipelineMode: state.seedPayload?.autoExecution?.pipelineMode,
+      pipelineState: state.seedPayload?.autoExecution?.pipelineState,
     });
     const dashboardView = buildDirectorDashboardView({
       task: state.task,

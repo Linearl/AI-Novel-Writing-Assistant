@@ -11,6 +11,7 @@ import CollapsibleSummary from "./CollapsibleSummary";
 import WorldInjectionHint from "./WorldInjectionHint";
 import { getLowScoreChapterRange, getPipelineStageState, PIPELINE_STAGE_ITEMS } from "./pipelineTab.utils";
 import DirectorTakeoverEntryPanel from "./DirectorTakeoverEntryPanel";
+import RiskPanel from "@/components/risk/RiskPanel";
 
 interface PipelineTabProps {
   novelId: string;
@@ -100,6 +101,7 @@ function stageStatusLabel(state: "pending" | "active" | "completed" | "failed"):
 
 export default function PipelineTab(props: PipelineTabProps) {
   const {
+    novelId,
     worldInjectionSummary,
     hasCharacters,
     onGoToCharacterTab,
@@ -255,6 +257,8 @@ export default function PipelineTab(props: PipelineTabProps) {
           ) : null}
         </CardContent>
       </Card>
+
+      <RiskPanel novelId={novelId} />
 
       <details className="group rounded-2xl border border-border/70 bg-background/95 p-4">
         <summary className="cursor-pointer list-none">

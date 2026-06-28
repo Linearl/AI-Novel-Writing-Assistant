@@ -31,6 +31,8 @@ export interface PipelineRuntimeInput extends ChapterRuntimeRequestInput {
   auditMode?: "light" | "full" | "repair_only";
   qualityThreshold?: number;
   repairMode?: "detect_only" | "light_repair" | "heavy_repair" | "continuity_only" | "character_only" | "ending_only";
+  /** REQ-2022: 关联自动执行 taskId，用于 debug buffer 采集 */
+  directorDebugTaskId?: string;
 }
 
 /**
@@ -158,6 +160,7 @@ export async function runPipelineChapterWithRuntime(
     qualityThreshold = 75,
     repairMode = "light_repair",
     artifactSyncMode = "adaptive",
+    directorDebugTaskId,
     ...requestInput
   } = options;
   const effectiveMaxRetries = Math.max(0, Math.min(maxRetries, 1));
@@ -287,6 +290,7 @@ export async function runPipelineChapterWithRuntime(
         model: request.model,
         temperature: request.temperature,
         repairMode,
+        directorDebugTaskId,
       },
       forceFullRewrite: styleLeakageIssues.length > 0,
     });
@@ -475,6 +479,7 @@ async function repairDraftContent(input: {
     model?: string;
     temperature?: number;
     repairMode?: "detect_only" | "light_repair" | "heavy_repair" | "continuity_only" | "character_only" | "ending_only";
+    directorDebugTaskId?: string;
   };
 }): Promise<{
   content: string;
@@ -508,6 +513,7 @@ async function repairDraftContent(input: {
       model: input.options.model,
       temperature: input.options.temperature,
       repairMode: input.options.repairMode,
+      directorDebugTaskId: input.options.directorDebugTaskId,
     },
   });
   return {

@@ -36,7 +36,7 @@ import {
 } from "../runtime/DirectorQualityLoopBudgetLedgerService";
 import { directorAutomationLedgerEventService } from "../runtime/DirectorAutomationLedgerEventService";
 import { directorUsageTelemetryQueryService } from "../runtime/DirectorUsageTelemetryQueryService";
-import { isDirectorDebugLogEnabled, getDirectorDebugDetailLevel } from "@/config/directorDebug";
+import { isDirectorDebugLogEnabled, getDirectorDebugDetailLevel } from "../../../../config/directorDebug";
 import { saveDirectorDebugBrief, saveDirectorDebugDetail } from "../debug/directorDebugLogger";
 import { directorDebugBuffer } from "../debug/directorDebugBuffer";
 

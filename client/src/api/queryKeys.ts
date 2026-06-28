@@ -147,4 +147,11 @@ export const queryKeys = {
   novelsKnowledge: {
     bindings: (id: string) => ["novels", "knowledge-documents", id] as const,
   },
+  risks: {
+    all: (novelId: string) => ["risks", novelId] as const,
+    list: (novelId: string, filters?: string) => ["risks", novelId, "list", filters ?? "all"] as const,
+    detail: (novelId: string, riskId: string) => ["risks", novelId, "detail", riskId] as const,
+    assessment: (novelId: string) => ["risks", novelId, "assessment"] as const,
+    reopenImpact: (novelId: string, riskId: string) => ["risks", novelId, "reopen-impact", riskId] as const,
+  },
 };

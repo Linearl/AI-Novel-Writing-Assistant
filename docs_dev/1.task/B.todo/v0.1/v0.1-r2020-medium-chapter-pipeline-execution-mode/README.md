@@ -1,10 +1,10 @@
 ---
 description: "REQ-2020: 自动导演流水线执行模式"
-status: todo
+status: done
 priority: p2
 version: 0.1
 created: 2026-06-27
-updated: 2026-06-27
+updated: 2026-06-28
 ---
 
 # REQ-2020: 自动导演流水线执行模式

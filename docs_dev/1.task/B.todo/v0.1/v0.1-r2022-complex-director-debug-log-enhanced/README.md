@@ -1,6 +1,6 @@
 ---
 description: "REQ-2022 质量修复阶段调试日志增强——任务包概览"
-status: requirements_ready
+status: done
 version: 0.1
 reqId: REQ-2022
 complexity: complex

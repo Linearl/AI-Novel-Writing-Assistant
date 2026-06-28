@@ -180,6 +180,7 @@ export interface PipelineRunOptions extends LLMGenerateOptions {
   qualityThreshold?: number;
   repairMode?: "detect_only" | "light_repair" | "heavy_repair" | "continuity_only" | "character_only" | "ending_only";
   artifactSyncMode?: ArtifactSyncMode;
+  pipelineMode?: "batch" | "pipeline";
 }
 
 export type PipelineBackgroundSyncKind = "artifact_delta" | "character_dynamics" | "state_snapshot" | "payoff_ledger" | "character_resources" | "canonical_state";
@@ -217,6 +218,13 @@ export interface PipelinePayload extends LLMGenerateOptions {
   replanAlertDetails?: string[];
   recoverableRepairDetails?: string[];
   backgroundSync?: PipelineBackgroundSyncState;
+  pipelineMode?: "batch" | "pipeline";
+  pipelineState?: {
+    refinementProgress: { total: number; completed: number; currentChapterId?: string | null };
+    writingProgress: { total: number; completed: number; currentChapterId?: string | null };
+    blockedChapterId?: string | null;
+    blockingReason?: "quality_review" | "manual_approval" | null;
+  } | null;
 }
 
 export interface StorylineDraftInput {
@@ -232,6 +240,8 @@ export interface StorylineImpactInput {
 
 export interface ReviewOptions extends LLMGenerateOptions {
   content?: string;
+  /** REQ-2022: 关联自动执行 taskId，用于 debug buffer 采集 */
+  directorDebugTaskId?: string;
 }
 
 export interface RepairOptions extends LLMGenerateOptions {
@@ -239,6 +249,8 @@ export interface RepairOptions extends LLMGenerateOptions {
   auditIssueIds?: string[];
   userInstruction?: string;
   repairMode?: "detect_only" | "light_repair" | "heavy_repair" | "continuity_only" | "character_only" | "ending_only";
+  /** REQ-2022: 关联自动执行 taskId，用于 debug buffer 采集 */
+  directorDebugTaskId?: string;
 }
 
 export interface HookGenerateOptions extends LLMGenerateOptions {

@@ -1,11 +1,11 @@
 ---
 description: "小说项目风险管理系统 — 风险记录、面板、评估与导出"
-status: requirements_ready
+status: done
 version: 0.1
 reqId: REQ-2018
 complexity: medium
 created: 2026-06-26
-updated: 2026-06-26
+updated: 2026-06-28
 ---
 
 # REQ-2018 — 小说项目风险管理系统

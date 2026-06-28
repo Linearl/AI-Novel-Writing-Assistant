@@ -56,6 +56,38 @@ export function createNovelRiskRoutes(): Router {
     },
   );
 
+  // Get assessment
+  router.get(
+    "/novels/:novelId/risks/assessment",
+    validate({ params: novelIdParamsSchema }),
+    async (req, res, next) => {
+      try {
+        const { novelId } = req.params as P;
+        const assessment = await novelRiskService.getAssessment(novelId);
+        const response: ApiResponse<typeof assessment> = { success: true, data: assessment };
+        res.json(response);
+      } catch (error) { next(error); }
+    },
+  );
+
+  // Get reopen impact (must be before /:riskId to avoid param capture)
+  router.get(
+    "/novels/:novelId/risks/:riskId/reopen-impact",
+    validate({ params: riskIdParamsSchema }),
+    async (req, res, next) => {
+      try {
+        const { novelId, riskId } = req.params as P;
+        const impact = await novelRiskService.getReopenImpact(novelId, riskId);
+        if (!impact) {
+          res.status(404).json({ success: false, error: "风险不存在" });
+          return;
+        }
+        const response: ApiResponse<typeof impact> = { success: true, data: impact };
+        res.json(response);
+      } catch (error) { next(error); }
+    },
+  );
+
   // Get single risk
   router.get(
     "/novels/:novelId/risks/:riskId",
@@ -107,20 +139,6 @@ export function createNovelRiskRoutes(): Router {
     },
   );
 
-  // Get assessment
-  router.get(
-    "/novels/:novelId/risks/assessment",
-    validate({ params: novelIdParamsSchema }),
-    async (req, res, next) => {
-      try {
-        const { novelId } = req.params as P;
-        const assessment = await novelRiskService.getAssessment(novelId);
-        const response: ApiResponse<typeof assessment> = { success: true, data: assessment };
-        res.json(response);
-      } catch (error) { next(error); }
-    },
-  );
-
   // Export risks
   router.post(
     "/novels/:novelId/risks/export",
@@ -128,12 +146,31 @@ export function createNovelRiskRoutes(): Router {
     async (req, res, next) => {
       try {
         const { novelId } = req.params as P;
+        const format = (req.query.format === "md" ? "md" : "json") as "json" | "md";
         const novel = await (await import("../../../../db/prisma")).prisma.novel.findUnique({
           where: { id: novelId },
           select: { title: true },
         });
-        const exportData = await novelRiskService.exportRisks(novelId, novel?.title ?? "未知小说");
+        const exportData = await novelRiskService.exportRisks(novelId, novel?.title ?? "未知小说", format);
         const response: ApiResponse<typeof exportData> = { success: true, data: exportData };
+        res.json(response);
+      } catch (error) { next(error); }
+    },
+  );
+
+  // Reopen risk
+  router.post(
+    "/novels/:novelId/risks/:riskId/reopen",
+    validate({ params: riskIdParamsSchema }),
+    async (req, res, next) => {
+      try {
+        const { novelId, riskId } = req.params as P;
+        const risk = await novelRiskService.updateRiskStatus(novelId, riskId, "reopened", "user", "手动重新开放");
+        if (!risk) {
+          res.status(404).json({ success: false, error: "风险不存在" });
+          return;
+        }
+        const response: ApiResponse<typeof risk> = { success: true, data: risk };
         res.json(response);
       } catch (error) { next(error); }
     },

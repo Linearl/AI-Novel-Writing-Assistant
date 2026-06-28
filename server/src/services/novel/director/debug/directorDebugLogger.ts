@@ -68,6 +68,7 @@ export async function saveDirectorDebugBrief(
   }, null, 2), "utf-8");
 
   await enforceMaxLogFiles(logDir);
+  await enforceRetention(logDir);
   return detailFilename;
 }
 

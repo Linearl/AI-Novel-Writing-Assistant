@@ -59,6 +59,7 @@ export function normalizeDirectorAutoExecutionPlan(
   const autoReview = plan?.autoReview ?? true;
   const autoRepair = autoReview ? (plan?.autoRepair ?? true) : false;
   const artifactSyncMode = plan?.artifactSyncMode ?? "adaptive";
+  const pipelineMode = plan?.pipelineMode ?? "batch";
   const rawMode = typeof (plan as { mode?: unknown } | null | undefined)?.mode === "string"
     ? (plan as { mode?: string }).mode
     : null;
@@ -72,6 +73,7 @@ export function normalizeDirectorAutoExecutionPlan(
       autoReview,
       autoRepair,
       artifactSyncMode,
+      pipelineMode,
     };
   }
   if (plan?.mode === "volume") {
@@ -81,6 +83,7 @@ export function normalizeDirectorAutoExecutionPlan(
       autoReview,
       autoRepair,
       artifactSyncMode,
+      pipelineMode,
     };
   }
   if (plan?.mode === "book") {
@@ -89,6 +92,7 @@ export function normalizeDirectorAutoExecutionPlan(
       autoReview,
       autoRepair,
       artifactSyncMode,
+      pipelineMode,
     };
   }
   const fallbackStartOrder = Math.max(
@@ -106,6 +110,7 @@ export function normalizeDirectorAutoExecutionPlan(
     autoReview,
     autoRepair,
     artifactSyncMode,
+    pipelineMode,
   };
 }
 
@@ -500,6 +505,7 @@ export function buildDirectorAutoExecutionPipelineOptions(input: {
   autoRepair?: boolean;
   artifactSyncMode?: ArtifactSyncMode;
   repairMode?: DirectorAutoExecutionRepairMode;
+  pipelineMode?: "batch" | "pipeline";
 }) {
   const autoReview = input.autoReview ?? true;
   return {
@@ -519,6 +525,7 @@ export function buildDirectorAutoExecutionPipelineOptions(input: {
     workflowTaskId: input.workflowTaskId,
     taskStyleProfileId: input.taskStyleProfileId,
     artifactSyncMode: input.artifactSyncMode ?? "adaptive",
+    pipelineMode: input.pipelineMode ?? "batch",
   };
 }
 

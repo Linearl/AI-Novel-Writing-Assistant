@@ -24,6 +24,8 @@ import { chapterQualityLoopService } from "./quality/ChapterQualityLoopService";
 import { chapterStatePairAfterManualQualityReview } from "./chapterLifecycleState";
 import { directorAutomationLedgerEventService } from "./director/runtime/DirectorAutomationLedgerEventService";
 import { ChapterRuntimeCoordinator } from "./runtime/ChapterRuntimeCoordinator";
+import { isDirectorDebugLogEnabled } from "../../config/directorDebug";
+import { directorDebugBuffer } from "./director/debug/directorDebugBuffer";
 import {
   ChapterContextAssemblyError,
   type AuditContextOperation,
@@ -67,6 +69,7 @@ export class NovelCoreReviewService {
       throw new Error("章节不存在");
     }
 
+    const reviewStartMs = Date.now();
     const review = await this.reviewChapterWithAudit(
       chapter.novel.title,
       chapter.title,
@@ -75,6 +78,30 @@ export class NovelCoreReviewService {
       novelId,
       chapterId,
     );
+
+    const taskId = options.directorDebugTaskId;
+    if (taskId && isDirectorDebugLogEnabled()) {
+      const durationMs = Date.now() - reviewStartMs;
+      try {
+        directorDebugBuffer.recordAuditResult(taskId, {
+          passed: isPass(review.score),
+          issues: review.issues.map((i) => ({
+            code: i.category,
+            message: i.fixSuggestion || i.evidence,
+            severity: i.severity === "critical" || i.severity === "high" ? "error" as const
+              : i.severity === "medium" ? "warning" as const
+              : "info" as const,
+          })),
+          timestamp: new Date().toISOString(),
+          durationMs,
+        });
+      } catch { /* fire-and-forget */ }
+      if (isPass(review.score)) {
+        try {
+          directorDebugBuffer.discardOnSuccess(taskId);
+        } catch { /* fire-and-forget */ }
+      }
+    }
 
     const chapterStatePatch = chapterStatePairAfterManualQualityReview(isPass(review.score));
     await prisma.chapter.update({

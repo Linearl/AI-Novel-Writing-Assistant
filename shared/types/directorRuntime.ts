@@ -900,6 +900,13 @@ export interface DirectorDisplayState {
   isLiveRunning: boolean;
   needsRecovery: boolean;
   steps: DirectorDisplayStep[];
+  pipelineMode?: "batch" | "pipeline";
+  pipelineState?: {
+    refinementProgress: { total: number; completed: number; currentChapterId?: string | null };
+    writingProgress: { total: number; completed: number; currentChapterId?: string | null };
+    blockedChapterId?: string | null;
+    blockingReason?: "quality_review" | "manual_approval" | null;
+  } | null;
 }
 
 export type DirectorDashboardMode =

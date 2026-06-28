@@ -10,15 +10,15 @@ created: 2026-06-28
 
 | # | 任务 | 优先级 | 涉及文件 | 状态 |
 | - | ---- | ------ | -------- | ---- |
-| T1 | 定义调试数据类型 | P0 | `server/src/services/novel/director/debug/directorDebugTypes.ts` | ⬜ 待开始 |
-| T2 | 扩展配置模块 | P0 | `server/src/config/directorDebug.ts` | ⬜ 待开始 |
-| T3 | 实现内存缓冲区管理器 | P0 | `server/src/services/novel/director/debug/directorDebugBuffer.ts` | ⬜ 待开始 |
-| T4 | 扩展日志保存函数 | P0 | `server/src/services/novel/director/debug/directorDebugLogger.ts` | ⬜ 待开始 |
-| T5 | 扩展断路器集成点 | P0 | `server/src/services/novel/director/automation/novelDirectorAutoExecutionCircuitBreakerRuntime.ts` | ⬜ 待开始 |
-| T6 | 在质量修复流程中注入采集点 | P0 | 质量修复流程相关文件 | ⬜ 待开始 |
-| T7 | 实现保留时间清理 | P1 | `server/src/services/novel/director/debug/directorDebugLogger.ts` | ⬜ 待开始 |
-| T8 | 编写单元测试 | P1 | `server/tests/directorDebugBuffer.test.ts`, `server/tests/directorDebugLogger.test.ts` | ⬜ 待开始 |
-| T9 | 验证全仓库类型检查 | P1 | - | ⬜ 待开始 |
+| T1 | 定义调试数据类型 | P0 | `server/src/services/novel/director/debug/directorDebugTypes.ts` | ✅ 完成 |
+| T2 | 扩展配置模块 | P0 | `server/src/config/directorDebug.ts` | ✅ 完成 |
+| T3 | 实现内存缓冲区管理器 | P0 | `server/src/services/novel/director/debug/directorDebugBuffer.ts` | ✅ 完成 |
+| T4 | 扩展日志保存函数 | P0 | `server/src/services/novel/director/debug/directorDebugLogger.ts` | ✅ 完成 |
+| T5 | 扩展断路器集成点 | P0 | `server/src/services/novel/director/automation/novelDirectorAutoExecutionCircuitBreakerRuntime.ts` | ✅ 完成 |
+| T6 | 在质量修复流程中注入采集点 | P0 | chapterPatchRepairService.ts, novelCoreReviewService.ts, AuditService.ts 等 | ✅ 完成 |
+| T7 | 实现保留时间清理 | P1 | `server/src/services/novel/director/debug/directorDebugLogger.ts` | ✅ 完成 |
+| T8 | 编写单元测试 | P1 | `server/tests/directorDebugBuffer.test.js`, `server/tests/directorDebugLogger.test.js` | ✅ 完成 |
+| T9 | 验证全仓库类型检查 | P1 | - | ✅ 完成 |
 
 ---
 

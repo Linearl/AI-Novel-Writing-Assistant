@@ -203,6 +203,7 @@ export class NovelDirectorAutoExecutionRuntime {
               autoRepair: autoExecution.autoRepair,
               artifactSyncMode: autoExecution.artifactSyncMode,
               repairMode: resolveDirectorAutoExecutionRepairMode(autoExecution),
+              pipelineMode: autoExecution.pipelineMode,
             }),
           );
           pipelineJobId = job.id;

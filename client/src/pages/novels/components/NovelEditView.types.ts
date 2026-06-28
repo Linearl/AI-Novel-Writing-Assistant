@@ -625,6 +625,8 @@ export interface NovelTaskDrawerState {
     canArchive: boolean;
   };
   onOpenFullTaskCenter: () => void;
+  pipelineMode?: "batch" | "pipeline";
+  onPipelineModeChange?: (mode: "batch" | "pipeline") => void;
 }
 
 export interface NovelEditViewProps {

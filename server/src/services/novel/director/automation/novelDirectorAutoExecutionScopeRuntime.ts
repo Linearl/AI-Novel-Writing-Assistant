@@ -133,6 +133,7 @@ export function buildRequestedAutoExecutionState(input: {
       autoReview: requestedPlan.autoReview,
       autoRepair: requestedPlan.autoRepair,
       artifactSyncMode: requestedPlan.artifactSyncMode,
+      pipelineMode: requestedPlan.pipelineMode,
       pipelineJobId: input.existingPipelineJobId?.trim() || null,
       pipelineStatus: input.existingPipelineJobId ? "running" : null,
     };
@@ -157,6 +158,7 @@ export function buildRequestedAutoExecutionState(input: {
     autoReview: requestedPlan.autoReview,
     autoRepair: requestedPlan.autoRepair,
     artifactSyncMode: requestedPlan.artifactSyncMode,
+    pipelineMode: requestedPlan.pipelineMode,
     scopeLabel: null,
     pipelineJobId: keepPipelineBinding
       ? (input.existingPipelineJobId?.trim() || input.existingState.pipelineJobId || null)

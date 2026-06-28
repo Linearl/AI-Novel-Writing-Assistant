@@ -104,10 +104,26 @@
 
 - 无 sceneCards 时，只要章节目标和上下文足够，允许生成正文。
 - 接收闸门输出 repair directives 后，只做一次局部 patch repair。
-- 接收闸门的自动修复只允许一次自动重试；仍未通过时，章节进入“未通过但继续生产”的终态，不再同时保留互相冲突的通过态与待修态。
+- 接收闸门的自动修复只允许一次自动重试；仍未通过时，章节进入”未通过但继续生产”的终态，不再同时保留互相冲突的通过态与待修态。
 - 伏笔每章默认写 delta，只有高风险、卷尾、周期节点或 strict 模式触发全量对账。
 - 背景资产回灌只消费已完成的稳定快照，不回拉主链，不因为同章的终态质量告警反复重跑正文链路。
 - 跳过章节时，先提交 degraded timeline，再进入下一章；不能把跳过当成绕过 timeline 的捷径。
+- 流水线执行模式下，第 N 章写作完成后立即开始第 N+1 章的 JIT 细化预取，与第 N 章的质量修复交错执行，提升章节间的并行效率。
+
+## 流水线执行模式（pipeline mode）
+
+章节批量执行支持两种模式：
+
+- **batch 模式**（默认）：顺序处理每个章节。完成第 N 章的生成 + 审核 + 修复后，再开始第 N+1 章。行为与传统流水线一致。
+- **pipeline 模式**：交错执行。第 N 章的写作（生成 + 审核 + 修复）完成后，立即在后台预取第 N+1 章的 chapter detail bundle（细化），同时继续当前质量修复流程。第 N+1 章在下一轮迭代开始时已准备好细化结果，减少等待时间。
+
+实现要点：
+
+- pipeline 模式复用现有 `ChapterPlanJITService.ensureExecutionReady()` 作为预取通道，不引入新的 LLM 调用路径。
+- 预取失败为非阻断错误，下一章正式组装时会重试。
+- 流水线状态（`pipelineState`）通过心跳机制更新到 `PipelinePayload`，包含 `refinementProgress`（细化进度）和 `writingProgress`（写作进度）。
+- 前端通过 `DirectorDisplayState.pipelineMode` 和 `pipelineState` 展示流水线交错执行状态。
+- batch 模式与 pipeline 模式的切换通过自动执行计划中的 `pipelineMode` 字段控制，可由用户在自动导演对话框或任务中心抽屉中切换。
 
 禁止做法：
 
@@ -129,6 +145,7 @@
 - 正文已经可读但 UI 显示失败：检查正文状态、资产回灌状态和账本校准状态是否被混为一个状态。
 - 第 3-8 章这类章节都显示“建议补写修复 / 质量需修复”：先检查 `riskFlags.qualityLoop` 是否是 `defer_and_continue` 质量债务。若没有 `replan_required`、`recommendedAction=replan` 或 `blockingObligations`，主界面和 AI 驾驶舱不得把它显示为阻塞错误。
 - 关闭自动审校后任务停在 `chapter.quality.review facts are not complete yet`：优先检查运行态 seed payload 中的 `autoExecution.autoReview`、`autoExecutionPlan.autoReview` 和 `directorInput.autoExecutionPlan.autoReview` 是否传入事实检查。若这些字段为 `false`，质量审校步骤应输出 `reviewSkipped=true` 并继续后续状态提交。
+- pipeline 模式下预取失败但后续章节细化无结果：检查 `ChapterPlanJITService.ensureExecutionReady()` 是否在预取时写入了 checkpoint；若预取失败未写入 checkpoint，下一章组装时会重新触发，但应确认不会导致重复 LLM 调用。
 - 章节出现未来剧情泄漏或上一章钩子未承接：优先检查 `timeline_context`、`previous_chapter_hook` 是否进入 writer prompt，以及 `TimelineCheckReport` 是否在失败时阻止了 occurred timeline 提交。
 - 下一章开头出现时间回退或重复承接旧钩子：优先检查上一章当前 content hash 是否有 `timeline_finalization` checkpoint、`ChapterTimeAnchor` 是否已落库、hook 是否通过 `addressedHookIds / resolvedHookIds` 关闭，以及上一章尾段是否进入 writer prompt。
 - 修复后仍从旧时间线继续：检查修复成功路径是否基于修复后正文调用 timeline finalization。若只在初稿路径提交 timeline，说明修复路径仍存在状态断层。
