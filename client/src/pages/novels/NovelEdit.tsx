@@ -2079,23 +2079,43 @@ export default function NovelEdit() {
 
   const confirmCharacterResourceProposalMutation = useMutation({
     mutationFn: (proposalId: string) => confirmCharacterResourceProposal(id, proposalId),
-    onSuccess: async () => {
+    onSuccess: async (data) => {
+      // 使用服务端返回的最新数据直接更新缓存，确保 UI 立即反映变化
+      queryClient.setQueryData(queryKeys.novels.characterResources(id), data);
       await invalidateCharacterResourceViews();
       toast.success("资源变更已确认，后续写作会参考它。");
     },
     onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "确认资源变更失败。");
+      const message = error instanceof Error ? error.message : "确认资源变更失败。";
+      // 如果是 404 错误，说明 proposal 可能已被自动导演处理
+      if (message.includes("没有找到") || message.includes("404")) {
+        toast.error("该变更可能已被自动处理，请刷新页面查看最新状态。");
+        // 刷新数据以获取最新状态
+        void invalidateCharacterResourceViews();
+      } else {
+        toast.error(message);
+      }
     },
   });
 
   const rejectCharacterResourceProposalMutation = useMutation({
     mutationFn: (proposalId: string) => rejectCharacterResourceProposal(id, proposalId),
-    onSuccess: async () => {
+    onSuccess: async (data) => {
+      // 使用服务端返回的最新数据直接更新缓存，确保 UI 立即反映变化
+      queryClient.setQueryData(queryKeys.novels.characterResources(id), data);
       await invalidateCharacterResourceViews();
       toast.success("资源变更已忽略。");
     },
     onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "忽略资源变更失败。");
+      const message = error instanceof Error ? error.message : "忽略资源变更失败。";
+      // 如果是 404 错误，说明 proposal 可能已被自动导演处理
+      if (message.includes("没有找到") || message.includes("404")) {
+        toast.error("该变更可能已被自动处理，请刷新页面查看最新状态。");
+        // 刷新数据以获取最新状态
+        void invalidateCharacterResourceViews();
+      } else {
+        toast.error(message);
+      }
     },
   });
 
