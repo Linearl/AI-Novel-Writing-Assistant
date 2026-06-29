@@ -38,17 +38,6 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1\v0.1-r2023-medium-resource-reject-intent-injection\REQ-2023.md](./1.task\B.todo\v0.1\v0.1-r2023-medium-resource-reject-intent-injection\REQ-2023.md) | 资源变更风险拒绝意图注入 - 用户不接受风险时保存意图并在章节修复时注入 | 资源变更风险拒绝意图注入 - 用户不接受风险时保存意图并在章节修复时注入 |
 | [1.task\B.todo\v0.1\v0.1-r2023-medium-resource-reject-intent-injection\tasks.md](./1.task\B.todo\v0.1\v0.1-r2023-medium-resource-reject-intent-injection\tasks.md) | REQ-2023 任务分解清单 | REQ-2023 任务分解清单 |
 
-## 1.task\B.todo\v0.1\v0.1-r3006-medium-repair-detail-dialog-enhancement
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r3006-medium-repair-detail-dialog-enhancement\decision_log.md](./1.task\B.todo\v0.1\v0.1-r3006-medium-repair-detail-dialog-enhancement\decision_log.md) | REQ-3006 决策日志 | REQ-3006 决策日志 |
-| [1.task\B.todo\v0.1\v0.1-r3006-medium-repair-detail-dialog-enhancement\design.md](./1.task\B.todo\v0.1\v0.1-r3006-medium-repair-detail-dialog-enhancement\design.md) | REQ-3006 技术设计文档 | REQ-3006 技术设计文档 |
-| [1.task\B.todo\v0.1\v0.1-r3006-medium-repair-detail-dialog-enhancement\README.md](./1.task\B.todo\v0.1\v0.1-r3006-medium-repair-detail-dialog-enhancement\README.md) | 修复详情弹窗增强 - Token 统计、多版本 Tab、Diff 视图 | 修复详情弹窗增强 - Token 统计、多版本 Tab、Diff 视图 |
-| [1.task\B.todo\v0.1\v0.1-r3006-medium-repair-detail-dialog-enhancement\REQ-3006-original.md](./1.task\B.todo\v0.1\v0.1-r3006-medium-repair-detail-dialog-enhancement\REQ-3006-original.md) | 修复详情弹窗增强 - Token 统计、多版本 Tab、Diff 视图 | 修复详情弹窗增强 - Token 统计、多版本 Tab、Diff 视图 |
-| [1.task\B.todo\v0.1\v0.1-r3006-medium-repair-detail-dialog-enhancement\REQ-3006.md](./1.task\B.todo\v0.1\v0.1-r3006-medium-repair-detail-dialog-enhancement\REQ-3006.md) | 修复详情弹窗增强 - Token 统计、多版本 Tab、Diff 视图 | 修复详情弹窗增强 - Token 统计、多版本 Tab、Diff 视图 |
-| [1.task\B.todo\v0.1\v0.1-r3006-medium-repair-detail-dialog-enhancement\tasks.md](./1.task\B.todo\v0.1\v0.1-r3006-medium-repair-detail-dialog-enhancement\tasks.md) | REQ-3006 任务分解清单 | REQ-3006 任务分解清单 |
-
 ## 1.task\B.todo\v0.1\v0.1-r7001-simple-auto-director-test-fix
 
 | 文件 | 标题 | 描述 |

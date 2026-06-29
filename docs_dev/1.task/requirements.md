@@ -50,7 +50,7 @@ description: "需求任务总清单（SSOT）"
 | 3002 | 导演进度规划资源缺失 Checklist 可视化 | p4 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r3002-medium-director-planning-checklist/README.md` |  |
 | 3003 | 小说项目对话存档 | p4 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r3003-medium-repair-progress-dialog/README.md` |  |
 | 3005 | Novel Conversation Archive | p4 | ✅ 已完成 | - | 0.1 | 2026-06-26T00:00:00.000Z | 2026-06-26T00:00:00.000Z | `B.2.done/v0.1-r3005-medium-novel-conversation-archive/README.md` |  |
-| 3006 | 修复详情弹窗增强 | p4 | ✅ 已完成 | - | 0.1 | 2026-06-28T00:00:00.000Z | 2026-06-29T00:00:00.000Z | `B.todo/v0.1-r3006-medium-repair-detail-dialog-enhancement/README.md` |  |
+| 3006 | 修复详情弹窗增强 | p4 | ✅ 已完成 | - | 0.1 | 2026-06-28T00:00:00.000Z | 2026-06-29T00:00:00.000Z | `B.2.done/v0.1-r3006-medium-repair-detail-dialog-enhancement/README.md` |  |
 | 3004 | Novel Conversation Archive | p4 | 📋 待办 | - | 0.1 | 2026-06-26T00:00:00.000Z | 2026-06-26T00:00:00.000Z | `B.todo/v0.1-r3004-medium-novel-conversation-archive/README.md` |  |
 
 ### 3.6 技术债务和重构任务（7xxx）
@@ -107,6 +107,6 @@ description: "需求任务总清单（SSOT）"
 | 3002 | 导演进度规划资源缺失 Checklist 可视化 | `B.2.done/v0.1-r3002-medium-director-planning-checklist/README.md` |
 | 3003 | 小说项目对话存档 | `B.2.done/v0.1-r3003-medium-repair-progress-dialog/README.md` |
 | 3005 | Novel Conversation Archive | `B.2.done/v0.1-r3005-medium-novel-conversation-archive/README.md` |
-| 3006 | 修复详情弹窗增强 | `B.todo/v0.1-r3006-medium-repair-detail-dialog-enhancement/README.md` |
+| 3006 | 修复详情弹窗增强 | `B.2.done/v0.1-r3006-medium-repair-detail-dialog-enhancement/README.md` |
 
 ---
