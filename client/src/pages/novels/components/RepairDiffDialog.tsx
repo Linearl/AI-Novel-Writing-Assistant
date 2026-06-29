@@ -1,7 +1,3 @@
----
-description: "Diff 视图组件 - 对比修复前后内容"
----
-
 import ReactDiffViewer, { DiffMethod } from "react-diff-viewer-continued";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -12,7 +8,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface RepairDiffDialogProps {
   open: boolean;
@@ -71,7 +66,7 @@ export default function RepairDiffDialog({
         </DialogHeader>
 
         <div className="flex-1 overflow-hidden">
-          <ScrollArea className="h-full">
+          <div className="h-full overflow-y-auto">
             <div className="p-4">
               <ReactDiffViewer
                 oldValue={originalContent}
@@ -95,7 +90,7 @@ export default function RepairDiffDialog({
                 }}
               />
             </div>
-          </ScrollArea>
+          </div>
         </div>
 
         <div className="border-t border-border/70 px-5 py-3">

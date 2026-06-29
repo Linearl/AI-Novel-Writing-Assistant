@@ -1,8 +1,4 @@
----
-description: "修复详情弹窗组件 - Token 统计、多版本 Tab、Diff 视图"
----
-
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -14,7 +10,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { queryKeys } from "@/api/queryKeys";
 import { getChapterRepairVersions, type ChapterRepairVersion } from "@/api/novel/chapters";
 
@@ -133,7 +128,7 @@ export default function RepairDetailDialog({
               </TabsList>
               {versions.map((v) => (
                 <TabsContent key={v.id} value={String(v.versionIndex)} className="flex-1 overflow-hidden px-5 pb-5 pt-2">
-                  <ScrollArea className="h-full">
+                  <div className="h-full overflow-y-auto">
                     <div className="space-y-3">
                       <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
                         <Badge variant="outline">{v.repairMode ?? "unknown"}</Badge>
@@ -151,7 +146,7 @@ export default function RepairDetailDialog({
                         {v.content}
                       </div>
                     </div>
-                  </ScrollArea>
+                  </div>
                 </TabsContent>
               ))}
             </Tabs>
