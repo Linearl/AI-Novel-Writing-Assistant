@@ -108,6 +108,8 @@ export class ChapterRepairStreamRuntime {
             chapterId,
             options,
             content: prepared.content.trim() || fullContent,
+            issues,
+            repairMode: prepared.finalRepairMode,
             helpers,
           });
         },
@@ -124,6 +126,8 @@ export class ChapterRepairStreamRuntime {
           chapterId,
           options,
           content: completed.output.trim() || fullContent,
+          issues,
+          repairMode: prepared.finalRepairMode,
           helpers,
         });
       },
@@ -170,6 +174,8 @@ export class ChapterRepairStreamRuntime {
     chapterId: string;
     options: RepairOptions;
     content: string;
+    issues?: ReviewIssue[];
+    repairMode?: string;
     helpers: StreamDoneHelpers;
   }): Promise<void> {
     const runId = `chapter-repair:${input.chapterId}`;
@@ -185,6 +191,27 @@ export class ChapterRepairStreamRuntime {
     if (!repairedContent) {
       throw new ChapterPatchRepairFailedError("修复结果为空，未保存章节正文。");
     }
+
+    // 保存修复版本记录
+    const latestVersion = await prisma.chapterRepairVersion.findFirst({
+      where: { novelId: input.novelId, chapterId: input.chapterId },
+      orderBy: { versionIndex: "desc" },
+      select: { versionIndex: true },
+    });
+    const nextVersionIndex = (latestVersion?.versionIndex ?? 0) + 1;
+
+    await prisma.chapterRepairVersion.create({
+      data: {
+        novelId: input.novelId,
+        chapterId: input.chapterId,
+        versionIndex: nextVersionIndex,
+        content: repairedContent,
+        repairMode: input.repairMode ?? null,
+        issuesJson: input.issues ? JSON.stringify(input.issues) : null,
+        tokenUsageJson: null,
+        userInstruction: input.options.userInstruction ?? null,
+      },
+    });
 
     await prisma.chapter.update({
       where: { id: input.chapterId },
@@ -213,7 +240,10 @@ export class ChapterRepairStreamRuntime {
     if (isPass(review.score)) {
       await prisma.chapter.update({
         where: { id: input.chapterId },
-        data: { generationState: "approved" },
+        data: {
+          generationState: "approved",
+          chapterStatus: "completed",
+        },
       });
       if (input.options.auditIssueIds?.length) {
         const resolveAuditIssues = this.deps.resolveAuditIssues
