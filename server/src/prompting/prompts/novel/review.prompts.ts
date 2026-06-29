@@ -256,7 +256,7 @@ export const chapterRepairPrompt: PromptAsset<ChapterRepairPromptInput, string, 
       input.ragContext || "none",
       "",
       ...(input.userInstruction ? [
-        "【用户修改指导】",
+        "【用户修改指导，高优先级】",
         input.userInstruction,
         "",
       ] : []),

@@ -635,9 +635,8 @@ export class NovelCorePipelineService {
           maxRetries,
         });
 
-        const [novel, chapters] = await Promise.all([
-          prisma.novel.findUnique({ where: { id: novelId } }),
-          prisma.chapter.findMany({
+        const novel = await prisma.novel.findUnique({ where: { id: novelId } });
+        let chapters = await prisma.chapter.findMany({
             where: {
               novelId,
               order: { gte: options.startOrder, lte: options.endOrder },
@@ -646,10 +645,30 @@ export class NovelCorePipelineService {
                 : {}),
             },
             orderBy: { order: "asc" },
-          }),
-        ]);
-        if (!novel || chapters.length === 0) {
-          throw new Error("任务执行失败：小说或章节不存在");
+          });
+        if (!novel) {
+          throw new Error("任务执行失败：小说不存在");
+        }
+        if (chapters.length === 0 && runtimePayload.skipCompleted) {
+          // skipCompleted 误过滤了无内容但未完成的章节（unplanned），
+          // 回退到不过滤模式重新查询
+          chapters = await prisma.chapter.findMany({
+            where: {
+              novelId,
+              order: { gte: options.startOrder, lte: options.endOrder },
+            },
+            orderBy: { order: "asc" },
+          });
+          if (chapters.length > 0) {
+            logPipelineInfo("skipCompleted 回退：包含未生成章节", {
+              jobId,
+              novelId,
+              chapterCount: chapters.length,
+            });
+          }
+        }
+        if (chapters.length === 0) {
+          throw new Error("任务执行失败：指定区间内没有可处理的章节");
         }
 
         logPipelineInfo("任务加载完成", {

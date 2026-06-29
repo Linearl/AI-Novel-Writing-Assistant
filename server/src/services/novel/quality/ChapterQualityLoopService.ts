@@ -51,6 +51,7 @@ function serializeRiskFlags(
   source: RecordChapterQualityLoopInput["source"],
   terminalAction?: RecordChapterQualityLoopInput["terminalAction"],
   qualityDebtAttribution?: RecordChapterQualityLoopInput["qualityDebtAttribution"],
+  overallScore?: number | null,
 ): string {
   const parsed = parseJsonObject(previous);
   return JSON.stringify({
@@ -58,6 +59,7 @@ function serializeRiskFlags(
     qualityLoop: {
       ...assessment,
       source,
+      ...(typeof overallScore === "number" ? { overallScore } : {}),
       ...(terminalAction ? { terminalAction } : {}),
       ...(qualityDebtAttribution ? { qualityDebtAttribution } : {}),
     },
@@ -92,11 +94,14 @@ function appendRepairHistory(
   return lines.join("\n");
 }
 
-function resolveContinuableChapterStatus(chapter: Pick<ChapterQualityLoopChapter, "chapterStatus" | "generationState">): ChapterStatus | undefined {
+function resolveContinuableChapterStatus(
+  chapter: Pick<ChapterQualityLoopChapter, "chapterStatus" | "generationState">,
+  willBeApproved: boolean,
+): ChapterStatus | undefined {
   if (chapter.chapterStatus !== "needs_repair") {
     return undefined;
   }
-  if (chapter.generationState === "approved" || chapter.generationState === "published") {
+  if (chapter.generationState === "approved" || chapter.generationState === "published" || willBeApproved) {
     return "completed";
   }
   return "pending_review";
@@ -108,16 +113,20 @@ export function buildChapterQualityLoopChapterUpdate(
   source: RecordChapterQualityLoopInput["source"],
   terminalAction?: RecordChapterQualityLoopInput["terminalAction"],
   qualityDebtAttribution?: RecordChapterQualityLoopInput["qualityDebtAttribution"],
+  overallScore?: number | null,
 ): Prisma.ChapterUpdateInput {
   const nextRepairHistory = appendRepairHistory(chapter.repairHistory, assessment, terminalAction);
   const shouldContinueChapter = assessment.recommendedAction === "continue" || terminalAction === "defer_and_continue";
+  const shouldUpgradeGenerationState = shouldContinueChapter
+    && (chapter.generationState === "reviewed" || chapter.generationState === "repaired");
   const nextChapterStatus: ChapterStatus | undefined = shouldContinueChapter
-    ? resolveContinuableChapterStatus(chapter)
+    ? resolveContinuableChapterStatus(chapter, shouldUpgradeGenerationState)
     : "needs_repair";
   return {
-    riskFlags: serializeRiskFlags(chapter.riskFlags, assessment, source, terminalAction, qualityDebtAttribution),
+    riskFlags: serializeRiskFlags(chapter.riskFlags, assessment, source, terminalAction, qualityDebtAttribution, overallScore),
     ...(nextRepairHistory !== undefined ? { repairHistory: nextRepairHistory } : {}),
     ...(nextChapterStatus ? { chapterStatus: nextChapterStatus } : {}),
+    ...(shouldUpgradeGenerationState ? { generationState: "approved" } : {}),
   };
 }
 
@@ -148,8 +157,26 @@ export class ChapterQualityLoopService {
     });
     await prisma.chapter.update({
       where: { id: input.chapterId },
-      data: buildChapterQualityLoopChapterUpdate(chapter, assessment, input.source, input.terminalAction ?? null, input.qualityDebtAttribution),
+      data: buildChapterQualityLoopChapterUpdate(chapter, assessment, input.source, input.terminalAction ?? null, input.qualityDebtAttribution, input.score.overall),
     });
+
+    // 质量闭环通过时，自动关闭该章节所有未解决的审计 issues
+    if (assessment.recommendedAction === "continue") {
+      const openIssues = await prisma.auditIssue.findMany({
+        where: {
+          report: { novelId: input.novelId, chapterId: input.chapterId },
+          status: "open",
+        },
+        select: { id: true },
+      });
+      if (openIssues.length > 0) {
+        await prisma.auditIssue.updateMany({
+          where: { id: { in: openIssues.map((issue) => issue.id) } },
+          data: { status: "resolved" },
+        });
+      }
+    }
+
     await directorAutomationLedgerEventService.recordQualityLoopAssessment({
       taskId: input.taskId,
       runId: input.runId,

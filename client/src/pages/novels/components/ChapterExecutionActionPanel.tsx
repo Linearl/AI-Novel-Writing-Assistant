@@ -345,6 +345,7 @@ export default function ChapterExecutionActionPanel(props: ChapterExecutionActio
       && primaryAction.label !== "自动修复问题"
       && primaryAction.label !== "正在自动修复...",
   );
+  const showGuidedRepairAction = Boolean(selectedChapter && !isSelectedChapterRepairing);
 
   return (
     <>
@@ -392,11 +393,11 @@ export default function ChapterExecutionActionPanel(props: ChapterExecutionActio
               </AiButton>
             ) : null}
             {showQuickRepairAction ? (
-              <AiButton className="w-full" variant="secondary" onClick={onAutoRepair} disabled={!selectedChapter || isSelectedChapterRepairing}>
+              <AiButton className="w-full" variant="outline" onClick={onAutoRepair} disabled={!selectedChapter || isSelectedChapterRepairing}>
                 {isSelectedChapterRepairing && repairActionKind === "autoRepair" ? "正在自动修复..." : "自动修复问题"}
               </AiButton>
             ) : null}
-            {showQuickRepairAction ? (
+            {showGuidedRepairAction ? (
               <GuidedRepairButton
                 disabled={!selectedChapter || isSelectedChapterRepairing}
                 isRepairing={isSelectedChapterRepairing && repairActionKind === "guidedRepair"}
