@@ -27,60 +27,56 @@ description: "docs 目录索引（自动生成）"
 | --- | --- | --- |
 | [1.task\B.todo\任务包六件套构成-编号分类规则-自动归档机制.md](./1.task\B.todo\任务包六件套构成-编号分类规则-自动归档机制.md) | --- | - |
 
-## 1.task\B.todo\v0.1\v0.1-r2018-medium-novel-risk-management
+## 1.task\B.todo\v0.1\v0.1-r2023-medium-resource-reject-intent-injection
 
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r2018-medium-novel-risk-management\decision_log.md](./1.task\B.todo\v0.1\v0.1-r2018-medium-novel-risk-management\decision_log.md) | 小说项目风险管理系统 — 决策日志 | 小说项目风险管理系统 — 决策日志 |
-| [1.task\B.todo\v0.1\v0.1-r2018-medium-novel-risk-management\design.md](./1.task\B.todo\v0.1\v0.1-r2018-medium-novel-risk-management\design.md) | 小说项目风险管理系统 — 设计文档 | 小说项目风险管理系统 — 设计文档 |
-| [1.task\B.todo\v0.1\v0.1-r2018-medium-novel-risk-management\README.md](./1.task\B.todo\v0.1\v0.1-r2018-medium-novel-risk-management\README.md) | 小说项目风险管理系统 — 风险记录、面板、评估与导出 | 小说项目风险管理系统 — 风险记录、面板、评估与导出 |
-| [1.task\B.todo\v0.1\v0.1-r2018-medium-novel-risk-management\REQ-2018-original.md](./1.task\B.todo\v0.1\v0.1-r2018-medium-novel-risk-management\REQ-2018-original.md) | 小说项目风险管理系统 — 原始需求冻结副本 | 小说项目风险管理系统 — 原始需求冻结副本 |
-| [1.task\B.todo\v0.1\v0.1-r2018-medium-novel-risk-management\REQ-2018.md](./1.task\B.todo\v0.1\v0.1-r2018-medium-novel-risk-management\REQ-2018.md) | 小说项目风险管理系统 — 需求工作副本 | 小说项目风险管理系统 — 需求工作副本 |
-| [1.task\B.todo\v0.1\v0.1-r2018-medium-novel-risk-management\tasks.md](./1.task\B.todo\v0.1\v0.1-r2018-medium-novel-risk-management\tasks.md) | 小说项目风险管理系统 — 任务拆解 | 小说项目风险管理系统 — 任务拆解 |
+| [1.task\B.todo\v0.1\v0.1-r2023-medium-resource-reject-intent-injection\decision_log.md](./1.task\B.todo\v0.1\v0.1-r2023-medium-resource-reject-intent-injection\decision_log.md) | REQ-2023 决策日志 | REQ-2023 决策日志 |
+| [1.task\B.todo\v0.1\v0.1-r2023-medium-resource-reject-intent-injection\design.md](./1.task\B.todo\v0.1\v0.1-r2023-medium-resource-reject-intent-injection\design.md) | REQ-2023 技术设计文档 | REQ-2023 技术设计文档 |
+| [1.task\B.todo\v0.1\v0.1-r2023-medium-resource-reject-intent-injection\README.md](./1.task\B.todo\v0.1\v0.1-r2023-medium-resource-reject-intent-injection\README.md) | 资源变更风险拒绝意图注入 - 用户不接受风险时保存意图并在章节修复时注入 | 资源变更风险拒绝意图注入 - 用户不接受风险时保存意图并在章节修复时注入 |
+| [1.task\B.todo\v0.1\v0.1-r2023-medium-resource-reject-intent-injection\REQ-2023-original.md](./1.task\B.todo\v0.1\v0.1-r2023-medium-resource-reject-intent-injection\REQ-2023-original.md) | 资源变更风险拒绝意图注入 - 用户不接受风险时保存意图并在章节修复时注入 | 资源变更风险拒绝意图注入 - 用户不接受风险时保存意图并在章节修复时注入 |
+| [1.task\B.todo\v0.1\v0.1-r2023-medium-resource-reject-intent-injection\REQ-2023.md](./1.task\B.todo\v0.1\v0.1-r2023-medium-resource-reject-intent-injection\REQ-2023.md) | 资源变更风险拒绝意图注入 - 用户不接受风险时保存意图并在章节修复时注入 | 资源变更风险拒绝意图注入 - 用户不接受风险时保存意图并在章节修复时注入 |
+| [1.task\B.todo\v0.1\v0.1-r2023-medium-resource-reject-intent-injection\tasks.md](./1.task\B.todo\v0.1\v0.1-r2023-medium-resource-reject-intent-injection\tasks.md) | REQ-2023 任务分解清单 | REQ-2023 任务分解清单 |
 
-## 1.task\B.todo\v0.1\v0.1-r2019-medium-tool-call-loop-detection
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r2019-medium-tool-call-loop-detection\decision_log.md](./1.task\B.todo\v0.1\v0.1-r2019-medium-tool-call-loop-detection\decision_log.md) | REQ-2019 决策日志 | REQ-2019 决策日志 |
-| [1.task\B.todo\v0.1\v0.1-r2019-medium-tool-call-loop-detection\design.md](./1.task\B.todo\v0.1\v0.1-r2019-medium-tool-call-loop-detection\design.md) | REQ-2019 方案设计 | REQ-2019 方案设计 |
-| [1.task\B.todo\v0.1\v0.1-r2019-medium-tool-call-loop-detection\README.md](./1.task\B.todo\v0.1\v0.1-r2019-medium-tool-call-loop-detection\README.md) | REQ-2019 重复工具调用循环检测任务总线 | REQ-2019 重复工具调用循环检测任务总线 |
-| [1.task\B.todo\v0.1\v0.1-r2019-medium-tool-call-loop-detection\REQ-2019-original.md](./1.task\B.todo\v0.1\v0.1-r2019-medium-tool-call-loop-detection\REQ-2019-original.md) | REQ-2019 重复工具调用循环检测 | REQ-2019 重复工具调用循环检测 |
-| [1.task\B.todo\v0.1\v0.1-r2019-medium-tool-call-loop-detection\REQ-2019.md](./1.task\B.todo\v0.1\v0.1-r2019-medium-tool-call-loop-detection\REQ-2019.md) | REQ-2019 重复工具调用循环检测 | REQ-2019 重复工具调用循环检测 |
-| [1.task\B.todo\v0.1\v0.1-r2019-medium-tool-call-loop-detection\tasks.md](./1.task\B.todo\v0.1\v0.1-r2019-medium-tool-call-loop-detection\tasks.md) | REQ-2019 任务拆解 | REQ-2019 任务拆解 |
-
-## 1.task\B.todo\v0.1\v0.1-r2020-medium-chapter-pipeline-execution-mode
+## 1.task\B.todo\v0.1\v0.1-r3006-medium-repair-detail-dialog-enhancement
 
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r2020-medium-chapter-pipeline-execution-mode\decision_log.md](./1.task\B.todo\v0.1\v0.1-r2020-medium-chapter-pipeline-execution-mode\decision_log.md) | REQ-2020 decision_log: 自动导演流水线执行模式决策日志 | REQ-2020 decision_log: 自动导演流水线执行模式决策日志 |
-| [1.task\B.todo\v0.1\v0.1-r2020-medium-chapter-pipeline-execution-mode\design.md](./1.task\B.todo\v0.1\v0.1-r2020-medium-chapter-pipeline-execution-mode\design.md) | REQ-2020 design: 自动导演流水线执行模式技术设计 | REQ-2020 design: 自动导演流水线执行模式技术设计 |
-| [1.task\B.todo\v0.1\v0.1-r2020-medium-chapter-pipeline-execution-mode\README.md](./1.task\B.todo\v0.1\v0.1-r2020-medium-chapter-pipeline-execution-mode\README.md) | REQ-2020: 自动导演流水线执行模式 | REQ-2020: 自动导演流水线执行模式 |
-| [1.task\B.todo\v0.1\v0.1-r2020-medium-chapter-pipeline-execution-mode\REQ-2020-original.md](./1.task\B.todo\v0.1\v0.1-r2020-medium-chapter-pipeline-execution-mode\REQ-2020-original.md) | REQ-2020-original: 自动导演流水线执行模式（原始冻结副本） | REQ-2020-original: 自动导演流水线执行模式（原始冻结副本） |
-| [1.task\B.todo\v0.1\v0.1-r2020-medium-chapter-pipeline-execution-mode\REQ-2020.md](./1.task\B.todo\v0.1\v0.1-r2020-medium-chapter-pipeline-execution-mode\REQ-2020.md) | REQ-2020: 自动导演流水线执行模式（章节细化与写作交错执行） | REQ-2020: 自动导演流水线执行模式（章节细化与写作交错执行） |
-| [1.task\B.todo\v0.1\v0.1-r2020-medium-chapter-pipeline-execution-mode\tasks.md](./1.task\B.todo\v0.1\v0.1-r2020-medium-chapter-pipeline-execution-mode\tasks.md) | REQ-2020 tasks: 自动导演流水线执行模式任务清单 | REQ-2020 tasks: 自动导演流水线执行模式任务清单 |
+| [1.task\B.todo\v0.1\v0.1-r3006-medium-repair-detail-dialog-enhancement\decision_log.md](./1.task\B.todo\v0.1\v0.1-r3006-medium-repair-detail-dialog-enhancement\decision_log.md) | REQ-3006 决策日志 | REQ-3006 决策日志 |
+| [1.task\B.todo\v0.1\v0.1-r3006-medium-repair-detail-dialog-enhancement\design.md](./1.task\B.todo\v0.1\v0.1-r3006-medium-repair-detail-dialog-enhancement\design.md) | REQ-3006 技术设计文档 | REQ-3006 技术设计文档 |
+| [1.task\B.todo\v0.1\v0.1-r3006-medium-repair-detail-dialog-enhancement\README.md](./1.task\B.todo\v0.1\v0.1-r3006-medium-repair-detail-dialog-enhancement\README.md) | 修复详情弹窗增强 - Token 统计、多版本 Tab、Diff 视图 | 修复详情弹窗增强 - Token 统计、多版本 Tab、Diff 视图 |
+| [1.task\B.todo\v0.1\v0.1-r3006-medium-repair-detail-dialog-enhancement\REQ-3006-original.md](./1.task\B.todo\v0.1\v0.1-r3006-medium-repair-detail-dialog-enhancement\REQ-3006-original.md) | 修复详情弹窗增强 - Token 统计、多版本 Tab、Diff 视图 | 修复详情弹窗增强 - Token 统计、多版本 Tab、Diff 视图 |
+| [1.task\B.todo\v0.1\v0.1-r3006-medium-repair-detail-dialog-enhancement\REQ-3006.md](./1.task\B.todo\v0.1\v0.1-r3006-medium-repair-detail-dialog-enhancement\REQ-3006.md) | 修复详情弹窗增强 - Token 统计、多版本 Tab、Diff 视图 | 修复详情弹窗增强 - Token 统计、多版本 Tab、Diff 视图 |
+| [1.task\B.todo\v0.1\v0.1-r3006-medium-repair-detail-dialog-enhancement\tasks.md](./1.task\B.todo\v0.1\v0.1-r3006-medium-repair-detail-dialog-enhancement\tasks.md) | REQ-3006 任务分解清单 | REQ-3006 任务分解清单 |
 
-## 1.task\B.todo\v0.1\v0.1-r2021-simple-director-debug-log
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r2021-simple-director-debug-log\decision_log.md](./1.task\B.todo\v0.1\v0.1-r2021-simple-director-debug-log\decision_log.md) | 质量修复阶段调试日志保存 — 决策日志 | 质量修复阶段调试日志保存 — 决策日志 |
-| [1.task\B.todo\v0.1\v0.1-r2021-simple-director-debug-log\design.md](./1.task\B.todo\v0.1\v0.1-r2021-simple-director-debug-log\design.md) | 质量修复阶段调试日志保存 — 设计文档 | 质量修复阶段调试日志保存 — 设计文档 |
-| [1.task\B.todo\v0.1\v0.1-r2021-simple-director-debug-log\README.md](./1.task\B.todo\v0.1\v0.1-r2021-simple-director-debug-log\README.md) | 质量修复阶段调试日志保存 — 任务包概览 | 质量修复阶段调试日志保存 — 任务包概览 |
-| [1.task\B.todo\v0.1\v0.1-r2021-simple-director-debug-log\REQ-2021-original.md](./1.task\B.todo\v0.1\v0.1-r2021-simple-director-debug-log\REQ-2021-original.md) | 小说项目风险管理系统 — 原始需求冻结副本 | 小说项目风险管理系统 — 原始需求冻结副本 |
-| [1.task\B.todo\v0.1\v0.1-r2021-simple-director-debug-log\REQ-2021.md](./1.task\B.todo\v0.1\v0.1-r2021-simple-director-debug-log\REQ-2021.md) | 质量修复阶段调试日志保存 — 需求工作副本 | 质量修复阶段调试日志保存 — 需求工作副本 |
-| [1.task\B.todo\v0.1\v0.1-r2021-simple-director-debug-log\tasks.md](./1.task\B.todo\v0.1\v0.1-r2021-simple-director-debug-log\tasks.md) | 质量修复阶段调试日志保存 — 任务拆解 | 质量修复阶段调试日志保存 — 任务拆解 |
-
-## 1.task\B.todo\v0.1\v0.1-r2022-complex-director-debug-log-enhanced
+## 1.task\B.todo\v0.1\v0.1-r7001-simple-auto-director-test-fix
 
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r2022-complex-director-debug-log-enhanced\decision_log.md](./1.task\B.todo\v0.1\v0.1-r2022-complex-director-debug-log-enhanced\decision_log.md) | REQ-2022 质量修复阶段调试日志增强 — 决策日志 | REQ-2022 质量修复阶段调试日志增强 — 决策日志 |
-| [1.task\B.todo\v0.1\v0.1-r2022-complex-director-debug-log-enhanced\design.md](./1.task\B.todo\v0.1\v0.1-r2022-complex-director-debug-log-enhanced\design.md) | REQ-2022 质量修复阶段调试日志增强 — 设计文档 | REQ-2022 质量修复阶段调试日志增强 — 设计文档 |
-| [1.task\B.todo\v0.1\v0.1-r2022-complex-director-debug-log-enhanced\README.md](./1.task\B.todo\v0.1\v0.1-r2022-complex-director-debug-log-enhanced\README.md) | REQ-2022 质量修复阶段调试日志增强——任务包概览 | REQ-2022 质量修复阶段调试日志增强——任务包概览 |
-| [1.task\B.todo\v0.1\v0.1-r2022-complex-director-debug-log-enhanced\REQ-2022-original.md](./1.task\B.todo\v0.1\v0.1-r2022-complex-director-debug-log-enhanced\REQ-2022-original.md) | REQ-2022 质量修复阶段调试日志增强 — 需求原始冻结副本 | REQ-2022 质量修复阶段调试日志增强 — 需求原始冻结副本 |
-| [1.task\B.todo\v0.1\v0.1-r2022-complex-director-debug-log-enhanced\REQ-2022.md](./1.task\B.todo\v0.1\v0.1-r2022-complex-director-debug-log-enhanced\REQ-2022.md) | REQ-2022 质量修复阶段调试日志增强 — 需求工作副本 | REQ-2022 质量修复阶段调试日志增强 — 需求工作副本 |
-| [1.task\B.todo\v0.1\v0.1-r2022-complex-director-debug-log-enhanced\tasks.md](./1.task\B.todo\v0.1\v0.1-r2022-complex-director-debug-log-enhanced\tasks.md) | REQ-2022 质量修复阶段调试日志增强 — 任务拆解 | REQ-2022 质量修复阶段调试日志增强 — 任务拆解 |
+| [1.task\B.todo\v0.1\v0.1-r7001-simple-auto-director-test-fix\README.md](./1.task\B.todo\v0.1\v0.1-r7001-simple-auto-director-test-fix\README.md) | REQ-7001 Auto-Director 测试隔离修复任务总线 | REQ-7001 Auto-Director 测试隔离修复任务总线 |
+| [1.task\B.todo\v0.1\v0.1-r7001-simple-auto-director-test-fix\REQ-7001-original.md](./1.task\B.todo\v0.1\v0.1-r7001-simple-auto-director-test-fix\REQ-7001-original.md) | REQ-7001 Auto-Director 测试隔离修复（原始冻结副本） | REQ-7001 Auto-Director 测试隔离修复（原始冻结副本） |
+| [1.task\B.todo\v0.1\v0.1-r7001-simple-auto-director-test-fix\REQ-7001.md](./1.task\B.todo\v0.1\v0.1-r7001-simple-auto-director-test-fix\REQ-7001.md) | REQ-7001 Auto-Director 测试隔离修复 | REQ-7001 Auto-Director 测试隔离修复 |
+| [1.task\B.todo\v0.1\v0.1-r7001-simple-auto-director-test-fix\tasks.md](./1.task\B.todo\v0.1\v0.1-r7001-simple-auto-director-test-fix\tasks.md) | REQ-7001 任务拆解 | REQ-7001 任务拆解 |
+
+## 1.task\B.todo\v0.1\v0.1-r7002-complex-novel-edit-refactor
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.1\v0.1-r7002-complex-novel-edit-refactor\design.md](./1.task\B.todo\v0.1\v0.1-r7002-complex-novel-edit-refactor\design.md) | REQ-7002 NovelEdit.tsx 拆分方案设计 | REQ-7002 NovelEdit.tsx 拆分方案设计 |
+| [1.task\B.todo\v0.1\v0.1-r7002-complex-novel-edit-refactor\README.md](./1.task\B.todo\v0.1\v0.1-r7002-complex-novel-edit-refactor\README.md) | REQ-7002 NovelEdit.tsx 大文件拆分任务总线 | REQ-7002 NovelEdit.tsx 大文件拆分任务总线 |
+| [1.task\B.todo\v0.1\v0.1-r7002-complex-novel-edit-refactor\REQ-7002-original.md](./1.task\B.todo\v0.1\v0.1-r7002-complex-novel-edit-refactor\REQ-7002-original.md) | REQ-7002 NovelEdit.tsx 大文件拆分（原始冻结副本） | REQ-7002 NovelEdit.tsx 大文件拆分（原始冻结副本） |
+| [1.task\B.todo\v0.1\v0.1-r7002-complex-novel-edit-refactor\REQ-7002.md](./1.task\B.todo\v0.1\v0.1-r7002-complex-novel-edit-refactor\REQ-7002.md) | REQ-7002 NovelEdit.tsx 大文件拆分 | REQ-7002 NovelEdit.tsx 大文件拆分 |
+| [1.task\B.todo\v0.1\v0.1-r7002-complex-novel-edit-refactor\tasks.md](./1.task\B.todo\v0.1\v0.1-r7002-complex-novel-edit-refactor\tasks.md) | REQ-7002 任务拆解 | REQ-7002 任务拆解 |
+
+## 1.task\B.todo\v0.1\v0.1-r7003-complex-server-large-file-refactor
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.1\v0.1-r7003-complex-server-large-file-refactor\design.md](./1.task\B.todo\v0.1\v0.1-r7003-complex-server-large-file-refactor\design.md) | REQ-7003 Server 超大文件拆分方案设计 | REQ-7003 Server 超大文件拆分方案设计 |
+| [1.task\B.todo\v0.1\v0.1-r7003-complex-server-large-file-refactor\README.md](./1.task\B.todo\v0.1\v0.1-r7003-complex-server-large-file-refactor\README.md) | REQ-7003 Server 超大文件分批拆分任务总线 | REQ-7003 Server 超大文件分批拆分任务总线 |
+| [1.task\B.todo\v0.1\v0.1-r7003-complex-server-large-file-refactor\REQ-7003-original.md](./1.task\B.todo\v0.1\v0.1-r7003-complex-server-large-file-refactor\REQ-7003-original.md) | REQ-7003 Server 超大文件分批拆分（原始冻结副本） | REQ-7003 Server 超大文件分批拆分（原始冻结副本） |
+| [1.task\B.todo\v0.1\v0.1-r7003-complex-server-large-file-refactor\REQ-7003.md](./1.task\B.todo\v0.1\v0.1-r7003-complex-server-large-file-refactor\REQ-7003.md) | REQ-7003 Server 超大文件分批拆分 | REQ-7003 Server 超大文件分批拆分 |
+| [1.task\B.todo\v0.1\v0.1-r7003-complex-server-large-file-refactor\tasks.md](./1.task\B.todo\v0.1\v0.1-r7003-complex-server-large-file-refactor\tasks.md) | REQ-7003 任务拆解 | REQ-7003 任务拆解 |
 
 ## 1.task\template
 
@@ -157,6 +153,15 @@ description: "docs 目录索引（自动生成）"
 | --- | --- | --- |
 | [3.analysis\diagnosis\01-active\2026-06-26-自动导演全自动模式能力诊断.md](./3.analysis\diagnosis\01-active\2026-06-26-自动导演全自动模式能力诊断.md) | 自动导演"全自动模式"三项能力诊断——自动审校修复、风险等级上报、运行中参数调整 | 自动导演"全自动模式"三项能力诊断——自动审校修复、风险等级上报、运行中参数调整 |
 | [3.analysis\diagnosis\01-active\2026-06-26-项目主工作流诊断报告.md](./3.analysis\diagnosis\01-active\2026-06-26-项目主工作流诊断报告.md) | > 日期：2026-06-26 | - |
+| [3.analysis\diagnosis\01-active\2026-06-28-harness-audit.md](./3.analysis\diagnosis\01-active\2026-06-28-harness-audit.md) | AI 小说创作工作台 Harness 审计报告 — 五种介质完备性与合理性评估 | AI 小说创作工作台 Harness 审计报告 — 五种介质完备性与合理性评估 |
+| [3.analysis\diagnosis\01-active\2026-06-28-health-check.md](./3.analysis\diagnosis\01-active\2026-06-28-health-check.md) | 2026-06-28 项目健康检查报告 — 五维评估 + 债务模式识别 + 行动建议 | 2026-06-28 项目健康检查报告 — 五维评估 + 债务模式识别 + 行动建议 |
+
+## 3.analysis\evidence\v0.1
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [3.analysis\evidence\v0.1\REQ-2023-evidence.md](./3.analysis\evidence\v0.1\REQ-2023-evidence.md) | REQ-2023 需求开发证据 | REQ-2023 需求开发证据 |
+| [3.analysis\evidence\v0.1\REQ-3006-evidence.md](./3.analysis\evidence\v0.1\REQ-3006-evidence.md) | REQ-3006 需求开发证据 | REQ-3006 需求开发证据 |
 
 ## 3.analysis\report
 

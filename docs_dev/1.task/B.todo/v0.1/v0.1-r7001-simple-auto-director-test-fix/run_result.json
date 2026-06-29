@@ -1,0 +1,23 @@
+{
+  "reqId": "7001",
+  "title": "Auto-Director 测试隔离修复",
+  "status": "requirements_ready",
+  "complexity": "simple",
+  "category": "7xxx",
+  "priority": "P1",
+  "version": "v0.1",
+  "created": "2026-06-28",
+  "artifacts": [
+    "README.md",
+    "REQ-7001.md",
+    "REQ-7001-original.md",
+    "tasks.md",
+    "run_result.json"
+  ],
+  "source": "2026-06-28-health-check.md",
+  "unresolved_items": [],
+  "assumptions": [
+    "测试框架保持 Node.js 内置 test runner",
+    "不修改生产代码"
+  ]
+}
