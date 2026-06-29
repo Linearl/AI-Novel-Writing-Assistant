@@ -84,7 +84,7 @@ async function resolveProviderSecret(provider: LLMProvider): Promise<ProviderSec
   return { apiKey: finalApiKey, baseURL };
 }
 
-function parseImagesFromPayload(payload: unknown): Array<{
+function parseImagesFromPayload(payload: unknown, provider?: LLMProvider): Array<{
   url: string;
   mimeType?: string;
   width?: number;
@@ -95,9 +95,10 @@ function parseImagesFromPayload(payload: unknown): Array<{
     return [];
   }
   const data = (payload as { data?: unknown }).data;
-  if (!Array.isArray(data)) {
+  if (!data || typeof data !== "object") {
     return [];
   }
+
   const images: Array<{
     url: string;
     mimeType?: string;
@@ -105,6 +106,25 @@ function parseImagesFromPayload(payload: unknown): Array<{
     height?: number;
     metadata?: Record<string, unknown>;
   }> = [];
+
+  // MiniMax 格式: data.image_urls[]
+  if (provider === "minimax" && "image_urls" in data && Array.isArray(data.image_urls)) {
+    for (const url of data.image_urls) {
+      if (typeof url === "string" && url) {
+        images.push({
+          url,
+          mimeType: "image/png",
+          metadata: {},
+        });
+      }
+    }
+    return images;
+  }
+
+  // OpenAI 格式: data[].url 或 data[].b64_json
+  if (!Array.isArray(data)) {
+    return [];
+  }
 
   for (const item of data) {
     if (!item || typeof item !== "object") {
@@ -159,7 +179,18 @@ export function buildImageGenerationRequestBody(input: ImageProviderGenerateInpu
     n: input.count,
   };
 
-  if (input.provider === "grok") {
+  if (input.provider === "minimax") {
+    // MiniMax 格式：使用 aspect_ratio 替代 size
+    const aspectRatio = mapSizeToAspectRatio(input.size);
+    if (aspectRatio) {
+      requestBody.aspect_ratio = aspectRatio;
+    }
+    requestBody.response_format = "url";
+    requestBody.prompt_optimizer = false;
+    if (typeof input.seed === "number") {
+      requestBody.seed = input.seed;
+    }
+  } else if (input.provider === "grok") {
     const aspectRatio = mapSizeToAspectRatio(input.size);
     if (aspectRatio) {
       requestBody.aspect_ratio = aspectRatio;
@@ -260,7 +291,7 @@ async function generateWithFileRef(
   }
 
   const payload = (await response.json()) as unknown;
-  const images = parseImagesFromPayload(payload);
+  const images = parseImagesFromPayload(payload, input.provider);
   if (images.length === 0) {
     throw new Error("Image API returned empty data.");
   }
@@ -279,7 +310,11 @@ export async function generateImagesByProvider(input: ImageProviderGenerateInput
     throw new Error(`Provider ${input.provider} does not support image generation currently.`);
   }
 
-  const { apiKey, baseURL } = await resolveProviderSecret(input.provider);
+  const { apiKey, baseURL: defaultBaseURL } = await resolveProviderSecret(input.provider);
+  // MiniMax 图像生成使用不同的 baseURL
+  const baseURL = input.provider === "minimax"
+    ? "https://api.minimaxi.com"
+    : defaultBaseURL;
   const controller = new AbortController();
   const timeoutMs = imageGenerationConfig.httpTimeoutMs;
   const timeout = setTimeout(
@@ -290,13 +325,18 @@ export async function generateImagesByProvider(input: ImageProviderGenerateInput
   try {
     // 优先使用本地文件路径（multipart 上传，避免 base64 膨胀）
     const refImagePath = input.refImagePaths?.[0];
-    if (refImagePath && input.provider !== "grok") {
+    if (refImagePath && input.provider !== "grok" && input.provider !== "minimax") {
       return await generateWithFileRef(input, refImagePath, apiKey, baseURL, controller);
     }
 
     const requestBody = buildImageGenerationRequestBody(input);
 
-    const response = await fetch(`${baseURL}/images/generations`, {
+    // MiniMax 使用不同的 API 端点
+    const endpoint = input.provider === "minimax"
+      ? "/v1/image_generation"
+      : "/images/generations";
+
+    const response = await fetch(`${baseURL}${endpoint}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -312,7 +352,7 @@ export async function generateImagesByProvider(input: ImageProviderGenerateInput
     }
 
     const payload = (await response.json()) as unknown;
-    const images = parseImagesFromPayload(payload);
+    const images = parseImagesFromPayload(payload, input.provider);
     if (images.length === 0) {
       throw new Error("Image API returned empty data.");
     }
