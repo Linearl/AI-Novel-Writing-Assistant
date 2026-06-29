@@ -1,0 +1,39 @@
+{
+  "version": "1.0",
+  "taskId": "REQ-2025",
+  "title": "自动导演高风险自动处理策略配置",
+  "status": "requirements_ready",
+  "route": "req",
+  "complexity": "medium",
+  "reqType": "feature",
+  "categoryCode": 2,
+  "skipClarification": true,
+  "skipDesign": false,
+  "createdAt": "2026-06-29T00:00:00.000Z",
+  "updatedAt": "2026-06-29T00:00:00.000Z",
+  "artifacts": {
+    "requirements": "docs_dev/1.task/B.todo/v0.1/v0.1-r2025-medium-high-risk-auto-handling-config/README.md",
+    "design": "docs_dev/1.task/B.todo/v0.1/v0.1-r2025-medium-high-risk-auto-handling-config/design.md",
+    "tasks": "docs_dev/1.task/B.todo/v0.1/v0.1-r2025-medium-high-risk-auto-handling-config/tasks.md",
+    "decisionLog": "docs_dev/1.task/B.todo/v0.1/v0.1-r2025-medium-high-risk-auto-handling-config/decision_log.md"
+  },
+  "unresolvedItems": [],
+  "assumptions": [
+    "高风险自动消除仅在 full_book_autopilot 模式下有意义",
+    "重试阈值按 issue signature 独立计数，复用现有 DirectorQualityLoopBudgetLedgerService 的 signature 机制",
+    "budget 倍率固定为 2 倍，后续可扩展为用户可配置",
+    "默认策略为人工审核，保证向后兼容"
+  ],
+  "blockingReasons": [],
+  "handoffTicket": {
+    "from": "req",
+    "to": "dev",
+    "type": "req_to_dev",
+    "status": "ready"
+  },
+  "stateSync": {
+    "requirementAxis": "approved",
+    "taskAxis": "requirements_ready",
+    "isConsistent": true
+  }
+}

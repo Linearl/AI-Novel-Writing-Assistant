@@ -19,7 +19,7 @@ description: "docs 目录索引（自动生成）"
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
 | [1.task\README.md](./1.task\README.md) | > 由 `init` 路由扫描 `1.task/B.todo/` 和 `1.task/B.2.done/` 自动生成。 | - |
-| [1.task\requirements.md](./1.task\requirements.md) | 需求任务总清单（SSOT） | 需求任务总清单（SSOT） |
+| [1.task\requirements.md](./1.task\requirements.md) | --- | - |
 
 ## 1.task\B.todo
 
@@ -46,6 +46,27 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1\v0.1-r2024-medium-minimax-image-generation\design.md](./1.task\B.todo\v0.1\v0.1-r2024-medium-minimax-image-generation\design.md) | REQ-2024 技术设计文档 | REQ-2024 技术设计文档 |
 | [1.task\B.todo\v0.1\v0.1-r2024-medium-minimax-image-generation\README.md](./1.task\B.todo\v0.1\v0.1-r2024-medium-minimax-image-generation\README.md) | 支持 MiniMax 图像生成 API - 用于生成小说封面 | 支持 MiniMax 图像生成 API - 用于生成小说封面 |
 | [1.task\B.todo\v0.1\v0.1-r2024-medium-minimax-image-generation\tasks.md](./1.task\B.todo\v0.1\v0.1-r2024-medium-minimax-image-generation\tasks.md) | REQ-2024 任务分解清单 | REQ-2024 任务分解清单 |
+
+## 1.task\B.todo\v0.1\v0.1-r2025-medium-high-risk-auto-handling-config
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.1\v0.1-r2025-medium-high-risk-auto-handling-config\decision_log.md](./1.task\B.todo\v0.1\v0.1-r2025-medium-high-risk-auto-handling-config\decision_log.md) | REQ-2025 决策日志 - 高风险自动处理策略配置的关键决策记录 | REQ-2025 决策日志 - 高风险自动处理策略配置的关键决策记录 |
+| [1.task\B.todo\v0.1\v0.1-r2025-medium-high-risk-auto-handling-config\design.md](./1.task\B.todo\v0.1\v0.1-r2025-medium-high-risk-auto-handling-config\design.md) | REQ-2025 设计文档 - 高风险自动处理策略配置的技术方案 | REQ-2025 设计文档 - 高风险自动处理策略配置的技术方案 |
+| [1.task\B.todo\v0.1\v0.1-r2025-medium-high-risk-auto-handling-config\README.md](./1.task\B.todo\v0.1\v0.1-r2025-medium-high-risk-auto-handling-config\README.md) | 自动导演高风险自动处理策略配置 - 允许用户选择高风险章节是人工审核还是自动消除 | 自动导演高风险自动处理策略配置 - 允许用户选择高风险章节是人工审核还是自动消除 |
+| [1.task\B.todo\v0.1\v0.1-r2025-medium-high-risk-auto-handling-config\REQ-2025-original.md](./1.task\B.todo\v0.1\v0.1-r2025-medium-high-risk-auto-handling-config\REQ-2025-original.md) | 自动导演高风险自动处理策略配置 - 允许用户选择高风险章节是人工审核还是自动消除 | 自动导演高风险自动处理策略配置 - 允许用户选择高风险章节是人工审核还是自动消除 |
+| [1.task\B.todo\v0.1\v0.1-r2025-medium-high-risk-auto-handling-config\REQ-2025.md](./1.task\B.todo\v0.1\v0.1-r2025-medium-high-risk-auto-handling-config\REQ-2025.md) | 自动导演高风险自动处理策略配置 - 允许用户选择高风险章节是人工审核还是自动消除 | 自动导演高风险自动处理策略配置 - 允许用户选择高风险章节是人工审核还是自动消除 |
+| [1.task\B.todo\v0.1\v0.1-r2025-medium-high-risk-auto-handling-config\tasks.md](./1.task\B.todo\v0.1\v0.1-r2025-medium-high-risk-auto-handling-config\tasks.md) | REQ-2025 任务分解 - 高风险自动处理策略配置 | REQ-2025 任务分解 - 高风险自动处理策略配置 |
+
+## 1.task\B.todo\v0.1\v0.1-r3007-medium-world-gen-stage-progress
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.1\v0.1-r3007-medium-world-gen-stage-progress\design.md](./1.task\B.todo\v0.1\v0.1-r3007-medium-world-gen-stage-progress\design.md) | REQ-3007 方案设计 | REQ-3007 方案设计 |
+| [1.task\B.todo\v0.1\v0.1-r3007-medium-world-gen-stage-progress\README.md](./1.task\B.todo\v0.1\v0.1-r3007-medium-world-gen-stage-progress\README.md) | REQ-3007 世界生成阶段进度显示任务总线 | REQ-3007 世界生成阶段进度显示任务总线 |
+| [1.task\B.todo\v0.1\v0.1-r3007-medium-world-gen-stage-progress\REQ-3007-original.md](./1.task\B.todo\v0.1\v0.1-r3007-medium-world-gen-stage-progress\REQ-3007-original.md) | REQ-3007 世界生成阶段进度显示 | REQ-3007 世界生成阶段进度显示 |
+| [1.task\B.todo\v0.1\v0.1-r3007-medium-world-gen-stage-progress\REQ-3007.md](./1.task\B.todo\v0.1\v0.1-r3007-medium-world-gen-stage-progress\REQ-3007.md) | REQ-3007 世界生成阶段进度显示 | REQ-3007 世界生成阶段进度显示 |
+| [1.task\B.todo\v0.1\v0.1-r3007-medium-world-gen-stage-progress\tasks.md](./1.task\B.todo\v0.1\v0.1-r3007-medium-world-gen-stage-progress\tasks.md) | REQ-3007 任务拆解（标准版） | REQ-3007 任务拆解（标准版） |
 
 ## 1.task\B.todo\v0.1\v0.1-r7001-simple-auto-director-test-fix
 
@@ -144,6 +165,7 @@ description: "docs 目录索引（自动生成）"
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
 | [1.task\todolist\2026-06-27-v0.1-全量任务包开发.md](./1.task\todolist\2026-06-27-v0.1-全量任务包开发.md) | v0.1 全量任务包开发 — 分阶段需求追踪清单 | v0.1 全量任务包开发 — 分阶段需求追踪清单 |
+| [1.task\todolist\2026-06-29-v0.1-第二轮任务包开发.md](./1.task\todolist\2026-06-29-v0.1-第二轮任务包开发.md) | v0.1 第二轮任务包开发 — 6 个待开发任务包分阶段追踪清单 | v0.1 第二轮任务包开发 — 6 个待开发任务包分阶段追踪清单 |
 
 ## 3.analysis\diagnosis\01-active
 
@@ -179,6 +201,7 @@ description: "docs 目录索引（自动生成）"
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
 | [4.misc\issues\2026-06-29-missing-repair-button-after-review.md](./4.misc\issues\2026-06-29-missing-repair-button-after-review.md) | 章节完成审校后（`generationState === "reviewed"`），正文窗口正确显示"查看建议"和"一键修复"按钮，但右侧 AI 执行台没有显示 | - |
+| [4.misc\issues\2026-06-29-skipcompleted-filters-unplanned-chapters.md](./4.misc\issues\2026-06-29-skipcompleted-filters-unplanned-chapters.md) | skipCompleted 过滤器与自动导演"待处理"定义冲突，导致无内容章节触发 pipeline 报错 | skipCompleted 过滤器与自动导演"待处理"定义冲突，导致无内容章节触发 pipeline 报错 |
 | [4.misc\issues\rag-worker-ui-toggle-ignored.md](./4.misc\issues\rag-worker-ui-toggle-ignored.md) | **状态**: 已修复 (local) | 待提交 upstream | - |
 | [4.misc\issues\sse-buffer-flush-missing-done-frame.md](./4.misc\issues\sse-buffer-flush-missing-done-frame.md) | **状态**: 已修复 | - |
 

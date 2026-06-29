@@ -1,0 +1,16 @@
+{
+  "reqId": "REQ-3007",
+  "title": "世界生成阶段进度显示",
+  "priority": "P3",
+  "version": "0.1",
+  "status": "requirements_ready",
+  "createdAt": "2026-06-29",
+  "completedAt": null,
+  "source": "用户体验反馈",
+  "note": "步骤2骨架生成按钮需显示阶段进度",
+  "tasks": {
+    "total": 5,
+    "completed": 0,
+    "pending": 5
+  }
+}
