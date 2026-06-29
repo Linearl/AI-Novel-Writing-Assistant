@@ -148,6 +148,20 @@ export function useSSE(options?: UseSSEOptions) {
             handleFrame(frame);
           }
         }
+
+        // 处理缓冲区中剩余的帧（包括最后一个 done 帧）
+        if (buffer.trim()) {
+          const payloadLine = buffer
+            .split("\n")
+            .find((line) => line.startsWith("data:"));
+          if (payloadLine) {
+            const rawData = payloadLine.replace("data:", "").trim();
+            if (rawData) {
+              const frame = JSON.parse(rawData) as SSEFrame;
+              handleFrame(frame);
+            }
+          }
+        }
       } catch (streamError) {
         if ((streamError as Error).name !== "AbortError") {
           setError(streamError instanceof Error ? streamError.message : "流式请求失败。");

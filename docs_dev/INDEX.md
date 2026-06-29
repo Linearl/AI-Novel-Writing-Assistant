@@ -179,6 +179,7 @@ description: "docs 目录索引（自动生成）"
 
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
-| [4.misc\issues\rag-worker-ui-toggle-ignored-upstream.md](./4.misc\issues\rag-worker-ui-toggle-ignored-upstream.md) | **状态**: 已在本项目修复 | 上游原版存在相同问题 | - |
+| [4.misc\issues\2026-06-29-missing-repair-button-after-review.md](./4.misc\issues\2026-06-29-missing-repair-button-after-review.md) | 章节完成审校后（`generationState === "reviewed"`），正文窗口正确显示"查看建议"和"一键修复"按钮，但右侧 AI 执行台没有显示 | - |
 | [4.misc\issues\rag-worker-ui-toggle-ignored.md](./4.misc\issues\rag-worker-ui-toggle-ignored.md) | **状态**: 已修复 (local) | 待提交 upstream | - |
+| [4.misc\issues\sse-buffer-flush-missing-done-frame.md](./4.misc\issues\sse-buffer-flush-missing-done-frame.md) | **状态**: 已修复 | - |
 
