@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { LoaderCircle, RefreshCw } from "lucide-react";
-import { API_BASE_URL, APP_RUNTIME } from "@/lib/constants";
+import { APP_RUNTIME } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 
 interface ServerStartupGateProps {
@@ -18,7 +18,7 @@ function shouldUseStartupGate(): boolean {
 
 async function checkServerReady(signal: AbortSignal): Promise<boolean> {
   try {
-    const response = await fetch(`${API_BASE_URL}/health`, {
+    const response = await fetch("/api/health", {
       cache: "no-store",
       signal,
     });

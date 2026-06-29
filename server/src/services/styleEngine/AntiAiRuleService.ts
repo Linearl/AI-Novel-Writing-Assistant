@@ -140,22 +140,30 @@ export class AntiAiRuleService {
 
   async generateAiDraft(input: AntiAiRuleAiDraftInput): Promise<AntiAiRuleAiDraftResult> {
     await ensureStyleEngineSeedData();
-    const result = await runStructuredPrompt({
-      asset: antiAiRuleAiDraftPrompt,
-      promptInput: {
-        mode: input.mode,
-        instruction: input.instruction,
-        currentRuleText: input.currentRule ? formatCurrentRuleForPrompt(input.currentRule) : undefined,
-      },
-      options: {
-        provider: input.provider ?? "deepseek",
-        model: input.model,
-        temperature: input.temperature ?? (input.mode === "create" ? 0.5 : 0.35),
-        maxTokens: 900,
-        timeoutMs: input.timeoutMs,
-        signal: input.signal,
-      },
-    });
+
+    let result;
+    try {
+      result = await runStructuredPrompt({
+        asset: antiAiRuleAiDraftPrompt,
+        promptInput: {
+          mode: input.mode,
+          instruction: input.instruction,
+          currentRuleText: input.currentRule ? formatCurrentRuleForPrompt(input.currentRule) : undefined,
+        },
+        options: {
+          provider: input.provider ?? "deepseek",
+          model: input.model,
+          temperature: input.temperature ?? (input.mode === "create" ? 0.5 : 0.35),
+          maxTokens: 900,
+          timeoutMs: input.timeoutMs,
+          signal: input.signal,
+        },
+      });
+    } catch (error) {
+      const rawMessage = error instanceof Error ? error.message : String(error);
+      console.error("[anti-ai-rule] generateAiDraft failed:", rawMessage);
+      throw error;
+    }
 
     const output = result.output;
     const rawDraft = output.draft;

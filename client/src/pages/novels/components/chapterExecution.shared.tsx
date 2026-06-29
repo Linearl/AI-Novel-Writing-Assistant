@@ -286,6 +286,7 @@ export function resolveDisplayedChapterStatus(chapter: Chapter): Chapter["chapte
   if (
     chapterHasContinuableQualityLoop(chapter)
     && (chapter.generationState === "reviewed" || chapter.generationState === "repaired")
+    && status !== "completed"
   ) {
     return "pending_review";
   }
@@ -460,12 +461,16 @@ function parseStructuredRiskFlags(input: string): string[] | null {
   const qualityLoop = parsed.qualityLoop;
   if (isRecord(qualityLoop)) {
     const qualityLoopRisk = classifyChapterQualityLoopRisk(qualityLoop);
+    const loopScore = typeof qualityLoop.overallScore === "number" ? qualityLoop.overallScore : null;
+    const scoreSuffix = loopScore !== null ? `，分数${loopScore}` : "";
     if (qualityLoopRisk === "non_blocking_quality_debt") {
-      labels.push("已记录质量债务");
+      labels.push(`已记录质量债务${scoreSuffix}`);
     } else {
       const actionLabel = qualityLoopActionLabel(qualityLoop.recommendedAction);
       const statusLabel = qualityLoopStatusLabel(qualityLoop.overallStatus);
-      if (actionLabel) labels.push(actionLabel);
+      if (actionLabel) {
+        labels.push(`${actionLabel}${scoreSuffix}`);
+      }
       if (statusLabel) labels.push(statusLabel);
     }
     const signals = Array.isArray(qualityLoop.signals) ? qualityLoop.signals : [];

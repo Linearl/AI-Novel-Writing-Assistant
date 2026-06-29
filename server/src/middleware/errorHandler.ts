@@ -200,6 +200,45 @@ function formatUpstreamConnectionError(error: unknown): string | null {
   return `上游模型服务连接失败：当前服务器无法连接到 ${target}${code}。请检查该提供商的网络连通性，或切换到其它可用模型提供商。`;
 }
 
+/**
+ * 检测来自 LLM 提供商的 HTTP 错误（如 400/401/403/429），转化为用户可操作的提示。
+ * 覆盖 StructuredOutputError（含 transport_error / unsupported_native_json 等分类）
+ * 以及 LangChain / OpenAI SDK 抛出的原始 HTTP 错误。
+ */
+function formatLlmUpstreamError(error: unknown): string | null {
+  if (!(error instanceof Error)) {
+    return null;
+  }
+  const messages = collectErrorMessages(error).join(" | ");
+  const isStructuredOutputError = error.constructor?.name === "StructuredOutputError"
+    || "category" in error
+    || "diagnostics" in error;
+
+  // 匹配多种 LLM 提供商错误格式：
+  // - "HTTP 400", "Error code: 400", "statusCode: 400", "status 401"
+  // - JSON error body: {"error":{"code":"400",...}}
+  // - 前缀被 [STRUCTURED_OUTPUT:xxx] 包裹的错误
+  const hasHttpPattern = /(?:HTTP|Error code|statusCode|status)\s*:?\s*4\d{2}\b/i.test(messages)
+    || /"error"\s*:\s*\{/.test(messages)
+    || /\bcode\b.*\b4\d{2}\b/i.test(messages);
+  const hasLlmContext = isStructuredOutputError
+    || /transport_error|unsupported_native_json|端点|endpoint|模型|model|provider|提供商/i.test(messages);
+
+  if (!hasHttpPattern || !hasLlmContext) {
+    return null;
+  }
+
+  const statusMatch = messages.match(/(?:HTTP|Error code|statusCode|status)\s*:?\s*(4\d{2})\b/i)
+    ?? messages.match(/\bcode\b[^0-9]*(4\d{2})\b/i);
+  const status = statusMatch?.[1];
+  const statusHint = status === "401" || status === "403"
+    ? "API Key 无效或权限不足，请在设置页面检查 API Key 是否正确。"
+    : status === "429"
+      ? "请求频率超限，请稍后重试或切换到其它模型提供商。"
+      : "请在设置页面检查模型配置是否正确，或切换到其它可用模型提供商。";
+  return `模型服务返回错误${status ? `（HTTP ${status}）` : ""}：${statusHint}`;
+}
+
 export function errorHandler(
   error: unknown,
   req: Request,
@@ -253,6 +292,17 @@ export function errorHandler(
     res.status(502).json({
       success: false,
       error: upstreamConnectionMessage,
+    });
+    return;
+  }
+
+  const llmUpstreamMessage = formatLlmUpstreamError(error);
+  if (llmUpstreamMessage) {
+    setRequestErrorMessage(res, llmUpstreamMessage);
+    logServerError(req, error);
+    res.status(502).json({
+      success: false,
+      error: llmUpstreamMessage,
     });
     return;
   }

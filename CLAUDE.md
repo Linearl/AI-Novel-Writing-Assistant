@@ -125,6 +125,10 @@ infra/           Docker Compose（Qdrant 等）
 - 拆分后通过 facade / `index.ts` 消费，不深导入内部文件
 - 架构收敛方向：`app/`（启动+路由）→ `platform/`（基础设施）→ `modules/`（产品能力）
 
+### 自动生成文件
+
+`docs_dev/1.task/requirements.md` 和 `docs_dev/INDEX.md` 由 git 提交 hooks 自动更新，**禁止手动编辑**。新增任务包或文档后，直接提交即可触发同步。
+
 ### Auto-Director 质量门
 
 章节审核、验收和质量循环结果**不能自动阻断**全局 auto-director 或全书执行链。只有明确的 `stop_for_replan`、`replan_required`、不可恢复的生成失败或运行时安全/数据完整性失败才能停止全局链。本地质量问题是可见警告和后续跟进项，不是工作流失败。

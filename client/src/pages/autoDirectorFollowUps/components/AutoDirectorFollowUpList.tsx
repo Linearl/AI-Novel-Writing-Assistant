@@ -140,7 +140,8 @@ export function AutoDirectorFollowUpListPanel(props: AutoDirectorFollowUpListPan
 
           {props.items.map((item) => {
             const itemKey = item.autoApprovalRecordId ?? item.directorTaskId;
-            const checked = props.selectedTaskIds.includes(item.directorTaskId);
+            const selectionKey = itemKey;
+            const checked = props.selectedTaskIds.includes(selectionKey);
             const selected = props.selectedTaskId === item.directorTaskId;
             return (
               <button
@@ -162,7 +163,7 @@ export function AutoDirectorFollowUpListPanel(props: AutoDirectorFollowUpListPan
                       <input
                         type="checkbox"
                         checked={checked}
-                        onChange={(event) => props.onToggleSelected(item.directorTaskId, event.target.checked)}
+                        onChange={(event) => props.onToggleSelected(selectionKey, event.target.checked)}
                         onClick={(event) => event.stopPropagation()}
                         disabled={props.actionLoading}
                       />

@@ -120,7 +120,11 @@ export class AutoDirectorFollowUpService {
     }
 
     if (options.heal !== false) {
-      await this.workflowService.healAutoDirectorTaskState(taskId);
+      try {
+        await this.workflowService.healAutoDirectorTaskState(taskId);
+      } catch (error) {
+        console.error(`[FollowUp] healAutoDirectorTaskState failed for ${taskId}`, error);
+      }
     }
 
     const rawRow = await prisma.novelWorkflowTask.findUnique({
@@ -149,16 +153,17 @@ export class AutoDirectorFollowUpService {
         knownTaskIds.add(replacement.id);
       }
     }
-    const item = projectFollowUpItem(row, knownTaskIds, await getAutoDirectorChannelSettings());
+    const channelSettings = await getAutoDirectorChannelSettings();
+    const item = projectFollowUpItem(row, knownTaskIds, channelSettings);
     if (!item) {
-      return null;
+      return this.buildFallbackDetailFromRow(taskId, row, channelSettings);
     }
 
     const task = await this.workflowTaskAdapter.detail(taskId, {
-      heal: options.heal,
+      heal: false,
     });
     if (!task) {
-      return null;
+      return this.buildFallbackDetail(taskId, row, item);
     }
 
     const originDetailUrl = `/tasks?kind=novel_workflow&id=${taskId}`;
@@ -225,6 +230,139 @@ export class AutoDirectorFollowUpService {
       }
       throw error;
     }
+  }
+
+  private async buildFallbackDetailFromRow(
+    taskId: string,
+    row: FollowUpWorkflowRow,
+    channelSettings?: Awaited<ReturnType<typeof getAutoDirectorChannelSettings>>,
+  ): Promise<AutoDirectorFollowUpDetail> {
+    const originDetailUrl = `/tasks?kind=novel_workflow&id=${taskId}`;
+    const executionScopeLabel = this.resolveExecutionScopeLabel(row.seedPayloadJson);
+    const novelTitle = row.novel?.title?.trim() || row.title.trim() || "AI 自动导演";
+    return {
+      directorTaskId: taskId,
+      taskId,
+      reasonLabel: "任务状态",
+      priority: "P2",
+      followUpSummary: row.checkpointSummary?.trim() || row.currentItemLabel?.trim() || `当前状态：${row.status}`,
+      checkpointSummary: row.checkpointSummary,
+      blockingReason: null,
+      nextStepSuggestion: null,
+      validationSummary: null,
+      currentModel: this.resolveCurrentModel(row.seedPayloadJson),
+      riskNote: null,
+      originDetailUrl,
+      replanUrl: null,
+      candidateSelectionUrl: null,
+      availableActions: [{
+        code: "open_detail",
+        kind: "navigation",
+        label: "查看任务详情",
+        riskLevel: "low",
+        requiresConfirm: false,
+        targetUrl: originDetailUrl,
+      }],
+      milestones: buildMilestones(row),
+      channelDeliveries: await this.getRecentChannelDeliveries(taskId),
+      task: {
+        id: taskId,
+        kind: "novel_workflow",
+        title: row.title,
+        status: row.status,
+        progress: 0,
+        attemptCount: row.attemptCount,
+        maxAttempts: 3,
+        retryCountLabel: `第 ${row.attemptCount} 次`,
+        createdAt: row.updatedAt.toISOString(),
+        updatedAt: row.updatedAt.toISOString(),
+        currentStage: row.currentStage,
+        currentItemKey: row.currentItemKey,
+        currentItemLabel: row.currentItemLabel,
+        lastError: row.lastError,
+        ownerId: row.novelId ?? taskId,
+        ownerLabel: novelTitle,
+        sourceRoute: originDetailUrl,
+        meta: {},
+        steps: [],
+      },
+    };
+  }
+
+  private resolveExecutionScopeLabel(seedPayloadJson: string | null | undefined): string | null {
+    try {
+      const payload = seedPayloadJson?.trim() ? JSON.parse(seedPayloadJson) as Record<string, unknown> : null;
+      const scopeLabel = (payload as { autoExecution?: { scopeLabel?: unknown } } | null)?.autoExecution?.scopeLabel;
+      return typeof scopeLabel === "string" && scopeLabel.trim() ? scopeLabel.trim() : null;
+    } catch {
+      return null;
+    }
+  }
+
+  private resolveCurrentModel(seedPayloadJson: string | null | undefined): string | null {
+    try {
+      const payload = seedPayloadJson?.trim() ? JSON.parse(seedPayloadJson) as Record<string, unknown> : null;
+      const llm = (payload as { llm?: Record<string, unknown> } | null)?.llm;
+      const provider = typeof llm?.provider === "string" ? llm.provider.trim() : null;
+      const model = typeof llm?.model === "string" ? llm.model.trim() : null;
+      if (provider && model) return `${provider}/${model}`;
+      return model ?? provider ?? null;
+    } catch {
+      return null;
+    }
+  }
+
+  private async buildFallbackDetail(
+    taskId: string,
+    row: FollowUpWorkflowRow,
+    item: AutoDirectorFollowUpItem,
+  ): Promise<AutoDirectorFollowUpDetail> {
+    const originDetailUrl = `/tasks?kind=novel_workflow&id=${taskId}`;
+    return {
+      directorTaskId: taskId,
+      taskId,
+      reasonLabel: item.reasonLabel,
+      priority: item.priority,
+      followUpSummary: item.followUpSummary,
+      checkpointSummary: row.checkpointSummary,
+      blockingReason: item.blockingReason,
+      nextStepSuggestion: item.availableActions[0]?.label ?? null,
+      validationSummary: item.validationSummary ?? null,
+      currentModel: item.currentModel,
+      riskNote: null,
+      originDetailUrl,
+      replanUrl: null,
+      candidateSelectionUrl: null,
+      availableActions: decorateDetailActions({
+        actions: item.availableActions,
+        originDetailUrl,
+        candidateSelectionUrl: null,
+        replanUrl: null,
+      }),
+      milestones: buildMilestones(row),
+      channelDeliveries: await this.getRecentChannelDeliveries(taskId),
+      task: {
+        id: taskId,
+        kind: "novel_workflow",
+        title: row.title,
+        status: row.status,
+        progress: 0,
+        attemptCount: row.attemptCount,
+        maxAttempts: 3,
+        retryCountLabel: `第 ${row.attemptCount} 次`,
+        createdAt: row.updatedAt.toISOString(),
+        updatedAt: row.updatedAt.toISOString(),
+        currentStage: row.currentStage,
+        currentItemKey: row.currentItemKey,
+        currentItemLabel: row.currentItemLabel,
+        lastError: row.lastError,
+        ownerId: row.novelId ?? taskId,
+        ownerLabel: row.novel?.title?.trim() || row.title.trim() || "小说主任务",
+        sourceRoute: originDetailUrl,
+        meta: {},
+        steps: [],
+      },
+    };
   }
 
   private async loadAutoApprovalItems(

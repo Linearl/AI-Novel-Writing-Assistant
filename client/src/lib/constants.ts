@@ -87,6 +87,11 @@ export function resolveApiBaseUrlForEnvironment({
 
   try {
     const parsed = new URL(configuredBaseUrl, windowLocation.origin);
+    // DEV 环境下，如果配置的 API 地址和当前页面都在 loopback，
+    // 使用相对路径让 Vite 代理转发，避免浏览器跨域限制。
+    if (env.DEV && isLoopbackHost(parsed.hostname) && isLoopbackHost(windowLocation.hostname)) {
+      return "/api";
+    }
     if (!isLoopbackHost(parsed.hostname) || isLoopbackHost(windowLocation.hostname)) {
       return trimTrailingSlash(parsed.toString());
     }

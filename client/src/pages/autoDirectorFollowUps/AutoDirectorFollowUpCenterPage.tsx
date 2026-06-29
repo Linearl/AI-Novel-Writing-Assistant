@@ -201,7 +201,7 @@ export default function AutoDirectorFollowUpCenterPage() {
   }, [items]);
 
   const selectedItems = useMemo(
-    () => items.filter((item) => selectedDirectorTaskIds.includes(item.directorTaskId)),
+    () => items.filter((item) => selectedDirectorTaskIds.includes(item.autoApprovalRecordId ?? item.directorTaskId)),
     [items, selectedDirectorTaskIds],
   );
 
@@ -425,6 +425,9 @@ export default function AutoDirectorFollowUpCenterPage() {
           onExecuteAction={handleExecuteAction}
           onRefreshValidation={handleRefreshValidation}
           onSafeFix={handleSafeFix}
+          onRetryDetail={selectedDirectorTaskId ? () => {
+            void queryClient.invalidateQueries({ queryKey: queryKeys.autoDirectorFollowUps.detail(selectedDirectorTaskId) });
+          } : undefined}
         />
       </div>
 

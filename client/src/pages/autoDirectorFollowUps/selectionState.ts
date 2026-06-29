@@ -1,6 +1,7 @@
 interface TaskIdLike {
   directorTaskId?: string;
   taskId: string;
+  autoApprovalRecordId?: string;
 }
 
 export function reconcileSelectedTaskIds<T extends TaskIdLike>(
@@ -11,7 +12,7 @@ export function reconcileSelectedTaskIds<T extends TaskIdLike>(
     return current;
   }
 
-  const visibleTaskIds = new Set(items.map((item) => item.directorTaskId ?? item.taskId));
+  const visibleTaskIds = new Set(items.map((item) => item.autoApprovalRecordId ?? item.directorTaskId ?? item.taskId));
   const next = current.filter((taskId) => visibleTaskIds.has(taskId));
 
   if (next.length === current.length) {

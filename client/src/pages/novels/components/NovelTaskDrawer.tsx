@@ -217,8 +217,8 @@ function ResourceProposalCard(props: {
       </div>
       <div className="flex flex-wrap gap-2">
         {proposal.chapterId ? (
-          <Button type="button" size="sm" variant="outline" onClick={() => onOpenSource?.(proposal)}>
-            查看来源
+          <Button type="button" size="sm" variant="outline" asChild>
+            <Link to={`/novels/${proposal.novelId}/chapters/${proposal.chapterId}`}>编辑来源章节</Link>
           </Button>
         ) : null}
         <Button

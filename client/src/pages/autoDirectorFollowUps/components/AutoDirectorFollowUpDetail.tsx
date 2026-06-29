@@ -17,6 +17,7 @@ interface AutoDirectorFollowUpDetailPanelProps {
   onExecuteAction: (item: AutoDirectorFollowUpItem, action: AutoDirectorAction) => void | Promise<void>;
   onRefreshValidation: () => void | Promise<void>;
   onSafeFix: () => void | Promise<void>;
+  onRetryDetail?: () => void;
 }
 
 export function AutoDirectorFollowUpDetailPanel({
@@ -27,6 +28,7 @@ export function AutoDirectorFollowUpDetailPanel({
   onExecuteAction,
   onRefreshValidation,
   onSafeFix,
+  onRetryDetail,
 }: AutoDirectorFollowUpDetailPanelProps) {
   const deliveryStatusLabels = {
     delivered: "已送达",
@@ -52,8 +54,30 @@ export function AutoDirectorFollowUpDetailPanel({
           <div className={`rounded-md border border-dashed p-6 text-sm text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>正在加载详情...</div>
         ) : null}
 
-        {!loading && (!detail || !selectedItem) ? (
+        {!loading && !selectedItem ? (
           <div className={`rounded-md border border-dashed p-6 text-sm text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>请选择一个导演跟进项查看详情。</div>
+        ) : null}
+
+        {!loading && selectedItem && !detail ? (
+          <div className={`space-y-3 rounded-md border border-dashed p-6 text-sm ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>
+            <div className="space-y-1">
+              <div className="font-medium">{selectedItem.novelTitle}</div>
+              <div className="text-muted-foreground">{selectedItem.reasonLabel}</div>
+            </div>
+            <div className="text-muted-foreground">
+              跟进详情暂时无法加载，任务状态可能已变化。请尝试刷新校验或稍后重试。
+            </div>
+            {onRetryDetail ? (
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={actionLoading}
+                onClick={() => void onRetryDetail()}
+              >
+                重新加载详情
+              </Button>
+            ) : null}
+          </div>
         ) : null}
 
         {detail && selectedItem ? (
