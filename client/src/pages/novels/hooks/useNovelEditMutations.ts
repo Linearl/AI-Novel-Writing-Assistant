@@ -273,7 +273,10 @@ export function useNovelEditMutations({
         itemLabel: "章节审校已完成",
         status: "waiting_approval",
       });
-      await queryClient.invalidateQueries({ queryKey: queryKeys.novels.qualityReport(id) });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: queryKeys.novels.qualityReport(id) }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.novels.detail(id) }),
+      ]);
     },
   });
 

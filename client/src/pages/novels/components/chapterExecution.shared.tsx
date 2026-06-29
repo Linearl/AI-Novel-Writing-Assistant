@@ -298,6 +298,15 @@ export function resolveDisplayedChapterStatus(chapter: Chapter): Chapter["chapte
   if (status === "pending_generation") {
     return "pending_review";
   }
+  // 当 generationState 已经是 reviewed/repaired 但 chapterStatus 仍是 pending_review
+  // 且没有 qualityLoop 数据时，应返回 pending_review 让按钮显示"查看建议"+"一键修复"
+  // 而不是"去审校"
+  if (
+    (chapter.generationState === "reviewed" || chapter.generationState === "repaired")
+    && status === "pending_review"
+  ) {
+    return "pending_review";
+  }
   return status;
 }
 
