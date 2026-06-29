@@ -38,6 +38,15 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1\v0.1-r2023-medium-resource-reject-intent-injection\REQ-2023.md](./1.task\B.todo\v0.1\v0.1-r2023-medium-resource-reject-intent-injection\REQ-2023.md) | 资源变更风险拒绝意图注入 - 用户不接受风险时保存意图并在章节修复时注入 | 资源变更风险拒绝意图注入 - 用户不接受风险时保存意图并在章节修复时注入 |
 | [1.task\B.todo\v0.1\v0.1-r2023-medium-resource-reject-intent-injection\tasks.md](./1.task\B.todo\v0.1\v0.1-r2023-medium-resource-reject-intent-injection\tasks.md) | REQ-2023 任务分解清单 | REQ-2023 任务分解清单 |
 
+## 1.task\B.todo\v0.1\v0.1-r2024-medium-minimax-image-generation
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.1\v0.1-r2024-medium-minimax-image-generation\decision_log.md](./1.task\B.todo\v0.1\v0.1-r2024-medium-minimax-image-generation\decision_log.md) | REQ-2024 决策日志 | REQ-2024 决策日志 |
+| [1.task\B.todo\v0.1\v0.1-r2024-medium-minimax-image-generation\design.md](./1.task\B.todo\v0.1\v0.1-r2024-medium-minimax-image-generation\design.md) | REQ-2024 技术设计文档 | REQ-2024 技术设计文档 |
+| [1.task\B.todo\v0.1\v0.1-r2024-medium-minimax-image-generation\README.md](./1.task\B.todo\v0.1\v0.1-r2024-medium-minimax-image-generation\README.md) | 支持 MiniMax 图像生成 API - 用于生成小说封面 | 支持 MiniMax 图像生成 API - 用于生成小说封面 |
+| [1.task\B.todo\v0.1\v0.1-r2024-medium-minimax-image-generation\tasks.md](./1.task\B.todo\v0.1\v0.1-r2024-medium-minimax-image-generation\tasks.md) | REQ-2024 任务分解清单 | REQ-2024 任务分解清单 |
+
 ## 1.task\B.todo\v0.1\v0.1-r7001-simple-auto-director-test-fix
 
 | 文件 | 标题 | 描述 |
@@ -150,6 +159,7 @@ description: "docs 目录索引（自动生成）"
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
 | [3.analysis\evidence\v0.1\REQ-2023-evidence.md](./3.analysis\evidence\v0.1\REQ-2023-evidence.md) | REQ-2023 需求开发证据 | REQ-2023 需求开发证据 |
+| [3.analysis\evidence\v0.1\REQ-2024-evidence.md](./3.analysis\evidence\v0.1\REQ-2024-evidence.md) | REQ-2024 需求开发证据 | REQ-2024 需求开发证据 |
 | [3.analysis\evidence\v0.1\REQ-3006-evidence.md](./3.analysis\evidence\v0.1\REQ-3006-evidence.md) | REQ-3006 需求开发证据 | REQ-3006 需求开发证据 |
 
 ## 3.analysis\report
