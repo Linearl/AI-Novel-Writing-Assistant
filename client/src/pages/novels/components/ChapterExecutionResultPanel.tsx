@@ -29,6 +29,10 @@ interface ChapterExecutionResultPanelProps {
   onAutoRepair: () => void;
   isRepairStreaming: boolean;
   repairStreamingChapterId?: string | null;
+  repairStreamContent?: string;
+  onOpenRepairDetail?: () => void;
+  onOpenRepairDiff?: () => void;
+  hasRepairVersions?: boolean;
 }
 
 function WorkspaceNotice(props: { title: string; description: string }) {
@@ -56,6 +60,10 @@ export default function ChapterExecutionResultPanel(props: ChapterExecutionResul
     onAutoRepair,
     isRepairStreaming,
     repairStreamingChapterId,
+    repairStreamContent,
+    onOpenRepairDetail,
+    onOpenRepairDiff,
+    hasRepairVersions,
   } = props;
 
   if (!selectedChapter) {
@@ -187,6 +195,16 @@ export default function ChapterExecutionResultPanel(props: ChapterExecutionResul
                     disabled={isSelectedChapterRepairStreaming}
                   >
                     {isSelectedChapterRepairStreaming ? "修复中..." : "一键修复"}
+                  </Button>
+                ) : null}
+                {hasRepairVersions && onOpenRepairDetail ? (
+                  <Button size="sm" variant="outline" onClick={onOpenRepairDetail}>
+                    修复详情
+                  </Button>
+                ) : null}
+                {hasRepairVersions && onOpenRepairDiff && !isSelectedChapterRepairStreaming ? (
+                  <Button size="sm" variant="outline" onClick={onOpenRepairDiff}>
+                    查看 Diff
                   </Button>
                 ) : null}
                 {isSelectedChapterStreaming && !isSelectedChapterFinalizing ? (
