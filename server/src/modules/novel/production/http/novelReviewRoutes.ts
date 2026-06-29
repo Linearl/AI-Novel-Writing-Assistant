@@ -3,6 +3,7 @@ import type { ApiResponse } from "@ai-novel/shared/types/api";
 import { z } from "zod";
 import { streamToSSE } from "../../../../llm/streaming";
 import { validate } from "../../../../middleware/validate";
+import { prisma } from "../../../../db/prisma";
 import type { NovelApplicationServices } from "../../../../services/novel/application/NovelApplicationContracts";
 import type { ChapterRuntimeCoordinator } from "../../../../services/novel/runtime/ChapterRuntimeCoordinator";
 import { stepModuleRunner } from "../../../../services/novel/director/workflowStepRuntime/StepModuleRunner";
@@ -194,6 +195,40 @@ export function registerNovelReviewRoutes(input: RegisterNovelReviewRoutesInput)
         success: true,
         data,
         message: "Quality report loaded.",
+      } satisfies ApiResponse<typeof data>);
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  router.get("/:id/chapters/:chapterId/repair-versions", validate({ params: chapterParamsSchema }), async (req, res, next) => {
+    try {
+      const { id, chapterId } = req.params as z.infer<typeof chapterParamsSchema>;
+      const versions = await prisma.chapterRepairVersion.findMany({
+        where: { novelId: id, chapterId },
+        orderBy: { versionIndex: "asc" },
+        select: {
+          id: true,
+          versionIndex: true,
+          content: true,
+          repairMode: true,
+          issuesJson: true,
+          tokenUsageJson: true,
+          userInstruction: true,
+          createdAt: true,
+        },
+      });
+      const data = {
+        versions: versions.map((v) => ({
+          ...v,
+          issues: v.issuesJson ? JSON.parse(v.issuesJson) : null,
+          tokenUsage: v.tokenUsageJson ? JSON.parse(v.tokenUsageJson) : null,
+        })),
+      };
+      res.status(200).json({
+        success: true,
+        data,
+        message: "Repair versions loaded.",
       } satisfies ApiResponse<typeof data>);
     } catch (error) {
       next(error);

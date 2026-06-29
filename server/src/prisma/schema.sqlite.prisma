@@ -382,6 +382,7 @@ model Novel {
   openConflicts      OpenConflict[]
   payoffLedgerItems  PayoffLedgerItem[]
   artifactSyncCheckpoints ChapterArtifactSyncCheckpoint[]
+  repairVersions    ChapterRepairVersion[]
   storyPlans         StoryPlan[]
   replanRuns         ReplanRun[]
   auditReports       AuditReport[]
@@ -521,6 +522,7 @@ model Chapter {
   lastTouchedCharacterResources CharacterResourceLedgerItem[] @relation("CharacterResourceLastTouchedChapter")
   characterResourceEvents CharacterResourceEvent[]
   artifactSyncCheckpoints ChapterArtifactSyncCheckpoint[]
+  repairVersions    ChapterRepairVersion[]
   volumeChapterPlans VolumeChapterPlan[]
   risks           NovelRisk[]
   createdAt       DateTime               @default(now())
@@ -548,6 +550,25 @@ model ChapterArtifactSyncCheckpoint {
 
   @@unique([novelId, chapterId, contentHash, artifactType, syncMode])
   @@index([novelId, chapterId, artifactType, updatedAt])
+}
+
+model ChapterRepairVersion {
+  id              String   @id @default(cuid())
+  novelId         String
+  chapterId       String
+  versionIndex    Int
+  content         String
+  repairMode      String?
+  issuesJson      String?
+  tokenUsageJson  String?
+  userInstruction String?
+  createdAt       DateTime @default(now())
+
+  novel   Novel   @relation(fields: [novelId], references: [id], onDelete: Cascade)
+  chapter Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+
+  @@unique([novelId, chapterId, versionIndex])
+  @@index([novelId, chapterId, createdAt])
 }
 
 model Character {

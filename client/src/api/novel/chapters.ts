@@ -138,3 +138,26 @@ export async function generateChapterExecutionContract(
   );
   return data;
 }
+
+export interface ChapterRepairVersion {
+  id: string;
+  versionIndex: number;
+  content: string;
+  repairMode: string | null;
+  issues: unknown[] | null;
+  tokenUsage: {
+    promptTokens: number;
+    completionTokens: number;
+    totalTokens: number;
+    llmCallCount: number;
+  } | null;
+  userInstruction: string | null;
+  createdAt: string;
+}
+
+export async function getChapterRepairVersions(novelId: string, chapterId: string) {
+  const { data } = await apiClient.get<ApiResponse<{ versions: ChapterRepairVersion[] }>>(
+    `/novels/${novelId}/chapters/${chapterId}/repair-versions`,
+  );
+  return data;
+}
