@@ -179,5 +179,6 @@ description: "docs 目录索引（自动生成）"
 
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
+| [4.misc\issues\rag-worker-ui-toggle-ignored-upstream.md](./4.misc\issues\rag-worker-ui-toggle-ignored-upstream.md) | **状态**: 已在本项目修复 | 上游原版存在相同问题 | - |
 | [4.misc\issues\rag-worker-ui-toggle-ignored.md](./4.misc\issues\rag-worker-ui-toggle-ignored.md) | **状态**: 已修复 (local) | 待提交 upstream | - |
 
