@@ -24,8 +24,8 @@ import { toast } from "@/components/ui/toast";
 import LLMSelector from "@/components/common/LLMSelector";
 import {
   createWorld,
-  generateWorldSkeleton,
   WORLD_INSPIRATION_ANALYZE_STREAM_PATH,
+  WORLD_SKELETON_GENERATE_STREAM_PATH,
   type WorldInspirationAnalysisResult,
 } from "@/api/world";
 import { queryKeys } from "@/api/queryKeys";
@@ -225,31 +225,23 @@ export default function WorldGenerator() {
       }
       : null;
   };
-  const generateSkeletonMutation = useMutation({
-    mutationFn: async () => {
-      const response = await generateWorldSkeleton({
-        idea: [
-          inspirationText.trim(),
-          concept?.summary ? `概念卡：${concept.summary}` : "",
-        ].filter(Boolean).join("\n\n") || "生成一个可用于小说创作的世界样本。",
-        worldType: selectedGenre?.path || concept?.worldType || matchedTemplateWorldType || selectedTemplate?.worldType || "自定义",
-        template: selectedTemplate?.name ?? "自定义",
-        referenceContext: buildReferenceContext(),
-        blueprint: buildGenerationBlueprint(),
-        options: {
-          preset: skeletonPreset,
-          counts: skeletonCounts,
-        },
-        provider: llm.provider,
-        model: llm.model,
-      });
-      return response.data;
-    },
-    onSuccess: (payload) => {
-      setSkeleton(payload ?? null);
-      setStep(3);
+  const skeletonStream = useSSE({
+    onDone: async (fullContent) => {
+      try {
+        const payload = JSON.parse(fullContent) as WorldSkeletonGenerationPayload;
+        setSkeleton(payload);
+        setStep(3);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : "世界骨架结果解析失败。";
+        toast.error(message);
+      }
     },
   });
+  useEffect(() => {
+    if (skeletonStream.error) {
+      toast.error(skeletonStream.error);
+    }
+  }, [skeletonStream.error]);
   const finalizeMutation = useMutation({
     mutationFn: async () => {
       if (!skeleton) {
@@ -285,6 +277,24 @@ export default function WorldGenerator() {
   const handleCountChange = (key: keyof WorldSkeletonGenerationCounts, value: number) => {
     setSkeletonCounts((prev) => ({ ...prev, [key]: value }));
     setSkeleton(null);
+  };
+  const handleGenerateSkeleton = () => {
+    void skeletonStream.start(WORLD_SKELETON_GENERATE_STREAM_PATH, {
+      idea: [
+        inspirationText.trim(),
+        concept?.summary ? `概念卡：${concept.summary}` : "",
+      ].filter(Boolean).join("\n\n") || "生成一个可用于小说创作的世界样本。",
+      worldType: selectedGenre?.path || concept?.worldType || matchedTemplateWorldType || selectedTemplate?.worldType || "自定义",
+      template: selectedTemplate?.name ?? "自定义",
+      referenceContext: buildReferenceContext(),
+      blueprint: buildGenerationBlueprint(),
+      options: {
+        preset: skeletonPreset,
+        counts: skeletonCounts,
+      },
+      provider: llm.provider,
+      model: llm.model,
+    });
   };
   return (
     <div className="space-y-4">
@@ -385,10 +395,11 @@ export default function WorldGenerator() {
             <WorldGeneratorStepTwo
               preset={skeletonPreset}
               counts={skeletonCounts}
-              generating={generateSkeletonMutation.isPending}
+              generating={skeletonStream.isStreaming}
+              progressMessage={skeletonStream.latestRun?.message}
               onPresetChange={handlePresetChange}
               onCountChange={handleCountChange}
-              onGenerateSkeleton={() => generateSkeletonMutation.mutate()}
+              onGenerateSkeleton={handleGenerateSkeleton}
             />
           ) : null}
 

@@ -3,7 +3,7 @@ description: "资源变更风险拒绝意图注入 - 用户不接受风险时保
 id: REQ-2023
 title: 资源变更风险拒绝意图注入
 version: 0.1
-status: in_progress
+status: done
 priority: p2
 complexity: medium
 created: 2026-06-28

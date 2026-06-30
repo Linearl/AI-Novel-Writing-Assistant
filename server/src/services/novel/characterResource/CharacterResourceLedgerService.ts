@@ -235,6 +235,53 @@ export class CharacterResourceLedgerService {
     });
   }
 
+  async getRejectedIntentsForChapter(
+    novelId: string,
+    chapterId: string,
+  ): Promise<Array<{ resourceName: string; riskLevel: string; summary: string; rejectedIntent: string }>> {
+    const rows = await prisma.stateChangeProposal.findMany({
+      where: {
+        novelId,
+        chapterId,
+        proposalType: "character_resource_update",
+        status: "rejected",
+      },
+      orderBy: [{ updatedAt: "desc" }],
+    });
+
+    const results: Array<{ resourceName: string; riskLevel: string; summary: string; rejectedIntent: string }> = [];
+    for (const row of rows) {
+      const notes: string[] = (() => {
+        try {
+          const parsed = JSON.parse(row.validationNotesJson ?? "[]");
+          return Array.isArray(parsed) ? parsed.filter((n): n is string => typeof n === "string") : [];
+        } catch {
+          return [];
+        }
+      })();
+      const intentNote = notes.find((n) => n.startsWith("rejectedIntent:"));
+      if (!intentNote) continue;
+      const rejectedIntent = intentNote.slice("rejectedIntent:".length);
+      if (!rejectedIntent) continue;
+
+      let payload: Record<string, unknown> = {};
+      try {
+        const parsed = JSON.parse(row.payloadJson ?? "{}");
+        if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+          payload = parsed as Record<string, unknown>;
+        }
+      } catch { /* ignore */ }
+
+      results.push({
+        resourceName: typeof payload.resourceName === "string" ? payload.resourceName : "未知资源",
+        riskLevel: row.riskLevel,
+        summary: row.summary,
+        rejectedIntent,
+      });
+    }
+    return results;
+  }
+
   private buildContextSummary(input: {
     availableItems: CharacterResourceLedgerItem[];
     setupNeededItems: CharacterResourceLedgerItem[];

@@ -76,8 +76,8 @@ T-1.3 (响应解析)
 
 ## 验证清单
 
-- [ ] T-1.1: 修改 buildImageGenerationRequestBody
-- [ ] T-1.2: 修改 generateImagesByProvider
-- [ ] T-1.3: 修改 parseImagesFromPayload
-- [ ] T-2.1: 单元测试
-- [ ] T-2.2: E2E 测试
+- [x] T-1.1: 修改 buildImageGenerationRequestBody
+- [x] T-1.2: 修改 generateImagesByProvider
+- [x] T-1.3: 修改 parseImagesFromPayload
+- [x] T-2.1: 单元测试
+- [ ] T-2.2: E2E 测试（⚠️ IMAGE_MODEL_OPTIONS 缺 minimax，前端设置页无推荐模型下拉）

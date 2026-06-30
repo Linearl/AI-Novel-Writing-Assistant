@@ -53,14 +53,7 @@ if (files.length === 0) {
   process.exit(1);
 }
 
-if (mode === "fast") {
-  for (const file of files) {
-    require(file);
-  }
-  return;
-}
-
-const result = spawnSync(process.execPath, ["--test", ...files], {
+const result = spawnSync(process.execPath, ["--test", "--test-concurrency=1", ...files], {
   cwd: serverRoot,
   stdio: "inherit",
 });

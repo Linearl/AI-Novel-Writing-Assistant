@@ -3,7 +3,7 @@ description: "自动导演高风险自动处理策略配置 - 允许用户选择
 id: REQ-2025
 title: 自动导演高风险自动处理策略配置
 version: 0.1
-status: requirements_ready
+status: done
 priority: p2
 complexity: medium
 created: 2026-06-29

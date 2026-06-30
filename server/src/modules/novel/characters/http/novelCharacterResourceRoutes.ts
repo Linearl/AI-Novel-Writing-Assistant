@@ -29,6 +29,11 @@ const characterResourceProposalParamsSchema = z.object({
   proposalId: z.string().trim().min(1),
 });
 
+const rejectProposalBodySchema = z.object({
+  reason: z.string().trim().max(500).optional(),
+  intent: z.string().trim().max(1000).optional(),
+}).optional();
+
 const resourceLlmOptionsSchema = z.object({
   provider: llmProviderSchema.optional(),
   model: z.string().trim().optional(),
@@ -87,6 +92,9 @@ function mapProposal(row: {
   createdAt: Date;
   updatedAt: Date;
 }): CharacterResourceProposalSummary {
+  const validationNotes = parseStringArray(row.validationNotesJson);
+  const rejectedIntent = validationNotes.find((n) => n.startsWith("rejectedIntent:"))?.slice("rejectedIntent:".length);
+  const rejectedReason = validationNotes.find((n) => n.startsWith("rejectedReason:"))?.slice("rejectedReason:".length);
   return {
     id: row.id,
     novelId: row.novelId,
@@ -101,7 +109,9 @@ function mapProposal(row: {
     summary: row.summary,
     payload: parsePayload(row.payloadJson),
     evidence: parseStringArray(row.evidenceJson),
-    validationNotes: parseStringArray(row.validationNotesJson),
+    validationNotes,
+    rejectedIntent: rejectedIntent || undefined,
+    rejectedReason: rejectedReason || undefined,
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt.toISOString(),
   };
@@ -349,10 +359,29 @@ export function registerNovelCharacterResourceRoutes(
 
   router.post(
     "/:id/character-resource-proposals/:proposalId/reject",
-    validate({ params: characterResourceProposalParamsSchema }),
+    validate({ params: characterResourceProposalParamsSchema, body: rejectProposalBodySchema }),
     async (req, res, next) => {
       try {
         const { id, proposalId } = req.params as z.infer<typeof characterResourceProposalParamsSchema>;
+        const body = (req.body ?? {}) as z.infer<typeof rejectProposalBodySchema>;
+
+        // Build update data; append intent/reason to validationNotesJson if provided
+        const updateData: { status: string; validationNotesJson?: string } = { status: "rejected" };
+        if (body?.intent || body?.reason) {
+          const existing = await prisma.stateChangeProposal.findUnique({
+            where: { id: proposalId },
+            select: { validationNotesJson: true },
+          });
+          const notes: string[] = parseStringArray(existing?.validationNotesJson ?? null);
+          if (body.intent) {
+            notes.unshift(`rejectedIntent:${body.intent}`);
+          }
+          if (body.reason) {
+            notes.unshift(`rejectedReason:${body.reason}`);
+          }
+          updateData.validationNotesJson = JSON.stringify(notes);
+        }
+
         const updated = await prisma.stateChangeProposal.updateMany({
           where: {
             id: proposalId,
@@ -360,7 +389,7 @@ export function registerNovelCharacterResourceRoutes(
             proposalType: "character_resource_update",
             status: "pending_review",
           },
-          data: { status: "rejected" },
+          data: updateData,
         });
         if (updated.count === 0) {
           throw new AppError("没有找到可忽略的角色资源变更。", 404);
@@ -369,10 +398,13 @@ export function registerNovelCharacterResourceRoutes(
           items: await characterResourceLedgerService.listResources(id),
           pendingProposals: await listPendingResourceProposals(id),
         };
+        const hasIntent = Boolean(body?.intent);
         res.status(200).json({
           success: true,
           data,
-          message: "资源变更已忽略，不会影响后续写作。",
+          message: hasIntent
+            ? "资源变更已拒绝，修正意图已记录，后续修复会参考。"
+            : "资源变更已忽略，不会影响后续写作。",
         } satisfies ApiResponse<typeof data>);
       } catch (error) {
         next(error);

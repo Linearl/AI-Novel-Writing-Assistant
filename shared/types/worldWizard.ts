@@ -45,6 +45,19 @@ export interface WorldSkeletonAssessment {
   recommendedNextActions: string[];
 }
 
+export interface WorldGenStageInfo {
+  id: string;
+  label: string;
+  order: number;
+  totalStages: number;
+}
+
+export interface WorldGenProgressEvent {
+  type: "stage_start" | "stage_complete" | "generation_complete" | "generation_error";
+  stage: WorldGenStageInfo;
+  message?: string;
+}
+
 export interface WorldSkeletonGenerationPayload {
   concept: {
     name: string;

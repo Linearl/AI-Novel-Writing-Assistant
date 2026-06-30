@@ -184,7 +184,7 @@ export default function NovelAutoDirectorDialog({
 
   const buildAutoExecutionPlanForRunMode = (): DirectorAutoExecutionPlan | undefined => {
     if (runMode === "full_book_autopilot") {
-      return buildFullBookAutopilotExecutionPlan();
+      return buildFullBookAutopilotExecutionPlan(autoExecutionDraft.highRiskStrategy);
     }
     if (runMode === "auto_to_execution") {
       return buildDirectorAutoExecutionPlanFromDraft(autoExecutionDraft, {

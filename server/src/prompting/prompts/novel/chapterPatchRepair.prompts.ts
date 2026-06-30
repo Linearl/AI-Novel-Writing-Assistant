@@ -11,6 +11,7 @@ export interface ChapterPatchRepairPromptInput {
   chapterContent: string;
   issuesJson: string;
   modeHint?: string;
+  rejectedIntents?: Array<{ resourceName: string; summary: string; rejectedIntent: string }>;
 }
 
 export const chapterPatchRepairPrompt: PromptAsset<
@@ -74,6 +75,16 @@ export const chapterPatchRepairPrompt: PromptAsset<
       "【分层上下文】",
       renderSelectedContextBlocks(context),
       "",
+      ...(input.rejectedIntents && input.rejectedIntents.length > 0
+        ? [
+          "【用户修正意图】",
+          "以下角色资源变更被用户拒绝，请在修复时尊重用户的修正方向：",
+          ...input.rejectedIntents.map(
+            (item) => `- ${item.resourceName}（原变更：${item.summary}）：用户要求 ${item.rejectedIntent}`,
+          ),
+          "",
+        ]
+        : []),
       "【当前正文】",
       input.chapterContent,
       "",

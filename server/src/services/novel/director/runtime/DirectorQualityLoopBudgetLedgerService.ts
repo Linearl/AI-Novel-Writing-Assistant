@@ -1,6 +1,7 @@
 import { createHash } from "crypto";
 import type {
   DirectorAutoExecutionState,
+  DirectorHighRiskStrategyConfig,
   DirectorQualityLoopBudgetAttemptAction,
   DirectorQualityLoopBudgetEntry,
   DirectorQualityLoopBudgetLedger,
@@ -129,17 +130,44 @@ export function buildDirectorQualityLoopBudgetSignatureKey(input: {
 
 export function resolveDirectorQualityLoopBudgetNextAction(
   entry: DirectorQualityLoopBudgetEntry | null | undefined,
+  highRiskStrategyConfig?: DirectorHighRiskStrategyConfig,
 ): DirectorQualityLoopBudgetNextAction {
   if ((entry?.deferredCount ?? 0) > 0) {
     return "defer_and_continue";
   }
-  if ((entry?.windowReplanCount ?? 0) >= DIRECTOR_QUALITY_LOOP_BUDGET_LIMITS.windowReplan) {
+
+  const isAutoEliminate = highRiskStrategyConfig?.strategy === "auto_eliminate";
+  const maxRetries = highRiskStrategyConfig?.maxAutoEliminateRetries ?? 3;
+
+  // 自动消除模式下：放宽修复预算为正常值的 2 倍
+  const patchLimit = isAutoEliminate
+    ? DIRECTOR_QUALITY_LOOP_BUDGET_LIMITS.patchRepair * 2
+    : DIRECTOR_QUALITY_LOOP_BUDGET_LIMITS.patchRepair;
+  const rewriteLimit = isAutoEliminate
+    ? DIRECTOR_QUALITY_LOOP_BUDGET_LIMITS.chapterRewrite * 2
+    : DIRECTOR_QUALITY_LOOP_BUDGET_LIMITS.chapterRewrite;
+  const replanLimit = isAutoEliminate
+    ? DIRECTOR_QUALITY_LOOP_BUDGET_LIMITS.windowReplan * 2
+    : DIRECTOR_QUALITY_LOOP_BUDGET_LIMITS.windowReplan;
+
+  // 自动消除模式下：累计尝试次数达到上限时强制 defer
+  if (isAutoEliminate) {
+    const cumulativeAttempts =
+      (entry?.patchRepairCount ?? 0)
+      + (entry?.chapterRewriteCount ?? 0)
+      + (entry?.windowReplanCount ?? 0);
+    if (cumulativeAttempts >= maxRetries) {
+      return "defer_and_continue";
+    }
+  }
+
+  if ((entry?.windowReplanCount ?? 0) >= replanLimit) {
     return "defer_and_continue";
   }
-  if ((entry?.chapterRewriteCount ?? 0) >= DIRECTOR_QUALITY_LOOP_BUDGET_LIMITS.chapterRewrite) {
+  if ((entry?.chapterRewriteCount ?? 0) >= rewriteLimit) {
     return "auto_replan_window";
   }
-  if ((entry?.patchRepairCount ?? 0) >= DIRECTOR_QUALITY_LOOP_BUDGET_LIMITS.patchRepair) {
+  if ((entry?.patchRepairCount ?? 0) >= patchLimit) {
     return "auto_rewrite_chapter";
   }
   return "auto_patch_repair";
@@ -205,6 +233,7 @@ export function recordDirectorQualityLoopBudgetAttempt(input: {
   chapterId?: string | null;
   chapterOrder?: number | null;
   occurredAt?: string | Date | null;
+  highRiskStrategyConfig?: DirectorHighRiskStrategyConfig;
 }): {
   state: DirectorAutoExecutionState;
   entry: DirectorQualityLoopBudgetEntry;
@@ -245,6 +274,6 @@ export function recordDirectorQualityLoopBudgetAttempt(input: {
       qualityLoopLedger: ledger,
     },
     entry: updatedEntry,
-    nextAction: resolveDirectorQualityLoopBudgetNextAction(updatedEntry),
+    nextAction: resolveDirectorQualityLoopBudgetNextAction(updatedEntry, input.highRiskStrategyConfig),
   };
 }

@@ -103,6 +103,7 @@ export interface WorldInspirationAnalysisResult {
 }
 
 export const WORLD_INSPIRATION_ANALYZE_STREAM_PATH = "/worlds/inspiration/analyze/stream";
+export const WORLD_SKELETON_GENERATE_STREAM_PATH = "/worlds/skeleton/generate-stream";
 
 export async function getWorldList() {
   const { data } = await apiClient.get<ApiResponse<World[]>>("/worlds");

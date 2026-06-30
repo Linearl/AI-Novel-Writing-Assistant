@@ -1,0 +1,57 @@
+{
+  "status": "requirements_ready",
+  "route": "req",
+  "timestamp": "2026-06-30T00:00:00.000Z",
+  "taskPath": "docs_dev/1.task/B.todo/v0.1/v0.1-r2026-medium-beat-sheet-structure-preservation",
+  "reqId": "2026",
+  "title": "节奏板重生成结构保持验证",
+  "category": "2xxx-核心功能开发",
+  "complexity": "medium",
+  "skipClarification": true,
+  "skipDesign": false,
+  "artifacts": [
+    {
+      "path": "docs_dev/1.task/B.todo/v0.1/v0.1-r2026-medium-beat-sheet-structure-preservation/REQ-2026.md",
+      "kind": "requirements"
+    },
+    {
+      "path": "docs_dev/1.task/B.todo/v0.1/v0.1-r2026-medium-beat-sheet-structure-preservation/design.md",
+      "kind": "design"
+    },
+    {
+      "path": "docs_dev/1.task/B.todo/v0.1/v0.1-r2026-medium-beat-sheet-structure-preservation/tasks.md",
+      "kind": "tasks"
+    }
+  ],
+  "unresolved_items": [],
+  "assumptions": [
+    "REQ-2007 已完成，referenceExisting 选项已可用",
+    "现有 parseBeatChapterSpan 函数可复用于章节数验证",
+    "repairPolicy.maxAttempts 机制可用于重试控制",
+    "resolveFullVolumeResumeState 作为第二层保护仍然有效"
+  ],
+  "blocking_reasons": [],
+  "decisions": [
+    {
+      "id": "D1",
+      "point": "选择方案 B（Prompt + 验证 + 重试）"
+    },
+    {
+      "id": "D2",
+      "point": "Context Block 从 reference 提升到 preferred"
+    },
+    {
+      "id": "D3",
+      "point": "重试次数限制为 1 次"
+    },
+    {
+      "id": "D4",
+      "point": "验证范围仅限已有章节关联的 beat"
+    }
+  ],
+  "handoff": {
+    "from": "req",
+    "to": "dev",
+    "ticketPath": "docs_dev/1.task/B.todo/v0.1/v0.1-r2026-medium-beat-sheet-structure-preservation/README.md"
+  }
+}

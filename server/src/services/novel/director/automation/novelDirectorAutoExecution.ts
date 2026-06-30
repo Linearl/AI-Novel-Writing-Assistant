@@ -74,6 +74,7 @@ export function normalizeDirectorAutoExecutionPlan(
       autoRepair,
       artifactSyncMode,
       pipelineMode,
+      highRiskStrategy: plan.highRiskStrategy,
     };
   }
   if (plan?.mode === "volume") {
@@ -84,6 +85,7 @@ export function normalizeDirectorAutoExecutionPlan(
       autoRepair,
       artifactSyncMode,
       pipelineMode,
+      highRiskStrategy: plan.highRiskStrategy,
     };
   }
   if (plan?.mode === "book") {
@@ -93,6 +95,7 @@ export function normalizeDirectorAutoExecutionPlan(
       autoRepair,
       artifactSyncMode,
       pipelineMode,
+      highRiskStrategy: plan.highRiskStrategy,
     };
   }
   const fallbackStartOrder = Math.max(
@@ -111,6 +114,7 @@ export function normalizeDirectorAutoExecutionPlan(
     autoRepair,
     artifactSyncMode,
     pipelineMode,
+    highRiskStrategy: plan?.highRiskStrategy,
   };
 }
 

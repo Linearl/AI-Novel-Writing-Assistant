@@ -72,7 +72,7 @@ import {
   safeParseJSON,
   uniqueKnowledgeDocumentIds,
 } from "./worldServiceShared";
-import { generateWorldSkeleton, type WorldSkeletonGenerateInput } from "./worldSkeletonGeneration";
+import { generateWorldSkeleton, generateWorldSkeletonWithProgress, type WorldSkeletonGenerateInput, type SkeletonProgressCallback } from "./worldSkeletonGeneration";
 import { exportWorldData, importWorldData } from "./worldTransfer";
 import { ragServices } from "../rag";
 import type { RagOwnerType } from "../rag/types";
@@ -180,6 +180,10 @@ export class WorldService {
 
   async generateSkeleton(input: WorldSkeletonGenerateInput) {
     return generateWorldSkeleton(input);
+  }
+
+  async generateSkeletonWithProgress(input: WorldSkeletonGenerateInput, onProgress?: SkeletonProgressCallback) {
+    return generateWorldSkeletonWithProgress(input, onProgress);
   }
 
   async createWorld(input: CreateWorldInput) {

@@ -449,6 +449,7 @@ test("director command service applies the full-book autopilot contract before q
       mode: "book",
       autoReview: true,
       autoRepair: true,
+      highRiskStrategy: undefined,
     });
     assert.equal(harness.bootstraps[0].seedPayload.autoApproval.enabled, true);
   } finally {

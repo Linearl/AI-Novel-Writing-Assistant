@@ -198,6 +198,17 @@ export interface DirectorAutoExecutionPlan {
   autoRepair?: boolean;
   artifactSyncMode?: ArtifactSyncMode;
   pipelineMode?: "batch" | "pipeline";
+  /** 高风险处理策略配置 */
+  highRiskStrategy?: DirectorHighRiskStrategyConfig;
+}
+
+export type DirectorHighRiskHandlingStrategy = "manual_review" | "auto_eliminate";
+
+export interface DirectorHighRiskStrategyConfig {
+  /** 高风险处理策略：人工审核（默认）或自动消除 */
+  strategy: DirectorHighRiskHandlingStrategy;
+  /** 自动消除时的最大重试次数（同一 issue signature），默认 3 */
+  maxAutoEliminateRetries?: number;
 }
 
 export interface DirectorFullBookAutopilotContract {
@@ -235,9 +246,12 @@ export function isFullBookAutopilotRunMode(
   return runMode === DIRECTOR_FULL_BOOK_AUTOPILOT_RUN_MODE;
 }
 
-export function buildFullBookAutopilotExecutionPlan(): DirectorAutoExecutionPlan {
+export function buildFullBookAutopilotExecutionPlan(
+  highRiskStrategy?: DirectorHighRiskStrategyConfig,
+): DirectorAutoExecutionPlan {
   return {
     ...DIRECTOR_FULL_BOOK_AUTOPILOT_CONTRACT.autoExecutionPlan,
+    highRiskStrategy,
   };
 }
 

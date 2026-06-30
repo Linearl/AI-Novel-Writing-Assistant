@@ -6,6 +6,7 @@ import type { DirectorBookAutomationAction } from "@ai-novel/shared/types/direct
 import type { TaskStatus } from "@ai-novel/shared/types/task";
 import type { CharacterResourceProposalSummary } from "@ai-novel/shared/types/characterResource";
 import type { AutoDirectorAction } from "@ai-novel/shared/types/autoDirectorFollowUp";
+import React from "react";
 import AICockpit from "@/components/autoDirector/AICockpit";
 import LLMSelector from "@/components/common/LLMSelector";
 import { Badge } from "@/components/ui/badge";
@@ -164,11 +165,56 @@ function readProposalPayloadText(
   return typeof value === "string" ? value.trim() : "";
 }
 
+function RejectIntentDialog(props: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  resourceName: string;
+  onSubmit: (intent: string) => void;
+  isSubmitting?: boolean;
+}) {
+  const { open, onOpenChange, resourceName, onSubmit, isSubmitting } = props;
+  const [intent, setIntent] = React.useState("");
+
+  const handleSubmit = () => {
+    onSubmit(intent.trim());
+    setIntent("");
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>不接受此风险</DialogTitle>
+          <DialogDescription>
+            你拒绝了「{resourceName}」的高风险变更。请描述你希望 AI 如何修正，以便后续修复参考你的意图。
+          </DialogDescription>
+        </DialogHeader>
+        <textarea
+          className="mt-2 w-full rounded-md border bg-background px-3 py-2 text-sm leading-6 focus:outline-none focus:ring-2 focus:ring-ring"
+          rows={4}
+          placeholder="例如：保留原角色性格不变，不要引入新的身份设定"
+          value={intent}
+          onChange={(e) => setIntent(e.target.value)}
+          disabled={isSubmitting}
+        />
+        <div className="mt-3 flex justify-end gap-2">
+          <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isSubmitting}>
+            取消
+          </Button>
+          <Button type="button" onClick={handleSubmit} disabled={isSubmitting}>
+            {isSubmitting ? "提交中..." : "提交并拒绝"}
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 function ResourceProposalCard(props: {
   proposal: CharacterResourceProposalSummary;
   onOpenSource?: (proposal: CharacterResourceProposalSummary) => void;
   onConfirm?: (proposalId: string) => void;
-  onReject?: (proposalId: string) => void;
+  onReject?: (proposalId: string, intent?: string) => void;
   confirmingProposalId?: string;
   rejectingProposalId?: string;
 }) {
@@ -185,6 +231,7 @@ function ResourceProposalCard(props: {
   const narrativeImpact = readProposalPayloadText(proposal, "narrativeImpact");
   const isConfirming = confirmingProposalId === proposal.id;
   const isRejecting = rejectingProposalId === proposal.id;
+  const [showIntentDialog, setShowIntentDialog] = React.useState(false);
 
   return (
     <div className="space-y-3 rounded-xl border bg-background/80 p-3">
@@ -229,16 +276,40 @@ function ResourceProposalCard(props: {
         >
           {isConfirming ? "确认中..." : "确认并用于后续写作"}
         </Button>
-        <Button
-          type="button"
-          size="sm"
-          variant="outline"
-          onClick={() => onReject?.(proposal.id)}
-          disabled={isRejecting || !onReject}
-        >
-          {isRejecting ? "处理中..." : "忽略这条变化"}
-        </Button>
+        {proposal.riskLevel === "high" ? (
+          <Button
+            type="button"
+            size="sm"
+            variant="destructive"
+            onClick={() => setShowIntentDialog(true)}
+            disabled={isRejecting || !onReject}
+          >
+            {isRejecting ? "处理中..." : "不接受此风险"}
+          </Button>
+        ) : (
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            onClick={() => onReject?.(proposal.id)}
+            disabled={isRejecting || !onReject}
+          >
+            {isRejecting ? "处理中..." : "忽略这条变化"}
+          </Button>
+        )}
       </div>
+      {proposal.riskLevel === "high" ? (
+        <RejectIntentDialog
+          open={showIntentDialog}
+          onOpenChange={setShowIntentDialog}
+          resourceName={resourceName}
+          isSubmitting={isRejecting}
+          onSubmit={(intent) => {
+            onReject?.(proposal.id, intent || undefined);
+            setShowIntentDialog(false);
+          }}
+        />
+      ) : null}
     </div>
   );
 }

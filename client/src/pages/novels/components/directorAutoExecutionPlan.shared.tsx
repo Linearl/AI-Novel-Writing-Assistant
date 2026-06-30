@@ -1,6 +1,7 @@
 import type {
   DirectorAutoExecutionMode,
   DirectorAutoExecutionPlan,
+  DirectorHighRiskStrategyConfig,
   DirectorTakeoverExecutableRangeSnapshot,
   DirectorTakeoverStrategy,
 } from "@ai-novel/shared/types/novelDirector";
@@ -16,6 +17,7 @@ export interface DirectorAutoExecutionDraftState {
   autoReview: boolean;
   autoRepair: boolean;
   pipelineMode: "batch" | "pipeline";
+  highRiskStrategy?: DirectorHighRiskStrategyConfig;
 }
 
 const DEFAULT_DIRECTOR_AUTO_EXECUTION_DRAFT: DirectorAutoExecutionDraftState = {
@@ -110,6 +112,7 @@ export function normalizeDirectorAutoExecutionDraftState(
       autoReview: plan.autoReview ?? true,
       autoRepair: plan.autoReview === false ? false : (plan.autoRepair ?? true),
       pipelineMode: plan.pipelineMode ?? "batch",
+      highRiskStrategy: plan.highRiskStrategy,
     };
   }
   if (plan?.mode === "chapter_range") {
@@ -123,6 +126,7 @@ export function normalizeDirectorAutoExecutionDraftState(
       autoReview: plan.autoReview ?? true,
       autoRepair: plan.autoReview === false ? false : (plan.autoRepair ?? true),
       pipelineMode: plan.pipelineMode ?? "batch",
+      highRiskStrategy: plan.highRiskStrategy,
     };
   }
   if (plan?.mode === "volume") {
@@ -134,6 +138,7 @@ export function normalizeDirectorAutoExecutionDraftState(
       autoReview: plan.autoReview ?? true,
       autoRepair: plan.autoReview === false ? false : (plan.autoRepair ?? true),
       pipelineMode: plan.pipelineMode ?? "batch",
+      highRiskStrategy: plan.highRiskStrategy,
     };
   }
   return {
@@ -141,6 +146,7 @@ export function normalizeDirectorAutoExecutionDraftState(
     endOrder: String(normalizePositiveInteger(plan?.endOrder, 10)),
     autoReview: plan?.autoReview ?? true,
     autoRepair: plan?.autoReview === false ? false : (plan?.autoRepair ?? true),
+    highRiskStrategy: plan?.highRiskStrategy,
   };
 }
 
@@ -157,6 +163,7 @@ export function buildDirectorAutoExecutionPlanFromDraft(
       autoReview: draft.autoReview,
       autoRepair: draft.autoReview ? draft.autoRepair : false,
     pipelineMode: draft.pipelineMode,
+    highRiskStrategy: draft.highRiskStrategy,
     };
   }
   if (draft.mode === "chapter_range") {
@@ -172,6 +179,7 @@ export function buildDirectorAutoExecutionPlanFromDraft(
       autoReview: draft.autoReview,
       autoRepair: draft.autoReview ? draft.autoRepair : false,
     pipelineMode: draft.pipelineMode,
+    highRiskStrategy: draft.highRiskStrategy,
     };
   }
   if (draft.mode === "volume") {
@@ -181,6 +189,7 @@ export function buildDirectorAutoExecutionPlanFromDraft(
       autoReview: draft.autoReview,
       autoRepair: draft.autoReview ? draft.autoRepair : false,
     pipelineMode: draft.pipelineMode,
+    highRiskStrategy: draft.highRiskStrategy,
     };
   }
   const endOrder = clampChapterOrder(normalizePositiveInteger(draft.endOrder, 10), options?.maxChapterCount);
@@ -191,6 +200,7 @@ export function buildDirectorAutoExecutionPlanFromDraft(
     autoReview: draft.autoReview,
     autoRepair: draft.autoReview ? draft.autoRepair : false,
     pipelineMode: draft.pipelineMode,
+    highRiskStrategy: draft.highRiskStrategy,
   };
 }
 

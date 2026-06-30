@@ -77,6 +77,7 @@ test("full-book autopilot shared contract is full book and full auto", () => {
     mode: "book",
     autoReview: true,
     autoRepair: true,
+    highRiskStrategy: undefined,
   });
   assert.deepEqual(buildFullDirectorAutoApprovalConfig(), {
     enabled: true,

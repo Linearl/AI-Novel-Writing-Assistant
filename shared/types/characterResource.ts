@@ -150,6 +150,8 @@ export const characterResourceProposalSummarySchema = z.object({
   payload: z.record(z.string(), z.unknown()).default({}),
   evidence: z.array(z.string()).default([]),
   validationNotes: z.array(z.string()).default([]),
+  rejectedIntent: z.string().optional(),
+  rejectedReason: z.string().optional(),
   createdAt: z.string(),
   updatedAt: z.string(),
 });

@@ -4,7 +4,7 @@ description: "REQ-7001 任务拆解"
 
 # REQ-7001 任务拆解
 
-> 状态：⏳ 进行中
+> 状态：✅ 全部完成
 
 ## 任务概述
 
@@ -14,12 +14,12 @@ description: "REQ-7001 任务拆解"
 
 ### 2. 问题
 
-批量运行测试时 prisma mock 污染导致 4 个 auto-director 测试失败，通过率 79%。
+批量运行测试时 prisma mock 污染导致多个 auto-director 测试失败，通过率 79%。
 
 ### 3. 需求
 
 - 修复测试隔离问题
-- 涉及文件：`server/tests/autoDirector*.test.js`
+- 涉及文件：`server/tests/autoDirector*.test.js`、`run-tests.cjs`、`novelRiskService.test.js`、`dramaPipelineContract.test.js`
 
 ### 4. 验收标准
 
@@ -29,10 +29,10 @@ description: "REQ-7001 任务拆解"
 
 | # | 任务 | 优先级 | 预估 | 状态 |
 | --- | --- | --- | --- | --- |
-| T1 | 分析批量运行失败的精确传播路径 | P0 | 30min | ⬜ 待开始 |
-| T2 | 修复 autoDirectorAutoApprovalAudit.test.js mock 恢复 | P0 | 30min | ⬜ 待开始 |
-| T3 | 修复其他受影响的 auto-director 测试 mock 恢复 | P1 | 30min | ⬜ 待开始 |
-| T4 | 验证 `pnpm test` 全部通过 | P0 | 15min | ⬜ 待开始 |
+| T1 | 分析批量运行失败的精确传播路径 | P0 | 30min | ✅ 已完成 |
+| T2 | 修复 autoDirectorAutoApprovalAudit.test.js mock 恢复 | P0 | 30min | ✅ 已完成 |
+| T3 | 修复其他受影响的 auto-director 测试 mock 恢复 | P1 | 30min | ✅ 已完成 |
+| T4 | 验证 `pnpm test` 全部通过 | P0 | 15min | ✅ 已完成 |
 
 ---
 

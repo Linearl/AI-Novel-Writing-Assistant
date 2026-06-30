@@ -121,6 +121,67 @@ export function registerGenerationWorldRoutes(router: Router): void {
   );
 
   router.post(
+    "/skeleton/generate-stream",
+    requireWorldWizard,
+    validate({ body: worldSkeletonGenerateSchema }),
+    async (req, res) => {
+      const runId = `world-skeleton-${Date.now()}`;
+      const disposeHeartbeat = initSSE(res);
+
+      try {
+        writeSSEFrame(res, {
+          type: "run_status",
+          runId,
+          status: "queued",
+          message: "已开始生成世界骨架",
+        });
+
+        const data = await worldService.generateSkeletonWithProgress(
+          req.body as WorldSkeletonGenerateInput,
+          (event) => {
+            writeSSEFrame(res, {
+              type: "run_status",
+              runId,
+              status: "running",
+              message: event.stage
+                ? `${event.stage.label} ${event.stage.order}/${event.stage.totalStages}`
+                : event.message ?? "",
+            });
+          },
+        );
+
+        writeSSEFrame(res, {
+          type: "run_status",
+          runId,
+          status: "succeeded",
+          message: "世界骨架生成完成",
+        });
+        writeSSEFrame(res, {
+          type: "done",
+          fullContent: JSON.stringify(data),
+        });
+      } catch (error) {
+        const message = error instanceof Error ? error.message : "世界骨架生成失败。";
+        writeSSEFrame(res, {
+          type: "run_status",
+          runId,
+          status: "failed",
+          message,
+        });
+        writeSSEFrame(res, {
+          type: "error",
+          error: message,
+        });
+      } finally {
+        disposeHeartbeat();
+        if (!res.writableEnded) {
+          res.end();
+        }
+      }
+    },
+  );
+
+  router.post(
     "/inspiration/analyze/stream",
     requireWorldWizard,
     validate({ body: inspirationSchema }),

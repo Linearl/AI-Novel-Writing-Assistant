@@ -499,7 +499,10 @@ export class NovelDirectorAutoExecutionRuntime {
             issueSignature,
             affectedChapterWindow,
           });
-          const plannedBudgetAction = resolveDirectorQualityLoopBudgetNextAction(existingBudgetEntry);
+          const plannedBudgetAction = resolveDirectorQualityLoopBudgetNextAction(
+            existingBudgetEntry,
+            autoExecution.highRiskStrategy,
+          );
           const budgetAttemptAction = plannedBudgetAction === "auto_rewrite_chapter"
             ? "chapter_rewrite"
             : plannedBudgetAction === "auto_replan_window"
@@ -517,6 +520,7 @@ export class NovelDirectorAutoExecutionRuntime {
             reason: failureMessage,
             chapterId: autoExecution.nextChapterId,
             chapterOrder: autoExecution.nextChapterOrder,
+            highRiskStrategyConfig: autoExecution.highRiskStrategy,
           });
           budgetedAutoExecution = budgetResult.state;
           qualityBudgetEntry = budgetResult.entry;

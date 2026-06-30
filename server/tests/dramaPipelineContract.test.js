@@ -398,6 +398,15 @@ function installPipelineStubs() {
 }
 
 test("drama service pipeline keeps repairable quality issues before storyboard and video tasks", async () => {
+  const prismaPath = require.resolve("../dist/db/prisma.js");
+  const imageProviderPath = require.resolve("../dist/services/image/provider.js");
+  const appPathsPath = require.resolve("../dist/runtime/appPaths.js");
+  const originalCacheEntries = {
+    prisma: require.cache[prismaPath],
+    imageProvider: require.cache[imageProviderPath],
+    appPaths: require.cache[appPathsPath],
+  };
+
   process.env.DRAMA_COST_CURRENCY = "CNY";
   process.env.DRAMA_IMAGE_COST_PER_IMAGE_OPENAI = "1.25";
   process.env.DRAMA_VIDEO_MOCK_COST_PER_SECOND = "0.4";
@@ -556,4 +565,18 @@ test("drama service pipeline keeps repairable quality issues before storyboard a
   assert.equal(keyframeData.history[0].version, 1);
   assert.equal(keyframeData.history[0].url, "/api/drama/shot-images/shot_1/keyframe/v1");
   assert.equal(fs.existsSync(path.join(state.generatedImagesRoot, "drama-shots", "shot_1", "keyframe.v1.png")), true);
+
+  // Restore require.cache entries to prevent mock pollution
+  for (const [key, entry] of Object.entries(originalCacheEntries)) {
+    const cacheKey = key === "prisma" ? prismaPath : key === "imageProvider" ? imageProviderPath : appPathsPath;
+    if (entry) {
+      require.cache[cacheKey] = entry;
+    } else {
+      delete require.cache[cacheKey];
+    }
+  }
+  delete process.env.DRAMA_COST_CURRENCY;
+  delete process.env.DRAMA_IMAGE_COST_PER_IMAGE_OPENAI;
+  delete process.env.DRAMA_VIDEO_MOCK_COST_PER_SECOND;
+  delete process.env.DRAMA_TTS_MOCK_COST_PER_SECOND;
 });

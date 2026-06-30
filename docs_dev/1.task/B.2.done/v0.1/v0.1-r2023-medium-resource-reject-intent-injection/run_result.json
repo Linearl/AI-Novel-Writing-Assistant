@@ -2,7 +2,7 @@
   "version": "1.0",
   "taskId": "REQ-2023",
   "title": "资源变更风险拒绝意图注入",
-  "status": "requirements_ready",
+  "status": "done",
   "route": "req",
   "complexity": "medium",
   "reqType": "feature",

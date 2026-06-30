@@ -2,7 +2,7 @@
   "version": "1.0",
   "taskId": "REQ-2025",
   "title": "自动导演高风险自动处理策略配置",
-  "status": "requirements_ready",
+  "status": "done",
   "route": "req",
   "complexity": "medium",
   "reqType": "feature",

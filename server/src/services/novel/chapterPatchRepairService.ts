@@ -36,6 +36,8 @@ export interface ChapterPatchRepairInput {
   repairMode?: PatchRepairMode;
   /** REQ-2022: 关联自动执行 taskId，用于 debug buffer 采集 */
   directorDebugTaskId?: string;
+  /** REQ-2023: 用户拒绝的角色资源变更意图，注入到修复 prompt */
+  rejectedIntents?: Array<{ resourceName: string; summary: string; rejectedIntent: string }>;
 }
 
 export interface ChapterPatchRepairResult {
@@ -85,6 +87,7 @@ export class ChapterPatchRepairService {
           chapterContent: input.content,
           issuesJson: JSON.stringify(input.issues, null, 2),
           modeHint: input.modeHint,
+          rejectedIntents: input.rejectedIntents,
         },
         contextBlocks,
         options: {

@@ -1,4 +1,4 @@
-import type { DirectorIdeaInspiration, DirectorRunMode, DirectorWorldSetupMode } from "@ai-novel/shared/types/novelDirector";
+import type { DirectorIdeaInspiration, DirectorRunMode, DirectorWorldSetupMode, DirectorHighRiskStrategyConfig } from "@ai-novel/shared/types/novelDirector";
 import type {
   DirectorAutoApprovalGroup,
   DirectorAutoApprovalPoint,
@@ -455,12 +455,18 @@ export default function NovelAutoDirectorSetupPanel(props: NovelAutoDirectorSetu
               </>
             ) : null}
             {runMode === "full_book_autopilot" ? (
-              <div className={`mt-3 rounded-md border border-primary/15 bg-primary/5 p-3 text-xs leading-5 text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>
-                <div className="text-sm font-medium text-foreground">全书自动成书</div>
-                <div className="mt-1">
-                  系统会以整本书为目标完成规划、拆章、正文生成、审校和修复。只有模型不可用、服务异常、正文保护或不可恢复风险会停下。
+              <>
+                <div className={`mt-3 rounded-md border border-primary/15 bg-primary/5 p-3 text-xs leading-5 text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>
+                  <div className="text-sm font-medium text-foreground">全书自动成书</div>
+                  <div className="mt-1">
+                    系统会以整本书为目标完成规划、拆章、正文生成、审校和修复。只有模型不可用、服务异常、正文保护或不可恢复风险会停下。
+                  </div>
                 </div>
-              </div>
+                <HighRiskStrategyCard
+                  highRiskStrategy={autoExecutionDraft.highRiskStrategy}
+                  onChange={(patch) => onAutoExecutionDraftChange({ highRiskStrategy: patch })}
+                />
+              </>
             ) : null}
           </section>
 
@@ -484,6 +490,106 @@ export default function NovelAutoDirectorSetupPanel(props: NovelAutoDirectorSetu
             </Button>
           </div>
         </div>
+      </div>
+    </div>
+  );
+}
+
+interface HighRiskStrategyCardProps {
+  highRiskStrategy?: DirectorHighRiskStrategyConfig;
+  onChange: (config: DirectorHighRiskStrategyConfig | undefined) => void;
+}
+
+const HIGH_RISK_STRATEGY_OPTIONS: Array<{
+  value: DirectorHighRiskStrategyConfig["strategy"];
+  label: string;
+  description: string;
+}> = [
+  {
+    value: "manual_review",
+    label: "人工审核（默认）",
+    description: "遇到高风险质量问题时暂停，等待你确认后再决定后续动作。",
+  },
+  {
+    value: "auto_eliminate",
+    label: "自动消除风险",
+    description: "遇到高风险质量问题时自动尝试修复，超出重试上限后跳过并记录。",
+  },
+];
+
+function HighRiskStrategyCard({ highRiskStrategy, onChange }: HighRiskStrategyCardProps) {
+  const currentStrategy = highRiskStrategy?.strategy ?? "manual_review";
+  const maxRetries = highRiskStrategy?.maxAutoEliminateRetries ?? 3;
+
+  const setStrategy = (strategy: DirectorHighRiskStrategyConfig["strategy"]) => {
+    if (strategy === "manual_review") {
+      onChange(undefined);
+    } else {
+      onChange({
+        strategy,
+        maxAutoEliminateRetries: highRiskStrategy?.maxAutoEliminateRetries,
+      });
+    }
+  };
+
+  const setMaxRetries = (value: string) => {
+    const numericValue = Number.parseInt(value, 10);
+    const clamped = Number.isFinite(numericValue) ? Math.max(1, Math.min(10, numericValue)) : 3;
+    onChange({
+      strategy: "auto_eliminate",
+      maxAutoEliminateRetries: clamped,
+    });
+  };
+
+  return (
+    <div className="mt-3 rounded-xl border bg-background/80 p-3">
+      <div className="text-sm font-medium text-foreground">风险控制</div>
+      <div className={`mt-1 text-xs leading-5 text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>
+        高风险质量问题的处理策略，影响修复预算和暂停行为。
+      </div>
+
+      <div className="mt-3 grid gap-2 sm:grid-cols-2">
+        {HIGH_RISK_STRATEGY_OPTIONS.map((option) => {
+          const active = option.value === currentStrategy;
+          return (
+            <button
+              key={option.value}
+              type="button"
+              className={`rounded-lg border p-3 text-left transition ${
+                active
+                  ? "border-primary bg-primary/10 shadow-sm"
+                  : "border-border bg-background hover:border-primary/40"
+              }`}
+              onClick={() => setStrategy(option.value)}
+            >
+              <div className="text-sm font-medium text-foreground">{option.label}</div>
+              <div className={`mt-1 text-xs leading-5 text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>{option.description}</div>
+            </button>
+          );
+        })}
+      </div>
+
+      {currentStrategy === "auto_eliminate" ? (
+        <div className="mt-3 max-w-[200px]">
+          <div className="text-xs font-medium text-foreground">最大重试次数</div>
+          <Input
+            className="mt-1"
+            type="number"
+            min={1}
+            max={10}
+            value={maxRetries}
+            onChange={(event) => setMaxRetries(event.target.value)}
+          />
+          <div className={`mt-1 text-xs text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>
+            同一问题超过此次数后自动跳过。
+          </div>
+        </div>
+      ) : null}
+
+      <div className={`mt-2 text-xs leading-5 text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>
+        {currentStrategy === "auto_eliminate"
+          ? "自动消除模式下修复预算自动放宽为正常值的 2 倍。"
+          : "默认模式下按标准修复预算执行，遇到高风险问题时暂停等待处理。"}
       </div>
     </div>
   );

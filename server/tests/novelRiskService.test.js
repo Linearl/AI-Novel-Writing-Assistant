@@ -8,6 +8,10 @@ const assert = require("node:assert/strict");
  * 测试 createRisk、listRisks、updateRiskStatus、getAssessment、exportRisks（含 Markdown）、getReopenImpact。
  */
 
+// Save original cache entry BEFORE any module loading replaces it
+const prismaPath = require.resolve("../dist/db/prisma.js");
+const originalPrismaCacheEntry = require.cache[prismaPath];
+
 // ============================================================
 // Mock Prisma — 注入到 require cache
 // ============================================================
@@ -146,22 +150,23 @@ function createMockPrisma() {
 }
 
 // 在加载服务之前，将 mock prisma 注入到 require cache
-const prismaPath = require.resolve("../dist/db/prisma.js");
 const { mockPrisma, store } = createMockPrisma();
 
-// 直接预设 require cache，阻止真实模块执行
-require.cache[prismaPath] = {
-  id: prismaPath,
-  filename: prismaPath,
-  loaded: true,
-  exports: { prisma: mockPrisma },
-};
+// 延迟加载：在 setup 测试中注入 mock 并 require 服务，避免污染其他测试文件
+let NovelRiskService;
+let freshService;
 
-const { NovelRiskService } = require("../dist/services/novel/risk/NovelRiskService.js");
-
-function freshService() {
-  return new NovelRiskService();
-}
+test("novelRiskService setup: inject mock prisma and load service", () => {
+  require.cache[prismaPath] = {
+    id: prismaPath,
+    filename: prismaPath,
+    loaded: true,
+    exports: { prisma: mockPrisma },
+  };
+  const loaded = require("../dist/services/novel/risk/NovelRiskService.js");
+  NovelRiskService = loaded.NovelRiskService;
+  freshService = () => new NovelRiskService();
+});
 
 // ============================================================
 // createRisk
@@ -467,4 +472,12 @@ test("getReopenImpact: recommends manual review for risk reopened 2+ times", asy
   const impact = await service.getReopenImpact("novel-1", risk.id);
   assert.equal(impact.recommendManualReview, true);
   assert.equal(impact.risk.reopenedCount, 2);
+});
+
+test("novelRiskService test cleanup: restore require.cache prisma entry", () => {
+  if (originalPrismaCacheEntry) {
+    require.cache[prismaPath] = originalPrismaCacheEntry;
+  } else {
+    delete require.cache[prismaPath];
+  }
 });

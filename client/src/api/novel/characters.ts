@@ -98,9 +98,14 @@ export async function confirmCharacterResourceProposal(id: string, proposalId: s
   return data;
 }
 
-export async function rejectCharacterResourceProposal(id: string, proposalId: string) {
+export async function rejectCharacterResourceProposal(
+  id: string,
+  proposalId: string,
+  body?: { reason?: string; intent?: string },
+) {
   const { data } = await apiClient.post<ApiResponse<CharacterResourceLedgerResponse>>(
     `/novels/${id}/character-resource-proposals/${proposalId}/reject`,
+    body,
   );
   return data;
 }

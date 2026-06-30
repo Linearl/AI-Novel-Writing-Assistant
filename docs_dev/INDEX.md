@@ -58,6 +58,28 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1\v0.1-r2025-medium-high-risk-auto-handling-config\REQ-2025.md](./1.task\B.todo\v0.1\v0.1-r2025-medium-high-risk-auto-handling-config\REQ-2025.md) | 自动导演高风险自动处理策略配置 - 允许用户选择高风险章节是人工审核还是自动消除 | 自动导演高风险自动处理策略配置 - 允许用户选择高风险章节是人工审核还是自动消除 |
 | [1.task\B.todo\v0.1\v0.1-r2025-medium-high-risk-auto-handling-config\tasks.md](./1.task\B.todo\v0.1\v0.1-r2025-medium-high-risk-auto-handling-config\tasks.md) | REQ-2025 任务分解 - 高风险自动处理策略配置 | REQ-2025 任务分解 - 高风险自动处理策略配置 |
 
+## 1.task\B.todo\v0.1\v0.1-r2026-medium-beat-sheet-structure-preservation
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.1\v0.1-r2026-medium-beat-sheet-structure-preservation\decision_log.md](./1.task\B.todo\v0.1\v0.1-r2026-medium-beat-sheet-structure-preservation\decision_log.md) | REQ-2026 决策留痕 | REQ-2026 决策留痕 |
+| [1.task\B.todo\v0.1\v0.1-r2026-medium-beat-sheet-structure-preservation\design.md](./1.task\B.todo\v0.1\v0.1-r2026-medium-beat-sheet-structure-preservation\design.md) | REQ-2026 方案设计 | REQ-2026 方案设计 |
+| [1.task\B.todo\v0.1\v0.1-r2026-medium-beat-sheet-structure-preservation\README.md](./1.task\B.todo\v0.1\v0.1-r2026-medium-beat-sheet-structure-preservation\README.md) | REQ-2026 节奏板重生成结构保持验证 任务总线 | REQ-2026 节奏板重生成结构保持验证 任务总线 |
+| [1.task\B.todo\v0.1\v0.1-r2026-medium-beat-sheet-structure-preservation\REQ-2026-original.md](./1.task\B.todo\v0.1\v0.1-r2026-medium-beat-sheet-structure-preservation\REQ-2026-original.md) | REQ-2026 节奏板重生成结构保持验证 — 原始需求冻结副本 | REQ-2026 节奏板重生成结构保持验证 — 原始需求冻结副本 |
+| [1.task\B.todo\v0.1\v0.1-r2026-medium-beat-sheet-structure-preservation\REQ-2026.md](./1.task\B.todo\v0.1\v0.1-r2026-medium-beat-sheet-structure-preservation\REQ-2026.md) | REQ-2026 节奏板重生成结构保持验证 | REQ-2026 节奏板重生成结构保持验证 |
+| [1.task\B.todo\v0.1\v0.1-r2026-medium-beat-sheet-structure-preservation\tasks.md](./1.task\B.todo\v0.1\v0.1-r2026-medium-beat-sheet-structure-preservation\tasks.md) | REQ-2026 任务拆解 | REQ-2026 任务拆解 |
+
+## 1.task\B.todo\v0.1\v0.1-r2027-complex-chapter-edit-asset-extraction
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.1\v0.1-r2027-complex-chapter-edit-asset-extraction\decision_log.md](./1.task\B.todo\v0.1\v0.1-r2027-complex-chapter-edit-asset-extraction\decision_log.md) | REQ-2027 决策日志 - 章节编辑器编辑后资产沉淀的关键决策记录 | REQ-2027 决策日志 - 章节编辑器编辑后资产沉淀的关键决策记录 |
+| [1.task\B.todo\v0.1\v0.1-r2027-complex-chapter-edit-asset-extraction\design.md](./1.task\B.todo\v0.1\v0.1-r2027-complex-chapter-edit-asset-extraction\design.md) | REQ-2027 设计文档 - 章节编辑器编辑后资产沉淀的技术方案 | REQ-2027 设计文档 - 章节编辑器编辑后资产沉淀的技术方案 |
+| [1.task\B.todo\v0.1\v0.1-r2027-complex-chapter-edit-asset-extraction\README.md](./1.task\B.todo\v0.1\v0.1-r2027-complex-chapter-edit-asset-extraction\README.md) | 章节编辑器编辑后资产沉淀 - 编辑修改自动提取反AI规则和风格画像 | 章节编辑器编辑后资产沉淀 - 编辑修改自动提取反AI规则和风格画像 |
+| [1.task\B.todo\v0.1\v0.1-r2027-complex-chapter-edit-asset-extraction\REQ-2027-original.md](./1.task\B.todo\v0.1\v0.1-r2027-complex-chapter-edit-asset-extraction\REQ-2027-original.md) | 章节编辑器编辑后资产沉淀 - 编辑修改自动提取反AI规则和风格画像 | 章节编辑器编辑后资产沉淀 - 编辑修改自动提取反AI规则和风格画像 |
+| [1.task\B.todo\v0.1\v0.1-r2027-complex-chapter-edit-asset-extraction\REQ-2027.md](./1.task\B.todo\v0.1\v0.1-r2027-complex-chapter-edit-asset-extraction\REQ-2027.md) | 章节编辑器编辑后资产沉淀 - 编辑修改自动提取反AI规则和风格画像 | 章节编辑器编辑后资产沉淀 - 编辑修改自动提取反AI规则和风格画像 |
+| [1.task\B.todo\v0.1\v0.1-r2027-complex-chapter-edit-asset-extraction\tasks.md](./1.task\B.todo\v0.1\v0.1-r2027-complex-chapter-edit-asset-extraction\tasks.md) | REQ-2027 任务分解 - 章节编辑器编辑后资产沉淀 | REQ-2027 任务分解 - 章节编辑器编辑后资产沉淀 |
+
 ## 1.task\B.todo\v0.1\v0.1-r3007-medium-world-gen-stage-progress
 
 | 文件 | 标题 | 描述 |

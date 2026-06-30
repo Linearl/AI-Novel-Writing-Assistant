@@ -128,38 +128,41 @@ test("auto director follow-up action executor continues auto execution and dedup
   };
   executor.workflowTaskAdapter.detail = async (taskId) => buildTaskDetail(taskId);
 
-  const first = await executor.execute({
-    taskId: "task_chapter_range",
-    actionCode: "continue_auto_execution",
-    source: "web",
-    operatorId: "user_1",
-    idempotencyKey: "continue-chapter_range-k1",
-  });
+  try {
+    const first = await executor.execute({
+      taskId: "task_chapter_range",
+      actionCode: "continue_auto_execution",
+      source: "web",
+      operatorId: "user_1",
+      idempotencyKey: "continue-chapter_range-k1",
+    });
 
-  const second = await executor.execute({
-    taskId: "task_chapter_range",
-    actionCode: "continue_auto_execution",
-    source: "web",
-    operatorId: "user_1",
-    idempotencyKey: "continue-chapter_range-k1",
-  });
+    const second = await executor.execute({
+      taskId: "task_chapter_range",
+      actionCode: "continue_auto_execution",
+      source: "web",
+      operatorId: "user_1",
+      idempotencyKey: "continue-chapter_range-k1",
+    });
 
-  assert.equal(first.code, "executed");
-  assert.equal(first.taskId, "task_chapter_range");
-  assert.equal(first.task.id, "task_chapter_range");
-  assert.deepEqual(calls, [{
-    taskId: "task_chapter_range",
-    input: {
-      continuationMode: "auto_execute_range",
-    },
-  }]);
-  assert.equal(actionLogs.get("continue-chapter_range-k1").resultCode, "executed");
-  assert.equal(second.code, "already_processed");
-  assert.equal(second.task.id, "task_chapter_range");
-  assert.equal(actionLogs.size, 1);
-
-  prisma.autoDirectorFollowUpActionLog.findUnique = originals.actionLogFindUnique;
-  prisma.autoDirectorFollowUpActionLog.create = originals.actionLogCreate;
+    assert.equal(first.code, "executed");
+    assert.equal(first.taskId, "task_chapter_range");
+    assert.equal(first.task.id, "task_chapter_range");
+    assert.deepEqual(calls, [{
+      taskId: "task_chapter_range",
+      input: {
+        continuationMode: "auto_execute_range",
+      },
+    }]);
+    assert.equal(actionLogs.get("continue-chapter_range-k1").resultCode, "executed");
+    assert.equal(second.code, "already_processed");
+    assert.equal(second.task.id, "task_chapter_range");
+    assert.equal(actionLogs.size, 1);
+  } finally {
+    prisma.autoDirectorFollowUpActionLog.findUnique = originals.actionLogFindUnique;
+    prisma.autoDirectorFollowUpActionLog.create = originals.actionLogCreate;
+    prisma.novelWorkflowTask.update = originals.workflowUpdate;
+  }
 });
 
 test("auto director follow-up action executor sends skip_quality_repair for quality-repair checkpoints", async () => {
@@ -196,24 +199,26 @@ test("auto director follow-up action executor sends skip_quality_repair for qual
     currentItemKey: "quality_repair",
   });
 
-  const result = await executor.execute({
-    taskId: "task_quality_repair_continue",
-    actionCode: "continue_auto_execution",
-    source: "web",
-    operatorId: "user_skip",
-    idempotencyKey: "continue-quality-repair-k1",
-  });
+  try {
+    const result = await executor.execute({
+      taskId: "task_quality_repair_continue",
+      actionCode: "continue_auto_execution",
+      source: "web",
+      operatorId: "user_skip",
+      idempotencyKey: "continue-quality-repair-k1",
+    });
 
-  assert.equal(result.code, "executed");
-  assert.deepEqual(calls, [{
-    taskId: "task_quality_repair_continue",
-    input: {
-      continuationMode: "skip_quality_repair",
-    },
-  }]);
-
-  prisma.autoDirectorFollowUpActionLog.findUnique = originals.actionLogFindUnique;
-  prisma.autoDirectorFollowUpActionLog.create = originals.actionLogCreate;
+    assert.equal(result.code, "executed");
+    assert.deepEqual(calls, [{
+      taskId: "task_quality_repair_continue",
+      input: {
+        continuationMode: "skip_quality_repair",
+      },
+    }]);
+  } finally {
+    prisma.autoDirectorFollowUpActionLog.findUnique = originals.actionLogFindUnique;
+    prisma.autoDirectorFollowUpActionLog.create = originals.actionLogCreate;
+  }
 });
 
 test("auto director follow-up action executor retries with the route model and resumes execution", async () => {
@@ -265,31 +270,33 @@ test("auto director follow-up action executor retries with the route model and r
     model: "gpt-5.4",
   });
 
-  const result = await executor.execute({
-    taskId: "task_retry_route",
-    actionCode: "retry_with_route_model",
-    source: "web",
-    operatorId: "user_2",
-    idempotencyKey: "retry-route-k1",
-  });
+  try {
+    const result = await executor.execute({
+      taskId: "task_retry_route",
+      actionCode: "retry_with_route_model",
+      source: "web",
+      operatorId: "user_2",
+      idempotencyKey: "retry-route-k1",
+    });
 
-  assert.equal(result.code, "executed");
-  assert.deepEqual(calls, [{
-    id: "task_retry_route",
-    llmOverride: {
-      provider: "openai",
-      model: "gpt-5.4",
-      temperature: 0.2,
-    },
-    resume: true,
-  }]);
-  assert.equal(result.task.provider, "openai");
-  assert.equal(result.task.model, "gpt-5.4");
-  assert.equal(actionLogs.get("retry-route-k1").resultCode, "executed");
-
-  prisma.autoDirectorFollowUpActionLog.findUnique = originals.actionLogFindUnique;
-  prisma.autoDirectorFollowUpActionLog.create = originals.actionLogCreate;
-  prisma.novelWorkflowTask.update = originals.workflowUpdate;
+    assert.equal(result.code, "executed");
+    assert.deepEqual(calls, [{
+      id: "task_retry_route",
+      llmOverride: {
+        provider: "openai",
+        model: "gpt-5.4",
+        temperature: 0.2,
+      },
+      resume: true,
+    }]);
+    assert.equal(result.task.provider, "openai");
+    assert.equal(result.task.model, "gpt-5.4");
+    assert.equal(actionLogs.get("retry-route-k1").resultCode, "executed");
+  } finally {
+    prisma.autoDirectorFollowUpActionLog.findUnique = originals.actionLogFindUnique;
+    prisma.autoDirectorFollowUpActionLog.create = originals.actionLogCreate;
+    prisma.novelWorkflowTask.update = originals.workflowUpdate;
+  }
 });
 
 test("novel workflow retry forces auto director resume after retry state healing", async () => {
@@ -320,22 +327,24 @@ test("novel workflow retry forces auto director resume after retry state healing
     currentItemLabel: "正在生成第 1 卷节奏段：开卷抓手",
   });
 
-  const result = await adapter.retry({
-    id: "task_cancelled_structured",
-    resume: true,
-  });
+  try {
+    const result = await adapter.retry({
+      id: "task_cancelled_structured",
+      resume: true,
+    });
 
-  assert.equal(result.id, "task_cancelled_structured");
-  assert.deepEqual(retryCalls, ["task_cancelled_structured"]);
-  assert.deepEqual(calls, [{
-    taskId: "task_cancelled_structured",
-    input: {
-      batchAlreadyStartedCount: undefined,
-      forceResume: true,
-    },
-  }]);
-
-  prisma.taskCenterArchive.findUnique = originalArchiveFindUnique;
+    assert.equal(result.id, "task_cancelled_structured");
+    assert.deepEqual(retryCalls, ["task_cancelled_structured"]);
+    assert.deepEqual(calls, [{
+      taskId: "task_cancelled_structured",
+      input: {
+        batchAlreadyStartedCount: undefined,
+        forceResume: true,
+      },
+    }]);
+  } finally {
+    prisma.taskCenterArchive.findUnique = originalArchiveFindUnique;
+  }
 });
 
 test("auto director follow-up action executor returns forbidden when the action is not allowed for the current reason", async () => {
@@ -365,20 +374,22 @@ test("auto director follow-up action executor returns forbidden when the action 
     checkpointSummary: "请先确认书级方向。",
   });
 
-  const result = await executor.execute({
-    taskId: "task_candidate",
-    actionCode: "retry_with_task_model",
-    source: "web",
-    operatorId: "user_3",
-    idempotencyKey: "forbidden-k1",
-  });
+  try {
+    const result = await executor.execute({
+      taskId: "task_candidate",
+      actionCode: "retry_with_task_model",
+      source: "web",
+      operatorId: "user_3",
+      idempotencyKey: "forbidden-k1",
+    });
 
-  assert.equal(result.code, "forbidden");
-  assert.equal(result.taskId, "task_candidate");
-  assert.match(result.message, /当前任务不支持该操作|不支持/);
-
-  prisma.autoDirectorFollowUpActionLog.findUnique = originals.actionLogFindUnique;
-  prisma.autoDirectorFollowUpActionLog.create = originals.actionLogCreate;
+    assert.equal(result.code, "forbidden");
+    assert.equal(result.taskId, "task_candidate");
+    assert.match(result.message, /当前任务不支持该操作|不支持/);
+  } finally {
+    prisma.autoDirectorFollowUpActionLog.findUnique = originals.actionLogFindUnique;
+    prisma.autoDirectorFollowUpActionLog.create = originals.actionLogCreate;
+  }
 });
 
 test("auto director follow-up action executor returns state_changed when the follow-up is no longer actionable", async () => {
@@ -406,19 +417,21 @@ test("auto director follow-up action executor returns state_changed when the fol
     finishedAt: "2026-04-22T08:10:00.000Z",
   });
 
-  const result = await executor.execute({
-    taskId: "task_done",
-    actionCode: "continue_generic",
-    source: "web",
-    operatorId: "user_4",
-    idempotencyKey: "state-changed-k1",
-  });
+  try {
+    const result = await executor.execute({
+      taskId: "task_done",
+      actionCode: "continue_generic",
+      source: "web",
+      operatorId: "user_4",
+      idempotencyKey: "state-changed-k1",
+    });
 
-  assert.equal(result.code, "state_changed");
-  assert.equal(result.task.status, "succeeded");
-
-  prisma.autoDirectorFollowUpActionLog.findUnique = originals.actionLogFindUnique;
-  prisma.autoDirectorFollowUpActionLog.create = originals.actionLogCreate;
+    assert.equal(result.code, "state_changed");
+    assert.equal(result.task.status, "succeeded");
+  } finally {
+    prisma.autoDirectorFollowUpActionLog.findUnique = originals.actionLogFindUnique;
+    prisma.autoDirectorFollowUpActionLog.create = originals.actionLogCreate;
+  }
 });
 
 test("auto director follow-up action executor batches per-task results without all-or-nothing failure", async () => {
@@ -477,31 +490,33 @@ test("auto director follow-up action executor batches per-task results without a
     checkpointType: taskId === "task_skip" ? "replan_required" : null,
   });
 
-  const result = await executor.executeBatch({
-    actionCode: "retry_with_task_model",
-    taskIds: ["task_ok", "task_skip", "task_fail"],
-    source: "web",
-    operatorId: "user_5",
-    batchRequestKey: "batch-retry-k1",
-  });
+  try {
+    const result = await executor.executeBatch({
+      actionCode: "retry_with_task_model",
+      taskIds: ["task_ok", "task_skip", "task_fail"],
+      source: "web",
+      operatorId: "user_5",
+      batchRequestKey: "batch-retry-k1",
+    });
 
-  assert.equal(result.code, "partial_success");
-  assert.equal(result.successCount, 1);
-  assert.equal(result.failureCount, 1);
-  assert.equal(result.skippedCount, 1);
-  assert.deepEqual(retryCalls, [{
-    id: "task_ok",
-    resume: true,
-  }]);
-  assert.deepEqual(result.itemResults.map((item) => [item.taskId, item.code]), [
-    ["task_ok", "executed"],
-    ["task_skip", "forbidden"],
-    ["task_fail", "failed"],
-  ]);
-
-  prisma.autoDirectorFollowUpActionLog.findUnique = originals.actionLogFindUnique;
-  prisma.autoDirectorFollowUpActionLog.create = originals.actionLogCreate;
-  prisma.novelWorkflowTask.update = originals.workflowUpdate;
+    assert.equal(result.code, "partial_success");
+    assert.equal(result.successCount, 1);
+    assert.equal(result.failureCount, 1);
+    assert.equal(result.skippedCount, 1);
+    assert.deepEqual(retryCalls, [{
+      id: "task_ok",
+      resume: true,
+    }]);
+    assert.deepEqual(result.itemResults.map((item) => [item.taskId, item.code]), [
+      ["task_ok", "executed"],
+      ["task_skip", "forbidden"],
+      ["task_fail", "failed"],
+    ]);
+  } finally {
+    prisma.autoDirectorFollowUpActionLog.findUnique = originals.actionLogFindUnique;
+    prisma.autoDirectorFollowUpActionLog.create = originals.actionLogCreate;
+    prisma.novelWorkflowTask.update = originals.workflowUpdate;
+  }
 });
 
 test("auto director follow-up action executor blocks mutation when unified validation fails", async () => {
@@ -538,20 +553,22 @@ test("auto director follow-up action executor blocks mutation when unified valid
     nextAction: "revalidate",
   });
 
-  const result = await executor.execute({
-    taskId: "task_blocked",
-    actionCode: "continue_auto_execution",
-    source: "web",
-    operatorId: "user_6",
-    idempotencyKey: "validation-block-k1",
-  });
+  try {
+    const result = await executor.execute({
+      taskId: "task_blocked",
+      actionCode: "continue_auto_execution",
+      source: "web",
+      operatorId: "user_6",
+      idempotencyKey: "validation-block-k1",
+    });
 
-  assert.equal(result.code, "forbidden");
-  assert.match(result.message, /缺少节奏拆章/);
-  assert.deepEqual(calls, []);
-
-  prisma.autoDirectorFollowUpActionLog.findUnique = originals.actionLogFindUnique;
-  prisma.autoDirectorFollowUpActionLog.create = originals.actionLogCreate;
+    assert.equal(result.code, "forbidden");
+    assert.match(result.message, /缺少节奏拆章/);
+    assert.deepEqual(calls, []);
+  } finally {
+    prisma.autoDirectorFollowUpActionLog.findUnique = originals.actionLogFindUnique;
+    prisma.autoDirectorFollowUpActionLog.create = originals.actionLogCreate;
+  }
 });
 
 test("auto director follow-up action executor passes batch high-memory count into later resumes", async () => {
@@ -582,30 +599,32 @@ test("auto director follow-up action executor passes batch high-memory count int
   };
   executor.workflowTaskAdapter.detail = async (taskId) => buildTaskDetail(taskId);
 
-  const result = await executor.executeBatch({
-    actionCode: "continue_auto_execution",
-    taskIds: ["task_one", "task_two"],
-    source: "web",
-    operatorId: "user_7",
-    batchRequestKey: "batch-continue-k1",
-  });
+  try {
+    const result = await executor.executeBatch({
+      actionCode: "continue_auto_execution",
+      taskIds: ["task_one", "task_two"],
+      source: "web",
+      operatorId: "user_7",
+      batchRequestKey: "batch-continue-k1",
+    });
 
-  assert.equal(result.code, "success");
-  assert.deepEqual(continueCalls, [{
-    taskId: "task_one",
-    input: {
-      continuationMode: "auto_execute_range",
-    },
-  }, {
-    taskId: "task_two",
-    input: {
-      continuationMode: "auto_execute_range",
-      batchAlreadyStartedCount: 1,
-    },
-  }]);
-
-  prisma.autoDirectorFollowUpActionLog.findUnique = originals.actionLogFindUnique;
-  prisma.autoDirectorFollowUpActionLog.create = originals.actionLogCreate;
+    assert.equal(result.code, "success");
+    assert.deepEqual(continueCalls, [{
+      taskId: "task_one",
+      input: {
+        continuationMode: "auto_execute_range",
+      },
+    }, {
+      taskId: "task_two",
+      input: {
+        continuationMode: "auto_execute_range",
+        batchAlreadyStartedCount: 1,
+      },
+    }]);
+  } finally {
+    prisma.autoDirectorFollowUpActionLog.findUnique = originals.actionLogFindUnique;
+    prisma.autoDirectorFollowUpActionLog.create = originals.actionLogCreate;
+  }
 });
 
 test("auto director follow-up action executor restricts batch actions to matching sections", async () => {
@@ -659,42 +678,44 @@ test("auto director follow-up action executor restricts batch actions to matchin
   };
   executor.workflowTaskAdapter.detail = async (taskId) => buildTaskDetail(taskId);
 
-  const continueResult = await executor.executeBatch({
-    actionCode: "continue_auto_execution",
-    taskIds: ["task_pending", "task_exception", "task_running"],
-    source: "web",
-    operatorId: "user_8",
-    batchRequestKey: "batch-section-continue-k1",
-  });
+  try {
+    const continueResult = await executor.executeBatch({
+      actionCode: "continue_auto_execution",
+      taskIds: ["task_pending", "task_exception", "task_running"],
+      source: "web",
+      operatorId: "user_8",
+      batchRequestKey: "batch-section-continue-k1",
+    });
 
-  const retryResult = await executor.executeBatch({
-    actionCode: "retry_with_task_model",
-    taskIds: ["task_pending", "task_exception", "task_running"],
-    source: "web",
-    operatorId: "user_8",
-    batchRequestKey: "batch-section-retry-k1",
-  });
+    const retryResult = await executor.executeBatch({
+      actionCode: "retry_with_task_model",
+      taskIds: ["task_pending", "task_exception", "task_running"],
+      source: "web",
+      operatorId: "user_8",
+      batchRequestKey: "batch-section-retry-k1",
+    });
 
-  assert.equal(continueResult.successCount, 1);
-  assert.equal(continueResult.skippedCount, 2);
-  assert.deepEqual(continueCalls.map((call) => call.taskId), ["task_pending"]);
-  assert.deepEqual(continueResult.itemResults.map((item) => [item.taskId, item.code]), [
-    ["task_pending", "executed"],
-    ["task_exception", "forbidden"],
-    ["task_running", "forbidden"],
-  ]);
+    assert.equal(continueResult.successCount, 1);
+    assert.equal(continueResult.skippedCount, 2);
+    assert.deepEqual(continueCalls.map((call) => call.taskId), ["task_pending"]);
+    assert.deepEqual(continueResult.itemResults.map((item) => [item.taskId, item.code]), [
+      ["task_pending", "executed"],
+      ["task_exception", "forbidden"],
+      ["task_running", "forbidden"],
+    ]);
 
-  assert.equal(retryResult.successCount, 1);
-  assert.equal(retryResult.skippedCount, 2);
-  assert.deepEqual(retryCalls.map((call) => call.id), ["task_exception"]);
-  assert.deepEqual(retryResult.itemResults.map((item) => [item.taskId, item.code]), [
-    ["task_pending", "forbidden"],
-    ["task_exception", "executed"],
-    ["task_running", "forbidden"],
-  ]);
-
-  prisma.autoDirectorFollowUpActionLog.findUnique = originals.actionLogFindUnique;
-  prisma.autoDirectorFollowUpActionLog.create = originals.actionLogCreate;
+    assert.equal(retryResult.successCount, 1);
+    assert.equal(retryResult.skippedCount, 2);
+    assert.deepEqual(retryCalls.map((call) => call.id), ["task_exception"]);
+    assert.deepEqual(retryResult.itemResults.map((item) => [item.taskId, item.code]), [
+      ["task_pending", "forbidden"],
+      ["task_exception", "executed"],
+      ["task_running", "forbidden"],
+    ]);
+  } finally {
+    prisma.autoDirectorFollowUpActionLog.findUnique = originals.actionLogFindUnique;
+    prisma.autoDirectorFollowUpActionLog.create = originals.actionLogCreate;
+  }
 });
 
 test("auto director follow-up action executor blocks validation-required tasks from batch continue", async () => {
@@ -754,23 +775,25 @@ test("auto director follow-up action executor blocks validation-required tasks f
     checkpointType: "chapter_batch_ready",
   });
 
-  const result = await executor.executeBatch({
-    actionCode: "continue_auto_execution",
-    taskIds: ["task_validation_blocked"],
-    source: "web",
-    operatorId: "user_9",
-    batchRequestKey: "batch-validation-block-k1",
-  });
+  try {
+    const result = await executor.executeBatch({
+      actionCode: "continue_auto_execution",
+      taskIds: ["task_validation_blocked"],
+      source: "web",
+      operatorId: "user_9",
+      batchRequestKey: "batch-validation-block-k1",
+    });
 
-  assert.equal(result.code, "skipped");
-  assert.equal(result.successCount, 0);
-  assert.equal(result.skippedCount, 1);
-  assert.equal(result.itemResults[0].code, "forbidden");
-  assert.match(result.itemResults[0].message, /分区不支持|批量动作/);
-  assert.deepEqual(continueCalls, []);
-
-  prisma.autoDirectorFollowUpActionLog.findUnique = originals.actionLogFindUnique;
-  prisma.autoDirectorFollowUpActionLog.create = originals.actionLogCreate;
+    assert.equal(result.code, "skipped");
+    assert.equal(result.successCount, 0);
+    assert.equal(result.skippedCount, 1);
+    assert.equal(result.itemResults[0].code, "forbidden");
+    assert.match(result.itemResults[0].message, /分区不支持|批量动作/);
+    assert.deepEqual(continueCalls, []);
+  } finally {
+    prisma.autoDirectorFollowUpActionLog.findUnique = originals.actionLogFindUnique;
+    prisma.autoDirectorFollowUpActionLog.create = originals.actionLogCreate;
+  }
 });
 
 test("auto director follow-up action executor clears validation and resumes structured outline backfill", async () => {
@@ -835,29 +858,31 @@ test("auto director follow-up action executor clears validation and resumes stru
     status: "queued",
   });
 
-  const result = await executor.execute({
-    taskId: "task_structured_backfill",
-    actionCode: "auto_backfill_structured_outline",
-    source: "web",
-    operatorId: "user_10",
-    idempotencyKey: "structured-backfill-k1",
-  });
+  try {
+    const result = await executor.execute({
+      taskId: "task_structured_backfill",
+      actionCode: "auto_backfill_structured_outline",
+      source: "web",
+      operatorId: "user_10",
+      idempotencyKey: "structured-backfill-k1",
+    });
 
-  assert.equal(result.code, "executed");
-  assert.deepEqual(continueCalls, [{
-    taskId: "task_structured_backfill",
-    input: {
-      continuationMode: "resume",
-      forceResume: true,
-    },
-  }]);
-  assert.equal(workflowUpdates.length, 1);
-  assert.equal(JSON.parse(workflowUpdates[0].data.seedPayloadJson).autoDirectorValidationResult, undefined);
-  assert.equal(actionLogs.get("structured-backfill-k1").resultCode, "executed");
-
-  prisma.autoDirectorFollowUpActionLog.findUnique = originals.actionLogFindUnique;
-  prisma.autoDirectorFollowUpActionLog.create = originals.actionLogCreate;
-  prisma.novelWorkflowTask.update = originals.workflowUpdate;
+    assert.equal(result.code, "executed");
+    assert.deepEqual(continueCalls, [{
+      taskId: "task_structured_backfill",
+      input: {
+        continuationMode: "resume",
+        forceResume: true,
+      },
+    }]);
+    assert.equal(workflowUpdates.length, 1);
+    assert.equal(JSON.parse(workflowUpdates[0].data.seedPayloadJson).autoDirectorValidationResult, undefined);
+    assert.equal(actionLogs.get("structured-backfill-k1").resultCode, "executed");
+  } finally {
+    prisma.autoDirectorFollowUpActionLog.findUnique = originals.actionLogFindUnique;
+    prisma.autoDirectorFollowUpActionLog.create = originals.actionLogCreate;
+    prisma.novelWorkflowTask.update = originals.workflowUpdate;
+  }
 });
 
 test("auto director follow-up safe fix repairs only validator-marked safe actions", async () => {
@@ -935,26 +960,28 @@ test("auto director follow-up safe fix repairs only validator-marked safe action
     throw new Error("safe fix must not retry execution");
   };
 
-  const result = await executor.execute({
-    taskId: "task_validation_fix",
-    actionCode: "safe_fix_validation",
-    source: "web",
-    operatorId: "user_10",
-    idempotencyKey: "safe-fix-k1",
-  });
+  try {
+    const result = await executor.execute({
+      taskId: "task_validation_fix",
+      actionCode: "safe_fix_validation",
+      source: "web",
+      operatorId: "user_10",
+      idempotencyKey: "safe-fix-k1",
+    });
 
-  assert.equal(result.code, "executed");
-  assert.match(result.message, /安全修复/);
-  assert.deepEqual(calls, [["heal", "task_validation_fix"]]);
-  assert.equal(workflowUpdates.length, 1);
-  assert.equal(JSON.parse(workflowUpdates[0].data.seedPayloadJson).autoDirectorValidationResult, undefined);
-  assert.equal(actionLogs.get("safe-fix-k1").resultCode, "executed");
-  assert.match(actionLogs.get("safe-fix-k1").metadataJson, /revalidate_assets/);
-  assert.doesNotMatch(actionLogs.get("safe-fix-k1").metadataJson, /create_rewrite_snapshot/);
-
-  prisma.autoDirectorFollowUpActionLog.findUnique = originals.actionLogFindUnique;
-  prisma.autoDirectorFollowUpActionLog.create = originals.actionLogCreate;
-  prisma.novelWorkflowTask.update = originals.workflowUpdate;
+    assert.equal(result.code, "executed");
+    assert.match(result.message, /安全修复/);
+    assert.deepEqual(calls, [["heal", "task_validation_fix"]]);
+    assert.equal(workflowUpdates.length, 1);
+    assert.equal(JSON.parse(workflowUpdates[0].data.seedPayloadJson).autoDirectorValidationResult, undefined);
+    assert.equal(actionLogs.get("safe-fix-k1").resultCode, "executed");
+    assert.match(actionLogs.get("safe-fix-k1").metadataJson, /revalidate_assets/);
+    assert.doesNotMatch(actionLogs.get("safe-fix-k1").metadataJson, /create_rewrite_snapshot/);
+  } finally {
+    prisma.autoDirectorFollowUpActionLog.findUnique = originals.actionLogFindUnique;
+    prisma.autoDirectorFollowUpActionLog.create = originals.actionLogCreate;
+    prisma.novelWorkflowTask.update = originals.workflowUpdate;
+  }
 });
 
 test("auto director follow-up safe fix blocks unsafe validation repairs", async () => {
@@ -1000,19 +1027,21 @@ test("auto director follow-up safe fix blocks unsafe validation repairs", async 
   });
   executor.workflowTaskAdapter.detail = async (taskId) => buildTaskDetail(taskId);
 
-  const result = await executor.execute({
-    taskId: "task_unsafe_fix",
-    actionCode: "safe_fix_validation",
-    source: "web",
-    operatorId: "user_10",
-    idempotencyKey: "safe-fix-unsafe-k1",
-  });
+  try {
+    const result = await executor.execute({
+      taskId: "task_unsafe_fix",
+      actionCode: "safe_fix_validation",
+      source: "web",
+      operatorId: "user_10",
+      idempotencyKey: "safe-fix-unsafe-k1",
+    });
 
-  assert.equal(result.code, "forbidden");
-  assert.match(result.message, /人工处理|不能安全修复|高风险/);
-  assert.equal(workflowUpdates.length, 0);
-
-  prisma.autoDirectorFollowUpActionLog.findUnique = originals.actionLogFindUnique;
-  prisma.autoDirectorFollowUpActionLog.create = originals.actionLogCreate;
-  prisma.novelWorkflowTask.update = originals.workflowUpdate;
+    assert.equal(result.code, "forbidden");
+    assert.match(result.message, /人工处理|不能安全修复|高风险/);
+    assert.equal(workflowUpdates.length, 0);
+  } finally {
+    prisma.autoDirectorFollowUpActionLog.findUnique = originals.actionLogFindUnique;
+    prisma.autoDirectorFollowUpActionLog.create = originals.actionLogCreate;
+    prisma.novelWorkflowTask.update = originals.workflowUpdate;
+  }
 });

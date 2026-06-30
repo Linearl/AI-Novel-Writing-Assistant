@@ -2099,12 +2099,13 @@ export default function NovelEdit() {
   });
 
   const rejectCharacterResourceProposalMutation = useMutation({
-    mutationFn: (proposalId: string) => rejectCharacterResourceProposal(id, proposalId),
-    onSuccess: async (data) => {
+    mutationFn: (payload: { proposalId: string; reason?: string; intent?: string }) =>
+      rejectCharacterResourceProposal(id, payload.proposalId, { reason: payload.reason, intent: payload.intent }),
+    onSuccess: async (data, variables) => {
       // 使用服务端返回的最新数据直接更新缓存，确保 UI 立即反映变化
       queryClient.setQueryData(queryKeys.novels.characterResources(id), data);
       await invalidateCharacterResourceViews();
-      toast.success("资源变更已忽略。");
+      toast.success(variables.intent ? "资源变更已拒绝，修正意图已记录。" : "资源变更已忽略。");
     },
     onError: (error) => {
       const message = error instanceof Error ? error.message : "忽略资源变更失败。";
@@ -2530,12 +2531,13 @@ export default function NovelEdit() {
     onExtractChapterResources: () => extractChapterResourcesMutation.mutate(),
     isExtractingChapterResources: extractChapterResourcesMutation.isPending,
     onConfirmCharacterResourceProposal: (proposalId: string) => confirmCharacterResourceProposalMutation.mutate(proposalId),
-    onRejectCharacterResourceProposal: (proposalId: string) => rejectCharacterResourceProposalMutation.mutate(proposalId),
+    onRejectCharacterResourceProposal: (proposalId: string, intent?: string) =>
+      rejectCharacterResourceProposalMutation.mutate({ proposalId, intent }),
     confirmingCharacterResourceProposalId: confirmCharacterResourceProposalMutation.isPending
       ? confirmCharacterResourceProposalMutation.variables ?? ""
       : "",
     rejectingCharacterResourceProposalId: rejectCharacterResourceProposalMutation.isPending
-      ? rejectCharacterResourceProposalMutation.variables ?? ""
+      ? (rejectCharacterResourceProposalMutation.variables?.proposalId ?? "")
       : "",
     chapterAuditReports,
     backgroundSyncActivities: pipelineBackgroundActivities,
@@ -2737,12 +2739,13 @@ export default function NovelEdit() {
           setIsTaskDrawerOpen(false);
         },
         onConfirmResourceProposal: (proposalId) => confirmCharacterResourceProposalMutation.mutate(proposalId),
-        onRejectResourceProposal: (proposalId) => rejectCharacterResourceProposalMutation.mutate(proposalId),
+        onRejectResourceProposal: (proposalId, intent) =>
+          rejectCharacterResourceProposalMutation.mutate({ proposalId, intent }),
         confirmingResourceProposalId: confirmCharacterResourceProposalMutation.isPending
           ? confirmCharacterResourceProposalMutation.variables ?? ""
           : "",
         rejectingResourceProposalId: rejectCharacterResourceProposalMutation.isPending
-          ? rejectCharacterResourceProposalMutation.variables ?? ""
+          ? (rejectCharacterResourceProposalMutation.variables?.proposalId ?? "")
           : "",
         onOpenFullTaskCenter: openAutoDirectorTaskCenter,
       }}

@@ -373,7 +373,7 @@ export interface ChapterTabViewProps {
   onExtractChapterResources?: () => void;
   isExtractingChapterResources?: boolean;
   onConfirmCharacterResourceProposal?: (proposalId: string) => void;
-  onRejectCharacterResourceProposal?: (proposalId: string) => void;
+  onRejectCharacterResourceProposal?: (proposalId: string, intent?: string) => void;
   confirmingCharacterResourceProposalId?: string;
   rejectingCharacterResourceProposalId?: string;
   chapterAuditReports: AuditReport[];
@@ -597,7 +597,7 @@ export interface NovelTaskDrawerState {
   resourceProposals?: CharacterResourceProposalSummary[];
   onOpenResourceProposalSource?: (proposal: CharacterResourceProposalSummary) => void;
   onConfirmResourceProposal?: (proposalId: string) => void;
-  onRejectResourceProposal?: (proposalId: string) => void;
+  onRejectResourceProposal?: (proposalId: string, intent?: string) => void;
   confirmingResourceProposalId?: string;
   rejectingResourceProposalId?: string;
   followUp?: AutoDirectorFollowUpDetail | null;

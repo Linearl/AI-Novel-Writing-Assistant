@@ -9,6 +9,7 @@ import {
   ChapterPatchRepairService,
   type PatchRepairMode,
 } from "../../chapterPatchRepairService";
+import { characterResourceLedgerService } from "../../characterResource/CharacterResourceLedgerService";
 
 export interface ChapterRepairExecutionOptions {
   provider?: LLMProvider;
@@ -209,6 +210,11 @@ export async function prepareChapterRepairExecution(
   }
 
   if (!input.forceFullRewrite && activeRepairMode !== "heavy_repair") {
+    // REQ-2023: Query rejected intents for this chapter to inject into repair prompt
+    const rejectedIntents = input.novelId && input.chapterId
+      ? await characterResourceLedgerService.getRejectedIntentsForChapter(input.novelId, input.chapterId)
+      : [];
+
     const patchRepairService = new ChapterPatchRepairService();
     try {
       const patched = await patchRepairService.repair({
@@ -226,6 +232,7 @@ export async function prepareChapterRepairExecution(
         repairMode: activeRepairMode,
         modeHint,
         directorDebugTaskId: input.options.directorDebugTaskId,
+        rejectedIntents: rejectedIntents.length > 0 ? rejectedIntents : undefined,
       });
       return {
         kind: "patched",
