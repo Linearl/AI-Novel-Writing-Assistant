@@ -37,6 +37,7 @@ description: "REQ-7002 NovelEdit.tsx 大文件拆分任务总线"
 | `REQ-7002.md` | 需求工作副本 | 否 |
 | `tasks.md` | 任务拆解 | 否 |
 | `design.md` | 方案设计（拆分策略） | 否 |
+| `decision_log.md` | 决策留痕 | 否 |
 | `run_result.json` | 执行快照 | 否 |
 
 ---

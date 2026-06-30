@@ -38,6 +38,11 @@ interface ProviderConfigDialogProps {
   onDeleteCustomProvider: () => void;
   deleteDisabled: boolean;
   deleteLabel: string;
+  onRefreshModels?: () => void;
+  isRefreshingModels?: boolean;
+  persistedModels?: string[];
+  onPersistModels?: () => void;
+  isPersistingModels?: boolean;
 }
 
 export default function ProviderConfigDialog({
@@ -62,6 +67,10 @@ export default function ProviderConfigDialog({
   onDeleteCustomProvider,
   deleteDisabled,
   deleteLabel,
+  onRefreshModels,
+  isRefreshingModels,
+  onPersistModels,
+  isPersistingModels,
 }: ProviderConfigDialogProps) {
   const primaryModelLabel = isCreatingCustomProvider ? "默认模型（可选）" : isCustomDialog ? "默认模型" : "模型名称";
   const canSelectListedModels = selectableModels.length > 0;
@@ -171,6 +180,34 @@ export default function ProviderConfigDialog({
                   {previewModelsResult}
                 </div>
               ) : null}
+            </div>
+          ) : null}
+
+          {!isCreatingCustomProvider && onRefreshModels ? (
+            <div className="flex items-center gap-2">
+              <Button
+                type="button"
+                variant="secondary"
+                size="sm"
+                onClick={onRefreshModels}
+                disabled={isRefreshingModels}
+              >
+                {isRefreshingModels ? "拉取中..." : "拉取模型列表"}
+              </Button>
+              {onPersistModels && canSelectListedModels ? (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={onPersistModels}
+                  disabled={isPersistingModels}
+                >
+                  {isPersistingModels ? "保存中..." : "保存到本地"}
+                </Button>
+              ) : null}
+              <span className="text-xs text-muted-foreground">
+                拉取后可保存，重启不丢失
+              </span>
             </div>
           ) : null}
 

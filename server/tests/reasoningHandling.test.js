@@ -42,7 +42,7 @@ test("deepseek thinking mode detection is limited to toggle-capable models", () 
 test("minimax provider behavior enables reasoning_split and raw response parsing", () => {
   const behavior = resolveProviderReasoningBehavior({
     provider: "minimax",
-    baseURL: "https://api.minimax.io/v1",
+    baseURL: "https://api.minimaxi.com/v1",
     model: "MiniMax-M2.7",
     reasoningEnabled: false,
   });

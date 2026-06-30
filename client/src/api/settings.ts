@@ -397,6 +397,13 @@ export async function refreshProviderModelList(provider: LLMProvider) {
   return data;
 }
 
+export async function persistProviderModels(provider: LLMProvider, models: string[]) {
+  const { data } = await apiClient.post<
+    ApiResponse<{ provider: string; models: string[] }>
+  >(`/settings/api-keys/${provider}/persist-models`, { models });
+  return data;
+}
+
 export async function getLLMProviders() {
   const { data } = await apiClient.get<ApiResponse<Record<string, unknown>>>("/llm/providers");
   return data;

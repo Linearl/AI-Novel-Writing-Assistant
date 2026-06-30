@@ -3,7 +3,7 @@ description: "支持 MiniMax 图像生成 API - 用于生成小说封面"
 id: REQ-2024
 title: 支持 MiniMax 图像生成
 version: 0.1
-status: in_progress
+status: pass
 priority: p2
 complexity: medium
 created: 2026-06-29

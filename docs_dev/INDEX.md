@@ -27,36 +27,16 @@ description: "docs 目录索引（自动生成）"
 | --- | --- | --- |
 | [1.task\B.todo\任务包六件套构成-编号分类规则-自动归档机制.md](./1.task\B.todo\任务包六件套构成-编号分类规则-自动归档机制.md) | --- | - |
 
-## 1.task\B.todo\v0.1\v0.1-r2023-medium-resource-reject-intent-injection
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r2023-medium-resource-reject-intent-injection\decision_log.md](./1.task\B.todo\v0.1\v0.1-r2023-medium-resource-reject-intent-injection\decision_log.md) | REQ-2023 决策日志 | REQ-2023 决策日志 |
-| [1.task\B.todo\v0.1\v0.1-r2023-medium-resource-reject-intent-injection\design.md](./1.task\B.todo\v0.1\v0.1-r2023-medium-resource-reject-intent-injection\design.md) | REQ-2023 技术设计文档 | REQ-2023 技术设计文档 |
-| [1.task\B.todo\v0.1\v0.1-r2023-medium-resource-reject-intent-injection\README.md](./1.task\B.todo\v0.1\v0.1-r2023-medium-resource-reject-intent-injection\README.md) | 资源变更风险拒绝意图注入 - 用户不接受风险时保存意图并在章节修复时注入 | 资源变更风险拒绝意图注入 - 用户不接受风险时保存意图并在章节修复时注入 |
-| [1.task\B.todo\v0.1\v0.1-r2023-medium-resource-reject-intent-injection\REQ-2023-original.md](./1.task\B.todo\v0.1\v0.1-r2023-medium-resource-reject-intent-injection\REQ-2023-original.md) | 资源变更风险拒绝意图注入 - 用户不接受风险时保存意图并在章节修复时注入 | 资源变更风险拒绝意图注入 - 用户不接受风险时保存意图并在章节修复时注入 |
-| [1.task\B.todo\v0.1\v0.1-r2023-medium-resource-reject-intent-injection\REQ-2023.md](./1.task\B.todo\v0.1\v0.1-r2023-medium-resource-reject-intent-injection\REQ-2023.md) | 资源变更风险拒绝意图注入 - 用户不接受风险时保存意图并在章节修复时注入 | 资源变更风险拒绝意图注入 - 用户不接受风险时保存意图并在章节修复时注入 |
-| [1.task\B.todo\v0.1\v0.1-r2023-medium-resource-reject-intent-injection\tasks.md](./1.task\B.todo\v0.1\v0.1-r2023-medium-resource-reject-intent-injection\tasks.md) | REQ-2023 任务分解清单 | REQ-2023 任务分解清单 |
-
 ## 1.task\B.todo\v0.1\v0.1-r2024-medium-minimax-image-generation
 
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
 | [1.task\B.todo\v0.1\v0.1-r2024-medium-minimax-image-generation\decision_log.md](./1.task\B.todo\v0.1\v0.1-r2024-medium-minimax-image-generation\decision_log.md) | REQ-2024 决策日志 | REQ-2024 决策日志 |
 | [1.task\B.todo\v0.1\v0.1-r2024-medium-minimax-image-generation\design.md](./1.task\B.todo\v0.1\v0.1-r2024-medium-minimax-image-generation\design.md) | REQ-2024 技术设计文档 | REQ-2024 技术设计文档 |
-| [1.task\B.todo\v0.1\v0.1-r2024-medium-minimax-image-generation\README.md](./1.task\B.todo\v0.1\v0.1-r2024-medium-minimax-image-generation\README.md) | 支持 MiniMax 图像生成 API - 用于生成小说封面 | 支持 MiniMax 图像生成 API - 用于生成小说封面 |
+| [1.task\B.todo\v0.1\v0.1-r2024-medium-minimax-image-generation\README.md](./1.task\B.todo\v0.1\v0.1-r2024-medium-minimax-image-generation\README.md) | --- | - |
+| [1.task\B.todo\v0.1\v0.1-r2024-medium-minimax-image-generation\REQ-2024-original.md](./1.task\B.todo\v0.1\v0.1-r2024-medium-minimax-image-generation\REQ-2024-original.md) | REQ-2024 支持 MiniMax 图像生成 API（冻结副本） | REQ-2024 支持 MiniMax 图像生成 API（冻结副本） |
+| [1.task\B.todo\v0.1\v0.1-r2024-medium-minimax-image-generation\REQ-2024.md](./1.task\B.todo\v0.1\v0.1-r2024-medium-minimax-image-generation\REQ-2024.md) | REQ-2024 支持 MiniMax 图像生成 API | REQ-2024 支持 MiniMax 图像生成 API |
 | [1.task\B.todo\v0.1\v0.1-r2024-medium-minimax-image-generation\tasks.md](./1.task\B.todo\v0.1\v0.1-r2024-medium-minimax-image-generation\tasks.md) | REQ-2024 任务分解清单 | REQ-2024 任务分解清单 |
-
-## 1.task\B.todo\v0.1\v0.1-r2025-medium-high-risk-auto-handling-config
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r2025-medium-high-risk-auto-handling-config\decision_log.md](./1.task\B.todo\v0.1\v0.1-r2025-medium-high-risk-auto-handling-config\decision_log.md) | REQ-2025 决策日志 - 高风险自动处理策略配置的关键决策记录 | REQ-2025 决策日志 - 高风险自动处理策略配置的关键决策记录 |
-| [1.task\B.todo\v0.1\v0.1-r2025-medium-high-risk-auto-handling-config\design.md](./1.task\B.todo\v0.1\v0.1-r2025-medium-high-risk-auto-handling-config\design.md) | REQ-2025 设计文档 - 高风险自动处理策略配置的技术方案 | REQ-2025 设计文档 - 高风险自动处理策略配置的技术方案 |
-| [1.task\B.todo\v0.1\v0.1-r2025-medium-high-risk-auto-handling-config\README.md](./1.task\B.todo\v0.1\v0.1-r2025-medium-high-risk-auto-handling-config\README.md) | 自动导演高风险自动处理策略配置 - 允许用户选择高风险章节是人工审核还是自动消除 | 自动导演高风险自动处理策略配置 - 允许用户选择高风险章节是人工审核还是自动消除 |
-| [1.task\B.todo\v0.1\v0.1-r2025-medium-high-risk-auto-handling-config\REQ-2025-original.md](./1.task\B.todo\v0.1\v0.1-r2025-medium-high-risk-auto-handling-config\REQ-2025-original.md) | 自动导演高风险自动处理策略配置 - 允许用户选择高风险章节是人工审核还是自动消除 | 自动导演高风险自动处理策略配置 - 允许用户选择高风险章节是人工审核还是自动消除 |
-| [1.task\B.todo\v0.1\v0.1-r2025-medium-high-risk-auto-handling-config\REQ-2025.md](./1.task\B.todo\v0.1\v0.1-r2025-medium-high-risk-auto-handling-config\REQ-2025.md) | 自动导演高风险自动处理策略配置 - 允许用户选择高风险章节是人工审核还是自动消除 | 自动导演高风险自动处理策略配置 - 允许用户选择高风险章节是人工审核还是自动消除 |
-| [1.task\B.todo\v0.1\v0.1-r2025-medium-high-risk-auto-handling-config\tasks.md](./1.task\B.todo\v0.1\v0.1-r2025-medium-high-risk-auto-handling-config\tasks.md) | REQ-2025 任务分解 - 高风险自动处理策略配置 | REQ-2025 任务分解 - 高风险自动处理策略配置 |
 
 ## 1.task\B.todo\v0.1\v0.1-r2026-medium-beat-sheet-structure-preservation
 
@@ -80,31 +60,35 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1\v0.1-r2027-complex-chapter-edit-asset-extraction\REQ-2027.md](./1.task\B.todo\v0.1\v0.1-r2027-complex-chapter-edit-asset-extraction\REQ-2027.md) | 章节编辑器编辑后资产沉淀 - 编辑修改自动提取反AI规则和风格画像 | 章节编辑器编辑后资产沉淀 - 编辑修改自动提取反AI规则和风格画像 |
 | [1.task\B.todo\v0.1\v0.1-r2027-complex-chapter-edit-asset-extraction\tasks.md](./1.task\B.todo\v0.1\v0.1-r2027-complex-chapter-edit-asset-extraction\tasks.md) | REQ-2027 任务分解 - 章节编辑器编辑后资产沉淀 | REQ-2027 任务分解 - 章节编辑器编辑后资产沉淀 |
 
-## 1.task\B.todo\v0.1\v0.1-r3007-medium-world-gen-stage-progress
+## 1.task\B.todo\v0.1\v0.1-r2028-simple-provider-refresh-model-list
 
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r3007-medium-world-gen-stage-progress\design.md](./1.task\B.todo\v0.1\v0.1-r3007-medium-world-gen-stage-progress\design.md) | REQ-3007 方案设计 | REQ-3007 方案设计 |
-| [1.task\B.todo\v0.1\v0.1-r3007-medium-world-gen-stage-progress\README.md](./1.task\B.todo\v0.1\v0.1-r3007-medium-world-gen-stage-progress\README.md) | REQ-3007 世界生成阶段进度显示任务总线 | REQ-3007 世界生成阶段进度显示任务总线 |
-| [1.task\B.todo\v0.1\v0.1-r3007-medium-world-gen-stage-progress\REQ-3007-original.md](./1.task\B.todo\v0.1\v0.1-r3007-medium-world-gen-stage-progress\REQ-3007-original.md) | REQ-3007 世界生成阶段进度显示 | REQ-3007 世界生成阶段进度显示 |
-| [1.task\B.todo\v0.1\v0.1-r3007-medium-world-gen-stage-progress\REQ-3007.md](./1.task\B.todo\v0.1\v0.1-r3007-medium-world-gen-stage-progress\REQ-3007.md) | REQ-3007 世界生成阶段进度显示 | REQ-3007 世界生成阶段进度显示 |
-| [1.task\B.todo\v0.1\v0.1-r3007-medium-world-gen-stage-progress\tasks.md](./1.task\B.todo\v0.1\v0.1-r3007-medium-world-gen-stage-progress\tasks.md) | REQ-3007 任务拆解（标准版） | REQ-3007 任务拆解（标准版） |
+| [1.task\B.todo\v0.1\v0.1-r2028-simple-provider-refresh-model-list\decision_log.md](./1.task\B.todo\v0.1\v0.1-r2028-simple-provider-refresh-model-list\decision_log.md) | REQ-2028 决策留痕 | REQ-2028 决策留痕 |
+| [1.task\B.todo\v0.1\v0.1-r2028-simple-provider-refresh-model-list\design.md](./1.task\B.todo\v0.1\v0.1-r2028-simple-provider-refresh-model-list\design.md) | REQ-2028 配置厂商弹窗内手动拉取模型列表 - 技术设计 | REQ-2028 配置厂商弹窗内手动拉取模型列表 - 技术设计 |
+| [1.task\B.todo\v0.1\v0.1-r2028-simple-provider-refresh-model-list\README.md](./1.task\B.todo\v0.1\v0.1-r2028-simple-provider-refresh-model-list\README.md) | 配置厂商弹窗内新增手动拉取模型列表按钮 | 配置厂商弹窗内新增手动拉取模型列表按钮 |
+| [1.task\B.todo\v0.1\v0.1-r2028-simple-provider-refresh-model-list\REQ-2028-original.md](./1.task\B.todo\v0.1\v0.1-r2028-simple-provider-refresh-model-list\REQ-2028-original.md) | REQ-2028 配置厂商弹窗内手动拉取模型列表（冻结副本） | REQ-2028 配置厂商弹窗内手动拉取模型列表（冻结副本） |
+| [1.task\B.todo\v0.1\v0.1-r2028-simple-provider-refresh-model-list\REQ-2028.md](./1.task\B.todo\v0.1\v0.1-r2028-simple-provider-refresh-model-list\REQ-2028.md) | REQ-2028 配置厂商弹窗内手动拉取模型列表 | REQ-2028 配置厂商弹窗内手动拉取模型列表 |
+| [1.task\B.todo\v0.1\v0.1-r2028-simple-provider-refresh-model-list\tasks.md](./1.task\B.todo\v0.1\v0.1-r2028-simple-provider-refresh-model-list\tasks.md) | REQ-2028 任务分解 - 配置厂商弹窗内手动拉取模型列表 | REQ-2028 任务分解 - 配置厂商弹窗内手动拉取模型列表 |
 
-## 1.task\B.todo\v0.1\v0.1-r7001-simple-auto-director-test-fix
+## 1.task\B.todo\v0.1\v0.1-r3008-medium-log-center
 
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r7001-simple-auto-director-test-fix\README.md](./1.task\B.todo\v0.1\v0.1-r7001-simple-auto-director-test-fix\README.md) | REQ-7001 Auto-Director 测试隔离修复任务总线 | REQ-7001 Auto-Director 测试隔离修复任务总线 |
-| [1.task\B.todo\v0.1\v0.1-r7001-simple-auto-director-test-fix\REQ-7001-original.md](./1.task\B.todo\v0.1\v0.1-r7001-simple-auto-director-test-fix\REQ-7001-original.md) | REQ-7001 Auto-Director 测试隔离修复（原始冻结副本） | REQ-7001 Auto-Director 测试隔离修复（原始冻结副本） |
-| [1.task\B.todo\v0.1\v0.1-r7001-simple-auto-director-test-fix\REQ-7001.md](./1.task\B.todo\v0.1\v0.1-r7001-simple-auto-director-test-fix\REQ-7001.md) | REQ-7001 Auto-Director 测试隔离修复 | REQ-7001 Auto-Director 测试隔离修复 |
-| [1.task\B.todo\v0.1\v0.1-r7001-simple-auto-director-test-fix\tasks.md](./1.task\B.todo\v0.1\v0.1-r7001-simple-auto-director-test-fix\tasks.md) | REQ-7001 任务拆解 | REQ-7001 任务拆解 |
+| [1.task\B.todo\v0.1\v0.1-r3008-medium-log-center\decision_log.md](./1.task\B.todo\v0.1\v0.1-r3008-medium-log-center\decision_log.md) | REQ-3008 决策留痕 | REQ-3008 决策留痕 |
+| [1.task\B.todo\v0.1\v0.1-r3008-medium-log-center\design.md](./1.task\B.todo\v0.1\v0.1-r3008-medium-log-center\design.md) | REQ-3008 方案设计 | REQ-3008 方案设计 |
+| [1.task\B.todo\v0.1\v0.1-r3008-medium-log-center\README.md](./1.task\B.todo\v0.1\v0.1-r3008-medium-log-center\README.md) | REQ-3008 日志中心 任务总线 | REQ-3008 日志中心 任务总线 |
+| [1.task\B.todo\v0.1\v0.1-r3008-medium-log-center\REQ-3008-original.md](./1.task\B.todo\v0.1\v0.1-r3008-medium-log-center\REQ-3008-original.md) | REQ-3008-log-center 需求原始冻结副本 | REQ-3008-log-center 需求原始冻结副本 |
+| [1.task\B.todo\v0.1\v0.1-r3008-medium-log-center\REQ-3008.md](./1.task\B.todo\v0.1\v0.1-r3008-medium-log-center\REQ-3008.md) | REQ-3008-log-center 需求工作副本 | REQ-3008-log-center 需求工作副本 |
+| [1.task\B.todo\v0.1\v0.1-r3008-medium-log-center\tasks.md](./1.task\B.todo\v0.1\v0.1-r3008-medium-log-center\tasks.md) | REQ-3008 任务拆解 | REQ-3008 任务拆解 |
 
 ## 1.task\B.todo\v0.1\v0.1-r7002-complex-novel-edit-refactor
 
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
+| [1.task\B.todo\v0.1\v0.1-r7002-complex-novel-edit-refactor\decision_log.md](./1.task\B.todo\v0.1\v0.1-r7002-complex-novel-edit-refactor\decision_log.md) | REQ-7002 NovelEdit.tsx 大文件拆分决策留痕 | REQ-7002 NovelEdit.tsx 大文件拆分决策留痕 |
 | [1.task\B.todo\v0.1\v0.1-r7002-complex-novel-edit-refactor\design.md](./1.task\B.todo\v0.1\v0.1-r7002-complex-novel-edit-refactor\design.md) | REQ-7002 NovelEdit.tsx 拆分方案设计 | REQ-7002 NovelEdit.tsx 拆分方案设计 |
-| [1.task\B.todo\v0.1\v0.1-r7002-complex-novel-edit-refactor\README.md](./1.task\B.todo\v0.1\v0.1-r7002-complex-novel-edit-refactor\README.md) | REQ-7002 NovelEdit.tsx 大文件拆分任务总线 | REQ-7002 NovelEdit.tsx 大文件拆分任务总线 |
+| [1.task\B.todo\v0.1\v0.1-r7002-complex-novel-edit-refactor\README.md](./1.task\B.todo\v0.1\v0.1-r7002-complex-novel-edit-refactor\README.md) | --- | - |
 | [1.task\B.todo\v0.1\v0.1-r7002-complex-novel-edit-refactor\REQ-7002-original.md](./1.task\B.todo\v0.1\v0.1-r7002-complex-novel-edit-refactor\REQ-7002-original.md) | REQ-7002 NovelEdit.tsx 大文件拆分（原始冻结副本） | REQ-7002 NovelEdit.tsx 大文件拆分（原始冻结副本） |
 | [1.task\B.todo\v0.1\v0.1-r7002-complex-novel-edit-refactor\REQ-7002.md](./1.task\B.todo\v0.1\v0.1-r7002-complex-novel-edit-refactor\REQ-7002.md) | REQ-7002 NovelEdit.tsx 大文件拆分 | REQ-7002 NovelEdit.tsx 大文件拆分 |
 | [1.task\B.todo\v0.1\v0.1-r7002-complex-novel-edit-refactor\tasks.md](./1.task\B.todo\v0.1\v0.1-r7002-complex-novel-edit-refactor\tasks.md) | REQ-7002 任务拆解 | REQ-7002 任务拆解 |
@@ -113,8 +97,9 @@ description: "docs 目录索引（自动生成）"
 
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
+| [1.task\B.todo\v0.1\v0.1-r7003-complex-server-large-file-refactor\decision_log.md](./1.task\B.todo\v0.1\v0.1-r7003-complex-server-large-file-refactor\decision_log.md) | REQ-7003 Server 超大文件分批拆分决策留痕 | REQ-7003 Server 超大文件分批拆分决策留痕 |
 | [1.task\B.todo\v0.1\v0.1-r7003-complex-server-large-file-refactor\design.md](./1.task\B.todo\v0.1\v0.1-r7003-complex-server-large-file-refactor\design.md) | REQ-7003 Server 超大文件拆分方案设计 | REQ-7003 Server 超大文件拆分方案设计 |
-| [1.task\B.todo\v0.1\v0.1-r7003-complex-server-large-file-refactor\README.md](./1.task\B.todo\v0.1\v0.1-r7003-complex-server-large-file-refactor\README.md) | REQ-7003 Server 超大文件分批拆分任务总线 | REQ-7003 Server 超大文件分批拆分任务总线 |
+| [1.task\B.todo\v0.1\v0.1-r7003-complex-server-large-file-refactor\README.md](./1.task\B.todo\v0.1\v0.1-r7003-complex-server-large-file-refactor\README.md) | --- | - |
 | [1.task\B.todo\v0.1\v0.1-r7003-complex-server-large-file-refactor\REQ-7003-original.md](./1.task\B.todo\v0.1\v0.1-r7003-complex-server-large-file-refactor\REQ-7003-original.md) | REQ-7003 Server 超大文件分批拆分（原始冻结副本） | REQ-7003 Server 超大文件分批拆分（原始冻结副本） |
 | [1.task\B.todo\v0.1\v0.1-r7003-complex-server-large-file-refactor\REQ-7003.md](./1.task\B.todo\v0.1\v0.1-r7003-complex-server-large-file-refactor\REQ-7003.md) | REQ-7003 Server 超大文件分批拆分 | REQ-7003 Server 超大文件分批拆分 |
 | [1.task\B.todo\v0.1\v0.1-r7003-complex-server-large-file-refactor\tasks.md](./1.task\B.todo\v0.1\v0.1-r7003-complex-server-large-file-refactor\tasks.md) | REQ-7003 任务拆解 | REQ-7003 任务拆解 |
@@ -187,6 +172,7 @@ description: "docs 目录索引（自动生成）"
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
 | [1.task\todolist\2026-06-27-v0.1-全量任务包开发.md](./1.task\todolist\2026-06-27-v0.1-全量任务包开发.md) | v0.1 全量任务包开发 — 分阶段需求追踪清单 | v0.1 全量任务包开发 — 分阶段需求追踪清单 |
+| [1.task\todolist\2026-06-29-v0.1-第三轮任务包开发.md](./1.task\todolist\2026-06-29-v0.1-第三轮任务包开发.md) | v0.1 第三轮任务包开发 — 6 个待开发任务包分阶段追踪清单 | v0.1 第三轮任务包开发 — 6 个待开发任务包分阶段追踪清单 |
 | [1.task\todolist\2026-06-29-v0.1-第二轮任务包开发.md](./1.task\todolist\2026-06-29-v0.1-第二轮任务包开发.md) | v0.1 第二轮任务包开发 — 6 个待开发任务包分阶段追踪清单 | v0.1 第二轮任务包开发 — 6 个待开发任务包分阶段追踪清单 |
 
 ## 3.analysis\diagnosis\01-active
@@ -197,6 +183,7 @@ description: "docs 目录索引（自动生成）"
 | [3.analysis\diagnosis\01-active\2026-06-26-项目主工作流诊断报告.md](./3.analysis\diagnosis\01-active\2026-06-26-项目主工作流诊断报告.md) | > 日期：2026-06-26 | - |
 | [3.analysis\diagnosis\01-active\2026-06-28-harness-audit.md](./3.analysis\diagnosis\01-active\2026-06-28-harness-audit.md) | AI 小说创作工作台 Harness 审计报告 — 五种介质完备性与合理性评估 | AI 小说创作工作台 Harness 审计报告 — 五种介质完备性与合理性评估 |
 | [3.analysis\diagnosis\01-active\2026-06-28-health-check.md](./3.analysis\diagnosis\01-active\2026-06-28-health-check.md) | 2026-06-28 项目健康检查报告 — 五维评估 + 债务模式识别 + 行动建议 | 2026-06-28 项目健康检查报告 — 五维评估 + 债务模式识别 + 行动建议 |
+| [3.analysis\diagnosis\01-active\2026-06-30-v0.1-第二轮任务包完成度诊断.md](./3.analysis\diagnosis\01-active\2026-06-30-v0.1-第二轮任务包完成度诊断.md) | --- | - |
 
 ## 3.analysis\evidence\v0.1
 

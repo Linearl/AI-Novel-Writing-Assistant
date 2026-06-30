@@ -14,6 +14,7 @@ import {
   previewCustomProviderModels,
   refreshProviderBalance,
   refreshProviderModelList,
+  persistProviderModels,
   saveAPIKeySetting,
   testLLMConnection,
   testModelRouteConnectivity,
@@ -61,6 +62,7 @@ export default function SettingsPage() {
     requestIntervalMs: "0",
   });
   const [dialogTestResult, setDialogTestResult] = useState("");
+  const [testingProvider, setTestingProvider] = useState<string | undefined>();
   const [providerTestResults, setProviderTestResults] = useState<Record<string, string>>({});
   const [actionResult, setActionResult] = useState("");
   const [previewModels, setPreviewModels] = useState<string[]>([]);
@@ -142,6 +144,7 @@ export default function SettingsPage() {
       requestIntervalMs: "0",
     });
     setDialogTestResult("");
+    setTestingProvider(undefined);
     setPreviewModels([]);
     setPreviewModelsResult("");
   };
@@ -284,6 +287,18 @@ export default function SettingsPage() {
     },
   });
 
+  const persistModelsMutation = useMutation({
+    mutationFn: ({ provider, models }: { provider: LLMProvider; models: string[] }) =>
+      persistProviderModels(provider, models),
+    onSuccess: async (response) => {
+      const count = response.data?.models?.length ?? 0;
+      setActionResult(`已保存 ${count} 个模型到本地，重启后仍可用。`);
+    },
+    onError: (error) => {
+      setActionResult(error instanceof Error ? error.message : "保存模型列表失败。");
+    },
+  });
+
   const toggleReasoningMutation = useMutation({
     mutationFn: (payload: { provider: LLMProvider; reasoningEnabled: boolean }) =>
       saveAPIKeySetting(payload.provider, {
@@ -397,6 +412,7 @@ export default function SettingsPage() {
       ...prev,
       [provider.provider]: "",
     }));
+    setTestingProvider(provider.provider);
     testMutation.mutate(
       {
         provider: provider.provider,
@@ -409,18 +425,21 @@ export default function SettingsPage() {
             ...prev,
             [provider.provider]: formatConnectionTestResult(response),
           }));
+          setTestingProvider(undefined);
         },
         onError: (error) => {
           setProviderTestResults((prev) => ({
             ...prev,
             [provider.provider]: error instanceof Error ? error.message : "连接测试失败。",
           }));
+          setTestingProvider(undefined);
         },
       },
     );
   };
 
   const handleTestProviderDialog = () => {
+    setTestingProvider(editingProvider || "custom_preview");
     testMutation.mutate(
       {
         provider: editingProvider || "custom_preview",
@@ -432,9 +451,11 @@ export default function SettingsPage() {
       {
         onSuccess: (response) => {
           setDialogTestResult(formatConnectionTestResult(response));
+          setTestingProvider(undefined);
         },
         onError: (error) => {
           setDialogTestResult(error instanceof Error ? error.message : "连接测试失败。");
+          setTestingProvider(undefined);
         },
       },
     );
@@ -471,7 +492,7 @@ export default function SettingsPage() {
           providers={providerConfigs}
           balances={providerBalancesQuery.data?.data ?? []}
           isBalanceLoading={providerBalancesQuery.isLoading}
-          testingProvider={testMutation.variables?.provider}
+          testingProvider={testingProvider}
           providerTestResults={providerTestResults}
           refreshingModelProvider={refreshModelsMutation.variables}
           refreshingBalanceProvider={refreshBalanceMutation.variables}
@@ -551,6 +572,15 @@ export default function SettingsPage() {
         onDeleteCustomProvider={handleDeleteCustomProvider}
         deleteDisabled={deleteCustomProviderMutation.isPending}
         deleteLabel={deleteCustomProviderMutation.isPending ? "删除中..." : "删除"}
+        onRefreshModels={editingProvider && !isCreatingCustomProvider ? () => {
+          setActionResult("");
+          refreshModelsMutation.mutate(editingProvider);
+        } : undefined}
+        isRefreshingModels={refreshModelsMutation.isPending}
+        onPersistModels={editingProvider && !isCreatingCustomProvider && selectableModels.length > 0 ? () => {
+          persistModelsMutation.mutate({ provider: editingProvider, models: selectableModels });
+        } : undefined}
+        isPersistingModels={persistModelsMutation.isPending}
       />
     </div>
   );

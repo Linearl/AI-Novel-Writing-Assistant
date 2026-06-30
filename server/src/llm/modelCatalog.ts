@@ -1,4 +1,5 @@
 import type { LLMProvider } from "@ai-novel/shared/types/llm";
+import { prisma } from "../db/prisma";
 import {
   isBuiltInProvider,
   providerRequiresApiKey,
@@ -90,7 +91,7 @@ function parseModelIds(payload: unknown): string[] {
 
 async function fetchJson(url: string, init: RequestInit): Promise<unknown> {
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 10_000);
+  const timer = setTimeout(() => controller.abort(), 15_000);
 
   try {
     const response = await fetch(url, {
@@ -104,6 +105,10 @@ async function fetchJson(url: string, init: RequestInit): Promise<unknown> {
     }
 
     return response.json();
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error(`[modelCatalog] fetchJson failed: ${url} — ${message}`);
+    throw error;
   } finally {
     clearTimeout(timer);
   }
@@ -121,6 +126,11 @@ function buildHeaders(provider: LLMProvider, apiKey?: string): Record<string, st
   if (provider === "anthropic") {
     headers["x-api-key"] = apiKey;
     headers["anthropic-version"] = process.env.ANTHROPIC_VERSION ?? "2023-06-01";
+    return headers;
+  }
+
+  if (provider === "minimax") {
+    headers["X-Api-Key"] = apiKey;
     return headers;
   }
 
@@ -172,7 +182,12 @@ async function fetchProviderModels(
     return fetchOllamaModels(baseURL);
   }
 
-  const payload = await fetchJson(`${baseURL}/models`, {
+  // MiniMax 使用 Anthropic 兼容的模型列表端点
+  const modelsURL = provider === "minimax"
+    ? `${baseURL.replace(/\/v1\/?$/, "")}/anthropic/v1/models`
+    : `${baseURL}/models`;
+
+  const payload = await fetchJson(modelsURL, {
     method: "GET",
     headers: buildHeaders(provider, apiKey),
   });
@@ -184,11 +199,26 @@ async function fetchProviderModels(
   return models;
 }
 
+async function getPersistedModels(provider: LLMProvider): Promise<string[]> {
+  try {
+    const record = await prisma.appSetting.findUnique({
+      where: { key: `provider.persistedModels.${provider}` },
+    });
+    if (!record?.value) {
+      return [];
+    }
+    const parsed = JSON.parse(record.value);
+    return Array.isArray(parsed) ? parsed.filter((item): item is string => typeof item === "string" && item.trim().length > 0) : [];
+  } catch {
+    return [];
+  }
+}
+
 export async function getProviderModels(
   provider: LLMProvider,
   options: GetProviderModelsOptions = {},
 ): Promise<string[]> {
-  const fallback = getFallbackModels(provider, options);
+  const hardcoded = getFallbackModels(provider, options);
   if (!options.forceRefresh) {
     const cached = getCachedModels(provider, options.baseURL);
     if (cached && cached.length > 0) {
@@ -200,18 +230,20 @@ export async function getProviderModels(
   const allowAnonymous = options.allowAnonymous ?? !providerRequiresApiKey(provider);
   const canFetchRemotely = normalizedApiKey || allowAnonymous;
   if (!canFetchRemotely) {
-    return fallback;
+    const persisted = await getPersistedModels(provider);
+    return persisted.length > 0 ? uniqueModels([...persisted, ...hardcoded]) : hardcoded;
   }
 
   try {
     const models = await fetchProviderModels(provider, normalizedApiKey, options.baseURL);
-    return models.length > 0 ? setCachedModels(provider, models, options.baseURL) : fallback;
+    return models.length > 0 ? setCachedModels(provider, models, options.baseURL) : hardcoded;
   } catch {
     const cached = getCachedModels(provider, options.baseURL);
     if (cached && cached.length > 0) {
       return cached;
     }
-    return fallback;
+    const persisted = await getPersistedModels(provider);
+    return persisted.length > 0 ? uniqueModels([...persisted, ...hardcoded]) : hardcoded;
   }
 }
 

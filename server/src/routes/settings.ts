@@ -2,6 +2,7 @@ import { Router } from "express";
 import type { ApiResponse } from "@ai-novel/shared/types/api";
 import type { BuiltinLLMProvider, LLMProvider } from "@ai-novel/shared/types/llm";
 import { z } from "zod";
+import { prisma } from "../db/prisma";
 import { setProviderSecretCache } from "../llm/factory";
 import { refreshProviderModels } from "../llm/modelCatalog";
 import { llmProviderSchema } from "../llm/providerSchema";
@@ -649,6 +650,33 @@ router.post(
         next(new AppError(error.message, 400));
         return;
       }
+      next(error);
+    }
+  },
+);
+
+router.post(
+  "/api-keys/:provider/persist-models",
+  validate({ params: providerSchema }),
+  async (req, res, next) => {
+    try {
+      const { provider } = req.params as z.infer<typeof providerSchema>;
+      const { models } = req.body as { models?: string[] };
+      if (!Array.isArray(models) || models.length === 0) {
+        throw new AppError("模型列表不能为空。", 400);
+      }
+      const key = `provider.persistedModels.${provider}`;
+      await prisma.appSetting.upsert({
+        where: { key },
+        update: { value: JSON.stringify(models) },
+        create: { key, value: JSON.stringify(models) },
+      });
+      res.status(200).json({
+        success: true,
+        data: { provider, models },
+        message: `已保存 ${models.length} 个模型到本地。`,
+      });
+    } catch (error) {
       next(error);
     }
   },
