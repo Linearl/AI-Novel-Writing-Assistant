@@ -146,6 +146,9 @@ export function registerGenerationWorldRoutes(router: Router): void {
               message: event.stage
                 ? `${event.stage.label} ${event.stage.order}/${event.stage.totalStages}`
                 : event.message ?? "",
+              percent: event.stage
+                ? Math.round((event.stage.order / event.stage.totalStages) * 100)
+                : undefined,
             });
           },
         );

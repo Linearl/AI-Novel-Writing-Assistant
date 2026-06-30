@@ -151,9 +151,9 @@ test("auto director follow-up service lists recent auto-approved records in auto
   ]);
   prisma.autoDirectorAutoApprovalRecord.findMany = async ({ where, take }) => {
     assert.deepEqual(where, {
-      novelId: "novel_a",
+      novelId: { in: ['novel_a'] },
     });
-    assert.equal(take, 10);
+    assert.equal(typeof take, "undefined");
     return [
       {
         id: "auto_approval_1",

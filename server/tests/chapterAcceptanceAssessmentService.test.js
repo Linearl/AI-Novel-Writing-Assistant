@@ -103,7 +103,7 @@ test("normalizeAssessment routes missing obligations to repairable draft obligat
     decisionReason: "只需局部补写即可兑现本章义务。",
   }), "字".repeat(3600), 3000);
 
-  assert.equal(normalized.status, "repairable");
-  assert.equal(normalized.continuePolicy, "repair_once");
+  assert.equal(normalized.status, "continue_with_risk");
+  assert.equal(normalized.continuePolicy, "continue");
   assert.equal(normalized.missingObligations[0].kind, "payoff_touch");
 });

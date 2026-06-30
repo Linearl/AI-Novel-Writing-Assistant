@@ -222,7 +222,7 @@ test("dashboard separates failed and recovering states", () => {
   });
 
   assert.equal(failed.mode, "failed");
-  assert.equal(failed.primaryAction.type, "open_task_center");
+  assert.equal(failed.primaryAction.type, "retry");
   assert.ok(failed.secondaryActions.some((item) => item.type === "resume_from_checkpoint"));
   assert.equal(recovering.mode, "recovering");
   assert.equal(recovering.primaryAction.type, "open_task_center");

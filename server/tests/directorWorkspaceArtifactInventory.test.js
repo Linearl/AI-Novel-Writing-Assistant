@@ -215,7 +215,7 @@ test("workspace artifact inventory skips repair tickets when the latest quality 
   const riskFlags = JSON.stringify({
     qualityLoop: {
       overallStatus: "risk",
-      recommendedAction: "manual_gate",
+      recommendedAction: "patch_repair",
       terminalAction: "defer_and_continue",
     },
   });

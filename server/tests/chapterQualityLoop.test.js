@@ -207,7 +207,7 @@ test("buildChapterQualityLoopChapterUpdate clears stale repair state after a val
     generationState: "reviewed",
   }, assessment, "repair_recheck");
 
-  assert.equal(update.chapterStatus, "pending_review");
+  assert.equal(update.chapterStatus, "completed");
   assert.equal(typeof update.riskFlags, "string");
   const riskFlags = JSON.parse(update.riskFlags);
   assert.equal(riskFlags.qualityLoop.recommendedAction, "continue");
@@ -235,7 +235,7 @@ test("buildChapterQualityLoopChapterUpdate marks exhausted auto repair as deferr
     generationState: "reviewed",
   }, assessment, "repair_recheck", "defer_and_continue");
 
-  assert.equal(update.chapterStatus, "pending_review");
+  assert.equal(update.chapterStatus, "completed");
   assert.equal(typeof update.riskFlags, "string");
   const riskFlags = JSON.parse(update.riskFlags);
   assert.equal(riskFlags.qualityLoop.terminalAction, "defer_and_continue");

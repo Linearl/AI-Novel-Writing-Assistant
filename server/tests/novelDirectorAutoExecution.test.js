@@ -20,6 +20,8 @@ test("chapter_range normalizes to the explicit chapter range 1-10", () => {
     autoReview: true,
     autoRepair: true,
     artifactSyncMode: "adaptive",
+    pipelineMode: "batch",
+    highRiskStrategy: undefined,
   });
 });
 
@@ -31,6 +33,8 @@ test("chapter_range can carry a user-selected chapter range", () => {
     autoReview: true,
     autoRepair: true,
     artifactSyncMode: "adaptive",
+    pipelineMode: "batch",
+    highRiskStrategy: undefined,
   });
 
   assert.equal(buildDirectorAutoExecutionScopeLabel({
@@ -45,6 +49,8 @@ test("book auto execution normalizes to full-book scope without chapter bounds",
     autoReview: true,
     autoRepair: true,
     artifactSyncMode: "adaptive",
+    pipelineMode: "batch",
+    highRiskStrategy: undefined,
   });
 
   assert.equal(buildDirectorAutoExecutionScopeLabel({ mode: "book" }), "全书");

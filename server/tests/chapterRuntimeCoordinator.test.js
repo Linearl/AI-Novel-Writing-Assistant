@@ -723,6 +723,8 @@ test("createRepairStream escalates patch schema failures to a single heavy repai
   const originalChapterFindFirst = prisma.chapter.findFirst;
   const originalBibleFindUnique = prisma.novelBible.findUnique;
   const originalChapterUpdate = prisma.chapter.update;
+  const originalRepairVersionFindFirst = prisma.chapterRepairVersion?.findFirst;
+  const originalRepairVersionCreate = prisma.chapterRepairVersion?.create;
   const originalRunStructuredPrompt = promptRunner.runStructuredPrompt;
   const originalStreamTextPrompt = promptRunner.streamTextPrompt;
 
@@ -743,6 +745,14 @@ test("createRepairStream escalates patch schema failures to a single heavy repai
     chapterUpdates.push(data);
     return { id: "chapter-1", ...data };
   };
+  if (prisma.chapterRepairVersion) {
+    prisma.chapterRepairVersion.findFirst = async () => null;
+    prisma.chapterRepairVersion.create = async () => ({
+      id: "repair-version-1",
+      chapterId: "chapter-1",
+      versionIndex: 1,
+    });
+  }
   promptRunner.runStructuredPrompt = async () => {
     throw new Error("[{\"origin\":\"string\",\"code\":\"too_small\",\"minimum\":6,\"inclusive\":true,\"path\":[\"patches\",0,\"targetExcerpt\"],\"message\":\"Too small: expected string to have >=6 characters\"}]");
   };
@@ -824,6 +834,10 @@ test("createRepairStream escalates patch schema failures to a single heavy repai
     prisma.chapter.findFirst = originalChapterFindFirst;
     prisma.novelBible.findUnique = originalBibleFindUnique;
     prisma.chapter.update = originalChapterUpdate;
+    if (prisma.chapterRepairVersion) {
+      if (originalRepairVersionFindFirst) prisma.chapterRepairVersion.findFirst = originalRepairVersionFindFirst;
+      if (originalRepairVersionCreate) prisma.chapterRepairVersion.create = originalRepairVersionCreate;
+    }
     promptRunner.runStructuredPrompt = originalRunStructuredPrompt;
     promptRunner.streamTextPrompt = originalStreamTextPrompt;
   }

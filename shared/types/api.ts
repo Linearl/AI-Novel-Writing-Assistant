@@ -25,6 +25,7 @@ export type SSEFrame =
     status: "queued" | "running" | "waiting_approval" | "succeeded" | "failed" | "cancelled";
     phase?: "streaming" | "finalizing" | "completed";
     message?: string;
+    percent?: number;
   };
 
 export type CreativeHubStreamFrame =

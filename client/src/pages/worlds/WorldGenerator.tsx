@@ -397,6 +397,7 @@ export default function WorldGenerator() {
               counts={skeletonCounts}
               generating={skeletonStream.isStreaming}
               progressMessage={skeletonStream.latestRun?.message}
+              progressPercent={skeletonStream.latestRun?.percent}
               onPresetChange={handlePresetChange}
               onCountChange={handleCountChange}
               onGenerateSkeleton={handleGenerateSkeleton}

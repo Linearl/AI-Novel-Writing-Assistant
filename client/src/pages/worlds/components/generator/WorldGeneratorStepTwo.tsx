@@ -44,6 +44,7 @@ interface WorldGeneratorStepTwoProps {
   counts: WorldSkeletonGenerationCounts;
   generating: boolean;
   progressMessage?: string | null;
+  progressPercent?: number | null;
   onPresetChange: (preset: WorldSkeletonPreset) => void;
   onCountChange: (key: keyof WorldSkeletonGenerationCounts, value: number) => void;
   onGenerateSkeleton: () => void;
@@ -55,6 +56,7 @@ export default function WorldGeneratorStepTwo(props: WorldGeneratorStepTwoProps)
     counts,
     generating,
     progressMessage,
+    progressPercent,
     onPresetChange,
     onCountChange,
     onGenerateSkeleton,
@@ -120,9 +122,20 @@ export default function WorldGeneratorStepTwo(props: WorldGeneratorStepTwoProps)
         </div>
       </div>
 
-      <Button onClick={onGenerateSkeleton} disabled={generating}>
+      <Button onClick={onGenerateSkeleton} disabled={generating} className="w-full">
         {generating ? (progressMessage ?? "生成世界骨架中...") : "生成世界骨架"}
       </Button>
+      {generating && progressPercent != null ? (
+        <div className="mt-2 space-y-1">
+          <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
+            <div
+              className="h-full rounded-full bg-primary transition-all duration-500 ease-out"
+              style={{ width: `${Math.min(100, Math.max(0, progressPercent))}%` }}
+            />
+          </div>
+          <p className="text-center text-xs text-muted-foreground">{progressMessage}</p>
+        </div>
+      ) : null}
     </div>
   );
 }
