@@ -1,0 +1,27 @@
+{
+  "reqId": "7004",
+  "title": "JSON 软引用 FK 缺失修复",
+  "status": "requirements_ready",
+  "complexity": "medium",
+  "category": "7xxx",
+  "priority": "P1",
+  "version": "v0.1",
+  "created": "2026-06-30",
+  "artifacts": [
+    "README.md",
+    "REQ-7004.md",
+    "REQ-7004-original.md",
+    "tasks.md",
+    "design.md",
+    "decision_log.md",
+    "run_result.json"
+  ],
+  "source": "2026-06-30-图数据库能力诊断.md",
+  "unresolved_items": [],
+  "assumptions": [
+    "存量 JSON 字段中的 ID 全部指向有效实体（无历史悬空引用）",
+    "时间线领域优先修复，世界设定领域次之",
+    "不引入图数据库，仅用 Prisma 边表",
+    "stateChangesJson 和 issuesJson 不在迁移范围（非 FK ID）"
+  ]
+}

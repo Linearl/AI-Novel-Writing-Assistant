@@ -4,6 +4,7 @@ import { LAYER_FIELD_MAP, WORLD_LAYER_ORDER } from "./worldTemplates";
 import {
   buildWorldBindingSupport,
   buildWorldStructureFromLegacySource,
+  normalizeWorldStructuredData,
   WORLD_STRUCTURE_SCHEMA_VERSION,
 } from "./worldStructure";
 import {
@@ -85,4 +86,51 @@ export function hasReliableStructuredLayerSource(parsed: {
   return parsed.structure.forces.length > 0
     || parsed.structure.locations.length > 0
     || parsed.structure.rules.axioms.length > 0;
+}
+
+export function buildLibraryInjectionStructure(
+  baseStructure: WorldStructuredData,
+  itemId: string,
+  itemName: string,
+  itemCategory: string,
+  itemDescription: string | null,
+  targetCollection: "forces" | "locations",
+): WorldStructuredData {
+  if (targetCollection === "forces") {
+    return normalizeWorldStructuredData({
+      ...baseStructure,
+      forces: [
+        ...baseStructure.forces,
+        {
+          id: `force-library-${itemId}`,
+          name: itemName,
+          type: itemCategory,
+          factionId: null,
+          summary: itemDescription ?? "",
+          baseOfPower: "",
+          currentObjective: "",
+          pressure: "",
+          leader: null,
+          narrativeRole: "素材库注入",
+        },
+      ],
+    }, baseStructure);
+  }
+  return normalizeWorldStructuredData({
+    ...baseStructure,
+    locations: [
+      ...baseStructure.locations,
+      {
+        id: `location-library-${itemId}`,
+        name: itemName,
+        terrain: itemCategory,
+        summary: itemDescription ?? "",
+        narrativeFunction: "素材库注入",
+        risk: "",
+        entryConstraint: "",
+        exitCost: "",
+        controllingForceIds: [],
+      },
+    ],
+  }, baseStructure);
 }

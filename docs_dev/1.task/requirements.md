@@ -41,9 +41,10 @@ description: "需求任务总清单（SSOT）"
 | 2023 | 资源变更风险拒绝意图注入 | p3 | ✅ 已完成 | - | 0.1 | 2026-06-28T00:00:00.000Z | 2026-06-28T00:00:00.000Z | `B.2.done/v0.1-r2023-medium-resource-reject-intent-injection/README.md` |  |
 | 2024 | 支持 MiniMax 图像生成 | p3 | ✅ 已完成 | - | 0.1 | 2026-06-29T00:00:00.000Z | 2026-06-29T00:00:00.000Z | `B.2.done/v0.1-r2024-medium-minimax-image-generation/README.md` |  |
 | 2025 | 自动导演高风险自动处理策略配置 | p3 | ✅ 已完成 | - | 0.1 | 2026-06-29T00:00:00.000Z | 2026-06-29T00:00:00.000Z | `B.2.done/v0.1-r2025-medium-high-risk-auto-handling-config/README.md` |  |
-| 2026 | 节奏板重生成结构保持验证 | p3 | ✅ 已完成 | - | 0.1 | - | - | `B.todo/v0.1-r2026-medium-beat-sheet-structure-preservation/README.md` |  |
-| 2027 | 章节编辑器编辑后资产沉淀 | p3 | ✅ 已完成 | - | 0.1 | 2026-06-30T00:00:00.000Z | 2026-06-30T00:00:00.000Z | `B.todo/v0.1-r2027-complex-chapter-edit-asset-extraction/README.md` |  |
+| 2026 | 节奏板重生成结构保持验证 | p3 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r2026-medium-beat-sheet-structure-preservation/README.md` |  |
+| 2027 | 章节编辑器编辑后资产沉淀 | p3 | ✅ 已完成 | - | 0.1 | 2026-06-30T00:00:00.000Z | 2026-06-30T00:00:00.000Z | `B.2.done/v0.1-r2027-complex-chapter-edit-asset-extraction/README.md` |  |
 | 2028 | 配置厂商弹窗内手动拉取模型列表 | p3 | ✅ 已完成 | - | 0.1 | 2026-06-30T00:00:00.000Z | 2026-06-30T00:00:00.000Z | `B.2.done/v0.1-r2028-simple-provider-refresh-model-list/README.md` |  |
+| 2029 | Creative Hub 叙事讨论通道 (narrative_advisor) | p2 | 📋 待办 | 上游 issue — Creative Hub 缺少宏观创作讨论能力 | 0.1 | 2026-06-30 | - | `B.todo/v0.1-r2029-complex-narrative-advisor-mode/README.md` | 在现有意图分类+workflow+answer composer 架构内扩展 narrative_advisor 意图，复用只读分析工具，生成叙事建议 |
 | 2013 | Director Failed Retry Entry | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2013-medium-director-failed-retry-entry/README.md` |  |
 | 2014 | Chapter Token Budget Dynamic | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2014-medium-chapter-token-budget-dynamic/README.md` |  |
 
@@ -57,7 +58,7 @@ description: "需求任务总清单（SSOT）"
 | 3005 | Novel Conversation Archive | p4 | ✅ 已完成 | - | 0.1 | 2026-06-26T00:00:00.000Z | 2026-06-26T00:00:00.000Z | `B.2.done/v0.1-r3005-medium-novel-conversation-archive/README.md` |  |
 | 3006 | 修复详情弹窗增强 | p4 | ✅ 已完成 | - | 0.1 | 2026-06-28T00:00:00.000Z | 2026-06-29T00:00:00.000Z | `B.2.done/v0.1-r3006-medium-repair-detail-dialog-enhancement/README.md` |  |
 | 3007 | 世界生成阶段进度显示 | p3 | ✅ 已完成 | 用户体验反馈 | 0.1 | 2026-06-29 | 2026-06-29 | `B.2.done/v0.1-r3007-medium-world-gen-stage-progress/README.md` | 步骤 2 骨架生成按钮需显示阶段进度 |
-| 3008 | 日志中心 | p4 | ✅ 已完成 | - | 0.1 | - | - | `B.todo/v0.1-r3008-medium-log-center/README.md` |  |
+| 3008 | 日志中心 | p4 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r3008-medium-log-center/README.md` |  |
 | 3004 | Novel Conversation Archive | p4 | 📋 待办 | - | 0.1 | 2026-06-26T00:00:00.000Z | 2026-06-26T00:00:00.000Z | `B.todo/v0.1-r3004-medium-novel-conversation-archive/README.md` |  |
 
 ### 3.6 技术债务和重构任务（7xxx）
@@ -65,8 +66,9 @@ description: "需求任务总清单（SSOT）"
 | 编号 | 任务标题 | 优先级 | 当前状态 | 来源层 | 目标版本 | 开始日期 | 完成日期 | 详情文档 | 备注 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 7001 | Auto-Director 测试隔离修复 | p1 | ✅ 已完成 | 2026-06-28-health-check.md | 0.1 | - | - | `B.2.done/v0.1-r7001-simple-auto-director-test-fix/README.md` |  |
-| 7002 | NovelEdit.tsx 大文件拆分 | p1 | ✅ 已完成 | 2026-06-28-health-check.md | 0.1 | - | - | `B.todo/v0.1-r7002-complex-novel-edit-refactor/README.md` |  |
-| 7003 | Server 超大文件分批拆分 | p2 | 📋 待办 | 2026-06-28-health-check.md | 0.1 | - | - | `B.todo/v0.1-r7003-complex-server-large-file-refactor/README.md` |  |
+| 7002 | NovelEdit.tsx 大文件拆分 | p1 | ✅ 已完成 | 2026-06-28-health-check.md | 0.1 | - | - | `B.2.done/v0.1-r7002-complex-novel-edit-refactor/README.md` |  |
+| 7003 | Server 超大文件分批拆分 | p2 | ✅ 已完成 | 2026-06-28-health-check.md | 0.1 | - | - | `B.todo/v0.1-r7003-complex-server-large-file-refactor/README.md` |  |
+| 7004 | JSON 软引用 FK 缺失修复 | p1 | 📋 待办 | 2026-06-30-图数据库能力诊断.md | 0.1 | - | - | `B.todo/v0.1-r7004-medium-json-soft-ref-fk-fix/README.md` |  |
 
 ---
 
@@ -78,7 +80,8 @@ description: "需求任务总清单（SSOT）"
 
 | 编号 | 任务标题 | 文档 |
 | --- | --- | --- |
-| 7003 | Server 超大文件分批拆分 | `B.todo/v0.1-r7003-complex-server-large-file-refactor/README.md` |
+| 2029 | Creative Hub 叙事讨论通道 (narrative_advisor) | `B.todo/v0.1-r2029-complex-narrative-advisor-mode/README.md` |
+| 7004 | JSON 软引用 FK 缺失修复 | `B.todo/v0.1-r7004-medium-json-soft-ref-fk-fix/README.md` |
 | 2013 | Director Failed Retry Entry | `B.todo/v0.1-r2013-medium-director-failed-retry-entry/README.md` |
 | 2014 | Chapter Token Budget Dynamic | `B.todo/v0.1-r2014-medium-chapter-token-budget-dynamic/README.md` |
 | 3004 | Novel Conversation Archive | `B.todo/v0.1-r3004-medium-novel-conversation-archive/README.md` |
@@ -110,8 +113,8 @@ description: "需求任务总清单（SSOT）"
 | 2023 | 资源变更风险拒绝意图注入 | `B.2.done/v0.1-r2023-medium-resource-reject-intent-injection/README.md` |
 | 2024 | 支持 MiniMax 图像生成 | `B.2.done/v0.1-r2024-medium-minimax-image-generation/README.md` |
 | 2025 | 自动导演高风险自动处理策略配置 | `B.2.done/v0.1-r2025-medium-high-risk-auto-handling-config/README.md` |
-| 2026 | 节奏板重生成结构保持验证 | `B.todo/v0.1-r2026-medium-beat-sheet-structure-preservation/README.md` |
-| 2027 | 章节编辑器编辑后资产沉淀 | `B.todo/v0.1-r2027-complex-chapter-edit-asset-extraction/README.md` |
+| 2026 | 节奏板重生成结构保持验证 | `B.2.done/v0.1-r2026-medium-beat-sheet-structure-preservation/README.md` |
+| 2027 | 章节编辑器编辑后资产沉淀 | `B.2.done/v0.1-r2027-complex-chapter-edit-asset-extraction/README.md` |
 | 2028 | 配置厂商弹窗内手动拉取模型列表 | `B.2.done/v0.1-r2028-simple-provider-refresh-model-list/README.md` |
 | 3001 | Task Batch Archive | `B.2.done/v0.1-r3001-medium-task-batch-archive/README.md` |
 | 3002 | 导演进度规划资源缺失 Checklist 可视化 | `B.2.done/v0.1-r3002-medium-director-planning-checklist/README.md` |
@@ -119,8 +122,9 @@ description: "需求任务总清单（SSOT）"
 | 3005 | Novel Conversation Archive | `B.2.done/v0.1-r3005-medium-novel-conversation-archive/README.md` |
 | 3006 | 修复详情弹窗增强 | `B.2.done/v0.1-r3006-medium-repair-detail-dialog-enhancement/README.md` |
 | 3007 | 世界生成阶段进度显示 | `B.2.done/v0.1-r3007-medium-world-gen-stage-progress/README.md` |
-| 3008 | 日志中心 | `B.todo/v0.1-r3008-medium-log-center/README.md` |
+| 3008 | 日志中心 | `B.2.done/v0.1-r3008-medium-log-center/README.md` |
 | 7001 | Auto-Director 测试隔离修复 | `B.2.done/v0.1-r7001-simple-auto-director-test-fix/README.md` |
-| 7002 | NovelEdit.tsx 大文件拆分 | `B.todo/v0.1-r7002-complex-novel-edit-refactor/README.md` |
+| 7002 | NovelEdit.tsx 大文件拆分 | `B.2.done/v0.1-r7002-complex-novel-edit-refactor/README.md` |
+| 7003 | Server 超大文件分批拆分 | `B.todo/v0.1-r7003-complex-server-large-file-refactor/README.md` |
 
 ---

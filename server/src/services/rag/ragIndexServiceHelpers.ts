@@ -85,3 +85,30 @@ export function buildJoinedText(...parts: Array<string | null | undefined>): str
     .join("\n")
     .trim();
 }
+
+// ---------------------------------------------------------------------------
+// Progress helpers
+// ---------------------------------------------------------------------------
+
+export function parseJobPayload(payloadJson: string | null): RagJobPayloadRecord {
+  if (!payloadJson) {
+    return {};
+  }
+  try {
+    const parsed = JSON.parse(payloadJson) as unknown;
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+      return {};
+    }
+    return parsed as RagJobPayloadRecord;
+  } catch {
+    return {};
+  }
+}
+
+export function createProgressSnapshot(input: Omit<RagJobProgressSnapshot, "updatedAt">): RagJobProgressSnapshot {
+  return {
+    ...input,
+    percent: Math.min(1, Math.max(0, Number.isFinite(input.percent) ? input.percent : 0)),
+    updatedAt: new Date().toISOString(),
+  };
+}

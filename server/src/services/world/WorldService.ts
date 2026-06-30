@@ -1,3 +1,19 @@
+/**
+ * WorldService — thin delegation layer.
+ *
+ * Heavy logic extracted to:
+ *   - worldServiceHelpers.ts (layer state helpers)
+ *   - worldStructureWorkspace.ts (structure CRUD)
+ *   - worldImprovementService.ts (deepening, consistency)
+ *   - worldSnapshotService.ts (snapshots)
+ *   - worldDraftGeneration.ts (stream generation)
+ *   - worldSkeletonGeneration.ts (skeleton generation)
+ *   - worldTransfer.ts (import/export)
+ *   - worldInspirationService.ts (inspiration analysis)
+ *   - worldLayerGeneration.ts (layer generation)
+ *   - worldGenerationBlueprint.ts (blueprint)
+ */
+
 import type { Prisma } from "@prisma/client";
 import type { LLMProvider } from "@ai-novel/shared/types/llm";
 import type {
@@ -76,86 +92,18 @@ import { generateWorldSkeleton, generateWorldSkeletonWithProgress, type WorldSke
 import { exportWorldData, importWorldData } from "./worldTransfer";
 import { ragServices } from "../rag";
 import type { RagOwnerType } from "../rag/types";
-
-function buildGeneratedStructurePersistence(
-  world: Parameters<typeof buildWorldStructureFromLegacySource>[0],
-): Pick<Prisma.WorldUpdateInput, "structureJson" | "bindingSupportJson" | "structureSchemaVersion"> {
-  const structure = buildWorldStructureFromLegacySource(world);
-  const bindingSupport = buildWorldBindingSupport(structure);
-  return {
-    structureJson: JSON.stringify({
-      ...structure,
-      metadata: {
-        ...structure.metadata,
-        lastGeneratedAt: nowISO(),
-      },
-    }),
-    bindingSupportJson: JSON.stringify(bindingSupport),
-    structureSchemaVersion: WORLD_STRUCTURE_SCHEMA_VERSION,
-  };
-}
-
-function markGeneratedLayerStatesFromFields(states: LayerStateMap, fields: Record<string, unknown>): LayerStateMap {
-  const updatedAt = nowISO();
-  for (const layerKey of WORLD_LAYER_ORDER) {
-    const hasLayerText = LAYER_FIELD_MAP[layerKey].some((field) => {
-      const value = fields[field];
-      return typeof value === "string" && value.trim().length > 0;
-    });
-    if (hasLayerText && states[layerKey].status !== "confirmed") {
-      states[layerKey] = { key: layerKey, status: "generated", updatedAt };
-    }
-  }
-  return states;
-}
-
-function buildInitialLayerStatesFromFields(fields: Record<string, unknown>): LayerStateMap {
-  return markGeneratedLayerStatesFromFields(normalizeLayerStates(undefined), fields);
-}
-
-function pickGeneratedLayerFields(
-  fields: Record<string, unknown>,
-  layerKey: WorldLayerKey,
-): Partial<Record<WorldTextField, string>> {
-  const generated: Partial<Record<WorldTextField, string>> = {};
-  for (const field of LAYER_FIELD_MAP[layerKey]) {
-    const value = fields[field];
-    if (typeof value === "string" && value.trim()) {
-      generated[field] = value.trim();
-    }
-  }
-  return generated;
-}
-
-function buildGeneratedLayersFromStructuredFields(
-  fields: Record<string, unknown>,
-): Record<WorldLayerKey, Partial<Record<WorldTextField, string>>> {
-  return WORLD_LAYER_ORDER.reduce((acc, layerKey) => {
-    acc[layerKey] = pickGeneratedLayerFields(fields, layerKey);
-    return acc;
-  }, {} as Record<WorldLayerKey, Partial<Record<WorldTextField, string>>>);
-}
-
-function hasReliableStructuredLayerSource(parsed: {
-  hasStructuredData: boolean;
-  structure: WorldStructuredData;
-}): boolean {
-  if (!parsed.hasStructuredData) {
-    return false;
-  }
-  if (parsed.structure.metadata.seededFrom === "legacy-text") {
-    return false;
-  }
-  return parsed.structure.forces.length > 0
-    || parsed.structure.locations.length > 0
-    || parsed.structure.rules.axioms.length > 0;
-}
+import {
+  buildGeneratedStructurePersistence,
+  markGeneratedLayerStatesFromFields,
+  buildInitialLayerStatesFromFields,
+  pickGeneratedLayerFields,
+  buildGeneratedLayersFromStructuredFields,
+  hasReliableStructuredLayerSource,
+} from "./worldServiceHelpers";
 
 export class WorldService {
   async listWorlds() {
-    return prisma.world.findMany({
-      orderBy: { updatedAt: "desc" },
-    });
+    return prisma.world.findMany({ orderBy: { updatedAt: "desc" } });
   }
 
   async getTemplates() {
@@ -163,15 +111,11 @@ export class WorldService {
   }
 
   private queueRagUpsert(ownerType: RagOwnerType, ownerId: string): void {
-    void ragServices.ragIndexService.enqueueUpsert(ownerType, ownerId).catch(() => {
-      // keep primary workflow resilient even when rag queueing fails
-    });
+    void ragServices.ragIndexService.enqueueUpsert(ownerType, ownerId).catch(() => {});
   }
 
   private queueRagDelete(ownerType: RagOwnerType, ownerId: string): void {
-    void ragServices.ragIndexService.enqueueDelete(ownerType, ownerId).catch(() => {
-      // keep primary workflow resilient even when rag queueing fails
-    });
+    void ragServices.ragIndexService.enqueueDelete(ownerType, ownerId).catch(() => {});
   }
 
   async analyzeInspiration(input: InspirationInput, onProgress?: (message: string) => void) {
@@ -190,10 +134,7 @@ export class WorldService {
     const knowledgeDocumentIds = uniqueKnowledgeDocumentIds(input.knowledgeDocumentIds);
     if (knowledgeDocumentIds.length > 0) {
       const documents = await prisma.knowledgeDocument.findMany({
-        where: {
-          id: { in: knowledgeDocumentIds },
-          status: { not: "archived" },
-        },
+        where: { id: { in: knowledgeDocumentIds }, status: { not: "archived" } },
         select: { id: true },
       });
       if (documents.length !== knowledgeDocumentIds.length) {
@@ -204,61 +145,42 @@ export class WorldService {
     const seededStructure = input.structure
       ? normalizeWorldStructuredData(input.structure)
       : buildWorldStructureSeedFromSource({
-        id: "",
-        name: input.name,
-        worldType: input.worldType ?? null,
-        description: input.description ?? null,
-        overviewSummary: null,
-        axioms: input.axioms ?? null,
-        background: input.background ?? null,
-        geography: input.geography ?? null,
-        cultures: input.cultures ?? null,
-        magicSystem: input.magicSystem ?? null,
-        politics: input.politics ?? null,
-        races: input.races ?? null,
-        religions: input.religions ?? null,
-        technology: input.technology ?? null,
-        conflicts: input.conflicts ?? null,
-        history: input.history ?? null,
-        economy: input.economy ?? null,
-        factions: input.factions ?? null,
-        selectedElements: input.selectedElements ?? null,
-        structureJson: null,
-        bindingSupportJson: null,
+        id: "", name: input.name, worldType: input.worldType ?? null,
+        description: input.description ?? null, overviewSummary: null,
+        axioms: input.axioms ?? null, background: input.background ?? null,
+        geography: input.geography ?? null, cultures: input.cultures ?? null,
+        magicSystem: input.magicSystem ?? null, politics: input.politics ?? null,
+        races: input.races ?? null, religions: input.religions ?? null,
+        technology: input.technology ?? null, conflicts: input.conflicts ?? null,
+        history: input.history ?? null, economy: input.economy ?? null,
+        factions: input.factions ?? null, selectedElements: input.selectedElements ?? null,
+        structureJson: null, bindingSupportJson: null,
         structureSchemaVersion: WORLD_STRUCTURE_SCHEMA_VERSION,
       });
     const bindingSupport = input.bindingSupport
       ? normalizeWorldBindingSupport(input.bindingSupport)
       : buildWorldBindingSupport(seededStructure);
     const structuredFields = applyStructuredWorldToLegacyFields(seededStructure, input, bindingSupport);
-    const initialLayerStates = buildInitialLayerStatesFromFields({
-      ...input,
-      ...structuredFields,
-    });
+    const initialLayerStates = buildInitialLayerStatesFromFields({ ...input, ...structuredFields });
 
     const world = await prisma.world.create({
       data: {
         name: input.name,
         description: (structuredFields.description as string | null | undefined) ?? input.description,
-        worldType: input.worldType,
-        templateKey: input.templateKey ?? "custom",
+        worldType: input.worldType, templateKey: input.templateKey ?? "custom",
         axioms: input.axioms ?? (structuredFields.axioms as string | null | undefined) ?? null,
         background: input.background ?? (structuredFields.background as string | null | undefined) ?? null,
         geography: input.geography ?? (structuredFields.geography as string | null | undefined) ?? null,
         cultures: input.cultures ?? (structuredFields.cultures as string | null | undefined) ?? null,
         magicSystem: input.magicSystem ?? (structuredFields.magicSystem as string | null | undefined) ?? null,
         politics: input.politics ?? (structuredFields.politics as string | null | undefined) ?? null,
-        races: input.races,
-        religions: input.religions,
-        technology: input.technology,
+        races: input.races, religions: input.religions, technology: input.technology,
         conflicts: input.conflicts ?? (structuredFields.conflicts as string | null | undefined) ?? null,
         history: input.history ?? (structuredFields.history as string | null | undefined) ?? null,
         economy: input.economy ?? (structuredFields.economy as string | null | undefined) ?? null,
         factions: input.factions ?? (structuredFields.factions as string | null | undefined) ?? null,
-        selectedDimensions: input.selectedDimensions,
-        selectedElements: input.selectedElements,
-        status: "draft",
-        layerStates: JSON.stringify(initialLayerStates),
+        selectedDimensions: input.selectedDimensions, selectedElements: input.selectedElements,
+        status: "draft", layerStates: JSON.stringify(initialLayerStates),
         overviewSummary: (structuredFields.overviewSummary as string | null | undefined) ?? null,
         structureJson: structuredFields.structureJson as string,
         bindingSupportJson: structuredFields.bindingSupportJson as string,
@@ -268,9 +190,7 @@ export class WorldService {
     if (knowledgeDocumentIds.length > 0) {
       await prisma.knowledgeBinding.createMany({
         data: knowledgeDocumentIds.map((documentId) => ({
-          targetType: "world",
-          targetId: world.id,
-          documentId,
+          targetType: "world", targetId: world.id, documentId,
         })),
       });
     }
@@ -292,11 +212,8 @@ export class WorldService {
 
   async updateWorld(id: string, input: Partial<CreateWorldInput>) {
     const world = await prisma.world.findUnique({ where: { id } });
-    if (!world) {
-      throw new Error("World not found.");
-    }
+    if (!world) { throw new Error("World not found."); }
     const { structure: _structure, bindingSupport: _bindingSupport, ...legacyInput } = input;
-
     const states = normalizeLayerStates(world.layerStates);
     for (const layer of WORLD_LAYER_ORDER) {
       const watched = LAYER_FIELD_MAP[layer];
@@ -305,30 +222,20 @@ export class WorldService {
         markDownstreamStale(states, layer);
       }
     }
-
     let structuredUpdate: Record<string, unknown> = {};
     if (input.structure || input.bindingSupport) {
-      const { structure: currentStructure, bindingSupport: currentBindingSupport } = parseWorldStructurePayload(
-        world.structureJson,
-        world.bindingSupportJson,
-      );
-      const nextStructure = input.structure
-        ? normalizeWorldStructuredData(input.structure, currentStructure)
-        : currentStructure;
+      const { structure: currentStructure, bindingSupport: currentBindingSupport } =
+        parseWorldStructurePayload(world.structureJson, world.bindingSupportJson);
+      const nextStructure = input.structure ? normalizeWorldStructuredData(input.structure, currentStructure) : currentStructure;
       const nextBindingSupport = input.bindingSupport
         ? normalizeWorldBindingSupport(input.bindingSupport, currentBindingSupport)
         : buildWorldBindingSupport(nextStructure);
       structuredUpdate = applyStructuredWorldToLegacyFields(nextStructure, world, nextBindingSupport);
       markGeneratedLayerStatesFromFields(states, structuredUpdate);
     }
-
     const updated = await prisma.world.update({
       where: { id },
-      data: {
-        ...legacyInput,
-        ...structuredUpdate,
-        layerStates: JSON.stringify(states),
-      },
+      data: { ...legacyInput, ...structuredUpdate, layerStates: JSON.stringify(states) },
     });
     this.queueRagUpsert("world", id);
     return updated;
@@ -339,73 +246,42 @@ export class WorldService {
     await prisma.world.delete({ where: { id } });
   }
 
-  async suggestAxioms(
-    worldId: string,
-    options: { provider?: LLMProvider; model?: string },
-  ) {
+  async suggestAxioms(worldId: string, options: { provider?: LLMProvider; model?: string }) {
     const world = await prisma.world.findUnique({ where: { id: worldId } });
-    if (!world) {
-      throw new Error("World not found.");
-    }
-
+    if (!world) { throw new Error("World not found."); }
     const template = getTemplateByKey(world.templateKey);
     const blueprintPromptBlock = buildWorldBlueprintPromptBlock(world);
     const result = await runStructuredPrompt({
       asset: worldAxiomSuggestionPrompt,
       promptInput: {
-        worldName: world.name,
-        worldType: world.worldType ?? "未知",
-        templateName: template.name,
-        templateDescription: template.description,
-        description: world.description ?? "无",
-        blueprintPromptBlock,
+        worldName: world.name, worldType: world.worldType ?? "未知",
+        templateName: template.name, templateDescription: template.description,
+        description: world.description ?? "无", blueprintPromptBlock,
       },
-      options: {
-        provider: options.provider ?? "deepseek",
-        model: options.model,
-        temperature: 0.5,
-      },
+      options: { provider: options.provider ?? "deepseek", model: options.model, temperature: 0.5 },
     });
     const axioms = normalizeAxiomList(result.output);
-    return axioms.length > 0
-      ? axioms
-      : [
-        "力量必须支付可衡量的代价。",
-        "任何规则突破都必须留下可追溯机制。",
-        "政治秩序受资源流动约束。",
-        "核心冲突必须源于世界规则而非偶然。",
-        "任何角色都不能直接违背基础公理。",
-      ];
+    return axioms.length > 0 ? axioms : [
+      "力量必须支付可衡量的代价。", "任何规则突破都必须留下可追溯机制。",
+      "政治秩序受资源流动约束。", "核心冲突必须源于世界规则而非偶然。",
+      "任何角色都不能直接违背基础公理。",
+    ];
   }
 
   async updateAxioms(worldId: string, axioms: string[]) {
     const world = await prisma.world.findUnique({ where: { id: worldId } });
-    if (!world) {
-      throw new Error("World not found.");
-    }
-
+    if (!world) { throw new Error("World not found."); }
     const parsed = parseWorldStructurePayload(world.structureJson, world.bindingSupportJson);
     const nextStructure = {
       ...parsed.structure,
-      rules: {
-        ...parsed.structure.rules,
-        axioms: buildStructuredRulesFromAxiomTexts(axioms),
-      },
-      metadata: {
-        ...parsed.structure.metadata,
-        lastGeneratedAt: nowISO(),
-      },
+      rules: { ...parsed.structure.rules, axioms: buildStructuredRulesFromAxiomTexts(axioms) },
+      metadata: { ...parsed.structure.metadata, lastGeneratedAt: nowISO() },
     };
     const nextBindingSupport = buildWorldBindingSupport(nextStructure);
     const structuredFields = applyStructuredWorldToLegacyFields(nextStructure, world, nextBindingSupport);
-
     const updated = await prisma.world.update({
       where: { id: worldId },
-      data: {
-        ...structuredFields,
-        axioms: JSON.stringify(axioms),
-        version: { increment: 1 },
-      },
+      data: { ...structuredFields, axioms: JSON.stringify(axioms), version: { increment: 1 } },
     });
     await this.createSnapshot(worldId, "axioms-updated");
     this.queueRagUpsert("world", worldId);
@@ -414,172 +290,98 @@ export class WorldService {
 
   async generateLayer(worldId: string, layerKey: WorldLayerKey, input: LayerGenerateInput) {
     const world = await prisma.world.findUnique({ where: { id: worldId } });
-    if (!world) {
-      throw new Error("World not found.");
-    }
-
+    if (!world) { throw new Error("World not found."); }
     const parsedStructure = parseWorldStructurePayload(world.structureJson, world.bindingSupportJson);
     if (hasReliableStructuredLayerSource(parsedStructure)) {
-      const structuredFields = applyStructuredWorldToLegacyFields(
-        parsedStructure.structure,
-        world,
-        parsedStructure.bindingSupport,
-      );
+      const structuredFields = applyStructuredWorldToLegacyFields(parsedStructure.structure, world, parsedStructure.bindingSupport);
       const generated = pickGeneratedLayerFields(structuredFields, layerKey);
       if (Object.keys(generated).length > 0) {
         const states = normalizeLayerStates(world.layerStates);
         states[layerKey] = { key: layerKey, status: "generated", updatedAt: nowISO() };
         markDownstreamStale(states, layerKey);
-
         const updated = await prisma.world.update({
           where: { id: worldId },
-          data: {
-            status: "refining",
-            layerStates: JSON.stringify(states),
-            ...structuredFields,
-          },
+          data: { status: "refining", layerStates: JSON.stringify(states), ...structuredFields },
         });
         await this.createSnapshot(worldId, `${layerKey}-structured-layer`);
         this.queueRagUpsert("world", worldId);
-
-        return {
-          world: updated,
-          layerKey,
-          generated,
-          layerStates: states,
-        };
+        return { world: updated, layerKey, generated, layerStates: states };
       }
     }
-
     const generated = await buildWorldLayerGeneration({
-      provider: input.provider ?? "deepseek",
-      model: input.model,
-      temperature: input.temperature ?? 0.7,
+      provider: input.provider ?? "deepseek", model: input.model, temperature: input.temperature ?? 0.7,
     }, world, layerKey);
-
     const states = normalizeLayerStates(world.layerStates);
     states[layerKey] = { key: layerKey, status: "generated", updatedAt: nowISO() };
     markDownstreamStale(states, layerKey);
-
     const updated = await prisma.world.update({
       where: { id: worldId },
       data: {
-        status: "refining",
-        layerStates: JSON.stringify(states),
-        ...buildGeneratedStructurePersistence(applyGeneratedWorldFields(world, generated)),
-        ...generated,
+        status: "refining", layerStates: JSON.stringify(states),
+        ...buildGeneratedStructurePersistence(applyGeneratedWorldFields(world, generated)), ...generated,
       },
     });
     await this.createSnapshot(worldId, `${layerKey}-generated`);
     this.queueRagUpsert("world", worldId);
-
-    return {
-      world: updated,
-      layerKey,
-      generated,
-      layerStates: states,
-    };
+    return { world: updated, layerKey, generated, layerStates: states };
   }
 
   async generateAllLayers(worldId: string, input: LayerGenerateInput) {
     const world = await prisma.world.findUnique({ where: { id: worldId } });
-    if (!world) {
-      throw new Error("World not found.");
-    }
-
+    if (!world) { throw new Error("World not found."); }
     const parsedStructure = parseWorldStructurePayload(world.structureJson, world.bindingSupportJson);
     if (hasReliableStructuredLayerSource(parsedStructure)) {
-      const structuredFields = applyStructuredWorldToLegacyFields(
-        parsedStructure.structure,
-        world,
-        parsedStructure.bindingSupport,
-      );
+      const structuredFields = applyStructuredWorldToLegacyFields(parsedStructure.structure, world, parsedStructure.bindingSupport);
       const generatedByLayer = buildGeneratedLayersFromStructuredFields(structuredFields);
-
       const states = normalizeLayerStates(world.layerStates);
       const updatedAt = nowISO();
-      for (const layerKey of WORLD_LAYER_ORDER) {
-        states[layerKey] = { key: layerKey, status: "generated", updatedAt };
-      }
-
+      for (const lk of WORLD_LAYER_ORDER) { states[lk] = { key: lk, status: "generated", updatedAt }; }
       const updated = await prisma.world.update({
         where: { id: worldId },
-        data: {
-          status: "refining",
-          layerStates: JSON.stringify(states),
-          ...structuredFields,
-        },
+        data: { status: "refining", layerStates: JSON.stringify(states), ...structuredFields },
       });
       await this.createSnapshot(worldId, "structured-layers-generated-all");
       this.queueRagUpsert("world", worldId);
-
-      return {
-        world: updated,
-        generated: generatedByLayer,
-        layerStates: states,
-      };
+      return { world: updated, generated: generatedByLayer, layerStates: states };
     }
-
-    const generatedByLayer = WORLD_LAYER_ORDER.reduce((acc, layerKey) => {
-      acc[layerKey] = {};
-      return acc;
+    const generatedByLayer = WORLD_LAYER_ORDER.reduce((acc, lk) => {
+      acc[lk] = {}; return acc;
     }, {} as Record<WorldLayerKey, Partial<Record<WorldTextField, string>>>);
     const mergedGenerated: Partial<Record<WorldTextField, string>> = {};
-
     let workingWorld = world;
-    for (const layerKey of WORLD_LAYER_ORDER) {
+    for (const lk of WORLD_LAYER_ORDER) {
       const generatedLayer = await buildWorldLayerGeneration({
-        provider: input.provider ?? "deepseek",
-        model: input.model,
-        temperature: input.temperature ?? 0.7,
-      }, workingWorld, layerKey);
-      generatedByLayer[layerKey] = generatedLayer;
+        provider: input.provider ?? "deepseek", model: input.model, temperature: input.temperature ?? 0.7,
+      }, workingWorld, lk);
+      generatedByLayer[lk] = generatedLayer;
       Object.assign(mergedGenerated, generatedLayer);
       workingWorld = applyGeneratedWorldFields(workingWorld, generatedLayer);
     }
-
     const states = normalizeLayerStates(world.layerStates);
     const updatedAt = nowISO();
-    for (const layerKey of WORLD_LAYER_ORDER) {
-      states[layerKey] = { key: layerKey, status: "generated", updatedAt };
-    }
-
+    for (const lk of WORLD_LAYER_ORDER) { states[lk] = { key: lk, status: "generated", updatedAt }; }
     const updated = await prisma.world.update({
       where: { id: worldId },
       data: {
-        status: "refining",
-        layerStates: JSON.stringify(states),
-        ...buildGeneratedStructurePersistence(applyGeneratedWorldFields(world, mergedGenerated)),
-        ...mergedGenerated,
+        status: "refining", layerStates: JSON.stringify(states),
+        ...buildGeneratedStructurePersistence(applyGeneratedWorldFields(world, mergedGenerated)), ...mergedGenerated,
       },
     });
     await this.createSnapshot(worldId, "layers-generated-all");
     this.queueRagUpsert("world", worldId);
-
-    return {
-      world: updated,
-      generated: generatedByLayer,
-      layerStates: states,
-    };
+    return { world: updated, generated: generatedByLayer, layerStates: states };
   }
 
   async updateLayer(worldId: string, layerKey: WorldLayerKey, input: LayerUpdateInput) {
     const world = await prisma.world.findUnique({ where: { id: worldId } });
-    if (!world) {
-      throw new Error("World not found.");
-    }
-
+    if (!world) { throw new Error("World not found."); }
     const field = LAYER_FIELD_MAP[layerKey][0];
     const states = normalizeLayerStates(world.layerStates);
     states[layerKey] = { key: layerKey, status: "generated", updatedAt: nowISO() };
     markDownstreamStale(states, layerKey);
-
     const updated = await prisma.world.update({
       where: { id: worldId },
-      data: {
-        [field]: input.content,
-        layerStates: JSON.stringify(states),
-      },
+      data: { [field]: input.content, layerStates: JSON.stringify(states) },
     });
     await this.createSnapshot(worldId, `${layerKey}-manual-update`);
     this.queueRagUpsert("world", worldId);
@@ -588,30 +390,20 @@ export class WorldService {
 
   async confirmLayer(worldId: string, layerKey: WorldLayerKey) {
     const world = await prisma.world.findUnique({ where: { id: worldId } });
-    if (!world) {
-      throw new Error("World not found.");
-    }
+    if (!world) { throw new Error("World not found."); }
     const states = normalizeLayerStates(world.layerStates);
     states[layerKey] = { key: layerKey, status: "confirmed", updatedAt: nowISO() };
     const allConfirmed = WORLD_LAYER_ORDER.every((key) => states[key].status === "confirmed");
-
     const updated = await prisma.world.update({
       where: { id: worldId },
-      data: {
-        layerStates: JSON.stringify(states),
-        status: allConfirmed ? "finalized" : "refining",
-        version: { increment: 1 },
-      },
+      data: { layerStates: JSON.stringify(states), status: allConfirmed ? "finalized" : "refining", version: { increment: 1 } },
     });
     await this.createSnapshot(worldId, `${layerKey}-confirmed`);
     this.queueRagUpsert("world", worldId);
     return updated;
   }
 
-  async createDeepeningQuestions(
-    worldId: string,
-    options: { provider?: LLMProvider; model?: string },
-  ) {
+  async createDeepeningQuestions(worldId: string, options: { provider?: LLMProvider; model?: string }) {
     return createWorldDeepeningQuestions(worldId, options);
   }
 
@@ -622,33 +414,22 @@ export class WorldService {
     });
   }
 
-  async checkConsistency(
-    worldId: string,
-    options: { provider?: LLMProvider; model?: string } = {},
-  ): Promise<WorldConsistencyReport> {
+  async checkConsistency(worldId: string, options: { provider?: LLMProvider; model?: string } = {}): Promise<WorldConsistencyReport> {
     return checkWorldConsistency(worldId, options, {
       createSnapshot: (id, label) => this.createSnapshot(id, label),
       queueWorldUpsert: (id) => this.queueRagUpsert("world", id),
     });
   }
 
-  async updateConsistencyIssueStatus(
-    worldId: string,
-    issueId: string,
-    status: "open" | "resolved" | "ignored",
-  ) {
+  async updateConsistencyIssueStatus(worldId: string, issueId: string, status: "open" | "resolved" | "ignored") {
     return updateWorldConsistencyIssueStatus(worldId, issueId, status);
   }
 
   async getOverview(worldId: string) {
-    return getWorldOverview(worldId, {
-      queueWorldUpsert: (id) => this.queueRagUpsert("world", id),
-    });
+    return getWorldOverview(worldId, { queueWorldUpsert: (id) => this.queueRagUpsert("world", id) });
   }
 
-  async getStructure(worldId: string) {
-    return getWorldStructure(worldId);
-  }
+  async getStructure(worldId: string) { return getWorldStructure(worldId); }
 
   async updateStructure(worldId: string, input: StructureUpdateInput) {
     return updateWorldStructure(worldId, input, {
@@ -678,116 +459,54 @@ export class WorldService {
       where: {
         ...(query.category ? { category: query.category } : {}),
         ...(query.worldType ? { worldType: query.worldType } : {}),
-        ...(query.keyword
-          ? {
-            OR: [
-              { name: { contains: query.keyword } },
-              { description: { contains: query.keyword } },
-            ],
-          }
-          : {}),
+        ...(query.keyword ? { OR: [{ name: { contains: query.keyword } }, { description: { contains: query.keyword } }] } : {}),
       },
       orderBy: [{ usageCount: "desc" }, { updatedAt: "desc" }],
       take: limit,
     });
   }
 
-  async createLibraryItem(input: {
-    name: string;
-    description?: string;
-    category: string;
-    worldType?: string;
-    sourceWorldId?: string;
-  }) {
-    const created = await prisma.worldPropertyLibrary.create({
-      data: input,
-    });
+  async createLibraryItem(input: { name: string; description?: string; category: string; worldType?: string; sourceWorldId?: string }) {
+    const created = await prisma.worldPropertyLibrary.create({ data: input });
     this.queueRagUpsert("world_library_item", created.id);
     return created;
   }
 
   async useLibraryItem(itemId: string, input: LibraryUseInput) {
     const item = await prisma.worldPropertyLibrary.findUnique({ where: { id: itemId } });
-    if (!item) {
-      throw new Error("Library item not found.");
-    }
-
-    await prisma.worldPropertyLibrary.update({
-      where: { id: itemId },
-      data: { usageCount: { increment: 1 } },
-    });
+    if (!item) { throw new Error("Library item not found."); }
+    await prisma.worldPropertyLibrary.update({ where: { id: itemId }, data: { usageCount: { increment: 1 } } });
     this.queueRagUpsert("world_library_item", itemId);
 
     if (input.worldId && input.targetCollection) {
       const world = await prisma.world.findUnique({ where: { id: input.worldId } });
-      if (!world) {
-        throw new Error("Target world not found.");
-      }
+      if (!world) { throw new Error("Target world not found."); }
       const parsed = parseWorldStructurePayload(world.structureJson, world.bindingSupportJson);
       const baseStructure = parsed.hasStructuredData ? parsed.structure : buildWorldStructureSeedFromSource(world);
       const nextStructure = normalizeWorldStructuredData({
         ...baseStructure,
         forces: input.targetCollection === "forces"
-          ? [
-            ...baseStructure.forces,
-            {
-              id: `force-library-${item.id}`,
-              name: item.name,
-              type: item.category,
-              factionId: null,
-              summary: item.description ?? "",
-              baseOfPower: "",
-              currentObjective: "",
-              pressure: "",
-              leader: null,
-              narrativeRole: "素材库注入",
-            },
-          ]
+          ? [...baseStructure.forces, { id: `force-library-${item.id}`, name: item.name, type: item.category, factionId: null, summary: item.description ?? "", baseOfPower: "", currentObjective: "", pressure: "", leader: null, narrativeRole: "素材库注入" }]
           : baseStructure.forces,
         locations: input.targetCollection === "locations"
-          ? [
-            ...baseStructure.locations,
-            {
-              id: `location-library-${item.id}`,
-              name: item.name,
-              terrain: item.category,
-              summary: item.description ?? "",
-              narrativeFunction: "素材库注入",
-              risk: "",
-              entryConstraint: "",
-              exitCost: "",
-              controllingForceIds: [],
-            },
-          ]
+          ? [...baseStructure.locations, { id: `location-library-${item.id}`, name: item.name, terrain: item.category, summary: item.description ?? "", narrativeFunction: "素材库注入", risk: "", entryConstraint: "", exitCost: "", controllingForceIds: [] }]
           : baseStructure.locations,
       }, baseStructure);
       const nextBindingSupport = buildWorldBindingSupport(nextStructure);
       const structuredFields = applyStructuredWorldToLegacyFields(nextStructure, world, nextBindingSupport);
-      await prisma.world.update({
-        where: { id: input.worldId },
-        data: structuredFields,
-      });
+      await prisma.world.update({ where: { id: input.worldId }, data: structuredFields });
       await this.createSnapshot(input.worldId, `library-use-${item.name}`);
       this.queueRagUpsert("world", input.worldId);
-      return {
-        itemId,
-        injected: true,
-        worldId: input.worldId,
-        targetCollection: input.targetCollection,
-      };
+      return { itemId, injected: true, worldId: input.worldId, targetCollection: input.targetCollection };
     }
 
     if (input.worldId && input.targetField) {
       const world = await prisma.world.findUnique({ where: { id: input.worldId } });
-      if (!world) {
-        throw new Error("Target world not found.");
-      }
+      if (!world) { throw new Error("Target world not found."); }
       const existing = world[input.targetField] ?? "";
       await prisma.world.update({
         where: { id: input.worldId },
-        data: {
-          [input.targetField]: `${existing}\n- ${item.name}: ${item.description ?? ""}`.trim(),
-        },
+        data: { [input.targetField]: `${existing}\n- ${item.name}: ${item.description ?? ""}`.trim() },
       });
       await this.createSnapshot(input.worldId, `library-use-${item.name}`);
       this.queueRagUpsert("world", input.worldId);
@@ -796,18 +515,14 @@ export class WorldService {
     return { itemId, injected: false, worldId: null, targetCollection: null };
   }
 
-  async listSnapshots(worldId: string) {
-    return listWorldSnapshots(worldId);
-  }
+  async listSnapshots(worldId: string) { return listWorldSnapshots(worldId); }
 
   async createSnapshot(worldId: string, label?: string) {
     return createWorldSnapshot(worldId, label);
   }
 
   async restoreSnapshot(worldId: string, snapshotId: string) {
-    return restoreWorldSnapshot(worldId, snapshotId, {
-      queueWorldUpsert: (id) => this.queueRagUpsert("world", id),
-    });
+    return restoreWorldSnapshot(worldId, snapshotId, { queueWorldUpsert: (id) => this.queueRagUpsert("world", id) });
   }
 
   async diffSnapshots(worldId: string, fromId: string, toId: string) {

@@ -1,4 +1,3 @@
-import crypto from "node:crypto";
 import type {
   DirectorCommandAcceptedResponse,
   DirectorRuntimePolicyUpdateRequest,
@@ -29,14 +28,24 @@ import {
   hashPayload,
   isUniqueConstraintError,
   parsePayload,
-  resolveNumberEnv,
   stableJson,
   toAcceptedResponse,
   type DirectorCommandPayload,
 } from "./DirectorCommandServiceHelpers";
+import {
+  ACTIVE_COMMAND_STATUSES,
+  CANCELLED_COMMAND_MSG,
+  closeCancelledTaskRuntimeState,
+  recoverStaleLeases,
+  leaseNextCommand as leaseNextCmd,
+  markCommandRunning as markRunning,
+  renewLease as renewLs,
+  markCommandSucceeded as markSucceeded,
+  markCommandCancelled as markCancelled,
+  markCommandFailed as markFailed,
+} from "./DirectorCommandServiceLeaseManager";
 import { taskDispatcher } from "../../../../workers/TaskDispatcher";
 
-const ACTIVE_COMMAND_STATUSES: DirectorRunCommandStatus[] = ["queued", "leased", "running"];
 const EXECUTION_COMMAND_TYPES: DirectorRunCommandType[] = [
   "generate_candidates",
   "refine_candidates",
@@ -56,54 +65,17 @@ const EXECUTION_COMMAND_TYPES: DirectorRunCommandType[] = [
 
 export type DirectorRunCommandRow = Awaited<ReturnType<DirectorCommandService["getCommandById"]>>;
 
-const DEFAULT_STALE_AUTO_RECOVERY_MAX_ATTEMPTS = 2;
-const STALE_COMMAND_AUTO_RECOVERY_MESSAGE = "后台执行中断，系统已自动从最近进度继续。";
-const STALE_COMMAND_MANUAL_RECOVERY_MESSAGE = "后台执行中断，任务已暂停。点击恢复后会从最近进度继续。";
-const STALE_COMMAND_INTERNAL_MESSAGE = "Director Worker 租约过期，任务等待恢复。";
-const CANCELLED_COMMAND_MESSAGE = "自动导演任务已取消。";
-
-function isAutoRecoverableStaleCommand(command: {
-  commandType: string;
-  attempt: number;
-  payloadJson?: string | null;
-}): boolean {
-  const defaultMaxAttempts = resolveNumberEnv(
-    "DIRECTOR_WORKER_STALE_AUTO_RECOVERY_MAX_ATTEMPTS",
-    DEFAULT_STALE_AUTO_RECOVERY_MAX_ATTEMPTS,
-  );
-  const payload = parsePayload(command.payloadJson ?? null);
-  const payloadRunMode = payload.confirmRequest?.runMode ?? payload.takeoverRequest?.runMode ?? null;
-  const isFullBookAutopilot = payloadRunMode === "full_book_autopilot";
-  const maxAttempts = isFullBookAutopilot
-    ? resolveNumberEnv(
-      "DIRECTOR_WORKER_FULL_BOOK_STALE_AUTO_RECOVERY_MAX_ATTEMPTS",
-      Math.max(defaultMaxAttempts, 5),
-    )
-    : defaultMaxAttempts;
-  return command.attempt < maxAttempts
-    && (
-      isFullBookAutopilot
-      || command.commandType === "continue"
-      || command.commandType === "resume_from_checkpoint"
-    );
-}
-
 export class DirectorCommandService {
   constructor(private readonly workflowService = new NovelWorkflowService()) {}
 
+  // ─── Enqueue methods ────────────────────────────────────────────────────
+
   async enqueueGenerateCandidatesCommand(input: DirectorCandidatesRequest): Promise<DirectorCommandAcceptedResponse> {
-    const task = await this.ensureCandidateTask(input, {
-      mode: "generate",
-    });
+    const task = await this.ensureCandidateTask(input, { mode: "generate" });
     return this.enqueueExecutionCommand({
       taskId: task.id,
       commandType: "generate_candidates",
-      payload: {
-        candidatesRequest: {
-          ...input,
-          workflowTaskId: task.id,
-        },
-      },
+      payload: { candidatesRequest: { ...input, workflowTaskId: task.id } },
     });
   }
 
@@ -116,12 +88,7 @@ export class DirectorCommandService {
     return this.enqueueExecutionCommand({
       taskId: task.id,
       commandType: "refine_candidates",
-      payload: {
-        refinementRequest: {
-          ...input,
-          workflowTaskId: task.id,
-        },
-      },
+      payload: { refinementRequest: { ...input, workflowTaskId: task.id } },
     });
   }
 
@@ -136,12 +103,7 @@ export class DirectorCommandService {
     return this.enqueueExecutionCommand({
       taskId: task.id,
       commandType: "patch_candidate",
-      payload: {
-        candidatePatchRequest: {
-          ...input,
-          workflowTaskId: task.id,
-        },
-      },
+      payload: { candidatePatchRequest: { ...input, workflowTaskId: task.id } },
     });
   }
 
@@ -155,12 +117,7 @@ export class DirectorCommandService {
     return this.enqueueExecutionCommand({
       taskId: task.id,
       commandType: "refine_titles",
-      payload: {
-        titleRefineRequest: {
-          ...input,
-          workflowTaskId: task.id,
-        },
-      },
+      payload: { titleRefineRequest: { ...input, workflowTaskId: task.id } },
     });
   }
 
@@ -184,37 +141,23 @@ export class DirectorCommandService {
         itemLabel: "等待创建小说项目",
         progress: 0.18,
       },
-
     });
     return this.enqueueExecutionCommand({
       taskId: task.id,
       commandType: "confirm_candidate",
-      payload: {
-        confirmRequest: {
-          ...confirmedInput,
-          workflowTaskId: task.id,
-        },
-      },
+      payload: { confirmRequest: { ...confirmedInput, workflowTaskId: task.id } },
     });
   }
 
   async enqueueContinueCommand(taskId: string, input: DirectorCommandPayload = {}): Promise<DirectorCommandAcceptedResponse> {
-    return this.enqueueExecutionCommand({
-      taskId,
-      commandType: "continue",
-      payload: input,
-    });
+    return this.enqueueExecutionCommand({ taskId, commandType: "continue", payload: input });
   }
 
   async enqueueApproveGateCommand(taskId: string, input: DirectorCommandPayload = {}): Promise<DirectorCommandAcceptedResponse> {
     return this.enqueueExecutionCommand({
       taskId,
       commandType: "approve_gate",
-      payload: {
-        ...input,
-        continuationMode: "resume",
-        forceResume: true,
-      },
+      payload: { ...input, continuationMode: "resume", forceResume: true },
     });
   }
 
@@ -222,9 +165,7 @@ export class DirectorCommandService {
     return this.enqueueExecutionCommand({
       taskId,
       commandType: "policy_update",
-      payload: {
-        policyUpdateRequest: input,
-      },
+      payload: { policyUpdateRequest: input },
     });
   }
 
@@ -294,10 +235,7 @@ export class DirectorCommandService {
     return this.enqueueExecutionCommand({
       taskId,
       commandType: "resume_from_checkpoint",
-      payload: {
-        ...input,
-        forceResume: true,
-      },
+      payload: { ...input, forceResume: true },
     });
   }
 
@@ -307,12 +245,8 @@ export class DirectorCommandService {
     batchAlreadyStartedCount?: number;
   }): Promise<DirectorCommandAcceptedResponse> {
     const row = await this.workflowService.getTaskById(input.taskId);
-    if (!row) {
-      throw new AppError("Task not found.", 404);
-    }
-    if (row.lane !== "auto_director") {
-      throw new AppError("Only auto director workflow tasks can be queued as director commands.", 400);
-    }
+    if (!row) throw new AppError("Task not found.", 404);
+    if (row.lane !== "auto_director") throw new AppError("Only auto director workflow tasks can be queued as director commands.", 400);
     if (input.llmOverride) {
       await this.workflowService.applyAutoDirectorLlmOverride(input.taskId, input.llmOverride);
     }
@@ -320,21 +254,14 @@ export class DirectorCommandService {
     return this.enqueueExecutionCommand({
       taskId: input.taskId,
       commandType: "retry",
-      payload: {
-        forceResume: true,
-        batchAlreadyStartedCount: input.batchAlreadyStartedCount,
-      },
+      payload: { forceResume: true, batchAlreadyStartedCount: input.batchAlreadyStartedCount },
     });
   }
 
   async enqueueCancelCommand(taskId: string): Promise<DirectorCommandAcceptedResponse> {
     const row = await this.workflowService.getTaskById(taskId);
-    if (!row) {
-      throw new AppError("Task not found.", 404);
-    }
-    if (row.lane !== "auto_director") {
-      throw new AppError("Only auto director workflow tasks can be queued as director commands.", 400);
-    }
+    if (!row) throw new AppError("Task not found.", 404);
+    if (row.lane !== "auto_director") throw new AppError("Only auto director workflow tasks can be queued as director commands.", 400);
     await this.workflowService.cancelTask(taskId);
     await prisma.directorRunCommand.updateMany({
       where: {
@@ -342,13 +269,9 @@ export class DirectorCommandService {
         commandType: { in: EXECUTION_COMMAND_TYPES },
         status: { in: ACTIVE_COMMAND_STATUSES },
       },
-      data: {
-        status: "cancelled",
-        finishedAt: new Date(),
-        errorMessage: "用户请求取消自动导演任务。",
-      },
+      data: { status: "cancelled", finishedAt: new Date(), errorMessage: "用户请求取消自动导演任务。" },
     });
-    await this.closeCancelledTaskRuntimeState(taskId, new Date());
+    await closeCancelledTaskRuntimeState(taskId, new Date());
     const now = new Date();
     const command = await withSqliteRetry(() => prisma.directorRunCommand.create({
       data: {
@@ -374,9 +297,7 @@ export class DirectorCommandService {
       },
       orderBy: [{ createdAt: "desc" }, { id: "desc" }],
     });
-    if (reusableCommand) {
-      return toAcceptedResponse(reusableCommand, null);
-    }
+    if (reusableCommand) return toAcceptedResponse(reusableCommand, null);
 
     const task = await this.workflowService.bootstrapTask({
       novelId: takeoverInput.novelId,
@@ -401,24 +322,96 @@ export class DirectorCommandService {
     return this.enqueueExecutionCommand({
       taskId: task.id,
       commandType: "takeover",
-      payload: {
-        takeoverRequest: takeoverInput,
-      },
+      payload: { takeoverRequest: takeoverInput },
     });
   }
 
-  async enqueueChapterTitleRepairCommand(taskId: string, input: {
-    volumeId?: string | null;
-  } = {}): Promise<DirectorCommandAcceptedResponse> {
+  async enqueueChapterTitleRepairCommand(taskId: string, input: { volumeId?: string | null } = {}): Promise<DirectorCommandAcceptedResponse> {
     return this.enqueueExecutionCommand({
       taskId,
       commandType: "repair_chapter_titles",
-      payload: {
-        volumeId: input.volumeId?.trim() || null,
-      },
+      payload: { volumeId: input.volumeId?.trim() || null },
       preserveLastError: true,
     });
   }
+
+  // ─── Query methods ──────────────────────────────────────────────────────
+
+  async getCommandById(commandId: string) {
+    return prisma.directorRunCommand.findUnique({ where: { id: commandId } });
+  }
+
+  async getCommandResult(commandId: string) {
+    const command = await this.getCommandById(commandId);
+    if (!command) throw new AppError("Director command not found.", 404);
+    const task = await this.workflowService.getTaskByIdWithoutHealing(command.taskId);
+    const seedPayload = parseSeedPayload<{ directorCommandResults?: Record<string, { result?: unknown } | unknown> }>(
+      task?.seedPayloadJson,
+    ) ?? {};
+    const resultEntry = seedPayload.directorCommandResults?.[commandId] ?? null;
+    const result = resultEntry && typeof resultEntry === "object" && "result" in resultEntry
+      ? (resultEntry as { result?: unknown }).result ?? null
+      : resultEntry;
+    return {
+      commandId: command.id,
+      taskId: command.taskId,
+      commandType: command.commandType,
+      status: command.status,
+      result,
+      errorMessage: command.errorMessage ?? null,
+    };
+  }
+
+  parseCommandPayload(command: NonNullable<DirectorRunCommandRow>): DirectorCommandPayload {
+    return parsePayload(command.payloadJson);
+  }
+
+  async getLatestTakeoverRequestForTask(taskId: string): Promise<DirectorTakeoverRequest | null> {
+    const command = await prisma.directorRunCommand.findFirst({
+      where: { taskId, commandType: "takeover" },
+      orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+    });
+    if (!command) return null;
+    return parsePayload(command.payloadJson).takeoverRequest ?? null;
+  }
+
+  // ─── Lease lifecycle (delegates to extracted module) ────────────────────
+
+  async recoverStaleLeases(now = new Date(), options: { taskId?: string } = {}): Promise<number> {
+    return recoverStaleLeases(now, options, async (taskId, message) => {
+      await this.workflowService.requeueTaskForRecovery(taskId, message);
+    });
+  }
+
+  async leaseNextCommand(input: { workerId: string; leaseMs: number }) {
+    return leaseNextCmd(input);
+  }
+
+  async markCommandRunning(commandId: string, workerId: string, leaseMs: number) {
+    return markRunning(commandId, workerId, leaseMs);
+  }
+
+  async renewLease(commandId: string, workerId: string, leaseMs: number): Promise<boolean> {
+    return renewLs(commandId, workerId, leaseMs);
+  }
+
+  async markCommandSucceeded(commandId: string, workerId: string): Promise<void> {
+    return markSucceeded(commandId, workerId);
+  }
+
+  async markCommandCancelled(commandId: string, workerId: string): Promise<void> {
+    return markCancelled(commandId, workerId, (taskId, now) =>
+      closeCancelledTaskRuntimeState(taskId, now),
+    );
+  }
+
+  async markCommandFailed(commandId: string, workerId: string, error: unknown): Promise<void> {
+    return markFailed(commandId, workerId, error, async (taskId, message) => {
+      await this.workflowService.requeueTaskForRecovery(taskId, message);
+    });
+  }
+
+  // ─── Private helpers ────────────────────────────────────────────────────
 
   private async ensureCandidateTask(
     input: DirectorCandidatesRequest | DirectorRefinementRequest | DirectorCandidatePatchRequest | DirectorCandidateTitleRefineRequest,
@@ -457,322 +450,6 @@ export class DirectorCommandService {
     });
   }
 
-  async getCommandById(commandId: string) {
-    return prisma.directorRunCommand.findUnique({
-      where: { id: commandId },
-    });
-  }
-
-  async getCommandResult(commandId: string) {
-    const command = await this.getCommandById(commandId);
-    if (!command) {
-      throw new AppError("Director command not found.", 404);
-    }
-    const task = await this.workflowService.getTaskByIdWithoutHealing(command.taskId);
-    const seedPayload = parseSeedPayload<{ directorCommandResults?: Record<string, { result?: unknown } | unknown> }>(
-      task?.seedPayloadJson,
-    ) ?? {};
-    const resultEntry = seedPayload.directorCommandResults?.[commandId] ?? null;
-    const result = resultEntry && typeof resultEntry === "object" && "result" in resultEntry
-      ? (resultEntry as { result?: unknown }).result ?? null
-      : resultEntry;
-    return {
-      commandId: command.id,
-      taskId: command.taskId,
-      commandType: command.commandType,
-      status: command.status,
-      result,
-      errorMessage: command.errorMessage ?? null,
-    };
-  }
-
-  async recoverStaleLeases(now = new Date(), options: {
-    taskId?: string;
-  } = {}): Promise<number> {
-    const staleCommands = await prisma.directorRunCommand.findMany({
-      where: {
-        ...(options.taskId ? { taskId: options.taskId } : {}),
-        status: { in: ["leased", "running"] },
-        leaseExpiresAt: { lt: now },
-      },
-      select: {
-        id: true,
-        taskId: true,
-        commandType: true,
-        attempt: true,
-        payloadJson: true,
-      },
-    });
-    if (staleCommands.length === 0) {
-      return 0;
-    }
-    const autoRecoverableCommands = staleCommands.filter(isAutoRecoverableStaleCommand);
-    const manualRecoveryCommands = staleCommands.filter((command) => !isAutoRecoverableStaleCommand(command));
-
-    if (autoRecoverableCommands.length > 0) {
-      const autoRecoverableIds = autoRecoverableCommands.map((command) => command.id);
-      await prisma.directorRunCommand.updateMany({
-        where: { id: { in: autoRecoverableIds } },
-        data: {
-          status: "queued",
-          leaseOwner: null,
-          leaseExpiresAt: null,
-          runAfter: now,
-          startedAt: null,
-          finishedAt: null,
-          errorMessage: STALE_COMMAND_AUTO_RECOVERY_MESSAGE,
-        },
-      });
-      const autoRecoverableTaskIds = Array.from(new Set(autoRecoverableCommands.map((command) => command.taskId)));
-      await prisma.novelWorkflowTask.updateMany({
-        where: { id: { in: autoRecoverableTaskIds } },
-        data: {
-          status: "queued",
-          pendingManualRecovery: false,
-          lastError: null,
-          heartbeatAt: now,
-          finishedAt: null,
-        },
-      }).catch(() => null);
-      taskDispatcher.notify();
-    }
-
-    if (manualRecoveryCommands.length === 0) {
-      return staleCommands.length;
-    }
-    const manualRecoveryIds = manualRecoveryCommands.map((command) => command.id);
-    await prisma.directorRunCommand.updateMany({
-      where: { id: { in: manualRecoveryIds } },
-      data: {
-        status: "stale",
-        finishedAt: now,
-        errorMessage: STALE_COMMAND_INTERNAL_MESSAGE,
-      },
-    });
-    const manualRecoveryTaskIds = Array.from(new Set(manualRecoveryCommands.map((command) => command.taskId)));
-    for (const taskId of manualRecoveryTaskIds) {
-      await prisma.directorStepRun.updateMany({
-        where: {
-          taskId,
-          status: "running",
-        },
-        data: {
-          status: "failed",
-          finishedAt: now,
-          error: STALE_COMMAND_INTERNAL_MESSAGE,
-        },
-      }).catch(() => null);
-      await this.workflowService.requeueTaskForRecovery(taskId, STALE_COMMAND_MANUAL_RECOVERY_MESSAGE)
-        .catch(() => null);
-    }
-    return staleCommands.length;
-  }
-
-  async leaseNextCommand(input: {
-    workerId: string;
-    leaseMs: number;
-  }) {
-    const now = new Date();
-    const leaseExpiresAt = new Date(now.getTime() + input.leaseMs);
-    const candidate = await prisma.directorRunCommand.findFirst({
-      where: {
-        status: "queued",
-        runAfter: { lte: now },
-      },
-      orderBy: [{ runAfter: "asc" }, { createdAt: "asc" }, { id: "asc" }],
-    });
-    if (!candidate) {
-      return null;
-    }
-    const claimed = await prisma.directorRunCommand.updateMany({
-      where: {
-        id: candidate.id,
-        status: "queued",
-      },
-      data: {
-        status: "leased",
-        leaseOwner: input.workerId,
-        leaseExpiresAt,
-        attempt: { increment: 1 },
-      },
-    });
-    if (claimed.count !== 1) {
-      return null;
-    }
-    return this.getCommandById(candidate.id);
-  }
-
-  async markCommandRunning(commandId: string, workerId: string, leaseMs: number) {
-    const now = new Date();
-    await prisma.directorRunCommand.updateMany({
-      where: {
-        id: commandId,
-        leaseOwner: workerId,
-        status: { in: ["leased", "running"] },
-      },
-      data: {
-        status: "running",
-        startedAt: now,
-        leaseExpiresAt: new Date(now.getTime() + leaseMs),
-      },
-    });
-  }
-
-  async renewLease(commandId: string, workerId: string, leaseMs: number): Promise<boolean> {
-    const updated = await prisma.directorRunCommand.updateMany({
-      where: {
-        id: commandId,
-        leaseOwner: workerId,
-        status: { in: ["leased", "running"] },
-      },
-      data: {
-        leaseExpiresAt: new Date(Date.now() + leaseMs),
-      },
-    });
-    return updated.count === 1;
-  }
-
-  async markCommandSucceeded(commandId: string, workerId: string): Promise<void> {
-    await prisma.directorRunCommand.updateMany({
-      where: {
-        id: commandId,
-        leaseOwner: workerId,
-        status: { in: ["leased", "running"] },
-      },
-      data: {
-        status: "succeeded",
-        leaseExpiresAt: null,
-        finishedAt: new Date(),
-        errorMessage: null,
-      },
-    });
-  }
-
-  async markCommandCancelled(commandId: string, workerId: string): Promise<void> {
-    const finishedAt = new Date();
-    const updated = await prisma.directorRunCommand.updateMany({
-      where: {
-        id: commandId,
-        leaseOwner: workerId,
-        status: { in: ["leased", "running"] },
-      },
-      data: {
-        status: "cancelled",
-        leaseExpiresAt: null,
-        finishedAt,
-        errorMessage: CANCELLED_COMMAND_MESSAGE,
-      },
-    });
-    if (updated.count !== 1) {
-      return;
-    }
-    const command = await this.getCommandById(commandId);
-    if (command) {
-      await this.closeCancelledTaskRuntimeState(command.taskId, finishedAt);
-    }
-  }
-
-  async markCommandFailed(commandId: string, workerId: string, error: unknown): Promise<void> {
-    const message = error instanceof Error ? error.message : String(error);
-    const failedAt = new Date();
-    const updated = await prisma.directorRunCommand.updateMany({
-      where: {
-        id: commandId,
-        leaseOwner: workerId,
-        status: { in: ["leased", "running"] },
-      },
-      data: {
-        status: "failed",
-        leaseExpiresAt: null,
-        finishedAt: failedAt,
-        errorMessage: message,
-      },
-    });
-    if (updated.count !== 1) {
-      return;
-    }
-    const command = await this.getCommandById(commandId);
-    if (!command) {
-      return;
-    }
-    await prisma.directorStepRun.updateMany({
-      where: {
-        taskId: command.taskId,
-        status: "running",
-      },
-      data: {
-        status: "failed",
-        finishedAt: failedAt,
-        error: message,
-      },
-    }).catch(() => null);
-    await this.workflowService.requeueTaskForRecovery(command.taskId, message)
-      .catch(() => null);
-  }
-
-  private async closeCancelledTaskRuntimeState(taskId: string, now: Date): Promise<void> {
-    await prisma.directorStepRun.updateMany({
-      where: {
-        taskId,
-        status: "running",
-      },
-      data: {
-        status: "failed",
-        finishedAt: now,
-        error: CANCELLED_COMMAND_MESSAGE,
-      },
-    }).catch(() => null);
-    await prisma.generationJob.updateMany({
-      where: {
-        status: { in: ["queued", "running"] },
-        payload: { contains: taskId },
-      },
-      data: {
-        status: "cancelled",
-        cancelRequestedAt: now,
-        finishedAt: now,
-        error: CANCELLED_COMMAND_MESSAGE,
-      },
-    }).catch(() => null);
-    const run = await prisma.directorRun.findUnique({
-      where: { taskId },
-      select: { id: true, novelId: true },
-    }).catch(() => null);
-    if (!run) {
-      return;
-    }
-    await prisma.directorEvent.create({
-      data: {
-        id: `${taskId}:run_cancelled:${crypto.randomUUID()}`,
-        runId: run.id,
-        taskId,
-        novelId: run.novelId,
-        type: "run_cancelled",
-        summary: "自动导演已停止，后台运行状态已收束。",
-        severity: "low",
-        occurredAt: now,
-      },
-    }).catch(() => null);
-  }
-
-  parseCommandPayload(command: NonNullable<DirectorRunCommandRow>): DirectorCommandPayload {
-    return parsePayload(command.payloadJson);
-  }
-
-  async getLatestTakeoverRequestForTask(taskId: string): Promise<DirectorTakeoverRequest | null> {
-    const command = await prisma.directorRunCommand.findFirst({
-      where: {
-        taskId,
-        commandType: "takeover",
-      },
-      orderBy: [{ createdAt: "desc" }, { id: "desc" }],
-    });
-    if (!command) {
-      return null;
-    }
-    return parsePayload(command.payloadJson).takeoverRequest ?? null;
-  }
-
   private async enqueueExecutionCommand(input: {
     taskId: string;
     commandType: DirectorRunCommandType;
@@ -781,18 +458,12 @@ export class DirectorCommandService {
     preserveLastError?: boolean;
   }): Promise<DirectorCommandAcceptedResponse> {
     let row = await this.workflowService.getTaskById(input.taskId);
-    if (!row) {
-      throw new AppError("Task not found.", 404);
-    }
-    if (row.lane !== "auto_director") {
-      throw new AppError("Only auto director workflow tasks can be queued as director commands.", 400);
-    }
+    if (!row) throw new AppError("Task not found.", 404);
+    if (row.lane !== "auto_director") throw new AppError("Only auto director workflow tasks can be queued as director commands.", 400);
     const recoveredStaleLeaseCount = await this.recoverStaleLeases(new Date(), { taskId: input.taskId });
     if (recoveredStaleLeaseCount > 0) {
       row = await this.workflowService.getTaskById(input.taskId);
-      if (!row) {
-        throw new AppError("Task not found.", 404);
-      }
+      if (!row) throw new AppError("Task not found.", 404);
     }
     const reusableCommand = await prisma.directorRunCommand.findFirst({
       where: {
@@ -802,9 +473,7 @@ export class DirectorCommandService {
       },
       orderBy: [{ createdAt: "desc" }, { id: "desc" }],
     });
-    if (reusableCommand) {
-      return toAcceptedResponse(reusableCommand, null);
-    }
+    if (reusableCommand) return toAcceptedResponse(reusableCommand, null);
 
     const normalizedPayload = Object.fromEntries(
       Object.entries(input.payload).filter(([, value]) => value !== undefined),
@@ -830,20 +499,12 @@ export class DirectorCommandService {
       taskDispatcher.notify({ commandType: input.commandType, taskId: input.taskId });
       return toAcceptedResponse(command, null);
     } catch (error) {
-      if (!isUniqueConstraintError(error) || input.allowTerminalReuse === false) {
-        throw error;
-      }
+      if (!isUniqueConstraintError(error) || input.allowTerminalReuse === false) throw error;
       const existing = await prisma.directorRunCommand.findFirst({
-        where: {
-          taskId: input.taskId,
-          commandType: input.commandType,
-          idempotencyKey,
-        },
+        where: { taskId: input.taskId, commandType: input.commandType, idempotencyKey },
         orderBy: [{ createdAt: "desc" }, { id: "desc" }],
       });
-      if (!existing) {
-        throw error;
-      }
+      if (!existing) throw error;
       return toAcceptedResponse(existing, null);
     }
   }

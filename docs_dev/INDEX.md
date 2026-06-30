@@ -27,49 +27,16 @@ description: "docs 目录索引（自动生成）"
 | --- | --- | --- |
 | [1.task\B.todo\任务包六件套构成-编号分类规则-自动归档机制.md](./1.task\B.todo\任务包六件套构成-编号分类规则-自动归档机制.md) | --- | - |
 
-## 1.task\B.todo\v0.1\v0.1-r2026-medium-beat-sheet-structure-preservation
+## 1.task\B.todo\v0.1-r2029-complex-narrative-advisor-mode
 
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r2026-medium-beat-sheet-structure-preservation\decision_log.md](./1.task\B.todo\v0.1\v0.1-r2026-medium-beat-sheet-structure-preservation\decision_log.md) | REQ-2026 决策留痕 | REQ-2026 决策留痕 |
-| [1.task\B.todo\v0.1\v0.1-r2026-medium-beat-sheet-structure-preservation\design.md](./1.task\B.todo\v0.1\v0.1-r2026-medium-beat-sheet-structure-preservation\design.md) | REQ-2026 方案设计 | REQ-2026 方案设计 |
-| [1.task\B.todo\v0.1\v0.1-r2026-medium-beat-sheet-structure-preservation\README.md](./1.task\B.todo\v0.1\v0.1-r2026-medium-beat-sheet-structure-preservation\README.md) | REQ-2026 节奏板重生成结构保持验证 任务总线 | REQ-2026 节奏板重生成结构保持验证 任务总线 |
-| [1.task\B.todo\v0.1\v0.1-r2026-medium-beat-sheet-structure-preservation\REQ-2026-original.md](./1.task\B.todo\v0.1\v0.1-r2026-medium-beat-sheet-structure-preservation\REQ-2026-original.md) | REQ-2026 节奏板重生成结构保持验证 — 原始需求冻结副本 | REQ-2026 节奏板重生成结构保持验证 — 原始需求冻结副本 |
-| [1.task\B.todo\v0.1\v0.1-r2026-medium-beat-sheet-structure-preservation\REQ-2026.md](./1.task\B.todo\v0.1\v0.1-r2026-medium-beat-sheet-structure-preservation\REQ-2026.md) | REQ-2026 节奏板重生成结构保持验证 | REQ-2026 节奏板重生成结构保持验证 |
-| [1.task\B.todo\v0.1\v0.1-r2026-medium-beat-sheet-structure-preservation\tasks.md](./1.task\B.todo\v0.1\v0.1-r2026-medium-beat-sheet-structure-preservation\tasks.md) | REQ-2026 任务拆解 | REQ-2026 任务拆解 |
-
-## 1.task\B.todo\v0.1\v0.1-r2027-complex-chapter-edit-asset-extraction
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r2027-complex-chapter-edit-asset-extraction\decision_log.md](./1.task\B.todo\v0.1\v0.1-r2027-complex-chapter-edit-asset-extraction\decision_log.md) | REQ-2027 决策日志 - 章节编辑器编辑后资产沉淀的关键决策记录 | REQ-2027 决策日志 - 章节编辑器编辑后资产沉淀的关键决策记录 |
-| [1.task\B.todo\v0.1\v0.1-r2027-complex-chapter-edit-asset-extraction\design.md](./1.task\B.todo\v0.1\v0.1-r2027-complex-chapter-edit-asset-extraction\design.md) | REQ-2027 设计文档 - 章节编辑器编辑后资产沉淀的技术方案 | REQ-2027 设计文档 - 章节编辑器编辑后资产沉淀的技术方案 |
-| [1.task\B.todo\v0.1\v0.1-r2027-complex-chapter-edit-asset-extraction\README.md](./1.task\B.todo\v0.1\v0.1-r2027-complex-chapter-edit-asset-extraction\README.md) | 章节编辑器编辑后资产沉淀 - 编辑修改自动提取反AI规则和风格画像 | 章节编辑器编辑后资产沉淀 - 编辑修改自动提取反AI规则和风格画像 |
-| [1.task\B.todo\v0.1\v0.1-r2027-complex-chapter-edit-asset-extraction\REQ-2027-original.md](./1.task\B.todo\v0.1\v0.1-r2027-complex-chapter-edit-asset-extraction\REQ-2027-original.md) | 章节编辑器编辑后资产沉淀 - 编辑修改自动提取反AI规则和风格画像 | 章节编辑器编辑后资产沉淀 - 编辑修改自动提取反AI规则和风格画像 |
-| [1.task\B.todo\v0.1\v0.1-r2027-complex-chapter-edit-asset-extraction\REQ-2027.md](./1.task\B.todo\v0.1\v0.1-r2027-complex-chapter-edit-asset-extraction\REQ-2027.md) | 章节编辑器编辑后资产沉淀 - 编辑修改自动提取反AI规则和风格画像 | 章节编辑器编辑后资产沉淀 - 编辑修改自动提取反AI规则和风格画像 |
-| [1.task\B.todo\v0.1\v0.1-r2027-complex-chapter-edit-asset-extraction\tasks.md](./1.task\B.todo\v0.1\v0.1-r2027-complex-chapter-edit-asset-extraction\tasks.md) | REQ-2027 任务分解 - 章节编辑器编辑后资产沉淀 | REQ-2027 任务分解 - 章节编辑器编辑后资产沉淀 |
-
-## 1.task\B.todo\v0.1\v0.1-r3008-medium-log-center
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r3008-medium-log-center\decision_log.md](./1.task\B.todo\v0.1\v0.1-r3008-medium-log-center\decision_log.md) | REQ-3008 决策留痕 | REQ-3008 决策留痕 |
-| [1.task\B.todo\v0.1\v0.1-r3008-medium-log-center\design.md](./1.task\B.todo\v0.1\v0.1-r3008-medium-log-center\design.md) | REQ-3008 方案设计 | REQ-3008 方案设计 |
-| [1.task\B.todo\v0.1\v0.1-r3008-medium-log-center\README.md](./1.task\B.todo\v0.1\v0.1-r3008-medium-log-center\README.md) | REQ-3008 日志中心 任务总线 | REQ-3008 日志中心 任务总线 |
-| [1.task\B.todo\v0.1\v0.1-r3008-medium-log-center\REQ-3008-original.md](./1.task\B.todo\v0.1\v0.1-r3008-medium-log-center\REQ-3008-original.md) | REQ-3008-log-center 需求原始冻结副本 | REQ-3008-log-center 需求原始冻结副本 |
-| [1.task\B.todo\v0.1\v0.1-r3008-medium-log-center\REQ-3008.md](./1.task\B.todo\v0.1\v0.1-r3008-medium-log-center\REQ-3008.md) | REQ-3008-log-center 需求工作副本 | REQ-3008-log-center 需求工作副本 |
-| [1.task\B.todo\v0.1\v0.1-r3008-medium-log-center\tasks.md](./1.task\B.todo\v0.1\v0.1-r3008-medium-log-center\tasks.md) | REQ-3008 任务拆解 | REQ-3008 任务拆解 |
-
-## 1.task\B.todo\v0.1\v0.1-r7002-complex-novel-edit-refactor
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r7002-complex-novel-edit-refactor\decision_log.md](./1.task\B.todo\v0.1\v0.1-r7002-complex-novel-edit-refactor\decision_log.md) | REQ-7002 NovelEdit.tsx 大文件拆分决策留痕 | REQ-7002 NovelEdit.tsx 大文件拆分决策留痕 |
-| [1.task\B.todo\v0.1\v0.1-r7002-complex-novel-edit-refactor\design.md](./1.task\B.todo\v0.1\v0.1-r7002-complex-novel-edit-refactor\design.md) | REQ-7002 NovelEdit.tsx 拆分方案设计 | REQ-7002 NovelEdit.tsx 拆分方案设计 |
-| [1.task\B.todo\v0.1\v0.1-r7002-complex-novel-edit-refactor\README.md](./1.task\B.todo\v0.1\v0.1-r7002-complex-novel-edit-refactor\README.md) | --- | - |
-| [1.task\B.todo\v0.1\v0.1-r7002-complex-novel-edit-refactor\REQ-7002-original.md](./1.task\B.todo\v0.1\v0.1-r7002-complex-novel-edit-refactor\REQ-7002-original.md) | REQ-7002 NovelEdit.tsx 大文件拆分（原始冻结副本） | REQ-7002 NovelEdit.tsx 大文件拆分（原始冻结副本） |
-| [1.task\B.todo\v0.1\v0.1-r7002-complex-novel-edit-refactor\REQ-7002.md](./1.task\B.todo\v0.1\v0.1-r7002-complex-novel-edit-refactor\REQ-7002.md) | REQ-7002 NovelEdit.tsx 大文件拆分 | REQ-7002 NovelEdit.tsx 大文件拆分 |
-| [1.task\B.todo\v0.1\v0.1-r7002-complex-novel-edit-refactor\tasks.md](./1.task\B.todo\v0.1\v0.1-r7002-complex-novel-edit-refactor\tasks.md) | REQ-7002 任务拆解 | REQ-7002 任务拆解 |
+| [1.task\B.todo\v0.1-r2029-complex-narrative-advisor-mode\decision_log.md](./1.task\B.todo\v0.1-r2029-complex-narrative-advisor-mode\decision_log.md) | REQ-2029 决策留痕 | REQ-2029 决策留痕 |
+| [1.task\B.todo\v0.1-r2029-complex-narrative-advisor-mode\design.md](./1.task\B.todo\v0.1-r2029-complex-narrative-advisor-mode\design.md) | REQ-2029 方案设计 | REQ-2029 方案设计 |
+| [1.task\B.todo\v0.1-r2029-complex-narrative-advisor-mode\README.md](./1.task\B.todo\v0.1-r2029-complex-narrative-advisor-mode\README.md) | REQ-2029 Creative Hub 叙事讨论通道任务总线 | REQ-2029 Creative Hub 叙事讨论通道任务总线 |
+| [1.task\B.todo\v0.1-r2029-complex-narrative-advisor-mode\REQ-2029-original.md](./1.task\B.todo\v0.1-r2029-complex-narrative-advisor-mode\REQ-2029-original.md) | REQ-2029 Creative Hub 叙事讨论通道（原始冻结副本） | REQ-2029 Creative Hub 叙事讨论通道（原始冻结副本） |
+| [1.task\B.todo\v0.1-r2029-complex-narrative-advisor-mode\REQ-2029.md](./1.task\B.todo\v0.1-r2029-complex-narrative-advisor-mode\REQ-2029.md) | REQ-2029 Creative Hub 叙事讨论通道 | REQ-2029 Creative Hub 叙事讨论通道 |
+| [1.task\B.todo\v0.1-r2029-complex-narrative-advisor-mode\tasks.md](./1.task\B.todo\v0.1-r2029-complex-narrative-advisor-mode\tasks.md) | REQ-2029 任务拆解（复杂版） | REQ-2029 任务拆解（复杂版） |
 
 ## 1.task\B.todo\v0.1\v0.1-r7003-complex-server-large-file-refactor
 
@@ -77,10 +44,21 @@ description: "docs 目录索引（自动生成）"
 | --- | --- | --- |
 | [1.task\B.todo\v0.1\v0.1-r7003-complex-server-large-file-refactor\decision_log.md](./1.task\B.todo\v0.1\v0.1-r7003-complex-server-large-file-refactor\decision_log.md) | REQ-7003 Server 超大文件分批拆分决策留痕 | REQ-7003 Server 超大文件分批拆分决策留痕 |
 | [1.task\B.todo\v0.1\v0.1-r7003-complex-server-large-file-refactor\design.md](./1.task\B.todo\v0.1\v0.1-r7003-complex-server-large-file-refactor\design.md) | REQ-7003 Server 超大文件拆分方案设计 | REQ-7003 Server 超大文件拆分方案设计 |
-| [1.task\B.todo\v0.1\v0.1-r7003-complex-server-large-file-refactor\README.md](./1.task\B.todo\v0.1\v0.1-r7003-complex-server-large-file-refactor\README.md) | --- | - |
+| [1.task\B.todo\v0.1\v0.1-r7003-complex-server-large-file-refactor\README.md](./1.task\B.todo\v0.1\v0.1-r7003-complex-server-large-file-refactor\README.md) | REQ-7003 Server 超大文件分批拆分任务总线 | REQ-7003 Server 超大文件分批拆分任务总线 |
 | [1.task\B.todo\v0.1\v0.1-r7003-complex-server-large-file-refactor\REQ-7003-original.md](./1.task\B.todo\v0.1\v0.1-r7003-complex-server-large-file-refactor\REQ-7003-original.md) | REQ-7003 Server 超大文件分批拆分（原始冻结副本） | REQ-7003 Server 超大文件分批拆分（原始冻结副本） |
 | [1.task\B.todo\v0.1\v0.1-r7003-complex-server-large-file-refactor\REQ-7003.md](./1.task\B.todo\v0.1\v0.1-r7003-complex-server-large-file-refactor\REQ-7003.md) | REQ-7003 Server 超大文件分批拆分 | REQ-7003 Server 超大文件分批拆分 |
 | [1.task\B.todo\v0.1\v0.1-r7003-complex-server-large-file-refactor\tasks.md](./1.task\B.todo\v0.1\v0.1-r7003-complex-server-large-file-refactor\tasks.md) | REQ-7003 任务拆解 | REQ-7003 任务拆解 |
+
+## 1.task\B.todo\v0.1\v0.1-r7004-medium-json-soft-ref-fk-fix
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.1\v0.1-r7004-medium-json-soft-ref-fk-fix\decision_log.md](./1.task\B.todo\v0.1\v0.1-r7004-medium-json-soft-ref-fk-fix\decision_log.md) | REQ-7004 JSON 软引用 FK 缺失修复 — 决策日志 | REQ-7004 JSON 软引用 FK 缺失修复 — 决策日志 |
+| [1.task\B.todo\v0.1\v0.1-r7004-medium-json-soft-ref-fk-fix\design.md](./1.task\B.todo\v0.1\v0.1-r7004-medium-json-soft-ref-fk-fix\design.md) | REQ-7004 JSON 软引用 FK 缺失修复 — 方案设计 | REQ-7004 JSON 软引用 FK 缺失修复 — 方案设计 |
+| [1.task\B.todo\v0.1\v0.1-r7004-medium-json-soft-ref-fk-fix\README.md](./1.task\B.todo\v0.1\v0.1-r7004-medium-json-soft-ref-fk-fix\README.md) | REQ-7004 JSON 软引用 FK 缺失修复任务总线 | REQ-7004 JSON 软引用 FK 缺失修复任务总线 |
+| [1.task\B.todo\v0.1\v0.1-r7004-medium-json-soft-ref-fk-fix\REQ-7004-original.md](./1.task\B.todo\v0.1\v0.1-r7004-medium-json-soft-ref-fk-fix\REQ-7004-original.md) | REQ-7004 JSON 软引用 FK 缺失修复 — 原始需求冻结副本 | REQ-7004 JSON 软引用 FK 缺失修复 — 原始需求冻结副本 |
+| [1.task\B.todo\v0.1\v0.1-r7004-medium-json-soft-ref-fk-fix\REQ-7004.md](./1.task\B.todo\v0.1\v0.1-r7004-medium-json-soft-ref-fk-fix\REQ-7004.md) | REQ-7004 JSON 软引用 FK 缺失修复 — 需求工作副本 | REQ-7004 JSON 软引用 FK 缺失修复 — 需求工作副本 |
+| [1.task\B.todo\v0.1\v0.1-r7004-medium-json-soft-ref-fk-fix\tasks.md](./1.task\B.todo\v0.1\v0.1-r7004-medium-json-soft-ref-fk-fix\tasks.md) | REQ-7004 JSON 软引用 FK 缺失修复 — 任务拆解 | REQ-7004 JSON 软引用 FK 缺失修复 — 任务拆解 |
 
 ## 1.task\template
 
@@ -162,6 +140,7 @@ description: "docs 目录索引（自动生成）"
 | [3.analysis\diagnosis\01-active\2026-06-28-harness-audit.md](./3.analysis\diagnosis\01-active\2026-06-28-harness-audit.md) | AI 小说创作工作台 Harness 审计报告 — 五种介质完备性与合理性评估 | AI 小说创作工作台 Harness 审计报告 — 五种介质完备性与合理性评估 |
 | [3.analysis\diagnosis\01-active\2026-06-28-health-check.md](./3.analysis\diagnosis\01-active\2026-06-28-health-check.md) | 2026-06-28 项目健康检查报告 — 五维评估 + 债务模式识别 + 行动建议 | 2026-06-28 项目健康检查报告 — 五维评估 + 债务模式识别 + 行动建议 |
 | [3.analysis\diagnosis\01-active\2026-06-30-v0.1-第二轮任务包完成度诊断.md](./3.analysis\diagnosis\01-active\2026-06-30-v0.1-第二轮任务包完成度诊断.md) | --- | - |
+| [3.analysis\diagnosis\01-active\2026-06-30-图数据库能力诊断.md](./3.analysis\diagnosis\01-active\2026-06-30-图数据库能力诊断.md) | 项目图结构能力诊断：盘点现有图模型、识别存储瓶颈、评估专用图数据库引入可行性 | 项目图结构能力诊断：盘点现有图模型、识别存储瓶颈、评估专用图数据库引入可行性 |
 
 ## 3.analysis\evidence\v0.1
 
@@ -189,6 +168,7 @@ description: "docs 目录索引（自动生成）"
 | --- | --- | --- |
 | [4.misc\issues\2026-06-29-missing-repair-button-after-review.md](./4.misc\issues\2026-06-29-missing-repair-button-after-review.md) | 章节完成审校后（`generationState === "reviewed"`），正文窗口正确显示"查看建议"和"一键修复"按钮，但右侧 AI 执行台没有显示 | - |
 | [4.misc\issues\2026-06-29-skipcompleted-filters-unplanned-chapters.md](./4.misc\issues\2026-06-29-skipcompleted-filters-unplanned-chapters.md) | skipCompleted 过滤器与自动导演"待处理"定义冲突，导致无内容章节触发 pipeline 报错 | skipCompleted 过滤器与自动导演"待处理"定义冲突，导致无内容章节触发 pipeline 报错 |
+| [4.misc\issues\2026-06-30-json-soft-ref-fk-deficiency.md](./4.misc\issues\2026-06-30-json-soft-ref-fk-deficiency.md) | 上游项目 JSON 软引用 FK 缺失问题 — 供上游作者参考的 issue 分析 | 上游项目 JSON 软引用 FK 缺失问题 — 供上游作者参考的 issue 分析 |
 | [4.misc\issues\rag-worker-ui-toggle-ignored.md](./4.misc\issues\rag-worker-ui-toggle-ignored.md) | **状态**: 已修复 (local) | 待提交 upstream | - |
 | [4.misc\issues\sse-buffer-flush-missing-done-frame.md](./4.misc\issues\sse-buffer-flush-missing-done-frame.md) | **状态**: 已修复 | - |
 

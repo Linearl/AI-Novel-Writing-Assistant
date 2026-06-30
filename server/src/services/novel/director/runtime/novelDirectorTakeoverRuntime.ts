@@ -5,7 +5,8 @@ import type {
   DirectorTakeoverPipelineJobSnapshot,
 } from "@ai-novel/shared/types/novelDirector";
 import { isFullBookAutopilotRunMode } from "@ai-novel/shared/types/novelDirector";
-import type { DirectorTakeoverNovelContext, DirectorTakeoverAssetSnapshot } from "./novelDirectorTakeover";
+import type { DirectorTakeoverNovelContext } from "./novelDirectorTakeover";
+import type { DirectorTakeoverAssetSnapshot } from "./novelDirectorTakeoverHelpers";
 import type { StoryMacroPlan } from "@ai-novel/shared/types/storyMacro";
 import type { BookContractService } from "../../BookContractService";
 import type { DirectorWorkflowSeedPayload } from "./novelDirectorHelpers";

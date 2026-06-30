@@ -1,70 +1,44 @@
-import type { ReviewIssue } from "@ai-novel/shared/types/novel";
 import type { Prisma } from "@prisma/client";
 import { prisma } from "../../db/prisma";
 import { novelEventBus } from "../../events";
-import { ChapterPlanJITService } from "./planning/ChapterPlanJITService";
-import { NovelVolumeService } from "./volume/NovelVolumeService";
-import { runWithLlmUsageTracking } from "../../llm/usageTracking";
 import { ChapterRuntimeCoordinator } from "./runtime/ChapterRuntimeCoordinator";
-import { isChapterEmptyContentError } from "./runtime/chapterEmptyContentError";
 import {
-  logPipelineError,
   logPipelineInfo,
   logPipelineWarn,
-  normalizeScore,
   type PipelinePayload,
   type PipelineRunOptions,
 } from "./novelCoreShared";
 import { ensureNovelCharacters } from "./novelCoreSupport";
-import { createQualityReport } from "./novelCoreReviewService";
-import { chapterQualityLoopService } from "./quality/ChapterQualityLoopService";
 import { selectPrimaryPipelineJob } from "./pipelineJobDedup";
-import { buildPipelineCurrentItemLabel, buildPipelineStageProgress, decoratePipelineJob as decoratePipelineJobRow, isPipelineActiveStage, parsePipelinePayload as parsePipelineJobPayload, stringifyPipelinePayload as stringifyPipelineJobPayload, type DecoratedPipelineJob, type PipelineActiveStage, type PipelineJobLike } from "./pipelineJobState";
+import {
+  buildPipelineCurrentItemLabel,
+  buildPipelineStageProgress,
+  decoratePipelineJob as decoratePipelineJobRow,
+  parsePipelinePayload as parsePipelineJobPayload,
+  stringifyPipelinePayload as stringifyPipelineJobPayload,
+  type DecoratedPipelineJob,
+  type PipelineJobLike,
+} from "./pipelineJobState";
+import {
+  clampPipelineMaxRetries,
+  buildSkipCompletedChapterWhere,
+} from "./novelCorePipelineHelpers";
+import {
+  executePipeline,
+  type PipelineExecutorDeps,
+} from "./novelCorePipelineExecutor";
 
 export { buildPipelineCurrentItemLabel, buildPipelineStageProgress } from "./pipelineJobState";
-
-const PIPELINE_HEARTBEAT_INTERVAL_MS = 15000;
-const TERMINAL_CONTINUE_QUALITY_LOOP_RISK_FLAG_FRAGMENT = '"terminalAction":"defer_and_continue"';
-const REPLAN_REQUIRED_QUALITY_LOOP_RISK_FLAG_FRAGMENT = '"rootCauseCode":"replan_required"';
-const REPLAN_ACTION_QUALITY_LOOP_RISK_FLAG_FRAGMENT = '"recommendedAction":"replan"';
-
-function clampPipelineMaxRetries(value: number | null | undefined): number {
-  return Math.max(0, Math.min(value ?? 1, 1));
-}
-
-function buildEmptyChapterDetail(chapter: { order: number; title: string }): string {
-  return `第${chapter.order}章「${chapter.title}」正文生成失败：模型连续未返回可保存正文，已暂停继续。`;
-}
-
-function buildSkipCompletedChapterWhere(): Prisma.ChapterWhereInput {
-  return {
-    NOT: {
-      AND: [
-        { content: { not: null } },
-        { content: { not: "" } },
-        {
-          OR: [
-            { generationState: { in: ["approved", "published"] } },
-            { chapterStatus: "completed" },
-            {
-              AND: [
-                { riskFlags: { not: null } },
-                { riskFlags: { contains: TERMINAL_CONTINUE_QUALITY_LOOP_RISK_FLAG_FRAGMENT } },
-                { riskFlags: { not: { contains: REPLAN_REQUIRED_QUALITY_LOOP_RISK_FLAG_FRAGMENT } } },
-                { riskFlags: { not: { contains: REPLAN_ACTION_QUALITY_LOOP_RISK_FLAG_FRAGMENT } } },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-  };
-}
 
 export class NovelCorePipelineService {
   private static readonly activeJobIds = new Set<string>();
   private static readonly startLocks = new Set<string>();
   private readonly chapterRuntimeCoordinator = new ChapterRuntimeCoordinator();
+
+  // ---------------------------------------------------------------------------
+  // Decoration & range key
+  // ---------------------------------------------------------------------------
+
   private decoratePipelineJob<T extends PipelineJobLike | null>(
     job: T,
   ): T extends null ? null : DecoratedPipelineJob<Extract<T, PipelineJobLike>> {
@@ -76,6 +50,10 @@ export class NovelCorePipelineService {
   private buildRangeKey(novelId: string, startOrder: number, endOrder: number): string {
     return `${novelId}:${startOrder}:${endOrder}`;
   }
+
+  // ---------------------------------------------------------------------------
+  // Start lock
+  // ---------------------------------------------------------------------------
 
   private async waitForStartLock(key: string): Promise<void> {
     while (NovelCorePipelineService.startLocks.has(key)) {
@@ -92,6 +70,10 @@ export class NovelCorePipelineService {
       NovelCorePipelineService.startLocks.delete(key);
     }
   }
+
+  // ---------------------------------------------------------------------------
+  // Job reconciliation
+  // ---------------------------------------------------------------------------
 
   private async listActivePipelineJobsForRange(novelId: string, startOrder: number, endOrder: number) {
     return prisma.generationJob.findMany({
@@ -165,6 +147,10 @@ export class NovelCorePipelineService {
     });
   }
 
+  // ---------------------------------------------------------------------------
+  // Job queries
+  // ---------------------------------------------------------------------------
+
   async listRecoverablePipelineJobs(): Promise<Array<{ id: string; status: string }>> {
     const rows = await prisma.generationJob.findMany({
       where: {
@@ -173,34 +159,19 @@ export class NovelCorePipelineService {
         finishedAt: null,
         cancelRequestedAt: null,
       },
-      select: {
-        id: true,
-        status: true,
-      },
+      select: { id: true, status: true },
       orderBy: [{ updatedAt: "asc" }, { createdAt: "asc" }],
     });
-    return rows.map((row) => ({
-      id: row.id,
-      status: row.status,
-    }));
+    return rows.map((row) => ({ id: row.id, status: row.status }));
   }
 
   async listPendingCancellationPipelineJobs(): Promise<Array<{ id: string; status: string }>> {
     const rows = await prisma.generationJob.findMany({
-      where: {
-        finishedAt: null,
-        cancelRequestedAt: { not: null },
-      },
-      select: {
-        id: true,
-        status: true,
-      },
+      where: { finishedAt: null, cancelRequestedAt: { not: null } },
+      select: { id: true, status: true },
       orderBy: [{ updatedAt: "asc" }, { createdAt: "asc" }],
     });
-    return rows.map((row) => ({
-      id: row.id,
-      status: row.status,
-    }));
+    return rows.map((row) => ({ id: row.id, status: row.status }));
   }
 
   async listStaleRecoverablePipelineJobs(cutoff: Date): Promise<Array<{ id: string; status: string }>> {
@@ -215,17 +186,25 @@ export class NovelCorePipelineService {
           { heartbeatAt: null, updatedAt: { lt: cutoff } },
         ],
       },
-      select: {
-        id: true,
-        status: true,
-      },
+      select: { id: true, status: true },
       orderBy: [{ updatedAt: "asc" }, { createdAt: "asc" }],
     });
-    return rows.map((row) => ({
-      id: row.id,
-      status: row.status,
-    }));
+    return rows.map((row) => ({ id: row.id, status: row.status }));
   }
+
+  async getPipelineJob(novelId: string, jobId: string) {
+    const job = await prisma.generationJob.findFirst({ where: { id: jobId, novelId } });
+    return job ? this.decoratePipelineJob(job) : null;
+  }
+
+  async getPipelineJobById(jobId: string) {
+    const job = await prisma.generationJob.findUnique({ where: { id: jobId } });
+    return job ? this.decoratePipelineJob(job) : null;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Job state mutations
+  // ---------------------------------------------------------------------------
 
   async markPipelineJobFailed(jobId: string, message: string): Promise<void> {
     await this.updateJobSafe(jobId, {
@@ -270,53 +249,114 @@ export class NovelCorePipelineService {
     const job = await prisma.generationJob.findUnique({
       where: { id: jobId },
       select: {
-        id: true,
-        novelId: true,
-        status: true,
-        startOrder: true,
-        endOrder: true,
-        runMode: true,
-        autoReview: true,
-        autoRepair: true,
-        skipCompleted: true,
-        qualityThreshold: true,
-        repairMode: true,
-        maxRetries: true,
-        payload: true,
+        id: true, novelId: true, status: true,
+        startOrder: true, endOrder: true, runMode: true,
+        autoReview: true, autoRepair: true, skipCompleted: true,
+        qualityThreshold: true, repairMode: true, maxRetries: true, payload: true,
       },
     });
     if (!job) {
       throw new Error("章节流水线任务不存在。");
     }
-      if (job.status !== "queued" && job.status !== "running") {
-        return;
-      }
-      await this.updateJobSafe(job.id, {
-        status: "queued",
-        pendingManualRecovery: false,
-        heartbeatAt: null,
-        cancelRequestedAt: null,
-      });
-      const payload = this.parsePipelinePayload(job.payload);
-      this.schedulePipelineExecution(job.id, job.novelId, {
-        startOrder: job.startOrder,
-        endOrder: job.endOrder,
-        controlPolicy: payload.controlPolicy,
-        workflowTaskId: payload.workflowTaskId,
-        taskStyleProfileId: payload.taskStyleProfileId,
-        maxRetries: clampPipelineMaxRetries(job.maxRetries),
-        runMode: job.runMode ?? payload.runMode,
-        autoReview: job.autoReview ?? payload.autoReview,
-        autoRepair: job.autoRepair ?? payload.autoRepair,
-        skipCompleted: job.skipCompleted ?? payload.skipCompleted,
-        qualityThreshold: job.qualityThreshold ?? payload.qualityThreshold,
-        repairMode: job.repairMode ?? payload.repairMode,
-        artifactSyncMode: payload.artifactSyncMode,
-        provider: payload.provider,
-        model: payload.model,
-        temperature: payload.temperature,
-      });
+    if (job.status !== "queued" && job.status !== "running") {
+      return;
+    }
+    await this.updateJobSafe(job.id, {
+      status: "queued",
+      pendingManualRecovery: false,
+      heartbeatAt: null,
+      cancelRequestedAt: null,
+    });
+    const payload = this.parsePipelinePayload(job.payload);
+    this.schedulePipelineExecution(job.id, job.novelId, {
+      startOrder: job.startOrder,
+      endOrder: job.endOrder,
+      controlPolicy: payload.controlPolicy,
+      workflowTaskId: payload.workflowTaskId,
+      taskStyleProfileId: payload.taskStyleProfileId,
+      maxRetries: clampPipelineMaxRetries(job.maxRetries),
+      runMode: job.runMode ?? payload.runMode,
+      autoReview: job.autoReview ?? payload.autoReview,
+      autoRepair: job.autoRepair ?? payload.autoRepair,
+      skipCompleted: job.skipCompleted ?? payload.skipCompleted,
+      qualityThreshold: job.qualityThreshold ?? payload.qualityThreshold,
+      repairMode: job.repairMode ?? payload.repairMode,
+      artifactSyncMode: payload.artifactSyncMode,
+      provider: payload.provider,
+      model: payload.model,
+      temperature: payload.temperature,
+    });
   }
+
+  async cancelPipelineJob(jobId: string) {
+    const job = await prisma.generationJob.findUnique({ where: { id: jobId } });
+    if (!job) {
+      throw new Error("任务不存在。");
+    }
+    if (job.status === "succeeded" || job.status === "failed" || job.status === "cancelled") {
+      throw new Error("仅排队中或运行中的任务可取消。");
+    }
+    if (job.status === "queued") {
+      return prisma.generationJob.update({
+        where: { id: jobId },
+        data: {
+          status: "cancelled",
+          cancelRequestedAt: null,
+          heartbeatAt: null,
+          error: null,
+          currentStage: null,
+          currentItemKey: null,
+          currentItemLabel: null,
+          finishedAt: new Date(),
+        },
+      });
+    }
+    return prisma.generationJob.update({
+      where: { id: jobId },
+      data: {
+        status: "cancelled",
+        cancelRequestedAt: new Date(),
+        heartbeatAt: new Date(),
+        finishedAt: null,
+      },
+    });
+  }
+
+  async retryPipelineJob(jobId: string) {
+    const job = await prisma.generationJob.findUnique({ where: { id: jobId } });
+    if (!job) {
+      throw new Error("任务不存在。");
+    }
+    if (job.status !== "failed" && job.status !== "cancelled") {
+      throw new Error("仅失败或已取消的任务支持重试。");
+    }
+    if (job.status === "cancelled" && job.cancelRequestedAt && !job.finishedAt) {
+      throw new Error("任务仍在取消中，请等待取消完成后再重试。");
+    }
+
+    const payload = this.parsePipelinePayload(job.payload);
+    return this.startPipelineJob(job.novelId, {
+      startOrder: job.startOrder,
+      endOrder: job.endOrder,
+      workflowTaskId: payload.workflowTaskId,
+      taskStyleProfileId: payload.taskStyleProfileId,
+      maxRetries: clampPipelineMaxRetries(job.maxRetries),
+      runMode: job.runMode ?? payload.runMode,
+      autoReview: job.autoReview ?? payload.autoReview,
+      autoRepair: job.autoRepair ?? payload.autoRepair,
+      skipCompleted: job.skipCompleted ?? payload.skipCompleted,
+      qualityThreshold: job.qualityThreshold ?? payload.qualityThreshold,
+      repairMode: job.repairMode ?? payload.repairMode,
+      artifactSyncMode: payload.artifactSyncMode,
+      provider: payload.provider,
+      model: payload.model,
+      temperature: payload.temperature,
+    });
+  }
+
+  // ---------------------------------------------------------------------------
+  // Start pipeline
+  // ---------------------------------------------------------------------------
 
   async startPipelineJob(novelId: string, options: PipelineRunOptions) {
     const rangeKey = this.buildRangeKey(novelId, options.startOrder, options.endOrder);
@@ -354,9 +394,7 @@ export class NovelCorePipelineService {
         where: {
           novelId,
           order: { gte: options.startOrder, lte: options.endOrder },
-          ...(options.skipCompleted
-            ? buildSkipCompletedChapterWhere()
-            : {}),
+          ...(options.skipCompleted ? buildSkipCompletedChapterWhere() : {}),
         },
         orderBy: { order: "asc" },
         select: { id: true },
@@ -423,85 +461,9 @@ export class NovelCorePipelineService {
     });
   }
 
-  async getPipelineJob(novelId: string, jobId: string) {
-    const job = await prisma.generationJob.findFirst({ where: { id: jobId, novelId } });
-    return job ? this.decoratePipelineJob(job) : null;
-  }
-
-  async getPipelineJobById(jobId: string) {
-    const job = await prisma.generationJob.findUnique({ where: { id: jobId } });
-    return job ? this.decoratePipelineJob(job) : null;
-  }
-
-  async retryPipelineJob(jobId: string) {
-    const job = await prisma.generationJob.findUnique({
-      where: { id: jobId },
-    });
-    if (!job) {
-      throw new Error("任务不存在。");
-    }
-    if (job.status !== "failed" && job.status !== "cancelled") {
-      throw new Error("仅失败或已取消的任务支持重试。");
-    }
-    if (job.status === "cancelled" && job.cancelRequestedAt && !job.finishedAt) {
-      throw new Error("任务仍在取消中，请等待取消完成后再重试。");
-    }
-
-    const payload = this.parsePipelinePayload(job.payload);
-    return this.startPipelineJob(job.novelId, {
-      startOrder: job.startOrder,
-      endOrder: job.endOrder,
-      workflowTaskId: payload.workflowTaskId,
-      taskStyleProfileId: payload.taskStyleProfileId,
-      maxRetries: clampPipelineMaxRetries(job.maxRetries),
-      runMode: job.runMode ?? payload.runMode,
-      autoReview: job.autoReview ?? payload.autoReview,
-      autoRepair: job.autoRepair ?? payload.autoRepair,
-      skipCompleted: job.skipCompleted ?? payload.skipCompleted,
-      qualityThreshold: job.qualityThreshold ?? payload.qualityThreshold,
-      repairMode: job.repairMode ?? payload.repairMode,
-      artifactSyncMode: payload.artifactSyncMode,
-      provider: payload.provider,
-      model: payload.model,
-      temperature: payload.temperature,
-    });
-  }
-
-  async cancelPipelineJob(jobId: string) {
-    const job = await prisma.generationJob.findUnique({
-      where: { id: jobId },
-    });
-    if (!job) {
-      throw new Error("任务不存在。");
-    }
-    if (job.status === "succeeded" || job.status === "failed" || job.status === "cancelled") {
-      throw new Error("仅排队中或运行中的任务可取消。");
-    }
-    if (job.status === "queued") {
-      return prisma.generationJob.update({
-        where: { id: jobId },
-        data: {
-          status: "cancelled",
-          cancelRequestedAt: null,
-          heartbeatAt: null,
-          error: null,
-          currentStage: null,
-          currentItemKey: null,
-          currentItemLabel: null,
-          finishedAt: new Date(),
-        },
-      });
-    }
-    return prisma.generationJob.update({
-      where: { id: jobId },
-      data: {
-        status: "cancelled",
-        cancelRequestedAt: new Date(),
-        heartbeatAt: new Date(),
-        finishedAt: null,
-      },
-    });
-  }
+  // ---------------------------------------------------------------------------
+  // Internal helpers
+  // ---------------------------------------------------------------------------
 
   private parsePipelinePayload(payload: string | null | undefined) {
     return parsePipelineJobPayload(payload);
@@ -514,10 +476,7 @@ export class NovelCorePipelineService {
   private async ensurePipelineNotCancelled(jobId: string): Promise<void> {
     const job = await prisma.generationJob.findUnique({
       where: { id: jobId },
-      select: {
-        status: true,
-        cancelRequestedAt: true,
-      },
+      select: { status: true, cancelRequestedAt: true },
     });
     if (!job || job.status === "cancelled" || job.cancelRequestedAt) {
       throw new Error("PIPELINE_CANCELLED");
@@ -541,13 +500,19 @@ export class NovelCorePipelineService {
     payload?: string | null;
   }) {
     try {
-      await prisma.generationJob.update({
-        where: { id: jobId },
-        data,
-      });
+      await prisma.generationJob.update({ where: { id: jobId }, data });
     } catch {
       // 后台任务状态更新失败不应影响主服务稳定
     }
+  }
+
+  async executePipeline(jobId: string, novelId: string, options: PipelineRunOptions): Promise<void> {
+    const executorDeps: PipelineExecutorDeps = {
+      updateJobSafe: (jId, data) => this.updateJobSafe(jId, data),
+      ensurePipelineNotCancelled: (jId) => this.ensurePipelineNotCancelled(jId),
+      chapterRuntimeCoordinator: this.chapterRuntimeCoordinator,
+    };
+    await executePipeline(executorDeps, jobId, novelId, options);
   }
 
   private schedulePipelineExecution(jobId: string, novelId: string, options: PipelineRunOptions): void {
@@ -555,511 +520,19 @@ export class NovelCorePipelineService {
       return;
     }
     NovelCorePipelineService.activeJobIds.add(jobId);
-    void this.executePipeline(jobId, novelId, options)
+
+    const executorDeps: PipelineExecutorDeps = {
+      updateJobSafe: (jId, data) => this.updateJobSafe(jId, data),
+      ensurePipelineNotCancelled: (jId) => this.ensurePipelineNotCancelled(jId),
+      chapterRuntimeCoordinator: this.chapterRuntimeCoordinator,
+    };
+
+    void executePipeline(executorDeps, jobId, novelId, options)
       .catch(() => {
         // 防止后台任务未处理拒绝导致进程不稳定
       })
       .finally(() => {
         NovelCorePipelineService.activeJobIds.delete(jobId);
       });
-  }
-
-  private async executePipeline(jobId: string, novelId: string, options: PipelineRunOptions) {
-    const maxRetries = clampPipelineMaxRetries(options.maxRetries);
-    const qualityThreshold = options.qualityThreshold ?? 75;
-    const existingJob = await prisma.generationJob.findUnique({
-      where: { id: jobId },
-      select: {
-        startedAt: true,
-        completedCount: true,
-        totalCount: true,
-        retryCount: true,
-        payload: true,
-      },
-    });
-    const persistedPayload = this.parsePipelinePayload(existingJob?.payload);
-    const runtimePayload: PipelinePayload = {
-      provider: persistedPayload.provider ?? options.provider ?? "deepseek",
-      model: persistedPayload.model ?? options.model ?? "",
-      temperature: persistedPayload.temperature ?? options.temperature ?? 0.8,
-      controlPolicy: persistedPayload.controlPolicy ?? options.controlPolicy,
-      workflowTaskId: persistedPayload.workflowTaskId ?? options.workflowTaskId,
-      taskStyleProfileId: persistedPayload.taskStyleProfileId ?? options.taskStyleProfileId,
-      maxRetries: clampPipelineMaxRetries(persistedPayload.maxRetries ?? options.maxRetries),
-      runMode: persistedPayload.runMode ?? options.runMode ?? "fast",
-      autoReview: persistedPayload.autoReview ?? options.autoReview ?? true,
-      autoRepair: persistedPayload.autoRepair ?? options.autoRepair ?? true,
-      skipCompleted: persistedPayload.skipCompleted ?? options.skipCompleted ?? true,
-      qualityThreshold: persistedPayload.qualityThreshold ?? options.qualityThreshold,
-      repairMode: persistedPayload.repairMode ?? options.repairMode ?? "light_repair",
-      artifactSyncMode: persistedPayload.artifactSyncMode ?? options.artifactSyncMode ?? "adaptive",
-    };
-    const directorTelemetryTask = runtimePayload.workflowTaskId
-      ? await prisma.novelWorkflowTask.findUnique({
-        where: { id: runtimePayload.workflowTaskId },
-        select: {
-          lane: true,
-          directorRun: {
-            select: { id: true },
-          },
-        },
-      }).catch(() => null)
-      : null;
-    const shouldRecordDirectorTelemetry = directorTelemetryTask?.lane === "auto_director";
-    let totalRetryCount = Math.max(existingJob?.retryCount ?? 0, 0);
-    const qualityAlertDetails = [...(persistedPayload.qualityAlertDetails ?? [])];
-    const replanAlertDetails = [...(persistedPayload.replanAlertDetails ?? [])];
-    const recoverableRepairDetails = [...(persistedPayload.recoverableRepairDetails ?? [])];
-
-    try {
-      await runWithLlmUsageTracking({
-        generationJobId: jobId,
-        workflowTaskId: runtimePayload.workflowTaskId,
-        directorTelemetry: shouldRecordDirectorTelemetry,
-        novelId: shouldRecordDirectorTelemetry ? novelId : null,
-        directorRunId: shouldRecordDirectorTelemetry
-          ? directorTelemetryTask?.directorRun?.id ?? runtimePayload.workflowTaskId ?? null
-          : null,
-      }, async () => {
-        await this.updateJobSafe(jobId, {
-          status: "running",
-          pendingManualRecovery: false,
-          startedAt: existingJob?.startedAt ?? new Date(),
-          heartbeatAt: new Date(),
-          currentStage: "generating_chapters",
-        });
-        logPipelineInfo("任务开始执行", {
-          jobId,
-          novelId,
-          range: `${options.startOrder}-${options.endOrder}`,
-          maxRetries,
-        });
-
-        const novel = await prisma.novel.findUnique({ where: { id: novelId } });
-        let chapters = await prisma.chapter.findMany({
-            where: {
-              novelId,
-              order: { gte: options.startOrder, lte: options.endOrder },
-              ...(options.skipCompleted
-                ? buildSkipCompletedChapterWhere()
-                : {}),
-            },
-            orderBy: { order: "asc" },
-          });
-        if (!novel) {
-          throw new Error("任务执行失败：小说不存在");
-        }
-        if (chapters.length === 0 && runtimePayload.skipCompleted) {
-          // skipCompleted 误过滤了无内容但未完成的章节（unplanned），
-          // 回退到不过滤模式重新查询
-          chapters = await prisma.chapter.findMany({
-            where: {
-              novelId,
-              order: { gte: options.startOrder, lte: options.endOrder },
-            },
-            orderBy: { order: "asc" },
-          });
-          if (chapters.length > 0) {
-            logPipelineInfo("skipCompleted 回退：包含未生成章节", {
-              jobId,
-              novelId,
-              chapterCount: chapters.length,
-            });
-          }
-        }
-        if (chapters.length === 0) {
-          throw new Error("任务执行失败：指定区间内没有可处理的章节");
-        }
-
-        logPipelineInfo("任务加载完成", {
-          jobId,
-          novelId,
-          title: novel.title,
-          chapterCount: chapters.length,
-        });
-
-        const totalCount = Math.max(existingJob?.totalCount ?? 0, chapters.length, 1);
-        const storedCompleted = Math.min(Math.max(existingJob?.completedCount ?? 0, 0), totalCount);
-        const filteredCompletedCount = runtimePayload.skipCompleted
-          ? Math.max(0, totalCount - chapters.length)
-          : 0;
-        const remainingStartIndex = Math.min(
-          Math.max(0, storedCompleted - filteredCompletedCount),
-          chapters.length,
-        );
-        let completed = storedCompleted;
-        const chaptersToProcess = chapters.slice(remainingStartIndex);
-
-        // Phase 3：JIT 预取服务（N+1 章执行预取）
-        const prefetchVolumeService = new NovelVolumeService();
-        const prefetchJITService = new ChapterPlanJITService({
-          ensureChapterExecutionContract: (nId, cId, opts) =>
-            prefetchVolumeService.ensureChapterExecutionContract(nId, cId, opts),
-        });
-        const isAutopilotMode = runtimePayload.controlPolicy?.advanceMode === "full_book_autopilot";
-        const isPipelineMode = runtimePayload.pipelineMode === "pipeline";
-
-        // pipeline 模式下的交错执行状态
-        let activePrefetchPromise: Promise<unknown> | null = null;
-        let pipelineRefinementTotal = 0;
-        let pipelineRefinementCompleted = 0;
-
-        for (let chapterIndex = 0; chapterIndex < chaptersToProcess.length; chapterIndex++) {
-          const chapter = chaptersToProcess[chapterIndex];
-          await this.ensurePipelineNotCancelled(jobId);
-
-          let final = { score: normalizeScore({}), issues: [] as ReviewIssue[] };
-          let shouldStopAfterCurrentChapter = false;
-          const currentItemLabel = buildPipelineCurrentItemLabel({
-            completedCount: completed,
-            totalCount,
-            chapterOrder: chapter.order,
-            title: chapter.title,
-          });
-          let activeStage: PipelineActiveStage = "generating_chapters";
-          const applyChapterStage = async (stage: PipelineActiveStage) => {
-            activeStage = stage;
-            await this.updateJobSafe(jobId, {
-              heartbeatAt: new Date(),
-              currentStage: stage,
-              currentItemKey: chapter.id,
-              currentItemLabel,
-              progress: buildPipelineStageProgress({
-                completedCount: completed,
-                totalCount,
-                stage,
-              }),
-            });
-          };
-
-          await applyChapterStage("generating_chapters");
-          logPipelineInfo("开始处理章节", {
-            jobId,
-            chapterId: chapter.id,
-            order: chapter.order,
-            hasDraft: Boolean((chapter.content ?? "").trim()),
-          });
-
-          const heartbeatTimer = setInterval(() => {
-            void this.updateJobSafe(jobId, {
-              heartbeatAt: new Date(),
-              currentStage: activeStage,
-              currentItemKey: chapter.id,
-              currentItemLabel,
-              progress: buildPipelineStageProgress({
-                completedCount: completed,
-                totalCount,
-                stage: activeStage,
-              }),
-            });
-          }, PIPELINE_HEARTBEAT_INTERVAL_MS);
-          heartbeatTimer.unref?.();
-
-          const chapterResult = await this.chapterRuntimeCoordinator.runPipelineChapter(
-            novelId,
-            chapter.id,
-            {
-              provider: runtimePayload.provider,
-              model: runtimePayload.model,
-              temperature: runtimePayload.temperature,
-              taskStyleProfileId: runtimePayload.taskStyleProfileId,
-              controlPolicy: runtimePayload.controlPolicy,
-              maxRetries,
-              autoReview: runtimePayload.autoReview,
-              autoRepair: runtimePayload.autoRepair,
-              qualityThreshold,
-              repairMode: runtimePayload.repairMode,
-              artifactSyncMode: runtimePayload.artifactSyncMode,
-            },
-            {
-              onCheckCancelled: () => this.ensurePipelineNotCancelled(jobId),
-              onStageChange: async (stage) => {
-                await applyChapterStage(stage);
-              },
-              onEmptyContent: async (event) => {
-                const detail = buildEmptyChapterDetail(chapter);
-                const meta = {
-                  jobId,
-                  workflowTaskId: runtimePayload.workflowTaskId,
-                  novelId,
-                  chapterId: chapter.id,
-                  chapterOrder: chapter.order,
-                  provider: runtimePayload.provider,
-                  model: runtimePayload.model,
-                  runMode: runtimePayload.runMode,
-                  emptyAttempt: event.attempt,
-                  willRetry: event.willRetry,
-                  contentLength: event.contentLength,
-                  rawContentLength: event.rawContentLength,
-                  source: event.error.details.source,
-                };
-                if (event.willRetry) {
-                  logPipelineWarn("章节生成未返回正文，正在重试当前章", meta);
-                  return;
-                }
-                if (!qualityAlertDetails.includes(detail)) {
-                  qualityAlertDetails.push(detail);
-                }
-                logPipelineError("章节生成连续未返回正文，已暂停流水线", meta);
-              },
-            },
-          ).finally(() => {
-            clearInterval(heartbeatTimer);
-          });
-
-          totalRetryCount += chapterResult.retryCountUsed;
-          final = { score: chapterResult.score, issues: chapterResult.issues };
-          if (chapterResult.recoverableRepairFailure) {
-            recoverableRepairDetails.push(
-              `第${chapter.order}章需要后续修复：${chapterResult.recoverableRepairFailure.message}`,
-            );
-            logPipelineWarn("章节局部修复未安全应用，已记录并继续后续章节", {
-              jobId,
-              order: chapter.order,
-              reason: chapterResult.recoverableRepairFailure.message,
-              failureTypes: chapterResult.recoverableRepairFailure.failureTypes,
-            });
-          }
-          if (chapterResult.reviewExecuted) {
-            await createQualityReport(novelId, chapter.id, final.score, final.issues);
-            await chapterQualityLoopService.recordAssessment({
-              novelId,
-              chapterId: chapter.id,
-              chapterOrder: chapter.order,
-              score: final.score,
-              issues: final.issues,
-              runtimePackage: chapterResult.runtimePackage,
-              source: chapterResult.retryCountUsed > 0 ? "repair_recheck" : "pipeline_review",
-              terminalAction: chapterResult.pass ? null : "defer_and_continue",
-              taskId: runtimePayload.workflowTaskId,
-              qualityDebtAttribution: chapterResult.qualityDebtAttribution ?? null,
-            }).catch((error) => {
-              logPipelineError("记录章节质量闭环状态失败", {
-                jobId,
-                novelId,
-                chapterId: chapter.id,
-                error: error instanceof Error ? error.message : String(error),
-              });
-            });
-          }
-
-          if (chapterResult.reviewExecuted && !chapterResult.pass) {
-            qualityAlertDetails.push(
-              `第${chapter.order}章（coherence=${final.score.coherence}, repetition=${final.score.repetition}, engagement=${final.score.engagement}）`,
-            );
-            logPipelineWarn("章节最终未达标", {
-              jobId,
-              order: chapter.order,
-              score: final.score,
-            });
-          }
-
-          const replanRecommendation = chapterResult.runtimePackage?.replanRecommendation;
-          if (replanRecommendation?.recommended) {
-            const impactedOrders = replanRecommendation.affectedChapterOrders?.length
-              ? `影响章节=${replanRecommendation.affectedChapterOrders.join(",")}`
-              : `锚点章节=${replanRecommendation.anchorChapterOrder ?? chapter.order}`;
-            const detail = `第${chapter.order}章${replanRecommendation.action === "stop_for_replan" ? "需要重规划" : "建议局部处理"}（${impactedOrders}；原因=${replanRecommendation.triggerReason ?? replanRecommendation.reason}）`;
-            if (replanRecommendation.action === "stop_for_replan") {
-              replanAlertDetails.push(detail);
-              shouldStopAfterCurrentChapter = true;
-            } else if (!qualityAlertDetails.includes(detail)) {
-              qualityAlertDetails.push(detail);
-            }
-          }
-
-          // Phase 3：N+1 章 JIT 预取
-          // 当前章 finalize 完成后（factLedger 已写入），后台触发下一章的 task sheet 生成。
-          // fire-and-forget：预取失败不影响当前流水线，下一章正式组装时会重试。
-          const nextChapter = chaptersToProcess[chapterIndex + 1];
-
-          if (isPipelineMode && nextChapter) {
-            // pipeline 模式：预取 N+1 章的 chapter detail bundle，同时跟踪进度
-            pipelineRefinementTotal += 1;
-            const prefetchPromise = prefetchJITService.ensureExecutionReady(novelId, nextChapter.id)
-              .then(() => {
-                pipelineRefinementCompleted += 1;
-                logPipelineInfo("pipeline 模式：N+1 章细化完成", {
-                  jobId,
-                  nextChapterId: nextChapter.id,
-                  nextChapterOrder: nextChapter.order,
-                });
-              })
-              .catch((error) => {
-                logPipelineInfo("pipeline 模式：N+1 章细化失败（非阻断，下一章将在组装时重试）", {
-                  jobId,
-                  nextChapterId: nextChapter.id,
-                  nextChapterOrder: nextChapter.order,
-                  error: error instanceof Error ? error.message : String(error),
-                });
-                pipelineRefinementCompleted += 1;
-              });
-            activePrefetchPromise = prefetchPromise;
-            // 更新 pipelineState 供前端心跳展示
-            await this.updateJobSafe(jobId, {
-              heartbeatAt: new Date(),
-              payload: this.stringifyPipelinePayload({
-                ...runtimePayload,
-                qualityAlertDetails,
-                replanAlertDetails,
-                recoverableRepairDetails,
-                pipelineState: {
-                  refinementProgress: {
-                    total: pipelineRefinementTotal,
-                    completed: pipelineRefinementCompleted,
-                    currentChapterId: nextChapter.id,
-                  },
-                  writingProgress: {
-                    total: totalCount,
-                    completed: completed + 1,
-                    currentChapterId: nextChapter.id,
-                  },
-                },
-              }),
-            });
-          } else if (nextChapter && (isAutopilotMode || isPipelineMode)) {
-            void prefetchJITService.ensureExecutionReady(novelId, nextChapter.id).catch((error) => {
-              logPipelineInfo("N+1 JIT 预取失败（非阻断，下一章将在组装时重试）", {
-                jobId,
-                nextChapterId: nextChapter.id,
-                nextChapterOrder: nextChapter.order,
-                error: error instanceof Error ? error.message : String(error),
-              });
-            });
-          }
-
-          // pipeline 模式：在处理下一章前，等待当前章的预取完成以实现交错
-          if (isPipelineMode && activePrefetchPromise) {
-            await activePrefetchPromise.catch(() => {});
-            activePrefetchPromise = null;
-          }
-
-          completed += 1;
-          await this.updateJobSafe(jobId, {
-            completedCount: completed,
-            progress: Number((completed / totalCount).toFixed(4)),
-            retryCount: totalRetryCount,
-            heartbeatAt: new Date(),
-            payload: this.stringifyPipelinePayload({
-              ...runtimePayload,
-              qualityAlertDetails,
-              replanAlertDetails,
-              recoverableRepairDetails,
-            }),
-          });
-          logPipelineInfo("任务进度更新", {
-            jobId,
-            completed,
-            total: totalCount,
-            progress: Number((completed / totalCount).toFixed(4)),
-            retryCount: totalRetryCount,
-          });
-          if (shouldStopAfterCurrentChapter) {
-            logPipelineWarn("章节触发重规划，已停止后续章节流水线", {
-              jobId,
-              order: chapter.order,
-              remaining: Math.max(0, totalCount - completed),
-            });
-            break;
-          }
-        }
-
-        const finalStatus: "succeeded" = "succeeded";
-        await this.updateJobSafe(jobId, {
-          heartbeatAt: new Date(),
-          currentStage: "finalizing",
-          currentItemKey: null,
-          currentItemLabel: "正在收尾章节流水线任务",
-          progress: buildPipelineStageProgress({
-            completedCount: completed,
-            totalCount,
-            stage: "finalizing",
-          }),
-        });
-        await this.updateJobSafe(jobId, {
-          status: finalStatus,
-          error: null,
-          heartbeatAt: null,
-          currentStage: null,
-          currentItemKey: null,
-          currentItemLabel: null,
-          cancelRequestedAt: null,
-          finishedAt: new Date(),
-          payload: this.stringifyPipelinePayload({
-            ...runtimePayload,
-            qualityAlertDetails,
-            replanAlertDetails,
-            recoverableRepairDetails,
-          }),
-        });
-        logPipelineInfo("任务执行结束", {
-          jobId,
-          status: finalStatus,
-          qualityAlertCount: qualityAlertDetails.length,
-        });
-        void novelEventBus.emit({
-          type: "pipeline:completed",
-          payload: { novelId, jobId, status: finalStatus },
-        }).catch(() => {});
-      });
-    } catch (error) {
-      if (error instanceof Error && error.message === "PIPELINE_CANCELLED") {
-        await this.updateJobSafe(jobId, {
-          status: "cancelled",
-          heartbeatAt: null,
-          currentStage: null,
-          currentItemKey: null,
-          currentItemLabel: null,
-          cancelRequestedAt: null,
-          finishedAt: new Date(),
-          payload: this.stringifyPipelinePayload({
-            ...runtimePayload,
-            qualityAlertDetails,
-            replanAlertDetails,
-            recoverableRepairDetails,
-          }),
-        });
-        void novelEventBus.emit({
-          type: "pipeline:completed",
-          payload: { novelId, jobId, status: "cancelled" },
-        }).catch(() => {});
-        return;
-      }
-
-      const message = error instanceof Error ? error.message : "流水线执行失败";
-      if (isChapterEmptyContentError(error)) {
-        logPipelineError("任务因章节空正文失败", {
-          jobId,
-          novelId,
-          provider: runtimePayload.provider,
-          model: runtimePayload.model,
-          runMode: runtimePayload.runMode,
-          workflowTaskId: runtimePayload.workflowTaskId,
-          source: error.details.source,
-          contentLength: error.details.trimmedLength,
-          rawContentLength: error.details.rawLength,
-        });
-      }
-      await this.updateJobSafe(jobId, {
-        status: "failed",
-        error: message,
-        finishedAt: new Date(),
-        payload: this.stringifyPipelinePayload({
-          ...runtimePayload,
-          qualityAlertDetails,
-          replanAlertDetails,
-          recoverableRepairDetails,
-        }),
-      });
-      logPipelineError("任务执行异常", {
-        jobId,
-        novelId,
-        message,
-      });
-      void novelEventBus.emit({
-        type: "pipeline:completed",
-        payload: { novelId, jobId, status: "failed" },
-      }).catch(() => {});
-    }
   }
 }

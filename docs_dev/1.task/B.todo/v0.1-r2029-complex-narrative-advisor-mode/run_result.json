@@ -1,0 +1,21 @@
+{
+  "reqId": "REQ-2029",
+  "title": "Creative Hub 叙事讨论通道 (narrative_advisor)",
+  "priority": "P2",
+  "version": "v0.1",
+  "status": "requirements_ready",
+  "createdAt": "2026-06-30",
+  "completedAt": null,
+  "source": "上游 issue — Creative Hub 缺少宏观创作讨论能力",
+  "note": "在现有意图分类+workflow+answer composer架构内扩展narrative_advisor意图，复用只读分析工具，生成叙事建议",
+  "reqType": "feature",
+  "categoryCode": 2,
+  "complexity": "complex",
+  "skipClarification": false,
+  "skipDesign": false,
+  "tasks": {
+    "total": 6,
+    "completed": 0,
+    "pending": 6
+  }
+}

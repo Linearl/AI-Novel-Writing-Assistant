@@ -6,6 +6,7 @@ const {
   buildManualEditFallbackDecision,
   buildManualEditInventoryFromArtifacts,
 } = require("../dist/services/novel/director/runtime/DirectorWorkspaceAnalyzer.js");
+const { prisma } = require("../dist/db/prisma.js");
 const promptRunner = require("../dist/prompting/core/promptRunner.js");
 const promptContextResolution = require("../dist/prompting/context/promptContextResolution.js");
 
@@ -111,7 +112,9 @@ test("manual edit inventory stays empty when tracked hashes did not change", () 
 
 test("workspace analyzer uses structured AI interpretation when requested", async (t) => {
   const originalResolve = promptContextResolution.resolvePromptContextBlocksForAsset;
+  const originalFindUnique = prisma.novel.findUnique;
   const structuredCalls = [];
+  prisma.novel.findUnique = async () => ({ id: "novel-1", title: "测试小说" });
   promptContextResolution.resolvePromptContextBlocksForAsset = async ({ fallbackBlocks }) => ({
     blocks: fallbackBlocks,
     brokerResolution: {},
@@ -143,6 +146,7 @@ test("workspace analyzer uses structured AI interpretation when requested", asyn
   t.after(() => {
     promptContextResolution.resolvePromptContextBlocksForAsset = originalResolve;
     promptRunner.setPromptRunnerStructuredInvokerForTests();
+    prisma.novel.findUnique = originalFindUnique;
   });
 
   const recorded = [];
@@ -194,8 +198,31 @@ test("workspace analyzer defaults to deterministic inventory interpretation", as
     structuredCalls.push(input);
     throw new Error("structured LLM should not be called by default");
   });
+
+  const originalFindUnique = prisma.novel.findUnique;
+  const originalKnowledgeFindUnique = prisma.knowledgeDocument?.findUnique;
+  prisma.novel.findUnique = async () => ({
+    id: "novel-1",
+    title: "测试小说",
+    worldId: null,
+    sourceKnowledgeDocumentId: "kd-1",
+    continuationBookAnalysisId: null,
+    updatedAt: new Date(),
+  });
+  if (prisma.knowledgeDocument) {
+    prisma.knowledgeDocument.findUnique = async () => ({
+      id: "kd-1",
+      activeVersionId: "v1",
+      activeVersionNumber: 1,
+      updatedAt: new Date(),
+    });
+  }
   t.after(() => {
     promptRunner.setPromptRunnerStructuredInvokerForTests();
+    prisma.novel.findUnique = originalFindUnique;
+    if (originalKnowledgeFindUnique && prisma.knowledgeDocument) {
+      prisma.knowledgeDocument.findUnique = originalKnowledgeFindUnique;
+    }
   });
 
   const analyzer = new DirectorWorkspaceAnalyzer({
