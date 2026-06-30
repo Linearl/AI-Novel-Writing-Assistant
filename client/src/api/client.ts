@@ -30,6 +30,8 @@ apiClient.interceptors.response.use(
     const status = error.response?.status;
     const backendError = error.response?.data?.error;
     const backendMessage = error.response?.data?.message;
+    const backendErrorId = (error.response?.data as Record<string, unknown> | undefined)?.errorId;
+    const errorId = typeof backendErrorId === "string" ? backendErrorId : undefined;
     const silentErrorStatuses = error.config?.silentErrorStatuses ?? [];
     let title = backendError ?? error.message ?? "请求失败。";
     let description = backendMessage && backendMessage !== backendError ? backendMessage : undefined;
@@ -45,15 +47,21 @@ apiClient.interceptors.response.use(
     if (!status || !silentErrorStatuses.includes(status)) {
       const isGenericServerErrorToast = title === "服务器错误，请稍后重试。";
 
-      if (description) {
+      let toastDescription = description;
+      if (errorId) {
+        const errorIdLine = `Error ID: ${errorId}`;
+        toastDescription = toastDescription ? `${toastDescription}\n${errorIdLine}` : errorIdLine;
+      }
+
+      if (toastDescription) {
         toast.error(
           title,
           isGenericServerErrorToast
             ? {
-                description,
+                description: toastDescription,
                 ...AUTO_DISMISS_SERVER_ERROR_TOAST,
               }
-            : { description },
+            : { description: toastDescription },
         );
       } else {
         toast.error(title, isGenericServerErrorToast ? AUTO_DISMISS_SERVER_ERROR_TOAST : undefined);

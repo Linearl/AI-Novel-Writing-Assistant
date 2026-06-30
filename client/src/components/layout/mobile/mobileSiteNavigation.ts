@@ -40,6 +40,7 @@ export const MOBILE_ROUTE_PATTERNS: MobileRoutePattern[] = [
   { key: "prompt-workbench", pattern: /^\/prompt-workbench\/?$/, title: "提示词管理", group: "more" },
   { key: "model-routes", pattern: /^\/settings\/model-routes\/?$/, title: "模型路由", group: "more" },
   { key: "settings", pattern: /^\/settings\/?$/, title: "系统设置", group: "more" },
+  { key: "logs", pattern: /^\/logs\/?$/, title: "日志中心", group: "more" },
   { key: "worlds", pattern: /^\/worlds\/?$/, title: "世界样本库", group: "more" },
   { key: "world-generator", pattern: /^\/worlds\/generator\/?$/, title: "创建世界样本", group: "more" },
   { key: "world-workspace", pattern: /^\/worlds\/[^/]+\/workspace\/?$/, title: "世界手册", group: "more" },
@@ -87,6 +88,7 @@ const moreNavGroups: MobileNavGroup[] = [
       { key: "prompt-workbench", label: "提示词管理", to: "/prompt-workbench", group: "more" },
       { key: "model-routes", label: "模型路由", to: "/settings/model-routes", group: "more" },
       { key: "settings", label: "系统设置", to: "/settings", group: "more" },
+      { key: "logs", label: "日志中心", to: "/logs", group: "more" },
     ],
   },
 ];

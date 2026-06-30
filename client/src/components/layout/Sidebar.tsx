@@ -13,6 +13,7 @@ import {
   ListTodo,
   MonitorPlay,
   Route,
+  ScrollText,
   SquareStack,
   ScanSearch,
   Settings2,
@@ -79,6 +80,7 @@ const navGroups: NavGroup[] = [
       { to: "/prompt-workbench", label: "提示词管理", icon: Braces },
       { to: "/settings/model-routes", label: "模型路由", icon: Route },
       { to: "/settings", label: "系统设置", icon: Settings2 },
+      { to: "/logs", label: "日志中心", icon: ScrollText },
     ],
   },
 ];

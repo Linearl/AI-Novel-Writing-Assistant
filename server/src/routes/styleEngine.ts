@@ -7,6 +7,7 @@ import { validate } from "../middleware/validate";
 import { AntiAiPolicyResolver } from "../services/styleEngine/AntiAiPolicyResolver";
 import { AntiAiRuleService } from "../services/styleEngine/AntiAiRuleService";
 import { StyleBindingService } from "../services/styleEngine/StyleBindingService";
+import { ChapterEditDiffService } from "../services/styleEngine/ChapterEditDiffService";
 import { StyleDetectionService } from "../services/styleEngine/StyleDetectionService";
 import { StyleGenerationService } from "../services/styleEngine/StyleGenerationService";
 import { StyleProfileService } from "../services/styleEngine/StyleProfileService";
@@ -21,6 +22,7 @@ const styleBindingService = new StyleBindingService();
 const styleDetectionService = new StyleDetectionService();
 const styleRewriteService = new StyleRewriteService();
 const styleGenerationService = new StyleGenerationService();
+const chapterEditDiffService = new ChapterEditDiffService();
 
 const idSchema = z.object({ id: z.string().trim().min(1) });
 const bindingIdSchema = z.object({ id: z.string().trim().min(1) });
@@ -178,6 +180,15 @@ const rewriteSchema = z.object({
     excerpt: z.string().trim().min(1),
     suggestion: z.string().trim().min(1),
   })).min(1),
+  provider: llmProviderSchema.optional(),
+  model: z.string().trim().optional(),
+  temperature: z.number().min(0).max(2).optional(),
+});
+
+const chapterEditDiffExtractSchema = z.object({
+  beforeText: z.string().min(1),
+  afterText: z.string().min(1),
+  novelId: z.string().trim().min(1),
   provider: llmProviderSchema.optional(),
   model: z.string().trim().optional(),
   temperature: z.number().min(0).max(2).optional(),
@@ -500,6 +511,32 @@ router.post("/style-detection/rewrite", validate({ body: rewriteSchema }), async
       success: true,
       data,
       message: "写法修正完成。",
+    } satisfies ApiResponse<typeof data>);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post("/chapter-edit/extract-anti-ai-from-diff", validate({ body: chapterEditDiffExtractSchema }), async (req, res, next) => {
+  try {
+    const data = await chapterEditDiffService.extractAntiAiRules(req.body as z.infer<typeof chapterEditDiffExtractSchema>);
+    res.status(200).json({
+      success: true,
+      data,
+      message: "反 AI 规则提取完成。",
+    } satisfies ApiResponse<typeof data>);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post("/chapter-edit/fork-style-from-diff", validate({ body: chapterEditDiffExtractSchema }), async (req, res, next) => {
+  try {
+    const data = await chapterEditDiffService.forkStyleFromDiff(req.body as z.infer<typeof chapterEditDiffExtractSchema>);
+    res.status(200).json({
+      success: true,
+      data,
+      message: "风格画像 fork 完成。",
     } satisfies ApiResponse<typeof data>);
   } catch (error) {
     next(error);

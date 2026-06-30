@@ -27,17 +27,6 @@ description: "docs 目录索引（自动生成）"
 | --- | --- | --- |
 | [1.task\B.todo\任务包六件套构成-编号分类规则-自动归档机制.md](./1.task\B.todo\任务包六件套构成-编号分类规则-自动归档机制.md) | --- | - |
 
-## 1.task\B.todo\v0.1\v0.1-r2024-medium-minimax-image-generation
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r2024-medium-minimax-image-generation\decision_log.md](./1.task\B.todo\v0.1\v0.1-r2024-medium-minimax-image-generation\decision_log.md) | REQ-2024 决策日志 | REQ-2024 决策日志 |
-| [1.task\B.todo\v0.1\v0.1-r2024-medium-minimax-image-generation\design.md](./1.task\B.todo\v0.1\v0.1-r2024-medium-minimax-image-generation\design.md) | REQ-2024 技术设计文档 | REQ-2024 技术设计文档 |
-| [1.task\B.todo\v0.1\v0.1-r2024-medium-minimax-image-generation\README.md](./1.task\B.todo\v0.1\v0.1-r2024-medium-minimax-image-generation\README.md) | --- | - |
-| [1.task\B.todo\v0.1\v0.1-r2024-medium-minimax-image-generation\REQ-2024-original.md](./1.task\B.todo\v0.1\v0.1-r2024-medium-minimax-image-generation\REQ-2024-original.md) | REQ-2024 支持 MiniMax 图像生成 API（冻结副本） | REQ-2024 支持 MiniMax 图像生成 API（冻结副本） |
-| [1.task\B.todo\v0.1\v0.1-r2024-medium-minimax-image-generation\REQ-2024.md](./1.task\B.todo\v0.1\v0.1-r2024-medium-minimax-image-generation\REQ-2024.md) | REQ-2024 支持 MiniMax 图像生成 API | REQ-2024 支持 MiniMax 图像生成 API |
-| [1.task\B.todo\v0.1\v0.1-r2024-medium-minimax-image-generation\tasks.md](./1.task\B.todo\v0.1\v0.1-r2024-medium-minimax-image-generation\tasks.md) | REQ-2024 任务分解清单 | REQ-2024 任务分解清单 |
-
 ## 1.task\B.todo\v0.1\v0.1-r2026-medium-beat-sheet-structure-preservation
 
 | 文件 | 标题 | 描述 |
@@ -59,17 +48,6 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1\v0.1-r2027-complex-chapter-edit-asset-extraction\REQ-2027-original.md](./1.task\B.todo\v0.1\v0.1-r2027-complex-chapter-edit-asset-extraction\REQ-2027-original.md) | 章节编辑器编辑后资产沉淀 - 编辑修改自动提取反AI规则和风格画像 | 章节编辑器编辑后资产沉淀 - 编辑修改自动提取反AI规则和风格画像 |
 | [1.task\B.todo\v0.1\v0.1-r2027-complex-chapter-edit-asset-extraction\REQ-2027.md](./1.task\B.todo\v0.1\v0.1-r2027-complex-chapter-edit-asset-extraction\REQ-2027.md) | 章节编辑器编辑后资产沉淀 - 编辑修改自动提取反AI规则和风格画像 | 章节编辑器编辑后资产沉淀 - 编辑修改自动提取反AI规则和风格画像 |
 | [1.task\B.todo\v0.1\v0.1-r2027-complex-chapter-edit-asset-extraction\tasks.md](./1.task\B.todo\v0.1\v0.1-r2027-complex-chapter-edit-asset-extraction\tasks.md) | REQ-2027 任务分解 - 章节编辑器编辑后资产沉淀 | REQ-2027 任务分解 - 章节编辑器编辑后资产沉淀 |
-
-## 1.task\B.todo\v0.1\v0.1-r2028-simple-provider-refresh-model-list
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r2028-simple-provider-refresh-model-list\decision_log.md](./1.task\B.todo\v0.1\v0.1-r2028-simple-provider-refresh-model-list\decision_log.md) | REQ-2028 决策留痕 | REQ-2028 决策留痕 |
-| [1.task\B.todo\v0.1\v0.1-r2028-simple-provider-refresh-model-list\design.md](./1.task\B.todo\v0.1\v0.1-r2028-simple-provider-refresh-model-list\design.md) | REQ-2028 配置厂商弹窗内手动拉取模型列表 - 技术设计 | REQ-2028 配置厂商弹窗内手动拉取模型列表 - 技术设计 |
-| [1.task\B.todo\v0.1\v0.1-r2028-simple-provider-refresh-model-list\README.md](./1.task\B.todo\v0.1\v0.1-r2028-simple-provider-refresh-model-list\README.md) | 配置厂商弹窗内新增手动拉取模型列表按钮 | 配置厂商弹窗内新增手动拉取模型列表按钮 |
-| [1.task\B.todo\v0.1\v0.1-r2028-simple-provider-refresh-model-list\REQ-2028-original.md](./1.task\B.todo\v0.1\v0.1-r2028-simple-provider-refresh-model-list\REQ-2028-original.md) | REQ-2028 配置厂商弹窗内手动拉取模型列表（冻结副本） | REQ-2028 配置厂商弹窗内手动拉取模型列表（冻结副本） |
-| [1.task\B.todo\v0.1\v0.1-r2028-simple-provider-refresh-model-list\REQ-2028.md](./1.task\B.todo\v0.1\v0.1-r2028-simple-provider-refresh-model-list\REQ-2028.md) | REQ-2028 配置厂商弹窗内手动拉取模型列表 | REQ-2028 配置厂商弹窗内手动拉取模型列表 |
-| [1.task\B.todo\v0.1\v0.1-r2028-simple-provider-refresh-model-list\tasks.md](./1.task\B.todo\v0.1\v0.1-r2028-simple-provider-refresh-model-list\tasks.md) | REQ-2028 任务分解 - 配置厂商弹窗内手动拉取模型列表 | REQ-2028 任务分解 - 配置厂商弹窗内手动拉取模型列表 |
 
 ## 1.task\B.todo\v0.1\v0.1-r3008-medium-log-center
 

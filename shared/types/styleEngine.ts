@@ -234,6 +234,30 @@ export interface AntiAiRuleDraftFields {
   autoRewrite: boolean;
 }
 
+/** Chapter editor diff extract request - used for both anti-AI extraction and style fork */
+export interface ChapterEditDiffExtractRequest {
+  beforeText: string;
+  afterText: string;
+  novelId: string;
+  provider?: LLMProvider;
+  model?: string;
+  temperature?: number;
+}
+
+/** Anti-AI rules extracted from chapter edit diff */
+export interface ChapterEditAntiAiExtractResult {
+  drafts: AntiAiRuleDraftFields[];
+  intentSummary: string;
+}
+
+/** Style fork result from chapter edit diff */
+export interface ChapterEditStyleForkResult {
+  newProfile: StyleProfile;
+  originalProfileId: string;
+  changeSummary: string;
+  suggestedName: string;
+}
+
 export interface AntiAiRuleAiDraftRequest {
   mode: "create" | "improve";
   instruction: string;

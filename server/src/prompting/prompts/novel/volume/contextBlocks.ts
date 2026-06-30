@@ -213,8 +213,8 @@ export function buildVolumeBeatSheetContextBlocks(
         .join("\n");
       blocks.push(createContextBlock({
         id: "existing_beat_sheet",
-        group: "reference",
-        priority: 60,
+        group: "preferred",
+        priority: 80,
         content: `Previous beat sheet:\n${summary}`,
       }));
     }
@@ -229,8 +229,8 @@ export function buildVolumeBeatSheetContextBlocks(
         .join("\n");
       blocks.push(createContextBlock({
         id: "existing_chapter_details",
-        group: "reference",
-        priority: 55,
+        group: "preferred",
+        priority: 75,
         content: `Existing chapter refinements:\n${summary}`,
       }));
     }

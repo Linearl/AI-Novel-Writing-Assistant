@@ -2,7 +2,7 @@
   "version": "1.0",
   "taskId": "REQ-2027",
   "title": "章节编辑器编辑后资产沉淀",
-  "status": "requirements_ready",
+  "status": "done",
   "route": "req",
   "complexity": "complex",
   "reqType": "feature",

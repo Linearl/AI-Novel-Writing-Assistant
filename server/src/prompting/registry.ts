@@ -466,6 +466,14 @@ const promptAssetLoaderEntries: PromptAssetLoaderEntry[] = [
       load: () => require("./prompts/style/style.prompts").styleProfileSanitizeForGenerationPrompt as UnknownPromptAsset,
     },
     {
+      key: "style.chapter_edit.anti_ai_extract@v1",
+      load: () => require("./prompts/style/style.prompts").chapterEditAntiAiExtractPrompt as UnknownPromptAsset,
+    },
+    {
+      key: "style.chapter_edit.style_fork@v1",
+      load: () => require("./prompts/style/style.prompts").chapterEditStyleForkPrompt as UnknownPromptAsset,
+    },
+    {
       key: "writingFormula.extract.stream@v1",
       load: () => require("./prompts/writingFormula/writingFormulaStream.prompts").writingFormulaExtractStreamPrompt as UnknownPromptAsset,
     },

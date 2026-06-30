@@ -47,6 +47,7 @@ export interface VolumeBeatSheetPromptInput {
   targetVolume: VolumePlan;
   targetChapterCount: number;
   guidance?: string;
+  referenceExisting?: boolean;
 }
 
 export interface VolumeChapterListPromptInput {

@@ -3,7 +3,7 @@ description: "章节编辑器编辑后资产沉淀 - 编辑修改自动提取反
 id: REQ-2027
 title: 章节编辑器编辑后资产沉淀
 version: 0.1
-status: requirements_ready
+status: done
 priority: p2
 complexity: complex
 created: 2026-06-30

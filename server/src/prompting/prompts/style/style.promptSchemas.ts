@@ -113,3 +113,28 @@ export const antiAiRuleAiDraftSchema = z.object({
   rationale: z.string().trim().optional().default(""),
   safetyNotes: z.array(z.string().trim().min(1)).max(6).optional().default([]),
 }).passthrough();
+
+/** Schema for anti-AI rule extraction from chapter edit diff */
+export const chapterEditAntiAiExtractSchema = z.object({
+  intentSummary: z.string().trim().min(1),
+  drafts: z.array(z.object({
+    key: z.string().trim().optional().default(""),
+    name: z.string().trim().min(1),
+    type: z.enum(["forbidden", "risk", "encourage"]),
+    severity: z.enum(["low", "medium", "high"]),
+    description: z.string().trim().min(1),
+    detectPatterns: z.array(z.string().trim().min(1)).max(12).optional().default([]),
+    promptInstruction: z.string().trim().optional().nullable(),
+    rewriteSuggestion: z.string().trim().optional().nullable(),
+  }).passthrough()).optional().default([]),
+}).passthrough();
+
+/** Schema for style fork from chapter edit diff */
+export const chapterEditStyleForkSchema = z.object({
+  changeSummary: z.string().trim().min(1),
+  suggestedName: z.string().trim().min(1),
+  narrativeRules: styleRuleObjectSchema.optional(),
+  characterRules: styleRuleObjectSchema.optional(),
+  languageRules: styleRuleObjectSchema.optional(),
+  rhythmRules: styleRuleObjectSchema.optional(),
+}).passthrough();

@@ -119,6 +119,9 @@ export const queryKeys = {
     list: (params: string) => ["agent-runs", "list", params] as const,
     detail: (id: string) => ["agent-runs", "detail", id] as const,
   },
+  logs: {
+    list: (params: string) => ["logs", "list", params] as const,
+  },
   agentCatalog: ["agent-catalog"] as const,
   promptWorkbench: {
     catalog: (params: string) => ["prompt-workbench", "catalog", params] as const,

@@ -4,6 +4,9 @@ import type {
   AntiAiRule,
   AntiAiRuleAiDraftRequest,
   AntiAiRuleAiDraftResult,
+  ChapterEditAntiAiExtractResult,
+  ChapterEditDiffExtractRequest,
+  ChapterEditStyleForkResult,
   StyleBinding,
   StyleDetectionReport,
   StyleExtractionDraft,
@@ -323,5 +326,21 @@ export async function rewriteStyleIssues(payload: {
   temperature?: number;
 }) {
   const { data } = await apiClient.post<ApiResponse<{ content: string }>>("/style-detection/rewrite", payload);
+  return data;
+}
+
+export async function extractAntiAiFromChapterDiff(payload: ChapterEditDiffExtractRequest) {
+  const { data } = await apiClient.post<ApiResponse<ChapterEditAntiAiExtractResult>>(
+    "/chapter-edit/extract-anti-ai-from-diff",
+    payload,
+  );
+  return data;
+}
+
+export async function forkStyleFromChapterDiff(payload: ChapterEditDiffExtractRequest) {
+  const { data } = await apiClient.post<ApiResponse<ChapterEditStyleForkResult>>(
+    "/chapter-edit/fork-style-from-diff",
+    payload,
+  );
   return data;
 }

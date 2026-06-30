@@ -1,6 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type {
+  AntiAiRuleDraftFields,
+  ChapterEditAntiAiExtractResult,
+  ChapterEditStyleForkResult,
+} from "@ai-novel/shared/types/styleEngine";
+import type {
   ChapterEditorDiagnosticCard,
   ChapterEditorOperation,
   ChapterEditorRecommendedTask,
@@ -8,13 +13,16 @@ import type {
   ChapterEditorTargetRange,
 } from "@ai-novel/shared/types/novel";
 import { createNovelSnapshot, previewChapterAiRevision, updateNovelChapter } from "@/api/novel";
+import { extractAntiAiFromChapterDiff, forkStyleFromChapterDiff, createAntiAiRule, updateStyleProfile, getStyleBindings, createStyleBinding, deleteStyleBinding } from "@/api/styleEngine";
 import { queryKeys } from "@/api/queryKeys";
 import { toast } from "@/components/ui/toast";
 import { useLLMStore } from "@/store/llmStore";
+import AntiAiExtractConfirmDialog from "./AntiAiExtractConfirmDialog";
 import ChapterEditorDirectorPanel from "./ChapterEditorDirectorPanel";
 import ChapterEditorSidebar from "./ChapterEditorSidebar";
 import ChapterTextEditor from "./ChapterTextEditor";
 import SelectionAIFloatingToolbar from "./SelectionAIFloatingToolbar";
+import StyleForkConfirmDialog from "./StyleForkConfirmDialog";
 import type {
   ChapterEditorSelectionRange,
   ChapterEditorSessionState,
@@ -88,6 +96,11 @@ export default function ChapterEditorShell(props: ChapterEditorShellProps) {
   const [revisionScope, setRevisionScope] = useState<ChapterEditorRevisionScope>("selection");
   const [revisionInstruction, setRevisionInstruction] = useState("");
   const [selectedDiagnosticId, setSelectedDiagnosticId] = useState<string | null>(null);
+  const [preEditContent, setPreEditContent] = useState<string>("");
+  const [antiAiDialogOpen, setAntiAiDialogOpen] = useState(false);
+  const [styleForkDialogOpen, setStyleForkDialogOpen] = useState(false);
+  const [antiAiExtractResult, setAntiAiExtractResult] = useState<ChapterEditAntiAiExtractResult | null>(null);
+  const [styleForkResult, setStyleForkResult] = useState<ChapterEditStyleForkResult | null>(null);
 
   useEffect(() => {
     const nextContent = normalizedChapterContent;
@@ -100,6 +113,11 @@ export default function ChapterEditorShell(props: ChapterEditorShellProps) {
     setRevisionInstruction("");
     setRevisionScope("selection");
     lastPreviewRequestRef.current = null;
+    setPreEditContent("");
+    setAntiAiExtractResult(null);
+    setStyleForkResult(null);
+    setAntiAiDialogOpen(false);
+    setStyleForkDialogOpen(false);
   }, [chapter?.id, normalizedChapterContent]);
 
   useEffect(() => {
@@ -153,7 +171,8 @@ export default function ChapterEditorShell(props: ChapterEditorShellProps) {
       }
       return updateNovelChapter(novelId, chapter.id, { content: nextContent });
     },
-    onMutate: () => {
+    onMutate: (nextContent) => {
+      setPreEditContent(nextContent);
       setSaveStatus("saving");
     },
     onSuccess: async (_response, nextContent) => {
@@ -274,6 +293,126 @@ export default function ChapterEditorShell(props: ChapterEditorShellProps) {
         candidateText: activeCandidate.content,
       }
       : null;
+
+  // --- Chapter Edit Diff Extraction ---
+  const hasDiff = (() => {
+    if (isDirty && savedContent && contentDraft !== savedContent) return true;
+    if (!isDirty && preEditContent && savedContent && preEditContent !== savedContent) return true;
+    return false;
+  })();
+
+  function getDiffView() {
+    if (isDirty) {
+      return { beforeText: savedContent ?? "", afterText: contentDraft };
+    }
+    return { beforeText: preEditContent ?? "", afterText: savedContent ?? "" };
+  }
+
+  const extractAntiAiMutation = useMutation({
+    mutationFn: async () => {
+      const diff = getDiffView();
+      return extractAntiAiFromChapterDiff({
+        ...diff,
+        novelId,
+        provider: llm.provider,
+        model: llm.model,
+        temperature: llm.temperature,
+      });
+    },
+    onSuccess: (response) => {
+      const data = response.data;
+      if (!data) {
+        toast.error("反 AI 规则提取未返回结果。");
+        return;
+      }
+      setAntiAiExtractResult(data);
+      setAntiAiDialogOpen(true);
+    },
+    onError: (error) => {
+      toast.error(error instanceof Error ? error.message : "反 AI 规则提取失败。");
+    },
+  });
+
+  const saveAntiAiRulesMutation = useMutation({
+    mutationFn: async (drafts: AntiAiRuleDraftFields[]) => {
+      const created = [];
+      for (const draft of drafts) {
+        const result = await createAntiAiRule({
+          key: draft.key,
+          name: draft.name,
+          type: draft.type,
+          severity: draft.severity,
+          description: draft.description,
+          detectPatterns: draft.detectPatterns,
+          rewriteSuggestion: draft.rewriteSuggestion ?? undefined,
+          promptInstruction: draft.promptInstruction ?? undefined,
+          autoRewrite: draft.autoRewrite,
+          enabled: draft.enabled,
+          globalBaselineEnabled: draft.globalBaselineEnabled,
+        });
+        if (result.data) {
+          created.push(result.data);
+        }
+      }
+      return created;
+    },
+    onSuccess: async (created) => {
+      setAntiAiDialogOpen(false);
+      setAntiAiExtractResult(null);
+      await invalidateChapterQueries();
+      toast.success(`已保存 ${created.length} 条反 AI 规则。`);
+    },
+    onError: (error) => {
+      toast.error(error instanceof Error ? error.message : "保存反 AI 规则失败。");
+    },
+  });
+
+  const extractStyleMutation = useMutation({
+    mutationFn: async () => {
+      const diff = getDiffView();
+      return forkStyleFromChapterDiff({
+        ...diff,
+        novelId,
+        provider: llm.provider,
+        model: llm.model,
+        temperature: llm.temperature,
+      });
+    },
+    onSuccess: (response) => {
+      const data = response.data;
+      if (!data) {
+        toast.error("风格画像 fork 未返回结果。");
+        return;
+      }
+      setStyleForkResult(data);
+      setStyleForkDialogOpen(true);
+    },
+    onError: (error) => {
+      toast.error(error instanceof Error ? error.message : "风格画像 fork 失败。");
+    },
+  });
+
+  const confirmStyleForkMutation = useMutation({
+    mutationFn: async (profileName: string) => {
+      if (!styleForkResult) return;
+      // If user changed the name, update the profile
+      if (profileName !== styleForkResult.suggestedName) {
+        await updateStyleProfile(styleForkResult.newProfile.id, { name: profileName });
+      }
+      // Binding was already created by the backend, just invalidate
+    },
+    onSuccess: async () => {
+      setStyleForkDialogOpen(false);
+      setStyleForkResult(null);
+      await invalidateChapterQueries();
+      await queryClient.invalidateQueries({ queryKey: ["style-profiles"] });
+      await queryClient.invalidateQueries({ queryKey: ["style-bindings"] });
+      toast.success("风格画像 fork 完成，新画像已绑定。");
+    },
+    onError: (error) => {
+      toast.error(error instanceof Error ? error.message : "风格画像 fork 确认失败。");
+    },
+  });
 
   if (!chapter) {
     return (
@@ -422,7 +561,26 @@ export default function ChapterEditorShell(props: ChapterEditorShellProps) {
           onRunDiagnostic={handleRunDiagnostic}
         />
 
-        <div className="relative min-h-0 overflow-hidden">
+        <div className="relative min-h-0 overflow-hidden flex flex-col">
+          <div className="flex flex-wrap gap-2 border-b px-3 py-2">
+            <button
+              type="button"
+              className="inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-md border bg-background px-3 py-1.5 text-xs font-medium transition-colors hover:bg-accent hover:text-accent-foreground disabled:pointer-events-none disabled:opacity-50"
+              disabled={!hasDiff || extractAntiAiMutation.isPending}
+              onClick={() => extractAntiAiMutation.mutate()}
+            >
+              {extractAntiAiMutation.isPending ? "提取中..." : "提取反 AI 规则"}
+            </button>
+            <button
+              type="button"
+              className="inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-md border bg-background px-3 py-1.5 text-xs font-medium transition-colors hover:bg-accent hover:text-accent-foreground disabled:pointer-events-none disabled:opacity-50"
+              disabled={!hasDiff || extractStyleMutation.isPending}
+              onClick={() => extractStyleMutation.mutate()}
+            >
+              {extractStyleMutation.isPending ? "提取中..." : "提取风格画像"}
+            </button>
+          </div>
+          <div className="relative min-h-0 flex-1 overflow-hidden">
           <ChapterTextEditor
             value={contentDraft}
             readOnly={session.status !== "idle"}
@@ -450,6 +608,7 @@ export default function ChapterEditorShell(props: ChapterEditorShellProps) {
             disabled={previewMutation.isPending}
             onRunOperation={handleRunOperation}
           />
+          </div>
         </div>
 
         <div className="min-h-0 overflow-hidden">
@@ -478,6 +637,22 @@ export default function ChapterEditorShell(props: ChapterEditorShellProps) {
           />
         </div>
       </div>
+
+      <AntiAiExtractConfirmDialog
+        open={antiAiDialogOpen}
+        onOpenChange={setAntiAiDialogOpen}
+        result={antiAiExtractResult}
+        isSaving={saveAntiAiRulesMutation.isPending}
+        onConfirm={(drafts) => saveAntiAiRulesMutation.mutate(drafts)}
+      />
+
+      <StyleForkConfirmDialog
+        open={styleForkDialogOpen}
+        onOpenChange={setStyleForkDialogOpen}
+        result={styleForkResult}
+        isSaving={confirmStyleForkMutation.isPending}
+        onConfirm={(name) => confirmStyleForkMutation.mutate(name)}
+      />
     </div>
   );
 }

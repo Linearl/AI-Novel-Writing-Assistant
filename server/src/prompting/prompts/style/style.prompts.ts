@@ -3,6 +3,8 @@ import { z } from "zod";
 import type { PromptAsset } from "../../core/promptTypes";
 import {
   antiAiRuleAiDraftSchema,
+  chapterEditAntiAiExtractSchema,
+  chapterEditStyleForkSchema,
   styleDetectionPayloadSchema,
   styleProfileAntiAiSelectionSchema,
   styleGeneratedProfileSchema,
@@ -802,5 +804,136 @@ export const antiAiRuleAiDraftPrompt: PromptAsset<
       "用户需求：",
       input.instruction,
     ].filter(Boolean).join("\n")),
+  ],
+};
+
+// --- Chapter Edit Diff Extraction Prompts ---
+
+export interface ChapterEditDiffExtractPromptInput {
+  beforeText: string;
+  afterText: string;
+  existingAntiAiRules?: string;
+}
+
+export interface ChapterEditStyleForkPromptInput {
+  beforeText: string;
+  afterText: string;
+  currentStyleRules: string;
+}
+
+export const chapterEditAntiAiExtractPrompt: PromptAsset<
+  ChapterEditDiffExtractPromptInput,
+  z.infer<typeof chapterEditAntiAiExtractSchema>
+> = {
+  id: "style.chapter_edit.anti_ai_extract",
+  version: "v1",
+  taskType: "planner",
+  mode: "structured",
+  language: "zh",
+  contextPolicy: {
+    maxTokensBudget: 0,
+  },
+  outputSchema: chapterEditAntiAiExtractSchema,
+  render: (input) => [
+    new SystemMessage([
+      "你是小说写作产品中的反 AI 规则提取器。",
+      "你的任务是分析用户对 AI 生成文本的编辑修改，提取出可复用的反 AI 规则。",
+      "",
+      "你会收到两个版本的章节正文：修改前（AI 生成）和修改后（用户手动编辑）。",
+      "你的工作是：",
+      "1. 分析用户修改的意图——用户在消除什么 AI 痕迹？在纠正什么表达习惯？",
+      "2. 将这些意图提炼为可执行的反 AI 规则草稿。",
+      "",
+      "只输出一个合法 JSON 对象，不要输出 Markdown、解释、注释、代码块或额外文本。",
+      "输出字段必须且只能包括：intentSummary, drafts。",
+      "",
+      "全局硬规则：",
+      "1. 所有文本字段必须使用简体中文，key 必须使用英文小写、数字和下划线。",
+      "2. 只能基于用户实际修改内容提取规则，不得凭空编造用户未体现的修改意图。",
+      "3. 每条规则必须具体、可执行，不能写'避免 AI 感'这类空泛要求。",
+      "4. detectPatterns 放用户修改中实际消除的 AI 表达模式，通常 3-8 个。",
+      "5. promptInstruction 使用命令式表达，能直接进入正文生成约束。",
+      "6. rewriteSuggestion 说明命中后如何修改。",
+      "7. 如果用户修改没有体现明显的 AI 痕迹问题，返回空 drafts 数组。",
+      "",
+      "字段要求：",
+      "1. intentSummary：用 2-3 句话概括用户修改的核心意图，说明用户在追求什么写法效果。",
+      "2. drafts：每条规则包含 key, name, type, severity, description, detectPatterns, promptInstruction, rewriteSuggestion。",
+      "3. type 使用 forbidden（明确禁止）、risk（需规避的风险）、encourage（鼓励的替代表达）。",
+      "4. severity 使用 low/medium/high 根据问题影响程度判断。",
+      "",
+      input.existingAntiAiRules
+        ? [
+            "已有反 AI 规则（用于去重，不要生成重复规则）：",
+            input.existingAntiAiRules,
+          ].join("\n")
+        : "",
+    ].filter(Boolean).join("\n")),
+    new HumanMessage([
+      "修改前正文（AI 生成）：",
+      input.beforeText,
+      "",
+      "修改后正文（用户编辑）：",
+      input.afterText,
+    ].join("\n")),
+  ],
+};
+
+export const chapterEditStyleForkPrompt: PromptAsset<
+  ChapterEditStyleForkPromptInput,
+  z.infer<typeof chapterEditStyleForkSchema>
+> = {
+  id: "style.chapter_edit.style_fork",
+  version: "v1",
+  taskType: "planner",
+  mode: "structured",
+  language: "zh",
+  contextPolicy: {
+    maxTokensBudget: 0,
+  },
+  outputSchema: chapterEditStyleForkSchema,
+  render: (input) => [
+    new SystemMessage([
+      "你是小说写法资产编辑器。",
+      "你的任务是分析用户对 AI 生成文本的编辑修改，理解用户的写法偏好，并基于当前风格画像生成一份调整后的规则 patch。",
+      "",
+      "你会收到两个版本的章节正文和当前风格画像的规则。",
+      "你的工作是：",
+      "1. 对比修改前后两个版本，理解用户在叙事、角色、语言、节奏四个维度上的偏好调整。",
+      "2. 生成规则 patch，在原规则基础上做合理调整。",
+      "3. 给出变更摘要和推荐的新画像名。",
+      "",
+      "只输出一个合法 JSON 对象，不要输出 Markdown、解释、注释、代码块或额外文本。",
+      "输出字段必须且只能包括：changeSummary, suggestedName, narrativeRules, characterRules, languageRules, rhythmRules。",
+      "",
+      "全局硬规则：",
+      "1. 所有文本字段必须使用简体中文。",
+      "2. 只能基于用户实际修改推断偏好，不得凭空编造。",
+      "3. 规则必须具体、可执行，不能写'增强代入感'这类空话。",
+      "4. 如果用户修改没有体现明显的写法偏好变化，返回空的规则对象（不返回任何规则字段）。",
+      "5. patch 应该只包含用户修改体现的变化，不要大幅重写原规则。",
+      "",
+      "字段要求：",
+      "1. changeSummary：用 2-3 句话概括用户修改体现的写法偏好变化。",
+      "2. suggestedName：基于原画像名和变化特征生成推荐名，格式为'{原画像名}-编辑偏好v{N}'。",
+      "3. narrativeRules / characterRules / languageRules / rhythmRules：仅在对应维度有明显变化时填写，每个都是对原规则的 patch（新增或覆盖的字段）。",
+      "",
+      "质量要求：",
+      "1. 优先捕捉语言风格变化（句式、用词、修辞）。",
+      "2. 其次捕捉节奏变化（段落密度、快慢、留白）。",
+      "3. 关注角色表达变化（情绪外露方式、台词风格、行为逻辑呈现）。",
+      "4. 注意叙事手法变化（视角控制、信息释放、场景切换）。",
+      "5. 不要把局部删改误判为系统性风格变化。",
+    ].join("\n")),
+    new HumanMessage([
+      "当前风格画像规则：",
+      input.currentStyleRules,
+      "",
+      "修改前正文（AI 生成）：",
+      input.beforeText,
+      "",
+      "修改后正文（用户编辑）：",
+      input.afterText,
+    ].join("\n")),
   ],
 };
