@@ -38,46 +38,6 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1\v0.1-r2029-complex-narrative-advisor-mode\REQ-2029.md](./1.task\B.todo\v0.1\v0.1-r2029-complex-narrative-advisor-mode\REQ-2029.md) | REQ-2029 Creative Hub 叙事讨论通道 | REQ-2029 Creative Hub 叙事讨论通道 |
 | [1.task\B.todo\v0.1\v0.1-r2029-complex-narrative-advisor-mode\tasks.md](./1.task\B.todo\v0.1\v0.1-r2029-complex-narrative-advisor-mode\tasks.md) | REQ-2029 任务拆解（复杂版） | REQ-2029 任务拆解（复杂版） |
 
-## 1.task\B.todo\v0.1\v0.1-r2030-complex-pace-curve-visualization
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r2030-complex-pace-curve-visualization\decision_log.md](./1.task\B.todo\v0.1\v0.1-r2030-complex-pace-curve-visualization\decision_log.md) | REQ-2030 决策留痕 | REQ-2030 决策留痕 |
-| [1.task\B.todo\v0.1\v0.1-r2030-complex-pace-curve-visualization\design.md](./1.task\B.todo\v0.1\v0.1-r2030-complex-pace-curve-visualization\design.md) | REQ-2030 方案设计 | REQ-2030 方案设计 |
-| [1.task\B.todo\v0.1\v0.1-r2030-complex-pace-curve-visualization\README.md](./1.task\B.todo\v0.1\v0.1-r2030-complex-pace-curve-visualization\README.md) | REQ-2030 节奏曲线可视化与调整任务总线 | REQ-2030 节奏曲线可视化与调整任务总线 |
-| [1.task\B.todo\v0.1\v0.1-r2030-complex-pace-curve-visualization\REQ-2030-original.md](./1.task\B.todo\v0.1\v0.1-r2030-complex-pace-curve-visualization\REQ-2030-original.md) | REQ-2030 节奏曲线可视化与调整（原始冻结副本） | REQ-2030 节奏曲线可视化与调整（原始冻结副本） |
-| [1.task\B.todo\v0.1\v0.1-r2030-complex-pace-curve-visualization\REQ-2030.md](./1.task\B.todo\v0.1\v0.1-r2030-complex-pace-curve-visualization\REQ-2030.md) | REQ-2030 节奏曲线可视化与调整 | REQ-2030 节奏曲线可视化与调整 |
-| [1.task\B.todo\v0.1\v0.1-r2030-complex-pace-curve-visualization\tasks.md](./1.task\B.todo\v0.1\v0.1-r2030-complex-pace-curve-visualization\tasks.md) | REQ-2030 任务拆解（复杂版） | REQ-2030 任务拆解（复杂版） |
-
-## 1.task\B.todo\v0.1\v0.1-r2031-medium-character-arc-query-tools
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r2031-medium-character-arc-query-tools\README.md](./1.task\B.todo\v0.1\v0.1-r2031-medium-character-arc-query-tools\README.md) | REQ-2031 角色弧光查询工具任务总线 | REQ-2031 角色弧光查询工具任务总线 |
-| [1.task\B.todo\v0.1\v0.1-r2031-medium-character-arc-query-tools\REQ-2031-original.md](./1.task\B.todo\v0.1\v0.1-r2031-medium-character-arc-query-tools\REQ-2031-original.md) | REQ-2031 角色弧光查询工具（原始冻结副本） | REQ-2031 角色弧光查询工具（原始冻结副本） |
-| [1.task\B.todo\v0.1\v0.1-r2031-medium-character-arc-query-tools\REQ-2031.md](./1.task\B.todo\v0.1\v0.1-r2031-medium-character-arc-query-tools\REQ-2031.md) | REQ-2031 角色弧光查询工具 | REQ-2031 角色弧光查询工具 |
-| [1.task\B.todo\v0.1\v0.1-r2031-medium-character-arc-query-tools\tasks.md](./1.task\B.todo\v0.1\v0.1-r2031-medium-character-arc-query-tools\tasks.md) | REQ-2031 任务拆解 | REQ-2031 任务拆解 |
-
-## 1.task\B.todo\v0.1\v0.1-r2032-complex-character-arc-visualization
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r2032-complex-character-arc-visualization\decision_log.md](./1.task\B.todo\v0.1\v0.1-r2032-complex-character-arc-visualization\decision_log.md) | REQ-2032 决策留痕 | REQ-2032 决策留痕 |
-| [1.task\B.todo\v0.1\v0.1-r2032-complex-character-arc-visualization\design.md](./1.task\B.todo\v0.1\v0.1-r2032-complex-character-arc-visualization\design.md) | REQ-2032 方案设计 | REQ-2032 方案设计 |
-| [1.task\B.todo\v0.1\v0.1-r2032-complex-character-arc-visualization\README.md](./1.task\B.todo\v0.1\v0.1-r2032-complex-character-arc-visualization\README.md) | REQ-2032 角色弧光可视化任务总线 | REQ-2032 角色弧光可视化任务总线 |
-| [1.task\B.todo\v0.1\v0.1-r2032-complex-character-arc-visualization\REQ-2032-original.md](./1.task\B.todo\v0.1\v0.1-r2032-complex-character-arc-visualization\REQ-2032-original.md) | REQ-2032 角色弧光可视化（原始冻结副本） | REQ-2032 角色弧光可视化（原始冻结副本） |
-| [1.task\B.todo\v0.1\v0.1-r2032-complex-character-arc-visualization\REQ-2032.md](./1.task\B.todo\v0.1\v0.1-r2032-complex-character-arc-visualization\REQ-2032.md) | REQ-2032 角色弧光可视化 | REQ-2032 角色弧光可视化 |
-| [1.task\B.todo\v0.1\v0.1-r2032-complex-character-arc-visualization\tasks.md](./1.task\B.todo\v0.1\v0.1-r2032-complex-character-arc-visualization\tasks.md) | REQ-2032 任务拆解（复杂版） | REQ-2032 任务拆解（复杂版） |
-
-## 1.task\B.todo\v0.1\v0.1-r2033-medium-theme-consistency-data-tools
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r2033-medium-theme-consistency-data-tools\README.md](./1.task\B.todo\v0.1\v0.1-r2033-medium-theme-consistency-data-tools\README.md) | REQ-2033 主题一致性纯数据工具层任务总线 | REQ-2033 主题一致性纯数据工具层任务总线 |
-| [1.task\B.todo\v0.1\v0.1-r2033-medium-theme-consistency-data-tools\REQ-2033-original.md](./1.task\B.todo\v0.1\v0.1-r2033-medium-theme-consistency-data-tools\REQ-2033-original.md) | REQ-2033 主题一致性纯数据工具层（原始冻结副本） | REQ-2033 主题一致性纯数据工具层（原始冻结副本） |
-| [1.task\B.todo\v0.1\v0.1-r2033-medium-theme-consistency-data-tools\REQ-2033.md](./1.task\B.todo\v0.1\v0.1-r2033-medium-theme-consistency-data-tools\REQ-2033.md) | REQ-2033 主题一致性纯数据工具层 | REQ-2033 主题一致性纯数据工具层 |
-| [1.task\B.todo\v0.1\v0.1-r2033-medium-theme-consistency-data-tools\tasks.md](./1.task\B.todo\v0.1\v0.1-r2033-medium-theme-consistency-data-tools\tasks.md) | REQ-2033 任务拆解 | REQ-2033 任务拆解 |
-
 ## 1.task\B.todo\v0.1\v0.1-r2034-medium-theme-consistency-llm-analysis
 
 | 文件 | 标题 | 描述 |
@@ -98,17 +58,6 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1\v0.1-r7004-medium-json-soft-ref-fk-fix\REQ-7004.md](./1.task\B.todo\v0.1\v0.1-r7004-medium-json-soft-ref-fk-fix\REQ-7004.md) | REQ-7004 JSON 软引用 FK 缺失修复 — 需求工作副本 | REQ-7004 JSON 软引用 FK 缺失修复 — 需求工作副本 |
 | [1.task\B.todo\v0.1\v0.1-r7004-medium-json-soft-ref-fk-fix\tasks.md](./1.task\B.todo\v0.1\v0.1-r7004-medium-json-soft-ref-fk-fix\tasks.md) | --- | - |
 
-## 1.task\B.todo\v0.1\v0.1-r7005-simple-p2-scattered-idsjson-edge-tables
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r7005-simple-p2-scattered-idsjson-edge-tables\decision_log.md](./1.task\B.todo\v0.1\v0.1-r7005-simple-p2-scattered-idsjson-edge-tables\decision_log.md) | REQ-7005 P2 零散 IdsJson 字段迁移为边表 — 决策日志 | REQ-7005 P2 零散 IdsJson 字段迁移为边表 — 决策日志 |
-| [1.task\B.todo\v0.1\v0.1-r7005-simple-p2-scattered-idsjson-edge-tables\design.md](./1.task\B.todo\v0.1\v0.1-r7005-simple-p2-scattered-idsjson-edge-tables\design.md) | REQ-7005 P2 零散 IdsJson 字段迁移为边表 — 方案设计 | REQ-7005 P2 零散 IdsJson 字段迁移为边表 — 方案设计 |
-| [1.task\B.todo\v0.1\v0.1-r7005-simple-p2-scattered-idsjson-edge-tables\README.md](./1.task\B.todo\v0.1\v0.1-r7005-simple-p2-scattered-idsjson-edge-tables\README.md) | REQ-7005 P2 零散 IdsJson 字段迁移为边表任务总线 | REQ-7005 P2 零散 IdsJson 字段迁移为边表任务总线 |
-| [1.task\B.todo\v0.1\v0.1-r7005-simple-p2-scattered-idsjson-edge-tables\REQ-7005-original.md](./1.task\B.todo\v0.1\v0.1-r7005-simple-p2-scattered-idsjson-edge-tables\REQ-7005-original.md) | REQ-7005 P2 零散 IdsJson 字段迁移为边表 — 需求工作副本 | REQ-7005 P2 零散 IdsJson 字段迁移为边表 — 需求工作副本 |
-| [1.task\B.todo\v0.1\v0.1-r7005-simple-p2-scattered-idsjson-edge-tables\REQ-7005.md](./1.task\B.todo\v0.1\v0.1-r7005-simple-p2-scattered-idsjson-edge-tables\REQ-7005.md) | REQ-7005 P2 零散 IdsJson 字段迁移为边表 — 需求工作副本 | REQ-7005 P2 零散 IdsJson 字段迁移为边表 — 需求工作副本 |
-| [1.task\B.todo\v0.1\v0.1-r7005-simple-p2-scattered-idsjson-edge-tables\tasks.md](./1.task\B.todo\v0.1\v0.1-r7005-simple-p2-scattered-idsjson-edge-tables\tasks.md) | REQ-7005 P2 零散 IdsJson 字段迁移为边表 — 任务拆解 | REQ-7005 P2 零散 IdsJson 字段迁移为边表 — 任务拆解 |
-
 ## 1.task\B.todo\v0.1\v0.1-r7006-simple-timeline-idsjson-removal
 
 | 文件 | 标题 | 描述 |
@@ -119,17 +68,6 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1\v0.1-r7006-simple-timeline-idsjson-removal\REQ-7006-original.md](./1.task\B.todo\v0.1\v0.1-r7006-simple-timeline-idsjson-removal\REQ-7006-original.md) | REQ-7006 移除时间线旧 JSON 字段 — 需求冻结副本 | REQ-7006 移除时间线旧 JSON 字段 — 需求冻结副本 |
 | [1.task\B.todo\v0.1\v0.1-r7006-simple-timeline-idsjson-removal\REQ-7006.md](./1.task\B.todo\v0.1\v0.1-r7006-simple-timeline-idsjson-removal\REQ-7006.md) | REQ-7006 移除时间线旧 JSON 字段 — 需求工作副本 | REQ-7006 移除时间线旧 JSON 字段 — 需求工作副本 |
 | [1.task\B.todo\v0.1\v0.1-r7006-simple-timeline-idsjson-removal\tasks.md](./1.task\B.todo\v0.1\v0.1-r7006-simple-timeline-idsjson-removal\tasks.md) | REQ-7006 移除时间线旧 JSON 字段 — 任务拆解 | REQ-7006 移除时间线旧 JSON 字段 — 任务拆解 |
-
-## 1.task\B.todo\v0.1\v0.1-r7007-medium-world-structure-json-relation-extract
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r7007-medium-world-structure-json-relation-extract\decision_log.md](./1.task\B.todo\v0.1\v0.1-r7007-medium-world-structure-json-relation-extract\decision_log.md) | REQ-7007 World.structureJson 关系提取为独立表 — 决策日志 | REQ-7007 World.structureJson 关系提取为独立表 — 决策日志 |
-| [1.task\B.todo\v0.1\v0.1-r7007-medium-world-structure-json-relation-extract\design.md](./1.task\B.todo\v0.1\v0.1-r7007-medium-world-structure-json-relation-extract\design.md) | REQ-7007 World.structureJson 关系提取为独立表 — 方案设计 | REQ-7007 World.structureJson 关系提取为独立表 — 方案设计 |
-| [1.task\B.todo\v0.1\v0.1-r7007-medium-world-structure-json-relation-extract\README.md](./1.task\B.todo\v0.1\v0.1-r7007-medium-world-structure-json-relation-extract\README.md) | REQ-7007 P1 World.structureJson 关系提取为独立表任务总线 | REQ-7007 P1 World.structureJson 关系提取为独立表任务总线 |
-| [1.task\B.todo\v0.1\v0.1-r7007-medium-world-structure-json-relation-extract\REQ-7007-original.md](./1.task\B.todo\v0.1\v0.1-r7007-medium-world-structure-json-relation-extract\REQ-7007-original.md) | REQ-7007 World.structureJson 关系提取为独立表 — 需求原始冻结副本 | REQ-7007 World.structureJson 关系提取为独立表 — 需求原始冻结副本 |
-| [1.task\B.todo\v0.1\v0.1-r7007-medium-world-structure-json-relation-extract\REQ-7007.md](./1.task\B.todo\v0.1\v0.1-r7007-medium-world-structure-json-relation-extract\REQ-7007.md) | REQ-7007 World.structureJson 关系提取为独立表 — 需求工作副本 | REQ-7007 World.structureJson 关系提取为独立表 — 需求工作副本 |
-| [1.task\B.todo\v0.1\v0.1-r7007-medium-world-structure-json-relation-extract\tasks.md](./1.task\B.todo\v0.1\v0.1-r7007-medium-world-structure-json-relation-extract\tasks.md) | REQ-7007 World.structureJson 关系提取为独立表 — 任务拆解 | REQ-7007 World.structureJson 关系提取为独立表 — 任务拆解 |
 
 ## 1.task\template
 
