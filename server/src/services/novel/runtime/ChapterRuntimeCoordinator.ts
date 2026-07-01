@@ -3,7 +3,7 @@ import type { StreamDoneHelpers, StreamDonePayload } from "../../../llm/streamin
 import type { QualityScore, ReviewIssue } from "@ai-novel/shared/types/novel";
 import { prisma } from "../../../db/prisma";
 import { auditService } from "../../audit/AuditService";
-import { plannerService } from "../../planner/PlannerService";
+import { plannerMediator } from "../../mediation/NovelPlannerMediator";
 import { ChapterWritingGraph } from "../chapterWritingGraph";
 import { ChapterArtifactSyncService } from "./ChapterArtifactSyncService";
 import { GenerationContextAssembler } from "./GenerationContextAssembler";
@@ -33,7 +33,7 @@ interface ChapterRuntimeCoordinatorDeps {
   chapterWritingGraph?: Pick<ChapterWritingGraph, "createChapterStream">;
   artifactSyncService?: Pick<ChapterArtifactSyncService, "saveDraftAndArtifacts" | "syncChapterArtifacts">;
   auditService?: Pick<typeof auditService, "auditChapter" | "assessChapterAuditNeed">;
-  plannerService?: Pick<typeof plannerService, "buildReplanRecommendation" | "shouldTriggerReplanFromAudit">;
+  plannerService?: Pick<typeof plannerMediator, "buildReplanRecommendation" | "shouldTriggerReplanFromAudit">;
   acceptanceAssessmentService?: Pick<ChapterAcceptanceAssessmentService, "assess">;
   readinessService?: Pick<ChapterRuntimeReadinessService, "assertReady">;
   agentRuntime?: ChapterRuntimeAgentPort;
@@ -64,7 +64,7 @@ export class ChapterRuntimeCoordinator {
     const agentRuntime = this.getAgentRuntime(deps.agentRuntime);
     const assembler = deps.assembler ?? new GenerationContextAssembler();
     const chapterWritingGraph = deps.chapterWritingGraph ?? this.createDefaultChapterWritingGraph(artifactSyncService);
-    const plannerRuntime = deps.plannerService ?? plannerService;
+    const plannerRuntime = deps.plannerService ?? plannerMediator;
     const acceptanceAssessmentService = deps.acceptanceAssessmentService ?? new ChapterAcceptanceAssessmentService();
     const reviewChapterAfterRepair = deps.reviewChapterAfterRepair ?? createDefaultReviewChapterAfterRepair();
     const ensureNovelCharacters = deps.ensureNovelCharacters ?? this.ensureNovelCharacters.bind(this);

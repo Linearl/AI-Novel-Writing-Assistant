@@ -2,7 +2,7 @@ import type { GenerationContextPackage } from "@ai-novel/shared/types/chapterRun
 import { buildCompressionLog } from "../../../prompting/core/contextBudget";
 import { prisma } from "../../../db/prisma";
 import { ragServices } from "../../rag";
-import { plannerService } from "../../planner/PlannerService";
+import { plannerMediator } from "../../mediation/NovelPlannerMediator";
 import { buildChapterRagQuery } from "../NovelReferenceService";
 import { NovelContinuationService } from "../NovelContinuationService";
 import { parseJsonStringArray } from "../novelP0Utils";
@@ -142,7 +142,7 @@ function buildSyntheticCharacterResourceIssues(
   return [...blockedIssues, ...reviewIssues, ...signalIssues];
 }
 
-function mapPlan(plan: Awaited<ReturnType<typeof plannerService.getChapterPlan>>): GenerationContextPackage["plan"] {
+function mapPlan(plan: Awaited<ReturnType<typeof plannerMediator.getChapterPlan>>): GenerationContextPackage["plan"] {
   if (!plan) {
     return null;
   }
@@ -278,7 +278,7 @@ export class GenerationContextAssembler {
     if (request.controlPolicy?.advanceMode === "full_book_autopilot") {
       await this.chapterPlanJITService.ensureExecutionReady(novelId, chapterId);
     }
-    const ensuredPlan = await plannerService.ensureChapterPlan(novelId, chapterId, request);
+    const ensuredPlan = await plannerMediator.ensureChapterPlan(novelId, chapterId, request);
     const refreshedChapter = await prisma.chapter.findFirst({
       where: { id: chapterId, novelId },
       select: runtimeChapterSelect,

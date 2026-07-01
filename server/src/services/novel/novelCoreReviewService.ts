@@ -8,7 +8,7 @@ import {
 import { ragServices } from "../rag";
 import { auditService } from "../audit/AuditService";
 import { payoffLedgerSyncService } from "../payoff/PayoffLedgerSyncService";
-import { plannerService } from "../planner/PlannerService";
+import { plannerMediator } from "../mediation/NovelPlannerMediator";
 import { stateService } from "../state/StateService";
 import {
   isPass,
@@ -123,13 +123,13 @@ export class NovelCoreReviewService {
         error: error instanceof Error ? error.message : String(error),
       });
     });
-    const replanRecommendation = plannerService.buildReplanRecommendation({
+    const replanRecommendation = plannerMediator.buildReplanRecommendation({
       auditReports: review.auditReports ?? [],
       ledgerSummary: review.contextPackage?.ledgerSummary ?? null,
       contextPackage: review.contextPackage ?? null,
     });
     if ((review.auditReports?.length ?? 0) > 0 && replanRecommendation.recommended) {
-      await plannerService.replan(novelId, {
+      await plannerMediator.replan(novelId, {
         chapterId,
         triggerType: "audit_failure",
         reason: replanRecommendation.triggerReason || replanRecommendation.reason,
@@ -164,19 +164,19 @@ export class NovelCoreReviewService {
   }
 
   async generateBookPlan(novelId: string, options: LLMGenerateOptions = {}) {
-    return plannerService.generateBookPlan(novelId, options);
+    return plannerMediator.generateBookPlan(novelId, options);
   }
 
   async generateArcPlan(novelId: string, arcId: string, options: LLMGenerateOptions = {}) {
-    return plannerService.generateArcPlan(novelId, arcId, options);
+    return plannerMediator.generateArcPlan(novelId, arcId, options);
   }
 
   async generateChapterPlan(novelId: string, chapterId: string, options: LLMGenerateOptions = {}) {
-    return plannerService.generateChapterPlan(novelId, chapterId, options);
+    return plannerMediator.generateChapterPlan(novelId, chapterId, options);
   }
 
   async getChapterPlan(novelId: string, chapterId: string) {
-    return plannerService.getChapterPlan(novelId, chapterId);
+    return plannerMediator.getChapterPlan(novelId, chapterId);
   }
 
   async replanNovel(
@@ -189,7 +189,7 @@ export class NovelCoreReviewService {
       reason: string;
     } & LLMGenerateOptions,
   ) {
-    const result = await plannerService.replan(novelId, input);
+    const result = await plannerMediator.replan(novelId, input);
     if (result.run) {
       await directorAutomationLedgerEventService.recordReplanRunCreated({
         novelId,
