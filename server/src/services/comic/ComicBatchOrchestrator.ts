@@ -2,6 +2,7 @@ import type { LLMProvider } from "@ai-novel/shared/types/llm";
 import { prisma } from "../../db/prisma";
 import { AppError } from "../../middleware/errorHandler";
 import { comicPanelImageService } from "./ComicPanelImageService";
+import { logger } from "../logging/LoggerService";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -148,7 +149,7 @@ export class ComicBatchOrchestrator {
       },
     }).catch(() => {});
 
-    console.log(
+    logger.info(
       `[comic.batch] job=${jobId} done=${progress.done} failed=${progress.failed} status=${finalStatus}`,
     );
   }

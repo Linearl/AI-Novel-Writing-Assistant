@@ -8,6 +8,7 @@ import {
 } from "../../prompting/prompts/character/character.prompts";
 import { characterLibrarySyncService } from "./CharacterLibrarySyncService";
 import { buildReferenceContext } from "./characterGenerateReference";
+import { logger } from "../logging/LoggerService";
 
 const STORY_FUNCTION_VALUES = ["主角", "反派", "导师", "对照组", "配角"] as const;
 const GROWTH_STAGE_VALUES = ["起点", "受挫", "转折", "觉醒", "收束"] as const;
@@ -339,7 +340,7 @@ export async function generateBaseCharacterFromAI(input: CharacterGenerateInput)
   const constraints = normalizeConstraints(input.constraints);
   assertConstraintConsistency(input.category, constraints);
 
-  console.info("[base-characters.generate] start", {
+  logger.info("[base-characters.generate] start", {
     category: input.category,
     hasConstraints: Boolean(constraints),
     knowledgeRefCount: input.knowledgeDocumentIds?.length ?? 0,
@@ -365,7 +366,7 @@ export async function generateBaseCharacterFromAI(input: CharacterGenerateInput)
     referenceContext,
   }, "skeleton");
   if (stageOne.retried || !stageOne.parsed) {
-    console.warn("[base-characters.generate] stage_one_retry_or_fallback", {
+    logger.warn("[base-characters.generate] stage_one_retry_or_fallback", {
       retried: stageOne.retried,
       parseSucceeded: Boolean(stageOne.parsed),
       errorMessage: stageOne.errorMessage ?? "",
@@ -379,7 +380,7 @@ export async function generateBaseCharacterFromAI(input: CharacterGenerateInput)
     referenceContext,
   }, "final");
   if (stageTwo.retried || !stageTwo.parsed) {
-    console.warn("[base-characters.generate] stage_two_retry_or_fallback", {
+    logger.warn("[base-characters.generate] stage_two_retry_or_fallback", {
       retried: stageTwo.retried,
       parseSucceeded: Boolean(stageTwo.parsed),
       errorMessage: stageTwo.errorMessage ?? "",
@@ -391,7 +392,7 @@ export async function generateBaseCharacterFromAI(input: CharacterGenerateInput)
   const outputAnomaly = !stageOne.parsed || !stageTwo.parsed;
 
   if (outputAnomaly) {
-    console.warn("[base-characters.generate] model_output_anomaly_fallback_used", {
+    logger.warn("[base-characters.generate] model_output_anomaly_fallback_used", {
       stageOneParsed: Boolean(stageOne.parsed),
       stageTwoParsed: Boolean(stageTwo.parsed),
     });
@@ -402,7 +403,7 @@ export async function generateBaseCharacterFromAI(input: CharacterGenerateInput)
   });
   await characterLibrarySyncService.createBaseRevision(data.id, "AI 生成角色库角色。", "ai_base_character_generate");
 
-  console.info("[base-characters.generate] done", {
+  logger.info("[base-characters.generate] done", {
     outputAnomaly,
     retriedStageOne: stageOne.retried,
     retriedStageTwo: stageTwo.retried,

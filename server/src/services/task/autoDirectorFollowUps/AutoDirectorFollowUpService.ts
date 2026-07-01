@@ -37,6 +37,7 @@ import {
   type RawFollowUpWorkflowRow,
 } from "./autoDirectorFollowUpProjection";
 import { loadRecentAutoDirectorAutoApprovalRecords } from "./autoDirectorAutoApprovalAudit";
+import { logger } from "../../logging/LoggerService";
 
 function isMissingTableError(error: unknown): boolean {
   return typeof error === "object"
@@ -123,7 +124,7 @@ export class AutoDirectorFollowUpService {
       try {
         await this.workflowService.healAutoDirectorTaskState(taskId);
       } catch (error) {
-        console.error(`[FollowUp] healAutoDirectorTaskState failed for ${taskId}`, error);
+        logger.error(`[FollowUp] healAutoDirectorTaskState failed for ${taskId}`, error);
       }
     }
 

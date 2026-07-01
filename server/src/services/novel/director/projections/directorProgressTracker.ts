@@ -1,5 +1,6 @@
 import type { DirectorProgressItemKey } from "./novelDirectorProgress";
 import type {
+import { logger } from "../../../logging/LoggerService";
   DirectorMarkTaskRunningCallback,
   DirectorMutatingStage,
 } from "../phases/novelDirectorPhaseTypes";
@@ -102,7 +103,7 @@ export async function runDirectorTrackedStep<T>(input: {
     itemLabel: input.itemLabel,
     progress: input.progress,
   });
-  console.info(
+  logger.info(
     `[director.step] event=start taskId=${input.taskId} stage=${input.stage} itemKey=${input.itemKey} progress=${input.progress} label=${JSON.stringify(input.itemLabel)}`,
   );
 
@@ -126,7 +127,7 @@ export async function runDirectorTrackedStep<T>(input: {
       if (isWorkflowTaskCancelledSignal(error)) {
         abortAsCancelled();
       }
-      console.warn(
+      logger.warn(
         `[director.step] event=heartbeat_failed taskId=${input.taskId} stage=${input.stage} itemKey=${currentItemKey} error=${JSON.stringify(stringifyError(error))}`,
       );
     }).finally(() => {
@@ -141,12 +142,12 @@ export async function runDirectorTrackedStep<T>(input: {
       startedAt,
       signal: abortController.signal,
     });
-    console.info(
+    logger.info(
       `[director.step] event=done taskId=${input.taskId} stage=${input.stage} itemKey=${currentItemKey} elapsedMs=${Date.now() - startedAt} finalLabel=${JSON.stringify(currentLabel)}`,
     );
     return result;
   } catch (error) {
-    console.warn(
+    logger.warn(
       `[director.step] event=failed taskId=${input.taskId} stage=${input.stage} itemKey=${currentItemKey} elapsedMs=${Date.now() - startedAt} error=${JSON.stringify(stringifyError(error))}`,
     );
     throw error;

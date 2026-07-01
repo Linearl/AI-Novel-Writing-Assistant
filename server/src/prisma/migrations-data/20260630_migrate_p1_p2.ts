@@ -9,6 +9,7 @@
  */
 
 import { prisma } from "../../db/prisma";
+import { logger } from "../../services/logging/LoggerService";
 
 function parseJsonArray(value: string | null | undefined): string[] {
   if (!value) return [];
@@ -39,7 +40,7 @@ interface StructureRelation {
 }
 
 async function migrateWorldRelations() {
-  console.log("[P1] World.structureJson → 边表...");
+  logger.info("[P1] World.structureJson → 边表...");
   const worlds = await prisma.world.findMany({
     where: { structureJson: { not: null } },
     select: { id: true, structureJson: true },
@@ -106,14 +107,14 @@ async function migrateWorldRelations() {
 
     if (ops.length > 0) await Promise.all(ops);
   }
-  console.log(`[P1] Worlds: ${worlds.length}, edges created: ${totalEdges}`);
+  logger.info(`[P1] Worlds: ${worlds.length}, edges created: ${totalEdges}`);
   return { entityCount: worlds.length, edgeCount: totalEdges };
 }
 
 // ── P2: 4 个零散字段 → 4 个边表 ──────────────────────
 
 async function migrateOpenConflictCharacters() {
-  console.log("[P2] OpenConflict.affectedCharacterIdsJson → OpenConflictCharacter...");
+  logger.info("[P2] OpenConflict.affectedCharacterIdsJson → OpenConflictCharacter...");
   const items = await prisma.openConflict.findMany({
     where: { affectedCharacterIdsJson: { not: null } },
     select: { id: true, novelId: true, affectedCharacterIdsJson: true },
@@ -136,12 +137,12 @@ async function migrateOpenConflictCharacters() {
       }
     }
   }
-  console.log(`[P2] OpenConflict: ${items.length} items, ${totalEdges} edges, ${skippedDangling} dangling`);
+  logger.info(`[P2] OpenConflict: ${items.length} items, ${totalEdges} edges, ${skippedDangling} dangling`);
   return { entityCount: items.length, edgeCount: totalEdges };
 }
 
 async function migrateCharacterResourceKnownBy() {
-  console.log("[P2] CharacterResourceLedgerItem.knownByCharacterIdsJson → CharacterResourceKnownBy...");
+  logger.info("[P2] CharacterResourceLedgerItem.knownByCharacterIdsJson → CharacterResourceKnownBy...");
   const items = await prisma.characterResourceLedgerItem.findMany({
     where: { knownByCharacterIdsJson: { not: null } },
     select: { id: true, novelId: true, knownByCharacterIdsJson: true },
@@ -164,12 +165,12 @@ async function migrateCharacterResourceKnownBy() {
       }
     }
   }
-  console.log(`[P2] CharacterResource: ${items.length} items, ${totalEdges} edges, ${skippedDangling} dangling`);
+  logger.info(`[P2] CharacterResource: ${items.length} items, ${totalEdges} edges, ${skippedDangling} dangling`);
   return { entityCount: items.length, edgeCount: totalEdges };
 }
 
 async function migrateStoryPlanIssues() {
-  console.log("[P2] StoryPlan.sourceIssueIdsJson → StoryPlanIssue...");
+  logger.info("[P2] StoryPlan.sourceIssueIdsJson → StoryPlanIssue...");
   const items = await prisma.storyPlan.findMany({
     where: { sourceIssueIdsJson: { not: null } },
     select: { id: true, novelId: true, sourceIssueIdsJson: true },
@@ -194,12 +195,12 @@ async function migrateStoryPlanIssues() {
       }
     }
   }
-  console.log(`[P2] StoryPlan: ${items.length} items, ${totalEdges} edges, ${skippedDangling} dangling refs skipped`);
+  logger.info(`[P2] StoryPlan: ${items.length} items, ${totalEdges} edges, ${skippedDangling} dangling refs skipped`);
   return { entityCount: items.length, edgeCount: totalEdges };
 }
 
 async function migrateStateVersionProposals() {
-  console.log("[P2] CanonicalStateVersion.acceptedProposalIdsJson → StateVersionProposal...");
+  logger.info("[P2] CanonicalStateVersion.acceptedProposalIdsJson → StateVersionProposal...");
   const items = await prisma.canonicalStateVersion.findMany({
     where: { acceptedProposalIdsJson: { not: null } },
     select: { id: true, novelId: true, acceptedProposalIdsJson: true },
@@ -222,7 +223,7 @@ async function migrateStateVersionProposals() {
       }
     }
   }
-  console.log(`[P2] CanonicalStateVersion: ${items.length} items, ${totalEdges} edges, ${skippedDangling} dangling`);
+  logger.info(`[P2] CanonicalStateVersion: ${items.length} items, ${totalEdges} edges, ${skippedDangling} dangling`);
   return { entityCount: items.length, edgeCount: totalEdges };
 }
 
@@ -242,30 +243,30 @@ async function verify(results: Array<{ label: string; entityCount: number; edgeC
   const totalInTables = wfr + wlc + wlcon + occ + crk + spi + svp;
   const totalFromJson = results.reduce((sum, r) => sum + r.edgeCount, 0);
 
-  console.log("\n[verify] Edge table row counts:");
-  console.log(`  WorldForceRelation:          ${wfr}`);
-  console.log(`  WorldLocationControl:        ${wlc}`);
-  console.log(`  WorldLocationConnection:     ${wlcon}`);
-  console.log(`  OpenConflictCharacter:       ${occ}`);
-  console.log(`  CharacterResourceKnownBy:    ${crk}`);
-  console.log(`  StoryPlanIssue:              ${spi}`);
-  console.log(`  StateVersionProposal:        ${svp}`);
-  console.log(`  TOTAL in edge tables:        ${totalInTables}`);
-  console.log(`  TOTAL from JSON:             ${totalFromJson}`);
+  logger.info("\n[verify] Edge table row counts:");
+  logger.info(`  WorldForceRelation:          ${wfr}`);
+  logger.info(`  WorldLocationControl:        ${wlc}`);
+  logger.info(`  WorldLocationConnection:     ${wlcon}`);
+  logger.info(`  OpenConflictCharacter:       ${occ}`);
+  logger.info(`  CharacterResourceKnownBy:    ${crk}`);
+  logger.info(`  StoryPlanIssue:              ${spi}`);
+  logger.info(`  StateVersionProposal:        ${svp}`);
+  logger.info(`  TOTAL in edge tables:        ${totalInTables}`);
+  logger.info(`  TOTAL from JSON:             ${totalFromJson}`);
 
   for (const r of results) {
-    console.log(`  ${r.label}: ${r.entityCount} entities, ${r.edgeCount} edges`);
+    logger.info(`  ${r.label}: ${r.entityCount} entities, ${r.edgeCount} edges`);
   }
 
   if (totalInTables === totalFromJson) {
-    console.log("\n✅ Verification PASSED: JSON element count == edge table row count");
+    logger.info("\n✅ Verification PASSED: JSON element count == edge table row count");
   } else {
-    console.warn(`\n⚠️  Verification MISMATCH: ${totalInTables} in tables vs ${totalFromJson} from JSON (diff: ${totalInTables - totalFromJson})`);
+    logger.warn(`\n⚠️  Verification MISMATCH: ${totalInTables} in tables vs ${totalFromJson} from JSON (diff: ${totalInTables - totalFromJson})`);
   }
 }
 
 async function main() {
-  console.log("=== REQ-7005 + REQ-7007: P1+P2 数据迁移 ===\n");
+  logger.info("=== REQ-7005 + REQ-7007: P1+P2 数据迁移 ===\n");
 
   const [worldResult, ocResult, crResult, spResult, csvResult] = await Promise.all([
     migrateWorldRelations(),
@@ -283,12 +284,12 @@ async function main() {
     { label: "CanonicalStateVersion", ...csvResult },
   ]);
 
-  console.log("\n=== 迁移完成 ===");
+  logger.info("\n=== 迁移完成 ===");
 }
 
 main()
   .catch((err) => {
-    console.error("Migration failed:", err);
+    logger.error("Migration failed:", err);
     process.exit(1);
   })
   .finally(() => prisma.$disconnect());

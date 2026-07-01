@@ -1,3 +1,5 @@
+import { logger } from "../logging/LoggerService";
+
 import type { NovelCorePipelineService } from "./novelCorePipelineService";
 
 const SERVER_RESTART_RECOVERY_MESSAGE = "章节流水线任务因服务重启中断，正在尝试恢复。";
@@ -63,7 +65,7 @@ export class NovelPipelineRuntimeService {
     const staleThresholdMs = Math.max(intervalMs * 2, input.staleThresholdMs ?? DEFAULT_STALE_THRESHOLD_MS);
     this.watchdogTimer = setInterval(() => {
       void this.recoverStalePipelineJobs(new Date(), staleThresholdMs).catch((error) => {
-        console.warn("Failed to recover stale novel pipeline jobs.", error);
+        logger.warn("Failed to recover stale novel pipeline jobs.", error);
       });
     }, intervalMs);
     this.watchdogTimer.unref?.();

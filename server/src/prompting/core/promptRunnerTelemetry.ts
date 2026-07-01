@@ -15,6 +15,7 @@ import {
   isPromptOutputEmpty,
 } from "./promptRunnerHelpers";
 import type {
+import { logger } from "../../services/logging/LoggerService";
   PromptAsset,
   PromptInvocationMeta,
   PromptRenderContext,
@@ -31,7 +32,7 @@ export function logPromptCompletion(input: {
   model?: string;
   latencyMs: number;
 }): void {
-  console.info(
+  logger.info(
     [
       "[prompt.runner]",
       `promptId=${input.meta.promptId}`,
@@ -67,7 +68,7 @@ export function logPromptEvent(input: {
   attempt?: number;
   validationError?: string;
 }): void {
-  console.info(
+  logger.info(
     [
       "[prompt.runner]",
       `event=${input.event}`,

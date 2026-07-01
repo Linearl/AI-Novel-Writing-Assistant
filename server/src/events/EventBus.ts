@@ -1,3 +1,5 @@
+import { logger } from "../services/logging/LoggerService";
+
 import type { NovelEvent, NovelEventType, EventHandler } from "./types";
 
 interface HandlerEntry {
@@ -28,7 +30,7 @@ export class EventBus {
       try {
         await handler(event);
       } catch (err) {
-        console.error(`[EventBus] handler error for ${event.type}:`, err);
+        logger.error(`[EventBus] handler error for ${event.type}:`, err);
       }
     }
   }

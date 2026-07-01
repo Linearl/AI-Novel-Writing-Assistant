@@ -1,5 +1,6 @@
 import type { StyleExtractionPreset } from "@ai-novel/shared/types/styleEngine";
 import type { StyleCreationCoreDraft } from "./styleCreation";
+import { logger } from "../logging/LoggerService";
 
 /* ------------------------------------------------------------------ */
 /*  Constants                                                          */
@@ -42,7 +43,7 @@ export function logStyleExtractionRuntimeEvent(event: string, payload: Record<st
     }
     parts.push(`${key}=${formatRuntimeLogValue(value)}`);
   }
-  console.info(parts.join(" "));
+  logger.info(parts.join(" "));
 }
 
 export function isRecord(value: unknown): value is Record<string, unknown> {

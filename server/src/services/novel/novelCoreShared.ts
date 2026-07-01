@@ -138,6 +138,7 @@ export interface CharacterInput {
 }
 
 import type { NovelControlPolicy } from "@ai-novel/shared/types/canonicalState";
+import { logger } from "../logging/LoggerService";
 
 export interface LLMGenerateOptions {
   provider?: LLMProvider;
@@ -376,26 +377,26 @@ export function normalizeNovelOutput<T extends {
 
 export function logPipelineInfo(message: string, meta?: Record<string, unknown>) {
   if (meta) {
-    console.info(`[pipeline] ${message}`, meta);
+    logger.info(`[pipeline] ${message}`, meta);
     return;
   }
-  console.info(`[pipeline] ${message}`);
+  logger.info(`[pipeline] ${message}`);
 }
 
 export function logPipelineWarn(message: string, meta?: Record<string, unknown>) {
   if (meta) {
-    console.warn(`[pipeline] ${message}`, meta);
+    logger.warn(`[pipeline] ${message}`, meta);
     return;
   }
-  console.warn(`[pipeline] ${message}`);
+  logger.warn(`[pipeline] ${message}`);
 }
 
 export function logPipelineError(message: string, meta?: Record<string, unknown>) {
   if (meta) {
-    console.error(`[pipeline] ${message}`, meta);
+    logger.error(`[pipeline] ${message}`, meta);
     return;
   }
-  console.error(`[pipeline] ${message}`);
+  logger.error(`[pipeline] ${message}`);
 }
 
 export function toText(content: unknown): string {

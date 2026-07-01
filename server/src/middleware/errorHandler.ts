@@ -1,6 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 import type { ApiResponse } from "@ai-novel/shared/types/api";
 import { ZodError, type ZodIssue } from "zod";
+import { logger } from "../services/logging/LoggerService";
 
 export class AppError extends Error {
   readonly statusCode: number;
@@ -132,7 +133,7 @@ function setRequestErrorMessage(
 }
 
 function logServerError(req: Request, error: unknown): void {
-  console.error(`[error] ${req.method} ${req.originalUrl}`, error);
+  logger.error(`[error] ${req.method} ${req.originalUrl}`, error);
 }
 
 function collectErrorMessages(error: unknown, depth = 0): string[] {

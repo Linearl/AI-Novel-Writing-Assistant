@@ -2,6 +2,7 @@ import { prisma } from "../../db/prisma";
 import { createContextBlock } from "../core/contextBudget";
 import type { PromptContextBlock } from "../core/promptTypes";
 import { listRegisteredPromptAssets } from "../registry";
+import { logger } from "../../services/logging/LoggerService";
 
 export type PromptAddendumScope = "global" | "novel";
 
@@ -319,7 +320,7 @@ export class PromptAddendumService {
         }));
     } catch (error) {
       if (!isMissingPromptAddendumTableError(error)) {
-        console.warn("[prompt.addendum] failed to resolve custom addendums", error);
+        logger.warn("[prompt.addendum] failed to resolve custom addendums", error);
       }
       return [];
     }

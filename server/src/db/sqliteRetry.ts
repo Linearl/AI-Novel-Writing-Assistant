@@ -1,3 +1,5 @@
+import { logger } from "../services/logging/LoggerService";
+
 const DEFAULT_SQLITE_RETRY_DELAYS_MS = [250, 1000, 2500] as const;
 
 function extractErrorCode(error: unknown): string | null {
@@ -43,7 +45,7 @@ export async function withSqliteRetry<T>(
 
       const delayMs = retryDelaysMs[attempt] ?? retryDelaysMs[retryDelaysMs.length - 1] ?? 0;
       const reason = error instanceof Error ? error.message : String(error);
-      console.warn(
+      logger.warn(
         `[sqlite.retry] label=${options?.label ?? "unknown"} attempt=${attempt + 1}/${retryDelaysMs.length} waitMs=${delayMs} reason=${JSON.stringify(reason)}`,
       );
       attempt += 1;

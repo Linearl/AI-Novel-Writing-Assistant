@@ -20,6 +20,7 @@ import {
 } from "./characterDynamicsShared";
 import { buildVolumeWindows, dedupeStrings, mergeProjectionAssignments, resolveCurrentVolume, toCharacterRelationStage } from "./characterDynamicsUtils";
 import { buildContentHash } from "../runtime/ChapterArtifactDeltaService";
+import { logger } from "../../logging/LoggerService";
 
 type NovelContextCharacterPort = Pick<NovelContextService, "createCharacter">;
 type NovelContextServiceFactory = () => NovelContextCharacterPort;
@@ -396,12 +397,12 @@ export class CharacterDynamicsMutationService {
       && volumeBySortOrder.has(assignment.volumeSortOrder)
     ));
     if (mergedAssignments.length < projection.assignments.length) {
-      console.warn(
+      logger.warn(
         `[CharacterDynamicsMutationService] Deduped ${projection.assignments.length - mergedAssignments.length} duplicate character-volume assignments for novel ${novelId}.`,
       );
     }
     if (validAssignments.length === 0) {
-      console.warn(
+      logger.warn(
         `[CharacterDynamicsMutationService] Skipped character dynamics rebuild for novel ${novelId}: projection contained no valid character-volume assignments.`,
       );
       return this.queryService.getOverview(novelId);

@@ -12,6 +12,7 @@
  */
 
 import { prisma } from "../../db/prisma";
+import { logger } from "../../services/logging/LoggerService";
 
 function parseJsonArray(value: string | null | undefined): string[] {
   if (!value) return [];
@@ -24,7 +25,7 @@ function parseJsonArray(value: string | null | undefined): string[] {
 }
 
 async function migrateStoryTimelineEvents() {
-  console.log("[migrate] StoryTimelineEvent → edge tables...");
+  logger.info("[migrate] StoryTimelineEvent → edge tables...");
   const events = await prisma.storyTimelineEvent.findMany({
     select: { id: true, novelId: true, participantIdsJson: true, factionIdsJson: true, prerequisiteIdsJson: true, consequenceIdsJson: true },
   });
@@ -67,12 +68,12 @@ async function migrateStoryTimelineEvents() {
 
     if (ops.length > 0) await Promise.all(ops);
   }
-  console.log(`[migrate] StoryTimelineEvent: ${events.length} events, ${totalEdges} edges created`);
+  logger.info(`[migrate] StoryTimelineEvent: ${events.length} events, ${totalEdges} edges created`);
   return { entityCount: events.length, edgeCount: totalEdges };
 }
 
 async function migrateChapterTimeAnchors() {
-  console.log("[migrate] ChapterTimeAnchor → edge tables...");
+  logger.info("[migrate] ChapterTimeAnchor → edge tables...");
   const anchors = await prisma.chapterTimeAnchor.findMany({
     select: { id: true, novelId: true, startsAfterIdsJson: true, plannedEventIdsJson: true, endedWithIdsJson: true, forbiddenEventIdsJson: true },
   });
@@ -99,12 +100,12 @@ async function migrateChapterTimeAnchors() {
       await prisma.timelineAnchorEventLink.createMany({ data });
     }
   }
-  console.log(`[migrate] ChapterTimeAnchor: ${anchors.length} anchors, ${totalEdges} edges created`);
+  logger.info(`[migrate] ChapterTimeAnchor: ${anchors.length} anchors, ${totalEdges} edges created`);
   return { entityCount: anchors.length, edgeCount: totalEdges };
 }
 
 async function migrateTimelineHooks() {
-  console.log("[migrate] TimelineHook → edge tables...");
+  logger.info("[migrate] TimelineHook → edge tables...");
   const hooks = await prisma.timelineHook.findMany({
     select: { id: true, novelId: true, relatedEventIdsJson: true, participantIdsJson: true },
   });
@@ -131,12 +132,12 @@ async function migrateTimelineHooks() {
 
     if (ops.length > 0) await Promise.all(ops);
   }
-  console.log(`[migrate] TimelineHook: ${hooks.length} hooks, ${totalEdges} edges created`);
+  logger.info(`[migrate] TimelineHook: ${hooks.length} hooks, ${totalEdges} edges created`);
   return { entityCount: hooks.length, edgeCount: totalEdges };
 }
 
 async function migrateTimelineConstraints() {
-  console.log("[migrate] TimelineConstraint → edge tables...");
+  logger.info("[migrate] TimelineConstraint → edge tables...");
   const constraints = await prisma.timelineConstraint.findMany({
     select: { id: true, novelId: true, relatedEventIdsJson: true, relatedHookIdsJson: true, relatedCharacterIdsJson: true },
   });
@@ -161,7 +162,7 @@ async function migrateTimelineConstraints() {
       await prisma.timelineConstraintLink.createMany({ data });
     }
   }
-  console.log(`[migrate] TimelineConstraint: ${constraints.length} constraints, ${totalEdges} edges created`);
+  logger.info(`[migrate] TimelineConstraint: ${constraints.length} constraints, ${totalEdges} edges created`);
   return { entityCount: constraints.length, edgeCount: totalEdges };
 }
 
@@ -179,26 +180,26 @@ async function verify(results: Array<{ entityCount: number; edgeCount: number }>
   const totalInTables = edgeCount + participantCount + factionCount + anchorLinkCount + hookEventCount + hookPartCount + constraintLinkCount;
   const totalFromJson = results.reduce((sum, r) => sum + r.edgeCount, 0);
 
-  console.log("\n[verify] Edge table row counts:");
-  console.log(`  TimelineEventEdge:          ${edgeCount}`);
-  console.log(`  TimelineEventParticipant:   ${participantCount}`);
-  console.log(`  TimelineEventFaction:       ${factionCount}`);
-  console.log(`  TimelineAnchorEventLink:    ${anchorLinkCount}`);
-  console.log(`  TimelineHookEventLink:      ${hookEventCount}`);
-  console.log(`  TimelineHookParticipant:    ${hookPartCount}`);
-  console.log(`  TimelineConstraintLink:     ${constraintLinkCount}`);
-  console.log(`  TOTAL in edge tables:       ${totalInTables}`);
-  console.log(`  TOTAL from JSON arrays:     ${totalFromJson}`);
+  logger.info("\n[verify] Edge table row counts:");
+  logger.info(`  TimelineEventEdge:          ${edgeCount}`);
+  logger.info(`  TimelineEventParticipant:   ${participantCount}`);
+  logger.info(`  TimelineEventFaction:       ${factionCount}`);
+  logger.info(`  TimelineAnchorEventLink:    ${anchorLinkCount}`);
+  logger.info(`  TimelineHookEventLink:      ${hookEventCount}`);
+  logger.info(`  TimelineHookParticipant:    ${hookPartCount}`);
+  logger.info(`  TimelineConstraintLink:     ${constraintLinkCount}`);
+  logger.info(`  TOTAL in edge tables:       ${totalInTables}`);
+  logger.info(`  TOTAL from JSON arrays:     ${totalFromJson}`);
 
   if (totalInTables === totalFromJson) {
-    console.log("\n✅ Verification PASSED: JSON element count == edge table row count");
+    logger.info("\n✅ Verification PASSED: JSON element count == edge table row count");
   } else {
-    console.warn(`\n⚠️  Verification MISMATCH: ${totalInTables} in tables vs ${totalFromJson} from JSON (diff: ${totalInTables - totalFromJson})`);
+    logger.warn(`\n⚠️  Verification MISMATCH: ${totalInTables} in tables vs ${totalFromJson} from JSON (diff: ${totalInTables - totalFromJson})`);
   }
 }
 
 async function main() {
-  console.log("=== REQ-7004: JSON 软引用 → 边表数据迁移 ===\n");
+  logger.info("=== REQ-7004: JSON 软引用 → 边表数据迁移 ===\n");
 
   const results = await Promise.all([
     migrateStoryTimelineEvents(),
@@ -209,12 +210,12 @@ async function main() {
 
   await verify(results);
 
-  console.log("\n=== 迁移完成 ===");
+  logger.info("\n=== 迁移完成 ===");
 }
 
 main()
   .catch((err) => {
-    console.error("Migration failed:", err);
+    logger.error("Migration failed:", err);
     process.exit(1);
   })
   .finally(() => prisma.$disconnect());

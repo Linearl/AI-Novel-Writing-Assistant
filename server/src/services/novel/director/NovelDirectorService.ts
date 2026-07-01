@@ -89,6 +89,7 @@ import { NovelDirectorChapterTitleRepairRuntime } from "./phases/novelDirectorCh
 import { NovelDirectorContinueRuntime } from "./runtime/novelDirectorContinueRuntime";
 import { prisma } from "../../../db/prisma";
 import { loadPersistentDirectorRuntimeProjection } from "./projections/novelDirectorRuntimeProjection";
+import { logger } from "../../logging/LoggerService";
 
 function isWorkflowTaskCancelledError(error: unknown): boolean {
   const message = error instanceof Error ? error.message : String(error);
@@ -235,7 +236,7 @@ export class NovelDirectorService {
       }
       const message = error instanceof Error ? error.message : "自动导演后台任务执行失败。";
       await this.workflowService.markTaskFailed(taskId, message);
-      console.error(`[director.background] task failed taskId=${taskId}`, error);
+      logger.error(`[director.background] task failed taskId=${taskId}`, error);
     } finally {
       await releaseHighMemoryDirectorReservations(taskId);
     }

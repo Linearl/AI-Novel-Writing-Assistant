@@ -29,6 +29,7 @@ import {
   type CharacterCastBatchAssessment,
 } from "./characterCastQuality";
 import { WorldContextGateway } from "../worldContext/WorldContextGateway";
+import { logger } from "../../logging/LoggerService";
 
 export interface CharacterPrepOptions {
   provider?: LLMProvider;
@@ -378,7 +379,7 @@ export async function generateAutoCharacterCastDraft(
       throw error;
     }
 
-    console.info(
+    logger.info(
       [
         "[character.cast.auto]",
         "event=staged_fallback",

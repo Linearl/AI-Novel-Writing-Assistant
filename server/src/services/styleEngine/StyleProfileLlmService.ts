@@ -17,6 +17,7 @@ import {
 } from "../../prompting/prompts/style/style.prompts";
 import { mapAntiAiRuleRow } from "./helpers";
 import {
+import { logger } from "../logging/LoggerService";
   buildAntiAiCatalogText,
   buildStyleAntiAiRiskDigest,
   buildStyleMetadataDigest,
@@ -111,7 +112,7 @@ export function logStyleExtractionRuntimeEvent(event: string, payload: Record<st
     }
     parts.push(`${key}=${formatRuntimeLogValue(value)}`);
   }
-  console.info(parts.join(" "));
+  logger.info(parts.join(" "));
 }
 
 export function isRecord(value: unknown): value is Record<string, unknown> {
@@ -345,7 +346,7 @@ export class StyleProfileLlmService {
         genreCount: metadata.applicableGenres.length,
       });
     } else {
-      console.warn("[style.profile.metadata] fallback_to_empty_metadata", {
+      logger.warn("[style.profile.metadata] fallback_to_empty_metadata", {
         name: coreDraft.name,
         error: metadataResult.reason instanceof Error ? metadataResult.reason.message : String(metadataResult.reason),
       });
@@ -361,7 +362,7 @@ export class StyleProfileLlmService {
         antiAiRuleCount: antiAiRuleKeys.length,
       });
     } else {
-      console.warn("[style.profile.anti_ai] fallback_to_empty_selection", {
+      logger.warn("[style.profile.anti_ai] fallback_to_empty_selection", {
         name: coreDraft.name,
         error: antiAiResult.reason instanceof Error ? antiAiResult.reason.message : String(antiAiResult.reason),
       });
@@ -410,13 +411,13 @@ export class StyleProfileLlmService {
     ]);
 
     if (metadataResult.status === "rejected") {
-      console.warn("[style.profile.metadata] fallback_to_empty_metadata", {
+      logger.warn("[style.profile.metadata] fallback_to_empty_metadata", {
         name,
         error: metadataResult.reason instanceof Error ? metadataResult.reason.message : String(metadataResult.reason),
       });
     }
     if (antiAiResult.status === "rejected") {
-      console.warn("[style.profile.anti_ai] fallback_to_empty_selection", {
+      logger.warn("[style.profile.anti_ai] fallback_to_empty_selection", {
         name,
         error: antiAiResult.reason instanceof Error ? antiAiResult.reason.message : String(antiAiResult.reason),
       });
@@ -504,7 +505,7 @@ export class StyleProfileLlmService {
     );
     const droppedKeys = rawKeys.filter((key) => !normalized.antiAiRuleKeys.includes(key));
     if (droppedKeys.length > 0) {
-      console.warn("[style.profile.anti_ai] dropped_invalid_rule_keys", {
+      logger.warn("[style.profile.anti_ai] dropped_invalid_rule_keys", {
         name: input.name,
         droppedKeys,
       });
@@ -558,7 +559,7 @@ export class StyleProfileLlmService {
     const matchedKeySet = new Set(antiRules.map((rule) => rule.key));
     const droppedKeys = normalizedRuleKeys.filter((key) => !matchedKeySet.has(key));
     if (droppedKeys.length > 0) {
-      console.warn("[style.profile.anti_ai] unresolved_rule_keys", {
+      logger.warn("[style.profile.anti_ai] unresolved_rule_keys", {
         droppedKeys,
       });
     }

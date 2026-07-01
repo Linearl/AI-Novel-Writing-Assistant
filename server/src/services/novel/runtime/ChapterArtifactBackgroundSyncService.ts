@@ -11,6 +11,7 @@ import type {
   PipelinePayload,
 } from "../novelCoreShared";
 import { buildContentHash, ChapterArtifactDeltaService } from "./ChapterArtifactDeltaService";
+import { logger } from "../../logging/LoggerService";
 
 interface ChapterBackgroundSyncContext {
   chapterId: string;
@@ -75,7 +76,7 @@ export class ChapterArtifactBackgroundSyncService {
       await this.runChapterSync(novelId, chapterId, content, artifactSyncMode, contentHash, options);
       this.latestSyncedContentHashByChapter.set(chapterKey, contentHash);
     } catch (error) {
-      console.warn("[chapter-artifact-background-sync] background sync failed", {
+      logger.warn("[chapter-artifact-background-sync] background sync failed", {
         novelId,
         chapterId,
         artifactSyncMode,
@@ -414,7 +415,7 @@ export class ChapterArtifactBackgroundSyncService {
         updatedAt: new Date(),
       },
     }).catch((error) => {
-      console.warn("[chapter-artifact-background-sync] checkpoint write failed", {
+      logger.warn("[chapter-artifact-background-sync] checkpoint write failed", {
         novelId: input.novelId,
         chapterId: input.chapterId,
         artifactType: input.artifactType,

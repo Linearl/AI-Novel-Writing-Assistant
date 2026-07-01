@@ -13,6 +13,7 @@ import { getSharedNovelServices } from "../novel/application/sharedNovelServices
 import { DirectorCommandService } from "../novel/director/commands/DirectorCommandService";
 import { NovelWorkflowRuntimeService } from "../novel/workflow/NovelWorkflowRuntimeService";
 import { styleExtractionTaskService } from "../styleEngine/StyleExtractionTaskService";
+import { logger } from "../logging/LoggerService";
 
 interface RecoveryInitializationDeps {
   markPendingBookAnalysesForManualRecovery(): Promise<unknown>;
@@ -339,7 +340,7 @@ export class RecoveryTaskService {
         }
       })
       .catch((error) => {
-        console.error("[recovery] resume-all background task failed:", error);
+        logger.error("[recovery] resume-all background task failed:", error);
       });
     return selected;
   }
@@ -365,7 +366,7 @@ export class RecoveryTaskService {
     void Promise.resolve()
       .then(() => this.resumeRecoveryCandidate(kind, id))
       .catch((error) => {
-        console.error(`[recovery] resume background task failed: ${kind}/${id}`, error);
+        logger.error(`[recovery] resume background task failed: ${kind}/${id}`, error);
       });
   }
 
@@ -382,7 +383,7 @@ export class RecoveryTaskService {
   private scheduleAutoDirectorRecovery(id: string): void {
     if (this.directorCommandService.enqueueRecoveryCommand) {
       void this.directorCommandService.enqueueRecoveryCommand(id).catch((error) => {
-        console.error(`[recovery] auto director command enqueue failed: novel_workflow/${id}`, error);
+        logger.error(`[recovery] auto director command enqueue failed: novel_workflow/${id}`, error);
       });
       return;
     }

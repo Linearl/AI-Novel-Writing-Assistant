@@ -17,6 +17,7 @@ import {
 } from "./structuredOutput";
 import { extractJSONValue } from "../services/novel/novelP0Utils";
 import type { PromptInvocationMeta } from "../prompting/core/promptTypes";
+import { logger } from "../services/logging/LoggerService";
 
 export interface StructuredInvokeResult<T> {
   data: T;
@@ -253,7 +254,7 @@ export function logStructuredInvokeEvent(input: {
   fallbackUsed?: boolean;
   reasoningForcedOff?: boolean;
 }): void {
-  console.info(
+  logger.info(
     [
       "[structured.invoke]",
       `event=${input.event}`,

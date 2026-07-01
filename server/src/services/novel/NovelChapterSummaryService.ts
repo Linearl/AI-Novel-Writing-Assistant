@@ -5,6 +5,7 @@ import type { RagOwnerType } from "../rag/types";
 import { runStructuredPrompt } from "../../prompting/core/promptRunner";
 import { chapterSummaryPrompt } from "../../prompting/prompts/novel/review.prompts";
 import { novelFactService, type NovelFactWriteItem } from "./fact/NovelFactService";
+import { logger } from "../logging/LoggerService";
 
 interface LLMGenerateOptions {
   provider?: LLMProvider;
@@ -145,7 +146,7 @@ export class NovelChapterSummaryService {
         await novelFactService.writeFacts(novelId, chapter.order, concreteFacts);
       } catch (error) {
         // 事实写入失败不应阻断摘要生成主流程
-        console.warn("[chapter-summary] concreteFacts ledger write failed", {
+        logger.warn("[chapter-summary] concreteFacts ledger write failed", {
           novelId,
           chapterId,
           error: error instanceof Error ? error.message : String(error),

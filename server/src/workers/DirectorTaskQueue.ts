@@ -3,6 +3,7 @@ import { prisma } from "../db/prisma";
 import { DirectorCommandService } from "../services/novel/director/commands/DirectorCommandService";
 import { resourceClassForCommand } from "../services/novel/director/commands/DirectorCommandServiceHelpers";
 import { taskDispatcher } from "./TaskDispatcher";
+import { logger } from "../services/logging/LoggerService";
 
 const ACTIVE_COMMAND_STATUSES = ["leased", "running"] as const;
 
@@ -144,7 +145,7 @@ export class DirectorTaskQueue {
   startLeaseRenewal(commandId: string, slotId: string): () => void {
     const renew = () => {
       void this.commandService.renewLease(commandId, `${this.workerId}:${slotId}`, this.leaseMs).catch((error) => {
-        console.warn(`[task-queue] failed to renew command lease commandId=${commandId}`, error);
+        logger.warn(`[task-queue] failed to renew command lease commandId=${commandId}`, error);
       });
     };
     renew();

@@ -17,6 +17,7 @@ import {
 } from "./ComicCharacterImageService";
 import { IMAGE_SIZES, type ImageSize } from "../image/types";
 import type { LLMProvider } from "@ai-novel/shared/types/llm";
+import { logger } from "../logging/LoggerService";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -306,10 +307,10 @@ export class ComicPanelImageService {
         : "1024x1536";
       const uniqueRefImagePaths = Array.from(new Set(refImagePaths)).slice(0, 10);
 
-      console.log(`[comic.image] generating panel=${panelId} order=${panel.order} provider=${provider} model=${model} size=${imageSize}`);
-      console.log(`[comic.image] prompt: ${prompt}`);
+      logger.info(`[comic.image] generating panel=${panelId} order=${panel.order} provider=${provider} model=${model} size=${imageSize}`);
+      logger.info(`[comic.image] prompt: ${prompt}`);
       if (uniqueRefImagePaths.length > 0) {
-        console.log(`[comic.image] refImagePaths(${uniqueRefImagePaths.length}): ${uniqueRefImagePaths.join(", ")}`);
+        logger.info(`[comic.image] refImagePaths(${uniqueRefImagePaths.length}): ${uniqueRefImagePaths.join(", ")}`);
       }
 
       const t0 = Date.now();
@@ -327,7 +328,7 @@ export class ComicPanelImageService {
       const imageUrl = result.images[0]?.url;
       if (!imageUrl) throw new Error("图片生成结果为空。");
 
-      console.log(`[comic.image] done panel=${panelId} elapsed=${elapsed}ms`);
+      logger.info(`[comic.image] done panel=${panelId} elapsed=${elapsed}ms`);
 
       const ext = inferExtension(imageUrl);
       const localPath = path.join(comicPanelDir(panelId), `panel.${ext}`);
@@ -351,7 +352,7 @@ export class ComicPanelImageService {
       return doneData;
     } catch (err) {
       const errMsg = err instanceof Error ? err.message : String(err);
-      console.error(`[comic.image] error panel=${panelId}:`, errMsg);
+      logger.error(`[comic.image] error panel=${panelId}:`, errMsg);
       const errorData: PanelImageData = {
         status: "error",
         provider,

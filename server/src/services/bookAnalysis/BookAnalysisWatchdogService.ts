@@ -1,5 +1,6 @@
 import { prisma } from "../../db/prisma";
 import { isMissingTableError } from "./bookAnalysis.utils";
+import { logger } from "../logging/LoggerService";
 
 const BOOK_ANALYSIS_WATCHDOG_INTERVAL_MS = 15_000;
 const BOOK_ANALYSIS_STALE_TIMEOUT_MS = 120_000;
@@ -15,7 +16,7 @@ export class BookAnalysisWatchdogService {
     }
     this.watchdogTimer = setInterval(() => {
       void this.recoverTimedOutAnalyses().catch((error) => {
-        console.warn("Failed to recover timed out book analyses.", error);
+        logger.warn("Failed to recover timed out book analyses.", error);
       });
     }, BOOK_ANALYSIS_WATCHDOG_INTERVAL_MS);
   }

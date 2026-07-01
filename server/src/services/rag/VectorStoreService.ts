@@ -1,5 +1,6 @@
 import { ragConfig } from "../../config/rag";
 import type { RagOwnerType } from "./types";
+import { logger } from "../logging/LoggerService";
 
 interface QdrantPayload {
   tenantId: string;
@@ -60,10 +61,10 @@ export class VectorStoreService {
       return;
     }
     if (meta) {
-      console.info(`${VectorStoreService.logPrefix} ${message}`, meta);
+      logger.info(`${VectorStoreService.logPrefix} ${message}`, meta);
       return;
     }
-    console.info(`${VectorStoreService.logPrefix} ${message}`);
+    logger.info(`${VectorStoreService.logPrefix} ${message}`);
   }
 
   private logWarn(message: string, meta?: Record<string, unknown>): void {
@@ -71,10 +72,10 @@ export class VectorStoreService {
       return;
     }
     if (meta) {
-      console.warn(`${VectorStoreService.logPrefix} ${message}`, meta);
+      logger.warn(`${VectorStoreService.logPrefix} ${message}`, meta);
       return;
     }
-    console.warn(`${VectorStoreService.logPrefix} ${message}`);
+    logger.warn(`${VectorStoreService.logPrefix} ${message}`);
   }
 
   private async fetchWithTimeout(url: string, init?: RequestInit): Promise<Response> {

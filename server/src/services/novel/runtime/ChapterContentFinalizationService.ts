@@ -10,6 +10,7 @@ import type { ChapterRuntimeRequestInput } from "./chapterRuntimeSchema";
 import type { StyleReviewResult } from "./PostGenerationStyleReviewRunner";
 import { ChapterQualityGateService } from "./ChapterQualityGateService";
 import {
+import { logger } from "../../logging/LoggerService";
   buildRuntimePackage,
   type ChapterRuntimePlannerPort,
   type OpenConflictRuntimeRow,
@@ -115,7 +116,7 @@ export class ChapterContentFinalizationService {
           runtimePackage,
         );
       } catch (error) {
-        console.warn("[chapter-runtime] fact ledger write failed", {
+        logger.warn("[chapter-runtime] fact ledger write failed", {
           novelId: input.novelId,
           chapterId: input.chapterId,
           error: error instanceof Error ? error.message : String(error),
@@ -230,7 +231,7 @@ export class ChapterContentFinalizationService {
     excluded: FactLedgerExcludedItem[];
   }): Promise<void> {
     for (const item of input.excluded) {
-      console.warn("[fact-ledger] skipped unverified chapter obligation", {
+      logger.warn("[fact-ledger] skipped unverified chapter obligation", {
         novelId: input.novelId,
         chapterId: input.chapterId,
         chapterOrder: input.chapterOrder,
@@ -273,7 +274,7 @@ export class ChapterContentFinalizationService {
         excludedObligations: input.excluded,
       },
     }).catch((error) => {
-      console.warn("[fact-ledger] skipped obligation exclusion event failed", {
+      logger.warn("[fact-ledger] skipped obligation exclusion event failed", {
         novelId: input.novelId,
         chapterId: input.chapterId,
         error: error instanceof Error ? error.message : String(error),

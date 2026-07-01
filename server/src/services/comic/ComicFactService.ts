@@ -4,6 +4,7 @@ import { z } from "zod";
 import { prisma } from "../../db/prisma";
 import { runStructuredPrompt } from "../../prompting/core/promptRunner";
 import type { PromptAsset } from "../../prompting/core/promptTypes";
+import { logger } from "../logging/LoggerService";
 
 // ─── Schema ───────────────────────────────────────────────────────────────────
 
@@ -132,10 +133,10 @@ export class ComicFactService {
         })),
       });
 
-      console.log(`[comic.fact] extracted ${newFacts.length} facts for episode=${episodeId} order=${episode.order}`);
+      logger.info(`[comic.fact] extracted ${newFacts.length} facts for episode=${episodeId} order=${episode.order}`);
     } catch (err) {
       // 事实提取失败不影响主流程
-      console.warn(`[comic.fact] extraction failed for episode=${episodeId}:`, err);
+      logger.warn(`[comic.fact] extraction failed for episode=${episodeId}:`, err);
     }
   }
 

@@ -1,3 +1,5 @@
+import { logger } from "../services/logging/LoggerService";
+
 type MemoryTelemetryValue = string | number | boolean | null | undefined;
 
 export interface MemoryTelemetryContext {
@@ -81,5 +83,5 @@ export function logMemoryUsage(context: MemoryTelemetryContext): void {
   appendField(parts, "volumeCount", context.volumeCount);
   appendField(parts, "chapterCount", context.chapterCount);
   appendField(parts, "beatSheetCount", context.beatSheetCount);
-  console.info(parts.join(" "));
+  logger.info(parts.join(" "));
 }

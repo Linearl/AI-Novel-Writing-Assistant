@@ -1,6 +1,7 @@
 import os from "node:os";
 import { NovelSideEffectJobService, novelSideEffectJobService } from "./NovelSideEffectJobService";
 import {
+import { logger } from "../../services/logging/LoggerService";
   NovelSideEffectJobHandlers,
   UnsupportedNovelSideEffectPayloadError,
 } from "./NovelSideEffectJobHandlers";
@@ -41,7 +42,7 @@ export class NovelSideEffectWorker {
       return;
     }
     void this.jobService.recoverExpiredRunningJobs().catch((error) => {
-      console.warn("[novel-side-effect-worker] failed to recover expired jobs", error);
+      logger.warn("[novel-side-effect-worker] failed to recover expired jobs", error);
     });
     this.timer = setInterval(() => {
       void this.tick();

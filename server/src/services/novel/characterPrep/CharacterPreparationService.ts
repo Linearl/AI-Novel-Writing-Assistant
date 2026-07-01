@@ -41,6 +41,7 @@ import {
   type CharacterCastBatchAssessment,
 } from "./characterCastQuality";
 import { WorldContextGateway } from "../worldContext/WorldContextGateway";
+import { logger } from "../../logging/LoggerService";
 
 interface CharacterPrepOptions {
   provider?: LLMProvider;
@@ -354,7 +355,7 @@ export class CharacterPreparationService {
         sourceType: "cast_option_projection",
       });
     } catch (error) {
-      console.warn("[character-cast-apply] 角色动态投影后台补齐失败", {
+      logger.warn("[character-cast-apply] 角色动态投影后台补齐失败", {
         ...logContext,
         stage: "character_dynamics",
         error,
@@ -368,7 +369,7 @@ export class CharacterPreparationService {
         input.visibleProfileGeneration,
       );
     } catch (error) {
-      console.warn("[character-cast-apply] 外显资料后台补齐失败", {
+      logger.warn("[character-cast-apply] 外显资料后台补齐失败", {
         ...logContext,
         stage: "visible_profile",
         error,
@@ -760,7 +761,7 @@ export class CharacterPreparationService {
     };
     if (options.postApplyMode === "background") {
       void this.runPostApplyEnhancements(postApplyInput).catch((error) => {
-        console.warn("[character-cast-apply] 阵容应用后台补齐任务失败", {
+        logger.warn("[character-cast-apply] 阵容应用后台补齐任务失败", {
           novelId,
           optionId: option.id,
           characterIds: uniqueCharacterIds,

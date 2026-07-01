@@ -19,6 +19,7 @@ import {
 import { NovelCoreService } from "../NovelCoreService";
 import { NovelVolumeService } from "../volume/NovelVolumeService";
 import {
+import { logger } from "../../logging/LoggerService";
   buildAnchorRangeFromParagraphBounds,
   buildCharacterStateSummary,
   buildMustKeepConstraints,
@@ -363,7 +364,7 @@ export class ChapterEditorWorkspaceService {
         refreshReason: "已基于本章内容、卷内定位与开放问题实时生成修文建议。",
       };
     } catch (error) {
-      console.warn("Failed to generate chapter editor workspace diagnosis.", error);
+      logger.warn("Failed to generate chapter editor workspace diagnosis.", error);
       return {
         chapterMeta: {
           chapterId: context.chapter.id,

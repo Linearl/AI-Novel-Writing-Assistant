@@ -29,6 +29,7 @@ import {
   toImageTask,
 } from "./imageGenerationMappers";
 import type {
+import { logger } from "../logging/LoggerService";
   CharacterImageGenerationRequest,
   ImageSize,
   NovelCoverImageGenerationRequest,
@@ -377,7 +378,7 @@ export class ImageGenerationService {
         metadata: asset.metadata,
       });
     } catch (error) {
-      console.warn(`[image] failed to remove stored asset file for ${asset.id}.`, error);
+      logger.warn(`[image] failed to remove stored asset file for ${asset.id}.`, error);
     }
 
     return toImageAsset(asset);

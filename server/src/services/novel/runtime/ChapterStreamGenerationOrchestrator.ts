@@ -14,6 +14,7 @@ import {
   type ChapterEmptyContentError,
 } from "./chapterEmptyContentError";
 import {
+import { logger } from "../../logging/LoggerService";
   ChapterContentFinalizationService,
   type FinalizeChapterContentResult,
 } from "./ChapterContentFinalizationService";
@@ -304,7 +305,7 @@ export class ChapterStreamGenerationOrchestrator {
     willRetry: boolean;
     attempt: number;
   }): void {
-    console.warn("[chapter-runtime] empty chapter content", {
+    logger.warn("[chapter-runtime] empty chapter content", {
       novelId: input.novelId,
       chapterId: input.chapterId,
       chapterOrder: input.chapterOrder,

@@ -16,6 +16,7 @@ import { createHash } from "node:crypto";
 import { prisma } from "../../db/prisma";
 import { hashSlotDefault } from "./slotResolution";
 import type { PromptSlotOverrideEntry, PromptSlotOverrideMap } from "./slotTypes";
+import { logger } from "../../services/logging/LoggerService";
 
 const PROMPT_APPEND_KEY_MAP: Record<string, string> = {
   "novel.chapter.writer": "writer.customConstraints",
@@ -36,7 +37,7 @@ function force(): boolean {
 }
 
 function log(...args: unknown[]) {
-  console.log("[migrateAddendumsToSlots]", ...args);
+  logger.info("[migrateAddendumsToSlots]", ...args);
 }
 
 type AddendumRow = {
@@ -174,6 +175,6 @@ async function main() {
 main()
   .then(() => process.exit(0))
   .catch((err) => {
-    console.error("[migrateAddendumsToSlots] FATAL:", err);
+    logger.error("[migrateAddendumsToSlots] FATAL:", err);
     process.exit(1);
   });

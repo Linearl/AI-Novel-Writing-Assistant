@@ -1,6 +1,7 @@
 import type { LLMProvider } from "@ai-novel/shared/types/llm";
 import { prisma } from "../db/prisma";
 import {
+import { logger } from "../services/logging/LoggerService";
   isBuiltInProvider,
   providerRequiresApiKey,
   PROVIDERS,
@@ -107,7 +108,7 @@ async function fetchJson(url: string, init: RequestInit): Promise<unknown> {
     return response.json();
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    console.error(`[modelCatalog] fetchJson failed: ${url} — ${message}`);
+    logger.error(`[modelCatalog] fetchJson failed: ${url} — ${message}`);
     throw error;
   } finally {
     clearTimeout(timer);

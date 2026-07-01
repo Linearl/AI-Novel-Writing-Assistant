@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { prisma } from "../../db/prisma";
 import { withSqliteRetry } from "../../db/sqliteRetry";
+import { logger } from "../logging/LoggerService";
 
 const RESERVATION_KEY_PREFIX = "runtime.highMemoryReservation";
 
@@ -150,7 +151,7 @@ function createHandle(input: {
         }),
         { label: "high-memory-reservation-release" },
       ).catch((error) => {
-        console.warn("[high-memory.reservation] release_failed", {
+        logger.warn("[high-memory.reservation] release_failed", {
           key: input.key,
           ownerId: input.ownerId,
           reason: error instanceof Error ? error.message : String(error),
@@ -427,13 +428,13 @@ export function startHighMemoryReservationRenewal(
   const timer = setInterval(() => {
     void handle.renew(options.ttlMs).then((renewed) => {
       if (!renewed) {
-        console.warn("[high-memory.reservation] renew_lost", {
+        logger.warn("[high-memory.reservation] renew_lost", {
           key: handle.key,
           ownerId: handle.ownerId,
         });
       }
     }).catch((error) => {
-      console.warn("[high-memory.reservation] renew_failed", {
+      logger.warn("[high-memory.reservation] renew_failed", {
         key: handle.key,
         ownerId: handle.ownerId,
         reason: error instanceof Error ? error.message : String(error),

@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import { resolveLogsRoot } from "../runtime/appPaths";
 import { resolveLogRetentionConfig, rotateLogFileIfNeeded } from "../platform/logging/logRetention";
+import { logger } from "../services/logging/LoggerService";
 
 const LOG_TRUE_VALUES = new Set(["1", "true", "on", "yes"]);
 const LOG_FALSE_VALUES = new Set(["0", "false", "off", "no"]);
@@ -179,11 +180,11 @@ function appendSessionLog(kind: "llm" | "llm-repair", entry: unknown): void {
       } else {
         announcedRepairLogPath = logPath;
       }
-      console.info(`[llm.debug] writing dedicated ${kind} log to ${logPath}`);
+      logger.info(`[llm.debug] writing dedicated ${kind} log to ${logPath}`);
     }
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    console.warn(`[llm.debug] failed to append dedicated ${kind} log: ${message}`);
+    logger.warn(`[llm.debug] failed to append dedicated ${kind} log: ${message}`);
   }
 }
 

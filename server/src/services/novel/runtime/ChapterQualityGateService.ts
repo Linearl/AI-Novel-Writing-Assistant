@@ -12,6 +12,7 @@ import {
 } from "./ChapterAcceptanceAssessmentService";
 import type { ChapterRuntimeRequestInput } from "./chapterRuntimeSchema";
 import {
+import { logger } from "../../logging/LoggerService";
   hashContent,
   normalizeTimelineGateResult,
   rememberCacheValue,
@@ -202,7 +203,7 @@ export class ChapterQualityGateService {
       }
       return payload.result;
     } catch (error) {
-      console.warn("[chapter-runtime] quality gate cache read skipped", {
+      logger.warn("[chapter-runtime] quality gate cache read skipped", {
         novelId: input.novelId,
         chapterId: input.chapterId,
         gate: input.gate,
@@ -258,7 +259,7 @@ export class ChapterQualityGateService {
         },
       });
     } catch (error) {
-      console.warn("[chapter-runtime] quality gate cache write skipped", {
+      logger.warn("[chapter-runtime] quality gate cache write skipped", {
         novelId: input.novelId,
         chapterId: input.chapterId,
         gate: input.gate,
@@ -498,7 +499,7 @@ export class ChapterQualityGateService {
       chapterIndex: input.contextPackage.chapter.order,
       result,
     }).catch((error) => {
-      console.warn("[chapter-runtime] timeline report save skipped", {
+      logger.warn("[chapter-runtime] timeline report save skipped", {
         novelId: input.novelId,
         chapterId: input.chapterId,
         error: error instanceof Error ? error.message : String(error),
@@ -531,7 +532,7 @@ export class ChapterQualityGateService {
     const startedAt = Date.now();
     try {
       const result = await input.run();
-      console.info("[chapter-runtime-trace]", {
+      logger.info("[chapter-runtime-trace]", {
         novelId: input.novelId,
         chapterId: input.chapterId,
         chapterOrder: input.chapterOrder,
@@ -546,7 +547,7 @@ export class ChapterQualityGateService {
       });
       return result;
     } catch (error) {
-      console.warn("[chapter-runtime-trace]", {
+      logger.warn("[chapter-runtime-trace]", {
         novelId: input.novelId,
         chapterId: input.chapterId,
         chapterOrder: input.chapterOrder,

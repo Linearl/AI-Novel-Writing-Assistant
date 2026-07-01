@@ -3,6 +3,7 @@ import type { ChatOpenAI } from "@langchain/openai";
 import type { TaskType } from "./modelRouter";
 import type { PromptInvocationMeta } from "../prompting/core/promptTypes";
 import { appendLlmSessionLog } from "./sessionLogFile";
+import { logger } from "../services/logging/LoggerService";
 
 const LLM_DEBUG_PATCHED = Symbol("LLM_DEBUG_PATCHED");
 const LOG_TRUE_VALUES = new Set(["1", "true", "on", "yes"]);
@@ -438,7 +439,7 @@ function logLlmFileBlock(input: {
 
 function logLLMRequest(method: "invoke" | "stream" | "batch", input: unknown, meta: LLMDebugMeta, requestId: string): void {
   const rendered = buildRequestLogText(method, input, meta);
-  console.info(rendered);
+  logger.info(rendered);
   logLlmFileBlock({
     requestId,
     event: "request",
@@ -450,7 +451,7 @@ function logLLMRequest(method: "invoke" | "stream" | "batch", input: unknown, me
 
 function logLLMResponse(method: "invoke" | "stream" | "batch", output: unknown, meta: LLMDebugMeta, requestId: string, latencyMs: number): void {
   const renderedOutput = serializeLLMOutput(method, output);
-  console.info(
+  logger.info(
     [
       "[llm.debug]",
       `event=${method}_response`,
@@ -473,7 +474,7 @@ function logLLMResponse(method: "invoke" | "stream" | "batch", output: unknown, 
 
 function logLLMError(method: "invoke" | "stream" | "batch", error: unknown, meta: LLMDebugMeta, requestId: string, latencyMs: number): void {
   const message = error instanceof Error ? error.message : String(error);
-  console.warn(
+  logger.warn(
     [
       "[llm.debug]",
       `event=${method}_error`,

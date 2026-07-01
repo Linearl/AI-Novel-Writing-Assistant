@@ -22,6 +22,7 @@ import { ChapterContentFinalizationService } from "./ChapterContentFinalizationS
 import { ChapterStreamGenerationOrchestrator } from "./ChapterStreamGenerationOrchestrator";
 import { ChapterPipelineRuntimeAdapter } from "./ChapterPipelineRuntimeAdapter";
 import {
+import { logger } from "../../logging/LoggerService";
   createDefaultReviewChapterAfterRepair,
   defaultChapterRuntimeAgent,
   type ChapterRuntimeAgentPort,
@@ -150,17 +151,17 @@ export class ChapterRuntimeCoordinator {
       saveDraftAndArtifacts: (...args) => artifactSyncService.saveDraftAndArtifacts(...args),
       logInfo: (message, meta) => {
         if (meta) {
-          console.info(`[chapter-runtime] ${message}`, meta);
+          logger.info(`[chapter-runtime] ${message}`, meta);
           return;
         }
-        console.info(`[chapter-runtime] ${message}`);
+        logger.info(`[chapter-runtime] ${message}`);
       },
       logWarn: (message, meta) => {
         if (meta) {
-          console.warn(`[chapter-runtime] ${message}`, meta);
+          logger.warn(`[chapter-runtime] ${message}`, meta);
           return;
         }
-        console.warn(`[chapter-runtime] ${message}`);
+        logger.warn(`[chapter-runtime] ${message}`);
       },
     });
   }

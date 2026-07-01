@@ -1,3 +1,5 @@
+import { logger } from "../services/logging/LoggerService";
+
 import Database from "better-sqlite3";
 
 export interface SqliteRuntimePragmaOptions {
@@ -19,7 +21,7 @@ export function configureSqliteRuntimePragmas(
     database.pragma("synchronous = NORMAL");
     database.pragma("wal_autocheckpoint = 1000");
     if (journalMode !== "wal") {
-      console.warn(`[sqlite] expected WAL journal mode, got ${JSON.stringify(journalMode)}.`);
+      logger.warn(`[sqlite] expected WAL journal mode, got ${JSON.stringify(journalMode)}.`);
     }
   } finally {
     database.close();

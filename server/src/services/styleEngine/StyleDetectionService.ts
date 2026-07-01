@@ -10,6 +10,7 @@ import {
 } from "./styleContractText";
 import { StyleRuntimeResolver } from "./StyleRuntimeResolver";
 import {
+import { logger } from "../logging/LoggerService";
   buildAntiAiRuleCatalogText,
   buildAntiAiRuleDirectiveText,
   listPreviewAntiAiRules,
@@ -68,7 +69,7 @@ export class StyleDetectionService {
     if (literalPatterns.length > 0) {
       const hasHit = literalPatterns.some((pattern) => input.content.includes(pattern));
       if (!hasHit) {
-        console.debug("[style-detect] fast-scan:skip-llm, no literal forbidden pattern matched");
+        logger.debug("[style-detect] fast-scan:skip-llm, no literal forbidden pattern matched");
         return {
           riskScore: 0,
           summary: "快扫未检出字面量违禁词，跳过 LLM 深度检测。",

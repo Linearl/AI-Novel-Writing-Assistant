@@ -10,6 +10,7 @@ import { runStructuredPrompt } from "../../prompting/core/promptRunner";
 import { antiAiRuleAiDraftPrompt } from "../../prompting/prompts/style/style.prompts";
 import { ensureStyleEngineSeedData } from "./StyleEngineSeedService";
 import { mapAntiAiRuleRow, serializeJson } from "./helpers";
+import { logger } from "../logging/LoggerService";
 
 interface AntiAiRuleInput {
   key: string;
@@ -161,7 +162,7 @@ export class AntiAiRuleService {
       });
     } catch (error) {
       const rawMessage = error instanceof Error ? error.message : String(error);
-      console.error("[anti-ai-rule] generateAiDraft failed:", rawMessage);
+      logger.error("[anti-ai-rule] generateAiDraft failed:", rawMessage);
       throw error;
     }
 

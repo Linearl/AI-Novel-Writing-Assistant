@@ -37,6 +37,7 @@ import {
 import { runDirectorTrackedStep } from "../projections/directorProgressTracker";
 import type { DirectorPhaseCallbacks, DirectorPhaseDependencies } from "./novelDirectorPhaseTypes";
 import { resetDirectorDownstreamChapterState } from "../recovery/novelDirectorDownstreamReset";
+import { logger } from "../../../logging/LoggerService";
 
 function buildChapterOrderRangeLabel(startOrder: number, endOrder: number): string {
   return startOrder === endOrder ? `第 ${startOrder} 章` : `第 ${startOrder}-${endOrder} 章`;
@@ -498,7 +499,7 @@ export async function runDirectorStructuredOutlinePhase(input: {
   await dependencies.characterDynamicsService.rebuildDynamics(novelId, {
     sourceType: "rebuild_projection",
   }).catch((error) => {
-    console.warn(
+    logger.warn(
       `[director.structured_outline] event=character_dynamics_rebuild_failed taskId=${taskId} novelId=${novelId} error=${JSON.stringify(error instanceof Error ? error.message : String(error))}`,
     );
   });

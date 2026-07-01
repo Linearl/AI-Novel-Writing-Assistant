@@ -1,6 +1,7 @@
 import { ragConfig } from "../../config/rag";
 import { RagIndexService, RagJobCancelledError } from "./RagIndexService";
 import { getRagRuntimeSettings } from "../settings/RagRuntimeSettingsService";
+import { logger } from "../logging/LoggerService";
 
 function backoffMs(attempt: number): number {
   const factor = Math.min(Math.max(attempt, 1), 6);
@@ -18,10 +19,10 @@ export class RagWorker {
       return;
     }
     if (meta) {
-      console.info(`[RAG][Worker] ${message}`, meta);
+      logger.info(`[RAG][Worker] ${message}`, meta);
       return;
     }
-    console.info(`[RAG][Worker] ${message}`);
+    logger.info(`[RAG][Worker] ${message}`);
   }
 
   private logWarn(message: string, meta?: Record<string, unknown>): void {
@@ -29,10 +30,10 @@ export class RagWorker {
       return;
     }
     if (meta) {
-      console.warn(`[RAG][Worker] ${message}`, meta);
+      logger.warn(`[RAG][Worker] ${message}`, meta);
       return;
     }
-    console.warn(`[RAG][Worker] ${message}`);
+    logger.warn(`[RAG][Worker] ${message}`);
   }
 
   /**

@@ -1,5 +1,6 @@
 import { prisma } from "../../db/prisma";
 import { normalizeNovelOutput } from "./novelCoreShared";
+import { logger } from "../logging/LoggerService";
 
 const DEFAULT_NOVEL_SNAPSHOT_RETENTION_COUNT = 10;
 const AUTOMATIC_SNAPSHOT_TRIGGERS = ["auto_milestone", "before_pipeline"] as const;
@@ -120,7 +121,7 @@ export class NovelCoreSnapshotService {
       try {
         await this.pruneAutomaticSnapshots(novelId);
       } catch (error) {
-        console.warn("[novel.snapshot] automatic snapshot retention skipped.", {
+        logger.warn("[novel.snapshot] automatic snapshot retention skipped.", {
           novelId,
           snapshotId: snapshot.id,
           error,

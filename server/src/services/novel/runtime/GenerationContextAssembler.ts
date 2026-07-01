@@ -43,6 +43,7 @@ import {
 } from "../characters/characterHardFacts";
 import { NovelVolumeService } from "../volume/NovelVolumeService";
 import { ChapterPlanJITService } from "../planning/ChapterPlanJITService";
+import { logger } from "../../logging/LoggerService";
 
 const OPENING_COMPARE_LIMIT = 3;
 const OPENING_SLICE_LENGTH = 220;
@@ -611,7 +612,7 @@ export class GenerationContextAssembler {
         chapterWriteContext.completedMilestones = factEntries.map((entry) => entry.text);
       }
     } catch (error) {
-      console.warn("[context-assembler] fact ledger read failed, completedMilestones will be empty", {
+      logger.warn("[context-assembler] fact ledger read failed, completedMilestones will be empty", {
         novelId,
         chapterOrder: chapter.order,
         error: error instanceof Error ? error.message : String(error),
@@ -670,7 +671,7 @@ export class GenerationContextAssembler {
       contextPackage.chapterWriteContext ? getAllContextBlocks(contextPackage) : [],
       2600,
     );
-    console.debug("[ctx-budget]", compressionLog);
+    logger.debug("[ctx-budget]", compressionLog);
 
     return {
       novel: { id: novel.id, title: novel.title },

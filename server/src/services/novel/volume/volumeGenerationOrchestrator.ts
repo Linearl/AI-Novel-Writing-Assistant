@@ -57,6 +57,7 @@ import {
   resolveBeatSheetTargetChapterCount,
 } from "./volumeBeatSheetGeneration";
 import {
+import { logger } from "../../logging/LoggerService";
   MAX_VOLUME_COUNT,
   buildVolumeCountGuidance,
 } from "@ai-novel/shared/types/volumePlanning";
@@ -70,7 +71,7 @@ async function notifyVolumeGenerationPhase(input: {
   label: string;
   options: VolumeGenerateOptions;
 }): Promise<void> {
-  console.info(
+  logger.info(
     `[volume.generate] event=phase_start novelId=${input.novelId} scope=${input.scope} phase=${input.phase} label=${JSON.stringify(input.label)}`,
   );
   await input.options.onPhaseStart?.({
