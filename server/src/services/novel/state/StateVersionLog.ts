@@ -61,6 +61,13 @@ export class StateVersionLog {
       return version;
     });
 
+    // REQ-7005: read acceptedProposalIds from edge table for consistency
+    const proposalEdges = await prisma.stateVersionProposal.findMany({
+      where: { versionId: created.id },
+      select: { proposalId: true },
+    });
+    const acceptedProposalIds = proposalEdges.map((e) => e.proposalId).filter((id): id is string => id != null);
+
     return {
       id: created.id,
       novelId: created.novelId,
@@ -69,10 +76,7 @@ export class StateVersionLog {
       sourceStage: created.sourceStage ?? null,
       version: created.version,
       summary: created.summary,
-      // REQ-7005: prefer input source (also written to edge table) over JSON fallback
-      acceptedProposalIds: input.acceptedProposalIds.length > 0
-        ? input.acceptedProposalIds
-        : parseStringArray(created.acceptedProposalIdsJson),
+      acceptedProposalIds,
       snapshotJson: created.snapshotJson,
       createdAt: created.createdAt.toISOString(),
     };
