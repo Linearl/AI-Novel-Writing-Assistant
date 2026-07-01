@@ -1,5 +1,39 @@
 import type { NextFunction, Request, Response } from "express";
+import { tokenService } from "../services/auth/TokenService";
 
-export function authMiddleware(_req: Request, _res: Response, next: NextFunction): void {
+/**
+ * API Token 认证中间件
+ * 检查 Authorization: Bearer <token> header
+ */
+export function authMiddleware(req: Request, res: Response, next: NextFunction): void {
+  // 跳过健康检查端点
+  if (req.path === "/api/health" || req.path === "/api/health/ready") {
+    next();
+    return;
+  }
+
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader) {
+    res.status(401).json({
+      success: false,
+      error: "Missing authorization header",
+    });
+    return;
+  }
+
+  // 支持 Bearer token 格式
+  const token = authHeader.startsWith("Bearer ")
+    ? authHeader.slice(7)
+    : authHeader;
+
+  if (!tokenService.validateToken(token)) {
+    res.status(401).json({
+      success: false,
+      error: "Invalid API token",
+    });
+    return;
+  }
+
   next();
 }

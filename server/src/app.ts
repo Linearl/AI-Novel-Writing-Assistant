@@ -8,6 +8,8 @@ import morgan from "morgan";
 import type { ApiResponse } from "@ai-novel/shared/types/api";
 import { ensureRuntimeDatabaseReady } from "./db/runtimeMigrations";
 import { errorHandler } from "./middleware/errorHandler";
+import { authMiddleware } from "./middleware/auth";
+import { globalLimiter, llmLimiter } from "./middleware/rateLimiter";
 import { loadProviderApiKeys } from "./llm/factory";
 import astrologyRouter from "./routes/astrology";
 import agentCatalogRouter from "./routes/agentCatalog";
@@ -115,6 +117,15 @@ export function createApp() {
     return `${method} ${url} ${status} ${responseTime} ms - ${contentLength}${errorSuffix}`;
   }));
   app.use(express.json({ limit: jsonBodyLimit }));
+
+  // 全局速率限制
+  app.use(globalLimiter);
+
+  // API Token 认证中间件
+  app.use("/api", authMiddleware);
+
+  // LLM 端点速率限制
+  app.use("/api/llm", llmLimiter);
 
   app.use("/api/health", healthRouter);
   app.use("/api/agent-catalog", agentCatalogRouter);
@@ -335,7 +346,29 @@ export async function startServer(options?: ServerStartOptions): Promise<Started
 }
 
 async function bootstrap(): Promise<void> {
-  await startServer();
+  const { server } = await startServer();
+
+  // 进程保护：未捕获异常处理
+  process.on('unhandledRejection', (reason, promise) => {
+    console.error('[server] Unhandled Rejection:', reason);
+    process.exit(1);
+  });
+
+  process.on('uncaughtException', (error) => {
+    console.error('[server] Uncaught Exception:', error.message, error.stack);
+    process.exit(1);
+  });
+
+  // 优雅关闭
+  process.on('SIGTERM', () => {
+    console.info('[server] SIGTERM received, shutting down gracefully');
+    server.close(() => process.exit(0));
+  });
+
+  process.on('SIGINT', () => {
+    console.info('[server] SIGINT received, shutting down gracefully');
+    server.close(() => process.exit(0));
+  });
 }
 
 if (require.main === module) {
