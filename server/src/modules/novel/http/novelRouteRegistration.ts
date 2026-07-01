@@ -4,6 +4,7 @@ import { registerNovelBaseRoutes } from "../setup/http/novelBaseRoutes";
 import { registerNovelChapterEditorRoutes } from "../production/http/novelChapterEditorRoutes";
 import { registerNovelChapterRoutes } from "../production/http/novelChapterRoutes";
 import { registerNovelChapterGenerationRoutes } from "../production/http/novelChapterGeneration";
+import { registerNovelCharacterArcRoutes } from "../characters/http/novelCharacterArcRoutes";
 import { registerNovelCharacterDynamicsRoutes } from "../characters/http/novelCharacterDynamicsRoutes";
 import { registerNovelCharacterPreparationRoutes } from "../characters/http/novelCharacterPreparationRoutes";
 import { registerNovelCharacterResourceRoutes } from "../characters/http/novelCharacterResourceRoutes";
@@ -22,6 +23,7 @@ import novelChapterSummaryRouter from "../production/http/novelChapterSummary";
 import novelDecisionsRouter from "../state/http/novelDecisions";
 import { createNovelImportRoutes } from "./novelImportRoutes";
 import { createNovelRiskRoutes } from "../risk/http/novelRiskRoutes";
+import { createNovelPaceCurveRoutes } from "../pace/http/novelPaceCurveRoutes";
 import type { NovelHttpServices } from "./novelHttpServices";
 import {
   aiRevisionPreviewSchema,
@@ -121,6 +123,10 @@ export function registerNovelHttpRoutes(router: Router, services: NovelHttpServi
     router,
     novelService,
     idParamsSchema,
+  });
+
+  registerNovelCharacterArcRoutes({
+    router,
   });
 
   registerNovelCharacterPreparationRoutes({
@@ -226,4 +232,5 @@ export function registerNovelHttpRoutes(router: Router, services: NovelHttpServi
   router.use(novelChapterSummaryRouter);
   router.use(createNovelImportRoutes());
   router.use(createNovelRiskRoutes());
+  router.use(createNovelPaceCurveRoutes());
 }

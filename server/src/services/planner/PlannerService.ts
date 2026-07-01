@@ -136,6 +136,15 @@ function buildPlannerStateGoalText(input: {
 export class PlannerService {
   private readonly styleBindingService = new StyleBindingService();
 
+  /** REQ-7005: enrich plan(s) with edge table issue IDs before calling enrichStoryPlan */
+  private async enrichPlanWithEdgeIssueIds<T extends { id: string }>(plan: T): Promise<T & { edgeIssueIds?: string[] }> {
+    const issueRows = await prisma.storyPlanIssue.findMany({
+      where: { planId: plan.id },
+      select: { issueId: true },
+    });
+    return { ...plan, edgeIssueIds: issueRows.map((r) => r.issueId).filter((id): id is string => id != null) };
+  }
+
   async getChapterPlan(novelId: string, chapterId: string) {
     const plan = await prisma.storyPlan.findFirst({
       where: { novelId, chapterId, level: "chapter", status: { not: "stale" } },
@@ -146,7 +155,9 @@ export class PlannerService {
       },
       orderBy: { updatedAt: "desc" },
     });
-    return plan ? enrichStoryPlan(plan as any) : null;
+    if (!plan) return null;
+    const enriched = await this.enrichPlanWithEdgeIssueIds(plan);
+    return enrichStoryPlan(enriched as any);
   }
 
   async getBookPlan(novelId: string) {
@@ -159,7 +170,9 @@ export class PlannerService {
       },
       orderBy: { updatedAt: "desc" },
     });
-    return plan ? enrichStoryPlan(plan as any) : null;
+    if (!plan) return null;
+    const enriched = await this.enrichPlanWithEdgeIssueIds(plan);
+    return enrichStoryPlan(enriched as any);
   }
 
   async listArcPlans(novelId: string) {
@@ -176,7 +189,8 @@ export class PlannerService {
       ],
       take: 6,
     });
-    return plans.map((plan) => enrichStoryPlan(plan as any));
+    const enriched = await Promise.all(plans.map((p) => this.enrichPlanWithEdgeIssueIds(p)));
+    return enriched.map((plan) => enrichStoryPlan(plan as any));
   }
 
   async buildPlanPromptBlock(novelId: string, chapterId: string): Promise<string> {
