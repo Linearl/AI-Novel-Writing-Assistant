@@ -634,6 +634,8 @@ model Character {
   syncProposals   CharacterSyncProposal[]
   conflictCharacters OpenConflictCharacter[]
   knownByResourceItems CharacterResourceKnownBy[]
+  timelineParticipants TimelineEventParticipant[]
+  timelineHookParticipants TimelineHookParticipant[]
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
@@ -2931,10 +2933,59 @@ model StoryTimelineEvent {
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
 
+  outgoingEdges        TimelineEventEdge[] @relation("EventEdgeSource")
+  incomingEdges        TimelineEventEdge[] @relation("EventEdgeTarget")
+  participants         TimelineEventParticipant[]
+  factions             TimelineEventFaction[]
+
   @@index([novelId, chapterIndex])
   @@index([novelId, eventOrder])
   @@index([novelId, status])
   @@index([novelId, eventKey])
+}
+
+model TimelineEventEdge {
+  id          String   @id @default(cuid())
+  sourceId    String
+  targetId    String
+  edgeType    String
+  novelId     String
+  createdAt   DateTime @default(now())
+
+  source      StoryTimelineEvent @relation("EventEdgeSource", fields: [sourceId], references: [id], onDelete: Cascade)
+  target      StoryTimelineEvent @relation("EventEdgeTarget", fields: [targetId], references: [id], onDelete: Cascade)
+
+  @@unique([sourceId, targetId, edgeType])
+  @@index([novelId])
+  @@index([sourceId])
+  @@index([targetId])
+}
+
+model TimelineEventParticipant {
+  id          String   @id @default(cuid())
+  eventId     String
+  characterId String
+  novelId     String
+  createdAt   DateTime @default(now())
+
+  event       StoryTimelineEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  character   Character         @relation(fields: [characterId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, characterId])
+  @@index([novelId])
+}
+
+model TimelineEventFaction {
+  id          String   @id @default(cuid())
+  eventId     String
+  factionId   String
+  novelId     String
+  createdAt   DateTime @default(now())
+
+  event       StoryTimelineEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, factionId])
+  @@index([novelId])
 }
 
 model ChapterTimeAnchor {
@@ -2952,6 +3003,8 @@ model ChapterTimeAnchor {
   forbiddenEventIdsJson String  @default("[]")
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
+
+  anchorEventLinks     TimelineAnchorEventLink[]
 
   @@unique([novelId, chapterId])
   @@index([novelId, chapterIndex])
@@ -2976,6 +3029,9 @@ model TimelineHook {
   createdAt                     DateTime @default(now())
   updatedAt                     DateTime @updatedAt
 
+  eventLinks                    TimelineHookEventLink[]
+  hookParticipants              TimelineHookParticipant[]
+
   @@index([novelId, status])
   @@index([novelId, resolveMode, blocking])
   @@index([novelId, createdInChapterIndex])
@@ -2997,6 +3053,8 @@ model TimelineConstraint {
   createdAt                DateTime @default(now())
   updatedAt                DateTime @updatedAt
 
+  constraintLinks          TimelineConstraintLink[]
+
   @@index([novelId, chapterIndex])
   @@index([novelId, active])
 }
@@ -3013,6 +3071,61 @@ model TimelineCheckReport {
 
   @@index([novelId, chapterIndex])
   @@index([novelId, status])
+}
+
+model TimelineAnchorEventLink {
+  id          String   @id @default(cuid())
+  anchorId    String
+  linkType    String
+  eventId     String
+  novelId     String
+  createdAt   DateTime @default(now())
+
+  anchor      ChapterTimeAnchor @relation(fields: [anchorId], references: [id], onDelete: Cascade)
+
+  @@unique([anchorId, linkType, eventId])
+  @@index([novelId])
+}
+
+model TimelineHookEventLink {
+  id          String   @id @default(cuid())
+  hookId      String
+  eventId     String
+  novelId     String
+  createdAt   DateTime @default(now())
+
+  hook        TimelineHook @relation(fields: [hookId], references: [id], onDelete: Cascade)
+
+  @@unique([hookId, eventId])
+  @@index([novelId])
+}
+
+model TimelineHookParticipant {
+  id          String   @id @default(cuid())
+  hookId      String
+  characterId String
+  novelId     String
+  createdAt   DateTime @default(now())
+
+  hook        TimelineHook @relation(fields: [hookId], references: [id], onDelete: Cascade)
+  character   Character    @relation(fields: [characterId], references: [id], onDelete: Cascade)
+
+  @@unique([hookId, characterId])
+  @@index([novelId])
+}
+
+model TimelineConstraintLink {
+  id            String   @id @default(cuid())
+  constraintId  String
+  refType       String
+  refId         String
+  novelId       String
+  createdAt     DateTime @default(now())
+
+  constraint    TimelineConstraint @relation(fields: [constraintId], references: [id], onDelete: Cascade)
+
+  @@unique([constraintId, refType, refId])
+  @@index([novelId])
 }
 
 // 事实账本：记录小说中已发生的不可逆事实，用于防止后续章节重复或矛盾

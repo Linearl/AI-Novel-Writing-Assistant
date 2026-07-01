@@ -38,15 +38,6 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1\v0.1-r2029-complex-narrative-advisor-mode\REQ-2029.md](./1.task\B.todo\v0.1\v0.1-r2029-complex-narrative-advisor-mode\REQ-2029.md) | REQ-2029 Creative Hub 叙事讨论通道 | REQ-2029 Creative Hub 叙事讨论通道 |
 | [1.task\B.todo\v0.1\v0.1-r2029-complex-narrative-advisor-mode\tasks.md](./1.task\B.todo\v0.1\v0.1-r2029-complex-narrative-advisor-mode\tasks.md) | REQ-2029 任务拆解（复杂版） | REQ-2029 任务拆解（复杂版） |
 
-## 1.task\B.todo\v0.1\v0.1-r2034-medium-theme-consistency-llm-analysis
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r2034-medium-theme-consistency-llm-analysis\README.md](./1.task\B.todo\v0.1\v0.1-r2034-medium-theme-consistency-llm-analysis\README.md) | REQ-2034 主题一致性LLM分析层任务总线 | REQ-2034 主题一致性LLM分析层任务总线 |
-| [1.task\B.todo\v0.1\v0.1-r2034-medium-theme-consistency-llm-analysis\REQ-2034-original.md](./1.task\B.todo\v0.1\v0.1-r2034-medium-theme-consistency-llm-analysis\REQ-2034-original.md) | REQ-2034 主题一致性LLM分析层（原始冻结副本） | REQ-2034 主题一致性LLM分析层（原始冻结副本） |
-| [1.task\B.todo\v0.1\v0.1-r2034-medium-theme-consistency-llm-analysis\REQ-2034.md](./1.task\B.todo\v0.1\v0.1-r2034-medium-theme-consistency-llm-analysis\REQ-2034.md) | REQ-2034 主题一致性LLM分析层 | REQ-2034 主题一致性LLM分析层 |
-| [1.task\B.todo\v0.1\v0.1-r2034-medium-theme-consistency-llm-analysis\tasks.md](./1.task\B.todo\v0.1\v0.1-r2034-medium-theme-consistency-llm-analysis\tasks.md) | REQ-2034 任务拆解 | REQ-2034 任务拆解 |
-
 ## 1.task\B.todo\v0.1\v0.1-r7004-medium-json-soft-ref-fk-fix
 
 | 文件 | 标题 | 描述 |

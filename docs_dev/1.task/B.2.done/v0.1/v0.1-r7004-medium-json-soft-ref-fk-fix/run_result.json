@@ -1,7 +1,7 @@
 {
   "reqId": "7004",
   "title": "JSON 软引用 FK 缺失修复",
-  "status": "requirements_ready",
+  "status": "done",
   "complexity": "medium",
   "category": "7xxx",
   "priority": "P1",
