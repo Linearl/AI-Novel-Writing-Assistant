@@ -77,6 +77,7 @@ description: "需求任务总清单（SSOT）"
 | 7005 | P2 零散 IdsJson 字段迁移为边表 | p2 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r7005-simple-p2-scattered-idsjson-edge-tables/README.md` |  |
 | 7006 | 移除时间线旧 JSON 字段 | p1 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r7006-simple-timeline-idsjson-removal/README.md` |  |
 | 7007 | World.structureJson 关系提取为独立表 | p1 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r7007-medium-world-structure-json-relation-extract/README.md` |  |
+| 7010 | Audit P1 Fix | p8 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r7010-p1-audit-p1-fix/README.md` |  |
 
 ---
 
@@ -89,6 +90,7 @@ description: "需求任务总清单（SSOT）"
 | 编号 | 任务标题 | 文档 |
 | --- | --- | --- |
 | 7006 | 移除时间线旧 JSON 字段 | `B.todo/v0.1-r7006-simple-timeline-idsjson-removal/README.md` |
+| 7010 | Audit P1 Fix | `B.todo/v0.1-r7010-p1-audit-p1-fix/README.md` |
 | 2013 | Director Failed Retry Entry | `B.todo/v0.1-r2013-medium-director-failed-retry-entry/README.md` |
 | 2014 | Chapter Token Budget Dynamic | `B.todo/v0.1-r2014-medium-chapter-token-budget-dynamic/README.md` |
 | 3004 | Novel Conversation Archive | `B.todo/v0.1-r3004-medium-novel-conversation-archive/README.md` |

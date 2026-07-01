@@ -38,6 +38,17 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1\v0.1-r7006-simple-timeline-idsjson-removal\REQ-7006.md](./1.task\B.todo\v0.1\v0.1-r7006-simple-timeline-idsjson-removal\REQ-7006.md) | REQ-7006 移除时间线旧 JSON 字段 — 需求工作副本 | REQ-7006 移除时间线旧 JSON 字段 — 需求工作副本 |
 | [1.task\B.todo\v0.1\v0.1-r7006-simple-timeline-idsjson-removal\tasks.md](./1.task\B.todo\v0.1\v0.1-r7006-simple-timeline-idsjson-removal\tasks.md) | REQ-7006 移除时间线旧 JSON 字段 — 任务拆解 | REQ-7006 移除时间线旧 JSON 字段 — 任务拆解 |
 
+## 1.task\B.todo\v0.1\v0.1-r7010-p1-audit-p1-fix
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.1\v0.1-r7010-p1-audit-p1-fix\decision_log.md](./1.task\B.todo\v0.1\v0.1-r7010-p1-audit-p1-fix\decision_log.md) | REQ-7010 决策留痕 | REQ-7010 决策留痕 |
+| [1.task\B.todo\v0.1\v0.1-r7010-p1-audit-p1-fix\design.md](./1.task\B.todo\v0.1\v0.1-r7010-p1-audit-p1-fix\design.md) | REQ-7010 方案设计 | REQ-7010 方案设计 |
+| [1.task\B.todo\v0.1\v0.1-r7010-p1-audit-p1-fix\README.md](./1.task\B.todo\v0.1\v0.1-r7010-p1-audit-p1-fix\README.md) | REQ-7010 全量审计 P1 关键问题修复任务总线 | REQ-7010 全量审计 P1 关键问题修复任务总线 |
+| [1.task\B.todo\v0.1\v0.1-r7010-p1-audit-p1-fix\REQ-7010-original.md](./1.task\B.todo\v0.1\v0.1-r7010-p1-audit-p1-fix\REQ-7010-original.md) | REQ-7010 全量审计 P1 关键问题修复 | REQ-7010 全量审计 P1 关键问题修复 |
+| [1.task\B.todo\v0.1\v0.1-r7010-p1-audit-p1-fix\REQ-7010.md](./1.task\B.todo\v0.1\v0.1-r7010-p1-audit-p1-fix\REQ-7010.md) | REQ-7010 全量审计 P1 关键问题修复 | REQ-7010 全量审计 P1 关键问题修复 |
+| [1.task\B.todo\v0.1\v0.1-r7010-p1-audit-p1-fix\tasks.md](./1.task\B.todo\v0.1\v0.1-r7010-p1-audit-p1-fix\tasks.md) | REQ-7010 任务拆解 | REQ-7010 任务拆解 |
+
 ## 1.task\template
 
 | 文件 | 标题 | 描述 |
@@ -120,6 +131,25 @@ description: "docs 目录索引（自动生成）"
 | [3.analysis\diagnosis\01-active\2026-06-28-health-check.md](./3.analysis\diagnosis\01-active\2026-06-28-health-check.md) | 2026-06-28 项目健康检查报告 — 五维评估 + 债务模式识别 + 行动建议 | 2026-06-28 项目健康检查报告 — 五维评估 + 债务模式识别 + 行动建议 |
 | [3.analysis\diagnosis\01-active\2026-06-30-v0.1-第二轮任务包完成度诊断.md](./3.analysis\diagnosis\01-active\2026-06-30-v0.1-第二轮任务包完成度诊断.md) | --- | - |
 | [3.analysis\diagnosis\01-active\2026-06-30-图数据库能力诊断.md](./3.analysis\diagnosis\01-active\2026-06-30-图数据库能力诊断.md) | 项目图结构能力诊断：盘点现有图模型、识别存储瓶颈、评估专用图数据库引入可行性 | 项目图结构能力诊断：盘点现有图模型、识别存储瓶颈、评估专用图数据库引入可行性 |
+
+## 3.analysis\diagnosis\01-active\2026-07-01-代码审计-full
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [3.analysis\diagnosis\01-active\2026-07-01-代码审计-full\README.md](./3.analysis\diagnosis\01-active\2026-07-01-代码审计-full\README.md) | AI-Novel 全量代码审计报告，覆盖安全、稳定性、架构、质量、性能、可测试性、可观测性、可维护性、兼容性共 9 个维度 | AI-Novel 全量代码审计报告，覆盖安全、稳定性、架构、质量、性能、可测试性、可观测性、可维护性、兼容性共 9 个维度 |
+
+## 3.analysis\diagnosis\01-active\2026-07-01-全量代码审计-full
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [3.analysis\diagnosis\01-active\2026-07-01-全量代码审计-full\fix-design.md](./3.analysis\diagnosis\01-active\2026-07-01-全量代码审计-full\fix-design.md) | > 创建时间：2026-07-01 | 基于审计报告：2026-07-01-全量代码审计-full | - |
+| [3.analysis\diagnosis\01-active\2026-07-01-全量代码审计-full\README.md](./3.analysis\diagnosis\01-active\2026-07-01-全量代码审计-full\README.md) | 2026-07-01 全量代码审计报告 - 9 维度扫描结果 | 2026-07-01 全量代码审计报告 - 9 维度扫描结果 |
+
+## 3.analysis\diagnosis\01-active\2026-07-01-全量代码审计-full\05-report
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [3.analysis\diagnosis\01-active\2026-07-01-全量代码审计-full\05-report\report-draft.md](./3.analysis\diagnosis\01-active\2026-07-01-全量代码审计-full\05-report\report-draft.md) | > 生成时间：2026-07-01 | 审计范围：full | 工作流：ll-workflow-core/aud (YAML) | - |
 
 ## 3.analysis\evidence\v0.1
 
