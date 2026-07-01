@@ -16,6 +16,7 @@ import {
   buildWorldStructureSeedFromSource,
   WORLD_STRUCTURE_SCHEMA_VERSION,
 } from "./worldStructure";
+import { syncWorldEdgeTables } from "./worldEdgeTableSync";
 import { normalizeGeneratedWorldPayload } from "./worldPersistence";
 import {
   type RefineMode,
@@ -106,6 +107,7 @@ async function persistGeneratedWorld(
       structureSchemaVersion: WORLD_STRUCTURE_SCHEMA_VERSION,
     },
   });
+  await syncWorldEdgeTables(world.id, seededStructure);
   await callbacks.createSnapshot(world.id, featureFlags.worldGraphEnabled ? "graph-generate" : "legacy-generate");
   callbacks.queueRagUpsert("world", world.id);
 }

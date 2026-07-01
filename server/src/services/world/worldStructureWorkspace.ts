@@ -17,6 +17,7 @@ import {
   worldStructureSectionPrompt,
 } from "../../prompting/prompts/world/world.prompts";
 import { buildWorldVisualizationPayload } from "./worldVisualization";
+import { syncWorldEdgeTables } from "./worldEdgeTableSync";
 import {
   type StructureBackfillInput,
   type StructureGenerateInput,
@@ -130,6 +131,7 @@ export async function updateWorldStructure(
       version: { increment: 1 },
     },
   });
+  await syncWorldEdgeTables(worldId, nextStructure);
   await callbacks.createSnapshot(worldId, "structure-saved");
   callbacks.queueWorldUpsert(worldId);
   return {
@@ -175,6 +177,7 @@ export async function backfillWorldStructure(
       version: { increment: 1 },
     },
   });
+  await syncWorldEdgeTables(worldId, nextStructure);
   await callbacks.createSnapshot(worldId, "structure-backfill");
   callbacks.queueWorldUpsert(worldId);
 

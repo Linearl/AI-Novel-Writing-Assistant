@@ -19,6 +19,7 @@ import {
   buildWorldBindingSupport,
   parseWorldStructurePayload,
 } from "./worldStructure";
+import { readWorldEdgeTables } from "./worldEdgeTableSync";
 
 import type {
   VisualizationDraft,
@@ -212,9 +213,21 @@ export function buildFallbackWorldVisualizationPayload(world: VisualizationSourc
 /*  Structured-data path                                               */
 /* ------------------------------------------------------------------ */
 
-function buildStructuredWorldVisualizationPayload(world: VisualizationSource): WorldVisualizationPayload | null {
+async function buildStructuredWorldVisualizationPayload(world: VisualizationSource): Promise<WorldVisualizationPayload | null> {
   const { structure, hasStructuredData } = parseWorldStructurePayload(world.structureJson, world.bindingSupportJson);
   if (!hasStructuredData) return null;
+
+  // REQ-7007: Read from edge tables; fall back to JSON if edge tables are empty
+  const edgeData = await readWorldEdgeTables(world.id);
+  const forceRelations = edgeData.forceRelations.length > 0
+    ? edgeData.forceRelations
+    : structure.relations.forceRelations;
+  const locationConnections = edgeData.locationConnections.length > 0
+    ? edgeData.locationConnections
+    : (structure.relations.locationConnections ?? []);
+  const locationControls = edgeData.locationControls.length > 0
+    ? edgeData.locationControls
+    : structure.relations.locationControls;
 
   const forceNodes = structure.forces.map((item) => ({
     id: item.id,
@@ -230,7 +243,7 @@ function buildStructuredWorldVisualizationPayload(world: VisualizationSource): W
     }));
   const factionNodesMerged = [...forceNodes, ...factionNodes].slice(0, MAX_FACTION_NODES);
   const factionNodeIds = new Set(factionNodesMerged.map((item) => item.id));
-  const factionEdges = structure.relations.forceRelations
+  const factionEdges = forceRelations
     .filter((item) => factionNodeIds.has(item.sourceForceId) && factionNodeIds.has(item.targetForceId))
     .map((item) => ({
       source: item.sourceForceId,
@@ -263,7 +276,7 @@ function buildStructuredWorldVisualizationPayload(world: VisualizationSource): W
     .slice(0, MAX_GEO_NODES);
   const geographyNodeIdSet = new Set(geographyNodes.map((item) => item.id));
   const forceNameById = new Map(structure.forces.map((item) => [item.id, item.name]));
-  const explicitLocationEdges = (structure.relations.locationConnections ?? [])
+  const explicitLocationEdges = locationConnections
     .filter((item) => geographyNodeIdSet.has(item.sourceLocationId) && geographyNodeIdSet.has(item.targetLocationId))
     .map((item) => ({
       source: item.sourceLocationId,
@@ -273,7 +286,7 @@ function buildStructuredWorldVisualizationPayload(world: VisualizationSource): W
       distanceHint: item.distanceHint || undefined,
       risk: item.narrativeUse || undefined,
     }));
-  const geographyEdges = explicitLocationEdges.length > 0 ? explicitLocationEdges : structure.relations.locationControls
+  const geographyEdges = explicitLocationEdges.length > 0 ? explicitLocationEdges : locationControls
     .filter((item) => geographyNodeIdSet.has(item.locationId))
     .reduce<WorldGeographyMapEdge[]>((acc, relation, index, list) => {
       const sibling = list.find(
@@ -418,7 +431,7 @@ function sanitizeVisualizationPayload(
 /* ------------------------------------------------------------------ */
 
 export async function buildWorldVisualizationPayload(world: VisualizationSource): Promise<WorldVisualizationPayload> {
-  const structured = buildStructuredWorldVisualizationPayload(world);
+  const structured = await buildStructuredWorldVisualizationPayload(world);
   if (structured) return structured;
   const fallback = buildFallbackWorldVisualizationPayload(world);
   const draft = await tryBuildWorldVisualizationWithLLM(world);

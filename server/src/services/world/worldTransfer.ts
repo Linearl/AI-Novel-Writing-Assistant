@@ -13,6 +13,7 @@ import {
   parseWorldStructurePayload,
   WORLD_STRUCTURE_SCHEMA_VERSION,
 } from "./worldStructure";
+import { syncWorldEdgeTables } from "./worldEdgeTableSync";
 import { WORLD_LAYER_ORDER } from "./worldTemplates";
 import type { RagOwnerType } from "../rag/types";
 
@@ -377,6 +378,7 @@ export async function importWorldData(
       structureSchemaVersion: WORLD_STRUCTURE_SCHEMA_VERSION,
     },
   });
+  await syncWorldEdgeTables(world.id, nextStructure);
   await callbacks.createSnapshot(world.id, "import-initial");
   callbacks.queueRagUpsert("world", world.id);
   return world;

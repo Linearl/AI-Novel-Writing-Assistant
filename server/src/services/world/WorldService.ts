@@ -41,6 +41,7 @@ import {
   WORLD_STRUCTURE_SCHEMA_VERSION,
 } from "./worldStructure";
 import { buildWorldVisualizationPayload } from "./worldVisualization";
+import { syncWorldEdgeTables } from "./worldEdgeTableSync";
 import { applyGeneratedWorldFields, buildWorldBlueprintPromptBlock } from "./worldGenerationBlueprint";
 import { createWorldDraftGenerateStream, createWorldDraftRefineStream } from "./worldDraftGeneration";
 import { analyzeWorldInspiration } from "./worldInspirationService";
@@ -187,6 +188,7 @@ export class WorldService {
         structureSchemaVersion: WORLD_STRUCTURE_SCHEMA_VERSION,
       },
     });
+    await syncWorldEdgeTables(world.id, seededStructure);
     if (knowledgeDocumentIds.length > 0) {
       await prisma.knowledgeBinding.createMany({
         data: knowledgeDocumentIds.map((documentId) => ({
@@ -223,6 +225,7 @@ export class WorldService {
       }
     }
     let structuredUpdate: Record<string, unknown> = {};
+    let structureToSync: WorldStructuredData | null = null;
     if (input.structure || input.bindingSupport) {
       const { structure: currentStructure, bindingSupport: currentBindingSupport } =
         parseWorldStructurePayload(world.structureJson, world.bindingSupportJson);
@@ -232,11 +235,13 @@ export class WorldService {
         : buildWorldBindingSupport(nextStructure);
       structuredUpdate = applyStructuredWorldToLegacyFields(nextStructure, world, nextBindingSupport);
       markGeneratedLayerStatesFromFields(states, structuredUpdate);
+      structureToSync = nextStructure;
     }
     const updated = await prisma.world.update({
       where: { id },
       data: { ...legacyInput, ...structuredUpdate, layerStates: JSON.stringify(states) },
     });
+    if (structureToSync) await syncWorldEdgeTables(id, structureToSync);
     this.queueRagUpsert("world", id);
     return updated;
   }
@@ -283,6 +288,7 @@ export class WorldService {
       where: { id: worldId },
       data: { ...structuredFields, axioms: JSON.stringify(axioms), version: { increment: 1 } },
     });
+    await syncWorldEdgeTables(worldId, nextStructure);
     await this.createSnapshot(worldId, "axioms-updated");
     this.queueRagUpsert("world", worldId);
     return updated;
@@ -303,6 +309,7 @@ export class WorldService {
           where: { id: worldId },
           data: { status: "refining", layerStates: JSON.stringify(states), ...structuredFields },
         });
+        await syncWorldEdgeTables(worldId, parsedStructure.structure);
         await this.createSnapshot(worldId, `${layerKey}-structured-layer`);
         this.queueRagUpsert("world", worldId);
         return { world: updated, layerKey, generated, layerStates: states };
@@ -340,6 +347,7 @@ export class WorldService {
         where: { id: worldId },
         data: { status: "refining", layerStates: JSON.stringify(states), ...structuredFields },
       });
+      await syncWorldEdgeTables(worldId, parsedStructure.structure);
       await this.createSnapshot(worldId, "structured-layers-generated-all");
       this.queueRagUpsert("world", worldId);
       return { world: updated, generated: generatedByLayer, layerStates: states };
@@ -367,6 +375,12 @@ export class WorldService {
         ...buildGeneratedStructurePersistence(applyGeneratedWorldFields(world, mergedGenerated)), ...mergedGenerated,
       },
     });
+    // Re-read to sync edge tables from the final merged structure
+    const finalWorld = await prisma.world.findUnique({ where: { id: worldId }, select: { structureJson: true } });
+    if (finalWorld?.structureJson) {
+      const { structure } = parseWorldStructurePayload(finalWorld.structureJson, null);
+      await syncWorldEdgeTables(worldId, structure);
+    }
     await this.createSnapshot(worldId, "layers-generated-all");
     this.queueRagUpsert("world", worldId);
     return { world: updated, generated: generatedByLayer, layerStates: states };
@@ -495,6 +509,7 @@ export class WorldService {
       const nextBindingSupport = buildWorldBindingSupport(nextStructure);
       const structuredFields = applyStructuredWorldToLegacyFields(nextStructure, world, nextBindingSupport);
       await prisma.world.update({ where: { id: input.worldId }, data: structuredFields });
+      await syncWorldEdgeTables(input.worldId, nextStructure);
       await this.createSnapshot(input.worldId, `library-use-${item.name}`);
       this.queueRagUpsert("world", input.worldId);
       return { itemId, injected: true, worldId: input.worldId, targetCollection: input.targetCollection };
