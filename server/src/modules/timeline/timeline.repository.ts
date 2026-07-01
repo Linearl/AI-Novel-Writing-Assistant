@@ -8,28 +8,7 @@ import type {
   TimelineIssue,
 } from "@ai-novel/shared/types/timeline";
 import { prisma } from "../../db/prisma";
-import {
-  syncEventEdges,
-  syncAnchorEdges,
-  syncHookEdges,
-  syncConstraintEdges,
-  readEventEdges,
-  readAnchorEdges,
-  readHookEdges,
-  readConstraintEdges,
-} from "./timelineEdgeTableSync";
-
-function parseJsonArray(value: string | null | undefined): string[] {
-  if (!value) {
-    return [];
-  }
-  try {
-    const parsed = JSON.parse(value);
-    return Array.isArray(parsed) ? parsed.filter((item): item is string => typeof item === "string") : [];
-  } catch {
-    return [];
-  }
-}
+import type { Prisma } from "@prisma/client";
 
 function parseJson<T>(value: string | null | undefined, fallback: T): T {
   if (!value) {
@@ -44,6 +23,78 @@ function parseJson<T>(value: string | null | undefined, fallback: T): T {
 
 function stringifyJson(value: unknown): string {
   return JSON.stringify(value ?? []);
+}
+
+// ── REQ-7004: Edge table helpers ──────────────────────────────
+
+function groupById(rows: Array<Record<string, string>>, keyField: string, valueField: string): Map<string, string[]> {
+  const map = new Map<string, string[]>();
+  for (const row of rows) {
+    const key = row[keyField];
+    const val = row[valueField];
+    if (!key || !val) continue;
+    const arr = map.get(key) ?? [];
+    arr.push(val);
+    map.set(key, arr);
+  }
+  return map;
+}
+
+async function batchLoadEventEdges(eventIds: string[]) {
+  const empty = { prerequisiteIds: new Map<string, string[]>(), consequenceIds: new Map<string, string[]>(), participantIds: new Map<string, string[]>(), factionIds: new Map<string, string[]>() };
+  if (eventIds.length === 0) return empty;
+  const [prereq, consequence, participants, factions] = await Promise.all([
+    prisma.timelineEventEdge.findMany({ where: { sourceId: { in: eventIds }, edgeType: "prerequisite" }, select: { sourceId: true, targetId: true } }),
+    prisma.timelineEventEdge.findMany({ where: { sourceId: { in: eventIds }, edgeType: "consequence" }, select: { sourceId: true, targetId: true } }),
+    prisma.timelineEventParticipant.findMany({ where: { eventId: { in: eventIds } }, select: { eventId: true, characterId: true } }),
+    prisma.timelineEventFaction.findMany({ where: { eventId: { in: eventIds } }, select: { eventId: true, factionId: true } }),
+  ]);
+  return {
+    prerequisiteIds: groupById(prereq as Record<string, string>[], "sourceId", "targetId"),
+    consequenceIds: groupById(consequence as Record<string, string>[], "sourceId", "targetId"),
+    participantIds: groupById(participants as Record<string, string>[], "eventId", "characterId"),
+    factionIds: groupById(factions as Record<string, string>[], "eventId", "factionId"),
+  };
+}
+
+async function batchLoadAnchorEdges(anchorIds: string[]) {
+  const empty = { startsAfterIds: new Map<string, string[]>(), plannedEventIds: new Map<string, string[]>(), endedWithIds: new Map<string, string[]>(), forbiddenIds: new Map<string, string[]>() };
+  if (anchorIds.length === 0) return empty;
+  const links = await prisma.timelineAnchorEventLink.findMany({ where: { anchorId: { in: anchorIds } }, select: { anchorId: true, eventId: true, linkType: true } });
+  return {
+    startsAfterIds: groupById(links.filter(l => l.linkType === "startsAfter") as Record<string, string>[], "anchorId", "eventId"),
+    plannedEventIds: groupById(links.filter(l => l.linkType === "plannedEvent") as Record<string, string>[], "anchorId", "eventId"),
+    endedWithIds: groupById(links.filter(l => l.linkType === "endedWith") as Record<string, string>[], "anchorId", "eventId"),
+    forbiddenIds: groupById(links.filter(l => l.linkType === "forbidden") as Record<string, string>[], "anchorId", "eventId"),
+  };
+}
+
+async function batchLoadHookEdges(hookIds: string[]) {
+  const empty = { relatedEventIds: new Map<string, string[]>(), participantIds: new Map<string, string[]>() };
+  if (hookIds.length === 0) return empty;
+  const [eventLinks, participants] = await Promise.all([
+    prisma.timelineHookEventLink.findMany({ where: { hookId: { in: hookIds } }, select: { hookId: true, eventId: true } }),
+    prisma.timelineHookParticipant.findMany({ where: { hookId: { in: hookIds } }, select: { hookId: true, characterId: true } }),
+  ]);
+  return {
+    relatedEventIds: groupById(eventLinks as Record<string, string>[], "hookId", "eventId"),
+    participantIds: groupById(participants as Record<string, string>[], "hookId", "characterId"),
+  };
+}
+
+async function batchLoadConstraintEdges(constraintIds: string[]) {
+  const empty = { relatedEventIds: new Map<string, string[]>(), relatedHookIds: new Map<string, string[]>(), relatedCharacterIds: new Map<string, string[]>() };
+  if (constraintIds.length === 0) return empty;
+  const links = await prisma.timelineConstraintLink.findMany({ where: { constraintId: { in: constraintIds } }, select: { constraintId: true, refId: true, refType: true } });
+  return {
+    relatedEventIds: groupById(links.filter(l => l.refType === "event") as Record<string, string>[], "constraintId", "refId"),
+    relatedHookIds: groupById(links.filter(l => l.refType === "hook") as Record<string, string>[], "constraintId", "refId"),
+    relatedCharacterIds: groupById(links.filter(l => l.refType === "character") as Record<string, string>[], "constraintId", "refId"),
+  };
+}
+
+function edgeOrEmpty(edgeMap: Map<string, string[]>, id: string): string[] {
+  return edgeMap.get(id) ?? [];
 }
 
 function toIso(value: Date | string): string {
@@ -92,17 +143,7 @@ type HookRow = Awaited<ReturnType<typeof prisma.timelineHook.findMany>>[number];
 type ConstraintRow = Awaited<ReturnType<typeof prisma.timelineConstraint.findMany>>[number];
 type ReportRow = Awaited<ReturnType<typeof prisma.timelineCheckReport.findFirst>>;
 
-interface EdgeOverrides {
-  participantIds?: string[];
-  factionIds?: string[];
-  prerequisiteEventIds?: string[];
-  consequenceEventIds?: string[];
-}
-
-function mapTimelineEvent(
-  row: EventRow,
-  edgeOverrides?: EdgeOverrides,
-): StoryTimelineEvent {
+export function mapTimelineEvent(row: EventRow, edges?: { prerequisiteIds: Map<string, string[]>; consequenceIds: Map<string, string[]>; participantIds: Map<string, string[]>; factionIds: Map<string, string[]> }): StoryTimelineEvent {
   return {
     id: row.id,
     novelId: row.novelId,
@@ -117,11 +158,11 @@ function mapTimelineEvent(
     status: row.status as StoryTimelineEvent["status"],
     visibility: row.visibility as StoryTimelineEvent["visibility"],
     source: row.source as StoryTimelineEvent["source"],
-    participantIds: edgeOverrides?.participantIds ?? parseJsonArray(row.participantIdsJson),
+    participantIds: edges ? edgeOrEmpty(edges.participantIds, row.id) : [],
     locationId: row.locationId,
-    factionIds: edgeOverrides?.factionIds ?? parseJsonArray(row.factionIdsJson),
-    prerequisiteEventIds: edgeOverrides?.prerequisiteEventIds ?? parseJsonArray(row.prerequisiteIdsJson),
-    consequenceEventIds: edgeOverrides?.consequenceEventIds ?? parseJsonArray(row.consequenceIdsJson),
+    factionIds: edges ? edgeOrEmpty(edges.factionIds, row.id) : [],
+    prerequisiteEventIds: edges ? edgeOrEmpty(edges.prerequisiteIds, row.id) : [],
+    consequenceEventIds: edges ? edgeOrEmpty(edges.consequenceIds, row.id) : [],
     stateChanges: parseJson(row.stateChangesJson, []),
     eventKey: row.eventKey,
     confidence: row.confidence,
@@ -130,19 +171,7 @@ function mapTimelineEvent(
   };
 }
 
-interface AnchorEdgeOverrides {
-  startsAfterEventIds?: string[];
-  plannedEventIds?: string[];
-  endedWithEventIds?: string[];
-  previousHookIds?: string[];
-  nextHookIds?: string[];
-  forbiddenEventIds?: string[];
-}
-
-function mapAnchor(
-  row: NonNullable<AnchorRow>,
-  edgeOverrides?: AnchorEdgeOverrides,
-): ChapterTimeAnchor {
+function mapAnchor(row: NonNullable<AnchorRow>, edges?: { startsAfterIds: Map<string, string[]>; plannedEventIds: Map<string, string[]>; endedWithIds: Map<string, string[]>; forbiddenIds: Map<string, string[]> }): ChapterTimeAnchor {
   return {
     id: row.id,
     novelId: row.novelId,
@@ -150,26 +179,18 @@ function mapAnchor(
     chapterIndex: row.chapterIndex,
     storyDayIndex: row.storyDayIndex,
     timeLabel: row.timeLabel,
-    startsAfterEventIds: edgeOverrides?.startsAfterEventIds ?? parseJsonArray(row.startsAfterIdsJson),
-    plannedEventIds: edgeOverrides?.plannedEventIds ?? parseJsonArray(row.plannedEventIdsJson),
-    endedWithEventIds: edgeOverrides?.endedWithEventIds ?? parseJsonArray(row.endedWithIdsJson),
-    previousHookIds: edgeOverrides?.previousHookIds ?? parseJsonArray(row.previousHookIdsJson),
-    nextHookIds: edgeOverrides?.nextHookIds ?? parseJsonArray(row.nextHookIdsJson),
-    forbiddenEventIds: edgeOverrides?.forbiddenEventIds ?? parseJsonArray(row.forbiddenEventIdsJson),
+    startsAfterEventIds: edges ? edgeOrEmpty(edges.startsAfterIds, row.id) : [],
+    plannedEventIds: edges ? edgeOrEmpty(edges.plannedEventIds, row.id) : [],
+    endedWithEventIds: edges ? edgeOrEmpty(edges.endedWithIds, row.id) : [],
+    previousHookIds: [],
+    nextHookIds: [],
+    forbiddenEventIds: edges ? edgeOrEmpty(edges.forbiddenIds, row.id) : [],
     createdAt: toIso(row.createdAt),
     updatedAt: toIso(row.updatedAt),
   };
 }
 
-interface HookEdgeOverrides {
-  relatedEventIds?: string[];
-  participantIds?: string[];
-}
-
-export function mapTimelineHook(
-  row: HookRow,
-  edgeOverrides?: HookEdgeOverrides,
-): TimelineHook {
+export function mapTimelineHook(row: HookRow, edges?: { relatedEventIds: Map<string, string[]>; participantIds: Map<string, string[]> }): TimelineHook {
   const resolveMode = (row.resolveMode as TimelineHookResolveMode | null | undefined) ?? "long_arc";
   const blocking = row.blocking ?? false;
   return {
@@ -186,23 +207,14 @@ export function mapTimelineHook(
     description: row.description,
     status: row.status as TimelineHook["status"],
     priority: row.priority as TimelineHook["priority"],
-    relatedEventIds: edgeOverrides?.relatedEventIds ?? parseJsonArray(row.relatedEventIdsJson),
-    participantIds: edgeOverrides?.participantIds ?? parseJsonArray(row.participantIdsJson),
+    relatedEventIds: edges ? edgeOrEmpty(edges.relatedEventIds, row.id) : [],
+    participantIds: edges ? edgeOrEmpty(edges.participantIds, row.id) : [],
     createdAt: toIso(row.createdAt),
     updatedAt: toIso(row.updatedAt),
   };
 }
 
-interface ConstraintEdgeOverrides {
-  relatedEventIds?: string[];
-  relatedHookIds?: string[];
-  relatedCharacterIds?: string[];
-}
-
-function mapConstraint(
-  row: ConstraintRow,
-  edgeOverrides?: ConstraintEdgeOverrides,
-): TimelineConstraint {
+function mapConstraint(row: ConstraintRow, edges?: { relatedEventIds: Map<string, string[]>; relatedHookIds: Map<string, string[]>; relatedCharacterIds: Map<string, string[]> }): TimelineConstraint {
   return {
     id: row.id,
     novelId: row.novelId,
@@ -211,9 +223,9 @@ function mapConstraint(
     type: row.type as TimelineConstraint["type"],
     severity: row.severity as TimelineConstraint["severity"],
     description: row.description,
-    relatedEventIds: edgeOverrides?.relatedEventIds ?? parseJsonArray(row.relatedEventIdsJson),
-    relatedHookIds: edgeOverrides?.relatedHookIds ?? parseJsonArray(row.relatedHookIdsJson),
-    relatedCharacterIds: edgeOverrides?.relatedCharacterIds ?? parseJsonArray(row.relatedCharacterIdsJson),
+    relatedEventIds: edges ? edgeOrEmpty(edges.relatedEventIds, row.id) : [],
+    relatedHookIds: edges ? edgeOrEmpty(edges.relatedHookIds, row.id) : [],
+    relatedCharacterIds: edges ? edgeOrEmpty(edges.relatedCharacterIds, row.id) : [],
     active: row.active,
     createdAt: toIso(row.createdAt),
     updatedAt: toIso(row.updatedAt),
@@ -265,81 +277,6 @@ export interface TimelineRepository {
   saveCheckReport(report: Omit<TimelineCheckReport, "id" | "createdAt">): Promise<TimelineCheckReport>;
 }
 
-/**
- * Resolve edge data for a batch of events from edge tables.
- * Returns a Map<eventId, EdgeOverrides>.
- */
-async function resolveEventEdgesBatch(
-  events: Array<{ id: string }>,
-): Promise<Map<string, EdgeOverrides>> {
-  if (events.length === 0) {
-    return new Map();
-  }
-  const ids = events.map((e) => e.id);
-  const [participants, factions, outgoingEdges, incomingEdges] = await Promise.all([
-    prisma.timelineEventParticipant.findMany({
-      where: { eventId: { in: ids } },
-      select: { eventId: true, characterId: true },
-    }),
-    prisma.timelineEventFaction.findMany({
-      where: { eventId: { in: ids } },
-      select: { eventId: true, factionId: true },
-    }),
-    prisma.timelineEventEdge.findMany({
-      where: { sourceId: { in: ids } },
-      select: { sourceId: true, targetId: true, edgeType: true },
-    }),
-    prisma.timelineEventEdge.findMany({
-      where: { targetId: { in: ids } },
-      select: { sourceId: true, targetId: true, edgeType: true },
-    }),
-  ]);
-
-  const map = new Map<string, EdgeOverrides>();
-
-  // Build lookup by eventId
-  const participantMap = new Map<string, string[]>();
-  for (const p of participants) {
-    const arr = participantMap.get(p.eventId) ?? [];
-    arr.push(p.characterId);
-    participantMap.set(p.eventId, arr);
-  }
-
-  const factionMap = new Map<string, string[]>();
-  for (const f of factions) {
-    const arr = factionMap.get(f.eventId) ?? [];
-    arr.push(f.factionId);
-    factionMap.set(f.eventId, arr);
-  }
-
-  const prereqMap = new Map<string, string[]>();
-  for (const e of incomingEdges) {
-    if (e.edgeType !== "prerequisite") continue;
-    const arr = prereqMap.get(e.targetId) ?? [];
-    arr.push(e.sourceId);
-    prereqMap.set(e.targetId, arr);
-  }
-
-  const consequenceMap = new Map<string, string[]>();
-  for (const e of outgoingEdges) {
-    if (e.edgeType !== "consequence") continue;
-    const arr = consequenceMap.get(e.sourceId) ?? [];
-    arr.push(e.targetId);
-    consequenceMap.set(e.sourceId, arr);
-  }
-
-  for (const event of events) {
-    const overrides: EdgeOverrides = {};
-    if (participantMap.has(event.id)) overrides.participantIds = participantMap.get(event.id);
-    if (factionMap.has(event.id)) overrides.factionIds = factionMap.get(event.id);
-    if (prereqMap.has(event.id)) overrides.prerequisiteEventIds = prereqMap.get(event.id);
-    if (consequenceMap.has(event.id)) overrides.consequenceEventIds = consequenceMap.get(event.id);
-    map.set(event.id, overrides);
-  }
-
-  return map;
-}
-
 export class PrismaTimelineRepository implements TimelineRepository {
   async listEventsBeforeChapter(input: { novelId: string; chapterIndex: number; limit?: number }): Promise<StoryTimelineEvent[]> {
     const rows = await prisma.storyTimelineEvent.findMany({
@@ -355,8 +292,8 @@ export class PrismaTimelineRepository implements TimelineRepository {
       take: input.limit ?? 20,
     });
     const ordered = rows.reverse();
-    const edgeMap = await resolveEventEdgesBatch(ordered);
-    return ordered.map((row) => mapTimelineEvent(row, edgeMap.get(row.id)));
+    const edges = await batchLoadEventEdges(ordered.map(r => r.id));
+    return ordered.map(r => mapTimelineEvent(r, edges));
   }
 
   async listPlannedEventsForChapter(input: { novelId: string; chapterIndex: number }): Promise<StoryTimelineEvent[]> {
@@ -368,8 +305,8 @@ export class PrismaTimelineRepository implements TimelineRepository {
       },
       orderBy: [{ eventOrder: "asc" }, { createdAt: "asc" }],
     });
-    const edgeMap = await resolveEventEdgesBatch(rows);
-    return rows.map((row) => mapTimelineEvent(row, edgeMap.get(row.id)));
+    const edges = await batchLoadEventEdges(rows.map(r => r.id));
+    return rows.map(r => mapTimelineEvent(r, edges));
   }
 
   async listForbiddenEventsForChapter(input: { novelId: string; chapterIndex: number }): Promise<StoryTimelineEvent[]> {
@@ -382,8 +319,8 @@ export class PrismaTimelineRepository implements TimelineRepository {
       orderBy: [{ chapterIndex: "asc" }, { eventOrder: "asc" }],
       take: 12,
     });
-    const edgeMap = await resolveEventEdgesBatch(rows);
-    return rows.map((row) => mapTimelineEvent(row, edgeMap.get(row.id)));
+    const edges = await batchLoadEventEdges(rows.map(r => r.id));
+    return rows.map(r => mapTimelineEvent(r, edges));
   }
 
   async listOpenHooks(input: { novelId: string; chapterIndex: number }): Promise<TimelineHook[]> {
@@ -397,40 +334,9 @@ export class PrismaTimelineRepository implements TimelineRepository {
       take: 12,
     });
 
-    // Batch-resolve edge data for hooks
-    const hookIds = rows.map((r) => r.id);
-    const [eventLinks, participants] = await Promise.all([
-      prisma.timelineHookEventLink.findMany({
-        where: { hookId: { in: hookIds } },
-        select: { hookId: true, eventId: true },
-      }),
-      prisma.timelineHookParticipant.findMany({
-        where: { hookId: { in: hookIds } },
-        select: { hookId: true, characterId: true },
-      }),
-    ]);
-
-    const hookEventMap = new Map<string, string[]>();
-    for (const l of eventLinks) {
-      const arr = hookEventMap.get(l.hookId) ?? [];
-      arr.push(l.eventId);
-      hookEventMap.set(l.hookId, arr);
-    }
-
-    const hookPartMap = new Map<string, string[]>();
-    for (const p of participants) {
-      const arr = hookPartMap.get(p.hookId) ?? [];
-      arr.push(p.characterId);
-      hookPartMap.set(p.hookId, arr);
-    }
-
+    const hookEdges = await batchLoadHookEdges(rows.map(r => r.id));
     return rows
-      .map((row) =>
-        mapTimelineHook(row, {
-          relatedEventIds: hookEventMap.get(row.id),
-          participantIds: hookPartMap.get(row.id),
-        }),
-      )
+      .map(r => mapTimelineHook(r, hookEdges))
       .sort((left, right) => {
         const blockingDiff = Number(right.blocking) - Number(left.blocking);
         if (blockingDiff !== 0) {
@@ -467,27 +373,8 @@ export class PrismaTimelineRepository implements TimelineRepository {
       take: 20,
     });
 
-    // Batch-resolve edge data for constraints
-    const constraintIds = rows.map((r) => r.id);
-    const links = await prisma.timelineConstraintLink.findMany({
-      where: { constraintId: { in: constraintIds } },
-      select: { constraintId: true, refType: true, refId: true },
-    });
-
-    const constraintLinksMap = new Map<string, ConstraintEdgeOverrides>();
-    for (const l of links) {
-      const existing = constraintLinksMap.get(l.constraintId) ?? {};
-      if (l.refType === "event") {
-        existing.relatedEventIds = [...(existing.relatedEventIds ?? []), l.refId];
-      } else if (l.refType === "hook") {
-        existing.relatedHookIds = [...(existing.relatedHookIds ?? []), l.refId];
-      } else if (l.refType === "character") {
-        existing.relatedCharacterIds = [...(existing.relatedCharacterIds ?? []), l.refId];
-      }
-      constraintLinksMap.set(l.constraintId, existing);
-    }
-
-    return rows.map((row) => mapConstraint(row, constraintLinksMap.get(row.id)));
+    const constraintEdges = await batchLoadConstraintEdges(rows.map(r => r.id));
+    return rows.map(r => mapConstraint(r, constraintEdges));
   }
 
   async getChapterTimeAnchor(input: { novelId: string; chapterId: string }): Promise<ChapterTimeAnchor | null> {
@@ -495,8 +382,8 @@ export class PrismaTimelineRepository implements TimelineRepository {
       where: { novelId_chapterId: { novelId: input.novelId, chapterId: input.chapterId } },
     });
     if (!row) return null;
-    const edgeData = await readAnchorEdges(row.id);
-    return mapAnchor(row, edgeData);
+    const anchorEdges = await batchLoadAnchorEdges([row.id]);
+    return mapAnchor(row, anchorEdges);
   }
 
   async getLatestCheckReport(input: { novelId: string; chapterId: string }): Promise<TimelineCheckReport | null> {
@@ -508,83 +395,84 @@ export class PrismaTimelineRepository implements TimelineRepository {
   }
 
   async upsertChapterTimeAnchor(input: Omit<ChapterTimeAnchor, "id" | "createdAt" | "updatedAt">): Promise<ChapterTimeAnchor> {
-    const data = {
-      chapterIndex: input.chapterIndex,
-      storyDayIndex: input.storyDayIndex ?? null,
-      timeLabel: input.timeLabel,
-      startsAfterIdsJson: stringifyJson(input.startsAfterEventIds),
-      plannedEventIdsJson: stringifyJson(input.plannedEventIds),
-      endedWithIdsJson: stringifyJson(input.endedWithEventIds),
-      previousHookIdsJson: stringifyJson(input.previousHookIds),
-      nextHookIdsJson: stringifyJson(input.nextHookIds),
-      forbiddenEventIdsJson: stringifyJson(input.forbiddenEventIds),
-    };
-    const row = await prisma.chapterTimeAnchor.upsert({
-      where: { novelId_chapterId: { novelId: input.novelId, chapterId: input.chapterId } },
-      create: {
-        novelId: input.novelId,
-        chapterId: input.chapterId,
-        ...data,
-      },
-      update: data,
+    const row = await prisma.$transaction(async (tx) => {
+      const data = {
+        chapterIndex: input.chapterIndex,
+        storyDayIndex: input.storyDayIndex ?? null,
+        timeLabel: input.timeLabel,
+        startsAfterIdsJson: stringifyJson(input.startsAfterEventIds),
+        plannedEventIdsJson: stringifyJson(input.plannedEventIds),
+        endedWithIdsJson: stringifyJson(input.endedWithEventIds),
+        previousHookIdsJson: stringifyJson(input.previousHookIds),
+        nextHookIdsJson: stringifyJson(input.nextHookIds),
+        forbiddenEventIdsJson: stringifyJson(input.forbiddenEventIds),
+      };
+      const anchor = await tx.chapterTimeAnchor.upsert({
+        where: { novelId_chapterId: { novelId: input.novelId, chapterId: input.chapterId } },
+        create: { novelId: input.novelId, chapterId: input.chapterId, ...data },
+        update: data,
+      });
+      // Write edge tables
+      await tx.timelineAnchorEventLink.deleteMany({ where: { anchorId: anchor.id } });
+      const linkOps: Prisma.PrismaPromise<unknown>[] = [];
+      const saData = input.startsAfterEventIds.filter(id => !!id).map(eventId => ({ novelId: input.novelId, anchorId: anchor.id, eventId, linkType: "startsAfter" as const }));
+      if (saData.length > 0) linkOps.push(tx.timelineAnchorEventLink.createMany({ data: saData }));
+      const plData = input.plannedEventIds.filter(id => !!id).map(eventId => ({ novelId: input.novelId, anchorId: anchor.id, eventId, linkType: "plannedEvent" as const }));
+      if (plData.length > 0) linkOps.push(tx.timelineAnchorEventLink.createMany({ data: plData }));
+      const ewData = input.endedWithEventIds.filter(id => !!id).map(eventId => ({ novelId: input.novelId, anchorId: anchor.id, eventId, linkType: "endedWith" as const }));
+      if (ewData.length > 0) linkOps.push(tx.timelineAnchorEventLink.createMany({ data: ewData }));
+      const fbData = input.forbiddenEventIds.filter(id => !!id).map(eventId => ({ novelId: input.novelId, anchorId: anchor.id, eventId, linkType: "forbidden" as const }));
+      if (fbData.length > 0) linkOps.push(tx.timelineAnchorEventLink.createMany({ data: fbData }));
+      if (linkOps.length > 0) await Promise.all(linkOps);
+      return anchor;
     });
-
-    // Dual-write: sync anchor edge tables
-    await syncAnchorEdges(
-      row.id,
-      input.novelId,
-      input.startsAfterEventIds ?? [],
-      input.plannedEventIds ?? [],
-      input.endedWithEventIds ?? [],
-      input.previousHookIds ?? [],
-      input.nextHookIds ?? [],
-      input.forbiddenEventIds ?? [],
-    );
-
-    const edgeData = await readAnchorEdges(row.id);
-    return mapAnchor(row, edgeData);
+    const anchorEdges = await batchLoadAnchorEdges([row.id]);
+    return mapAnchor(row, anchorEdges);
   }
 
   async saveExtractedEvents(events: Array<Omit<StoryTimelineEvent, "id" | "createdAt" | "updatedAt">>): Promise<StoryTimelineEvent[]> {
     const created: StoryTimelineEvent[] = [];
     for (const event of events) {
-      const row = await prisma.storyTimelineEvent.create({
-        data: {
-          novelId: event.novelId,
-          chapterId: event.chapterId ?? null,
-          chapterIndex: event.chapterIndex ?? null,
-          eventOrder: event.eventOrder,
-          storyDayIndex: event.storyDayIndex ?? null,
-          storyTimeLabel: event.storyTimeLabel ?? null,
-          title: event.title,
-          summary: event.summary,
-          type: event.type,
-          status: event.status,
-          visibility: event.visibility,
-          source: event.source,
-          participantIdsJson: stringifyJson(event.participantIds),
-          locationId: event.locationId ?? null,
-          factionIdsJson: stringifyJson(event.factionIds),
-          prerequisiteIdsJson: stringifyJson(event.prerequisiteEventIds),
-          consequenceIdsJson: stringifyJson(event.consequenceEventIds),
-          stateChangesJson: stringifyJson(event.stateChanges),
-          eventKey: event.eventKey ?? null,
-          confidence: event.confidence,
-        },
+      const result = await prisma.$transaction(async (tx) => {
+        const row = await tx.storyTimelineEvent.create({
+          data: {
+            novelId: event.novelId,
+            chapterId: event.chapterId ?? null,
+            chapterIndex: event.chapterIndex ?? null,
+            eventOrder: event.eventOrder,
+            storyDayIndex: event.storyDayIndex ?? null,
+            storyTimeLabel: event.storyTimeLabel ?? null,
+            title: event.title,
+            summary: event.summary,
+            type: event.type,
+            status: event.status,
+            visibility: event.visibility,
+            source: event.source,
+            participantIdsJson: "[]",
+            locationId: event.locationId ?? null,
+            factionIdsJson: "[]",
+            prerequisiteIdsJson: "[]",
+            consequenceIdsJson: "[]",
+            stateChangesJson: stringifyJson(event.stateChanges),
+            eventKey: event.eventKey ?? null,
+            confidence: event.confidence,
+          },
+        });
+        // Write edge tables
+        const edgeOps: Prisma.PrismaPromise<unknown>[] = [];
+        const prereqData = event.prerequisiteEventIds.filter(id => !!id).map(targetId => ({ novelId: event.novelId, sourceId: row.id, targetId, edgeType: "prerequisite" as const }));
+        if (prereqData.length > 0) edgeOps.push(tx.timelineEventEdge.createMany({ data: prereqData }));
+        const consData = event.consequenceEventIds.filter(id => !!id).map(targetId => ({ novelId: event.novelId, sourceId: row.id, targetId, edgeType: "consequence" as const }));
+        if (consData.length > 0) edgeOps.push(tx.timelineEventEdge.createMany({ data: consData }));
+        const partData = event.participantIds.filter(id => !!id).map(characterId => ({ novelId: event.novelId, eventId: row.id, characterId }));
+        if (partData.length > 0) edgeOps.push(tx.timelineEventParticipant.createMany({ data: partData }));
+        const facData = event.factionIds.filter(id => !!id).map(factionId => ({ novelId: event.novelId, eventId: row.id, factionId }));
+        if (facData.length > 0) edgeOps.push(tx.timelineEventFaction.createMany({ data: facData }));
+        await Promise.all(edgeOps);
+        return row;
       });
-
-      // Dual-write: sync event edge tables
-      await syncEventEdges(
-        row.id,
-        event.novelId,
-        event.participantIds ?? [],
-        event.factionIds ?? [],
-        event.prerequisiteEventIds ?? [],
-        event.consequenceEventIds ?? [],
-      );
-
-      const edgeData = await readEventEdges(row.id);
-      created.push(mapTimelineEvent(row, edgeData));
+      const edges = await batchLoadEventEdges([result.id]);
+      created.push(mapTimelineEvent(result, edges));
     }
     return created;
   }
@@ -605,10 +493,7 @@ export class PrismaTimelineRepository implements TimelineRepository {
     if (hooks.length === 0) {
       return;
     }
-
-    // createMany returns no IDs in SQLite, so we find the newly created hooks
-    const now = new Date();
-    await prisma.timelineHook.createMany({
+    const createdHooks = await prisma.timelineHook.createManyAndReturn({
       data: hooks.map((hook) => ({
         novelId: hook.novelId,
         createdInChapterId: hook.createdInChapterId,
@@ -623,31 +508,23 @@ export class PrismaTimelineRepository implements TimelineRepository {
         description: hook.description,
         status: "open",
         priority: hook.priority,
-        relatedEventIdsJson: stringifyJson(hook.relatedEventIds ?? []),
-        participantIdsJson: stringifyJson(hook.participantIds ?? []),
+        relatedEventIdsJson: "[]",
+        participantIdsJson: "[]",
       })),
+      select: { id: true, novelId: true },
     });
-
-    // Dual-write: find the newly created hooks and sync edge tables
-    const createdHooks = await prisma.timelineHook.findMany({
-      where: {
-        novelId: hooks[0].novelId,
-        createdAt: { gte: now },
-      },
-      select: { id: true, title: true },
-    });
-
-    for (const hook of hooks) {
-      const matchedHook = createdHooks.find((h) => h.title === hook.title);
-      if (matchedHook) {
-        await syncHookEdges(
-          matchedHook.id,
-          hook.novelId,
-          hook.relatedEventIds ?? [],
-          hook.participantIds ?? [],
-        );
-      }
+    // Write edge tables
+    const edgeOps: Prisma.PrismaPromise<unknown>[] = [];
+    for (let i = 0; i < createdHooks.length; i++) {
+      const { id: hookId, novelId } = createdHooks[i];
+      const input = hooks[i];
+      if (!input) continue;
+      const eventData = (input.relatedEventIds ?? []).filter(id => !!id).map(eventId => ({ novelId, hookId, eventId }));
+      if (eventData.length > 0) edgeOps.push(prisma.timelineHookEventLink.createMany({ data: eventData }));
+      const partData = (input.participantIds ?? []).filter(id => !!id).map(characterId => ({ novelId, hookId, characterId }));
+      if (partData.length > 0) edgeOps.push(prisma.timelineHookParticipant.createMany({ data: partData }));
     }
+    if (edgeOps.length > 0) await Promise.all(edgeOps);
   }
 
   async markHooksAddressed(input: { hookIds: string[]; chapterId: string; chapterIndex: number; resolved?: boolean }): Promise<void> {
