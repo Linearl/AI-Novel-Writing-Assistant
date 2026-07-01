@@ -27,17 +27,6 @@ description: "docs 目录索引（自动生成）"
 | --- | --- | --- |
 | [1.task\B.todo\任务包六件套构成-编号分类规则-自动归档机制.md](./1.task\B.todo\任务包六件套构成-编号分类规则-自动归档机制.md) | --- | - |
 
-## 1.task\B.todo\v0.1\v0.1-r2029-complex-narrative-advisor-mode
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r2029-complex-narrative-advisor-mode\decision_log.md](./1.task\B.todo\v0.1\v0.1-r2029-complex-narrative-advisor-mode\decision_log.md) | REQ-2029 决策留痕 | REQ-2029 决策留痕 |
-| [1.task\B.todo\v0.1\v0.1-r2029-complex-narrative-advisor-mode\design.md](./1.task\B.todo\v0.1\v0.1-r2029-complex-narrative-advisor-mode\design.md) | REQ-2029 方案设计 | REQ-2029 方案设计 |
-| [1.task\B.todo\v0.1\v0.1-r2029-complex-narrative-advisor-mode\README.md](./1.task\B.todo\v0.1\v0.1-r2029-complex-narrative-advisor-mode\README.md) | REQ-2029 Creative Hub 叙事讨论通道任务总线 | REQ-2029 Creative Hub 叙事讨论通道任务总线 |
-| [1.task\B.todo\v0.1\v0.1-r2029-complex-narrative-advisor-mode\REQ-2029-original.md](./1.task\B.todo\v0.1\v0.1-r2029-complex-narrative-advisor-mode\REQ-2029-original.md) | REQ-2029 Creative Hub 叙事讨论通道（原始冻结副本） | REQ-2029 Creative Hub 叙事讨论通道（原始冻结副本） |
-| [1.task\B.todo\v0.1\v0.1-r2029-complex-narrative-advisor-mode\REQ-2029.md](./1.task\B.todo\v0.1\v0.1-r2029-complex-narrative-advisor-mode\REQ-2029.md) | REQ-2029 Creative Hub 叙事讨论通道 | REQ-2029 Creative Hub 叙事讨论通道 |
-| [1.task\B.todo\v0.1\v0.1-r2029-complex-narrative-advisor-mode\tasks.md](./1.task\B.todo\v0.1\v0.1-r2029-complex-narrative-advisor-mode\tasks.md) | REQ-2029 任务拆解（复杂版） | REQ-2029 任务拆解（复杂版） |
-
 ## 1.task\B.todo\v0.1\v0.1-r7006-simple-timeline-idsjson-removal
 
 | 文件 | 标题 | 描述 |

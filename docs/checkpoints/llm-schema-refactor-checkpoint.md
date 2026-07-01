@@ -1,65 +1,65 @@
-# LLM Schema Refactor Checkpoint
+# LLM Schema 重构检查点
 
-Date: 2026-03-23
+日期：2026-03-23
 
-## Purpose
+## 目的
 
-This checkpoint marks the current codebase changes as part of a repo-wide LLM schema refactor rather than a set of isolated feature patches.
+本检查点将当前代码库变更标记为仓库级 LLM schema 重构的一部分，而非一系列独立的功能补丁。
 
-The goal of this refactor is to move structured LLM output handling onto a shared foundation:
+本次重构的目标是将结构化 LLM 输出处理迁移到统一的基础设施上：
 
-- shared schema definitions per domain
-- shared structured invoke / repair flow
-- provider capability awareness for JSON output
-- less ad-hoc `JSON.parse + try/catch + local normalization` scattered across services
+- 按领域定义共享 schema
+- 共享结构化 invoke / 修复流程
+- Provider 层感知 JSON 输出能力
+- 减少散布在各服务中的临时 `JSON.parse + try/catch + 局部规范化` 代码
 
-## Why This Needs A Special Record
+## 为何需要专项记录
 
-This batch touches multiple domains at the same time:
+本批次变更横跨多个领域：
 
-- planner
-- novel core / chapter summary
-- world / world visualization / world reference
-- audit
-- book analysis
-- character
-- genre
-- style detection
-- title generation
-- Creative Hub and route entry points
+- planner（规划器）
+- novel core / chapter summary（小说核心 / 章节摘要）
+- world / world visualization / world reference（世界观 / 世界观可视化 / 世界观引用）
+- audit（审校）
+- book analysis（书籍分析）
+- character（角色）
+- genre（题材）
+- style detection（风格检测）
+- title generation（标题生成）
+- Creative Hub 及路由入口点
 
-Because the change is horizontal and architectural, a normal feature note is not enough. Future changes should recognize this commit as a migration checkpoint for the overall LLM schema layer.
+由于变更是横向且架构性的，普通功能说明不足以记录。后续变更应将此提交视为整体 LLM schema 层的迁移检查点。
 
-## Main Structural Changes
+## 主要结构变更
 
-### 1. Shared structured invoke path
+### 1. 共享结构化 invoke 路径
 
-New shared entry points have been introduced under `server/src/llm/`:
+在 `server/src/llm/` 下新增了共享入口：
 
 - `structuredInvoke.ts`
 - `schemaHelpers.ts`
 
-These files centralize:
+这些文件集中负责：
 
-- structured output invocation
-- JSON extraction
-- truncated JSON repair
-- Zod validation
-- one-step repair retry through LLM when schema validation fails
+- 结构化输出调用
+- JSON 提取
+- 截断 JSON 修复
+- Zod 校验
+- Schema 校验失败时通过 LLM 进行一步修复重试
 
-### 2. Provider JSON capability layer
+### 2. Provider JSON 能力层
 
-`server/src/llm/capabilities.ts` now acts as the capability gate for provider/model JSON behavior, instead of leaving each service to guess whether a model supports forced JSON output.
+`server/src/llm/capabilities.ts` 现在充当 Provider/模型 JSON 行为的能力网关，不再由各服务自行判断模型是否支持强制 JSON 输出。
 
-This is intended to become the single place that answers:
+此处定位为统一回答以下问题的单一来源：
 
-- whether a provider supports `json_object`
-- whether a provider supports schema-level JSON output
-- whether a specific model family needs extra guarding
+- Provider 是否支持 `json_object`
+- Provider 是否支持 schema 级 JSON 输出
+- 特定模型系列是否需要额外防护
 
-### 3. Domain schema split
+### 3. 领域 schema 拆分
 
-Schema files are being extracted from business services into dedicated schema modules, including but not limited to:
+Schema 文件正从业务服务中抽取到独立的 schema 模块，包括但不限于：
 
 - `server/src/services/audit/auditSchemas.ts`
 - `server/src/services/bookAnalysis/bookAnalysisSchemas.ts`
@@ -74,50 +74,50 @@ Schema files are being extracted from business services into dedicated schema mo
 - `server/src/services/world/worldReferenceSchema.ts`
 - `server/src/services/world/worldVisualizationSchema.ts`
 
-The intended direction is:
+预期方向：
 
-- business services own prompts, orchestration and persistence
-- schema modules own structured output contracts
+- 业务服务负责 prompt、编排和持久化
+- Schema 模块负责结构化输出契约
 
-### 4. Service migration away from local parsing
+### 4. 服务迁移：去除局部解析
 
-Several services have been moved away from domain-local LLM parsing helpers and toward the shared schema/invoke path. This is visible in book analysis, planner, novel core, title generation, world-related services, style detection and related route wiring.
+多个服务已从领域局部的 LLM 解析辅助工具迁移到共享 schema/invoke 路径。这在书籍分析、planner、小说核心、标题生成、世界观相关服务、风格检测及相关路由接线中均有体现。
 
-## Current Status
+## 当前状态
 
-This checkpoint should be treated as:
+本检查点应被理解为：
 
-- an in-progress architectural migration
-- not the final stable end state
-- suitable to commit as a milestone boundary
+- 一次进行中的架构迁移
+- 非最终稳定状态
+- 适合作为里程碑边界提交
 
-What is already true:
+当前已达成：
 
-- the repo now has a visible shared LLM schema layer
-- multiple domains have started migrating onto it
-- provider capability handling is no longer fully scattered
+- 仓库现在有了可见的共享 LLM schema 层
+- 多个领域已开始迁移
+- Provider 能力处理不再完全分散
 
-What is not fully finished yet:
+尚未完全完成：
 
-- some old normalization paths still coexist with the new schema path
-- not every service has been migrated to the same strictness level
-- some schema files are intentionally tolerant and will still need tightening after more real-output validation
+- 部分旧的规范化路径仍与新 schema 路径共存
+- 并非所有服务都已迁移到同一严格级别
+- 部分 schema 文件有意保持宽松，待更多真实输出验证后再收紧
 
-## Guardrail For Follow-up Work
+## 后续工作准则
 
-After this checkpoint, new LLM-facing development should prefer:
+在本检查点之后，新增 LLM 相关开发应遵循：
 
-1. define or extend a schema module first
-2. route generation through shared structured invoke
-3. keep deterministic cleanup as post-processing only
-4. avoid adding new one-off JSON parsing branches inside business services
+1. 优先定义或扩展 schema 模块
+2. 通过共享结构化 invoke 路由生成
+3. 确定性清理仅作为后处理步骤
+4. 避免在业务服务中新增临时 JSON 解析分支
 
-If a later change needs structured output in a new domain, it should build on this layer instead of reintroducing local ad-hoc parsing.
+若后续变更需要在新领域使用结构化输出，应基于本层构建，而非重新引入局部临时解析。
 
-## Commit Intent
+## 提交意图
 
-This checkpoint exists so the current code can be recognized later as:
+本检查点的存在是为了让当前代码在日后可被识别为：
 
-- the start of the repo-wide LLM schema migration
-- a deliberate architectural boundary
-- a safe point for continued migration in later commits
+- 仓库级 LLM schema 迁移的起点
+- 一次有意识的架构边界划分
+- 后续继续迁移的安全基准点

@@ -44,7 +44,7 @@ description: "需求任务总清单（SSOT）"
 | 2026 | 节奏板重生成结构保持验证 | p3 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r2026-medium-beat-sheet-structure-preservation/README.md` |  |
 | 2027 | 章节编辑器编辑后资产沉淀 | p3 | ✅ 已完成 | - | 0.1 | 2026-06-30T00:00:00.000Z | 2026-06-30T00:00:00.000Z | `B.2.done/v0.1-r2027-complex-chapter-edit-asset-extraction/README.md` |  |
 | 2028 | 配置厂商弹窗内手动拉取模型列表 | p3 | ✅ 已完成 | - | 0.1 | 2026-06-30T00:00:00.000Z | 2026-06-30T00:00:00.000Z | `B.2.done/v0.1-r2028-simple-provider-refresh-model-list/README.md` |  |
-| 2029 | Creative Hub 叙事讨论通道 (narrative_advisor) | p2 | ✅ 已完成 | 上游 issue — Creative Hub 缺少宏观创作讨论能力 | 0.1 | 2026-06-30 | - | `B.todo/v0.1-r2029-complex-narrative-advisor-mode/README.md` | 在现有意图分类+workflow+answer composer 架构内扩展 narrative_advisor 意图，复用只读分析工具，生成叙事建议 |
+| 2029 | Creative Hub 叙事讨论通道 (narrative_advisor) | p2 | ✅ 已完成 | 上游 issue — Creative Hub 缺少宏观创作讨论能力 | 0.1 | 2026-06-30 | - | `B.2.done/v0.1-r2029-complex-narrative-advisor-mode/README.md` | 在现有意图分类+workflow+answer composer 架构内扩展 narrative_advisor 意图，复用只读分析工具，生成叙事建议 |
 | 2030 | 节奏曲线可视化与调整 (Pace Curve Visualization) | p2 | ✅ 已完成 | REQ-2029 后续迭代；上游 issue 节奏曲线需求 | 0.1 | 2026-06-30 | - | `B.2.done/v0.1-r2030-complex-pace-curve-visualization/README.md` | 后端聚合 API + recharts 折线图 + 未写章节节奏参数滑块编辑，复用现有 conflictLevel/revealLevel 字段 |
 | 2031 | 角色弧光查询工具 (Character Arc Query Tools) | p2 | ✅ 已完成 | REQ-2029 narrative_advisor 后续迭代 | 0.1 | 2026-06-30 | - | `B.2.done/v0.1-r2031-medium-character-arc-query-tools/README.md` | 新增 4 个 read-only agent tool 暴露角色弧光/时间线/动态/关系演化数据 |
 | 2032 | 角色弧光可视化 (Character Arc Visualization) | p2 | ✅ 已完成 | REQ-2029 后续迭代，依赖 REQ-2031 | 0.1 | 2026-06-30 | - | `B.2.done/v0.1-r2032-complex-character-arc-visualization/README.md` | 后端聚合 API + recharts 时间线图 + visx/纯 SVG 关系网络图，集成到角色管理页面 |
@@ -123,7 +123,7 @@ description: "需求任务总清单（SSOT）"
 | 2026 | 节奏板重生成结构保持验证 | `B.2.done/v0.1-r2026-medium-beat-sheet-structure-preservation/README.md` |
 | 2027 | 章节编辑器编辑后资产沉淀 | `B.2.done/v0.1-r2027-complex-chapter-edit-asset-extraction/README.md` |
 | 2028 | 配置厂商弹窗内手动拉取模型列表 | `B.2.done/v0.1-r2028-simple-provider-refresh-model-list/README.md` |
-| 2029 | Creative Hub 叙事讨论通道 (narrative_advisor) | `B.todo/v0.1-r2029-complex-narrative-advisor-mode/README.md` |
+| 2029 | Creative Hub 叙事讨论通道 (narrative_advisor) | `B.2.done/v0.1-r2029-complex-narrative-advisor-mode/README.md` |
 | 2030 | 节奏曲线可视化与调整 (Pace Curve Visualization) | `B.2.done/v0.1-r2030-complex-pace-curve-visualization/README.md` |
 | 2031 | 角色弧光查询工具 (Character Arc Query Tools) | `B.2.done/v0.1-r2031-medium-character-arc-query-tools/README.md` |
 | 2032 | 角色弧光可视化 (Character Arc Visualization) | `B.2.done/v0.1-r2032-complex-character-arc-visualization/README.md` |

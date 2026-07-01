@@ -1,46 +1,46 @@
-# Windows Desktop Installer Manual Checklist
+# Windows 桌面端安装程序手动检查清单
 
-## Scope
+## 适用范围
 
-Use this checklist after a fresh `NSIS Setup.exe` build for the desktop beta channel. The goal is to verify the interactive install and uninstall flow that the silent smoke script cannot cover.
+用于全新 `NSIS Setup.exe` 构建后的桌面 Beta 频道验证。目标是确认静默冒烟测试脚本无法覆盖的交互式安装与卸载流程。
 
-## Install flow
+## 安装流程
 
-1. Launch the newest `Setup.exe`.
-2. Confirm the installer header icon uses the desktop brand mark instead of the default Electron icon.
-3. Confirm the installer exposes a browsable install directory step instead of forcing the default path.
-4. Change the install path to a custom non-default directory and confirm the summary/install step reflects the new path.
-5. Toggle desktop shortcut creation and confirm the choice is respected after installation.
-6. Keep "run after finish" enabled once, and disable it once on a second pass.
-7. Confirm the installed app launches to the branded startup shell instead of a blank white window.
+1. 启动最新版 `Setup.exe`。
+2. 确认安装程序头部图标使用桌面端品牌标识，而非默认 Electron 图标。
+3. 确认安装程序提供可浏览的安装目录步骤，而非强制使用默认路径。
+4. 将安装路径修改为非默认的自定义目录，确认摘要/安装步骤已反映新路径。
+5. 切换桌面快捷方式创建选项，确认安装后该选项被正确保留。
+6. 一次保持"完成后运行"启用，另一次取消启用。
+7. 确认安装完成后的应用启动显示品牌启动壳层，而非空白白屏窗口。
 
-## First launch flow
+## 首次启动流程
 
-1. Check that the branded splash appears within the first half second after clicking the installed shortcut.
-2. Confirm the main window background never flashes a pure white empty frame.
-3. If no model provider is configured, confirm the desktop-specific setup guidance points to the existing settings page.
-4. If a model provider is configured, confirm the app reaches the normal writing workspace.
-5. Open Settings and confirm the desktop update card shows the current binary version and update status.
+1. 检查点击已安装快捷方式后，品牌闪屏是否在半秒内出现。
+2. 确认主窗口背景从未闪现纯白空框架。
+3. 若未配置模型提供方，确认桌面端专属设置引导指向已有的设置页面。
+4. 若已配置模型提供方，确认应用正常进入写作工作台。
+5. 打开设置，确认桌面更新卡片显示当前二进制版本和更新状态。
 
-## Shortcut and shell integration
+## 快捷方式与壳层集成
 
-1. Confirm the desktop shortcut uses the branded icon.
-2. Confirm the Start Menu shortcut uses the branded icon.
-3. Confirm the taskbar icon uses the branded icon while the app is running.
-4. Confirm the installed executable icon in Explorer uses the branded icon.
+1. 确认桌面快捷方式使用品牌图标。
+2. 确认开始菜单快捷方式使用品牌图标。
+3. 确认应用运行时任务栏图标使用品牌图标。
+4. 确认资源管理器中已安装的可执行文件图标使用品牌图标。
 
-## Uninstall and reinstall flow
+## 卸载与重装流程
 
-1. Run the uninstaller from Apps & Features or the Start Menu uninstall entry.
-2. Confirm the uninstall flow removes program files and shortcuts.
-3. Confirm the user data directory is not deleted by default.
-4. Reinstall the same build and confirm the previous user data is still readable.
+1. 从"应用和功能"或开始菜单卸载条目运行卸载程序。
+2. 确认卸载流程已移除程序文件和快捷方式。
+3. 确认用户数据目录默认未被删除。
+4. 重新安装同一构建版本，确认之前的用户数据仍可读取。
 
-## Update flow
+## 更新流程
 
-1. Install an older NSIS beta build.
-2. Launch the app and let the background update check run.
-3. Confirm a newer GitHub prerelease is detected without blocking entry into the app.
-4. Confirm the user must explicitly approve the download.
-5. Confirm the download completes and the restart/install prompt appears.
-6. Restart and confirm the newer installed version is running.
+1. 安装一个较早的 NSIS Beta 构建版本。
+2. 启动应用，等待后台更新检查运行。
+3. 确认检测到更新的 GitHub 预发布版本时不会阻止进入应用。
+4. 确认用户必须明确同意才能开始下载。
+5. 确认下载完成后出现重启/安装提示。
+6. 重启后确认运行的是更新的已安装版本。
