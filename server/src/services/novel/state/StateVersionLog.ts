@@ -45,7 +45,6 @@ export class StateVersionLog {
           version: (latest?.version ?? 0) + 1,
           summary: input.summary,
           snapshotJson: JSON.stringify(input.snapshot),
-          acceptedProposalIdsJson: JSON.stringify(input.acceptedProposalIds),
         },
       });
       // REQ-7005: dual-write to StateVersionProposal edge table

@@ -2409,7 +2409,6 @@ model OpenConflict {
   severity             String   @default("medium")
   status               String   @default("open")
   evidenceJson         String?
-  affectedCharacterIdsJson String?
   resolutionHint       String?
   lastSeenChapterOrder Int?
   novel                Novel    @relation(fields: [novelId], references: [id], onDelete: Cascade)
@@ -2482,7 +2481,6 @@ model CharacterResourceLedgerItem {
   status                       String
   readerKnows                  Boolean  @default(false)
   holderKnows                  Boolean  @default(true)
-  knownByCharacterIdsJson      String?
   introducedChapterId          String?
   introducedChapterOrder       Int?
   lastTouchedChapterId         String?
@@ -2550,7 +2548,6 @@ model CanonicalStateVersion {
   version                Int
   summary                String
   snapshotJson           String
-  acceptedProposalIdsJson String?
   novel                  Novel    @relation(fields: [novelId], references: [id], onDelete: Cascade)
   chapter                Chapter? @relation(fields: [chapterId], references: [id], onDelete: SetNull)
   committedProposals     StateChangeProposal[] @relation("CommittedStateChangeVersion")
@@ -2606,7 +2603,6 @@ model StoryPlan {
   riskNotesJson        String?
   mustAdvanceJson      String?
   mustPreserveJson     String?
-  sourceIssueIdsJson   String?
   replannedFromPlanId  String?
   hookTarget           String?
   status               String   @default("draft")
@@ -2922,11 +2918,7 @@ model StoryTimelineEvent {
   status               String
   visibility           String
   source               String
-  participantIdsJson   String   @default("[]")
   locationId           String?
-  factionIdsJson       String   @default("[]")
-  prerequisiteIdsJson  String   @default("[]")
-  consequenceIdsJson   String   @default("[]")
   stateChangesJson     String   @default("[]")
   eventKey             String?
   confidence           Float    @default(1)
@@ -2995,12 +2987,6 @@ model ChapterTimeAnchor {
   chapterIndex         Int
   storyDayIndex        Int?
   timeLabel            String
-  startsAfterIdsJson   String   @default("[]")
-  plannedEventIdsJson  String   @default("[]")
-  endedWithIdsJson     String   @default("[]")
-  previousHookIdsJson  String   @default("[]")
-  nextHookIdsJson      String   @default("[]")
-  forbiddenEventIdsJson String  @default("[]")
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
 
@@ -3024,8 +3010,6 @@ model TimelineHook {
   description                   String
   status                        String
   priority                      String
-  relatedEventIdsJson           String   @default("[]")
-  participantIdsJson            String   @default("[]")
   createdAt                     DateTime @default(now())
   updatedAt                     DateTime @updatedAt
 
@@ -3046,9 +3030,6 @@ model TimelineConstraint {
   type                     String
   severity                 String
   description              String
-  relatedEventIdsJson      String   @default("[]")
-  relatedHookIdsJson       String   @default("[]")
-  relatedCharacterIdsJson  String   @default("[]")
   active                   Boolean  @default(true)
   createdAt                DateTime @default(now())
   updatedAt                DateTime @updatedAt

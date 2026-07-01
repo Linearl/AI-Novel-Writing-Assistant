@@ -62,7 +62,6 @@ function normalizeConflict(row: {
   severity: string;
   status: string;
   evidenceJson: string | null;
-  affectedCharacterIdsJson: string | null;
   resolutionHint: string | null;
   lastSeenChapterOrder: number | null;
   createdAt: Date;
@@ -82,7 +81,7 @@ function normalizeConflict(row: {
     severity: row.severity,
     status: row.status,
     evidenceJson: row.evidenceJson,
-    affectedCharacterIdsJson: row.affectedCharacterIdsJson,
+    affectedCharacterIdsJson: null,
     resolutionHint: row.resolutionHint,
     lastSeenChapterOrder: row.lastSeenChapterOrder,
     createdAt: row.createdAt.toISOString(),
@@ -317,7 +316,6 @@ export class PayoffLedgerSyncService {
           severity: issue.severity,
           status: "open",
           evidenceJson: JSON.stringify([issue.evidence]),
-          affectedCharacterIdsJson: JSON.stringify([]),
           resolutionHint: issue.fixSuggestion,
           lastSeenChapterOrder: ledgerItem?.lastTouchedChapterOrder ?? ledgerItem?.targetEndChapterOrder ?? null,
         };

@@ -22,9 +22,7 @@ export type CharacterResourceRowLike = {
   status: string;
   readerKnows: boolean;
   holderKnows: boolean;
-  knownByCharacterIdsJson: string | null;
-  /** REQ-7005: edge table override — when populated, used instead of knownByCharacterIdsJson */
-  edgeKnownByCharacterIds?: string[];
+  edgeKnownByCharacterIds: string[];
   introducedChapterId: string | null;
   introducedChapterOrder: number | null;
   lastTouchedChapterId: string | null;
@@ -119,7 +117,7 @@ export function mapCharacterResourceRow(row: CharacterResourceRowLike): Characte
     status: coerceStatus(row.status),
     readerKnows: row.readerKnows,
     holderKnows: row.holderKnows,
-    knownByCharacterIds: row.edgeKnownByCharacterIds ?? parseStringArray(row.knownByCharacterIdsJson),
+    knownByCharacterIds: row.edgeKnownByCharacterIds,
     introducedChapterId: row.introducedChapterId,
     introducedChapterOrder: row.introducedChapterOrder,
     lastTouchedChapterId: row.lastTouchedChapterId,

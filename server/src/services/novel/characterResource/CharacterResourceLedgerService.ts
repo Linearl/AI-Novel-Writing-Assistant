@@ -33,8 +33,8 @@ function isBlockedStatus(status: CharacterResourceLedgerItem["status"]): boolean
 
 export class CharacterResourceLedgerService {
   /** REQ-7005: batch-enrich rows with edge table knownByCharacterIds */
-  private async enrichWithEdgeData(rows: CharacterResourceRowLike[]): Promise<CharacterResourceRowLike[]> {
-    if (rows.length === 0) return rows;
+  private async enrichWithEdgeData<T extends { id: string }>(rows: T[]): Promise<(T & { edgeKnownByCharacterIds: string[] })[]> {
+    if (rows.length === 0) return rows as (T & { edgeKnownByCharacterIds: string[] })[];
     const resourceIds = rows.map((r) => r.id);
     const edgeRows = await prisma.characterResourceKnownBy.findMany({
       where: { resourceId: { in: resourceIds } },
@@ -51,7 +51,7 @@ export class CharacterResourceLedgerService {
     }
     return rows.map((row) => ({
       ...row,
-      edgeKnownByCharacterIds: edgeMap.get(row.id) ?? undefined,
+      edgeKnownByCharacterIds: edgeMap.get(row.id) ?? [],
     }));
   }
 

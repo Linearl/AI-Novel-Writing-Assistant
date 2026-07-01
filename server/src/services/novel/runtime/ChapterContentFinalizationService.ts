@@ -12,6 +12,7 @@ import { ChapterQualityGateService } from "./ChapterQualityGateService";
 import {
   buildRuntimePackage,
   type ChapterRuntimePlannerPort,
+  type OpenConflictRuntimeRow,
 } from "./chapterRuntimePackageBuilders";
 
 export interface ChapterContentFinalizationAgentRuntime {
@@ -82,7 +83,7 @@ export class ChapterContentFinalizationService {
       beforeChapterOrder: input.contextPackage.chapter.order,
       includeCurrentChapter: true,
       limit: 8,
-    });
+    }) as OpenConflictRuntimeRow[];
     const runtimePackage = buildRuntimePackage({
       novelId: input.novelId,
       chapterId: input.chapterId,

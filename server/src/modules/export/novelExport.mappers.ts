@@ -361,7 +361,6 @@ export function mapChapterPlan(row: {
   riskNotesJson: string | null;
   mustAdvanceJson: string | null;
   mustPreserveJson: string | null;
-  sourceIssueIdsJson: string | null;
   rawPlanJson: string | null;
   scenes: Array<{
     id: string;
@@ -405,7 +404,6 @@ export function mapChapterPlan(row: {
     riskNotesJson: row.riskNotesJson,
     mustAdvanceJson: row.mustAdvanceJson,
     mustPreserveJson: row.mustPreserveJson,
-    sourceIssueIdsJson: row.sourceIssueIdsJson,
     rawPlanJson: row.rawPlanJson,
     scenes,
     createdAt: row.createdAt.toISOString(),

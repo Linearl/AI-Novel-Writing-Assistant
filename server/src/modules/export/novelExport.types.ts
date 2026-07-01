@@ -88,7 +88,6 @@ export interface ExportChapterPlan {
   riskNotesJson?: string | null;
   mustAdvanceJson?: string | null;
   mustPreserveJson?: string | null;
-  sourceIssueIdsJson?: string | null;
   rawPlanJson?: string | null;
   scenes: ExportChapterPlanScene[];
   createdAt: string;

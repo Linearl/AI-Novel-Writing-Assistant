@@ -47,9 +47,7 @@ export interface OpenConflictRuntimeRow {
   severity: GenerationContextPackage["openConflicts"][number]["severity"];
   status: GenerationContextPackage["openConflicts"][number]["status"];
   evidenceJson: string | null;
-  affectedCharacterIdsJson: string | null;
-  /** REQ-7005: edge table override — when populated, used instead of affectedCharacterIdsJson */
-  edgeCharacterIds?: string[];
+  edgeCharacterIds: string[];
   resolutionHint: string | null;
   lastSeenChapterOrder: number | null;
   chapter?: { order: number } | null;
@@ -315,7 +313,7 @@ export function mapOpenConflictForRuntime(
     status: conflict.status,
     evidence: parseStringArray(conflict.evidenceJson),
     // REQ-7005: prefer edge table data over JSON fallback
-    affectedCharacterIds: conflict.edgeCharacterIds ?? parseStringArray(conflict.affectedCharacterIdsJson),
+    affectedCharacterIds: conflict.edgeCharacterIds,
     resolutionHint: conflict.resolutionHint ?? null,
     lastSeenChapterOrder: conflict.lastSeenChapterOrder ?? conflict.chapter?.order ?? null,
     createdAt: conflict.createdAt.toISOString(),
