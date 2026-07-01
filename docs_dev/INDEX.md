@@ -38,17 +38,6 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1\v0.1-r2029-complex-narrative-advisor-mode\REQ-2029.md](./1.task\B.todo\v0.1\v0.1-r2029-complex-narrative-advisor-mode\REQ-2029.md) | REQ-2029 Creative Hub 叙事讨论通道 | REQ-2029 Creative Hub 叙事讨论通道 |
 | [1.task\B.todo\v0.1\v0.1-r2029-complex-narrative-advisor-mode\tasks.md](./1.task\B.todo\v0.1\v0.1-r2029-complex-narrative-advisor-mode\tasks.md) | REQ-2029 任务拆解（复杂版） | REQ-2029 任务拆解（复杂版） |
 
-## 1.task\B.todo\v0.1\v0.1-r7004-medium-json-soft-ref-fk-fix
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r7004-medium-json-soft-ref-fk-fix\decision_log.md](./1.task\B.todo\v0.1\v0.1-r7004-medium-json-soft-ref-fk-fix\decision_log.md) | --- | - |
-| [1.task\B.todo\v0.1\v0.1-r7004-medium-json-soft-ref-fk-fix\design.md](./1.task\B.todo\v0.1\v0.1-r7004-medium-json-soft-ref-fk-fix\design.md) | REQ-7004 JSON 软引用 FK 缺失修复 — 方案设计 | REQ-7004 JSON 软引用 FK 缺失修复 — 方案设计 |
-| [1.task\B.todo\v0.1\v0.1-r7004-medium-json-soft-ref-fk-fix\README.md](./1.task\B.todo\v0.1\v0.1-r7004-medium-json-soft-ref-fk-fix\README.md) | --- | - |
-| [1.task\B.todo\v0.1\v0.1-r7004-medium-json-soft-ref-fk-fix\REQ-7004-original.md](./1.task\B.todo\v0.1\v0.1-r7004-medium-json-soft-ref-fk-fix\REQ-7004-original.md) | REQ-7004 JSON 软引用 FK 缺失修复 — 原始需求冻结副本 | REQ-7004 JSON 软引用 FK 缺失修复 — 原始需求冻结副本 |
-| [1.task\B.todo\v0.1\v0.1-r7004-medium-json-soft-ref-fk-fix\REQ-7004.md](./1.task\B.todo\v0.1\v0.1-r7004-medium-json-soft-ref-fk-fix\REQ-7004.md) | REQ-7004 JSON 软引用 FK 缺失修复 — 需求工作副本 | REQ-7004 JSON 软引用 FK 缺失修复 — 需求工作副本 |
-| [1.task\B.todo\v0.1\v0.1-r7004-medium-json-soft-ref-fk-fix\tasks.md](./1.task\B.todo\v0.1\v0.1-r7004-medium-json-soft-ref-fk-fix\tasks.md) | --- | - |
-
 ## 1.task\B.todo\v0.1\v0.1-r7006-simple-timeline-idsjson-removal
 
 | 文件 | 标题 | 描述 |

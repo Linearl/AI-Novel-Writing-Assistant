@@ -2,6 +2,7 @@ import type { PlannerInput, StructuredIntent } from "../../agents/types";
 import { chapterWorkflowDefinitions } from "./chapterWorkflowDefinitions";
 import { directorWorkflowDefinitions } from "./directorWorkflowDefinitions";
 import { generalWorkflowDefinitions } from "./generalWorkflowDefinitions";
+import { narrativeAdvisorWorkflowDefinitions } from "./narrativeAdvisorWorkflowDefinition";
 import { productionWorkflowDefinitions } from "./productionWorkflowDefinitions";
 import type { WorkflowDefinition, WorkflowResolution } from "./workflowTypes";
 export type { WorkflowActionDefinition, WorkflowDefinition, WorkflowResolution } from "./workflowTypes";
@@ -22,6 +23,7 @@ const workflowDefinitions: Record<StructuredIntent["intent"], WorkflowDefinition
   ...productionWorkflowDefinitions,
   ...directorWorkflowDefinitions,
   ...chapterWorkflowDefinitions,
+  ...narrativeAdvisorWorkflowDefinitions,
 ].reduce((registry, definition) => {
   registry[definition.intent] = definition;
   return registry;

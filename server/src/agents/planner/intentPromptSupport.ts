@@ -36,6 +36,7 @@ export const INTENT_NAMES = [
   "search_knowledge",
   "ideate_novel_setup",
   "general_chat",
+  "narrative_advisor",
   "unknown",
 ] as const satisfies readonly StructuredIntent["intent"][];
 
@@ -149,6 +150,18 @@ const WORKFLOW_RECIPES = [
     examples: [
       "当前写完了几章",
       "现在进度到哪了",
+    ],
+  },
+  {
+    intent: "narrative_advisor",
+    when: "用户讨论节奏、角色弧光、主题、结构、叙事手法等宏观创作问题，请求分析性建议而非操作性指令。",
+    examples: [
+      "帮我分析一下这本书的叙事节奏",
+      "主角的弧光发展得怎么样",
+      "这本书的主题一致性如何",
+      "前五章的结构有什么问题",
+      "给我一些关于角色关系的建议",
+      "这部小说的伏笔回收情况怎么样",
     ],
   },
 ];
@@ -285,6 +298,7 @@ export function buildPlannerIntentPromptParts(input: PlannerInput): { systemProm
       "如果用户在问某个关键词、关系模式、题材、设定或世界观原型是否存在于知识库、已索引的拆书资料或世界观中，或者想找类似于 X 的设定或参考案例，优先使用 search_knowledge，不要误判成 general_chat。",
       "如果用户是在取消或解绑当前小说的世界观，例如不要这个世界观了、取消世界观绑定、先不用某某世界观，优先使用 unbind_world_from_novel，不要误判成 bind_world_to_novel。",
       "如果用户想基于当前标题、已有设定或当前工作区信息生成几套备选方案，例如给我备选、给几个方向、提供 3 套核心设定或故事承诺或题材风格方案，优先使用 ideate_novel_setup，不要误判成 general_chat。",
+      "如果用户在讨论叙事节奏、角色弧光、主题一致性、伏笔回收、结构布局、叙事手法等宏观创作问题，请求分析性建议而非操作性指令，优先使用 narrative_advisor，不要误判成 general_chat 或 query 类意图。narrative_advisor 用于分析、诊断和建议，不执行任何写入操作。",
       "projectMode 只能是 ai_led、co_pilot、draft_mode、auto_pipeline；pacePreference 只能是 fast、balanced、slow；narrativePov 只能是 first_person、third_person、mixed。",
       "emotionIntensity 和 aiFreedom 只能是 low、medium、high；defaultChapterLength 是 500 到 10000 的整数。",
       "chapterSelectors 可包含：chapterId、orders、range{startOrder,endOrder}、relative{type,count}。",

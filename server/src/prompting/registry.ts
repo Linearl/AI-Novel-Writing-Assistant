@@ -565,6 +565,10 @@ const promptAssetLoaderEntries: PromptAssetLoaderEntry[] = [
     key: "novel.motifTracking@v1",
     load: () => require("./prompts/novel/themeAnalysis.prompt").motifTrackingPrompt as UnknownPromptAsset,
   },
+  {
+    key: "narrative.advisor.analysis@v1",
+    load: () => require("./prompts/narrative/narrativeAdvisorAnalysisPrompt").narrativeAdvisorAnalysisPrompt as UnknownPromptAsset,
+  },
 ];
 
 const promptAssetLoaderByKey = createPromptAssetLoaderRegistry(promptAssetLoaderEntries);

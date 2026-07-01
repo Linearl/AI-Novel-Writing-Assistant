@@ -1,5 +1,6 @@
 import { runTextPrompt } from "../../prompting/core/promptRunner";
 import { runtimeFallbackAnswerPrompt } from "../../prompting/prompts/agent/runtime.prompts";
+import { narrativeAdvisorAnalysisPrompt, type NarrativeAdvisorAnalysisInput } from "../../prompting/prompts/narrative/narrativeAdvisorAnalysisPrompt";
 import { listAgentToolDefinitions } from "../toolRegistry";
 import type { StructuredIntent, ToolCall, ToolExecutionContext } from "../types";
 import { isRecord, safeJson, type ToolExecutionResult } from "./runtimeHelpers";
@@ -579,6 +580,53 @@ async function composeFallbackAnswer(
   return "当前信息不足，无法继续";
 }
 
+function formatToolResultsForAdvisor(results: ToolExecutionResult[]): string {
+  const successful = results.filter((item) => item.success && item.output);
+  if (successful.length === 0) {
+    return "未获取到有效的分析数据。";
+  }
+  return successful.map((item) => {
+    const label = item.tool;
+    const output = item.output as Record<string, unknown>;
+    const snippet = typeof item.summary === "string" && item.summary.trim()
+      ? item.summary.trim()
+      : JSON.stringify(output, null, 2).slice(0, 600);
+    return `### ${label}\n${snippet}`;
+  }).join("\n\n");
+}
+
+async function composeNarrativeAdvisorAnswer(
+  goal: string,
+  results: ToolExecutionResult[],
+  context: Omit<ToolExecutionContext, "runId" | "agentName">,
+): Promise<string> {
+  const toolResultsText = formatToolResultsForAdvisor(results);
+  const groundingFacts = buildGroundingFacts(results);
+  try {
+    const input: NarrativeAdvisorAnalysisInput = {
+      creativeContext: groundingFacts,
+      toolResults: toolResultsText,
+      userQuestion: goal,
+    };
+    const result = await runTextPrompt({
+      asset: narrativeAdvisorAnalysisPrompt,
+      promptInput: input,
+      options: {
+        provider: context.provider ?? "deepseek",
+        model: context.model,
+        temperature: 0.3,
+        maxTokens: context.maxTokens,
+      },
+    });
+    return result.output.trim() || "分析结果为空，请尝试更具体的问题。";
+  } catch {
+    const fallback = toolResultsText.length > 0
+      ? `以下是与你问题相关的数据分析：\n\n${toolResultsText}`
+      : "当前数据不足以进行深入分析，请确保小说已有基本资产（角色、世界观、章节等）。";
+    return fallback;
+  }
+}
+
 export async function composeAssistantMessage(
   goal: string,
   summary: string,
@@ -639,6 +687,8 @@ export async function composeAssistantMessage(
     case "save_chapter_draft":
     case "start_pipeline":
       return composeWriteAnswer(results, waitingForApproval) ?? "未获取到可执行范围";
+    case "narrative_advisor":
+      return composeNarrativeAdvisorAnswer(goal, results, context);
     default:
       break;
   }

@@ -73,7 +73,7 @@ description: "需求任务总清单（SSOT）"
 | 7001 | Auto-Director 测试隔离修复 | p1 | ✅ 已完成 | 2026-06-28-health-check.md | 0.1 | - | - | `B.2.done/v0.1-r7001-simple-auto-director-test-fix/README.md` |  |
 | 7002 | NovelEdit.tsx 大文件拆分 | p1 | ✅ 已完成 | 2026-06-28-health-check.md | 0.1 | - | - | `B.2.done/v0.1-r7002-complex-novel-edit-refactor/README.md` |  |
 | 7003 | Server 超大文件分批拆分 | p2 | ✅ 已完成 | 2026-06-28-health-check.md | 0.1 | - | - | `B.2.done/v0.1-r7003-complex-server-large-file-refactor/README.md` |  |
-| 7004 | JSON 软引用 FK 缺失修复 | p1 | ✅ 已完成 | 2026-06-30-图数据库能力诊断.md | 0.1 | - | - | `B.todo/v0.1-r7004-medium-json-soft-ref-fk-fix/README.md` |  |
+| 7004 | JSON 软引用 FK 缺失修复 | p1 | ✅ 已完成 | 2026-06-30-图数据库能力诊断.md | 0.1 | - | - | `B.2.done/v0.1-r7004-medium-json-soft-ref-fk-fix/README.md` |  |
 | 7005 | P2 零散 IdsJson 字段迁移为边表 | p2 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r7005-simple-p2-scattered-idsjson-edge-tables/README.md` |  |
 | 7006 | 移除时间线旧 JSON 字段 | p1 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r7006-simple-timeline-idsjson-removal/README.md` |  |
 | 7007 | World.structureJson 关系提取为独立表 | p1 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r7007-medium-world-structure-json-relation-extract/README.md` |  |
@@ -139,7 +139,7 @@ description: "需求任务总清单（SSOT）"
 | 7001 | Auto-Director 测试隔离修复 | `B.2.done/v0.1-r7001-simple-auto-director-test-fix/README.md` |
 | 7002 | NovelEdit.tsx 大文件拆分 | `B.2.done/v0.1-r7002-complex-novel-edit-refactor/README.md` |
 | 7003 | Server 超大文件分批拆分 | `B.2.done/v0.1-r7003-complex-server-large-file-refactor/README.md` |
-| 7004 | JSON 软引用 FK 缺失修复 | `B.todo/v0.1-r7004-medium-json-soft-ref-fk-fix/README.md` |
+| 7004 | JSON 软引用 FK 缺失修复 | `B.2.done/v0.1-r7004-medium-json-soft-ref-fk-fix/README.md` |
 | 7005 | P2 零散 IdsJson 字段迁移为边表 | `B.2.done/v0.1-r7005-simple-p2-scattered-idsjson-edge-tables/README.md` |
 | 7007 | World.structureJson 关系提取为独立表 | `B.2.done/v0.1-r7007-medium-world-structure-json-relation-extract/README.md` |
 

@@ -113,6 +113,7 @@ export type AgentIntentName =
   | "search_knowledge"
   | "ideate_novel_setup"
   | "general_chat"
+  | "narrative_advisor"
   | "unknown";
 
 export interface StructuredIntent {
