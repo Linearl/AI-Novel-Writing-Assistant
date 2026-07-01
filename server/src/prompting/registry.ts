@@ -557,6 +557,14 @@ const promptAssetLoaderEntries: PromptAssetLoaderEntry[] = [
     key: "world.axioms.suggest@v1",
     load: () => require("./prompts/world/world.prompts").worldAxiomSuggestionPrompt as UnknownPromptAsset,
   },
+  {
+    key: "novel.themeAnalysis@v1",
+    load: () => require("./prompts/novel/themeAnalysis.prompt").themeAnalysisPrompt as UnknownPromptAsset,
+  },
+  {
+    key: "novel.motifTracking@v1",
+    load: () => require("./prompts/novel/themeAnalysis.prompt").motifTrackingPrompt as UnknownPromptAsset,
+  },
 ];
 
 const promptAssetLoaderByKey = createPromptAssetLoaderRegistry(promptAssetLoaderEntries);

@@ -1,7 +1,16 @@
 import { prisma } from "../../db/prisma";
+import { runStructuredPrompt } from "../../prompting/core/promptRunner";
+import {
+  motifTrackingPrompt,
+  themeAnalysisPrompt,
+} from "../../prompting/prompts/novel/themeAnalysis.prompt";
 import type { AgentToolName } from "../types";
 import type { AgentToolDefinition } from "./toolTypes";
 import {
+  analyzeMotifTrackingInputSchema,
+  analyzeMotifTrackingOutputSchema,
+  analyzeThemeConsistencyInputSchema,
+  analyzeThemeConsistencyOutputSchema,
   auditPayoffHealthInputSchema,
   auditPayoffHealthOutputSchema,
   auditVolumeThemeCoverageInputSchema,
@@ -288,6 +297,182 @@ export const themeConsistencyToolDefinitions: Partial<
         totalVolumeCount: volumes.length,
         totalChapterPlanCount,
         summary,
+      });
+    },
+  },
+
+  // ─── LLM inspect tools ────────────────────────────────────────────────
+
+  analyze_theme_consistency: {
+    name: "analyze_theme_consistency",
+    title: "主题一致性 LLM 分析",
+    description: "LLM 辅助检测各卷主题是否与声明的主题承诺一致。返回结构化分析报告。",
+    category: "inspect",
+    riskLevel: "medium",
+    domainAgent: "NovelAgent",
+    resourceScopes: ["novel"],
+    inputSchema: analyzeThemeConsistencyInputSchema,
+    outputSchema: analyzeThemeConsistencyOutputSchema,
+    execute: async (_context, rawInput) => {
+      const input = analyzeThemeConsistencyInputSchema.parse(rawInput);
+
+      // 1. 聚合主题层级（复用 get_theme_hierarchy 的查询逻辑）
+      const [bible, allVolumes] = await Promise.all([
+        prisma.novelBible.findUnique({
+          where: { novelId: input.novelId },
+          select: { mainPromise: true },
+        }),
+        prisma.volumePlan.findMany({
+          where: { novelId: input.novelId },
+          orderBy: { sortOrder: "asc" },
+          select: {
+            sortOrder: true,
+            title: true,
+            mainPromise: true,
+            chapters: {
+              orderBy: { chapterOrder: "asc" },
+              select: {
+                chapterOrder: true,
+                title: true,
+                purpose: true,
+                summary: true,
+              },
+            },
+          },
+        }),
+      ]);
+
+      // 2. 按卷过滤（如指定）
+      const volumes = input.volumeSortOrder != null
+        ? allVolumes.filter((v) => v.sortOrder === input.volumeSortOrder)
+        : allVolumes;
+
+      // 3. 构造章节摘要文本
+      const chapterSummaries = volumes
+        .flatMap((vol) =>
+          vol.chapters.map(
+            (ch) => `V${vol.sortOrder}-Ch${ch.chapterOrder} [${ch.title}]: ${ch.summary ?? "(无摘要)"} | purpose: ${ch.purpose ?? "(无)"}`,
+          ),
+        )
+        .join("\n");
+
+      // 4. 构造主题层级文本
+      const themeHierarchy = [
+        bible?.mainPromise ? `全书主线: ${bible.mainPromise}` : "",
+        ...volumes.map(
+          (v) => `卷${v.sortOrder} [${v.title}]: mainPromise=${v.mainPromise ?? "(无)"}`,
+        ),
+      ]
+        .filter(Boolean)
+        .join("\n");
+
+      const analysisTask = input.volumeSortOrder != null
+        ? `分析第 ${input.volumeSortOrder} 卷的主题一致性。`
+        : "分析全书各卷的主题一致性，检查是否存在主题偏移或冲突。";
+
+      // 5. 调用 LLM
+      const result = await runStructuredPrompt({
+        asset: themeAnalysisPrompt,
+        promptInput: { themeHierarchy, chapterSummaries, analysisTask },
+        options: { maxTokens: 1500 },
+      });
+
+      return analyzeThemeConsistencyOutputSchema.parse({
+        novelId: input.novelId,
+        verdict: result.output.verdict,
+        findings: result.output.findings,
+        summary: result.output.summary,
+      });
+    },
+  },
+
+  analyze_motif_tracking: {
+    name: "analyze_motif_tracking",
+    title: "母题追踪 LLM 分析",
+    description: "检查 WritingFormula 中定义的母题是否在章节中持续出现。",
+    category: "inspect",
+    riskLevel: "medium",
+    domainAgent: "NovelAgent",
+    resourceScopes: ["novel"],
+    inputSchema: analyzeMotifTrackingInputSchema,
+    outputSchema: analyzeMotifTrackingOutputSchema,
+    execute: async (_context, rawInput) => {
+      const input = analyzeMotifTrackingInputSchema.parse(rawInput);
+
+      // 1. 获取写作公式中的母题
+      const formulas = await prisma.writingFormula.findMany({
+        select: { motifs: true, themes: true, name: true },
+      });
+
+      const motifLines = formulas
+        .filter((f) => f.motifs || f.themes)
+        .map((f) => {
+          const parts: string[] = [];
+          if (f.name) parts.push(`公式: ${f.name}`);
+          if (f.motifs) parts.push(`motifs: ${f.motifs}`);
+          if (f.themes) parts.push(`themes: ${f.themes}`);
+          return parts.join(" | ");
+        });
+
+      if (motifLines.length === 0) {
+        return analyzeMotifTrackingOutputSchema.parse({
+          novelId: input.novelId,
+          motifs: [],
+          summary: "无写作公式母题数据。",
+        });
+      }
+
+      const motifDefinitions = motifLines.join("\n");
+
+      // 2. 获取章节摘要
+      const volumes = await prisma.volumePlan.findMany({
+        where: { novelId: input.novelId },
+        orderBy: { sortOrder: "asc" },
+        select: {
+          sortOrder: true,
+          title: true,
+          chapters: {
+            orderBy: { chapterOrder: "asc" },
+            select: {
+              chapterOrder: true,
+              title: true,
+              summary: true,
+            },
+          },
+        },
+      });
+
+      const chapterSummaries = volumes
+        .flatMap((vol) =>
+          vol.chapters.map(
+            (ch) => `V${vol.sortOrder}-Ch${ch.chapterOrder} [${ch.title}]: ${ch.summary ?? "(无摘要)"}`,
+          ),
+        )
+        .join("\n");
+
+      if (!chapterSummaries.trim()) {
+        return analyzeMotifTrackingOutputSchema.parse({
+          novelId: input.novelId,
+          motifs: [],
+          summary: "无章节摘要数据可供分析。",
+        });
+      }
+
+      // 3. 调用 LLM
+      const result = await runStructuredPrompt({
+        asset: motifTrackingPrompt,
+        promptInput: {
+          motifDefinitions,
+          chapterSummaries,
+          threshold: input.threshold,
+        },
+        options: { maxTokens: 1500 },
+      });
+
+      return analyzeMotifTrackingOutputSchema.parse({
+        novelId: input.novelId,
+        motifs: result.output.motifs,
+        summary: result.output.summary,
       });
     },
   },

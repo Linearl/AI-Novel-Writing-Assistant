@@ -6,6 +6,7 @@ import { formulaToolDefinitions } from "./tools/formulaTools";
 import { knowledgeToolDefinitions } from "./tools/knowledgeTools";
 import { novelToolDefinitions } from "./tools/novelTools";
 import { taskToolDefinitions } from "./tools/taskTools";
+import { themeConsistencyToolDefinitions } from "./tools/themeConsistencyTools";
 import { worldToolDefinitions } from "./tools/worldTools";
 import { writeToolDefinitions } from "./tools/writeTools";
 import type { AgentIntentName } from "./types";
@@ -21,6 +22,7 @@ const definitions = {
   ...directorRuntimeToolDefinitions,
   ...taskToolDefinitions,
   ...writeToolDefinitions,
+  ...themeConsistencyToolDefinitions,
 } as Record<AgentToolName, AgentToolDefinition<Record<string, unknown>, Record<string, unknown>>>;
 
 export type { AgentToolDefinition, ToolRiskLevel } from "./tools/toolTypes";

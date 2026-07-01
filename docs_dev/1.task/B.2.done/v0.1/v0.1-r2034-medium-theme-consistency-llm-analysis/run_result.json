@@ -3,7 +3,7 @@
   "title": "主题一致性 LLM 分析层 (Theme Consistency LLM Analysis)",
   "priority": "P2",
   "version": "v0.1",
-  "status": "requirements_ready",
+  "status": "done",
   "createdAt": "2026-06-30",
   "completedAt": null,
   "source": "REQ-2029 后续迭代，依赖 REQ-2033",

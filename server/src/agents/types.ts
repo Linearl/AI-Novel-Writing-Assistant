@@ -69,6 +69,11 @@ export type AgentToolName =
   | "get_run_failure_reason"
   | "retry_task"
   | "cancel_task"
+  | "get_theme_hierarchy"
+  | "analyze_theme_consistency"
+  | "analyze_motif_tracking"
+  | "audit_payoff_health"
+  | "audit_volume_theme_coverage"
   | "explain_generation_blocker";
 
 export type AgentContextMode = "global" | "novel";

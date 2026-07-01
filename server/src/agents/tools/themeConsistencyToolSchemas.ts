@@ -101,3 +101,44 @@ export const getThemeHierarchyOutputSchema = z.object({
   totalChapterPlanCount: toolCountSchema,
   summary: toolSummarySchema,
 });
+
+// ─── analyze_theme_consistency (LLM inspect) ──────────────────────────────
+
+export const analyzeThemeConsistencyInputSchema = z.object({
+  novelId: toolRequiredIdSchema,
+  volumeSortOrder: z.number().int().optional().describe("指定某卷，不指定则分析全书"),
+});
+
+export const analyzeThemeConsistencyFindingSchema = z.object({
+  chapterRef: z.string().describe("章节引用，如 V2-Ch5"),
+  evidence: z.string().describe("内容证据描述"),
+  severity: z.enum(["low", "medium", "high"]).describe("偏移严重程度"),
+});
+
+export const analyzeThemeConsistencyOutputSchema = z.object({
+  novelId: z.string(),
+  verdict: z.enum(["consistent", "deviation", "conflict"]).describe("总体判定"),
+  findings: z.array(analyzeThemeConsistencyFindingSchema),
+  summary: toolSummarySchema,
+});
+
+// ─── analyze_motif_tracking (LLM inspect) ──────────────────────────────────
+
+export const analyzeMotifTrackingInputSchema = z.object({
+  novelId: toolRequiredIdSchema,
+  threshold: z.number().int().min(1).default(5).describe("连续未出现章节数阈值"),
+});
+
+export const analyzeMotifTrackingFindingSchema = z.object({
+  motif: z.string().describe("母题名称或描述"),
+  definedIn: z.string().describe("母题定义来源"),
+  lastSeenChapter: z.string().describe("最近出现的章节引用"),
+  gapChapters: z.number().int().describe("连续未出现章节数"),
+  status: z.enum(["active", "dormant", "dropped"]).describe("母题状态"),
+});
+
+export const analyzeMotifTrackingOutputSchema = z.object({
+  novelId: z.string(),
+  motifs: z.array(analyzeMotifTrackingFindingSchema),
+  summary: toolSummarySchema,
+});
