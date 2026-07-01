@@ -1,3 +1,4 @@
+import type { Prisma } from "@prisma/client";
 import type { WorldVisualizationPayload } from "@ai-novel/shared/types/world";
 import { prisma } from "../../db/prisma";
 import { runStructuredPrompt } from "../../prompting/core/promptRunner";
@@ -124,14 +125,17 @@ export async function updateWorldStructure(
     : buildWorldBindingSupport(nextStructure);
   const structuredFields = applyStructuredWorldToLegacyFields(nextStructure, world, nextBindingSupport);
 
-  const updated = await prisma.world.update({
-    where: { id: worldId },
-    data: {
-      ...structuredFields,
-      version: { increment: 1 },
-    },
+  const updated = await prisma.$transaction(async (tx) => {
+    const row = await tx.world.update({
+      where: { id: worldId },
+      data: {
+        ...structuredFields,
+        version: { increment: 1 },
+      },
+    });
+    await syncWorldEdgeTables(worldId, nextStructure, tx);
+    return row;
   });
-  await syncWorldEdgeTables(worldId, nextStructure);
   await callbacks.createSnapshot(worldId, "structure-saved");
   callbacks.queueWorldUpsert(worldId);
   return {
@@ -170,14 +174,17 @@ export async function backfillWorldStructure(
   const nextBindingSupport = buildWorldBindingSupport(nextStructure);
   const structuredFields = applyStructuredWorldToLegacyFields(nextStructure, world, nextBindingSupport);
 
-  const updated = await prisma.world.update({
-    where: { id: worldId },
-    data: {
-      ...structuredFields,
-      version: { increment: 1 },
-    },
+  const updated = await prisma.$transaction(async (tx) => {
+    const row = await tx.world.update({
+      where: { id: worldId },
+      data: {
+        ...structuredFields,
+        version: { increment: 1 },
+      },
+    });
+    await syncWorldEdgeTables(worldId, nextStructure, tx);
+    return row;
   });
-  await syncWorldEdgeTables(worldId, nextStructure);
   await callbacks.createSnapshot(worldId, "structure-backfill");
   callbacks.queueWorldUpsert(worldId);
 

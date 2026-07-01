@@ -10,8 +10,12 @@
  * Strategy: deleteMany(worldId) + createMany — idempotent upsert.
  */
 
+import type { Prisma } from "@prisma/client";
 import type { WorldStructuredData } from "@ai-novel/shared/types/world";
 import { prisma } from "../../db/prisma";
+
+/** Database client — either the global prisma or a transaction client. */
+export type WorldEdgeDbClient = Prisma.TransactionClient | typeof prisma;
 
 export interface EdgeTableSyncResult {
   forceRelations: number;
@@ -26,16 +30,18 @@ export interface EdgeTableSyncResult {
 export async function syncWorldEdgeTables(
   worldId: string,
   structure: WorldStructuredData,
+  client?: WorldEdgeDbClient,
 ): Promise<EdgeTableSyncResult> {
+  const db = client ?? prisma;
   const { forceRelations, locationControls, locationConnections } = structure.relations;
 
   const [frCount, lcCount, lconCount] = await Promise.all([
     // WorldForceRelation
     forceRelations.length > 0
-      ? prisma.worldForceRelation
+      ? db.worldForceRelation
         .deleteMany({ where: { worldId } })
         .then(() =>
-          prisma.worldForceRelation.createMany({
+          db.worldForceRelation.createMany({
             data: forceRelations.map((r) => ({
               worldId,
               sourceForceId: r.sourceForceId,
@@ -47,14 +53,14 @@ export async function syncWorldEdgeTables(
           })
         )
         .then((r) => r.count)
-      : prisma.worldForceRelation.deleteMany({ where: { worldId } }).then(() => 0),
+      : db.worldForceRelation.deleteMany({ where: { worldId } }).then(() => 0),
 
     // WorldLocationControl
     locationControls.length > 0
-      ? prisma.worldLocationControl
+      ? db.worldLocationControl
         .deleteMany({ where: { worldId } })
         .then(() =>
-          prisma.worldLocationControl.createMany({
+          db.worldLocationControl.createMany({
             data: locationControls.map((r) => ({
               worldId,
               forceId: r.forceId,
@@ -65,14 +71,14 @@ export async function syncWorldEdgeTables(
           })
         )
         .then((r) => r.count)
-      : prisma.worldLocationControl.deleteMany({ where: { worldId } }).then(() => 0),
+      : db.worldLocationControl.deleteMany({ where: { worldId } }).then(() => 0),
 
     // WorldLocationConnection
     (locationConnections ?? []).length > 0
-      ? prisma.worldLocationConnection
+      ? db.worldLocationConnection
         .deleteMany({ where: { worldId } })
         .then(() =>
-          prisma.worldLocationConnection.createMany({
+          db.worldLocationConnection.createMany({
             data: (locationConnections ?? []).map((r) => ({
               worldId,
               sourceLocationId: r.sourceLocationId,
@@ -84,7 +90,7 @@ export async function syncWorldEdgeTables(
           })
         )
         .then((r) => r.count)
-      : prisma.worldLocationConnection.deleteMany({ where: { worldId } }).then(() => 0),
+      : db.worldLocationConnection.deleteMany({ where: { worldId } }).then(() => 0),
   ]);
 
   return {
