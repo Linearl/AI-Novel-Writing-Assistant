@@ -4,11 +4,14 @@
  */
 
 import type { AuditReport, ReplanResult } from "@ai-novel/shared/types/novel";
+import type { PayoffLedgerSummary } from "@ai-novel/shared/types/payoffLedger";
 import { plannerService } from "../planner/PlannerService";
 import type { IPlannerMediator } from "./interfaces";
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 class NovelPlannerMediator implements IPlannerMediator {
-  async ensureChapterPlan(novelId: string, chapterId: string, request?: unknown) {
+  async ensureChapterPlan(novelId: string, chapterId: string, request?: any) {
     return plannerService.ensureChapterPlan(novelId, chapterId, request);
   }
 
@@ -16,28 +19,31 @@ class NovelPlannerMediator implements IPlannerMediator {
     return plannerService.getChapterPlan(novelId, chapterId);
   }
 
-  async generateBookPlan(novelId: string, options?: unknown) {
+  async generateBookPlan(novelId: string, options?: any) {
     return plannerService.generateBookPlan(novelId, options);
   }
 
-  async generateArcPlan(novelId: string, arcId: string, options?: unknown) {
+  async generateArcPlan(novelId: string, arcId: string, options?: any) {
     return plannerService.generateArcPlan(novelId, arcId, options);
   }
 
-  async generateChapterPlan(novelId: string, chapterId: string, options?: unknown) {
+  async generateChapterPlan(novelId: string, chapterId: string, options?: any) {
     return plannerService.generateChapterPlan(novelId, chapterId, options);
   }
 
-  async replan(novelId: string, input: unknown): Promise<ReplanResult> {
+  async replan(novelId: string, input: any): Promise<ReplanResult> {
     return plannerService.replan(novelId, input);
   }
 
-  buildReplanRecommendation(params: unknown) {
+  buildReplanRecommendation(params: any) {
     return plannerService.buildReplanRecommendation(params);
   }
 
-  shouldTriggerReplanFromAudit(report: AuditReport): boolean {
-    return plannerService.shouldTriggerReplanFromAudit(report);
+  shouldTriggerReplanFromAudit(report: AuditReport | AuditReport[], ledgerSummary?: PayoffLedgerSummary | null): boolean {
+    return plannerService.shouldTriggerReplanFromAudit(
+      Array.isArray(report) ? report : [report],
+      ledgerSummary
+    );
   }
 }
 

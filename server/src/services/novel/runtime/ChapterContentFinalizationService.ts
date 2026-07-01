@@ -9,8 +9,8 @@ import { ChapterArtifactSyncService } from "./ChapterArtifactSyncService";
 import type { ChapterRuntimeRequestInput } from "./chapterRuntimeSchema";
 import type { StyleReviewResult } from "./PostGenerationStyleReviewRunner";
 import { ChapterQualityGateService } from "./ChapterQualityGateService";
-import {
 import { logger } from "../../logging/LoggerService";
+import {
   buildRuntimePackage,
   type ChapterRuntimePlannerPort,
   type OpenConflictRuntimeRow,

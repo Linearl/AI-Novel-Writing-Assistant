@@ -21,8 +21,8 @@ import { ChapterQualityGateService } from "./ChapterQualityGateService";
 import { ChapterContentFinalizationService } from "./ChapterContentFinalizationService";
 import { ChapterStreamGenerationOrchestrator } from "./ChapterStreamGenerationOrchestrator";
 import { ChapterPipelineRuntimeAdapter } from "./ChapterPipelineRuntimeAdapter";
-import {
 import { logger } from "../../logging/LoggerService";
+import {
   createDefaultReviewChapterAfterRepair,
   defaultChapterRuntimeAgent,
   type ChapterRuntimeAgentPort,
@@ -33,7 +33,10 @@ interface ChapterRuntimeCoordinatorDeps {
   chapterWritingGraph?: Pick<ChapterWritingGraph, "createChapterStream">;
   artifactSyncService?: Pick<ChapterArtifactSyncService, "saveDraftAndArtifacts" | "syncChapterArtifacts">;
   auditService?: Pick<typeof auditService, "auditChapter" | "assessChapterAuditNeed">;
-  plannerService?: Pick<typeof plannerMediator, "buildReplanRecommendation" | "shouldTriggerReplanFromAudit">;
+  plannerService?: {
+    buildReplanRecommendation?: (...args: any[]) => any;
+    shouldTriggerReplanFromAudit?: (...args: any[]) => boolean;
+  };
   acceptanceAssessmentService?: Pick<ChapterAcceptanceAssessmentService, "assess">;
   readinessService?: Pick<ChapterRuntimeReadinessService, "assertReady">;
   agentRuntime?: ChapterRuntimeAgentPort;
@@ -77,7 +80,7 @@ export class ChapterRuntimeCoordinator {
     this.contentFinalizationService = new ChapterContentFinalizationService({
       qualityGateService: this.qualityGateService,
       artifactSyncService,
-      plannerService: plannerRuntime,
+      plannerService: plannerRuntime as any,
       agentRuntime,
     });
     this.streamOrchestrator = new ChapterStreamGenerationOrchestrator({

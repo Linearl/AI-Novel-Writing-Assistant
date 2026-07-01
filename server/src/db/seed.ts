@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { prisma } from "./prisma";
-import {
 import { logger } from "../services/logging/LoggerService";
+import {
   ensureSystemResourceStarterData,
   hasSystemResourceBootstrapChanges,
 } from "../services/bootstrap/SystemResourceBootstrapService";

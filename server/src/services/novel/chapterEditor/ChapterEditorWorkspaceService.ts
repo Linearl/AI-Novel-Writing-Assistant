@@ -18,8 +18,8 @@ import {
 } from "../../../prompting/prompts/novel/chapterEditor/workspaceDiagnosis.prompts";
 import { NovelCoreService } from "../NovelCoreService";
 import { NovelVolumeService } from "../volume/NovelVolumeService";
-import {
 import { logger } from "../../logging/LoggerService";
+import {
   buildAnchorRangeFromParagraphBounds,
   buildCharacterStateSummary,
   buildMustKeepConstraints,

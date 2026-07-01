@@ -1,6 +1,6 @@
 import type { DirectorProgressItemKey } from "./novelDirectorProgress";
-import type {
 import { logger } from "../../../logging/LoggerService";
+import type {
   DirectorMarkTaskRunningCallback,
   DirectorMutatingStage,
 } from "../phases/novelDirectorPhaseTypes";

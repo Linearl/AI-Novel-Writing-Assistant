@@ -101,11 +101,19 @@ function processFile(filePath) {
     if (!hasLoggerImport) {
       const importStatement = getRelativeImportPath(filePath);
       
-      // 在最后一个 import 语句后添加
-      const lastImportIndex = content.lastIndexOf('\nimport ');
-      if (lastImportIndex !== -1) {
-        const endOfLine = content.indexOf('\n', lastImportIndex + 1);
-        content = content.slice(0, endOfLine + 1) + importStatement + '\n' + content.slice(endOfLine + 1);
+      // 找到所有 import 语句块的结束位置
+      // 使用正则匹配 import 语句（包括多行 import）
+      const importRegex = /^import\s+[\s\S]*?from\s+['"][^'"]+['"];?\s*$/gm;
+      let lastImportEnd = -1;
+      let match;
+      
+      while ((match = importRegex.exec(content)) !== null) {
+        lastImportEnd = match.index + match[0].length;
+      }
+      
+      if (lastImportEnd !== -1) {
+        // 在最后一个 import 语句后添加
+        content = content.slice(0, lastImportEnd) + '\n' + importStatement + content.slice(lastImportEnd);
       } else {
         // 如果没有 import，在文件开头添加
         content = importStatement + '\n\n' + content;

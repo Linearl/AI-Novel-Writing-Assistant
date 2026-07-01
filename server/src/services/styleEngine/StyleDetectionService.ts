@@ -9,8 +9,8 @@ import {
   inferStyleViolationSource,
 } from "./styleContractText";
 import { StyleRuntimeResolver } from "./StyleRuntimeResolver";
-import {
 import { logger } from "../logging/LoggerService";
+import {
   buildAntiAiRuleCatalogText,
   buildAntiAiRuleDirectiveText,
   listPreviewAntiAiRules,

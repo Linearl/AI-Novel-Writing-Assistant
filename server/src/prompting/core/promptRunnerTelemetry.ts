@@ -14,8 +14,8 @@ import {
   estimateOutputChars,
   isPromptOutputEmpty,
 } from "./promptRunnerHelpers";
-import type {
 import { logger } from "../../services/logging/LoggerService";
+import type {
   PromptAsset,
   PromptInvocationMeta,
   PromptRenderContext,

@@ -58,7 +58,6 @@ import { DirectorWorker } from "./workers/directorWorker";
 import { cleanupLogDirectory, resolveLogRetentionConfig } from "./platform/logging/logRetention";
 import { resolveLogsRoot } from "./runtime/appPaths";
 import { logger } from "./services/logging/LoggerService";
-import { logger } from "./services/logging/LoggerService";
 
 getSharedNovelServices();
 registerNovelEventHandlers(novelEventBus);

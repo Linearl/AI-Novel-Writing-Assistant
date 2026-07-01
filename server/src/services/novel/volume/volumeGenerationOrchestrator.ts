@@ -56,8 +56,8 @@ import {
   generateBeatSheet,
   resolveBeatSheetTargetChapterCount,
 } from "./volumeBeatSheetGeneration";
-import {
 import { logger } from "../../logging/LoggerService";
+import {
   MAX_VOLUME_COUNT,
   buildVolumeCountGuidance,
 } from "@ai-novel/shared/types/volumePlanning";

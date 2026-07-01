@@ -16,8 +16,8 @@ import {
   styleProfileMetadataPrompt,
 } from "../../prompting/prompts/style/style.prompts";
 import { mapAntiAiRuleRow } from "./helpers";
-import {
 import { logger } from "../logging/LoggerService";
+import {
   buildAntiAiCatalogText,
   buildStyleAntiAiRiskDigest,
   buildStyleMetadataDigest,

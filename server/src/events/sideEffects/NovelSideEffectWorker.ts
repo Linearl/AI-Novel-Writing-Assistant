@@ -1,7 +1,7 @@
 import os from "node:os";
 import { NovelSideEffectJobService, novelSideEffectJobService } from "./NovelSideEffectJobService";
-import {
 import { logger } from "../../services/logging/LoggerService";
+import {
   NovelSideEffectJobHandlers,
   UnsupportedNovelSideEffectPayloadError,
 } from "./NovelSideEffectJobHandlers";

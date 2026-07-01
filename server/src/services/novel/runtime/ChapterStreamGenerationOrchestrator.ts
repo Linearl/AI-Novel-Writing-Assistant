@@ -13,8 +13,8 @@ import {
   isChapterEmptyContentError,
   type ChapterEmptyContentError,
 } from "./chapterEmptyContentError";
-import {
 import { logger } from "../../logging/LoggerService";
+import {
   ChapterContentFinalizationService,
   type FinalizeChapterContentResult,
 } from "./ChapterContentFinalizationService";

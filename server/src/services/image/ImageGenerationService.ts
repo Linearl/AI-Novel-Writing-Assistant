@@ -28,8 +28,8 @@ import {
   toImageAsset,
   toImageTask,
 } from "./imageGenerationMappers";
-import type {
 import { logger } from "../logging/LoggerService";
+import type {
   CharacterImageGenerationRequest,
   ImageSize,
   NovelCoverImageGenerationRequest,
