@@ -1,0 +1,290 @@
+{
+  "dimension": "architecture",
+  "weight": 0.15,
+  "scanDate": "2026-07-01",
+  "findings": [
+    {
+      "id": "ARCH-001",
+      "severity": "P1",
+      "title": "God Object: NovelDirectorService 拥有 14 个服务依赖和 42+ 跨域导入",
+      "file": "server/src/services/novel/director/NovelDirectorService.ts",
+      "line": null,
+      "description": "NovelDirectorService (707行) 实例化 14 个私有服务字段，导入覆盖 9 个 sibling novel 子目录 + 3 个跨域服务（styleEngine、task、payoff）。这是经典的 God Object 模式，承担了整个小说流水线的编排职责，几乎无法独立测试。",
+      "code": null,
+      "risk": "修改任何被依赖服务的接口都会波及此文件；测试需要 mock 14 个服务；是项目中耦合度最高的单点",
+      "suggestion": "按职责拆分为 3-4 个编排器（TakeoverOrchestrator、PipelineOrchestrator、ContextBuilder 等），每个持有 3-5 个依赖；startTakeover 方法 (165行) 优先提取为独立 handler"
+    },
+    {
+      "id": "ARCH-002",
+      "severity": "P1",
+      "title": "God Function: PlannerService.generateChapterPlan 单方法 352 行",
+      "file": "server/src/services/planner/PlannerService.ts",
+      "line": 388,
+      "description": "generateChapterPlan 方法 (lines 388-740) 包含 15 个并行数据库查询的 Promise.all、volume plan 数据映射、上下文组装、LLM 调用和结果持久化，全在一个方法内完成。PlannerService 整体 992 行，是项目中最大的文件。",
+      "code": null,
+      "risk": "单方法 352 行难以理解和测试；任何修改都可能影响整个章节规划流程；replan 方法 (199行) 也有同样问题",
+      "suggestion": "将 15 查询 Promise.all 块提取为 ChapterPlanDataLoader；将 volume 映射提取为 VolumePlanMapper；将 LLM 调用和持久化拆分为独立步骤"
+    },
+    {
+      "id": "ARCH-003",
+      "severity": "P1",
+      "title": "循环依赖: llm/factory.ts <-> services/settings/ 双向导入",
+      "file": "server/src/llm/factory.ts",
+      "line": 5,
+      "description": "llm/factory.ts 从 services/settings/secretStore 导入 secretStore；而 services/settings/ 下的 ProviderBalanceService、RagEmbeddingModelService、RagCompatibilityBootstrapService、RagSettingsService 四个文件反向导入 llm/providers 和 llm/modelCatalog。这是基础设施层的紧耦合循环。",
+      "code": "import { secretStore } from '../services/settings/secretStore';",
+      "risk": "模块加载顺序敏感；改变任一侧导出可能引发运行时错误；难以独立测试 LLM 客户端工厂",
+      "suggestion": "将 secretStore 提取为独立模块（如 config/secrets.ts 或 platform/secrets.ts），使其不依赖 services/ 也不被 services/ 依赖"
+    },
+    {
+      "id": "ARCH-004",
+      "severity": "P1",
+      "title": "循环依赖: services/novel/director/commands/ <-> workers/ 双向导入",
+      "file": "server/src/services/novel/director/commands/DirectorCommandService.ts",
+      "line": 47,
+      "description": "DirectorCommandService 和 DirectorCommandServiceLeaseManager 从 workers/TaskDispatcher 导入 taskDispatcher；而 workers/DirectorTaskQueue 从 services/novel/director/commands/ 导入 DirectorCommandService 和 resourceClassForCommand。directorSubsystem.ts 还将 workers 类型 re-export 到 services 命名空间。",
+      "code": "import { taskDispatcher } from '../../../../workers/TaskDispatcher';",
+      "risk": "命令服务和任务队列互相依赖，形成紧耦合；无法独立部署或测试任一侧",
+      "suggestion": "通过依赖注入传递 taskDispatcher（而非直接 import），或提取共享接口到独立类型模块"
+    },
+    {
+      "id": "ARCH-005",
+      "severity": "P1",
+      "title": "循环依赖: llm/structuredInvoke.ts <-> services/novel/novelP0Utils.ts",
+      "file": "server/src/llm/structuredInvoke.ts",
+      "line": 34,
+      "description": "llm/structuredInvoke.ts、structuredInvokeParser.ts、structuredInvokeRepair.ts 三个 LLM 基础设施文件从 services/novel/novelP0Utils 导入 toText/extractJSONValue；而 services/novel/ 下多个文件反向导入 llm/ 下的 providerSchema、factory、structuredOutput、usageTracking、streaming。",
+      "code": "import { toText } from '../services/novel/novelP0Utils';",
+      "risk": "LLM 基础设施层依赖业务层工具函数，违反依赖方向原则（基础设施不应依赖业务逻辑）",
+      "suggestion": "将 novelP0Utils 中的 toText/extractJSONValue 等纯工具函数提取为 llm/utils.ts 或 shared 包"
+    },
+    {
+      "id": "ARCH-006",
+      "severity": "P1",
+      "title": "循环依赖: services/novel/NovelExportService.ts <-> modules/export/ 双向 re-export",
+      "file": "server/src/services/novel/NovelExportService.ts",
+      "line": 1,
+      "description": "NovelExportService.ts 第一行即 export * from '../../modules/export'（services re-export modules）；而 modules/export/novelExport.service.ts 和 novelExport.mappers.ts 反向导入 services/novel/application/ 和 services/novel/storyMacro/。",
+      "code": "export * from '../../modules/export';",
+      "risk": "文件级 re-export 循环；模块边界模糊——无法判断导出功能的真实归属",
+      "suggestion": "消除 re-export 循环：将 NovelExportService 改为纯 facade 调用 modules/export，或合并两处为单一归属"
+    },
+    {
+      "id": "ARCH-007",
+      "severity": "P2",
+      "title": "9 个路由文件直接访问 Prisma 数据库，跳过服务层",
+      "file": "server/src/routes/character.ts",
+      "line": 4,
+      "description": "character.ts、settings.ts、llm.ts、customProviderRoutes.ts、novelImportRoutes.ts、novelCharacterArcRoutes.ts、novelReviewRoutes.ts、novelProductionRoutes.ts、novelCharacterResourceRoutes.ts 共 9 个路由文件直接 import prisma 并执行 CRUD/事务操作。其中 novelProductionRoutes.ts 和 novelCharacterResourceRoutes.ts 包含 prisma.$transaction 多步事务逻辑。",
+      "code": "import { prisma } from '../db/prisma';",
+      "risk": "HTTP 层与数据访问层耦合；无法复用数据操作逻辑；测试需要启动完整 HTTP 服务器",
+      "suggestion": "为每个直接访问 prisma 的路由提取对应的 Repository/Service；路由只做参数解析和响应格式化"
+    },
+    {
+      "id": "ARCH-008",
+      "severity": "P2",
+      "title": "agents/traceStore.ts 包含 18 个直接 Prisma 调用",
+      "file": "server/src/agents/traceStore.ts",
+      "line": 14,
+      "description": "traceStore.ts 在 agents/ 层直接导入 @prisma/client 和 db/prisma，包含约 18 个 prisma.* 调用（agentRun.create、agentStep.create、agentApproval.create 等），充当了完整的数据访问仓库角色，但不在数据访问层。",
+      "code": "import { prisma } from '../db/prisma';",
+      "risk": "agent 层与数据库 schema 紧耦合；Prisma schema 变更直接影响 agent 运行时",
+      "suggestion": "提取为 AgentTraceRepository 放入 db/ 或 services/ 下的 repository 目录"
+    },
+    {
+      "id": "ARCH-009",
+      "severity": "P2",
+      "title": "services/novel/director/http/ 包含 Express 路由定义，HTTP 与业务逻辑混放",
+      "file": "server/src/services/novel/director/http/novelDirector.ts",
+      "line": 1,
+      "description": "services/novel/director/http/novelDirector.ts 定义了 10+ 个 Express 路由（router.post/router.get），novelWorkflows.ts 定义了 5 个。这些 HTTP 路由处理程序位于 services/ 目录下，违反了路由层与服务层的职责分离。",
+      "code": "import { Router } from 'express';",
+      "risk": "业务逻辑与 HTTP 框架耦合；无法在非 HTTP 上下文（如 worker、CLI）中复用",
+      "suggestion": "将路由定义迁移到 modules/novel/http/ 或 routes/ 目录，services/ 仅保留纯业务逻辑"
+    },
+    {
+      "id": "ARCH-010",
+      "severity": "P2",
+      "title": "URL 路径命名不一致：复数与单数资源名混用",
+      "file": "server/src/app.ts",
+      "line": null,
+      "description": "app.ts 挂载路径混合使用复数和单数：复数（/api/genres, /api/novels, /api/worlds, /api/tasks, /api/images）vs 单数（/api/drama, /api/comic, /api/writing-formula, /api/title-library, /api/base-characters）。集合资源应统一使用复数形式。",
+      "code": null,
+      "risk": "API 约定不一致增加认知负担；前端调用者需要记住每个资源的单复数形式",
+      "suggestion": "统一为 kebab-case 复数形式（/api/dramas, /api/comics, /api/writing-formulas 等），通过版本化过渡"
+    },
+    {
+      "id": "ARCH-011",
+      "severity": "P2",
+      "title": "API 响应格式不一致：部分路由缺少 message 字段和 satisfies 类型检查",
+      "file": "server/src/modules/drama/http/dramaRoutes.ts",
+      "line": 205,
+      "description": "comicRoutes.ts 始终返回 { success, data } 不含 message；dramaRoutes.ts 包含 message 但 20+ 个响应省略了 satisfies ApiResponse 类型检查。不同模块对 ApiResponse 的使用方式不统一。",
+      "code": "res.status(200).json({ success: true, data, message: '...' });",
+      "risk": "前端无法可靠依赖 message 字段做用户反馈；缺少 satisfies 检查的响应可能静默偏离 ApiResponse 类型",
+      "suggestion": "在所有路由响应中统一使用 satisfies ApiResponse；决定 message 是否必填并文档化"
+    },
+    {
+      "id": "ARCH-012",
+      "severity": "P2",
+      "title": "验证中间件使用不一致：部分路由手动 parse 而非使用 validate() 中间件",
+      "file": "server/src/routes/titleLibrary.ts",
+      "line": 64,
+      "description": "titleLibrary.ts 使用 querySchema.parse(req.query) 手动解析而非项目标准的 validate({ query: querySchema }) 中间件。dramaRoutes.ts 多个路由读取 req.query/req.params 时完全跳过验证。",
+      "code": "const query = querySchema.parse(req.query);",
+      "risk": "Zod parse 错误的异常格式与 validate 中间件不一致；跳过验证的路由存在输入安全风险",
+      "suggestion": "统一使用 validate() 中间件处理所有输入验证；对 dramaRoutes.ts 中读取 query/params 的路由补充 validate"
+    },
+    {
+      "id": "ARCH-013",
+      "severity": "P2",
+      "title": "硬编码 PostgreSQL 连接串包含明文密码",
+      "file": "server/src/config/database.ts",
+      "line": 3,
+      "description": "DEFAULT_POSTGRES_DATABASE_URL 包含硬编码的 postgres:postgres 用户名密码，作为 fallback 值暴露在源码中。",
+      "code": "const DEFAULT_POSTGRES_DATABASE_URL = 'postgresql://postgres:postgres@127.0.0.1:5432/ai_novel';",
+      "risk": "密码泄露到代码仓库；生产环境可能意外使用此默认值",
+      "suggestion": "移除默认值中的密码，改为启动时验证 DATABASE_URL 环境变量存在"
+    },
+    {
+      "id": "ARCH-014",
+      "severity": "P2",
+      "title": "电路断路器阈值硬编码，无法通过配置覆盖",
+      "file": "server/src/services/novel/director/runtime/DirectorCircuitBreakerService.ts",
+      "line": 8,
+      "description": "DIRECTOR_CIRCUIT_BREAKER_THRESHOLDS 包含 7 个生产关键安全阈值（patchFailureOpenAt: 3, chapterTotalTokenLimitBase: 120000 等），声明为 as const 且无环境变量覆盖机制。",
+      "code": "export const DIRECTOR_CIRCUIT_BREAKER_THRESHOLDS = { patchFailureOpenAt: 3, replanLoopOpenAt: 3, ... } as const;",
+      "risk": "调整阈值需要修改源码并重新部署；不同部署规模无法差异化配置",
+      "suggestion": "将阈值改为从环境变量或 config 模块读取，保留 as const 作为默认值"
+    },
+    {
+      "id": "ARCH-015",
+      "severity": "P2",
+      "title": "环境变量散落在 7+ 个服务文件中读取，缺乏集中管理",
+      "file": "server/src/llm/debugLogging.ts",
+      "line": 34,
+      "description": "config/ 目录是预设的集中配置层，但 llm/debugLogging.ts、llm/sessionLogFile.ts、runtime/appPaths.ts、llm/streamingRepetitionDetector.ts、workers/DirectorTaskQueue.ts 等 7+ 个文件直接读取 process.env，绕过验证和默认值机制。",
+      "code": "process.env.LLM_DEBUG_LOG",
+      "risk": "无法审计所有环境变量；各处默认值不一致；缺少统一验证",
+      "suggestion": "将所有 process.env 读取收敛到 config/ 目录下的模块，使用 Zod schema 验证"
+    },
+    {
+      "id": "ARCH-016",
+      "severity": "P2",
+      "title": "llm/structuredOutput.ts 中 safeStructuredMaxTokens: 8192 重复 9 次",
+      "file": "server/src/llm/structuredOutput.ts",
+      "line": 162,
+      "description": "safeStructuredMaxTokens 值 8192 在 9 个模型配置文件中重复硬编码。修改默认值需要同时编辑 9 个位置。",
+      "code": "safeStructuredMaxTokens: 8192,",
+      "risk": "修改遗漏导致不一致；维护成本高",
+      "suggestion": "提取为命名常量 DEFAULT_SAFE_STRUCTURED_MAX_TOKENS 并在基础 profile 中引用"
+    },
+    {
+      "id": "ARCH-017",
+      "severity": "P3",
+      "title": "26 个文件超过 700 行（项目约束 >700 必须重构）",
+      "file": "server/src/services/planner/PlannerService.ts",
+      "line": null,
+      "description": "项目约束规定单文件目标 ~600 行，>700 必须重构。当前有 26 个文件超过 700 行：server 12个、client 9个、shared 5个。最大文件为 shared/types/directorRuntime.ts (1273行)、PlannerService.ts (992行)、shared/types/novel.ts (1063行)、shared/types/chapterRuntime.ts (1039行)。",
+      "code": null,
+      "risk": "大文件降低可读性和可维护性；增加 merge 冲突概率；AI 辅助编码效率下降",
+      "suggestion": "按领域拆分大文件：shared/types 按子域拆分（director/、novel/、chapter/）；PlannerService 拆分为 PlannerDataService + PlannerOrchestrator + PlannerPersistence"
+    },
+    {
+      "id": "ARCH-018",
+      "severity": "P3",
+      "title": "9 个 client 页面组件超过 700 行",
+      "file": "client/src/pages/promptWorkbench/components/PromptSlotPanel.tsx",
+      "line": null,
+      "description": "PromptSlotPanel.tsx (842行)、WorldVisualizationBoard.tsx (836行)、PanelsGridPanel.tsx (777行)、OutlineTab.tsx (774行)、NovelCharacterPanel.tsx (774行)、NovelTaskDrawer.tsx (758行)、NovelAutoDirectorDialog.tsx (743行)、NovelAutoDirectorProgressPanel.tsx (710行)、DramaProjectPage.tsx (709行)、NovelExistingProjectTakeoverDialog.tsx (700行)。",
+      "code": null,
+      "risk": "React 组件过长导致状态管理混乱、渲染性能问题、难以复用",
+      "suggestion": "按子功能拆分为独立组件；提取复杂状态逻辑到 custom hooks；将纯展示逻辑与业务逻辑分离"
+    },
+    {
+      "id": "ARCH-019",
+      "severity": "P3",
+      "title": "SSE 心跳间隔 15000ms 在 4 个文件中重复定义",
+      "file": "server/src/llm/streaming.ts",
+      "line": 69,
+      "description": "15000ms SSE 心跳间隔分别出现在 llm/streaming.ts (line 69)、routes/creativeHub.ts (line 89)、services/novel/novelCorePipelineHelpers.ts (line 5)、NovelPipelineRuntimeService.ts (line 62)，四处使用不同形式（字面量/命名常量）但值相同。",
+      "code": "setInterval(() => { res.write(': heartbeat\\n\\n'); }, 15000);",
+      "risk": "修改心跳间隔需搜索 4 个文件；遗漏任一处会导致不一致行为",
+      "suggestion": "提取为共享常量 SSE_HEARTBEAT_INTERVAL_MS 放入 config/ 或 constants.ts"
+    },
+    {
+      "id": "ARCH-020",
+      "severity": "P3",
+      "title": "modules/ 与 services/ 之间存在目录级双向耦合",
+      "file": "server/src/modules/",
+      "line": null,
+      "description": "modules/ 目录下 drama、comic、novel、export、setup 等子模块共 60+ 处导入 services/ 符号；services/novel/runtime/ 反向导入 modules/timeline；services/novel/NovelExportService re-export modules/export。modules 与 services 之间缺乏清晰的单向依赖规则。",
+      "code": null,
+      "risk": "模块边界模糊；改动 services/ 可能波及 modules/，反之亦然",
+      "suggestion": "确立单向依赖规则：modules/ -> services/（modules 调用 services）或 services/ -> modules/（services 编排 modules），不双向"
+    },
+    {
+      "id": "ARCH-021",
+      "severity": "P3",
+      "title": "ImageGenerationService.executeTask 单方法 195 行，混合编排/持久化/重试",
+      "file": "server/src/services/image/ImageGenerationService.ts",
+      "line": 491,
+      "description": "executeTask 方法 (lines 491-686) 将任务验证、图像生成、资产持久化、事务状态更新和重试逻辑全部放在一个方法内。虽然该服务耦合度低，但单方法过长。",
+      "code": null,
+      "risk": "方法内各阶段难以独立测试；重试逻辑与持久化逻辑纠缠",
+      "suggestion": "拆分为 validateTask()、generateImage()、persistResult()、handleRetry() 等独立方法"
+    },
+    {
+      "id": "ARCH-022",
+      "severity": "P3",
+      "title": "TTS/视频超时回退值 120000ms 在两个服务文件中重复",
+      "file": "server/src/services/drama/audio/TTSProviderPort.ts",
+      "line": 43,
+      "description": "TTSProviderPort.ts (line 43) 和 VideoProviderPort.ts (line 80) 共享相同的 normalizeTimeoutMs 模式，回退值均为 120000 (2分钟)，但未共享命名常量。",
+      "code": "return 120000;",
+      "risk": "修改一处可能遗漏另一处",
+      "suggestion": "提取为共享常量 DEFAULT_MEDIA_TIMEOUT_MS"
+    },
+    {
+      "id": "ARCH-023",
+      "severity": "P4",
+      "title": "chat.ts GET /history 返回硬编码空数组 stub",
+      "file": "server/src/routes/chat.ts",
+      "line": 318,
+      "description": "GET /history 端点始终返回空数组和中文提示消息，使用 ApiResponse<unknown[]> 而非正确类型化响应。该 stub 无弃用标记或文档说明。",
+      "code": "res.status(200).json({ success: true, data: [], message: '...' } satisfies ApiResponse<unknown[]>);",
+      "risk": "消费者可能误以为历史记录功能正常工作",
+      "suggestion": "添加 Deprecation 响应头或 501 状态码，或在注释中标记为临时 stub"
+    },
+    {
+      "id": "ARCH-024",
+      "severity": "P4",
+      "title": "llm.ts POST /model-routes/connectivity 对只读操作使用 POST 方法",
+      "file": "server/src/routes/llm.ts",
+      "line": 109,
+      "description": "connectivity 测试端点使用 POST 方法但无请求体，是只读操作（测试连接）。同文件中 /model-routes 的查询使用 GET。REST 约定中只读操作应使用 GET。",
+      "code": "router.post('/model-routes/connectivity', async (_req, res, next) => {",
+      "risk": "违反 RESTful 约定；客户端可能因缓存策略差异产生意外行为",
+      "suggestion": "改为 GET 方法，或在 POST 时携带 provider 配置信息使其语义合理"
+    },
+    {
+      "id": "ARCH-025",
+      "severity": "P4",
+      "title": "novelP0Utils.ts 中的纯工具函数导致 llm/ 与 services/novel/ 双向依赖",
+      "file": "server/src/services/novel/novelP0Utils.ts",
+      "line": null,
+      "description": "novelP0Utils.ts 包含 toText、extractJSONValue 等纯工具函数，本应属于共享工具层，但放置在 services/novel/ 下导致 llm/ 基础设施层反向依赖业务层。",
+      "code": null,
+      "risk": "基础设施依赖业务逻辑违反分层原则",
+      "suggestion": "将纯工具函数迁移至 llm/utils.ts 或 shared 包"
+    }
+  ],
+  "summary": {
+    "total": 25,
+    "P1": 6,
+    "P2": 9,
+    "P3": 6,
+    "P4": 4
+  },
+  "score": 5.8
+}

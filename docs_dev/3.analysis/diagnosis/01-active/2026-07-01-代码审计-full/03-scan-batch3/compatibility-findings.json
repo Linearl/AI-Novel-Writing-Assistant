@@ -1,0 +1,158 @@
+{
+  "dimension": "compatibility",
+  "weight": 0.05,
+  "scanDate": "2026-07-01",
+  "findings": [
+    {
+      "id": "COMPAT-001",
+      "severity": "P1",
+      "title": "ESM/CJS 模块系统不兼容：server (CJS) require() shared (ESM) 将在 Node 20 抛出 ERR_REQUIRE_ESM",
+      "file": "server/src/db/prisma.ts",
+      "line": 5,
+      "description": "server 包编译为 CommonJS (module: \"CommonJS\")，而 shared 包编译为 ESM (module: \"ESNext\" + \"type\": \"module\")。server 通过 tsconfig paths 映射 @ai-novel/shared/* → ../shared/dist/*，运行时 require() 解析到 shared/dist/ 下的 ESM .js 文件。Node 20 不支持 require() 加载 ESM 模块，会抛出 ERR_REQUIRE_ESM。仅 Node 22.12+ 原生支持 require(esm)。项目声明支持 Node ^20.19.0，因此 Node 20 用户在生产模式下会崩溃。dev 模式不受影响（ts-node-dev 直接加载 .ts 源文件绕过此问题）。",
+      "code": "// server/dist output (CJS):\nconst bookAnalysis_1 = require(\"@ai-novel/shared/types/bookAnalysis\");\n// shared/dist/types/bookAnalysis.js (ESM):\nexport type BookAnalysisStatus = \"draft\" | \"queued\" | ...;\n// shared/package.json: { \"type\": \"module\" }",
+      "risk": "Node 20.x 用户执行 node dist/app.js 时，所有运行时 import from @ai-novel/shared（约 30+ 处）都会失败。生产环境无法启动。影响所有使用 Node 20 的部署场景。",
+      "suggestion": "方案 A（推荐）：将 shared 的 tsconfig 改为双格式输出，或移除 shared/package.json 的 \"type\": \"module\"，让 .js 文件默认为 CJS。方案 B：将 server 改为 ESM（package.json 加 \"type\": \"module\"，tsconfig 改 module: \"NodeNext\"）。方案 C：仅在 engines 中移除 Node 20 支持，仅保留 ^22.12.0 || >=24.0.0。"
+    },
+    {
+      "id": "COMPAT-002",
+      "severity": "P2",
+      "title": "5 处 navigator.clipboard.writeText() 无 try/catch 回退",
+      "file": "client/src/pages/worlds/WorldWorkspace.tsx",
+      "line": 288,
+      "description": "客户端有 6 处使用 Clipboard API，其中仅 NovelPreview.tsx 有 try/catch + execCommand 回退。其余 5 处直接调用 navigator.clipboard.writeText() 无异常处理。Clipboard API 要求安全上下文（HTTPS）和用户手势权限，在非 localhost 的 HTTP 环境、Electron webview 或隐私浏览模式下可能不可用。",
+      "code": "await navigator.clipboard.writeText(text);  // WorldWorkspace.tsx:288\nawait navigator.clipboard.writeText(content); // TitleFactoryPanel.tsx:111\nawait navigator.clipboard.writeText(text);    // TitleLibraryPanel.tsx:60\nawait navigator.clipboard.writeText(text);    // NovelTitleWorkshop.tsx:79\nawait navigator.clipboard.writeText(text);    // NovelCreateTitleQuickFill.tsx:178",
+      "risk": "在 Clipboard API 不可用时抛出未捕获异常，用户体验中断。Desktop Electron 环境可能因安全策略拒绝访问。",
+      "suggestion": "统一采用 NovelPreview.tsx 已有的模式：try { navigator.clipboard.writeText() } catch { textarea + execCommand('copy') } 回退方案。可抽取为 shared utility 函数。"
+    },
+    {
+      "id": "COMPAT-003",
+      "severity": "P2",
+      "title": "idb-keyval (IndexedDB) 操作无异常处理，隐私模式/受限环境可能崩溃",
+      "file": "client/src/hooks/useLocalDB.ts",
+      "line": 1,
+      "description": "useLocalDB hook 和 chatStore 直接使用 idb-keyval 的 get/set/del 操作，无 try/catch 包裹。IndexedDB 在部分浏览器隐私浏览模式（Safari）、存储配额耗尽、或安全策略限制时不可用，Promise 会 reject，导致未处理异常。",
+      "code": "// useLocalDB.ts\nimport { del, get, set } from 'idb-keyval';\n// chatStore.ts\nimport { del, get, set } from 'idb-keyval';",
+      "risk": "IndexedDB 不可用时导致未处理 Promise rejection，可能使应用状态管理（chatStore hydration）中断或白屏。",
+      "suggestion": "为所有 idb-keyval 调用添加 try/catch，降级到内存状态或 localStorage。建议封装 safeGet/safeSet/safeDel 工具函数。"
+    },
+    {
+      "id": "COMPAT-004",
+      "severity": "P2",
+      "title": "REST API 无版本管理，无向后兼容策略",
+      "file": "server/src/app.ts",
+      "line": 119,
+      "description": "所有 API 端点直接挂载在 /api/ 路径下，无版本前缀（如 /api/v1/）。无 Deprecation/Sunset HTTP 头，无版本协商中间件，无 API 变更日志。任何破坏性变更将直接影响所有客户端。",
+      "code": "// app.ts 路由挂载\napp.use(\"/api/novels\", novelRouter);\napp.use(\"/api/worlds\", worldRouter);\napp.use(\"/api/settings\", settingsRouter);\n// 无版本前缀",
+      "risk": "随着 desktop 客户端独立发布，客户端和 server 可能出现版本不同步。任何端点签名变更都会破坏已发布的 desktop 客户端。Electron 自动更新无法保证 server 同步更新。",
+      "suggestion": "短期：在路由约定中增加版本前缀 /api/v1/。中期：增加版本协商中间件和 Deprecation 头。当前为 v0.x 阶段可暂不实施，但应在正式 v1.0 前完成。"
+    },
+    {
+      "id": "COMPAT-005",
+      "severity": "P2",
+      "title": "Raw SQL 中使用裸 false 字面量（非参数化），SQLite 兼容性风险",
+      "file": "server/src/services/novel/worldContext/NovelWorldManualService.ts",
+      "line": 110,
+      "description": "ON CONFLICT DO UPDATE SET 子句中直接使用 SQL 裸字面量 false（而非 Prisma 参数化的 ${false}）。同一查询的第 93 行正确使用了 ${false}。PostgreSQL 的 boolean 列接受 false，但 SQLite 将 boolean 存储为整数 0/1，裸 false 字面量可能被驱动层拒绝或产生意外结果。",
+      "code": "\"syncEnabled\" = false,     // 第 110 行：裸 SQL 字面量\n\"syncEnabled\" = ${false},  // 第 93 行：Prisma 参数化（正确）",
+      "risk": "SQLite 环境下 ON CONFLICT 语句可能执行失败或 syncEnabled 被设置为非预期值。同查询内的不一致写法增加维护风险。",
+      "suggestion": "将第 110 行的 false 改为 ${false}，使用 Prisma 参数化模板统一处理。"
+    },
+    {
+      "id": "COMPAT-006",
+      "severity": "P3",
+      "title": "Array.prototype.at() 在 Safari < 15.4 不可用，无 polyfill",
+      "file": "client/src/pages/novels/components/NovelAutoDirectorDialog.tsx",
+      "line": 254,
+      "description": "两处使用 Array.prototype.at()：NovelAutoDirectorDialog.tsx (line 254) 和 NovelEdit.tsx (line 252)。该方法在 Safari 15.4（2022 年 3 月）之前不可用。项目无 .browserslistrc，Vite 默认 build.target 为 esnext，未显式声明最低浏览器版本。",
+      "code": "const latestBatch = batches.at(-1) ?? null;  // NovelAutoDirectorDialog.tsx:254\nactiveDirectorSnapshot.recentEvents.at(-1)   // NovelEdit.tsx:252",
+      "risk": "Safari 15.3 及以下版本运行时抛出 TypeError: batches.at is not a function。对桌面 Electron 内嵌 Chromium 无影响，但影响移动 Safari 用户。",
+      "suggestion": "替换为 arr[arr.length - 1] 或添加 .browserslistrc 显式声明最低 Safari 版本 >= 15.4。"
+    },
+    {
+      "id": "COMPAT-007",
+      "severity": "P3",
+      "title": "electron-builder 配置仅定义 Windows 目标，macOS/Linux 构建缺失",
+      "file": "desktop/electron-builder.config.cjs",
+      "line": 83,
+      "description": "electron-builder 配置仅包含 win.target（nsis + portable, x64），未定义 mac 或 linux target。updater.ts 硬编码 Windows 提示文案。desktop/package.json description 写明 \"Windows desktop runtime\"。如果计划支持跨平台，当前配置不完整。",
+      "code": "win: {\n  icon: builderIconPath,\n  signAndEditExecutable: true,\n  target: [\n    { target: \"nsis\", arch: [\"x64\"] },\n    { target: \"portable\", arch: [\"x64\"] },\n  ],\n},\n// 缺少 mac: {}, linux: {}",
+      "risk": "如果未来需要 macOS/Linux 分发，需要大幅修改构建配置。当前 .ico 图标格式、更新器消息、NSIS 安装器等均为 Windows 专属。",
+      "suggestion": "如果仅面向 Windows，当前配置可接受，但建议在文档中明确标注平台限制。如需跨平台，需添加 mac/linux target、.icns/.png 图标、DMG/AppImage 配置。"
+    },
+    {
+      "id": "COMPAT-008",
+      "severity": "P3",
+      "title": "Prisma raw SQL 中 CASE WHEN 返回 boolean 在 SQLite 下可能产生整数而非布尔值",
+      "file": "server/src/services/novel/NovelProductionStatusService.ts",
+      "line": 312,
+      "description": "CASE WHEN ... THEN true ELSE false END 返回的布尔值在 PostgreSQL 下为原生 boolean，在 SQLite 下 Prisma adapter 映射为整数 0/1。TypeScript 类型标注为 boolean，但 SQLite 实际返回 number，严格的 === true 比较可能失败。",
+      "code": "CASE WHEN \"structuredDataJson\" IS NOT NULL AND length(trim(\"structuredDataJson\")) > 0 THEN true ELSE false END AS \"hasStructuredData\",\nCASE WHEN \"storySliceJson\" IS NOT NULL AND length(trim(\"storySliceJson\")) > 0 THEN true ELSE false END AS \"hasStorySlice\"",
+      "risk": "SQLite 环境下 hasStructuredData/hasStorySlice 可能返回 1 而非 true，if (row.hasStructuredData) 可以工作，但 if (row.hasStructuredData === true) 会失败。",
+      "suggestion": "验证下游消费代码使用 truthy 检查而非严格等值比较。或将 CASE WHEN 改为返回整数 1/0 以保持双数据库一致。"
+    },
+    {
+      "id": "COMPAT-009",
+      "severity": "P3",
+      "title": "sharp 未列入 pnpm.onlyBuiltDependencies，构建时可能跳过安装脚本",
+      "file": "package.json",
+      "line": 58,
+      "description": "sharp v0.35.1 是原生 C++ 扩展，需要 postinstall 脚本下载平台特定二进制文件。pnpm.onlyBuiltDependencies 列表包含 @prisma/engines、better-sqlite3、esbuild、prisma，但不包含 sharp。在 pnpm 严格沙箱模式下，sharp 的 postinstall 可能被跳过。",
+      "code": "pnpm: {\n  onlyBuiltDependencies: [\n    \"@prisma/engines\",\n    \"better-sqlite3\",\n    \"esbuild\",\n    \"prisma\"\n    // 缺少 \"sharp\"\n  ]\n}",
+      "risk": "pnpm install 后 sharp 可能缺少原生二进制文件，导致 ComicExportService/ComicCharacterImageService/ComicBubbleLayoutService 运行时崩溃。",
+      "suggestion": "在 pnpm.onlyBuiltDependencies 中添加 \"sharp\"。"
+    },
+    {
+      "id": "COMPAT-010",
+      "severity": "P3",
+      "title": "Vite build 未设置 build.target，依赖默认 esnext 目标",
+      "file": "client/vite.config.ts",
+      "line": 97,
+      "description": "vite.config.ts 的 build 配置未指定 build.target，Vite 7 默认使用 esnext，不进行语法降级。同时项目无 .browserslistrc 文件，未显式声明支持的浏览器范围。",
+      "code": "build: {\n  chunkSizeWarningLimit: 1400,\n  rollupOptions: { ... }\n  // 缺少 target: 'modules' 或具体版本\n}",
+      "risk": "无法保证构建产物在目标浏览器中的兼容性。现代语法（如 top-level await、??=、import.meta）可能在旧浏览器中执行失败。",
+      "suggestion": "添加 build.target: 'modules'（ES modules 浏览器）或 'es2020'，并创建 .browserslistrc 显式声明支持范围。"
+    },
+    {
+      "id": "COMPAT-011",
+      "severity": "P4",
+      "title": "Desktop 未遵循 Linux XDG Base Directory 规范",
+      "file": "desktop/src/runtime/paths.ts",
+      "line": 57,
+      "description": "Linux 下应用数据目录 fallback 到 ~/.AI-Novel-Writing-Assistant-v2，未遵循 XDG Base Directory Specification（应使用 $XDG_DATA_HOME 或 ~/.local/share/）。这是 Linux 桌面应用的标准约定。",
+      "code": "// paths.ts:57\nreturn path.join(os.homedir(), \".AI-Novel-Writing-Assistant-v2\");",
+      "risk": "Linux 用户会看到非标准的隐藏目录，与系统其他应用的数据存放位置不一致。非功能性问题，仅影响规范性。",
+      "suggestion": "添加 process.platform === 'linux' 分支，优先使用 process.env.XDG_DATA_HOME || path.join(os.homedir(), '.local', 'share')。"
+    },
+    {
+      "id": "COMPAT-012",
+      "severity": "P4",
+      "title": "Desktop 图标使用 .ico 格式，macOS/Linux 非原生",
+      "file": "desktop/src/runtime/paths.ts",
+      "line": 108,
+      "description": "应用图标硬编码为 .ico 格式（Windows 原生）。macOS 使用 .icns，Linux 使用 .png。Electron 可从 .ico 提取图像但非原生格式。",
+      "code": "const packagedIconPath = path.join(resolveDesktopResourcesDir(), \"icons\", \"app-icon.ico\");\nreturn path.resolve(resolveWorkspaceRoot(), \"desktop\", \"builder\", \"app-icon.ico\");",
+      "risk": "macOS/Linux 上图标可能显示为非最优尺寸或质量。非功能性问题。",
+      "suggestion": "如需跨平台支持，为各平台提供对应格式图标（.icns, .png）。"
+    },
+    {
+      "id": "COMPAT-013",
+      "severity": "P4",
+      "title": "Desktop 自动更新器消息硬编码为 Windows 专属文案",
+      "file": "desktop/src/runtime/updater.ts",
+      "line": 44,
+      "description": "updater.ts 中更新不可用的提示消息明确提到 \"Windows build\"，但 electron-updater 本身支持 Windows/macOS/Linux。如果未来支持多平台，消息需要调整。",
+      "code": "\"Updates are only available from the packaged Windows build.\"",
+      "risk": "误导用户认为更新仅在 Windows 上可用。非功能性问题。",
+      "suggestion": "将消息改为平台无关表述，如 \"Updates are only available from the packaged build.\""
+    }
+  ],
+  "summary": {
+    "total": 13,
+    "P1": 1,
+    "P2": 4,
+    "P3": 5,
+    "P4": 3
+  },
+  "score": 6.8
+}

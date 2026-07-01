@@ -1,0 +1,360 @@
+{
+  "timestamp": "2026-07-01",
+  "summary": {
+    "serverTotalTs": 835,
+    "clientTotalTsTsx": 430,
+    "sharedTotalTs": 50,
+    "serverModules": 18,
+    "clientModules": 12,
+    "sharedTopLevelModules": 1
+  },
+  "packages": {
+    "server": {
+      "root": "server/src",
+      "totalTsFiles": 835,
+      "rootLevelFiles": 1,
+      "modules": [
+        {
+          "name": "agents",
+          "path": "server/src/agents",
+          "subModules": ["planner", "runtime", "tools"],
+          "fileCount": 48
+        },
+        {
+          "name": "chains",
+          "path": "server/src/chains",
+          "subModules": [],
+          "fileCount": 3
+        },
+        {
+          "name": "config",
+          "path": "server/src/config",
+          "subModules": [],
+          "fileCount": 6
+        },
+        {
+          "name": "creativeHub",
+          "path": "server/src/creativeHub",
+          "subModules": [],
+          "fileCount": 9
+        },
+        {
+          "name": "db",
+          "path": "server/src/db",
+          "subModules": [],
+          "fileCount": 6
+        },
+        {
+          "name": "events",
+          "path": "server/src/events",
+          "subModules": ["handlers", "sideEffects"],
+          "fileCount": 9
+        },
+        {
+          "name": "graphs",
+          "path": "server/src/graphs",
+          "subModules": [],
+          "fileCount": 4
+        },
+        {
+          "name": "llm",
+          "path": "server/src/llm",
+          "subModules": [],
+          "fileCount": 25
+        },
+        {
+          "name": "middleware",
+          "path": "server/src/middleware",
+          "subModules": [],
+          "fileCount": 3
+        },
+        {
+          "name": "modules",
+          "path": "server/src/modules",
+          "subModules": ["comic", "drama", "export", "novel", "setup", "timeline"],
+          "fileCount": 52
+        },
+        {
+          "name": "platform",
+          "path": "server/src/platform",
+          "subModules": ["logging"],
+          "fileCount": 1
+        },
+        {
+          "name": "prisma",
+          "path": "server/src/prisma",
+          "subModules": ["migrations", "migrations.sqlite", "migrations-data"],
+          "fileCount": 0,
+          "note": "Schema and migrations only, no .ts files"
+        },
+        {
+          "name": "prompting",
+          "path": "server/src/prompting",
+          "subModules": ["addendums", "context", "core", "materials", "prompts", "slots", "workflows"],
+          "fileCount": 127
+        },
+        {
+          "name": "routes",
+          "path": "server/src/routes",
+          "subModules": ["settings"],
+          "fileCount": 27
+        },
+        {
+          "name": "runtime",
+          "path": "server/src/runtime",
+          "subModules": [],
+          "fileCount": 2
+        },
+        {
+          "name": "services",
+          "path": "server/src/services",
+          "subModules": [
+            "adaptation", "audit", "bookAnalysis", "bootstrap", "character",
+            "comic", "drama", "genre", "image", "knowledge", "logging",
+            "novel", "payoff", "planner", "rag", "settings", "state",
+            "storyMode", "styleEngine", "task", "title", "world", "writingFormula"
+          ],
+          "fileCount": 508,
+          "note": "Largest module - services/novel/director alone has 116 files"
+        },
+        {
+          "name": "types",
+          "path": "server/src/types",
+          "subModules": [],
+          "fileCount": 1
+        },
+        {
+          "name": "workers",
+          "path": "server/src/workers",
+          "subModules": [],
+          "fileCount": 3
+        }
+      ]
+    },
+    "client": {
+      "root": "client/src",
+      "totalTsTsxFiles": 430,
+      "modules": [
+        {
+          "name": "api",
+          "path": "client/src/api",
+          "subModules": ["novel"],
+          "fileCount": 41
+        },
+        {
+          "name": "assets",
+          "path": "client/src/assets",
+          "subModules": ["icon"],
+          "fileCount": 0,
+          "note": "Static assets, no .ts/.tsx"
+        },
+        {
+          "name": "components",
+          "path": "client/src/components",
+          "subModules": ["autoDirector", "common", "creativeHub", "knowledge", "layout", "risk", "ui", "workflow"],
+          "fileCount": 49
+        },
+        {
+          "name": "config",
+          "path": "client/src/config",
+          "subModules": [],
+          "fileCount": 1
+        },
+        {
+          "name": "hooks",
+          "path": "client/src/hooks",
+          "subModules": [],
+          "fileCount": 3
+        },
+        {
+          "name": "lib",
+          "path": "client/src/lib",
+          "subModules": [],
+          "fileCount": 13
+        },
+        {
+          "name": "mobile",
+          "path": "client/src/mobile",
+          "subModules": ["autoDirector"],
+          "fileCount": 2
+        },
+        {
+          "name": "pages",
+          "path": "client/src/pages",
+          "subModules": [
+            "antiAiRules", "astrology", "autoDirectorFollowUps", "bookAnalysis",
+            "characters", "chat", "comic", "creativeHub", "drama", "genres",
+            "help", "knowledge", "logs", "novels", "promptWorkbench",
+            "settings", "storyModes", "tasks", "titles", "worlds", "writingFormula"
+          ],
+          "fileCount": 313
+        },
+        {
+          "name": "router",
+          "path": "client/src/router",
+          "subModules": [],
+          "fileCount": 1
+        },
+        {
+          "name": "store",
+          "path": "client/src/store",
+          "subModules": [],
+          "fileCount": 4
+        },
+        {
+          "name": "types",
+          "path": "client/src/types",
+          "subModules": [],
+          "fileCount": 1
+        }
+      ]
+    },
+    "shared": {
+      "root": "shared",
+      "totalTsFiles": 50,
+      "rootLevelFiles": 2,
+      "rootLevelFileList": ["imagePrompt.ts", "index.ts"],
+      "modules": [
+        {
+          "name": "types",
+          "path": "shared/types",
+          "subModules": [],
+          "fileCount": 48
+        }
+      ]
+    }
+  },
+  "servicesNovelBreakdown": {
+    "note": "services/novel/ is the deepest sub-module, 241 .ts files total",
+    "subModules": {
+      "director": 116,
+      "volume": 27,
+      "runtime": 25,
+      "workflow": 13,
+      "worldContext": 9,
+      "dynamics": 7,
+      "production": 6,
+      "storyMacro": 6,
+      "characterPrep": 5,
+      "chapterEditor": 4,
+      "characterResource": 4,
+      "state": 4,
+      "application": 3,
+      "storyWorldSlice": 3,
+      "fact": 2,
+      "risk": 1,
+      "quality": 1,
+      "planning": 1,
+      "characterProfile": 1,
+      "characters": 1
+    }
+  },
+  "clientPagesBreakdown": {
+    "note": "client/pages/ is the largest client module, 313 .ts/.tsx files",
+    "subModules": {
+      "novels": 145,
+      "worlds": 30,
+      "settings": 20,
+      "writingFormula": 18,
+      "creativeHub": 17,
+      "antiAiRules": 9,
+      "bookAnalysis": 9,
+      "drama": 9,
+      "tasks": 9,
+      "comic": 6,
+      "genres": 6,
+      "knowledge": 6,
+      "autoDirectorFollowUps": 6,
+      "characters": 5,
+      "titles": 5,
+      "chat": 4,
+      "storyModes": 3,
+      "promptWorkbench": 2,
+      "astrology": 1,
+      "help": 1,
+      "logs": 1
+    }
+  },
+  "crossPackageImports": [
+    {
+      "from": "shared",
+      "to": "server",
+      "count": 796,
+      "note": "server imports @ai-novel/shared 796 times"
+    },
+    {
+      "from": "shared",
+      "to": "client",
+      "count": 495,
+      "note": "client imports @ai-novel/shared 495 times"
+    }
+  ],
+  "serverModuleImportPopularity": {
+    "note": "How many times each server module is imported by OTHER server modules (incoming dependency count)",
+    "ranked": [
+      { "module": "db", "incomingImports": 253 },
+      { "module": "prompting", "incomingImports": 235 },
+      { "module": "services", "incomingImports": 206 },
+      { "module": "llm", "incomingImports": 196 },
+      { "module": "runtime", "incomingImports": 143 },
+      { "module": "config", "incomingImports": 25 },
+      { "module": "routes", "incomingImports": 24 },
+      { "module": "agents", "incomingImports": 24 },
+      { "module": "creativeHub", "incomingImports": 22 },
+      { "module": "modules", "incomingImports": 10 },
+      { "module": "events", "incomingImports": 9 },
+      { "module": "platform", "incomingImports": 2 },
+      { "module": "graphs", "incomingImports": 1 },
+      { "module": "chains", "incomingImports": 0 }
+    ]
+  },
+  "sharedTypeImportPopularity": {
+    "server": [
+      { "typeFile": "novel", "count": 235 },
+      { "typeFile": "llm", "count": 102 },
+      { "typeFile": "novelDirector", "count": 81 },
+      { "typeFile": "api", "count": 64 },
+      { "typeFile": "directorRuntime", "count": 53 },
+      { "typeFile": "world", "count": 36 },
+      { "typeFile": "novelWorkflow", "count": 33 },
+      { "typeFile": "chapterRuntime", "count": 32 },
+      { "typeFile": "task", "count": 25 },
+      { "typeFile": "styleEngine", "count": 25 },
+      { "typeFile": "bookAnalysis", "count": 20 },
+      { "typeFile": "storyMacro", "count": 19 },
+      { "typeFile": "canonicalState", "count": 18 },
+      { "typeFile": "agent", "count": 17 },
+      { "typeFile": "autoDirectorFollowUp", "count": 13 }
+    ],
+    "client": [
+      { "typeFile": "novel", "count": 138 },
+      { "typeFile": "api", "count": 59 },
+      { "typeFile": "llm", "count": 39 },
+      { "typeFile": "task", "count": 32 },
+      { "typeFile": "styleEngine", "count": 32 },
+      { "typeFile": "novelDirector", "count": 32 },
+      { "typeFile": "world", "count": 28 },
+      { "typeFile": "directorRuntime", "count": 24 },
+      { "typeFile": "bookAnalysis", "count": 22 },
+      { "typeFile": "creativeHub", "count": 15 },
+      { "typeFile": "autoDirectorFollowUp", "count": 13 },
+      { "typeFile": "worldWizard", "count": 10 },
+      { "typeFile": "knowledge", "count": 10 },
+      { "typeFile": "chapterRuntime", "count": 9 },
+      { "typeFile": "agent", "count": 9 }
+    ]
+  },
+  "hotspotFiles": {
+    "note": "Largest files likely needing audit attention - files with high import counts or very large subdirectories",
+    "observations": [
+      "server/src/services/ is the largest module with 508 .ts files",
+      "server/src/services/novel/director/ has 116 .ts files alone",
+      "server/src/prompting/ has 127 .ts files (prompt governance hub)",
+      "server/src/modules/ has 52 .ts files across 6 product modules",
+      "client/src/pages/novels/ has 145 .ts/.tsx files (UI hotspot)",
+      "shared/types/novel.ts is the most imported shared file (235 server + 138 client = 373 total)",
+      "shared/types/novelDirector.ts is second most imported (81 + 32 = 113 total)",
+      "server/src/db/ is imported by 253 other server files (foundational dependency)"
+    ]
+  }
+}

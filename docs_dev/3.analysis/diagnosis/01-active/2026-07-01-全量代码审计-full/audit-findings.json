@@ -1,0 +1,1438 @@
+{
+  "auditDate": "2026-07-01",
+  "scope": "full",
+  "project": "ai-novel",
+  "totalFindings": 150,
+  "severitySummary": {
+    "P1": 7,
+    "P2": 41,
+    "P3": 63,
+    "P4": 39
+  },
+  "dimensionSummary": {
+    "security": {
+      "total": 14,
+      "P1": 2,
+      "P2": 4,
+      "P3": 4,
+      "P4": 4,
+      "weight": 0.2
+    },
+    "stability": {
+      "total": 16,
+      "P1": 0,
+      "P2": 3,
+      "P3": 7,
+      "P4": 6,
+      "weight": 0.15
+    },
+    "architecture": {
+      "total": 15,
+      "P1": 1,
+      "P2": 6,
+      "P3": 6,
+      "P4": 2,
+      "weight": 0.15
+    },
+    "quality": {
+      "total": 15,
+      "P1": 2,
+      "P2": 5,
+      "P3": 6,
+      "P4": 2,
+      "weight": 0.15
+    },
+    "performance": {
+      "total": 15,
+      "P1": 0,
+      "P2": 4,
+      "P3": 7,
+      "P4": 4,
+      "weight": 0.1
+    },
+    "testability": {
+      "total": 18,
+      "P1": 0,
+      "P2": 3,
+      "P3": 8,
+      "P4": 7,
+      "weight": 0.1
+    },
+    "observability": {
+      "total": 12,
+      "P1": 1,
+      "P2": 3,
+      "P3": 5,
+      "P4": 3,
+      "weight": 0.05
+    },
+    "maintainability": {
+      "total": 30,
+      "P1": 1,
+      "P2": 12,
+      "P3": 11,
+      "P4": 6,
+      "weight": 0.05
+    },
+    "compatibility": {
+      "total": 15,
+      "P1": 0,
+      "P2": 1,
+      "P3": 9,
+      "P4": 5,
+      "weight": 0.05
+    }
+  },
+  "findings": [
+    {
+      "id": "SEC-001",
+      "dimension": "security",
+      "severity": "P1",
+      "title": "认证中间件为空操作（no-op）",
+      "file": "server/src/middleware/auth.ts",
+      "line": "3",
+      "impact": "任何能访问服务端口的客户端均可无限制调用所有 API，可导致数据泄露、资源滥用、数据篡改或删除。"
+    },
+    {
+      "id": "SEC-002",
+      "dimension": "security",
+      "severity": "P1",
+      "title": "API 无速率限制",
+      "file": "server/src/app.ts",
+      "line": "117",
+      "impact": "攻击者可发起大量请求导致 LLM API 额度快速耗尽、服务过载，或被用于 DDoS 放大攻击。"
+    },
+    {
+      "id": "SEC-003",
+      "dimension": "security",
+      "severity": "P2",
+      "title": "文件路径遍历风险：用户输入直接拼接文件路径",
+      "file": "server/src/services/comic/ComicCharacterImageService.ts, server/src/services/drama/visual/DramaShotKeyframeService.ts",
+      "line": "89-91, 71-73",
+      "impact": "攻击者通过构造包含 ../ 的 charId 参数，可能读取服务器上的任意文件。"
+    },
+    {
+      "id": "SEC-004",
+      "dimension": "security",
+      "severity": "P2",
+      "title": "无 CSRF 保护",
+      "file": "server/src/app.ts",
+      "line": "91-105",
+      "impact": "攻击者可通过恶意网站诱导已认证用户发起状态变更请求。"
+    },
+    {
+      "id": "SEC-005",
+      "dimension": "security",
+      "severity": "P2",
+      "title": "错误响应泄露内部错误信息",
+      "file": "server/src/middleware/errorHandler.ts",
+      "line": "287-315",
+      "impact": "攻击者可通过触发服务器错误获取内部信息（文件路径、数据库结构、技术栈版本）。"
+    },
+    {
+      "id": "SEC-006",
+      "dimension": "security",
+      "severity": "P2",
+      "title": "Prisma raw query 大量使用，需审计参数化程度",
+      "file": "server/src/services/novel/worldContext/NovelWorldSyncService.ts 等",
+      "line": "多处（20+）",
+      "impact": "若后续维护者在 raw query 中引入字符串拼接，可能导致 SQL 注入。"
+    },
+    {
+      "id": "SEC-007",
+      "dimension": "security",
+      "severity": "P3",
+      "title": "CORS 配置允许任意 LAN IP 访问",
+      "file": "server/src/app.ts",
+      "line": "90-101",
+      "impact": "同一局域网内的恶意设备可跨域调用 API。"
+    },
+    {
+      "id": "SEC-008",
+      "dimension": "security",
+      "severity": "P3",
+      "title": "Helmet 默认配置可能不够严格",
+      "file": "server/src/app.ts",
+      "line": "106",
+      "impact": "在混合部署场景下，缺少严格 CSP 可能允许 XSS 攻击。"
+    },
+    {
+      "id": "SEC-009",
+      "dimension": "security",
+      "severity": "P3",
+      "title": "API Key 通过环境变量和 secretStore 双路径存储",
+      "file": "server/src/llm/factory.ts, server/src/config/imageStorage.ts",
+      "line": "factory.ts:1-5, imageStorage.ts:28-30",
+      "impact": "环境变量泄露可暴露 API Key 和存储凭据。"
+    },
+    {
+      "id": "SEC-010",
+      "dimension": "security",
+      "severity": "P3",
+      "title": "日志文件通过 API 直接暴露",
+      "file": "server/src/services/logging/logQueryService.ts",
+      "line": "38-49",
+      "impact": "攻击者可获取服务器内部运行信息。"
+    },
+    {
+      "id": "SEC-011",
+      "dimension": "security",
+      "severity": "P4",
+      "title": "Client 端无 XSS 漏洞（正面发现）",
+      "file": "client/src/",
+      "line": "-",
+      "impact": "正面发现。前端无明显 XSS 漏洞。"
+    },
+    {
+      "id": "SEC-012",
+      "dimension": "security",
+      "severity": "P4",
+      "title": ".env 文件已正确 gitignore",
+      "file": ".gitignore",
+      "line": "5-11",
+      "impact": "正面发现。环境变量文件不会被提交到版本库。"
+    },
+    {
+      "id": "SEC-013",
+      "dimension": "security",
+      "severity": "P4",
+      "title": "输入验证覆盖率良好",
+      "file": "server/src/middleware/validate.ts",
+      "line": "11-34",
+      "impact": "正面发现。输入验证机制设计合理。"
+    },
+    {
+      "id": "SEC-014",
+      "dimension": "security",
+      "severity": "P4",
+      "title": "无命令注入风险（正面发现）",
+      "file": "server/src/db/runtimeMigrations.ts",
+      "line": "125, 323-332",
+      "impact": "正面发现。无命令注入风险。"
+    },
+    {
+      "id": "STB-001",
+      "dimension": "stability",
+      "severity": "P2",
+      "title": "大量 HTTP 路由层 req.body as any 绕过类型检查",
+      "file": "server/src/modules/novel/production/http/novelProductionRoutes.ts 等",
+      "line": "101-242",
+      "impact": "绕过类型检查可能导致运行时传入非法字段。"
+    },
+    {
+      "id": "STB-002",
+      "dimension": "stability",
+      "severity": "P3",
+      "title": "LLM 结构化调用层存在 81 处 as any 类型逃逸",
+      "file": "server/src/agents/tools/novelProductionTools.ts 等 25 个文件",
+      "line": "多处",
+      "impact": "运行时类型不匹配风险。"
+    },
+    {
+      "id": "STB-003",
+      "dimension": "stability",
+      "severity": "P3",
+      "title": "2 处 @ts-ignore 用于 Winston 类型导入",
+      "file": "server/src/services/logging/LoggerService.ts",
+      "line": "3-7",
+      "impact": "winston 版本升级可能导致 API 变更被掩盖。"
+    },
+    {
+      "id": "STB-004",
+      "dimension": "stability",
+      "severity": "P3",
+      "title": "EventBus 错误被吞没：handler 异常仅 console.error",
+      "file": "server/src/events/EventBus.ts",
+      "line": "25-34",
+      "impact": "重要事件 handler 失败时调用方不感知。"
+    },
+    {
+      "id": "STB-005",
+      "dimension": "stability",
+      "severity": "P4",
+      "title": "RAG 索引操作的空 catch 块",
+      "file": "server/src/services/world/WorldService.ts",
+      "line": "115-119",
+      "impact": "RAG 索引队列失败时静默丢弃。"
+    },
+    {
+      "id": "STB-006",
+      "dimension": "stability",
+      "severity": "P4",
+      "title": "Heartbeat 触碰失败被完全吞没",
+      "file": "server/src/services/bookAnalysis/bookAnalysis.generation.ts",
+      "line": "431",
+      "impact": "心跳丢失导致 analysis 被 watchdog 误判为超时。"
+    },
+    {
+      "id": "STB-007",
+      "dimension": "stability",
+      "severity": "P4",
+      "title": "文件清理错误被忽略",
+      "file": "server/src/services/comic/ComicPanelImageService.ts",
+      "line": "404",
+      "impact": "旧格式图片文件无法清理，磁盘空间缓慢泄漏。"
+    },
+    {
+      "id": "STB-008",
+      "dimension": "stability",
+      "severity": "P2",
+      "title": "主进程缺少 unhandledRejection / uncaughtException 处理",
+      "file": "server/src/app.ts",
+      "line": "全局",
+      "impact": "未捕获的 Promise rejection 可能导致进程突然退出。"
+    },
+    {
+      "id": "STB-009",
+      "dimension": "stability",
+      "severity": "P2",
+      "title": "主 Express 服务器无 SIGTERM/SIGINT 处理",
+      "file": "server/src/app.ts",
+      "line": "292-335",
+      "impact": "容器化部署中后台任务无机会完成，可能导致数据不一致。"
+    },
+    {
+      "id": "STB-010",
+      "dimension": "stability",
+      "severity": "P3",
+      "title": "LLM 调用层无自动重试机制",
+      "file": "server/src/llm/anthropicClient.ts",
+      "line": "136-174",
+      "impact": "网络抖动导致 LLM 调用失败率偏高。"
+    },
+    {
+      "id": "STB-011",
+      "dimension": "stability",
+      "severity": "P3",
+      "title": "SSE streaming 心跳 setInterval 未 unref",
+      "file": "server/src/llm/streaming.ts",
+      "line": "67-69",
+      "impact": "心跳定时器可能阻止进程退出。"
+    },
+    {
+      "id": "STB-012",
+      "dimension": "stability",
+      "severity": "P3",
+      "title": "批量事务串行执行，无批量优化",
+      "file": "server/src/modules/timeline/timeline.repository.ts",
+      "line": "434-436",
+      "impact": "100 条事件 = 100 次事务提交，写入性能差。"
+    },
+    {
+      "id": "STB-013",
+      "dimension": "stability",
+      "severity": "P4",
+      "title": "DirectorTaskQueue lease renewal 定时器未调用 unref",
+      "file": "server/src/workers/DirectorTaskQueue.ts",
+      "line": "151-152",
+      "impact": "定时器可能阻止进程退出。"
+    },
+    {
+      "id": "STB-014",
+      "dimension": "stability",
+      "severity": "P3",
+      "title": "NovelSideEffectWorker start 中 tick() 的 Promise 被忽略",
+      "file": "server/src/events/sideEffects/NovelSideEffectWorker.ts",
+      "line": "43-49",
+      "impact": "job 恢复失败不阻断启动但不重试。"
+    },
+    {
+      "id": "STB-015",
+      "dimension": "stability",
+      "severity": "P4",
+      "title": "ragWorker.start() 返回的 Promise 被 void 忽略",
+      "file": "server/src/app.ts",
+      "line": "248",
+      "impact": "RAG worker 静默失败。"
+    },
+    {
+      "id": "STB-016",
+      "dimension": "stability",
+      "severity": "P4",
+      "title": "migrateAddendumsToSlots 使用 prisma as any 访问未声明的表",
+      "file": "server/src/prompting/slots/migrateAddendumsToSlots.ts",
+      "line": "59, 116, 148, 155",
+      "impact": "迁移脚本缺少编译期类型保障。"
+    },
+    {
+      "id": "ARCH-001",
+      "dimension": "architecture",
+      "severity": "P1",
+      "title": "services/novel 与 services/planner 双向循环引用",
+      "file": "server/src/services/novel/novelCoreReviewService.ts",
+      "line": "全文",
+      "impact": "模块边界失效、循环初始化崩溃风险、难以独立测试和替换子系统。"
+    },
+    {
+      "id": "ARCH-002",
+      "dimension": "architecture",
+      "severity": "P2",
+      "title": "services/novel 反向依赖 modules/",
+      "file": "server/src/services/novel/NovelExportService.ts",
+      "line": "1",
+      "impact": "依赖方向反转导致模块边界模糊。"
+    },
+    {
+      "id": "ARCH-003",
+      "dimension": "architecture",
+      "severity": "P2",
+      "title": "services/styleEngine 反向依赖 prompting/",
+      "file": "server/src/services/styleEngine/ChapterEditDiffService.ts",
+      "line": "8",
+      "impact": "Prompt Governance 原则被局部破坏。"
+    },
+    {
+      "id": "ARCH-004",
+      "dimension": "architecture",
+      "severity": "P2",
+      "title": "10 个路由/HTTP 文件直接访问 Prisma 数据库",
+      "file": "server/src/routes/character.ts 等",
+      "line": "4,56,87,107,133,157",
+      "impact": "业务逻辑泄漏到 HTTP 层，无法复用、难以测试。"
+    },
+    {
+      "id": "ARCH-005",
+      "dimension": "architecture",
+      "severity": "P2",
+      "title": "server/src 有 15 个 .ts 文件超过 700 行",
+      "file": "server/src/services/planner/PlannerService.ts",
+      "line": "全文 992 行",
+      "impact": "文件过大导致导航困难、合并冲突频繁。"
+    },
+    {
+      "id": "ARCH-006",
+      "dimension": "architecture",
+      "severity": "P2",
+      "title": "client/src 有 9 个文件超过 700 行",
+      "file": "client/src/pages/promptWorkbench/components/PromptSlotPanel.tsx",
+      "line": "全文 842 行",
+      "impact": "组件文件过大导致维护困难。"
+    },
+    {
+      "id": "ARCH-007",
+      "dimension": "architecture",
+      "severity": "P2",
+      "title": "多个目录超过 12 个 .ts 文件未建子目录",
+      "file": "server/src/routes/ 等",
+      "line": "目录级",
+      "impact": "目录膨胀增加认知负担、降低代码导航效率。"
+    },
+    {
+      "id": "ARCH-008",
+      "dimension": "architecture",
+      "severity": "P3",
+      "title": "双 HTTP 注册模式并存（routes/ + modules/http/）",
+      "file": "server/src/app.ts",
+      "line": "12-42",
+      "impact": "架构不一致增加认知负担。"
+    },
+    {
+      "id": "ARCH-009",
+      "dimension": "architecture",
+      "severity": "P3",
+      "title": "routes/chat.ts 和 routes/creativeHub.ts 含大量业务编排逻辑",
+      "file": "server/src/routes/chat.ts",
+      "line": "39,168",
+      "impact": "路由文件承载业务逻辑导致不可复用。"
+    },
+    {
+      "id": "ARCH-010",
+      "dimension": "architecture",
+      "severity": "P3",
+      "title": "shared/types 中有 6 个文件超过 700 行",
+      "file": "shared/types/directorRuntime.ts",
+      "line": "全文 1273 行",
+      "impact": "双端消费的大类型文件增加构建时间。"
+    },
+    {
+      "id": "ARCH-011",
+      "dimension": "architecture",
+      "severity": "P3",
+      "title": "llm/ 模块中硬编码模型名字符串匹配（AI-First 原则偏差）",
+      "file": "server/src/llm/structuredOutput.ts",
+      "line": "81-202",
+      "impact": "每次新增模型都需要修改代码。"
+    },
+    {
+      "id": "ARCH-012",
+      "dimension": "architecture",
+      "severity": "P3",
+      "title": "agents/catalog.ts 使用关键词匹配判断工具分类",
+      "file": "server/src/agents/catalog.ts",
+      "line": "57-97",
+      "impact": "新增工具时需手动添加匹配规则。"
+    },
+    {
+      "id": "ARCH-013",
+      "dimension": "architecture",
+      "severity": "P3",
+      "title": "配置文件中硬编码 localhost 地址",
+      "file": "server/src/config/database.ts",
+      "line": "3",
+      "impact": "部署时容易遗漏配置覆盖导致连接错误。"
+    },
+    {
+      "id": "ARCH-014",
+      "dimension": "architecture",
+      "severity": "P4",
+      "title": "prompting/ 大量导入 services/ 但方向合规",
+      "file": "server/src/prompting/core/promptRunner.ts",
+      "line": "全文",
+      "impact": "prompting 层与业务服务层耦合过深。"
+    },
+    {
+      "id": "ARCH-015",
+      "dimension": "architecture",
+      "severity": "P4",
+      "title": "routes/ 和 modules/ 无 index.ts facade",
+      "file": "server/src/routes/",
+      "line": "目录级",
+      "impact": "模块边界靠约定而非代码强制。"
+    },
+    {
+      "id": "QUA-001",
+      "dimension": "quality",
+      "severity": "P1",
+      "title": "超大文件: 30个文件超过700行硬上限",
+      "file": "shared/types/directorRuntime.ts",
+      "line": "1-1273",
+      "impact": "职责不清、合并冲突频繁、AI上下文窗口溢出。"
+    },
+    {
+      "id": "QUA-002",
+      "dimension": "quality",
+      "severity": "P1",
+      "title": "超长函数: 80+函数超过50行",
+      "file": "client/src/pages/novels/components/NovelAutoDirectorDialog.tsx",
+      "line": "90-743",
+      "impact": "难以测试和理解; React逻辑渲染混杂。"
+    },
+    {
+      "id": "QUA-003",
+      "dimension": "quality",
+      "severity": "P2",
+      "title": "深层嵌套: 60+处超过5层",
+      "file": "server/src/agents/tools/novelReadTools.ts",
+      "line": "47-49",
+      "impact": "认知负担高、错误处理路径不清。"
+    },
+    {
+      "id": "QUA-004",
+      "dimension": "quality",
+      "severity": "P2",
+      "title": "console.log残留: 20+处生产代码console输出",
+      "file": "server/src/services/comic/ComicPanelImageService.ts",
+      "line": "309-330",
+      "impact": "日志不统一、敏感信息泄露风险。"
+    },
+    {
+      "id": "QUA-005",
+      "dimension": "quality",
+      "severity": "P2",
+      "title": "错误码硬编码: 30+处AppError裸数字",
+      "file": "server/src/services/bookAnalysis/BookAnalysisCommandService.ts",
+      "line": "89-477",
+      "impact": "误导监控告警。"
+    },
+    {
+      "id": "QUA-006",
+      "dimension": "quality",
+      "severity": "P2",
+      "title": "代码重复: BookAnalysisCommandService 8处相同模式",
+      "file": "server/src/services/bookAnalysis/BookAnalysisCommandService.ts",
+      "line": "89,165,228,275,338,391,456,477",
+      "impact": "违反DRY，修改需同步8处。"
+    },
+    {
+      "id": "QUA-007",
+      "dimension": "quality",
+      "severity": "P2",
+      "title": "错误吞没: 14处.catch(()=>{})",
+      "file": "server/src/services/novel/novelCorePipelineExecutor.ts",
+      "line": "419,489,511,548",
+      "impact": "后台任务失败无迹可查。"
+    },
+    {
+      "id": "QUA-008",
+      "dimension": "quality",
+      "severity": "P3",
+      "title": "魔数: 1500ms/30000ms硬编码跨文件重复",
+      "file": "server/src/services/image/ImageGenerationService.ts",
+      "line": "686",
+      "impact": "修改需逐文件搜索。"
+    },
+    {
+      "id": "QUA-009",
+      "dimension": "quality",
+      "severity": "P3",
+      "title": "路由函数过长: 5个registerXxxRoutes超200行",
+      "file": "server/src/modules/novel/production/http/novelProductionRoutes.ts",
+      "line": "35-352",
+      "impact": "维护瓶颈、合并冲突。"
+    },
+    {
+      "id": "QUA-010",
+      "dimension": "quality",
+      "severity": "P3",
+      "title": "Client组件职责过重: 600+行页面组件",
+      "file": "client/src/pages/novels/components/NovelAutoDirectorDialog.tsx",
+      "line": "90-743",
+      "impact": "渲染性能差、难测试。"
+    },
+    {
+      "id": "QUA-011",
+      "dimension": "quality",
+      "severity": "P3",
+      "title": "Shared类型文件膨胀: 6个超700行",
+      "file": "shared/types/directorRuntime.ts",
+      "line": "1-1273",
+      "impact": "导入范围模糊。"
+    },
+    {
+      "id": "QUA-012",
+      "dimension": "quality",
+      "severity": "P3",
+      "title": "var声明残留: Prisma客户端",
+      "file": "server/src/db/prisma.ts",
+      "line": "12",
+      "impact": "风格不一致。"
+    },
+    {
+      "id": "QUA-013",
+      "dimension": "quality",
+      "severity": "P3",
+      "title": "@ts-ignore: 2处winston类型",
+      "file": "server/src/services/logging/LoggerService.ts",
+      "line": "3-6",
+      "impact": "类型安全缺口。"
+    },
+    {
+      "id": "QUA-014",
+      "dimension": "quality",
+      "severity": "P4",
+      "title": "TODO标记极少",
+      "file": "N/A",
+      "line": "N/A",
+      "impact": "正面发现。"
+    },
+    {
+      "id": "QUA-015",
+      "dimension": "quality",
+      "severity": "P4",
+      "title": "命名规范良好",
+      "file": "N/A",
+      "line": "N/A",
+      "impact": "正面发现。"
+    },
+    {
+      "id": "PERF-001",
+      "dimension": "performance",
+      "severity": "P2",
+      "title": "list_chapters 工具查询全量章节内容字段",
+      "file": "server/src/agents/tools/novelReadTools.ts",
+      "line": "127",
+      "impact": "章节数量增长时，数据库传输和内存占用线性增长。"
+    },
+    {
+      "id": "PERF-002",
+      "dimension": "performance",
+      "severity": "P2",
+      "title": "export 全量导出无分页/无限制查询",
+      "file": "server/src/modules/export/novelExport.service.ts",
+      "line": "103",
+      "impact": "导出操作在大型项目上可能消耗大量内存和时间。"
+    },
+    {
+      "id": "PERF-003",
+      "dimension": "performance",
+      "severity": "P2",
+      "title": "listKnowledgeDocuments 后二次查询未使用 include",
+      "file": "server/src/agents/tools/knowledgeTools.ts",
+      "line": "27",
+      "impact": "知识文档列表查询延迟 = query1 + query2，两次串行数据库往返。"
+    },
+    {
+      "id": "PERF-004",
+      "dimension": "performance",
+      "severity": "P2",
+      "title": "WorldService.listWorlds() 全量查询无分页无限制",
+      "file": "server/src/services/world/WorldService.ts",
+      "line": "107",
+      "impact": "返回所有 world 记录的全部字段，随数据增长可能成为问题。"
+    },
+    {
+      "id": "PERF-005",
+      "dimension": "performance",
+      "severity": "P3",
+      "title": "worldBuildingGraph 串行 9 次 LLM 调用无并行化",
+      "file": "server/src/graphs/worldBuildingGraph.ts",
+      "line": "44",
+      "impact": "总耗时 30-90 秒，可减少 40-60%。"
+    },
+    {
+      "id": "PERF-006",
+      "dimension": "performance",
+      "severity": "P3",
+      "title": "novelOutlineGraph 串行 4 次 LLM 调用",
+      "file": "server/src/graphs/novelOutlineGraph.ts",
+      "line": "31",
+      "impact": "单次 outline 生成耗时 15-30 秒。"
+    },
+    {
+      "id": "PERF-007",
+      "dimension": "performance",
+      "severity": "P3",
+      "title": "getNovelContext 查询含章节内容且二次查询 chapters",
+      "file": "server/src/agents/tools/novelReadTools.ts",
+      "line": "44",
+      "impact": "双重查询章节数据。"
+    },
+    {
+      "id": "PERF-008",
+      "dimension": "performance",
+      "severity": "P3",
+      "title": "runtimeMigrations 使用 readFileSync 同步读取 SQL 文件",
+      "file": "server/src/db/runtimeMigrations.ts",
+      "line": "307",
+      "impact": "启动时短暂阻塞主线程。"
+    },
+    {
+      "id": "PERF-009",
+      "dimension": "performance",
+      "severity": "P3",
+      "title": "novelCharacterArcRoutes 无分页查询",
+      "file": "server/src/modules/novel/characters/http/novelCharacterArcRoutes.ts",
+      "line": "79",
+      "impact": "角色数据量大时，API 响应体可能过大。"
+    },
+    {
+      "id": "PERF-010",
+      "dimension": "performance",
+      "severity": "P3",
+      "title": "NovelEdit.tsx 组件状态过多（30+ useState）",
+      "file": "client/src/pages/novels/NovelEdit.tsx",
+      "line": "115",
+      "impact": "频繁的 UI 交互会导致大量不相关子组件重渲染。"
+    },
+    {
+      "id": "PERF-011",
+      "dimension": "performance",
+      "severity": "P3",
+      "title": "前端 useEffect 缺少依赖数组或依赖项过多",
+      "file": "client/src/pages/writingFormula/WritingFormulaPage.tsx",
+      "line": "174",
+      "impact": "过多的 useEffect 在不必要时触发。"
+    },
+    {
+      "id": "PERF-012",
+      "dimension": "performance",
+      "severity": "P4",
+      "title": "getCharacterStates 工具无分页限制",
+      "file": "server/src/agents/tools/novelReadTools.ts",
+      "line": "321",
+      "impact": "当前实际影响小。"
+    },
+    {
+      "id": "PERF-013",
+      "dimension": "performance",
+      "severity": "P4",
+      "title": "多个 setInterval 定时器在服务生命周期内未显式清理",
+      "file": "server/src/services/bookAnalysis/BookAnalysisWatchdogService.ts",
+      "line": "16",
+      "impact": "测试环境可能泄漏定时器。"
+    },
+    {
+      "id": "PERF-014",
+      "dimension": "performance",
+      "severity": "P4",
+      "title": "前端路由已全部使用 React.lazy 懒加载（正面发现）",
+      "file": "client/src/router/index.tsx",
+      "line": "7",
+      "impact": "正面发现。首屏加载只需加载当前路由的代码块。"
+    },
+    {
+      "id": "PERF-015",
+      "dimension": "performance",
+      "severity": "P4",
+      "title": "useSSE hook 和多个组件正确使用 useCallback/useMemo（正面发现）",
+      "file": "client/src/hooks/useSSE.ts",
+      "line": "1",
+      "impact": "正面发现。避免了不必要的重渲染。"
+    },
+    {
+      "id": "TEST-001",
+      "dimension": "testability",
+      "severity": "P2",
+      "title": "无 E2E 测试框架（Playwright/Cypress）",
+      "file": "项目根目录",
+      "line": "-",
+      "impact": "无法在 CI/CD 中自动验证核心用户流程。"
+    },
+    {
+      "id": "TEST-002",
+      "dimension": "testability",
+      "severity": "P2",
+      "title": "无标准 mock 框架，依赖 require.cache 手动注入",
+      "file": "server/tests/*.test.js",
+      "line": "-",
+      "impact": "mock 维护成本高，测试间隔离差。"
+    },
+    {
+      "id": "TEST-003",
+      "dimension": "testability",
+      "severity": "P2",
+      "title": "客户端测试极度稀疏，100+ 组件零测试覆盖",
+      "file": "client/src/",
+      "line": "-",
+      "impact": "前端回归完全依赖手动验证。"
+    },
+    {
+      "id": "TEST-004",
+      "dimension": "testability",
+      "severity": "P3",
+      "title": "缺少测试基础设施文件（fixtures/helpers/factories）",
+      "file": "server/tests/",
+      "line": "-",
+      "impact": "测试代码重复率高，维护成本增加。"
+    },
+    {
+      "id": "TEST-005",
+      "dimension": "testability",
+      "severity": "P3",
+      "title": "依赖注入使用不一致",
+      "file": "server/src/",
+      "line": "-",
+      "impact": "不一致增加认知负担。"
+    },
+    {
+      "id": "TEST-006",
+      "dimension": "testability",
+      "severity": "P3",
+      "title": "Prisma client 无统一 mock 层",
+      "file": "server/tests/",
+      "line": "-",
+      "impact": "mock 与实际 Prisma 接口不一致时，测试通过但实际代码有 bug。"
+    },
+    {
+      "id": "TEST-007",
+      "dimension": "testability",
+      "severity": "P3",
+      "title": "集成测试仅 11 个文件，路由覆盖不完整",
+      "file": "server/scripts/run-tests.cjs",
+      "line": "8",
+      "impact": "路由行为变更可能不被发现。"
+    },
+    {
+      "id": "TEST-008",
+      "dimension": "testability",
+      "severity": "P3",
+      "title": "platform、middleware、db、config、chains、workers 模块无直接测试",
+      "file": "server/src/platform/ 等",
+      "line": "-",
+      "impact": "基础设施层的 bug 无法通过测试发现。"
+    },
+    {
+      "id": "TEST-009",
+      "dimension": "testability",
+      "severity": "P3",
+      "title": "335 个文件导出纯函数，但可测试纯函数未充分利用",
+      "file": "server/src/",
+      "line": "-",
+      "impact": "高价值低成本的测试机会被浪费。"
+    },
+    {
+      "id": "TEST-010",
+      "dimension": "testability",
+      "severity": "P3",
+      "title": "测试使用串行执行（--test-concurrency=1）",
+      "file": "server/scripts/run-tests.cjs",
+      "line": "56",
+      "impact": "本地和 CI 测试运行时间长。"
+    },
+    {
+      "id": "TEST-011",
+      "dimension": "testability",
+      "severity": "P4",
+      "title": "TypeScript 源码使用 JavaScript 测试文件",
+      "file": "server/tests/*.test.js",
+      "line": "-",
+      "impact": "测试必须在 build 后运行。"
+    },
+    {
+      "id": "TEST-012",
+      "dimension": "testability",
+      "severity": "P4",
+      "title": "使用 Node.js 内置 assert 而非更富表达力的断言库",
+      "file": "server/tests/*.test.js",
+      "line": "-",
+      "impact": "断言表达力有限。"
+    },
+    {
+      "id": "TEST-013",
+      "dimension": "testability",
+      "severity": "P4",
+      "title": "无快照测试，prompt 模板变更无法自动检测",
+      "file": "server/src/prompting/",
+      "line": "-",
+      "impact": "prompt 模板被意外修改时无自动捕获。"
+    },
+    {
+      "id": "TEST-014",
+      "dimension": "testability",
+      "severity": "P4",
+      "title": "无测试覆盖率报告配置",
+      "file": "server/package.json",
+      "line": "-",
+      "impact": "无法量化测试覆盖率。"
+    },
+    {
+      "id": "TEST-015",
+      "dimension": "testability",
+      "severity": "P4",
+      "title": "desktop 包无测试",
+      "file": "desktop/",
+      "line": "-",
+      "impact": "Electron 构建产物验证只能通过手动检查。"
+    },
+    {
+      "id": "TEST-016",
+      "dimension": "testability",
+      "severity": "P4",
+      "title": "shared 包无测试",
+      "file": "shared/",
+      "line": "-",
+      "impact": "Zod schema 变更可能引入验证行为变化。"
+    },
+    {
+      "id": "TEST-017",
+      "dimension": "testability",
+      "severity": "P4",
+      "title": "已覆盖模块中存在明显测试盲区",
+      "file": "server/src/services/novel/",
+      "line": "-",
+      "impact": "这些子模块的逻辑变更可能引入回归。"
+    },
+    {
+      "id": "TEST-018",
+      "dimension": "testability",
+      "severity": "P3",
+      "title": "测试依赖完整构建链",
+      "file": "server/package.json",
+      "line": "25",
+      "impact": "开发迭代速度慢。"
+    },
+    {
+      "id": "OBS-001",
+      "dimension": "observability",
+      "severity": "P1",
+      "title": "Winston LoggerService 已实现但全项目零引用",
+      "file": "server/src/services/logging/LoggerService.ts",
+      "line": "-",
+      "impact": "已建设的 winston 结构化日志体系完全未被使用。"
+    },
+    {
+      "id": "OBS-002",
+      "dimension": "observability",
+      "severity": "P2",
+      "title": "无 Request ID / Correlation ID 机制",
+      "file": "server/src/",
+      "line": "-",
+      "impact": "并发请求下无法区分日志属于哪个请求。"
+    },
+    {
+      "id": "OBS-003",
+      "dimension": "observability",
+      "severity": "P2",
+      "title": "console.* 调用散布 52 个文件，日志格式和级别不统一",
+      "file": "server/src/",
+      "line": "-",
+      "impact": "生产环境日志无法按级别过滤。"
+    },
+    {
+      "id": "OBS-004",
+      "dimension": "observability",
+      "severity": "P2",
+      "title": "LLM 调用追踪体系完备但仅写入数据库，无实时可观测性",
+      "file": "server/src/llm/usageTracking.ts",
+      "line": "-",
+      "impact": "生产环境下 LLM 调用的指标仅通过事后查询数据库获取。"
+    },
+    {
+      "id": "OBS-005",
+      "dimension": "observability",
+      "severity": "P3",
+      "title": "健康检查端点存在但过于简单",
+      "file": "server/src/routes/health.ts",
+      "line": "-",
+      "impact": "运维监控系统无法通过 /health 端点探测服务真实可用性。"
+    },
+    {
+      "id": "OBS-006",
+      "dimension": "observability",
+      "severity": "P3",
+      "title": "性能指标记录不系统",
+      "file": "server/src/",
+      "line": "-",
+      "impact": "无法识别生产环境中的性能瓶颈。"
+    },
+    {
+      "id": "OBS-007",
+      "dimension": "observability",
+      "severity": "P3",
+      "title": "告警机制存在但仅覆盖 Auto-Director 流程",
+      "file": "server/src/",
+      "line": "-",
+      "impact": "服务可能在无人值守时进入异常状态。"
+    },
+    {
+      "id": "OBS-008",
+      "dimension": "observability",
+      "severity": "P3",
+      "title": "LLM 调试日志仅在非生产环境启用",
+      "file": "server/src/llm/debugLogging.ts",
+      "line": "-",
+      "impact": "生产环境出现 LLM 调用问题时缺少请求/响应内容的日志。"
+    },
+    {
+      "id": "OBS-009",
+      "dimension": "observability",
+      "severity": "P3",
+      "title": "StructuredOutput 诊断日志输出到 console.info 而非结构化日志",
+      "file": "server/src/llm/structuredInvokeParser.ts",
+      "line": "242-258",
+      "impact": "有价值的 LLM structured output 事件日志无法被日志文件捕获。"
+    },
+    {
+      "id": "OBS-010",
+      "dimension": "observability",
+      "severity": "P4",
+      "title": "DirectorDebugLogger 有独立的日志文件写入机制",
+      "file": "server/src/services/novel/director/debug/directorDebugLogger.ts",
+      "line": "-",
+      "impact": "功能上合理但增加日志管理的分散性。"
+    },
+    {
+      "id": "OBS-011",
+      "dimension": "observability",
+      "severity": "P4",
+      "title": "LogRetention 平台层已实现但仅被 sessionLogFile 使用",
+      "file": "server/src/platform/logging/logRetention.ts",
+      "line": "-",
+      "impact": "日志保留策略存在两套实现。"
+    },
+    {
+      "id": "OBS-012",
+      "dimension": "observability",
+      "severity": "P4",
+      "title": "MemoryTelemetry 有价值但覆盖面有限",
+      "file": "server/src/runtime/memoryTelemetry.ts",
+      "line": "-",
+      "impact": "内存相关问题的排查仅在 volume 生成路径有数据。"
+    },
+    {
+      "id": "MAINT-001",
+      "dimension": "maintainability",
+      "severity": "P1",
+      "title": "server 端 20 个文件超过 700 行阈值，最高达 992 行",
+      "file": "server/src/services/planner/PlannerService.ts",
+      "line": "全文 992 行",
+      "impact": "修改任一超大文件时，开发者理解成本极高。"
+    },
+    {
+      "id": "MAINT-002",
+      "dimension": "maintainability",
+      "severity": "P2",
+      "title": "client 端 25+ 个文件超过 700 行阈值",
+      "file": "client/src/pages/promptWorkbench/components/PromptSlotPanel.tsx",
+      "line": "全文 842 行",
+      "impact": "组件文件过大导致渲染逻辑、状态管理、UI 耦合。"
+    },
+    {
+      "id": "MAINT-003",
+      "dimension": "maintainability",
+      "severity": "P2",
+      "title": "多个函数超过 400 行，最高 653 行",
+      "file": "client/src/pages/novels/components/NovelAutoDirectorDialog.tsx",
+      "line": "90-743",
+      "impact": "超长函数极难理解、测试和调试。"
+    },
+    {
+      "id": "MAINT-004",
+      "dimension": "maintainability",
+      "severity": "P2",
+      "title": "大量 10+ 分支的 switch 语句，可替换为查找表",
+      "file": "server/src/ 和 client/src/",
+      "line": "-",
+      "impact": "新增枚举值时需要在多处 switch 中逐一添加 case。"
+    },
+    {
+      "id": "MAINT-005",
+      "dimension": "maintainability",
+      "severity": "P2",
+      "title": "多处 4-5 层深嵌套的控制流",
+      "file": "server/src/llm/anthropicClient.ts 等",
+      "line": "-",
+      "impact": "深嵌套代码难以阅读、修改和测试。"
+    },
+    {
+      "id": "MAINT-006",
+      "dimension": "maintainability",
+      "severity": "P2",
+      "title": "88 处 as any 类型断言，系统性绕过类型检查",
+      "file": "server/src/modules/novel/production/http/novelProductionRoutes.ts 等",
+      "line": "-",
+      "impact": "绕过类型检查导致运行时类型错误无法在编译期捕获。"
+    },
+    {
+      "id": "MAINT-007",
+      "dimension": "maintainability",
+      "severity": "P2",
+      "title": "plannerChapterPlanContext.ts 中 20 处 : any 类型标注",
+      "file": "server/src/services/planner/plannerChapterPlanContext.ts",
+      "line": "-",
+      "impact": "规划器核心业务逻辑中 any 类型使编译器无法检查。"
+    },
+    {
+      "id": "MAINT-008",
+      "dimension": "maintainability",
+      "severity": "P3",
+      "title": "38 处 as unknown as 双重类型断言",
+      "file": "server/src/modules/drama/http/dramaRoutes.ts 等",
+      "line": "-",
+      "impact": "双重断言完全绕过类型检查。"
+    },
+    {
+      "id": "MAINT-009",
+      "dimension": "maintainability",
+      "severity": "P2",
+      "title": "130 个 server 子目录中仅 4 个有 README（3.1%）",
+      "file": "server/src/",
+      "line": "-",
+      "impact": "新开发者无法快速理解模块职责和架构边界。"
+    },
+    {
+      "id": "MAINT-010",
+      "dimension": "maintainability",
+      "severity": "P2",
+      "title": "JSDoc 覆盖率极低：server 6.3%、client 0%、shared 0%",
+      "file": "server/src/ + client/src/ + shared/types/",
+      "line": "-",
+      "impact": "接口契约完全靠代码推断。"
+    },
+    {
+      "id": "MAINT-011",
+      "dimension": "maintainability",
+      "severity": "P3",
+      "title": "shared/types/ 无 barrel export，且混入运行时代码",
+      "file": "shared/types/",
+      "line": "-",
+      "impact": "导入路径不稳定。"
+    },
+    {
+      "id": "MAINT-012",
+      "dimension": "maintainability",
+      "severity": "P2",
+      "title": "server 端 396 处跨 3 层以上的深层 import",
+      "file": "server/src/",
+      "line": "-",
+      "impact": "修改底层文件会影响大量上层模块。"
+    },
+    {
+      "id": "MAINT-013",
+      "dimension": "maintainability",
+      "severity": "P3",
+      "title": "bookAnalysis 被 31 个文件引用，为最高扇入模块",
+      "file": "server/src/services/bookAnalysis/",
+      "line": "-",
+      "impact": "高扇入模块的任何接口变更都是高风险操作。"
+    },
+    {
+      "id": "MAINT-014",
+      "dimension": "maintainability",
+      "severity": "P3",
+      "title": "server 端 chains/ 目录和多个 graph 文件完全未使用",
+      "file": "server/src/chains/",
+      "line": "-",
+      "impact": "死代码增加认知负担。"
+    },
+    {
+      "id": "MAINT-015",
+      "dimension": "maintainability",
+      "severity": "P3",
+      "title": "17 处非迁移代码中的 console.log/debug 调用",
+      "file": "server/src/",
+      "line": "-",
+      "impact": "console.log 无法分级、过滤和持久化。"
+    },
+    {
+      "id": "MAINT-016",
+      "dimension": "maintainability",
+      "severity": "P2",
+      "title": "项目未配置 ESLint 或 Prettier",
+      "file": "项目根目录",
+      "line": "-",
+      "impact": "代码风格不一致，多人协作时格式冲突频繁。"
+    },
+    {
+      "id": "MAINT-017",
+      "dimension": "maintainability",
+      "severity": "P3",
+      "title": "import 排序无统一规则",
+      "file": "server/src/ + client/src/",
+      "line": "-",
+      "impact": "import 顺序不一致增加代码审查噪音。"
+    },
+    {
+      "id": "MAINT-018",
+      "dimension": "maintainability",
+      "severity": "P3",
+      "title": "三种不同的路由导出模式共存",
+      "file": "server/src/modules/",
+      "line": "-",
+      "impact": "新模块不知道应采用哪种模式。"
+    },
+    {
+      "id": "MAINT-019",
+      "dimension": "maintainability",
+      "severity": "P3",
+      "title": "168 处 process.env 直接访问，分布于 36 个文件",
+      "file": "server/src/",
+      "line": "-",
+      "impact": "环境变量名变更时需要全局搜索替换。"
+    },
+    {
+      "id": "MAINT-020",
+      "dimension": "maintainability",
+      "severity": "P3",
+      "title": "30+ 处硬编码 localhost/127.0.0.1 URL",
+      "file": "server/src/config/database.ts 等",
+      "line": "-",
+      "impact": "部署到非默认环境时需要逐一修改。"
+    },
+    {
+      "id": "MAINT-021",
+      "dimension": "maintainability",
+      "severity": "P4",
+      "title": "client 仅 5 处 import.meta.env，且无类型化环境变量声明",
+      "file": "client/src/",
+      "line": "-",
+      "impact": "环境变量名拼写错误无法在编译期发现。"
+    },
+    {
+      "id": "MAINT-022",
+      "dimension": "maintainability",
+      "severity": "P4",
+      "title": "当前无循环依赖，但存在耦合热点",
+      "file": "server/src/",
+      "line": "-",
+      "impact": "耦合热点在大规模重构时容易引入循环依赖。"
+    },
+    {
+      "id": "MAINT-023",
+      "dimension": "maintainability",
+      "severity": "P4",
+      "title": "skeleton.prompts.ts 中 33 行注释掉的旧版代码",
+      "file": "server/src/prompting/prompts/novel/volume/skeleton.prompts.ts",
+      "line": "10-42",
+      "impact": "注释代码混淆版本历史。"
+    },
+    {
+      "id": "MAINT-024",
+      "dimension": "maintainability",
+      "severity": "P4",
+      "title": "2 处 @ts-ignore 和 2 处 @ts-nocheck，均合理",
+      "file": "server/src/services/logging/LoggerService.ts",
+      "line": "3-6",
+      "impact": "影响极小。"
+    },
+    {
+      "id": "MAINT-025",
+      "dimension": "maintainability",
+      "severity": "P4",
+      "title": "8 处 eslint-disable 指令，集中在迁移代码",
+      "file": "server/src/",
+      "line": "-",
+      "impact": "数量少且集中在特殊场景。"
+    },
+    {
+      "id": "MAINT-026",
+      "dimension": "maintainability",
+      "severity": "P2",
+      "title": "server/src/services/ 含 508 个 .ts 文件，远超 12 文件阈值",
+      "file": "server/src/services/",
+      "line": "-",
+      "impact": "文件数量过多导致文件导航困难。"
+    },
+    {
+      "id": "MAINT-027",
+      "dimension": "maintainability",
+      "severity": "P3",
+      "title": "server 端 194K 行、client 端 91K 行，总计近 287K 行",
+      "file": "server/src/ + client/src/",
+      "line": "-",
+      "impact": "代码量偏大，增加维护成本。"
+    },
+    {
+      "id": "MAINT-028",
+      "dimension": "maintainability",
+      "severity": "P3",
+      "title": "export 模块绕过 novel 模块直接引用 services/novel/",
+      "file": "modules/export/",
+      "line": "-",
+      "impact": "违反模块边界约束。"
+    },
+    {
+      "id": "MAINT-029",
+      "dimension": "maintainability",
+      "severity": "P2",
+      "title": "shared/types/ 48 个文件 251+ 导出符号零文档",
+      "file": "shared/types/",
+      "line": "-",
+      "impact": "AI 辅助编码无法理解字段语义。"
+    },
+    {
+      "id": "MAINT-030",
+      "dimension": "maintainability",
+      "severity": "P4",
+      "title": "多处魔数散布于业务代码中",
+      "file": "server/src/",
+      "line": "-",
+      "impact": "魔数缺乏语义。"
+    },
+    {
+      "id": "COMP-001",
+      "dimension": "compatibility",
+      "severity": "P2",
+      "title": "node:sqlite 在 Node 20.x 下不可用",
+      "file": "server/scripts/restore-dev-data.cjs",
+      "line": "3",
+      "impact": "在 Node 20 下执行此脚本会直接崩溃。"
+    },
+    {
+      "id": "COMP-002",
+      "dimension": "compatibility",
+      "severity": "P3",
+      "title": "Prisma 38 个 enum 在 SQLite desktop 模式下无数据库级约束",
+      "file": "server/src/prisma/schema.prisma",
+      "line": "-",
+      "impact": "Desktop 模式下 enum 完整性仅由 Prisma Client 运行时保证。"
+    },
+    {
+      "id": "COMP-003",
+      "dimension": "compatibility",
+      "severity": "P3",
+      "title": "Anthropic 模型列表过时，缺少 Claude 4 系列",
+      "file": "server/src/llm/providers.ts",
+      "line": "57-61",
+      "impact": "用户无法使用最新 Claude 模型。"
+    },
+    {
+      "id": "COMP-004",
+      "dimension": "compatibility",
+      "severity": "P3",
+      "title": "Vite 未设置 build.target，输出默认 esnext",
+      "file": "client/vite.config.ts",
+      "line": "-",
+      "impact": "若未来 Web 部署目标包含旧浏览器，输出 bundle 会解析失败。"
+    },
+    {
+      "id": "COMP-005",
+      "dimension": "compatibility",
+      "severity": "P3",
+      "title": "Gemini API 使用 v1beta 端点",
+      "file": "server/src/llm/providers.ts",
+      "line": "128",
+      "impact": "若 Google 废弃 v1beta 端点，Gemini 集成将直接中断。"
+    },
+    {
+      "id": "COMP-006",
+      "dimension": "compatibility",
+      "severity": "P3",
+      "title": "Anthropic API 版本头默认 2023-06-01",
+      "file": "server/src/llm/anthropicClient.ts",
+      "line": "153",
+      "impact": "默认配置下无法使用新特性（如 prompt caching）。"
+    },
+    {
+      "id": "COMP-007",
+      "dimension": "compatibility",
+      "severity": "P3",
+      "title": "Prisma schema 3684 行单文件，双提供者兼容无自动化保障",
+      "file": "server/src/prisma/schema.prisma",
+      "line": "-",
+      "impact": "新增 Prisma 字段可能静默破坏 SQLite 兼容性。"
+    },
+    {
+      "id": "COMP-008",
+      "dimension": "compatibility",
+      "severity": "P3",
+      "title": "ts-node-dev 依赖长期未更新",
+      "file": "server/",
+      "line": "-",
+      "impact": "开发体验退化。"
+    },
+    {
+      "id": "COMP-009",
+      "dimension": "compatibility",
+      "severity": "P3",
+      "title": "deepseek-v4-pro 引用与模型目录不一致",
+      "file": "server/src/llm/reasoning.ts",
+      "line": "95",
+      "impact": "逻辑不一致。"
+    },
+    {
+      "id": "COMP-010",
+      "dimension": "compatibility",
+      "severity": "P3",
+      "title": "6 处 navigator.clipboard.writeText() 缺少错误处理",
+      "file": "client/src/pages/worlds/WorldWorkspace.tsx 等",
+      "line": "-",
+      "impact": "非安全上下文或权限拒绝时产生未捕获的 Promise rejection。"
+    },
+    {
+      "id": "COMP-011",
+      "dimension": "compatibility",
+      "severity": "P4",
+      "title": "Prisma schema 缺少 @map/@@map 显式映射",
+      "file": "server/src/prisma/schema.prisma",
+      "line": "-",
+      "impact": "无功能影响，未来重构风险增加。"
+    },
+    {
+      "id": "COMP-012",
+      "dimension": "compatibility",
+      "severity": "P4",
+      "title": "tsconfig 未启用 isolatedModules",
+      "file": "tsconfig.base.json 等",
+      "line": "-",
+      "impact": "低风险。"
+    },
+    {
+      "id": "COMP-013",
+      "dimension": "compatibility",
+      "severity": "P4",
+      "title": "DeepSeek/SiliconFlow 余额查询使用非公开 API 端点",
+      "file": "server/src/services/settings/ProviderBalanceService.ts",
+      "line": "-",
+      "impact": "余额查询功能在 API 变更后会静默失败。"
+    },
+    {
+      "id": "COMP-014",
+      "dimension": "compatibility",
+      "severity": "P4",
+      "title": "MiniMax 图像生成使用独立 baseURL，绕过提供者注册表",
+      "file": "server/src/services/image/provider.ts",
+      "line": "315-317",
+      "impact": "MiniMax 图像生成 API 结构变更时需在两处修改。"
+    },
+    {
+      "id": "COMP-015",
+      "dimension": "compatibility",
+      "severity": "P4",
+      "title": "Electron 自定义类型声明不完整",
+      "file": "desktop/src/@types/electron/index.d.ts",
+      "line": "-",
+      "impact": "TypeScript 不会标记 Electron API 的新增属性或方法。"
+    }
+  ]
+}

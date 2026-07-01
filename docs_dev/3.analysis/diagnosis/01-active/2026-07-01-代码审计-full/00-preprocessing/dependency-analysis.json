@@ -1,0 +1,393 @@
+{
+  "timestamp": "2026-07-01",
+  "analyzer": "dependency-analysis-preprocessing",
+  "workspaceConfig": {
+    "name": "ai-novel-writing-assistant-v2",
+    "private": true,
+    "license": "AGPL-3.0-only",
+    "packageManager": "pnpm@10.6.0",
+    "engines": {
+      "node": "^20.19.0 || ^22.12.0 || >=24.0.0",
+      "pnpm": ">=10.6.0"
+    },
+    "packages": ["client", "desktop", "server", "shared"],
+    "onlyBuiltDependencies": ["@prisma/engines", "better-sqlite3", "esbuild", "prisma"],
+    "ignoredBuiltDependencies": ["electron", "electron-winstaller"],
+    "rootDevDependencies": {
+      "concurrently": "^9.2.1",
+      "typescript": "^5.9.3"
+    }
+  },
+  "packages": {
+    "server": {
+      "name": "@ai-novel/server",
+      "version": "0.1.0",
+      "dependencies": {
+        "@ai-novel/shared": "workspace:*",
+        "@aws-sdk/client-s3": "^3.910.0",
+        "@langchain/community": "^1.1.21",
+        "@langchain/core": "^1.1.29",
+        "@langchain/langgraph": "^1.2.0",
+        "@langchain/openai": "^1.2.11",
+        "@prisma/adapter-better-sqlite3": "^7.4.2",
+        "@prisma/adapter-pg": "7.4.2",
+        "@prisma/client": "^7.4.2",
+        "better-sqlite3": "^12.6.2",
+        "cors": "^2.8.6",
+        "dotenv": "^17.3.1",
+        "express": "^5.2.1",
+        "helmet": "^8.1.0",
+        "langchain": "^1.2.28",
+        "morgan": "^1.10.1",
+        "sharp": "^0.35.1",
+        "winston": "^3.17.0",
+        "winston-daily-rotate-file": "^5.0.0",
+        "zod": "^4.3.6"
+      },
+      "devDependencies": {
+        "@types/better-sqlite3": "^7.6.13",
+        "@types/cors": "^2.8.19",
+        "@types/express": "^5.0.6",
+        "@types/morgan": "^1.9.10",
+        "@types/node": "^25.3.3",
+        "prisma": "^7.4.2",
+        "ts-node-dev": "^2.0.0",
+        "typescript": "^5.9.3"
+      },
+      "keyDeps": ["express", "@prisma/client", "langchain", "@langchain/langgraph", "@langchain/openai", "zod", "helmet", "sharp", "winston", "better-sqlite3", "@aws-sdk/client-s3"]
+    },
+    "client": {
+      "name": "@ai-novel/client",
+      "version": "0.1.0",
+      "dependencies": {
+        "@ai-novel/shared": "workspace:*",
+        "@assistant-ui/react": "^0.12.17",
+        "@assistant-ui/react-devtools": "^1.0.2",
+        "@assistant-ui/react-langgraph": "^0.13.3",
+        "@assistant-ui/react-ui": "^0.2.1",
+        "@hookform/resolvers": "^5.2.2",
+        "@langchain/langgraph-sdk": "^1.7.2",
+        "@platejs/ai": "^52.3.1",
+        "@radix-ui/react-dialog": "^1.1.15",
+        "@radix-ui/react-select": "^2.2.6",
+        "@radix-ui/react-slot": "^1.2.4",
+        "@radix-ui/react-tabs": "^1.1.13",
+        "@tanstack/react-query": "^5.90.21",
+        "axios": "^1.13.6",
+        "class-variance-authority": "^0.7.1",
+        "clsx": "^2.1.1",
+        "framer-motion": "^12.34.4",
+        "highlight.js": "^11.11.1",
+        "idb-keyval": "^6.2.2",
+        "lucide-react": "^0.576.0",
+        "next-themes": "^0.4.6",
+        "platejs": "^52.3.3",
+        "react": "^19.2.4",
+        "react-diff-viewer-continued": "^4.2.2",
+        "react-dom": "^19.2.4",
+        "react-hook-form": "^7.71.2",
+        "react-markdown": "^10.1.0",
+        "react-resizable-panels": "^4.7.2",
+        "react-router-dom": "^7.13.1",
+        "rehype-highlight": "^7.0.2",
+        "sonner": "^2.0.7",
+        "tailwind-merge": "^3.5.0",
+        "zod": "^4.3.6",
+        "zustand": "^5.0.11"
+      },
+      "devDependencies": {
+        "@types/node": "^25.3.3",
+        "@types/react": "^19.2.14",
+        "@types/react-dom": "^19.2.3",
+        "@vitejs/plugin-react": "^5.1.4",
+        "autoprefixer": "^10.4.27",
+        "postcss": "^8.5.8",
+        "tailwindcss": "^3.4.17",
+        "typescript": "^5.9.3",
+        "vite": "^7.3.1",
+        "vite-plugin-pages": "^0.33.3"
+      },
+      "keyDeps": ["react", "react-dom", "react-router-dom", "@tanstack/react-query", "platejs", "@platejs/ai", "@assistant-ui/react", "zustand", "axios", "framer-motion", "zod", "vite"]
+    },
+    "shared": {
+      "name": "@ai-novel/shared",
+      "version": "0.1.0",
+      "dependencies": {
+        "zod": "^4.3.6"
+      },
+      "devDependencies": {
+        "typescript": "^5.9.3"
+      },
+      "keyDeps": ["zod"]
+    },
+    "desktop": {
+      "name": "@ai-novel/desktop",
+      "version": "0.3.20",
+      "dependencies": {
+        "@ai-novel/server": "workspace:*",
+        "better-sqlite3": "^12.6.2",
+        "electron-updater": "^6.6.2"
+      },
+      "devDependencies": {
+        "@types/node": "^25.3.3",
+        "electron": "^35.7.5",
+        "electron-builder": "^26.1.0",
+        "typescript": "^5.9.3"
+      },
+      "keyDeps": ["electron", "electron-updater", "electron-builder", "@ai-novel/server", "better-sqlite3"]
+    }
+  },
+  "configModules": {
+    "database.ts": {
+      "description": "数据库配置 - 支持 SQLite/PostgreSQL 双模式切换",
+      "envVars": ["AI_NOVEL_DATABASE_MODE", "DATABASE_URL", "NODE_ENV"],
+      "defaults": {
+        "provider": "sqlite",
+        "url": "file:./dev.db",
+        "postgresUrl": "postgresql://postgres:postgres@127.0.0.1:5432/ai_novel"
+      },
+      "securityNotes": [
+        "默认 Postgres 凭据硬编码在源码中 (postgres:postgres)，仅用于开发默认值",
+        "生产环境要求显式设置 DATABASE_URL，否则抛出异常"
+      ]
+    },
+    "rag.ts": {
+      "description": "RAG (检索增强生成) 配置",
+      "envVars": [
+        "RAG_ENABLED", "RAG_VERBOSE_LOG", "RAG_DEFAULT_TENANT",
+        "EMBEDDING_PROVIDER", "EMBEDDING_MODEL", "EMBEDDING_VERSION",
+        "EMBEDDING_BATCH_SIZE", "RAG_EMBEDDING_TIMEOUT_MS", "RAG_EMBEDDING_MAX_RETRIES",
+        "RAG_EMBEDDING_RETRY_BASE_MS", "QDRANT_URL", "QDRANT_API_KEY",
+        "QDRANT_COLLECTION", "QDRANT_TIMEOUT_MS", "QDRANT_UPSERT_MAX_BYTES",
+        "RAG_CHUNK_SIZE", "RAG_CHUNK_OVERLAP", "RAG_VECTOR_CANDIDATES",
+        "RAG_KEYWORD_CANDIDATES", "RAG_FINAL_TOP_K", "RAG_WORKER_POLL_MS",
+        "RAG_WORKER_MAX_ATTEMPTS", "RAG_WORKER_RETRY_BASE_MS", "RAG_HTTP_TIMEOUT_MS",
+        "SILICONFLOW_EMBEDDING_MODEL", "OPENAI_EMBEDDING_MODEL"
+      ],
+      "defaults": {
+        "enabled": true,
+        "qdrantUrl": "http://127.0.0.1:6333",
+        "embeddingProvider": "openai",
+        "embeddingModel": "text-embedding-3-small",
+        "chunkSize": 800,
+        "finalTopK": 8
+      },
+      "securityNotes": [
+        "QDRANT_API_KEY 默认为空字符串 - 应确保生产环境配置",
+        "QDRANT_URL 默认指向 localhost - 生产部署需更改"
+      ]
+    },
+    "featureFlags.ts": {
+      "description": "功能开关配置",
+      "envVars": ["WORLD_WIZARD_ENABLED", "WORLD_VIS_ENABLED", "WORLD_GRAPH_ENABLED"],
+      "defaults": {
+        "worldWizardEnabled": true,
+        "worldVisEnabled": true,
+        "worldGraphEnabled": false
+      }
+    },
+    "imageGeneration.ts": {
+      "description": "图片生成超时配置",
+      "envVars": ["LLM_REQUEST_TIMEOUT_MS", "IMAGE_GENERATION_HTTP_TIMEOUT_MS"],
+      "defaults": {
+        "httpTimeoutMs": 300000
+      }
+    },
+    "imageStorage.ts": {
+      "description": "图片存储配置 - 支持 local/S3 双驱动",
+      "envVars": [
+        "IMAGE_STORAGE_DRIVER", "IMAGE_STORAGE_ROOT",
+        "IMAGE_STORAGE_S3_ENDPOINT", "IMAGE_STORAGE_S3_REGION",
+        "IMAGE_STORAGE_S3_BUCKET", "IMAGE_STORAGE_S3_ACCESS_KEY_ID",
+        "IMAGE_STORAGE_S3_SECRET_ACCESS_KEY", "IMAGE_STORAGE_S3_FORCE_PATH_STYLE",
+        "MINIO_ENDPOINT", "MINIO_REGION", "MINIO_BUCKET",
+        "MINIO_ACCESS_KEY", "MINIO_SECRET_KEY", "MINIO_FORCE_PATH_STYLE"
+      ],
+      "defaults": {
+        "driver": "local",
+        "localRoot": "storage/generated-images"
+      },
+      "securityNotes": [
+        "S3 凭据通过环境变量读取，未发现硬编码泄露",
+        "兼容 MinIO 配置别名"
+      ]
+    },
+    "directorDebug.ts": {
+      "description": "导演调试日志配置",
+      "envVars": [
+        "DIRECTOR_DEBUG_LOG_ENABLED",
+        "DIRECTOR_DEBUG_LOG_DETAIL_LEVEL",
+        "DIRECTOR_DEBUG_LOG_RETENTION_HOURS"
+      ],
+      "defaults": {
+        "enabled": true,
+        "detailLevel": "standard",
+        "retentionHours": 168
+      }
+    }
+  },
+  "dependencyGraph": {
+    "buildOrder": ["shared", "server", "client", "desktop"],
+    "internalDeps": {
+      "shared": [],
+      "server": ["shared"],
+      "client": ["shared"],
+      "desktop": ["server"]
+    },
+    "sharedVersion": {
+      "zod": "^4.3.6"
+    }
+  },
+  "crossPackageDuplication": {
+    "zod": {
+      "packages": ["server", "client", "shared"],
+      "version": "^4.3.6",
+      "note": "shared 作为核心依赖导出，server/client 各自声明依赖 - 允许但需注意版本一致性"
+    },
+    "better-sqlite3": {
+      "packages": ["server", "desktop"],
+      "version": "^12.6.2",
+      "note": "桌面端和 server 都直接依赖，版本一致"
+    },
+    "typescript": {
+      "packages": ["server", "client", "shared", "desktop", "root"],
+      "version": "^5.9.3",
+      "note": "各包独立声明，版本统一"
+    },
+    "@types/node": {
+      "packages": ["server", "client", "desktop"],
+      "version": "^25.3.3",
+      "note": "版本统一"
+    }
+  },
+  "potentialIssues": [
+    {
+      "package": "ts-node-dev",
+      "version": "^2.0.0",
+      "issue": "ts-node-dev 最后更新于 2022 年，维护不活跃。可考虑迁移至 tsx 或 ts-node + nodemon",
+      "severity": "LOW",
+      "category": "maintenance"
+    },
+    {
+      "package": "cors",
+      "version": "^2.8.6",
+      "issue": "cors 包 v2.8.x 已较旧，最新为 v2.8.5+。Express 5 自带 CORS 支持，未来可考虑移除独立包",
+      "severity": "LOW",
+      "category": "redundancy"
+    },
+    {
+      "package": "tailwindcss",
+      "version": "^3.4.17",
+      "issue": "Tailwind CSS v3 已进入维护模式，v4 已发布。当前版本安全但未来需要迁移",
+      "severity": "LOW",
+      "category": "outdated"
+    },
+    {
+      "package": "dotenv",
+      "version": "^17.3.1",
+      "issue": "dotenv v17 为最新版本，无安全问题。但需确认 server 项目确实需要手动加载（Express 5 项目通常用其他方式）",
+      "severity": "INFO",
+      "category": "verification"
+    },
+    {
+      "package": "express (hardcoded DB credentials)",
+      "version": "N/A",
+      "issue": "database.ts 中硬编码默认 Postgres 凭据 postgres:postgres@127.0.0.1:5432/ai_novel。虽然是开发默认值，但存在泄漏到生产环境的风险",
+      "severity": "MEDIUM",
+      "category": "security",
+      "file": "server/src/config/database.ts"
+    },
+    {
+      "package": "Qdrant (RAG config)",
+      "version": "N/A",
+      "issue": "QDRANT_API_KEY 默认为空字符串，QDRANT_URL 默认 localhost。生产部署若忘记配置可能导致未授权访问",
+      "severity": "MEDIUM",
+      "category": "security",
+      "file": "server/src/config/rag.ts"
+    },
+    {
+      "package": "helmet",
+      "version": "^8.1.0",
+      "issue": "helmet v8 为最新版本，良好。与 Express 5 配合正确",
+      "severity": "OK",
+      "category": "security-positive"
+    },
+    {
+      "package": "sharp",
+      "version": "^0.35.1",
+      "issue": "sharp v0.35 为较新版本，无已知安全问题。原生模块需注意 Node.js 版本兼容",
+      "severity": "OK",
+      "category": "native-module"
+    },
+    {
+      "package": "electron",
+      "version": "^35.7.5",
+      "issue": "Electron v35 为最新 LTS 分支。ignoredBuiltDependencies 中排除了 electron 和 electron-winstaller 的构建步骤",
+      "severity": "INFO",
+      "category": "desktop"
+    },
+    {
+      "package": "@prisma/adapter-pg",
+      "version": "7.4.2 (无 ^ 前缀)",
+      "issue": "@prisma/adapter-pg 使用精确版本 7.4.2 而非 ^7.4.2，与其他 Prisma 包的 ^ 前缀不一致。可能导致版本漂移时 adapter 与 client 不匹配",
+      "severity": "LOW",
+      "category": "version-consistency",
+      "file": "server/package.json"
+    },
+    {
+      "package": "react",
+      "version": "^19.2.4",
+      "issue": "React 19 为最新稳定版本。platejs v52 和 assistant-ui 为较新库，需关注与 React 19 的兼容性",
+      "severity": "INFO",
+      "category": "ecosystem"
+    },
+    {
+      "package": "langchain ecosystem",
+      "version": "langchain ^1.2.28 / @langchain/*",
+      "issue": "LangChain 生态更新频繁（周级别），需定期同步版本避免 breaking changes 堆积",
+      "severity": "LOW",
+      "category": "maintenance"
+    },
+    {
+      "package": "vite",
+      "version": "^7.3.1",
+      "issue": "Vite v7 为最新版本，无安全问题",
+      "severity": "OK",
+      "category": "build-tool"
+    },
+    {
+      "package": "zod",
+      "version": "^4.3.6",
+      "issue": "Zod v4 为全新大版本（2025 年发布），API 与 v3 有 breaking changes。三个包统一使用 v4 良好",
+      "severity": "INFO",
+      "category": "ecosystem"
+    }
+  ],
+  "summary": {
+    "totalDependencies": {
+      "server": { "prod": 20, "dev": 8 },
+      "client": { "prod": 33, "dev": 10 },
+      "shared": { "prod": 1, "dev": 1 },
+      "desktop": { "prod": 3, "dev": 3 }
+    },
+    "criticalFindings": [
+      "硬编码默认数据库凭据 (database.ts) - MEDIUM 优先级",
+      "RAG 配置缺少生产环境强制校验 (rag.ts) - MEDIUM 优先级",
+      "@prisma/adapter-pg 精确版本锁定与其他 Prisma 包不一致 - LOW"
+    ],
+    "positiveFindings": [
+      "所有主要依赖均为最新或较新版本",
+      "helmet 已启用安全 HTTP 头",
+      "无已知 CRITICAL/HIGH 安全漏洞依赖",
+      "Express 5 + Prisma 7 + React 19 技术栈处于最新主流",
+      "zod 版本在所有包中统一"
+    ],
+    "recommendations": [
+      "短期: 检查 database.ts 和 rag.ts 中的默认值是否会在生产环境泄漏",
+      "短期: 将 @prisma/adapter-pg 版本锁定改为 ^7.4.2 以与其他 Prisma 包保持一致",
+      "中期: 评估 ts-node-dev 替代方案（tsx/nodemon）",
+      "中期: 规划 Tailwind CSS v3 → v4 迁移",
+      "长期: 定期同步 LangChain 生态版本"
+    ]
+  }
+}

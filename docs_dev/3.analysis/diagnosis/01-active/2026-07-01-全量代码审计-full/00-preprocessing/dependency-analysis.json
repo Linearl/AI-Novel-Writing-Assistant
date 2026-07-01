@@ -1,0 +1,254 @@
+{
+  "analysisDate": "2026-07-01",
+  "project": "ai-novel",
+  "packageManager": "pnpm@10.6.0",
+  "workspacePackages": ["client", "desktop", "server", "shared"],
+  "workspaceDependencies": [
+    { "from": "@ai-novel/server", "to": "@ai-novel/shared", "type": "workspace" },
+    { "from": "@ai-novel/client", "to": "@ai-novel/shared", "type": "workspace" },
+    { "from": "@ai-novel/desktop", "to": "@ai-novel/server", "type": "workspace" }
+  ],
+  "dependencyGraph": {
+    "root": {
+      "dependencies": {},
+      "devDependencies": ["concurrently", "typescript"]
+    },
+    "shared": {
+      "dependencies": ["zod"],
+      "devDependencies": ["typescript"],
+      "workspaceDependents": ["server", "client"]
+    },
+    "server": {
+      "dependencies": [
+        "@ai-novel/shared (workspace)",
+        "@aws-sdk/client-s3",
+        "@langchain/community",
+        "@langchain/core",
+        "@langchain/langgraph",
+        "@langchain/openai",
+        "@prisma/adapter-better-sqlite3",
+        "@prisma/adapter-pg",
+        "@prisma/client",
+        "better-sqlite3",
+        "cors",
+        "dotenv",
+        "express",
+        "helmet",
+        "langchain",
+        "morgan",
+        "sharp",
+        "winston",
+        "winston-daily-rotate-file",
+        "zod"
+      ],
+      "devDependencies": [
+        "@types/better-sqlite3",
+        "@types/cors",
+        "@types/express",
+        "@types/morgan",
+        "@types/node",
+        "prisma",
+        "ts-node-dev",
+        "typescript"
+      ],
+      "workspaceDependents": ["desktop"]
+    },
+    "client": {
+      "dependencies": [
+        "@ai-novel/shared (workspace)",
+        "@assistant-ui/react",
+        "@assistant-ui/react-devtools",
+        "@assistant-ui/react-langgraph",
+        "@assistant-ui/react-ui",
+        "@hookform/resolvers",
+        "@langchain/langgraph-sdk",
+        "@platejs/ai",
+        "@radix-ui/react-dialog",
+        "@radix-ui/react-select",
+        "@radix-ui/react-slot",
+        "@radix-ui/react-tabs",
+        "@tanstack/react-query",
+        "axios",
+        "class-variance-authority",
+        "clsx",
+        "framer-motion",
+        "highlight.js",
+        "idb-keyval",
+        "lucide-react",
+        "next-themes",
+        "platejs",
+        "react",
+        "react-diff-viewer-continued",
+        "react-dom",
+        "react-hook-form",
+        "react-markdown",
+        "react-resizable-panels",
+        "react-router-dom",
+        "rehype-highlight",
+        "sonner",
+        "tailwind-merge",
+        "zod",
+        "zustand"
+      ],
+      "devDependencies": [
+        "@types/node",
+        "@types/react",
+        "@types/react-dom",
+        "@vitejs/plugin-react",
+        "autoprefixer",
+        "postcss",
+        "tailwindcss",
+        "typescript",
+        "vite",
+        "vite-plugin-pages"
+      ]
+    },
+    "desktop": {
+      "dependencies": [
+        "@ai-novel/server (workspace)",
+        "better-sqlite3",
+        "electron-updater"
+      ],
+      "devDependencies": [
+        "@types/node",
+        "electron",
+        "electron-builder",
+        "typescript"
+      ]
+    }
+  },
+  "keyDependencies": [
+    { "name": "express", "version": "^5.2.1", "package": "server", "category": "web-framework", "notes": "Express 5.x (major version upgrade from 4.x)" },
+    { "name": "@prisma/client", "version": "^7.4.2", "package": "server", "category": "orm", "notes": "Prisma 7.x" },
+    { "name": "prisma", "version": "^7.4.2", "package": "server/dev", "category": "orm-cli" },
+    { "name": "react", "version": "^19.2.4", "package": "client", "category": "ui-framework" },
+    { "name": "react-dom", "version": "^19.2.4", "package": "client", "category": "ui-framework" },
+    { "name": "langchain", "version": "^1.2.28", "package": "server", "category": "ai-llm" },
+    { "name": "@langchain/core", "version": "^1.1.29", "package": "server", "category": "ai-llm" },
+    { "name": "@langchain/langgraph", "version": "^1.2.0", "package": "server", "category": "ai-llm" },
+    { "name": "@langchain/openai", "version": "^1.2.11", "package": "server", "category": "ai-llm" },
+    { "name": "@langchain/community", "version": "^1.1.21", "package": "server", "category": "ai-llm" },
+    { "name": "@langchain/langgraph-sdk", "version": "^1.7.2", "package": "client", "category": "ai-llm" },
+    { "name": "electron", "version": "^35.7.5", "package": "desktop/dev", "category": "desktop-runtime" },
+    { "name": "electron-builder", "version": "^26.1.0", "package": "desktop/dev", "category": "desktop-build" },
+    { "name": "electron-updater", "version": "^6.6.2", "package": "desktop", "category": "desktop-update" },
+    { "name": "zod", "version": "^4.3.6", "package": "shared/server/client", "category": "validation", "notes": "Zod 4.x (major version upgrade from 3.x)" },
+    { "name": "typescript", "version": "^5.9.3", "package": "all", "category": "language" },
+    { "name": "vite", "version": "^7.3.1", "package": "client/dev", "category": "build-tool" },
+    { "name": "tailwindcss", "version": "^3.4.17", "package": "client/dev", "category": "css-framework", "notes": "Still on Tailwind v3, v4 available" },
+    { "name": "zustand", "version": "^5.0.11", "package": "client", "category": "state-management" },
+    { "name": "@tanstack/react-query", "version": "^5.90.21", "package": "client", "category": "data-fetching" },
+    { "name": "react-router-dom", "version": "^7.13.1", "package": "client", "category": "routing", "notes": "React Router v7" },
+    { "name": "better-sqlite3", "version": "^12.6.2", "package": "server/desktop", "category": "database" },
+    { "name": "sharp", "version": "^0.35.1", "package": "server", "category": "image-processing" },
+    { "name": "winston", "version": "^3.17.0", "package": "server", "category": "logging" },
+    { "name": "helmet", "version": "^8.1.0", "package": "server", "category": "security" },
+    { "name": "axios", "version": "^1.13.6", "package": "client", "category": "http-client" },
+    { "name": "platejs", "version": "^52.3.3", "package": "client", "category": "editor" },
+    { "name": "framer-motion", "version": "^12.34.4", "package": "client", "category": "animation" },
+    { "name": "@aws-sdk/client-s3", "version": "^3.910.0", "package": "server", "category": "cloud-storage" }
+  ],
+  "potentialIssues": [
+    {
+      "name": "tailwindcss",
+      "currentVersion": "^3.4.17",
+      "latestVersion": "4.x",
+      "reason": "Tailwind CSS v3 已进入维护模式，v4 已发布。虽然 v3 仍可用，但建议规划升级。",
+      "severity": "low",
+      "package": "client"
+    },
+    {
+      "name": "ts-node-dev",
+      "currentVersion": "^2.0.0",
+      "latestVersion": "2.x (maintained)",
+      "reason": "ts-node-dev 仅维护模式，功能上 tsx 可作为更活跃的替代。非紧急。",
+      "severity": "low",
+      "package": "server"
+    },
+    {
+      "name": "idb-keyval",
+      "currentVersion": "^6.2.2",
+      "latestVersion": "6.x",
+      "reason": "idb-keyval 最后发布较久，但作为轻量 IndexedDB wrapper 无已知安全问题。",
+      "severity": "info",
+      "package": "client"
+    },
+    {
+      "name": "react-diff-viewer-continued",
+      "currentVersion": "^4.2.2",
+      "latestVersion": "4.x",
+      "reason": "社区维护的 fork，活跃度中等。关注是否跟上 React 19 变化。",
+      "severity": "info",
+      "package": "client"
+    },
+    {
+      "name": "electron",
+      "currentVersion": "^35.7.5",
+      "latestVersion": "35.x",
+      "reason": "Electron 35 较新。注意 Electron 自身 Chromium 版本的 CVE 追踪。",
+      "severity": "info",
+      "package": "desktop"
+    },
+    {
+      "name": "better-sqlite3",
+      "currentVersion": "^12.6.2",
+      "latestVersion": "12.x",
+      "reason": "版本较新。注意 native addon 在 Electron 渲染进程中的兼容性。",
+      "severity": "info",
+      "package": "server/desktop"
+    },
+    {
+      "name": "vite-plugin-pages",
+      "currentVersion": "^0.33.3",
+      "latestVersion": "0.33.x",
+      "reason": "vite-plugin-pages 的 semver 尚未达到 1.0，API 稳定性需关注。",
+      "severity": "info",
+      "package": "client"
+    },
+    {
+      "name": "sharp",
+      "currentVersion": "^0.35.1",
+      "latestVersion": "0.35.x+",
+      "reason": "sharp 依赖 native binaries，部署时需确保平台兼容。",
+      "severity": "info",
+      "package": "server"
+    }
+  ],
+  "sharedDependencyVersions": {
+    "typescript": "^5.9.3 (all packages)",
+    "zod": "^4.3.6 (shared, server, client)",
+    "better-sqlite3": "^12.6.2 (server, desktop)",
+    "@types/node": "^25.3.3 (server, client, desktop)"
+  },
+  "totalDependencies": {
+    "root": { "dependencies": 0, "devDependencies": 2 },
+    "shared": { "dependencies": 1, "devDependencies": 1 },
+    "server": { "dependencies": 19, "devDependencies": 8 },
+    "client": { "dependencies": 32, "devDependencies": 10 },
+    "desktop": { "dependencies": 3, "devDependencies": 4 },
+    "grandTotal": {
+      "dependencies": 55,
+      "devDependencies": 25,
+      "total": 80,
+      "note": "含 workspace:* 引用，去重后外部依赖约 65 个独立包"
+    }
+  },
+  "nodeEngineRequirement": "^20.19.0 || ^22.12.0 || >=24.0.0",
+  "summary": {
+    "architecture": "pnpm workspace monorepo with 4 packages: shared (types/schemas) -> server (Express 5 + Prisma 7 + LangChain) -> client (React 19 + Vite 7) -> desktop (Electron 35 shell)",
+    "buildOrder": "shared -> server -> client -> desktop",
+    "riskAreas": [
+      "Express 5.x 是大版本升级，中间件生态可能不完全兼容",
+      "Zod 4.x 是大版本升级（从 3.x），schema 定义可能需要调整",
+      "Electron 35 的 native addon (better-sqlite3) 需要 rebuild 确认兼容",
+      "LangChain 生态版本碎片化（@langchain/* 包版本分散），需保持一致更新"
+    ],
+    "strengths": [
+      "所有关键依赖版本均为最新或接近最新",
+      "TypeScript 5.9.3 在所有包中一致",
+      "Prisma 7.4.2 统一版本（client + adapter + CLI）",
+      "React 19 + Vite 7 技术栈前沿",
+      "workspace 依赖结构清晰，无循环依赖"
+    ]
+  }
+}
