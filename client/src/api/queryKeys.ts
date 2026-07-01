@@ -14,6 +14,8 @@ export const queryKeys = {
     characterDynamicsOverview: (id: string, chapterOrder?: number) => ["novels", "character-dynamics-overview", id, chapterOrder ?? "latest"] as const,
     characterCandidates: (id: string) => ["novels", "character-candidates", id] as const,
     characterTimeline: (id: string, charId: string) => ["novels", "character-timeline", id, charId] as const,
+    characterArc: (id: string, charId: string) => ["novels", "character-arc", id, charId] as const,
+    characterRelationEvolution: (id: string, charId: string) => ["novels", "character-relation-evolution", id, charId] as const,
     chapterTraces: (novelId: string, chapterId: string) => ["novels", "chapter-traces", novelId, chapterId] as const,
     pipelineJob: (id: string, jobId: string) => ["novels", "pipeline", id, jobId] as const,
     qualityReport: (id: string) => ["novels", "quality-report", id] as const,
@@ -37,6 +39,7 @@ export const queryKeys = {
     novelWorldSyncDiff: (id: string) => ["novels", "novel-world", id, "sync-diff"] as const,
     worldSlice: (id: string) => ["novels", "world-slice", id] as const,
     snapshots: (id: string) => ["novels", "snapshots", id] as const,
+    paceCurve: (id: string) => ["novels", "pace-curve", id] as const,
   },
   worlds: {
     all: ["worlds"] as const,
