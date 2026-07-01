@@ -1,7 +1,9 @@
-/**
- * World prompts — core prompts (reference, visualization, inspiration, property options,
- * deepening questions, consistency check).
+﻿/**
+ * World prompts — core prompts (reference, visualization, consistency, property options).
  * Extracted from world.prompts.ts for modularity.
+ *
+ * Inspiration prompts (concept card, localization, deepening questions)
+ * have been moved to world.prompts.inspiration.ts.
  */
 
 import type { WorldReferenceMode } from "@ai-novel/shared/types/worldWizard";
@@ -9,44 +11,21 @@ import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 import { z } from "zod";
 import type { PromptAsset } from "../../core/promptTypes";
 import {
-  type WorldAxiomSuggestionPromptInput,
   type WorldConsistencyPromptInput,
-  type WorldDeepeningQuestionsPromptInput,
-  type WorldImportExtractionPromptInput,
-  type WorldInspirationConceptCardLocalizationPromptInput,
-  type WorldInspirationConceptCardPromptInput,
-  type WorldLayerGenerationPromptInput,
-  type WorldLayerLocalizationPromptInput,
-  type NovelThemeWorldGenerationPromptInput,
   type WorldPropertyOptionsPromptInput,
   type WorldReferenceInspirationPromptInput,
-  type WorldStructureBackfillPromptInput,
-  type WorldStructureSectionPromptInput,
   type WorldVisualizationPromptInput,
 } from "./world.promptTypes";
 import {
-  worldAxiomSuggestionSchema,
-  worldConceptCardSchema,
   worldConsistencyIssuesSchema,
-  worldDeepeningQuestionsSchema,
-  worldImportExtractionSchema,
-  worldLooseObjectSchema,
-  novelThemeWorldGenerationSchema,
   worldPropertyOptionsPayloadSchema,
 } from "./world.promptSchemas";
 import { worldReferenceInspirationPayloadSchema } from "../../../services/world/worldReferenceSchema";
-import { worldStructuredDataSchema, worldStructureSectionOutputSchema } from "../../../services/world/worldSchemas";
 import { worldVisualizationDraftSchema } from "../../../services/world/worldVisualizationSchema";
-import {
-  buildStructureSectionInstructions,
-} from "../../../services/world/worldServiceShared";
 
 import {
   buildReferenceModeLabel,
-  sanitizeLooseWorldObject,
-  normalizeWorldStructureSectionPayload,
 } from "./world.promptHelpers";
-
 export const worldReferenceInspirationPrompt: PromptAsset<
   WorldReferenceInspirationPromptInput,
   z.infer<typeof worldReferenceInspirationPayloadSchema>
@@ -270,234 +249,6 @@ export const worldVisualizationPrompt: PromptAsset<
       "输出必须严格符合 worldVisualizationDraftSchema。",
     ].join("\n")),
     new HumanMessage(input.worldPromptSource),
-  ],
-};
-
-export const worldInspirationConceptCardPrompt: PromptAsset<
-  WorldInspirationConceptCardPromptInput,
-  z.infer<typeof worldConceptCardSchema>
-> = {
-  id: "world.inspiration.concept_card",
-  version: "v1",
-  taskType: "planner",
-  mode: "structured",
-  language: "zh",
-  contextPolicy: {
-    maxTokensBudget: 0,
-  },
-  outputSchema: worldConceptCardSchema,
-  render: (input) => [
-    new SystemMessage([
-      "你是世界观灵感概念卡提炼器。",
-      "你的任务是根据输入的灵感文本、世界类型提示和可用素材，提炼出一张可直接用于后续世界观设计的“世界灵感概念卡”。",
-      "",
-      "只输出一个合法 JSON 对象，不要输出 Markdown、解释、注释、代码块或额外文本。",
-      "所有文本字段都必须使用简体中文。",
-      "",
-      "输出结构必须严格为：",
-      "{",
-      '  "worldType":"...",',
-      `  "templateKey":"${input.templateKeysText}",`,
-      '  "coreImagery":["..."],',
-      '  "tone":"...",',
-      '  "keywords":["..."],',
-      '  "summary":"3-5句中文摘要"',
-      "}",
-      "",
-      "全局硬规则：",
-      "1. templateKey 必须从给定可用值中选择，不得自造、改写或留空。",
-      "2. 只能基于输入材料提炼，不得凭空发明完整世界设定。",
-      "3. 允许做低风险归纳，但禁止把模糊印象写成过强结论。",
-      "4. 输出目标是“世界灵感概念卡”，不是剧情梗概，不是人物设定，也不是世界百科。",
-      "",
-      "字段要求：",
-      "1. worldType：",
-      "   - 优先结合 worldTypeHint 与灵感文本判断。",
-      "   - 应概括世界的基础类型，例如都市现实变体、末世废土、架空王朝、近未来高压社会等。",
-      "   - 要稳、准、可用于后续分流，不要写成空泛大词。",
-      "",
-      "2. templateKey：",
-      "   - 必须在给定可用模板中选最贴合的一项。",
-      "   - 若输入信息混合度高，也要优先选择最能承载后续展开的主模板。",
-      "",
-      "3. coreImagery：",
-      "   - 提取 3-6 个最有辨识度的世界意象。",
-      "   - 优先保留空间感、秩序感、行业感、压迫感、技术感、宗教感、社会质感等“能让人一眼看见这个世界”的意象。",
-      "   - 不要写剧情桥段，不要写单个角色动作。",
-      "",
-      "4. tone：",
-      "   - 用一句短语概括这个世界的整体气质，如冷硬压抑、破败混乱、华丽腐朽、克制诡谲等。",
-      "   - 不要写成“很精彩”“很有氛围”这种空话。",
-      "",
-      "5. keywords：",
-      "   - 提取 4-8 个关键词。",
-      "   - 优先体现世界结构、规则来源、主要压迫、运行逻辑、社会生态或核心气味。",
-      "   - 不要和 coreImagery 机械重复。",
-      "",
-      "6. summary：",
-      "   - 必须是 3-5 句中文摘要。",
-      "   - 要说明这个世界最值得保留的核心底板是什么、它给人的第一读感是什么、后续适合往什么方向展开。",
-      "   - 不要写成剧情简介，不要泛泛复述题材。",
-      "",
-      "提炼原则：",
-      "1. 如果输入是原始灵感，应优先帮用户“收拢方向”，而不是继续发散。",
-      "2. 如果输入已经分段提取或带有检索素材，应优先保留其中最稳定、最可复用的世界底板。",
-      "3. 如果信息不足，宁可输出更稳的概念卡，也不要硬补复杂设定。",
-      "4. 不要把人物关系、具体事件推进、主线冲突误写成世界概念。",
-      "",
-      "质量要求：",
-      "1. 概念卡应让人看完就知道“这是个什么世界、什么气味、后续能往哪走”。",
-      "2. 各字段之间必须一致，不能 worldType 是一种世界，tone 和 keywords 却像另一套东西。",
-      "3. 结果必须适合进入后续世界观设计流程，而不是停留在灵感随笔层。",
-    ].join("\n")),
-    new HumanMessage([
-      `模式=${input.mode}`,
-      `世界类型提示=${input.worldTypeHint}`,
-      `灵感文本=${input.promptText}`,
-      `是否分段提取=${input.extracted ? "是" : "否"}`,
-      `原文长度=${input.originalLength} 字符`,
-      `可用世界观素材检索=${input.ragContext || "无"}`,
-    ].join("\n")),
-  ],
-};
-
-export const worldInspirationConceptCardLocalizationPrompt: PromptAsset<
-  WorldInspirationConceptCardLocalizationPromptInput,
-  z.infer<typeof worldConceptCardSchema>
-> = {
-  id: "world.inspiration.localize_concept_card",
-  version: "v1",
-  taskType: "planner",
-  mode: "structured",
-  language: "zh",
-  contextPolicy: {
-    maxTokensBudget: 0,
-  },
-  outputSchema: worldConceptCardSchema,
-  render: (input) => [
-    new SystemMessage([
-      "你是世界观概念卡本地化编辑。",
-      "你的任务是把输入的概念卡内容翻译并润色为自然、准确、可直接展示与继续使用的简体中文版本。",
-      "",
-      "只输出一个合法 JSON 对象，不要输出 Markdown、解释、注释、代码块或额外文本。",
-      "",
-      "必须严格保持原有 JSON 结构不变，输出结构只能是：",
-      "{",
-      '  "worldType":"...",',
-      '  "templateKey":"...",',
-      '  "coreImagery":["..."],',
-      '  "tone":"...",',
-      '  "keywords":["..."],',
-      '  "summary":"..."',
-      "}",
-      "",
-      "全局硬规则：",
-      "1. 所有可展示文本都必须改写为自然、流畅、准确的简体中文。",
-      "2. 必须严格保留原有字段名、字段层级、数组长度和基本语义，不得新增、删除、重命名字段。",
-      "3. templateKey 属于结构字段，必须保持原样，不得翻译、改写或替换。",
-      "4. 不得改变概念卡原本的世界类型判断、意象方向、气质定位和关键词含义。",
-      "5. 不得补写新的世界设定、剧情信息或解释性内容。",
-      "",
-      "本地化要求：",
-      "1. 不是机械直译，而是要转写成符合中文世界观策划语境的自然表达。",
-      "2. 若原文存在明显生硬、重复、翻译腔或英文思维表达，应在不改变原意的前提下润色。",
-      "3. coreImagery 和 keywords 应保持短词或短语风格，简洁、有辨识度，不要扩写成长句。",
-      "4. tone 应像中文策划中真实会使用的气质描述，不要翻得僵硬。",
-      "5. summary 应保持概念卡摘要风格，清楚、凝练，不要写成散文或说明书。",
-      "",
-      "质量要求：",
-      "1. 输出结果应像一张成熟的中文世界灵感概念卡，而不是翻译稿。",
-      "2. 各字段之间必须一致，不得出现 worldType 是一种世界、tone 和 keywords 却像另一种世界的情况。",
-      "3. 若输入中已有中文且表达自然，应尽量保留，不要为了“翻译”而硬改。",
-      "",
-      "输出必须严格符合 worldConceptCardSchema。",
-    ].join("\n")),
-    new HumanMessage(input.conceptCardJson),
-  ],
-};
-
-export const worldDeepeningQuestionsPrompt: PromptAsset<
-  WorldDeepeningQuestionsPromptInput,
-  z.infer<typeof worldDeepeningQuestionsSchema>
-> = {
-  id: "world.deepening.questions",
-  version: "v1",
-  taskType: "planner",
-  mode: "structured",
-  language: "zh",
-  contextPolicy: {
-    maxTokensBudget: 0,
-  },
-  outputSchema: worldDeepeningQuestionsSchema,
-  render: (input) => [
-    new SystemMessage([
-      "你是世界观补全提问器。",
-      "你的任务是基于当前世界设定，挑出最值得优先追问的 2-3 个关键补全问题，帮助后续世界生成继续往下走。",
-      "",
-      "只输出一个合法 JSON 数组，不要输出 Markdown、解释、注释、代码块或额外文本。",
-      "",
-      "每个数组项必须严格使用以下结构：",
-      "{",
-      '  "priority":"required|recommended|optional",',
-      '  "question":"...",',
-      '  "quickOptions":["...", "...", "..."],',
-      '  "targetLayer":"foundation|power|society|culture|history|conflict",',
-      '  "targetField":"..."',
-      "}",
-      "",
-      "全局硬规则：",
-      "1. 只能输出 2-3 个问题，不得少于 2 个，不得多于 3 个。",
-      "2. 所有文本必须使用简体中文。",
-      "3. 只能基于输入中的世界名称、描述、已有数据和可用参考素材来提问，不得凭空发散到无关方向。",
-      "4. 问题必须是“继续生成世界前最值得先问的缺口”，而不是泛泛聊天问题。",
-      "",
-      "问题设计要求：",
-      "1. 每个问题都必须指向一个真正会影响后续世界搭建方向的关键缺口。",
-      "2. 优先提问最能决定世界走向、规则形态、社会结构、冲突来源或历史底板的问题。",
-      "3. 不要问太宽的问题，例如“你还想补充什么”“这个世界还有什么特点”。",
-      "4. 不要问角色动机、具体剧情桥段、感情推进这类故事层问题，除非它直接影响世界层结构。",
-      "",
-      "priority 规则：",
-      "1. required：缺了这个问题，后续世界生成容易跑偏或塌掉。",
-      "2. recommended：补上会明显提升世界完整度与可写性，但短期缺失仍可继续。",
-      "3. optional：属于锦上添花型补充，不是当前最硬缺口。",
-      "",
-      "question 规则：",
-      "1. 必须写成用户一看就能回答的自然问题。",
-      "2. 问法要具体、清楚，不要用抽象术语。",
-      "3. 每个问题都应尽量只问一个核心点，不要把多个问题塞进一句话。",
-      "",
-      "quickOptions 规则：",
-      "1. 必须提供 2-4 个简洁候选答案，全部使用简体中文。",
-      "2. quickOptions 应该帮助用户快速选择方向，而不是重复 question。",
-      "3. 不同选项之间必须体现真实分叉，不能只是同义改写。",
-      "4. 选项要短、准、可直接点选，不要写成长句分析。",
-      "",
-      "targetLayer 规则：",
-      "1. 只能从 foundation、power、society、culture、history、conflict 中选择。",
-      "2. 必须准确对应这个问题主要作用于哪一层世界结构。",
-      "",
-      "targetField 规则：",
-      "1. 必须写清这个问题要补的是哪个具体字段或决策点。",
-      "2. targetField 要简洁稳定，适合后续系统消费，例如“规则公开程度”“力量来源”“社会控制方式”“历史断层原因”。",
-      "",
-      "选择优先级原则：",
-      "1. 优先挑“最少提问、最大增益”的问题。",
-      "2. 若已有 dataJson 已经较完整，就不要重复问已明确的信息。",
-      "3. 若 ragContext 提供了强参考方向，可以优先追问那些会决定参考素材如何落地的关键分叉。",
-      "4. 2-3 个问题之间尽量分布在不同层级，不要全部挤在同一层，除非某一层确实是当前最大缺口。",
-      "",
-      "质量要求：",
-      "1. 输出的问题要让用户感觉“这几个问题确实问到了点子上”。",
-      "2. 不要为了凑数量提价值很低的问题。",
-      "3. 整体结果必须能直接用于下一步世界补全流程。",
-    ].join("\n")),
-    new HumanMessage([
-      `世界名称：${input.worldName}`,
-      `世界描述：${input.description || "无"}`,
-      `当前数据：${input.dataJson}`,
-      `可用参考素材：${input.ragContext || "无"}`,
-    ].join("\n")),
   ],
 };
 
