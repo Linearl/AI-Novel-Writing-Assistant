@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import type { ChapterExecutionInsightsSidebarProps } from "./chapterInsights.types";
+import CharacterArcTab from "./CharacterArcTab";
 import CharacterDynamicsPanel from "./CharacterDynamicsPanel";
 import ChapterExecutionOverviewPanel from "./ChapterExecutionOverviewPanel";
 import ResourceRiskPanel from "./ResourceRiskPanel";
@@ -10,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useIsMobileViewport } from "@/components/layout/mobile/useIsMobileViewport";
 
 function DesktopSidebar(props: ChapterExecutionInsightsSidebarProps) {
-  const [activeTab, setActiveTab] = useState<"overview" | "timeline" | "character" | "resources">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "timeline" | "character" | "characterArc" | "resources">("overview");
 
   useEffect(() => {
     setActiveTab("overview");
@@ -30,12 +31,13 @@ function DesktopSidebar(props: ChapterExecutionInsightsSidebarProps) {
         </div>
       </CardHeader>
       <CardContent className="min-h-0 p-0 xl:flex-1 xl:overflow-hidden">
-        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as "overview" | "timeline" | "character" | "resources")} className="xl:flex xl:h-full xl:min-h-0 xl:flex-col">
+        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as "overview" | "timeline" | "character" | "characterArc" | "resources")} className="xl:flex xl:h-full xl:min-h-0 xl:flex-col">
           <div className="shrink-0 border-b px-4 py-3">
             <TabsList className="grid h-auto w-full grid-cols-2 gap-1 rounded-xl bg-muted/50 p-1.5">
               <TabsTrigger value="overview" className="rounded-lg px-2 py-2 text-xs">本章概览</TabsTrigger>
               <TabsTrigger value="timeline" className="rounded-lg px-2 py-2 text-xs">时间线</TabsTrigger>
               <TabsTrigger value="character" className="rounded-lg px-2 py-2 text-xs">角色动态</TabsTrigger>
+              <TabsTrigger value="characterArc" className="rounded-lg px-2 py-2 text-xs">角色弧线</TabsTrigger>
               <TabsTrigger value="resources" className="rounded-lg px-2 py-2 text-xs">资源风险</TabsTrigger>
             </TabsList>
           </div>
@@ -60,6 +62,13 @@ function DesktopSidebar(props: ChapterExecutionInsightsSidebarProps) {
             </TabsContent>
             <TabsContent value="character" className="mt-0">
               <CharacterDynamicsPanel latestStateSnapshot={props.latestStateSnapshot} chapterStateSnapshot={props.chapterStateSnapshot} />
+            </TabsContent>
+            <TabsContent value="characterArc" className="mt-0">
+              {props.novelId ? (
+                <CharacterArcTab novelId={props.novelId} />
+              ) : (
+                <div className="text-xs text-muted-foreground">需要小说上下文</div>
+              )}
             </TabsContent>
             <TabsContent value="resources" className="mt-0">
               <ResourceRiskPanel {...props} />
@@ -129,6 +138,22 @@ function MobileSidebar(props: ChapterExecutionInsightsSidebarProps) {
         </summary>
         <div className="pt-3">
           <CharacterDynamicsPanel latestStateSnapshot={props.latestStateSnapshot} chapterStateSnapshot={props.chapterStateSnapshot} />
+        </div>
+      </details>
+
+      <details className="group rounded-xl border border-border/70 bg-background p-3">
+        <summary className="cursor-pointer list-none">
+          <div className="flex items-center justify-between gap-3">
+            <div className="text-sm font-medium text-foreground">角色弧线</div>
+            <Badge variant="outline">展开查看</Badge>
+          </div>
+        </summary>
+        <div className="pt-3">
+          {props.novelId ? (
+            <CharacterArcTab novelId={props.novelId} />
+          ) : (
+            <div className="text-xs text-muted-foreground">需要小说上下文</div>
+          )}
         </div>
       </details>
 

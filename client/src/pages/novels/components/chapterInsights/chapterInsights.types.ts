@@ -9,6 +9,7 @@ export type TimelineCheckSummary =
   | Pick<NonNullable<ChapterRuntimePackage["timelineCheck"]>, "status" | "score" | "issues">;
 
 export interface ChapterExecutionInsightsSidebarProps {
+  novelId?: string;
   selectedChapter?: Chapter;
   chapterTimeline?: ChapterTimelineViewData | null;
   isLoadingChapterTimeline?: boolean;

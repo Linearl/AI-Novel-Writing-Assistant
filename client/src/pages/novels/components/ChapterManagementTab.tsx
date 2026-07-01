@@ -273,6 +273,7 @@ export default function ChapterManagementTab(props: ChapterTabViewProps) {
               {!rightRailCollapsed && (<>
               <TabsContent value="insights" className="mt-3 min-h-0 flex-1">
                 <ChapterExecutionInsightsSidebar
+                  novelId={novelId}
                   selectedChapter={selectedChapter}
                   chapterTimeline={chapterTimeline}
                   isLoadingChapterTimeline={isLoadingChapterTimeline}

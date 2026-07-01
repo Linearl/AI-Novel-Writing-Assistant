@@ -1,6 +1,10 @@
 import type { ApiResponse } from "@ai-novel/shared/types/api";
 import type { LLMProvider } from "@ai-novel/shared/types/llm";
 import type {
+  CharacterArcData,
+  CharacterRelationEvolutionData,
+} from "@ai-novel/shared/types/characterArc";
+import type {
   CharacterResourceContext,
   CharacterResourceLedgerItem,
   CharacterResourceLedgerResponse,
@@ -410,5 +414,45 @@ export async function checkCharacterAgainstWorld(
       issues: Array<{ severity: "warn" | "error"; message: string; suggestion?: string }>;
     }>
   >(`/novels/${id}/world-check/characters/${charId}`, payload ?? {});
+  return data;
+}
+
+// --- Character Arc (REQ-2032) ---
+
+export async function getCharacterArc(
+  id: string,
+  charId: string,
+  params?: { fromChapter?: number; toChapter?: number },
+) {
+  const { data } = await apiClient.get<ApiResponse<CharacterArcData>>(
+    `/novels/${id}/characters/${charId}/arc`,
+    { params },
+  );
+  return data;
+}
+
+export async function getCharacterRelationEvolution(id: string, charId: string) {
+  const { data } = await apiClient.get<
+    ApiResponse<{
+      characterId: string;
+      relationCount: number;
+      totalStageCount: number;
+      relations: Array<{
+        partnerName: string;
+        stages: Array<{
+          stageLabel: string;
+          stageSummary: string;
+          chapterOrder: number | null;
+          trustScore: number | null;
+          conflictScore: number | null;
+          intimacyScore: number | null;
+          dependencyScore: number | null;
+          sourceType: string;
+          isCurrent: boolean;
+          nextTurnPoint: string | null;
+        }>;
+      }>;
+    }>
+  >(`/novels/${id}/characters/${charId}/relations`);
   return data;
 }
