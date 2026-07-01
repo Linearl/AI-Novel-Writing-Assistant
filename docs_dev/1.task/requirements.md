@@ -77,6 +77,7 @@ description: "需求任务总清单（SSOT）"
 | 7005 | P2 零散 IdsJson 字段迁移为边表 | p2 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r7005-simple-p2-scattered-idsjson-edge-tables/README.md` |  |
 | 7006 | 移除时间线旧 JSON 字段 | p1 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r7006-simple-timeline-idsjson-removal/README.md` |  |
 | 7007 | World.structureJson 关系提取为独立表 | p1 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r7007-medium-world-structure-json-relation-extract/README.md` |  |
+| 7008 | Streaming Loop Recovery Enhance | p8 | 🚧 进行中 | MiMo Code 源码分析 | 0.1 | 2026-07-01T21:22:00.000Z | 2026-07-01T21:22:00.000Z | `B.todo/v0.1-r7008-medium-streaming-loop-recovery-enhance/README.md` |  |
 | 7010 | Audit P1 Fix | p8 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r7010-p1-audit-p1-fix/README.md` |  |
 
 ---
@@ -84,6 +85,12 @@ description: "需求任务总清单（SSOT）"
 ## 4. 📍 任务清单视图（按状态）
 
 > 说明：用于快速看板，不替代第 3 章全量清单。
+
+### 4.1 🚧 进行中
+
+| 编号 | 任务标题 | 文档 |
+| --- | --- | --- |
+| 7008 | Streaming Loop Recovery Enhance | `B.todo/v0.1-r7008-medium-streaming-loop-recovery-enhance/README.md` |
 
 ### 4.2 📋 待办
 

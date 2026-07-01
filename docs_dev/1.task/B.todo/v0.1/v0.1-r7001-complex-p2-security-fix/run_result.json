@@ -1,0 +1,71 @@
+{
+  "taskId": "REQ-7001",
+  "taskName": "P2 问题修复",
+  "status": "in_progress",
+  "createdAt": "2026-07-01T18:23:00.000Z",
+  "updatedAt": "2026-07-01T18:23:00.000Z",
+  "source": "2026-07-01-全量代码审计-full",
+  "summary": {
+    "totalIssues": 41,
+    "toFix": 28,
+    "skipped": 7,
+    "pending": 0,
+    "estimatedHours": 160,
+    "estimatedDays": 22
+  },
+  "phases": [
+    {
+      "id": "phase-1",
+      "name": "基础设施",
+      "tasks": ["T1", "T2", "T3"],
+      "status": "pending"
+    },
+    {
+      "id": "phase-2",
+      "name": "安全加固",
+      "tasks": ["T4", "T5", "T6", "T7"],
+      "status": "pending"
+    },
+    {
+      "id": "phase-3",
+      "name": "稳定性提升",
+      "tasks": ["T8", "T9", "T10"],
+      "status": "pending"
+    },
+    {
+      "id": "phase-4",
+      "name": "架构优化",
+      "tasks": ["T11", "T12", "T13", "T14", "T15"],
+      "status": "pending"
+    },
+    {
+      "id": "phase-5",
+      "name": "前端优化",
+      "tasks": ["T16", "T17", "T18", "T19"],
+      "status": "pending"
+    },
+    {
+      "id": "phase-6",
+      "name": "代码质量",
+      "tasks": ["T20", "T21", "T22", "T23", "T24"],
+      "status": "pending"
+    },
+    {
+      "id": "phase-7",
+      "name": "可观测性与文档",
+      "tasks": ["T25", "T26", "T27", "T28"],
+      "status": "pending"
+    },
+    {
+      "id": "phase-8",
+      "name": "性能优化与兼容性",
+      "tasks": ["T29", "T30", "T31", "T32"],
+      "status": "pending"
+    }
+  ],
+  "verification": {
+    "typecheck": false,
+    "test": false,
+    "lint": false
+  }
+}

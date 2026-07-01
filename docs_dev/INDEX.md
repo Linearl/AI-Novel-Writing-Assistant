@@ -27,6 +27,37 @@ description: "docs 目录索引（自动生成）"
 | --- | --- | --- |
 | [1.task\B.todo\任务包六件套构成-编号分类规则-自动归档机制.md](./1.task\B.todo\任务包六件套构成-编号分类规则-自动归档机制.md) | --- | - |
 
+## 1.task\B.todo\v0.1\v0.1-r7001-complex-p2-security-fix
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.1\v0.1-r7001-complex-p2-security-fix\decision_log.md](./1.task\B.todo\v0.1\v0.1-r7001-complex-p2-security-fix\decision_log.md) | P2 问题修复决策记录 | P2 问题修复决策记录 |
+| [1.task\B.todo\v0.1\v0.1-r7001-complex-p2-security-fix\design.md](./1.task\B.todo\v0.1\v0.1-r7001-complex-p2-security-fix\design.md) | P2 问题修复技术设计文档 | P2 问题修复技术设计文档 |
+| [1.task\B.todo\v0.1\v0.1-r7001-complex-p2-security-fix\README.md](./1.task\B.todo\v0.1\v0.1-r7001-complex-p2-security-fix\README.md) | P2 安全问题修复任务包 — 基于 2026-07-01 全量代码审计 | P2 安全问题修复任务包 — 基于 2026-07-01 全量代码审计 |
+| [1.task\B.todo\v0.1\v0.1-r7001-complex-p2-security-fix\REQ-original.md](./1.task\B.todo\v0.1\v0.1-r7001-complex-p2-security-fix\REQ-original.md) | P2 安全问题修复需求文档（原始版） | P2 安全问题修复需求文档（原始版） |
+| [1.task\B.todo\v0.1\v0.1-r7001-complex-p2-security-fix\REQ.md](./1.task\B.todo\v0.1\v0.1-r7001-complex-p2-security-fix\REQ.md) | P2 问题修复需求文档 | P2 问题修复需求文档 |
+| [1.task\B.todo\v0.1\v0.1-r7001-complex-p2-security-fix\tasks.md](./1.task\B.todo\v0.1\v0.1-r7001-complex-p2-security-fix\tasks.md) | P2 问题修复任务清单 | P2 问题修复任务清单 |
+
+## 1.task\B.todo\v0.1\v0.1-r7002-medium-p3-quality-fix
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.1\v0.1-r7002-medium-p3-quality-fix\decision_log.md](./1.task\B.todo\v0.1\v0.1-r7002-medium-p3-quality-fix\decision_log.md) | P3 问题修复决策记录 | P3 问题修复决策记录 |
+| [1.task\B.todo\v0.1\v0.1-r7002-medium-p3-quality-fix\design.md](./1.task\B.todo\v0.1\v0.1-r7002-medium-p3-quality-fix\design.md) | P3 问题修复技术设计文档 | P3 问题修复技术设计文档 |
+| [1.task\B.todo\v0.1\v0.1-r7002-medium-p3-quality-fix\README.md](./1.task\B.todo\v0.1\v0.1-r7002-medium-p3-quality-fix\README.md) | P3 代码质量问题修复任务包 — 基于 2026-07-01 全量代码审计 | P3 代码质量问题修复任务包 — 基于 2026-07-01 全量代码审计 |
+| [1.task\B.todo\v0.1\v0.1-r7002-medium-p3-quality-fix\REQ.md](./1.task\B.todo\v0.1\v0.1-r7002-medium-p3-quality-fix\REQ.md) | P3 问题修复需求文档 | P3 问题修复需求文档 |
+| [1.task\B.todo\v0.1\v0.1-r7002-medium-p3-quality-fix\tasks.md](./1.task\B.todo\v0.1\v0.1-r7002-medium-p3-quality-fix\tasks.md) | P3 问题修复任务清单 | P3 问题修复任务清单 |
+
+## 1.task\B.todo\v0.1\v0.1-r7003-simple-p4-low-priority-fix
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.1\v0.1-r7003-simple-p4-low-priority-fix\decision_log.md](./1.task\B.todo\v0.1\v0.1-r7003-simple-p4-low-priority-fix\decision_log.md) | P4 问题修复决策记录 | P4 问题修复决策记录 |
+| [1.task\B.todo\v0.1\v0.1-r7003-simple-p4-low-priority-fix\design.md](./1.task\B.todo\v0.1\v0.1-r7003-simple-p4-low-priority-fix\design.md) | P4 问题修复技术设计文档 | P4 问题修复技术设计文档 |
+| [1.task\B.todo\v0.1\v0.1-r7003-simple-p4-low-priority-fix\README.md](./1.task\B.todo\v0.1\v0.1-r7003-simple-p4-low-priority-fix\README.md) | P4 低优先级问题修复任务包 — 基于 2026-07-01 全量代码审计 | P4 低优先级问题修复任务包 — 基于 2026-07-01 全量代码审计 |
+| [1.task\B.todo\v0.1\v0.1-r7003-simple-p4-low-priority-fix\REQ.md](./1.task\B.todo\v0.1\v0.1-r7003-simple-p4-low-priority-fix\REQ.md) | P4 问题修复需求文档 | P4 问题修复需求文档 |
+| [1.task\B.todo\v0.1\v0.1-r7003-simple-p4-low-priority-fix\tasks.md](./1.task\B.todo\v0.1\v0.1-r7003-simple-p4-low-priority-fix\tasks.md) | P4 问题修复任务清单 | P4 问题修复任务清单 |
+
 ## 1.task\B.todo\v0.1\v0.1-r7006-simple-timeline-idsjson-removal
 
 | 文件 | 标题 | 描述 |
@@ -37,6 +68,16 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1\v0.1-r7006-simple-timeline-idsjson-removal\REQ-7006-original.md](./1.task\B.todo\v0.1\v0.1-r7006-simple-timeline-idsjson-removal\REQ-7006-original.md) | REQ-7006 移除时间线旧 JSON 字段 — 需求冻结副本 | REQ-7006 移除时间线旧 JSON 字段 — 需求冻结副本 |
 | [1.task\B.todo\v0.1\v0.1-r7006-simple-timeline-idsjson-removal\REQ-7006.md](./1.task\B.todo\v0.1\v0.1-r7006-simple-timeline-idsjson-removal\REQ-7006.md) | REQ-7006 移除时间线旧 JSON 字段 — 需求工作副本 | REQ-7006 移除时间线旧 JSON 字段 — 需求工作副本 |
 | [1.task\B.todo\v0.1\v0.1-r7006-simple-timeline-idsjson-removal\tasks.md](./1.task\B.todo\v0.1\v0.1-r7006-simple-timeline-idsjson-removal\tasks.md) | REQ-7006 移除时间线旧 JSON 字段 — 任务拆解 | REQ-7006 移除时间线旧 JSON 字段 — 任务拆解 |
+
+## 1.task\B.todo\v0.1\v0.1-r7008-medium-streaming-loop-recovery-enhance
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.1\v0.1-r7008-medium-streaming-loop-recovery-enhance\decision_log.md](./1.task\B.todo\v0.1\v0.1-r7008-medium-streaming-loop-recovery-enhance\decision_log.md) | 流式循环检测分级恢复增强决策记录 | 流式循环检测分级恢复增强决策记录 |
+| [1.task\B.todo\v0.1\v0.1-r7008-medium-streaming-loop-recovery-enhance\design.md](./1.task\B.todo\v0.1\v0.1-r7008-medium-streaming-loop-recovery-enhance\design.md) | 流式循环检测分级恢复增强技术设计文档 | 流式循环检测分级恢复增强技术设计文档 |
+| [1.task\B.todo\v0.1\v0.1-r7008-medium-streaming-loop-recovery-enhance\README.md](./1.task\B.todo\v0.1\v0.1-r7008-medium-streaming-loop-recovery-enhance\README.md) | 流式循环检测分级恢复增强 — 参考 MiMo Code TextNgramMonitor 设计 | 流式循环检测分级恢复增强 — 参考 MiMo Code TextNgramMonitor 设计 |
+| [1.task\B.todo\v0.1\v0.1-r7008-medium-streaming-loop-recovery-enhance\REQ.md](./1.task\B.todo\v0.1\v0.1-r7008-medium-streaming-loop-recovery-enhance\REQ.md) | 流式循环检测分级恢复增强需求文档 | 流式循环检测分级恢复增强需求文档 |
+| [1.task\B.todo\v0.1\v0.1-r7008-medium-streaming-loop-recovery-enhance\tasks.md](./1.task\B.todo\v0.1\v0.1-r7008-medium-streaming-loop-recovery-enhance\tasks.md) | 流式循环检测分级恢复增强任务清单 | 流式循环检测分级恢复增强任务清单 |
 
 ## 1.task\B.todo\v0.1\v0.1-r7010-p1-audit-p1-fix
 
@@ -150,6 +191,12 @@ description: "docs 目录索引（自动生成）"
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
 | [3.analysis\diagnosis\01-active\2026-07-01-全量代码审计-full\05-report\report-draft.md](./3.analysis\diagnosis\01-active\2026-07-01-全量代码审计-full\05-report\report-draft.md) | > 生成时间：2026-07-01 | 审计范围：full | 工作流：ll-workflow-core/aud (YAML) | - |
+
+## 3.analysis\diagnosis\01-active\2026-07-01-全量代码审计-full\skipped
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [3.analysis\diagnosis\01-active\2026-07-01-全量代码审计-full\skipped\debt_backlog.md](./3.analysis\diagnosis\01-active\2026-07-01-全量代码审计-full\skipped\debt_backlog.md) | 技术债台账 — 基于 2026-07-01 全量代码审计 | 技术债台账 — 基于 2026-07-01 全量代码审计 |
 
 ## 3.analysis\evidence\v0.1
 

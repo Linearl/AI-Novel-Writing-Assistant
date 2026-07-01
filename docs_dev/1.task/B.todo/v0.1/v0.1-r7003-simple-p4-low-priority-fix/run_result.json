@@ -1,0 +1,41 @@
+{
+  "taskId": "REQ-7003",
+  "taskName": "P4 低优先级问题处理",
+  "status": "in_progress",
+  "createdAt": "2026-07-01T20:41:00.000Z",
+  "updatedAt": "2026-07-01T20:41:00.000Z",
+  "source": "2026-07-01-全量代码审计-full",
+  "summary": {
+    "totalIssues": 39,
+    "positiveFindings": 10,
+    "toFix": 12,
+    "skipped": 17,
+    "estimatedHours": 8,
+    "estimatedDays": 3
+  },
+  "phases": [
+    {
+      "id": "phase-1",
+      "name": "正面发现记录",
+      "tasks": ["T1", "T2", "T3"],
+      "status": "pending"
+    },
+    {
+      "id": "phase-2",
+      "name": "稳定性修复",
+      "tasks": ["T4", "T5", "T6", "T7", "T8"],
+      "status": "pending"
+    },
+    {
+      "id": "phase-3",
+      "name": "可维护性修复",
+      "tasks": ["T9", "T10", "T11"],
+      "status": "pending"
+    }
+  ],
+  "verification": {
+    "typecheck": false,
+    "test": false,
+    "lint": false
+  }
+}
