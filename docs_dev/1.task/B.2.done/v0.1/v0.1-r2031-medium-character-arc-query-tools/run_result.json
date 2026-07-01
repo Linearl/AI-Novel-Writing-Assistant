@@ -1,0 +1,21 @@
+{
+  "reqId": "REQ-2031",
+  "title": "角色弧光查询工具 (Character Arc Query Tools)",
+  "priority": "P2",
+  "version": "v0.1",
+  "status": "done",
+  "createdAt": "2026-06-30",
+  "completedAt": null,
+  "source": "REQ-2029 narrative_advisor 后续迭代",
+  "note": "新增4个read-only agent tool暴露角色弧光/时间线/动态/关系演化数据",
+  "reqType": "feature",
+  "categoryCode": 2,
+  "complexity": "medium",
+  "skipClarification": true,
+  "skipDesign": true,
+  "tasks": {
+    "total": 6,
+    "completed": 0,
+    "pending": 6
+  }
+}

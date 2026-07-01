@@ -1,0 +1,21 @@
+{
+  "reqId": "REQ-2030",
+  "title": "节奏曲线可视化与调整 (Pace Curve Visualization)",
+  "priority": "P2",
+  "version": "v0.1",
+  "status": "done",
+  "createdAt": "2026-06-30",
+  "completedAt": null,
+  "source": "REQ-2029 后续迭代；上游 issue 节奏曲线需求",
+  "note": "后端聚合API + recharts折线图 + 未写章节节奏参数滑块编辑，复用现有conflictLevel/revealLevel字段",
+  "reqType": "feature",
+  "categoryCode": 3,
+  "complexity": "complex",
+  "skipClarification": false,
+  "skipDesign": false,
+  "tasks": {
+    "total": 4,
+    "completed": 0,
+    "pending": 4
+  }
+}

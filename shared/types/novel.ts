@@ -884,6 +884,28 @@ export interface VolumePlanVersion extends VolumePlanVersionSummary {
   contentJson: string;
 }
 
+export interface PaceCurveChapter {
+  chapterOrder: number;
+  title: string;
+  conflictLevel: number | null;
+  revealLevel: number | null;
+  isWritten: boolean;
+  chapterId: string | null;
+  volumeId: string;
+}
+
+export interface PaceCurveVolume {
+  volumeId: string;
+  volumeTitle: string;
+  sortOrder: number;
+  chapters: PaceCurveChapter[];
+}
+
+export interface PaceCurveData {
+  novelId: string;
+  volumes: PaceCurveVolume[];
+}
+
 export interface VolumePlanDocument {
   novelId: string;
   workspaceVersion: "v2";

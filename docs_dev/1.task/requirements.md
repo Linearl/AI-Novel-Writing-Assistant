@@ -44,7 +44,12 @@ description: "需求任务总清单（SSOT）"
 | 2026 | 节奏板重生成结构保持验证 | p3 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r2026-medium-beat-sheet-structure-preservation/README.md` |  |
 | 2027 | 章节编辑器编辑后资产沉淀 | p3 | ✅ 已完成 | - | 0.1 | 2026-06-30T00:00:00.000Z | 2026-06-30T00:00:00.000Z | `B.2.done/v0.1-r2027-complex-chapter-edit-asset-extraction/README.md` |  |
 | 2028 | 配置厂商弹窗内手动拉取模型列表 | p3 | ✅ 已完成 | - | 0.1 | 2026-06-30T00:00:00.000Z | 2026-06-30T00:00:00.000Z | `B.2.done/v0.1-r2028-simple-provider-refresh-model-list/README.md` |  |
-| 2029 | Creative Hub 叙事讨论通道 (narrative_advisor) | p2 | 📋 待办 | 上游 issue — Creative Hub 缺少宏观创作讨论能力 | 0.1 | 2026-06-30 | - | `B.todo/v0.1-r2029-complex-narrative-advisor-mode/README.md` | 在现有意图分类+workflow+answer composer 架构内扩展 narrative_advisor 意图，复用只读分析工具，生成叙事建议 |
+| 2029 | Creative Hub 叙事讨论通道 (narrative_advisor) | p2 | ✅ 已完成 | 上游 issue — Creative Hub 缺少宏观创作讨论能力 | 0.1 | 2026-06-30 | - | `B.todo/v0.1-r2029-complex-narrative-advisor-mode/README.md` | 在现有意图分类+workflow+answer composer 架构内扩展 narrative_advisor 意图，复用只读分析工具，生成叙事建议 |
+| 2030 | 节奏曲线可视化与调整 (Pace Curve Visualization) | p2 | ✅ 已完成 | REQ-2029 后续迭代；上游 issue 节奏曲线需求 | 0.1 | 2026-06-30 | - | `B.todo/v0.1-r2030-complex-pace-curve-visualization/README.md` | 后端聚合 API + recharts 折线图 + 未写章节节奏参数滑块编辑，复用现有 conflictLevel/revealLevel 字段 |
+| 2031 | 角色弧光查询工具 (Character Arc Query Tools) | p2 | ✅ 已完成 | REQ-2029 narrative_advisor 后续迭代 | 0.1 | 2026-06-30 | - | `B.todo/v0.1-r2031-medium-character-arc-query-tools/README.md` | 新增 4 个 read-only agent tool 暴露角色弧光/时间线/动态/关系演化数据 |
+| 2032 | 角色弧光可视化 (Character Arc Visualization) | p2 | ✅ 已完成 | REQ-2029 后续迭代，依赖 REQ-2031 | 0.1 | 2026-06-30 | - | `B.todo/v0.1-r2032-complex-character-arc-visualization/README.md` | 后端聚合 API + recharts 时间线图 + visx/纯 SVG 关系网络图，集成到角色管理页面 |
+| 2033 | 主题一致性纯数据工具层 (Theme Consistency Data Tools) | p2 | ✅ 已完成 | REQ-2029 后续迭代 | 0.1 | 2026-06-30 | - | `B.todo/v0.1-r2033-medium-theme-consistency-data-tools/README.md` | 3 个 inspect tool: payoff 健康度、卷主题覆盖率、主题层级聚合，纯规则无 LLM |
+| 2034 | 主题一致性 LLM 分析层 (Theme Consistency LLM Analysis) | p2 | 📋 待办 | REQ-2029 后续迭代，依赖 REQ-2033 | 0.1 | 2026-06-30 | - | `B.todo/v0.1-r2034-medium-theme-consistency-llm-analysis/README.md` | 2 个 inspect tool + 1 个 PromptAsset: 主题偏移检测、母题持续性检查，LLM 语义分析 |
 | 2013 | Director Failed Retry Entry | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2013-medium-director-failed-retry-entry/README.md` |  |
 | 2014 | Chapter Token Budget Dynamic | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2014-medium-chapter-token-budget-dynamic/README.md` |  |
 
@@ -67,8 +72,11 @@ description: "需求任务总清单（SSOT）"
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 7001 | Auto-Director 测试隔离修复 | p1 | ✅ 已完成 | 2026-06-28-health-check.md | 0.1 | - | - | `B.2.done/v0.1-r7001-simple-auto-director-test-fix/README.md` |  |
 | 7002 | NovelEdit.tsx 大文件拆分 | p1 | ✅ 已完成 | 2026-06-28-health-check.md | 0.1 | - | - | `B.2.done/v0.1-r7002-complex-novel-edit-refactor/README.md` |  |
-| 7003 | Server 超大文件分批拆分 | p2 | ✅ 已完成 | 2026-06-28-health-check.md | 0.1 | - | - | `B.todo/v0.1-r7003-complex-server-large-file-refactor/README.md` |  |
+| 7003 | Server 超大文件分批拆分 | p2 | ✅ 已完成 | 2026-06-28-health-check.md | 0.1 | - | - | `B.2.done/v0.1-r7003-complex-server-large-file-refactor/README.md` |  |
 | 7004 | JSON 软引用 FK 缺失修复 | p1 | 📋 待办 | 2026-06-30-图数据库能力诊断.md | 0.1 | - | - | `B.todo/v0.1-r7004-medium-json-soft-ref-fk-fix/README.md` |  |
+| 7005 | P2 零散 IdsJson 字段迁移为边表 | p2 | ✅ 已完成 | - | 0.1 | - | - | `B.todo/v0.1-r7005-simple-p2-scattered-idsjson-edge-tables/README.md` |  |
+| 7006 | 移除时间线旧 JSON 字段 | p1 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r7006-simple-timeline-idsjson-removal/README.md` |  |
+| 7007 | World.structureJson 关系提取为独立表 | p1 | ✅ 已完成 | - | 0.1 | - | - | `B.todo/v0.1-r7007-medium-world-structure-json-relation-extract/README.md` |  |
 
 ---
 
@@ -80,8 +88,9 @@ description: "需求任务总清单（SSOT）"
 
 | 编号 | 任务标题 | 文档 |
 | --- | --- | --- |
-| 2029 | Creative Hub 叙事讨论通道 (narrative_advisor) | `B.todo/v0.1-r2029-complex-narrative-advisor-mode/README.md` |
+| 2034 | 主题一致性 LLM 分析层 (Theme Consistency LLM Analysis) | `B.todo/v0.1-r2034-medium-theme-consistency-llm-analysis/README.md` |
 | 7004 | JSON 软引用 FK 缺失修复 | `B.todo/v0.1-r7004-medium-json-soft-ref-fk-fix/README.md` |
+| 7006 | 移除时间线旧 JSON 字段 | `B.todo/v0.1-r7006-simple-timeline-idsjson-removal/README.md` |
 | 2013 | Director Failed Retry Entry | `B.todo/v0.1-r2013-medium-director-failed-retry-entry/README.md` |
 | 2014 | Chapter Token Budget Dynamic | `B.todo/v0.1-r2014-medium-chapter-token-budget-dynamic/README.md` |
 | 3004 | Novel Conversation Archive | `B.todo/v0.1-r3004-medium-novel-conversation-archive/README.md` |
@@ -116,6 +125,11 @@ description: "需求任务总清单（SSOT）"
 | 2026 | 节奏板重生成结构保持验证 | `B.2.done/v0.1-r2026-medium-beat-sheet-structure-preservation/README.md` |
 | 2027 | 章节编辑器编辑后资产沉淀 | `B.2.done/v0.1-r2027-complex-chapter-edit-asset-extraction/README.md` |
 | 2028 | 配置厂商弹窗内手动拉取模型列表 | `B.2.done/v0.1-r2028-simple-provider-refresh-model-list/README.md` |
+| 2029 | Creative Hub 叙事讨论通道 (narrative_advisor) | `B.todo/v0.1-r2029-complex-narrative-advisor-mode/README.md` |
+| 2030 | 节奏曲线可视化与调整 (Pace Curve Visualization) | `B.todo/v0.1-r2030-complex-pace-curve-visualization/README.md` |
+| 2031 | 角色弧光查询工具 (Character Arc Query Tools) | `B.todo/v0.1-r2031-medium-character-arc-query-tools/README.md` |
+| 2032 | 角色弧光可视化 (Character Arc Visualization) | `B.todo/v0.1-r2032-complex-character-arc-visualization/README.md` |
+| 2033 | 主题一致性纯数据工具层 (Theme Consistency Data Tools) | `B.todo/v0.1-r2033-medium-theme-consistency-data-tools/README.md` |
 | 3001 | Task Batch Archive | `B.2.done/v0.1-r3001-medium-task-batch-archive/README.md` |
 | 3002 | 导演进度规划资源缺失 Checklist 可视化 | `B.2.done/v0.1-r3002-medium-director-planning-checklist/README.md` |
 | 3003 | 小说项目对话存档 | `B.2.done/v0.1-r3003-medium-repair-progress-dialog/README.md` |
@@ -125,6 +139,8 @@ description: "需求任务总清单（SSOT）"
 | 3008 | 日志中心 | `B.2.done/v0.1-r3008-medium-log-center/README.md` |
 | 7001 | Auto-Director 测试隔离修复 | `B.2.done/v0.1-r7001-simple-auto-director-test-fix/README.md` |
 | 7002 | NovelEdit.tsx 大文件拆分 | `B.2.done/v0.1-r7002-complex-novel-edit-refactor/README.md` |
-| 7003 | Server 超大文件分批拆分 | `B.todo/v0.1-r7003-complex-server-large-file-refactor/README.md` |
+| 7003 | Server 超大文件分批拆分 | `B.2.done/v0.1-r7003-complex-server-large-file-refactor/README.md` |
+| 7005 | P2 零散 IdsJson 字段迁移为边表 | `B.todo/v0.1-r7005-simple-p2-scattered-idsjson-edge-tables/README.md` |
+| 7007 | World.structureJson 关系提取为独立表 | `B.todo/v0.1-r7007-medium-world-structure-json-relation-extract/README.md` |
 
 ---

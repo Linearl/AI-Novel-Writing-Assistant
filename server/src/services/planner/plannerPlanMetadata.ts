@@ -183,7 +183,10 @@ export function readPlanMetadataFromPlan(
     | "sourceIssueIdsJson"
     | "replannedFromPlanId"
     | "rawPlanJson"
-  >,
+  > & {
+    /** REQ-7005: edge table override — when populated, used instead of sourceIssueIdsJson */
+    edgeIssueIds?: string[];
+  },
 ): PlannerPlanMetadata {
   const fallback = buildDefaultPlanMetadata(plan.level, {});
   const columnMetadata: PlannerPlanMetadata = {
@@ -191,7 +194,8 @@ export function readPlanMetadataFromPlan(
     phaseLabel: plan.phaseLabel ?? fallback.phaseLabel,
     mustAdvance: sanitizeCreativeMustAdvanceItems(parseStoredStringArray(plan.mustAdvanceJson)).slice(0, 5),
     mustPreserve: parseStoredStringArray(plan.mustPreserveJson).slice(0, 5),
-    sourceIssueIds: parseStoredStringArray(plan.sourceIssueIdsJson).slice(0, 12),
+    // REQ-7005: prefer edge table data over JSON fallback
+    sourceIssueIds: (plan.edgeIssueIds ?? parseStoredStringArray(plan.sourceIssueIdsJson)).slice(0, 12),
     replannedFromPlanId: plan.replannedFromPlanId ?? fallback.replannedFromPlanId,
   };
 

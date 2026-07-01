@@ -269,6 +269,18 @@ export async function persistStoryPlan(input: PersistPlanInput) {
       });
     }
 
+    // REQ-7005: dual-write to StoryPlanIssue edge table
+    if (input.sourceIssueIds.length > 0) {
+      await tx.storyPlanIssue.deleteMany({ where: { planId: plan.id } });
+      await tx.storyPlanIssue.createMany({
+        data: input.sourceIssueIds.map((issueId) => ({
+          novelId: input.novelId,
+          planId: plan.id,
+          issueId,
+        })),
+      });
+    }
+
     if (input.level === "chapter" && input.chapterId) {
       const chapter = await tx.chapter.findUnique({
         where: { id: input.chapterId },
@@ -311,5 +323,11 @@ export async function persistStoryPlan(input: PersistPlanInput) {
   if (!persistedPlan) {
     throw new Error("章节规划持久化失败。");
   }
-  return enrichStoryPlan(persistedPlan as any);
+  // REQ-7005: enrich with edge table issue IDs
+  const planIssueRows = await prisma.storyPlanIssue.findMany({
+    where: { planId: persistedPlan.id },
+    select: { issueId: true },
+  });
+  const edgeIssueIds = planIssueRows.map((r) => r.issueId).filter((id): id is string => id != null);
+  return enrichStoryPlan({ ...persistedPlan, edgeIssueIds } as any);
 }

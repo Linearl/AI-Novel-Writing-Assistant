@@ -4,7 +4,7 @@ description: "REQ-2029 任务拆解（复杂版）"
 
 # REQ-2029 任务拆解
 
-> 状态：⏳ 进行中（完成后改为 ✅ 全部完成）
+> 状态：✅ 全部完成
 > 模板类型：**复杂版** — 跨模块、多文件任务
 
 ## 任务概述
@@ -39,12 +39,12 @@ description: "REQ-2029 任务拆解（复杂版）"
 
 | # | 任务 | 优先级 | 预估 | 依赖 | 产物 | 状态 |
 | --- | --- | --- | --- | --- | --- | --- |
-| T1 | 意图定义 — 新增 `narrative_advisor` 枚举 + prompt + 别名 | P0 | 30min | — | intentPromptSupport.ts, utils.ts 修改 | ⬜ 待开始 |
-| T2 | Workflow — 新建 narrativeAdvisorWorkflowDefinition | P0 | 30min | T1 | narrativeAdvisorWorkflowDefinition.ts + registry 注册 | ⬜ 待开始 |
-| T3 | 权限 — approvalPolicy.ts 只读安全约束 | P0 | 15min | T1 | approvalPolicy.ts 修改 | ⬜ 待开始 |
-| T4 | Prompt — 新建叙事分析 PromptAsset | P1 | 30min | — | narrativeAdvisorAnalysisPrompt.ts + registry 注册 | ⬜ 待开始 |
-| T5 | Answer Composer — 新增 advisor 分支 | P1 | 30min | T2, T4 | answerComposer.ts 修改 | ⬜ 待开始 |
-| T6 | 集成验证 — 类型检查 + 测试 + 手动 E2E | P1 | 30min | T1-T5 | 测试通过报告 | ⬜ 待开始 |
+| T1 | 意图定义 — 新增 `narrative_advisor` 枚举 + prompt + 别名 | P0 | 30min | — | intentPromptSupport.ts, utils.ts 修改 | ✅ 已完成 |
+| T2 | Workflow — 新建 narrativeAdvisorWorkflowDefinition | P0 | 30min | T1 | narrativeAdvisorWorkflowDefinition.ts + registry 注册 | ✅ 已完成 |
+| T3 | 权限 — approvalPolicy.ts 只读安全约束 | P0 | 15min | T1 | approvalPolicy.ts + RunExecutionService.ts 修改 | ✅ 已完成 |
+| T4 | Prompt — 新建叙事分析 PromptAsset | P1 | 30min | — | narrativeAdvisorAnalysisPrompt.ts + registry 注册 | ✅ 已完成 |
+| T5 | Answer Composer — 新增 advisor 分支 | P1 | 30min | T2, T4 | answerComposer.ts 修改 | ✅ 已完成 |
+| T6 | 集成验证 — 类型检查 + 测试 + 手动 E2E | P1 | 30min | T1-T5 | 类型检查 + 1110 测试通过 | ✅ 已完成 |
 
 ---
 

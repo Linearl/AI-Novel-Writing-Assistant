@@ -84,13 +84,36 @@ export class OpenConflictService {
       take: 20,
     });
 
-    return rows.sort((left, right) => {
+    const sorted = rows.sort((left, right) => {
       const bySeverity = severityRank(right.severity) - severityRank(left.severity);
       if (bySeverity !== 0) {
         return bySeverity;
       }
       return right.updatedAt.getTime() - left.updatedAt.getTime();
     }).slice(0, limit);
+
+    // REQ-7005: enrich with edge table character IDs
+    const conflictIds = sorted.map((r) => r.id);
+    if (conflictIds.length > 0) {
+      const edgeRows = await prisma.openConflictCharacter.findMany({
+        where: { conflictId: { in: conflictIds } },
+        select: { conflictId: true, characterId: true },
+      });
+      const edgeMap = new Map<string, string[]>();
+      for (const er of edgeRows) {
+        const list = edgeMap.get(er.conflictId);
+        if (list) {
+          list.push(er.characterId);
+        } else {
+          edgeMap.set(er.conflictId, [er.characterId]);
+        }
+      }
+      for (const row of sorted) {
+        (row as any).edgeCharacterIds = edgeMap.get(row.id) ?? undefined;
+      }
+    }
+
+    return sorted;
   }
 
   async syncFromAuditReports(input: {
@@ -238,7 +261,7 @@ export class OpenConflictService {
           },
         });
 
-        await tx.openConflict.upsert({
+        const upserted = await tx.openConflict.upsert({
           where: {
             novelId_chapterId_sourceType_conflictKey: {
               novelId: input.novelId,
@@ -278,6 +301,17 @@ export class OpenConflictService {
             lastSeenChapterOrder: input.chapterOrder,
           },
         });
+        // REQ-7005: dual-write to OpenConflictCharacter edge table
+        if (item.affectedCharacterIds.length > 0) {
+          await tx.openConflictCharacter.deleteMany({ where: { conflictId: upserted.id } });
+          await tx.openConflictCharacter.createMany({
+            data: item.affectedCharacterIds.map((characterId) => ({
+              novelId: input.novelId,
+              conflictId: upserted.id,
+              characterId,
+            })),
+          });
+        }
       }
     });
 

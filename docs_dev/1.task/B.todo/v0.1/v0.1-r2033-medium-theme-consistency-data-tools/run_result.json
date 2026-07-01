@@ -1,0 +1,21 @@
+{
+  "reqId": "REQ-2033",
+  "title": "主题一致性纯数据工具层 (Theme Consistency Data Tools)",
+  "priority": "P2",
+  "version": "v0.1",
+  "status": "done",
+  "createdAt": "2026-06-30",
+  "completedAt": null,
+  "source": "REQ-2029 后续迭代",
+  "note": "3个inspect tool: payoff健康度、卷主题覆盖率、主题层级聚合，纯规则无LLM",
+  "reqType": "feature",
+  "categoryCode": 2,
+  "complexity": "medium",
+  "skipClarification": true,
+  "skipDesign": true,
+  "tasks": {
+    "total": 4,
+    "completed": 0,
+    "pending": 4
+  }
+}

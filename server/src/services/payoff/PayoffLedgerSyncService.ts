@@ -338,6 +338,7 @@ export class PayoffLedgerSyncService {
               ...data,
             },
           });
+          // REQ-7005: affectedCharacterIdsJson is always [] here, no edge rows needed
         }
       }
     });

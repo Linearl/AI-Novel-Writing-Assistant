@@ -157,7 +157,7 @@ function mapPlan(plan: Awaited<ReturnType<typeof plannerService.getChapterPlan>>
     riskNotes: parseJsonStringArray(plan.riskNotesJson),
     mustAdvance: parseJsonStringArray(plan.mustAdvanceJson),
     mustPreserve: parseJsonStringArray(plan.mustPreserveJson),
-    sourceIssueIds: parseJsonStringArray(plan.sourceIssueIdsJson),
+    sourceIssueIds: (plan as any).edgeIssueIds ?? parseJsonStringArray(plan.sourceIssueIdsJson),
     replannedFromPlanId: plan.replannedFromPlanId ?? null,
     hookTarget: plan.hookTarget ?? null,
     rawPlanJson: plan.rawPlanJson ?? null,

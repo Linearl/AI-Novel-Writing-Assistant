@@ -36,7 +36,7 @@ export class StateVersionLog {
         orderBy: { version: "desc" },
         select: { version: true },
       });
-      return tx.canonicalStateVersion.create({
+      const version = await tx.canonicalStateVersion.create({
         data: {
           novelId: input.novelId,
           chapterId: input.chapterId ?? null,
@@ -48,6 +48,17 @@ export class StateVersionLog {
           acceptedProposalIdsJson: JSON.stringify(input.acceptedProposalIds),
         },
       });
+      // REQ-7005: dual-write to StateVersionProposal edge table
+      if (input.acceptedProposalIds.length > 0) {
+        await tx.stateVersionProposal.createMany({
+          data: input.acceptedProposalIds.map((proposalId) => ({
+            novelId: input.novelId,
+            versionId: version.id,
+            proposalId,
+          })),
+        });
+      }
+      return version;
     });
 
     return {
@@ -58,7 +69,10 @@ export class StateVersionLog {
       sourceStage: created.sourceStage ?? null,
       version: created.version,
       summary: created.summary,
-      acceptedProposalIds: parseStringArray(created.acceptedProposalIdsJson),
+      // REQ-7005: prefer input source (also written to edge table) over JSON fallback
+      acceptedProposalIds: input.acceptedProposalIds.length > 0
+        ? input.acceptedProposalIds
+        : parseStringArray(created.acceptedProposalIdsJson),
       snapshotJson: created.snapshotJson,
       createdAt: created.createdAt.toISOString(),
     };

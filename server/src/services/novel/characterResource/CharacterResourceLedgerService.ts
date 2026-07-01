@@ -11,6 +11,7 @@ import {
   mapCharacterResourceRow,
   normalizeResourceKey,
   stringifyJson,
+  type CharacterResourceRowLike,
 } from "./characterResourceShared";
 
 function riskLevelFromItem(item: CharacterResourceLedgerItem): "none" | "info" | "warn" | "high" {
@@ -31,12 +32,36 @@ function isBlockedStatus(status: CharacterResourceLedgerItem["status"]): boolean
 }
 
 export class CharacterResourceLedgerService {
+  /** REQ-7005: batch-enrich rows with edge table knownByCharacterIds */
+  private async enrichWithEdgeData(rows: CharacterResourceRowLike[]): Promise<CharacterResourceRowLike[]> {
+    if (rows.length === 0) return rows;
+    const resourceIds = rows.map((r) => r.id);
+    const edgeRows = await prisma.characterResourceKnownBy.findMany({
+      where: { resourceId: { in: resourceIds } },
+      select: { resourceId: true, characterId: true },
+    });
+    const edgeMap = new Map<string, string[]>();
+    for (const er of edgeRows) {
+      const list = edgeMap.get(er.resourceId);
+      if (list) {
+        list.push(er.characterId);
+      } else {
+        edgeMap.set(er.resourceId, [er.characterId]);
+      }
+    }
+    return rows.map((row) => ({
+      ...row,
+      edgeKnownByCharacterIds: edgeMap.get(row.id) ?? undefined,
+    }));
+  }
+
   async listResources(novelId: string): Promise<CharacterResourceLedgerItem[]> {
     const rows = await prisma.characterResourceLedgerItem.findMany({
       where: { novelId },
       orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
     });
-    return rows.map(mapCharacterResourceRow);
+    const enriched = await this.enrichWithEdgeData(rows);
+    return enriched.map(mapCharacterResourceRow);
   }
 
   async listCharacterResources(novelId: string, characterId: string): Promise<CharacterResourceLedgerItem[]> {
@@ -50,7 +75,8 @@ export class CharacterResourceLedgerService {
       },
       orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
     });
-    return rows.map(mapCharacterResourceRow);
+    const enriched = await this.enrichWithEdgeData(rows);
+    return enriched.map(mapCharacterResourceRow);
   }
 
   async getChapterResourceContext(novelId: string, chapterId: string): Promise<CharacterResourceContext> {
@@ -84,7 +110,8 @@ export class CharacterResourceLedgerService {
       take: 60,
     });
     const chapterOrder = options.chapterOrder;
-    const items = rows.map(mapCharacterResourceRow);
+    const enriched = await this.enrichWithEdgeData(rows);
+    const items = enriched.map(mapCharacterResourceRow);
     const relevant = items.filter((item) => {
       if (chapterOrder == null) {
         return true;
@@ -218,6 +245,19 @@ export class CharacterResourceLedgerService {
       },
       update: data,
     });
+
+    // REQ-7005: dual-write to CharacterResourceKnownBy edge table
+    const knownByIds = payload.visibilityAfter.knownByCharacterIds ?? [];
+    if (knownByIds.length > 0) {
+      await tx.characterResourceKnownBy.deleteMany({ where: { resourceId: row.id } });
+      await tx.characterResourceKnownBy.createMany({
+        data: knownByIds.map((characterId) => ({
+          novelId: input.novelId,
+          resourceId: row.id,
+          characterId,
+        })),
+      });
+    }
 
     await tx.characterResourceEvent.create({
       data: {

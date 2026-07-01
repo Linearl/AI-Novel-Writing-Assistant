@@ -6,7 +6,7 @@ description: "REQ-2029 Creative Hub 叙事讨论通道任务总线"
 
 > 创建日期：2026-06-30
 > 目标版本：v0.1
-> 状态：📋 待办
+> 状态：✅ 已完成
 
 ---
 
@@ -53,9 +53,9 @@ description: "REQ-2029 Creative Hub 叙事讨论通道任务总线"
 
 ## 4. 执行清单
 
-- [ ] T1: 意图定义层 — 新增 `narrative_advisor` 枚举 + prompt + normalize 逻辑
-- [ ] T2: Workflow 层 — 新建 `narrativeAdvisorWorkflowDefinition.ts`，组合只读工具
-- [ ] T3: Prompt 层 — 新建 `narrativeAdvisorAnalysisPrompt.ts`，叙事分析 LLM prompt
-- [ ] T4: Answer Composer — 新增 advisor 分支，组装上下文 + 工具结果 → LLM 分析
-- [ ] T5: 权限与安全 — `approvalPolicy.ts` 更新，确保只读安全
-- [ ] T6: 集成验证 — 类型检查 + 意图分类测试 + 端到端对话验证
+- [x] T1: 意图定义层 — 新增 `narrative_advisor` 枚举 + prompt + normalize 逻辑
+- [x] T2: Workflow 层 — 新建 `narrativeAdvisorWorkflowDefinition.ts`，组合只读工具
+- [x] T3: Prompt 层 — 新建 `narrativeAdvisorAnalysisPrompt.ts`，叙事分析 LLM prompt
+- [x] T4: Answer Composer — 新增 advisor 分支，组装上下文 + 工具结果 → LLM 分析
+- [x] T5: 权限与安全 — `approvalPolicy.ts` 更新，确保只读安全
+- [x] T6: 集成验证 — 类型检查 + 意图分类测试 + 端到端对话验证

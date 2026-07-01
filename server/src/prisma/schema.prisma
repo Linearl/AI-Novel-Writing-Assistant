@@ -632,6 +632,8 @@ model Character {
   fromResourceEvents CharacterResourceEvent[] @relation("CharacterResourceEventFromHolder")
   toResourceEvents CharacterResourceEvent[] @relation("CharacterResourceEventToHolder")
   syncProposals   CharacterSyncProposal[]
+  conflictCharacters OpenConflictCharacter[]
+  knownByResourceItems CharacterResourceKnownBy[]
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
@@ -1130,6 +1132,10 @@ model World {
   libraryItems       WorldPropertyLibrary[]
   novelWorlds        NovelWorld[]
   assets             WorldAsset[]
+  // REQ-7007: Edge table reverse relations
+  worldForceRelations        WorldForceRelation[]
+  worldLocationControls      WorldLocationControl[]
+  worldLocationConnections   WorldLocationConnection[]
   createdAt          DateTime              @default(now())
   updatedAt          DateTime              @updatedAt
 }
@@ -1502,10 +1508,71 @@ model ConsistencyFact {
   chapter   Chapter?     @relation(fields: [chapterId], references: [id], onDelete: SetNull)
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
+  planIssues StoryPlanIssue[]
 
   @@index([novelId])
   @@index([chapterId])
   @@index([novelId, category])
+}
+
+model OpenConflictCharacter {
+  id          String   @id @default(cuid())
+  novelId     String
+  conflictId  String
+  characterId String
+  createdAt   DateTime @default(now())
+
+  conflict  OpenConflict @relation(fields: [conflictId], references: [id], onDelete: Cascade)
+  character Character    @relation(fields: [characterId], references: [id], onDelete: Cascade)
+
+  @@unique([conflictId, characterId])
+  @@index([novelId])
+  @@index([characterId])
+}
+
+model CharacterResourceKnownBy {
+  id          String   @id @default(cuid())
+  novelId     String
+  resourceId  String
+  characterId String
+  createdAt   DateTime @default(now())
+
+  resource  CharacterResourceLedgerItem @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  character Character                   @relation(fields: [characterId], references: [id], onDelete: Cascade)
+
+  @@unique([resourceId, characterId])
+  @@index([novelId])
+  @@index([characterId])
+}
+
+model StoryPlanIssue {
+  id       String    @id @default(cuid())
+  novelId  String
+  planId   String
+  issueId  String?
+  createdAt DateTime @default(now())
+
+  plan  StoryPlan        @relation(fields: [planId], references: [id], onDelete: Cascade)
+  issue ConsistencyFact? @relation(fields: [issueId], references: [id], onDelete: SetNull)
+
+  @@unique([planId, issueId])
+  @@index([novelId])
+  @@index([issueId])
+}
+
+model StateVersionProposal {
+  id         String   @id @default(cuid())
+  novelId    String
+  versionId  String
+  proposalId String
+  createdAt  DateTime @default(now())
+
+  version  CanonicalStateVersion @relation(fields: [versionId], references: [id], onDelete: Cascade)
+  proposal StateChangeProposal   @relation(fields: [proposalId], references: [id], onDelete: Cascade)
+
+  @@unique([versionId, proposalId])
+  @@index([novelId])
+  @@index([proposalId])
 }
 
 model GenerationJob {
@@ -2349,6 +2416,8 @@ model OpenConflict {
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
 
+  conflictCharacters   OpenConflictCharacter[]
+
   @@unique([novelId, chapterId, sourceType, conflictKey])
   @@index([novelId, status, updatedAt])
   @@index([chapterId, status])
@@ -2429,6 +2498,7 @@ model CharacterResourceLedgerItem {
   introducedChapter            Chapter? @relation("CharacterResourceIntroducedChapter", fields: [introducedChapterId], references: [id], onDelete: SetNull)
   lastTouchedChapter           Chapter? @relation("CharacterResourceLastTouchedChapter", fields: [lastTouchedChapterId], references: [id], onDelete: SetNull)
   events                       CharacterResourceEvent[]
+  knownByCharacters             CharacterResourceKnownBy[]
   createdAt                    DateTime @default(now())
   updatedAt                    DateTime @updatedAt
 
@@ -2482,6 +2552,7 @@ model CanonicalStateVersion {
   novel                  Novel    @relation(fields: [novelId], references: [id], onDelete: Cascade)
   chapter                Chapter? @relation(fields: [chapterId], references: [id], onDelete: SetNull)
   committedProposals     StateChangeProposal[] @relation("CommittedStateChangeVersion")
+  stateVersionProposals  StateVersionProposal[]
   createdAt              DateTime @default(now())
 
   @@unique([novelId, version])
@@ -2507,6 +2578,7 @@ model StateChangeProposal {
   novel                Novel    @relation(fields: [novelId], references: [id], onDelete: Cascade)
   chapter              Chapter? @relation(fields: [chapterId], references: [id], onDelete: SetNull)
   committedVersion     CanonicalStateVersion? @relation("CommittedStateChangeVersion", fields: [committedVersionId], references: [id], onDelete: SetNull)
+  stateVersionLinks    StateVersionProposal[]
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
 
@@ -2545,6 +2617,7 @@ model StoryPlan {
   sourceStateSnapshot  StoryStateSnapshot? @relation(fields: [sourceStateSnapshotId], references: [id], onDelete: SetNull)
   scenes               ChapterPlanScene[]
   replanRuns           ReplanRun[]
+  planIssues           StoryPlanIssue[]
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
 
@@ -3464,4 +3537,53 @@ model RiskAuditLog {
   risk        NovelRisk @relation(fields: [riskId], references: [id], onDelete: Cascade)
 
   @@index([riskId])
+}
+
+// REQ-7007: World.structureJson.relations → 3 个边表
+
+model WorldForceRelation {
+  id            String   @id @default(cuid())
+  worldId       String
+  sourceForceId String
+  targetForceId String
+  relation      String
+  tension       String
+  detail        String
+  createdAt     DateTime @default(now())
+
+  world         World @relation(fields: [worldId], references: [id], onDelete: Cascade)
+
+  @@unique([worldId, sourceForceId, targetForceId])
+  @@index([worldId])
+}
+
+model WorldLocationControl {
+  id         String   @id @default(cuid())
+  worldId    String
+  forceId    String
+  locationId String
+  relation   String
+  detail     String
+  createdAt  DateTime @default(now())
+
+  world      World @relation(fields: [worldId], references: [id], onDelete: Cascade)
+
+  @@unique([worldId, forceId, locationId])
+  @@index([worldId])
+}
+
+model WorldLocationConnection {
+  id               String   @id @default(cuid())
+  worldId          String
+  sourceLocationId String
+  targetLocationId String
+  connectionType   String
+  distanceHint     String
+  narrativeUse     String
+  createdAt        DateTime @default(now())
+
+  world            World @relation(fields: [worldId], references: [id], onDelete: Cascade)
+
+  @@unique([worldId, sourceLocationId, targetLocationId])
+  @@index([worldId])
 }
