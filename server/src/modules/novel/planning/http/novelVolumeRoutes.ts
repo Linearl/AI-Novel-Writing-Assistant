@@ -97,6 +97,125 @@ function shouldSyncSlimVolumeResponseToChapterExecution(body: unknown): boolean 
   return scope === "chapter_detail";
 }
 
+// Sub-function: Register volume CRUD routes
+function registerVolumeCrudRoutes(params: { router: any; novelService: any; idParamsSchema: any; volumeDocumentSchema: any; volumeGenerateSchema: any }) {
+  const { router, novelService, idParamsSchema, volumeDocumentSchema, volumeGenerateSchema } = params;
+
+  router.get("/:id/volumes", validate({ params: idParamsSchema }), async (req: any, res: any, next: any) => {
+    try {
+      const { id } = req.params;
+      const data = await novelService.getVolumes(id);
+      res.status(200).json({ success: true, data, message: "Volume workspace loaded." });
+    } catch (error) { next(error); }
+  });
+
+  router.put("/:id/volumes", validate({ params: idParamsSchema, body: volumeDocumentSchema }), async (req: any, res: any, next: any) => {
+    try {
+      const { id } = req.params;
+      const data = await novelService.updateVolumes(id, req.body);
+      res.status(200).json({ success: true, data, message: "Volume workspace updated." });
+    } catch (error) { next(error); }
+  });
+
+  router.post("/:id/volumes/generate", validate({ params: idParamsSchema, body: volumeGenerateSchema }), async (req: any, res: any, next: any) => {
+    try {
+      const { id } = req.params;
+      const data = await novelService.generateVolumes(id, req.body);
+      if (shouldUseSlimVolumeGenerationResponse(req.body)) {
+        const persistedData = shouldPersistBeforeSlimVolumeResponse(req.body)
+          ? await novelService.updateVolumes(id, { ...data, syncToChapterExecution: shouldSyncSlimVolumeResponseToChapterExecution(req.body) })
+          : data;
+        res.status(200).json({ success: true, data: buildSlimVolumeGenerationResponse(persistedData), message: "Volume workspace generated." });
+        return;
+      }
+      res.status(200).json({ success: true, data, message: "Volume workspace generated." });
+    } catch (error) { next(error); }
+  });
+}
+
+// Sub-function: Register volume version routes
+function registerVolumeVersionRoutes(params: { router: any; novelService: any; idParamsSchema: any; volumeVersionParamsSchema: any; volumeDiffQuerySchema: any; volumeDraftSchema: any }) {
+  const { router, novelService, idParamsSchema, volumeVersionParamsSchema, volumeDiffQuerySchema, volumeDraftSchema } = params;
+
+  router.post("/:id/volumes/versions/draft", validate({ params: idParamsSchema, body: volumeDraftSchema }), async (req: any, res: any, next: any) => {
+    try {
+      const { id } = req.params;
+      const data = await novelService.createVolumeDraft(id, req.body);
+      res.status(201).json({ success: true, data, message: "Volume draft version created." });
+    } catch (error) { next(error); }
+  });
+
+  router.post("/:id/volumes/versions/:versionId/activate", validate({ params: volumeVersionParamsSchema }), async (req: any, res: any, next: any) => {
+    try {
+      const { id, versionId } = req.params;
+      const data = await novelService.activateVolumeVersion(id, versionId);
+      res.status(200).json({ success: true, data, message: "Volume version activated." });
+    } catch (error) { next(error); }
+  });
+
+  router.post("/:id/volumes/versions/:versionId/freeze", validate({ params: volumeVersionParamsSchema }), async (req: any, res: any, next: any) => {
+    try {
+      const { id, versionId } = req.params;
+      const data = await novelService.freezeVolumeVersion(id, versionId);
+      res.status(200).json({ success: true, data, message: "Volume version frozen." });
+    } catch (error) { next(error); }
+  });
+
+  router.get("/:id/volumes/versions", validate({ params: idParamsSchema }), async (req: any, res: any, next: any) => {
+    try {
+      const { id } = req.params;
+      const data = await novelService.listVolumeVersions(id);
+      res.status(200).json({ success: true, data, message: "Volume versions loaded." });
+    } catch (error) { next(error); }
+  });
+
+  router.get("/:id/volumes/versions/:versionId", validate({ params: volumeVersionParamsSchema }), async (req: any, res: any, next: any) => {
+    try {
+      const { id, versionId } = req.params;
+      const data = await novelService.getVolumeVersion(id, versionId);
+      res.status(200).json({ success: true, data, message: "Volume version loaded." });
+    } catch (error) { next(error); }
+  });
+
+  router.get("/:id/volumes/versions/:versionId/diff", validate({ params: volumeVersionParamsSchema, query: volumeDiffQuerySchema }), async (req: any, res: any, next: any) => {
+    try {
+      const { id, versionId } = req.params;
+      const query = volumeDiffQuerySchema.parse(req.query) as { compareVersion?: number };
+      const data = await novelService.getVolumeDiff(id, versionId, query.compareVersion);
+      res.status(200).json({ success: true, data, message: "Volume diff loaded." });
+    } catch (error) { next(error); }
+  });
+}
+
+// Sub-function: Register volume utility routes
+function registerVolumeUtilityRoutes(params: { router: any; novelService: any; idParamsSchema: any; volumeImpactSchema: any; volumeSyncSchema: any }) {
+  const { router, novelService, idParamsSchema, volumeImpactSchema, volumeSyncSchema } = params;
+
+  router.post("/:id/volumes/impact-analysis", validate({ params: idParamsSchema, body: volumeImpactSchema }), async (req: any, res: any, next: any) => {
+    try {
+      const { id } = req.params;
+      const data = await novelService.analyzeVolumeImpact(id, req.body);
+      res.status(200).json({ success: true, data, message: "Volume impact analysis completed." });
+    } catch (error) { next(error); }
+  });
+
+  router.post("/:id/volumes/sync-chapters", validate({ params: idParamsSchema, body: volumeSyncSchema }), async (req: any, res: any, next: any) => {
+    try {
+      const { id } = req.params;
+      const data = await novelService.syncVolumeChapters(id, req.body);
+      res.status(200).json({ success: true, data, message: "Volume chapters synchronized." });
+    } catch (error) { next(error); }
+  });
+
+  router.post("/:id/volumes/migrate-legacy", validate({ params: idParamsSchema }), async (req: any, res: any, next: any) => {
+    try {
+      const { id } = req.params;
+      const data = await novelService.migrateLegacyVolumes(id);
+      res.status(200).json({ success: true, data, message: "Legacy outline migrated to volume workspace." });
+    } catch (error) { next(error); }
+  });
+}
+
 export function registerNovelVolumeRoutes(input: RegisterNovelVolumeRoutesInput): void {
   const {
     router,
@@ -111,235 +230,7 @@ export function registerNovelVolumeRoutes(input: RegisterNovelVolumeRoutesInput)
     volumeSyncSchema,
   } = input;
 
-  router.get(
-    "/:id/volumes",
-    validate({ params: idParamsSchema }),
-    async (req, res, next) => {
-      try {
-        const { id } = req.params as z.infer<typeof idParamsSchema>;
-        const data = await novelService.getVolumes(id);
-        res.status(200).json({
-          success: true,
-          data,
-          message: "Volume workspace loaded.",
-        } satisfies ApiResponse<typeof data>);
-      } catch (error) {
-        next(error);
-      }
-    },
-  );
-
-  router.put(
-    "/:id/volumes",
-    validate({ params: idParamsSchema, body: volumeDocumentSchema }),
-    async (req, res, next) => {
-      try {
-        const { id } = req.params as z.infer<typeof idParamsSchema>;
-        const data = await novelService.updateVolumes(id, req.body as any);
-        res.status(200).json({
-          success: true,
-          data,
-          message: "Volume workspace updated.",
-        } satisfies ApiResponse<typeof data>);
-      } catch (error) {
-        next(error);
-      }
-    },
-  );
-
-  router.post(
-    "/:id/volumes/generate",
-    validate({ params: idParamsSchema, body: volumeGenerateSchema }),
-    async (req, res, next) => {
-      try {
-        const { id } = req.params as z.infer<typeof idParamsSchema>;
-        const data = await novelService.generateVolumes(id, req.body as any);
-        if (shouldUseSlimVolumeGenerationResponse(req.body)) {
-          const persistedData = shouldPersistBeforeSlimVolumeResponse(req.body)
-            ? await novelService.updateVolumes(id, {
-              ...data,
-              syncToChapterExecution: shouldSyncSlimVolumeResponseToChapterExecution(req.body),
-            })
-            : data;
-          const responseData = buildSlimVolumeGenerationResponse(persistedData);
-          res.status(200).json({
-            success: true,
-            data: responseData,
-            message: "Volume workspace generated.",
-          } satisfies ApiResponse<typeof responseData>);
-          return;
-        }
-        res.status(200).json({
-          success: true,
-          data,
-          message: "Volume workspace generated.",
-        } satisfies ApiResponse<typeof data>);
-      } catch (error) {
-        next(error);
-      }
-    },
-  );
-
-  router.post(
-    "/:id/volumes/versions/draft",
-    validate({ params: idParamsSchema, body: volumeDraftSchema }),
-    async (req, res, next) => {
-      try {
-        const { id } = req.params as z.infer<typeof idParamsSchema>;
-        const data = await novelService.createVolumeDraft(id, req.body as any);
-        res.status(201).json({
-          success: true,
-          data,
-          message: "Volume draft version created.",
-        } satisfies ApiResponse<typeof data>);
-      } catch (error) {
-        next(error);
-      }
-    },
-  );
-
-  router.post(
-    "/:id/volumes/versions/:versionId/activate",
-    validate({ params: volumeVersionParamsSchema }),
-    async (req, res, next) => {
-      try {
-        const { id, versionId } = req.params as z.infer<typeof volumeVersionParamsSchema>;
-        const data = await novelService.activateVolumeVersion(id, versionId);
-        res.status(200).json({
-          success: true,
-          data,
-          message: "Volume version activated.",
-        } satisfies ApiResponse<typeof data>);
-      } catch (error) {
-        next(error);
-      }
-    },
-  );
-
-  router.post(
-    "/:id/volumes/versions/:versionId/freeze",
-    validate({ params: volumeVersionParamsSchema }),
-    async (req, res, next) => {
-      try {
-        const { id, versionId } = req.params as z.infer<typeof volumeVersionParamsSchema>;
-        const data = await novelService.freezeVolumeVersion(id, versionId);
-        res.status(200).json({
-          success: true,
-          data,
-          message: "Volume version frozen.",
-        } satisfies ApiResponse<typeof data>);
-      } catch (error) {
-        next(error);
-      }
-    },
-  );
-
-  router.get(
-    "/:id/volumes/versions",
-    validate({ params: idParamsSchema }),
-    async (req, res, next) => {
-      try {
-        const { id } = req.params as z.infer<typeof idParamsSchema>;
-        const data = await novelService.listVolumeVersions(id);
-        res.status(200).json({
-          success: true,
-          data,
-          message: "Volume versions loaded.",
-        } satisfies ApiResponse<typeof data>);
-      } catch (error) {
-        next(error);
-      }
-    },
-  );
-
-  router.get(
-    "/:id/volumes/versions/:versionId",
-    validate({ params: volumeVersionParamsSchema }),
-    async (req, res, next) => {
-      try {
-        const { id, versionId } = req.params as z.infer<typeof volumeVersionParamsSchema>;
-        const data = await novelService.getVolumeVersion(id, versionId);
-        res.status(200).json({
-          success: true,
-          data,
-          message: "Volume version loaded.",
-        } satisfies ApiResponse<typeof data>);
-      } catch (error) {
-        next(error);
-      }
-    },
-  );
-
-  router.get(
-    "/:id/volumes/versions/:versionId/diff",
-    validate({ params: volumeVersionParamsSchema, query: volumeDiffQuerySchema }),
-    async (req, res, next) => {
-      try {
-        const { id, versionId } = req.params as z.infer<typeof volumeVersionParamsSchema>;
-        const query = volumeDiffQuerySchema.parse(req.query) as { compareVersion?: number };
-        const data = await novelService.getVolumeDiff(id, versionId, query.compareVersion);
-        res.status(200).json({
-          success: true,
-          data,
-          message: "Volume diff loaded.",
-        } satisfies ApiResponse<typeof data>);
-      } catch (error) {
-        next(error);
-      }
-    },
-  );
-
-  router.post(
-    "/:id/volumes/impact-analysis",
-    validate({ params: idParamsSchema, body: volumeImpactSchema }),
-    async (req, res, next) => {
-      try {
-        const { id } = req.params as z.infer<typeof idParamsSchema>;
-        const data = await novelService.analyzeVolumeImpact(id, req.body as any);
-        res.status(200).json({
-          success: true,
-          data,
-          message: "Volume impact analysis completed.",
-        } satisfies ApiResponse<typeof data>);
-      } catch (error) {
-        next(error);
-      }
-    },
-  );
-
-  router.post(
-    "/:id/volumes/sync-chapters",
-    validate({ params: idParamsSchema, body: volumeSyncSchema }),
-    async (req, res, next) => {
-      try {
-        const { id } = req.params as z.infer<typeof idParamsSchema>;
-        const data = await novelService.syncVolumeChapters(id, req.body as any);
-        res.status(200).json({
-          success: true,
-          data,
-          message: "Volume chapters synchronized.",
-        } satisfies ApiResponse<typeof data>);
-      } catch (error) {
-        next(error);
-      }
-    },
-  );
-
-  router.post(
-    "/:id/volumes/migrate-legacy",
-    validate({ params: idParamsSchema }),
-    async (req, res, next) => {
-      try {
-        const { id } = req.params as z.infer<typeof idParamsSchema>;
-        const data = await novelService.migrateLegacyVolumes(id);
-        res.status(200).json({
-          success: true,
-          data,
-          message: "Legacy outline migrated to volume workspace.",
-        } satisfies ApiResponse<typeof data>);
-      } catch (error) {
-        next(error);
-      }
-    },
-  );
+  registerVolumeCrudRoutes({ router, novelService, idParamsSchema, volumeDocumentSchema, volumeGenerateSchema });
+  registerVolumeVersionRoutes({ router, novelService, idParamsSchema, volumeVersionParamsSchema, volumeDiffQuerySchema, volumeDraftSchema });
+  registerVolumeUtilityRoutes({ router, novelService, idParamsSchema, volumeImpactSchema, volumeSyncSchema });
 }

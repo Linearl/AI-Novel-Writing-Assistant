@@ -157,153 +157,61 @@ interface ChapterPlanContextResult {
   outputScopeLabel: string;
 }
 
-async function fetchChapterPlanContext(input: GenerateChapterPlanContextInput): Promise<ChapterPlanContextResult> {
-  const { novelId, chapterId, options, getBookPlan, listArcPlans, resolveStyleEngine } = input;
+// Sub-function: Fetch chapter plan data from database
+async function fetchChapterPlanData(novelId: string, chapterId: string, options: any, getBookPlan: any, listArcPlans: any, resolveStyleEngine: any) {
   const [novel, chapter, bible, plotBeats, summaries, characters, bookPlan, arcPlans, volumePlans, recentAuditReports, recentDecisions, storyMacroPlanRow, styleEngine, pendingReviewProposalCount] = await Promise.all([
     prisma.novel.findUnique({
       where: { id: novelId },
       select: {
-        id: true,
-        title: true,
-        description: true,
-        outline: true,
-        structuredOutline: true,
-        estimatedChapterCount: true,
-        genre: { select: { name: true } },
-        targetAudience: true,
-        bookSellingPoint: true,
-        competingFeel: true,
-        first30ChapterPromise: true,
-        narrativePov: true,
-        pacePreference: true,
-        emotionIntensity: true,
-        styleTone: true,
-        primaryStoryMode: { select: plannerStoryModeSelect },
-        secondaryStoryMode: { select: plannerStoryModeSelect },
+        id: true, title: true, description: true, outline: true, structuredOutline: true, estimatedChapterCount: true,
+        genre: { select: { name: true } }, targetAudience: true, bookSellingPoint: true, competingFeel: true,
+        first30ChapterPromise: true, narrativePov: true, pacePreference: true, emotionIntensity: true, styleTone: true,
+        primaryStoryMode: { select: plannerStoryModeSelect }, secondaryStoryMode: { select: plannerStoryModeSelect },
       },
     }),
     prisma.chapter.findFirst({
       where: { id: chapterId, novelId },
-      select: {
-        id: true,
-        title: true,
-        order: true,
-        expectation: true,
-        content: true,
-        targetWordCount: true,
-        conflictLevel: true,
-        revealLevel: true,
-        mustAvoid: true,
-        hook: true,
-        taskSheet: true,
-        sceneCards: true,
-      },
+      select: { id: true, title: true, order: true, expectation: true, content: true, targetWordCount: true, conflictLevel: true, revealLevel: true, mustAvoid: true, hook: true, taskSheet: true, sceneCards: true },
     }),
-    prisma.novelBible.findUnique({
-      where: { novelId },
-      select: { rawContent: true },
-    }),
-    prisma.plotBeat.findMany({
-      where: { novelId },
-      orderBy: { chapterOrder: "asc" },
-      take: 8,
-    }),
-    prisma.chapterSummary.findMany({
-      where: { novelId },
-      orderBy: { createdAt: "desc" },
-      take: 4,
-    }),
-    prisma.character.findMany({
-      where: { novelId },
-      select: { id: true, name: true, role: true, currentGoal: true, currentState: true },
-    }),
+    prisma.novelBible.findUnique({ where: { novelId }, select: { rawContent: true } }),
+    prisma.plotBeat.findMany({ where: { novelId }, orderBy: { chapterOrder: "asc" }, take: 8 }),
+    prisma.chapterSummary.findMany({ where: { novelId }, orderBy: { createdAt: "desc" }, take: 4 }),
+    prisma.character.findMany({ where: { novelId }, select: { id: true, name: true, role: true, currentGoal: true, currentState: true } }),
     getBookPlan(novelId),
     listArcPlans(novelId),
-    prisma.volumePlan.findMany({
-      where: { novelId },
-      orderBy: { sortOrder: "asc" },
-      include: {
-        chapters: {
-          orderBy: { chapterOrder: "asc" },
-        },
-      },
-    }),
-    prisma.auditReport.findMany({
-      where: { novelId },
-      orderBy: { createdAt: "desc" },
-      take: 4,
-      include: {
-        issues: {
-          where: { status: "open" },
-        },
-      },
-    }),
-    prisma.creativeDecision.findMany({
-      where: { novelId },
-      orderBy: { createdAt: "desc" },
-      take: 6,
-      select: {
-        category: true,
-        content: true,
-        importance: true,
-      },
-    }),
-    prisma.storyMacroPlan.findUnique({
-      where: { novelId },
-    }),
+    prisma.volumePlan.findMany({ where: { novelId }, orderBy: { sortOrder: "asc" }, include: { chapters: { orderBy: { chapterOrder: "asc" } } } }),
+    prisma.auditReport.findMany({ where: { novelId }, orderBy: { createdAt: "desc" }, take: 4, include: { issues: { where: { status: "open" } } } }),
+    prisma.creativeDecision.findMany({ where: { novelId }, orderBy: { createdAt: "desc" }, take: 6, select: { category: true, content: true, importance: true } }),
+    prisma.storyMacroPlan.findUnique({ where: { novelId } }),
     resolveStyleEngine(novelId, chapterId, options.taskStyleProfileId),
-    prisma.stateChangeProposal.count({
-      where: {
-        novelId,
-        status: "pending_review",
-      },
-    }),
+    prisma.stateChangeProposal.count({ where: { novelId, status: "pending_review" } }),
   ]);
+  return { novel, chapter, bible, plotBeats, summaries, characters, bookPlan, arcPlans, volumePlans, recentAuditReports, recentDecisions, storyMacroPlanRow, styleEngine, pendingReviewProposalCount };
+}
+
+async function fetchChapterPlanContext(input: GenerateChapterPlanContextInput): Promise<ChapterPlanContextResult> {
+  const { novelId, chapterId, options, getBookPlan, listArcPlans, resolveStyleEngine } = input;
+  const data = await fetchChapterPlanData(novelId, chapterId, options, getBookPlan, listArcPlans, resolveStyleEngine);
+  const { novel, chapter, bible, plotBeats, summaries, characters, bookPlan, arcPlans, volumePlans, recentAuditReports, recentDecisions, storyMacroPlanRow, styleEngine, pendingReviewProposalCount } = data;
+
   if (!novel || !chapter) {
     throw new Error("小说或章节不存在。");
   }
   const storyModeBlock = buildPlannerStoryModeBlock(novel);
   const storyMacroPlan = storyMacroPlanRow ? mapRowToPlan(storyMacroPlanRow) : null;
-  const payoffLedger = await payoffLedgerSyncService.getPayoffLedger(novelId, {
-    chapterOrder: chapter.order,
-  }).catch(() => ({
-    summary: {
-      totalCount: 0,
-      pendingCount: 0,
-      urgentCount: 0,
-      overdueCount: 0,
-      paidOffCount: 0,
-      failedCount: 0,
-      updatedAt: null,
-    },
-    items: [],
-    updatedAt: null,
+  const payoffLedger = await payoffLedgerSyncService.getPayoffLedger(novelId, { chapterOrder: chapter.order }).catch(() => ({
+    summary: { totalCount: 0, pendingCount: 0, urgentCount: 0, overdueCount: 0, paidOffCount: 0, failedCount: 0, updatedAt: null },
+    items: [], updatedAt: null,
   }));
-  const characterDynamicsOverview = await characterDynamicsQueryService.getOverview(novelId, {
-    chapterOrder: chapter.order,
-  }).catch(() => null);
+  const characterDynamicsOverview = await characterDynamicsQueryService.getOverview(novelId, { chapterOrder: chapter.order }).catch(() => null);
   const characterDynamicsContext = buildPlannerCharacterDynamicsContext(characterDynamicsOverview);
   const plannerVolumes = mapVolumePlansToPlannerVolumes(volumePlans, novelId);
-  const defaultMetadata = buildDefaultPlanMetadata("chapter", {
-    chapterOrder: chapter.order,
-    totalChapters: novel.estimatedChapterCount ?? null,
-    expectation: chapter.expectation ?? null,
-  });
-  const openAuditIssues = recentAuditReports.flatMap((report) => report.issues.map((issue) => (
-    `${issue.auditType}/${issue.severity}: ${issue.description} | 证据=${issue.evidence}`
-  )));
+  const defaultMetadata = buildDefaultPlanMetadata("chapter", { chapterOrder: chapter.order, totalChapters: novel.estimatedChapterCount ?? null, expectation: chapter.expectation ?? null });
+  const openAuditIssues = recentAuditReports.flatMap((report) => report.issues.map((issue) => `${issue.auditType}/${issue.severity}: ${issue.description} | 证据=${issue.evidence}`));
   const resolvedStateDrivenContext = await contextAssemblyService.build({
-    novelId,
-    chapterId,
-    chapterOrder: chapter.order,
-    includeCurrentChapterState: false,
-    policy: {
-      kickoffMode: "manual_start",
-      advanceMode: options.replanContext ? "stage_review" : "manual",
-    },
-    pendingReviewProposalCount,
-    openAuditIssueCount: openAuditIssues.length,
-    hasRepairableDraft: Boolean(chapter.content?.trim()),
+    novelId, chapterId, chapterOrder: chapter.order, includeCurrentChapterState: false,
+    policy: { kickoffMode: "manual_start", advanceMode: options.replanContext ? "stage_review" : "manual" },
+    pendingReviewProposalCount, openAuditIssueCount: openAuditIssues.length, hasRepairableDraft: Boolean(chapter.content?.trim()),
   });
   const plannerStateGoalText = buildPlannerStateGoalText({
     summary: resolvedStateDrivenContext.chapterStateGoal?.summary ?? null,
@@ -313,85 +221,36 @@ async function fetchChapterPlanContext(input: GenerateChapterPlanContextInput): 
     protectedSecrets: resolvedStateDrivenContext.protectedSecrets,
     recentTimeline: resolvedStateDrivenContext.recentTimeline.map((item: any) => item.summary),
   });
-  const replanContextBlock = options.replanContext
-    ? buildReplanContextBlock(options.replanContext)
-    : "无";
+  const replanContextBlock = options.replanContext ? buildReplanContextBlock(options.replanContext) : "无";
   const contextBlocks = buildChapterPlanContextBlocks({
-    novelTitle: novel.title,
-    description: novel.description,
-    genreName: novel.genre?.name ?? null,
-    targetAudience: novel.targetAudience,
-    bookSellingPoint: novel.bookSellingPoint,
-    competingFeel: novel.competingFeel,
-    first30ChapterPromise: novel.first30ChapterPromise,
-    narrativePov: novel.narrativePov,
-    pacePreference: novel.pacePreference,
-    emotionIntensity: novel.emotionIntensity,
-    styleTone: novel.styleTone,
-    chapterExpectation: chapter.expectation,
-    chapterTaskSheet: chapter.taskSheet,
-    chapterTargetWordCount: chapter.targetWordCount,
-    bible: bible?.rawContent ?? "无",
-    styleEngine,
-    outline: novel.outline,
-    structuredOutline: novel.structuredOutline,
-    mappedVolumes: plannerVolumes.map((volume) => ({
-      sortOrder: volume.sortOrder,
-      title: volume.title,
-      summary: volume.summary,
-      mainPromise: volume.mainPromise,
-      climax: volume.climax,
-      updatedAt: volume.updatedAt,
-      chapters: volume.chapters,
-    })),
+    novelTitle: novel.title, description: novel.description, genreName: novel.genre?.name ?? null,
+    targetAudience: novel.targetAudience, bookSellingPoint: novel.bookSellingPoint, competingFeel: novel.competingFeel,
+    first30ChapterPromise: novel.first30ChapterPromise, narrativePov: novel.narrativePov, pacePreference: novel.pacePreference,
+    emotionIntensity: novel.emotionIntensity, styleTone: novel.styleTone, chapterExpectation: chapter.expectation,
+    chapterTaskSheet: chapter.taskSheet, chapterTargetWordCount: chapter.targetWordCount, bible: bible?.rawContent ?? "无",
+    styleEngine, outline: novel.outline, structuredOutline: novel.structuredOutline,
+    mappedVolumes: plannerVolumes.map((volume) => ({ sortOrder: volume.sortOrder, title: volume.title, summary: volume.summary, mainPromise: volume.mainPromise, climax: volume.climax, updatedAt: volume.updatedAt, chapters: volume.chapters })),
     bookPlan: bookPlan ? `${bookPlan.title} | ${bookPlan.objective}${bookPlan.phaseLabel ? ` | 阶段=${bookPlan.phaseLabel}` : ""}` : "无",
-    arcPlans: arcPlans.length > 0
-      ? arcPlans.map((plan: any) => `${plan.externalRef ?? "-"} ${plan.title} | ${plan.objective}${plan.phaseLabel ? ` | 阶段=${plan.phaseLabel}` : ""}`).join("\n")
-      : "无",
+    arcPlans: arcPlans.length > 0 ? arcPlans.map((plan: any) => `${plan.externalRef ?? "-"} ${plan.title} | ${plan.objective}${plan.phaseLabel ? ` | 阶段=${plan.phaseLabel}` : ""}`).join("\n") : "无",
     characters: characters.map((item: any) => `${item.id}|${item.name}|${item.role}|goal=${item.currentGoal ?? ""}|state=${item.currentState ?? ""}`).join("\n") || "无",
     recentSummaries: summaries.map((item: any) => `${item.summary}`).join("\n") || "无",
     plotBeats: plotBeats.map((item: any) => `${item.chapterOrder ?? "-"} ${item.title} ${item.content}`).join("\n") || "无",
     stateSnapshot: buildStateContextBlockFromCanonical(resolvedStateDrivenContext.snapshot),
     openAuditIssues: openAuditIssues.join("\n") || "无",
     recentDecisions: recentDecisions.map((item: any) => `${item.category}/${item.importance}: ${item.content}`).join("\n") || "无",
-    characterDynamicsSummary: characterDynamicsContext.summary,
-    characterVolumeAssignments: characterDynamicsContext.volumeAssignments,
-    characterRelationStages: characterDynamicsContext.relationStages,
-    characterCandidateGuards: characterDynamicsContext.candidateGuards,
-    stateDrivenDirective: buildPlannerStateDrivenDirective({
-      nextAction: resolvedStateDrivenContext.nextAction,
-      pendingReviewProposalCount,
-      openAuditIssueCount: openAuditIssues.length,
-    }),
+    characterDynamicsSummary: characterDynamicsContext.summary, characterVolumeAssignments: characterDynamicsContext.volumeAssignments,
+    characterRelationStages: characterDynamicsContext.relationStages, characterCandidateGuards: characterDynamicsContext.candidateGuards,
+    stateDrivenDirective: buildPlannerStateDrivenDirective({ nextAction: resolvedStateDrivenContext.nextAction, pendingReviewProposalCount, openAuditIssueCount: openAuditIssues.length }),
     stateDrivenGoal: plannerStateGoalText,
-    defaultMetadata: [
-      `planRole=${defaultMetadata.planRole ?? "progress"} | phase=${defaultMetadata.phaseLabel ?? "无"}`,
-      `mustAdvance=${defaultMetadata.mustAdvance.join("；") || "无"}`,
-      `mustPreserve=${defaultMetadata.mustPreserve.join("；") || "无"}`,
-    ].join("\n"),
-    replanContext: replanContextBlock,
-    storyMacroSummary: buildStoryMacroSummary(storyMacroPlan),
+    defaultMetadata: [`planRole=${defaultMetadata.planRole ?? "progress"} | phase=${defaultMetadata.phaseLabel ?? "无"}`, `mustAdvance=${defaultMetadata.mustAdvance.join("；") || "无"}`, `mustPreserve=${defaultMetadata.mustPreserve.join("；") || "无"}`].join("\n"),
+    replanContext: replanContextBlock, storyMacroSummary: buildStoryMacroSummary(storyMacroPlan),
     currentVolumeWindow: buildCurrentVolumeWindowSummary(plannerVolumes, chapter.order),
-    payoffLedgerSummary: buildPlannerPayoffLedgerContext(payoffLedger, chapter.order),
-    storyModeBlock,
+    payoffLedgerSummary: buildPlannerPayoffLedgerContext(payoffLedger, chapter.order), storyModeBlock,
   });
 
   return {
-    novel,
-    chapter,
-    bible,
-    plotBeats,
-    summaries,
-    characters,
-    bookPlan,
-    arcPlans,
-    recentDecisions,
-    openAuditIssues,
-    styleEngine,
-    plannerVolumes,
-    storyModeBlock,
-    defaultMetadata,
-    resolvedStateDrivenContext,
+    novel, chapter, bible, plotBeats, summaries, characters, bookPlan, arcPlans, recentDecisions, openAuditIssues,
+    styleEngine, plannerVolumes, storyModeBlock, defaultMetadata, resolvedStateDrivenContext,
     plannerStateGoalText,
     replanContextBlock,
     contextBlocks,
