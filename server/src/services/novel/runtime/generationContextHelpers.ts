@@ -1,6 +1,6 @@
 import type { GenerationContextPackage } from "@ai-novel/shared/types/chapterRuntime";
 import { parseJsonStringArray } from "../novelP0Utils";
-import { plannerMediator } from "../mediation/NovelPlannerMediator";
+import { plannerMediator } from "../../mediation/NovelPlannerMediator";
 import { parseJsonStringArraySafe } from "./runtimeContextBlocks";
 
 export const OPENING_COMPARE_LIMIT = 3;
