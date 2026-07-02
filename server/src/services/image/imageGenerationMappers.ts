@@ -4,14 +4,7 @@ import type { ImageAsset, ImageGenerationTask } from "@ai-novel/shared/types/ima
 import { AppError } from "../../middleware/errorHandler";
 import { buildImageAssetPublicUrl, parseImageAssetMetadata } from "./imageAssetStorage";
 
-export function isMissingTableError(error: unknown): boolean {
-  return (
-    typeof error === "object" &&
-    error !== null &&
-    "code" in error &&
-    (error as { code?: string }).code === "P2021"
-  );
-}
+export { isMissingTableError } from "../../platform/dbErrors";
 
 export function normalizeImageGenerationError(error: unknown): string {
   if (error instanceof Error) {

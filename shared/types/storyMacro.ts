@@ -64,6 +64,11 @@ export interface StoryMacroTurningPoint {
   phase: string;
 }
 
+/**
+ * Story constraint engine — the book-level structural blueprint: premise, conflict axis, mystery box,
+ * pressure roles, growth path, phase model, hard constraints, turning points, and ending constraints.
+ * Generated during the "story macro planning" stage and consumed by volume/chapter planning.
+ */
 export interface StoryConstraintEngine {
   premise: string;
   conflict_axis: string;

@@ -111,6 +111,7 @@ export type PipelineRepairMode =
   | "character_only"
   | "ending_only";
 
+/** Auto-director task summary — top-level status of a director run including progress, stage, checkpoint, and blocking info. */
 export interface NovelAutoDirectorTaskSummary {
   id: string;
   status: TaskStatus;
@@ -142,6 +143,7 @@ export type ModelRouteTaskType =
   | "fact_extraction"
   | "chat";
 
+/** Core novel entity — represents a single book project with all book-level settings, progress tracking, and resource bindings. */
 export interface Novel {
   id: string;
   title: string;
@@ -185,6 +187,7 @@ export interface Novel {
   updatedAt: string;
 }
 
+/** A single chapter within a novel — holds content, generation state, quality scores, and task/review metadata. */
 export interface Chapter {
   id: string;
   title: string;

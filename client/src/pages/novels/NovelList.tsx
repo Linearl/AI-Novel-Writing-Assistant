@@ -1,6 +1,4 @@
-﻿import type { KeyboardEvent, MouseEvent } from "react";
 import { useEffect, useMemo, useState } from "react";
-import type { ProjectProgressStatus } from "@ai-novel/shared/types/novel";
 import type { DirectorContinuationMode } from "@ai-novel/shared/types/novelDirector";
 import type {
   DirectorBookAutomationAction,
@@ -8,39 +6,23 @@ import type {
 } from "@ai-novel/shared/types/directorRuntime";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { BookOpen, Gauge, RotateCcw } from "lucide-react";
+import { RotateCcw } from "lucide-react";
 import { getDirectorBookAutomationProjection } from "@/api/novelDirector";
 import { continueNovelWorkflow } from "@/api/novelWorkflow";
 import { deleteNovel, downloadNovelExport, getNovelList } from "@/api/novel";
 import { queryKeys } from "@/api/queryKeys";
-import AICockpit from "@/components/autoDirector/AICockpit";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  AppDialogContent,
-  Dialog,
-} from "@/components/ui/dialog";
-import { cn } from "@/lib/utils";
-import {
-  canContinueDirector,
-  canContinueChapterBatchAutoExecution,
-  canEnterChapterExecution,
-  getCandidateSelectionLink,
-  getWorkflowBadge,
-  getWorkflowDescription,
-  isWorkflowRunningInBackground,
-  requiresCandidateSelection,
-} from "@/lib/novelWorkflowTaskUi";
 import { toast } from "@/components/ui/toast";
-import { resolveWorkflowContinuationFeedback } from "@/lib/novelWorkflowContinuation";
 import {
   getDirectorCockpitActionHref,
   getDirectorCockpitContinuationMode,
   isDirectorCockpitContinuationAction,
 } from "@/lib/directorCockpitActions";
+import { resolveWorkflowContinuationFeedback } from "@/lib/novelWorkflowContinuation";
 import { useTaskRecovery } from "@/components/layout/TaskRecoveryContext";
-import NovelWorkflowRunningIndicator from "./components/NovelWorkflowRunningIndicator";
+import NovelListItem, { NovelListCockpitDialog } from "./components/NovelListItem";
 
 type StatusFilter = "all" | "draft" | "published";
 type WritingModeFilter = "all" | "original" | "continuation";
@@ -57,29 +39,6 @@ function createDownload(blob: Blob, fileName: string): void {
   anchor.click();
   anchor.remove();
   URL.revokeObjectURL(url);
-}
-
-function formatProgressStatus(status?: ProjectProgressStatus | null): string {
-  if (status === "completed") {
-    return "已完成";
-  }
-  if (status === "in_progress") {
-    return "进行中";
-  }
-  if (status === "rework") {
-    return "待返工";
-  }
-  if (status === "blocked") {
-    return "受阻";
-  }
-  return "未开始";
-}
-
-function formatTokenCount(value?: number | null): string {
-  const normalized = typeof value === "number" && Number.isFinite(value)
-    ? Math.max(0, Math.round(value))
-    : 0;
-  return new Intl.NumberFormat("zh-CN").format(normalized);
 }
 
 export default function NovelList() {
@@ -213,19 +172,15 @@ export default function NovelList() {
     deleteNovelMutation.mutate(novelId);
   };
 
-  const stopCardClick = (event: MouseEvent<HTMLElement> | KeyboardEvent<HTMLElement>) => {
-    event.stopPropagation();
-  };
-
   const openNovelEditor = (novelId: string) => {
     navigate(`/novels/${novelId}/edit`);
   };
 
   const handleCockpitAction = (
-    projection: DirectorBookAutomationProjection,
+    proj: DirectorBookAutomationProjection,
     action: DirectorBookAutomationAction,
   ) => {
-    const taskId = action.commandPayload?.taskId ?? action.target.taskId ?? projection.latestTask?.id;
+    const taskId = action.commandPayload?.taskId ?? action.target.taskId ?? proj.latestTask?.id;
     if (taskId && isDirectorCockpitContinuationAction(action)) {
       continueWorkflowMutation.mutate({
         taskId,
@@ -234,7 +189,7 @@ export default function NovelList() {
       return;
     }
     setCockpitNovelId(null);
-    navigate(getDirectorCockpitActionHref(projection, action));
+    navigate(getDirectorCockpitActionHref(proj, action));
   };
 
   return (
@@ -360,226 +315,34 @@ export default function NovelList() {
       ) : (
         <>
           <div className="grid gap-3 md:grid-cols-2">
-            {novels.map((novel) => {
-            const workflowTask = novel.latestAutoDirectorTask ?? null;
-            const workflowCurrentAction = workflowTask?.currentItemLabel?.trim() || "";
-            const workflowBadge = getWorkflowBadge(workflowTask);
-            const workflowDescription = getWorkflowDescription(workflowTask);
-            const isWorkflowRunning = isWorkflowRunningInBackground(workflowTask);
-            const isWorkflowPending = continueWorkflowMutation.isPending
-              && continueWorkflowMutation.variables?.taskId === workflowTask?.id;
-            const isDownloadPending = downloadNovelMutation.isPending
-              && downloadNovelMutation.variables?.novelId === novel.id;
-            const isDeletePending = deleteNovelMutation.isPending
-              && deleteNovelMutation.variables === novel.id;
-
-            return (
-              <Card
+            {novels.map((novel) => (
+              <NovelListItem
                 key={novel.id}
-                role="link"
-                tabIndex={0}
-                className="cursor-pointer transition hover:border-primary/40 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-ring"
-                onClick={() => openNovelEditor(novel.id)}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter" || event.key === " ") {
-                    event.preventDefault();
-                    openNovelEditor(novel.id);
-                  }
+                novel={novel}
+                isWorkflowPending={
+                  continueWorkflowMutation.isPending
+                  && continueWorkflowMutation.variables?.taskId === novel.latestAutoDirectorTask?.id
+                }
+                isDownloadPending={
+                  downloadNovelMutation.isPending
+                  && downloadNovelMutation.variables?.novelId === novel.id
+                }
+                isDeletePending={
+                  deleteNovelMutation.isPending
+                  && deleteNovelMutation.variables === novel.id
+                }
+                onCockpitClick={(novelId) => setCockpitNovelId(novelId)}
+                onContinueWorkflow={(input) => {
+                  continueWorkflowMutation.mutate({
+                    taskId: input.taskId,
+                    mode: input.mode as DirectorContinuationMode | undefined,
+                  });
                 }}
-              >
-                <CardHeader className="space-y-3">
-                  <div className="flex items-center justify-between gap-2">
-                    <CardTitle className="line-clamp-1 text-lg transition hover:text-primary">
-                      {novel.title}
-                    </CardTitle>
-                    <div className="flex flex-wrap items-center justify-end gap-2">
-                      <Badge variant={novel.status === "published" ? "default" : "secondary"}>
-                        {novel.status === "published" ? "已发布" : "草稿"}
-                      </Badge>
-                      {novel.writingMode === "continuation" ? (
-                        <Badge variant="outline">续写</Badge>
-                      ) : (
-                        <Badge variant="outline">原创</Badge>
-                      )}
-                    </div>
-                  </div>
-                  <CardDescription className="line-clamp-2">
-                    {novel.description || "暂无简介"}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="text-xs text-muted-foreground">
-                    章节数：{novel._count.chapters}，角色数：{novel._count.characters}，累计 Token：{formatTokenCount(
-                      novel.tokenUsage?.totalTokens,
-                    )}
-                  </div>
-
-                  {workflowTask ? (
-                    <div
-                      className={cn(
-                        "rounded-xl border p-3 transition-colors",
-                        isWorkflowRunning
-                          ? "border-primary/20 bg-primary/[0.04] shadow-sm"
-                          : "bg-muted/20",
-                      )}
-                    >
-                      <div className="flex flex-wrap items-center gap-2">
-                        {workflowBadge ? (
-                          <Badge variant={workflowBadge.variant}>{workflowBadge.label}</Badge>
-                        ) : null}
-                        <Badge variant="outline">进度 {Math.round(workflowTask.progress * 100)}%</Badge>
-                        {isWorkflowRunning ? (
-                          <Badge variant="outline">后台运行中</Badge>
-                        ) : null}
-                      </div>
-                      {workflowDescription ? (
-                        <div className="mt-2 text-sm text-muted-foreground">{workflowDescription}</div>
-                      ) : null}
-                      {isWorkflowRunning ? (
-                        <NovelWorkflowRunningIndicator
-                          className="mt-3"
-                          progress={workflowTask.progress}
-                          label={workflowCurrentAction || "AI 正在后台持续推进"}
-                        />
-                      ) : null}
-                      <div className="mt-2 text-xs text-muted-foreground">
-                        当前阶段：{workflowTask.currentStage ?? "自动导演"}{workflowCurrentAction ? ` · ${workflowCurrentAction}` : ""}
-                      </div>
-                      {workflowTask.lastHealthyStage ? (
-                        <div className="mt-1 text-xs text-muted-foreground">
-                          最近健康阶段：{workflowTask.lastHealthyStage}
-                        </div>
-                      ) : null}
-                      {workflowTask.resumeAction ? (
-                        <div className="mt-1 text-xs text-muted-foreground">
-                          建议继续：{workflowTask.resumeAction}
-                        </div>
-                      ) : null}
-                    </div>
-                  ) : (
-                    <div className="rounded-xl border border-dashed bg-muted/10 p-3 text-xs text-muted-foreground">
-                      当前未检测到自动导演任务，列表按小说基础资产展示。
-                    </div>
-                  )}
-
-                  <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
-                    <span>项目：{formatProgressStatus(novel.projectStatus)}</span>
-                    <span>主线：{formatProgressStatus(novel.storylineStatus)}</span>
-                    <span>大纲：{formatProgressStatus(novel.outlineStatus)}</span>
-                    <span>资源：{novel.resourceReadyScore ?? 0}/100</span>
-                  </div>
-
-                  {novel.world ? (
-                    <div className="text-xs text-muted-foreground">
-                      参考世界样本：{novel.world.name}
-                    </div>
-                  ) : null}
-
-                  <div className="flex flex-wrap gap-2">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={(event) => {
-                        stopCardClick(event);
-                        setCockpitNovelId(novel.id);
-                      }}
-                    >
-                      <Gauge className="h-4 w-4" aria-hidden="true" />
-                      AI 驾驶舱
-                    </Button>
-
-                    {canContinueChapterBatchAutoExecution(workflowTask) ? (
-                      <Button
-                        size="sm"
-                        onClick={(event) => {
-                          stopCardClick(event);
-                          if (!workflowTask) {
-                            return;
-                          }
-                          continueWorkflowMutation.mutate({
-                            taskId: workflowTask.id,
-                            mode: "auto_execute_range",
-                          });
-                        }}
-                        disabled={isWorkflowPending}
-                      >
-                        {isWorkflowPending ? "继续执行中..." : (workflowTask?.resumeAction ?? `继续自动执行${workflowTask?.executionScopeLabel ?? "当前章节范围"}`)}
-                      </Button>
-                    ) : canContinueDirector(workflowTask) ? (
-                      <Button
-                        size="sm"
-                        onClick={(event) => {
-                          stopCardClick(event);
-                          if (!workflowTask) {
-                            return;
-                          }
-                          continueWorkflowMutation.mutate({
-                            taskId: workflowTask.id,
-                          });
-                        }}
-                        disabled={isWorkflowPending}
-                      >
-                        {isWorkflowPending ? "继续中..." : (workflowTask?.resumeAction ?? "继续导演")}
-                      </Button>
-                    ) : requiresCandidateSelection(workflowTask) ? (
-                      <Button asChild size="sm">
-                        <Link to={getCandidateSelectionLink(workflowTask!.id)} onClick={stopCardClick}>
-                          {workflowTask!.resumeAction ?? "继续确认书级方向"}
-                        </Link>
-                      </Button>
-                    ) : canEnterChapterExecution(workflowTask) ? (
-                      <Button asChild size="sm">
-                        <Link to={`/novels/${novel.id}/edit`} onClick={stopCardClick}>进入章节执行</Link>
-                      </Button>
-                    ) : workflowTask ? (
-                      <Button asChild size="sm">
-                        <Link to={`/novels/${novel.id}/edit?directorTaskId=${workflowTask.id}`} onClick={stopCardClick}>查看推进状态</Link>
-                      </Button>
-                    ) : null}
-
-                    {workflowTask ? (
-                      <Button asChild size="sm" variant="outline">
-                        <Link to={`/novels/${novel.id}/edit?directorTaskId=${workflowTask.id}&taskPanel=1`} onClick={stopCardClick}>执行详情</Link>
-                      </Button>
-                    ) : null}
-
-                    <Button asChild size="sm" variant="outline">
-                      <Link to={`/novels/${novel.id}/preview`} onClick={stopCardClick}>
-                        <BookOpen className="h-4 w-4" aria-hidden="true" />
-                        预览
-                      </Link>
-                    </Button>
-
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={(event) => {
-                        stopCardClick(event);
-                        downloadNovelMutation.mutate({
-                          novelId: novel.id,
-                          novelTitle: novel.title,
-                        });
-                      }}
-                      disabled={isDownloadPending}
-                    >
-                      {isDownloadPending ? "导出中..." : "导出"}
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="secondary"
-                      onClick={(event) => {
-                        stopCardClick(event);
-                        handleDelete(novel.id, novel.title);
-                      }}
-                      disabled={isDeletePending}
-                    >
-                      {isDeletePending ? "删除中..." : "删除"}
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            );
-            })}
+                onDownload={(input) => downloadNovelMutation.mutate(input)}
+                onDelete={handleDelete}
+                onOpenEditor={openNovelEditor}
+              />
+            ))}
           </div>
           {totalPages > 1 ? (
             <div className="flex flex-wrap items-center justify-end gap-2">
@@ -604,56 +367,36 @@ export default function NovelList() {
         </>
       )}
 
-      <Dialog
+      <NovelListCockpitDialog
         open={Boolean(cockpitNovelId)}
         onOpenChange={(open) => {
           if (!open) {
             setCockpitNovelId(null);
           }
         }}
-      >
-        <AppDialogContent
-          className="max-w-2xl"
-          title="AI 驾驶舱"
-          description={
-            selectedCockpitNovel?.title
-              ? `查看《${selectedCockpitNovel.title}》的 AI 推进状态和下一步动作。`
-              : "查看这本书的 AI 推进状态和下一步动作。"
+        title={selectedCockpitNovel?.title ?? null}
+        isPending={cockpitProjectionQuery.isPending}
+        isError={cockpitProjectionQuery.isError}
+        projection={cockpitProjection}
+        isActionPending={continueWorkflowMutation.isPending}
+        onAction={(projection, action) => {
+          const taskId = action.commandPayload?.taskId ?? action.target.taskId ?? projection.latestTask?.id;
+          if (taskId && isDirectorCockpitContinuationAction(action)) {
+            continueWorkflowMutation.mutate({
+              taskId,
+              mode: getDirectorCockpitContinuationMode(action),
+            });
+            return;
           }
-        >
-          {cockpitProjectionQuery.isPending ? (
-            <div className="rounded-lg border p-3 text-sm text-muted-foreground">
-              读取这本书的 AI 状态...
-            </div>
-          ) : cockpitProjectionQuery.isError ? (
-            <div className="rounded-lg border p-3">
-              <div className="text-sm text-muted-foreground">无法读取这本书的 AI 状态，请稍后重试。</div>
-              <Button
-                type="button"
-                size="sm"
-                variant="outline"
-                className="mt-3"
-                onClick={() => void cockpitProjectionQuery.refetch()}
-              >
-                重新读取
-              </Button>
-            </div>
-          ) : cockpitProjection ? (
-            <AICockpit
-              projection={cockpitProjection}
-              mode="focusedNovel"
-              isActionPending={continueWorkflowMutation.isPending}
-              onAction={handleCockpitAction}
-              onOpenNovel={(projection) => {
-                setCockpitNovelId(null);
-                navigate(projection.focusNovel.href);
-              }}
-            />
-          ) : (
-            <AICockpit fallbackSummary="这本书没有需要处理的 AI 自动推进任务。" />
-          )}
-        </AppDialogContent>
-      </Dialog>
+          setCockpitNovelId(null);
+          navigate(getDirectorCockpitActionHref(projection, action));
+        }}
+        onOpenNovel={(projection) => {
+          setCockpitNovelId(null);
+          navigate(projection.focusNovel.href);
+        }}
+        onRetry={() => void cockpitProjectionQuery.refetch()}
+      />
     </div>
   );
 }

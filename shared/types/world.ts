@@ -1,3 +1,4 @@
+/** World entity — represents a complete world definition with structured sections (rules, factions, locations) and optional structure JSON for rich editing. */
 export interface World {
   id: string;
   name: string;

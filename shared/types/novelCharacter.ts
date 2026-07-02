@@ -24,6 +24,7 @@ export interface CharacterHardFacts {
   prohibitionsJson?: string | null;
 }
 
+/** A novel-scoped character — carries personality, arc progression, hard facts (faction/power/location), and appearance details. Scoped to a single novel via `novelId`. */
 export interface Character {
   id: string;
   name: string;
@@ -109,6 +110,7 @@ export interface CharacterVisibleProfileApplyResult {
   warnings: string[];
 }
 
+/** Library-level character template — the reusable base character that novel-scoped characters can inherit from via `baseCharacterId`. */
 export interface BaseCharacter {
   id: string;
   name: string;

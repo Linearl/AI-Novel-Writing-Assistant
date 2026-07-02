@@ -119,6 +119,11 @@ export const DIRECTOR_CIRCUIT_BREAKER_REASONS = [
 
 export type DirectorCircuitBreakerReason = typeof DIRECTOR_CIRCUIT_BREAKER_REASONS[number];
 
+/**
+ * Circuit breaker state for the auto-director pipeline.
+ * When `status` is `"open"`, the pipeline pauses and surfaces a `recoveryAction`
+ * (retry, switch model, manual repair, etc.) to prevent runaway failure loops.
+ */
 export interface DirectorCircuitBreakerState {
   status: "closed" | "open";
   reason?: DirectorCircuitBreakerReason | null;

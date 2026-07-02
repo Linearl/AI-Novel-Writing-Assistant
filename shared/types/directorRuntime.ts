@@ -42,6 +42,7 @@ export type DirectorArtifactSource =
   | "imported"
   | "backfilled";
 
+/** Versioned reference to a director artifact — tracks type, status, source, content hash, and dependency chain for the auto-director's artifact lineage. */
 export interface DirectorArtifactRef {
   id: string;
   novelId: string;
@@ -119,6 +120,7 @@ export type DirectorStepRunStatus =
   | "waiting_approval"
   | "blocked_scope";
 
+/** Single execution record of a director step run — captures idempotency key, status, produced artifacts, and policy decision for replay/debug. */
 export interface DirectorStepRun {
   idempotencyKey: string;
   nodeKey: string;

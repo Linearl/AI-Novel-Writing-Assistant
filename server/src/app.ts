@@ -6,6 +6,7 @@ import express from "express";
 import helmet from "helmet";
 import morgan from "morgan";
 import type { ApiResponse } from "@ai-novel/shared/types/api";
+import { BIND_ALL_HOST, DEFAULT_HOST, DEFAULT_SERVER_PORT } from "./config/constants";
 import { ensureRuntimeDatabaseReady } from "./db/runtimeMigrations";
 import { errorHandler } from "./middleware/errorHandler";
 import { requestIdMiddleware } from "./middleware/requestId";
@@ -26,6 +27,7 @@ import healthRouter from "./routes/health";
 import imagesRouter from "./routes/images";
 import knowledgeRouter from "./routes/knowledge";
 import llmRouter from "./routes/llm";
+import llmTrackingRouter from "./routes/llmTracking";
 import novelRouter from "./modules/novel/http/novel";
 import dramaRouter from "./modules/drama/http/dramaRoutes";
 import comicRouter from "./modules/comic/http/comicRoutes";
@@ -138,6 +140,7 @@ export function createApp() {
   app.use("/api/story-modes", storyModeRouter);
   app.use("/api/knowledge", knowledgeRouter);
   app.use("/api/llm", llmRouter);
+  app.use("/api/llm-tracking", llmTrackingRouter);
   app.use("/api/title-library", titleLibraryRouter);
   app.use("/api", styleEngineRouter);
   app.use("/api", styleEngineExtractionRouter);
@@ -189,7 +192,7 @@ function getLanIp(): string | null {
 }
 
 function createServerUrl(host: string, port: number): string {
-  if (host === "0.0.0.0" || host === "::") {
+  if (host === BIND_ALL_HOST || host === "::") {
     return `http://localhost:${port}`;
   }
   return host.includes(":") ? `http://[${host}]:${port}` : `http://${host}:${port}`;
@@ -223,14 +226,14 @@ function resolveServerStartOptions(options?: ServerStartOptions): {
   const allowLan = options?.allowLan ?? parseEnvFlag(process.env.ALLOW_LAN, process.env.NODE_ENV !== "production");
   return {
     allowLan,
-    port: options?.port ?? Number(process.env.AI_NOVEL_SERVER_PORT ?? process.env.PORT ?? 3000),
-    host: options?.host ?? process.env.HOST ?? (allowLan ? "0.0.0.0" : "localhost"),
+    port: options?.port ?? Number(process.env.AI_NOVEL_SERVER_PORT ?? process.env.PORT ?? DEFAULT_SERVER_PORT),
+    host: options?.host ?? process.env.HOST ?? (allowLan ? BIND_ALL_HOST : DEFAULT_HOST),
   };
 }
 
 function logServerReady(host: string, port: number): void {
   logger.info(`[server] listening on http://localhost:${port}`);
-  if (host === "0.0.0.0" || host === "::") {
+  if (host === BIND_ALL_HOST || host === "::") {
     const lanIp = getLanIp();
     if (lanIp) {
       logger.info(`[server] LAN: http://${lanIp}:${port}`);

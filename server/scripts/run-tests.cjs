@@ -53,7 +53,10 @@ if (files.length === 0) {
   process.exit(1);
 }
 
-const result = spawnSync(process.execPath, ["--test", "--test-concurrency=1", ...files], {
+// Fast tests run in parallel; integration tests remain serial to avoid
+// database contention on the shared development database.
+const concurrencyFlag = mode === "integration" ? "--test-concurrency=1" : "--test-concurrency=4";
+const result = spawnSync(process.execPath, ["--test", concurrencyFlag, ...files], {
   cwd: serverRoot,
   stdio: "inherit",
 });

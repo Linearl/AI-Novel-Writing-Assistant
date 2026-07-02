@@ -40,6 +40,7 @@ export interface NovelWorkflowResumeTarget {
   mode?: "director" | null;
 }
 
+/** Book contract — the book-level creative promise: reading hook, protagonist fantasy, core selling point, milestone payoffs (ch3/10/30), escalation ladder, and hard constraints. */
 export interface BookContract {
   id: string;
   novelId: string;

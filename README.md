@@ -522,6 +522,56 @@ pnpm --filter @ai-novel/server test:routes
 pnpm --filter @ai-novel/server test:book-analysis
 ```
 
+## API 端点概览
+
+所有 API 统一挂载在 `/api` 前缀下。端点按模块分组，路由定义在 `server/src/modules/` 各子目录的 `http/` 入口中。
+
+| 模块组 | 前缀 | 说明 |
+|--------|------|------|
+| 小说 CRUD | `/api/novels` | 小说创建、列表、详情、更新、删除 |
+| 项目设定 | `/api/novels/:id/setup` | 书级 framing、题材绑定、写法确认 |
+| 故事规划 | `/api/novels/:id/planning` | 宏观规划、故事线、卷战略 |
+| 卷管理 | `/api/novels/:id/volumes` | 卷骨架、节奏板、拆章 |
+| 章节执行 | `/api/novels/:id/production` | 章节写作、审核、修复、正文编辑 |
+| 角色管理 | `/api/novels/:id/characters` | 角色准备、动态、资源、弧光、同步 |
+| 世界观 | `/api/worlds`、`/api/novels/:id/world` | 世界骨架、规则、势力、可视化 |
+| 拆书分析 | `/api/novels/:id/book-analysis` | 拆书生成、发布、状态查询 |
+| 知识库 | `/api/knowledge` | 文档管理、向量索引、检索 |
+| 写法引擎 | `/api/style-engine` | 风格配置、特征提取、反 AI 规则 |
+| 模型设置 | `/api/settings` | 供应商配置、模型路由、连通性测试 |
+| Creative Hub | `/api/creative-hub` | 统一创作中枢、对话、工具调用 |
+| 导演出口 | `/api/novels/:id/director` | 自动导演启动、恢复、状态查询 |
+| 导出 | `/api/novels/:id/export` | 小说导出为不同格式 |
+| 漫画 | `/api/comics` | 漫画工作台、分格、图片生成 |
+| 世界库 | `/api/setup/world` | 世界模板、结构管理 |
+| 任务中心 | `/api/tasks` | 后台任务排队、执行、失败状态 |
+| 健康检查 | `/api/health` | 服务存活检测 |
+
+详细的请求 / 响应格式请参考各路由文件中的 Zod schema 定义，以及客户端 API 层 (`client/src/api/`) 的调用实现。
+
+## 环境变量参考
+
+环境变量按子包分别加载：
+
+- **服务端**：读取 `server/.env`（首次复制 `cp server/.env.example server/.env`）
+- **前端**：读取 `client/.env`（大多数场景无需单独配置）
+- 根目录 `.env.example` 仅为总览参考，非默认加载入口
+
+主要环境变量：
+
+| 变量 | 默认值 | 说明 |
+|------|--------|------|
+| `DATABASE_URL` | `file:../data/dev.db` | 数据库连接串，开发默认 SQLite |
+| `RAG_ENABLED` | `false` | 是否启用 Qdrant 知识库 |
+| `QDRANT_URL` | — | Qdrant REST 地址（含 `:6333`） |
+| `QDRANT_API_KEY` | — | Qdrant 数据库 API Key |
+| `OPENAI_API_KEY` | — | OpenAI 供应商密钥 |
+| `DEEPSEEK_API_KEY` | — | DeepSeek 供应商密钥 |
+| `ANTHROPIC_API_KEY` | — | Anthropic 供应商密钥 |
+| `SILICONFLOW_API_KEY` | — | SiliconFlow 供应商密钥 |
+
+模型密钥建议在启动后通过 `/settings` 页面配置，环境变量主要作为启动默认值或数据库未保存时的回退。完整变量列表参见 `server/.env.example`。
+
 ## 技术栈与架构
 
 ### 技术栈

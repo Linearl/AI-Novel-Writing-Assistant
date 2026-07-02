@@ -62,6 +62,7 @@ export interface CreativeHubProductionStage {
   detail?: string | null;
 }
 
+/** Production status snapshot for Creative Hub — aggregates chapter counts, asset readiness stages, pipeline state, and recovery hints for a novel project. */
 export interface CreativeHubProductionStatus {
   novelId: string;
   worldId?: string | null;

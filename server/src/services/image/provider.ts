@@ -28,14 +28,7 @@ function normalizeBaseUrl(value: string): string {
   return value.endsWith("/") ? value.slice(0, -1) : value;
 }
 
-function isMissingTableError(error: unknown): boolean {
-  return (
-    typeof error === "object"
-    && error !== null
-    && "code" in error
-    && (error as { code?: string }).code === "P2021"
-  );
-}
+import { isMissingTableError } from "../../platform/dbErrors";
 
 interface ProviderSecret {
   apiKey?: string;

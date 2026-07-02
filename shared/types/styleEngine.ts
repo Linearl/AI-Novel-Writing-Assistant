@@ -54,6 +54,10 @@ export interface RhythmRules {
   [key: string]: unknown;
 }
 
+/**
+ * Complete style rule set — bundles narrative, character, language, and rhythm rules
+ * that together define a reusable writing style profile.
+ */
 export interface StyleRuleSet {
   narrativeRules: NarrativeRules;
   characterRules: CharacterRules;
