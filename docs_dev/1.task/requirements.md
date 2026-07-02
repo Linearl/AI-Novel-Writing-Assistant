@@ -50,6 +50,7 @@ description: "需求任务总清单（SSOT）"
 | 2032 | 角色弧光可视化 (Character Arc Visualization) | p2 | ✅ 已完成 | REQ-2029 后续迭代，依赖 REQ-2031 | 0.1 | 2026-06-30 | - | `B.2.done/v0.1-r2032-complex-character-arc-visualization/README.md` | 后端聚合 API + recharts 时间线图 + visx/纯 SVG 关系网络图，集成到角色管理页面 |
 | 2033 | 主题一致性纯数据工具层 (Theme Consistency Data Tools) | p2 | ✅ 已完成 | REQ-2029 后续迭代 | 0.1 | 2026-06-30 | - | `B.2.done/v0.1-r2033-medium-theme-consistency-data-tools/README.md` | 3 个 inspect tool: payoff 健康度、卷主题覆盖率、主题层级聚合，纯规则无 LLM |
 | 2034 | 主题一致性 LLM 分析层 (Theme Consistency LLM Analysis) | p2 | ✅ 已完成 | REQ-2029 后续迭代，依赖 REQ-2033 | 0.1 | 2026-06-30 | - | `B.2.done/v0.1-r2034-medium-theme-consistency-llm-analysis/README.md` | 2 个 inspect tool + 1 个 PromptAsset: 主题偏移检测、母题持续性检查，LLM 语义分析 |
+| 2036 | 用户反馈系统 | p3 | 📋 待办 | - | 0.1 | 2026-07-02T09:45:00.000Z | 2026-07-02T09:45:00.000Z | `B.todo/v0.1-r2036-medium-user-feedback-system/README.md` |  |
 | 2013 | Director Failed Retry Entry | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2013-medium-director-failed-retry-entry/README.md` |  |
 | 2014 | Chapter Token Budget Dynamic | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2014-medium-chapter-token-budget-dynamic/README.md` |  |
 
@@ -96,6 +97,7 @@ description: "需求任务总清单（SSOT）"
 
 | 编号 | 任务标题 | 文档 |
 | --- | --- | --- |
+| 2036 | 用户反馈系统 | `B.todo/v0.1-r2036-medium-user-feedback-system/README.md` |
 | 7006 | 移除时间线旧 JSON 字段 | `B.todo/v0.1-r7006-simple-timeline-idsjson-removal/README.md` |
 | 7010 | Audit P1 Fix | `B.todo/v0.1-r7010-p1-audit-p1-fix/README.md` |
 | 2013 | Director Failed Retry Entry | `B.todo/v0.1-r2013-medium-director-failed-retry-entry/README.md` |

@@ -1,0 +1,29 @@
+{
+  "reqId": "REQ-2036",
+  "title": "用户反馈系统",
+  "status": "requirements_ready",
+  "complexity": "medium",
+  "category": "2xxx",
+  "reqType": "核心功能开发",
+  "version": "v0.1",
+  "createdAt": "2026-07-02T09:45:00.000Z",
+  "updatedAt": "2026-07-02T09:45:00.000Z",
+  "artifacts": {
+    "requirementsPath": "docs_dev/1.task/B.todo/v0.1/v0.1-r2036-medium-user-feedback-system/REQ.md",
+    "designPath": "docs_dev/1.task/B.todo/v0.1/v0.1-r2036-medium-user-feedback-system/design.md",
+    "tasksPath": "docs_dev/1.task/B.todo/v0.1/v0.1-r2036-medium-user-feedback-system/tasks.md",
+    "decisionLogPath": "docs_dev/1.task/B.todo/v0.1/v0.1-r2036-medium-user-feedback-system/decision_log.md"
+  },
+  "unresolved_items": [],
+  "assumptions": [
+    "反馈数据量不大，文件系统存储足够",
+    "管理员接口可复用现有认证中间件",
+    "前端可复用现有 UI 组件库"
+  ],
+  "blocking_reasons": [],
+  "handoff": {
+    "from": "req",
+    "to": "dev",
+    "ready": true
+  }
+}

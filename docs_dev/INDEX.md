@@ -27,6 +27,17 @@ description: "docs 目录索引（自动生成）"
 | --- | --- | --- |
 | [1.task\B.todo\任务包六件套构成-编号分类规则-自动归档机制.md](./1.task\B.todo\任务包六件套构成-编号分类规则-自动归档机制.md) | --- | - |
 
+## 1.task\B.todo\v0.1\v0.1-r2036-medium-user-feedback-system
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.1\v0.1-r2036-medium-user-feedback-system\decision_log.md](./1.task\B.todo\v0.1\v0.1-r2036-medium-user-feedback-system\decision_log.md) | REQ-2036 用户反馈系统决策日志 | REQ-2036 用户反馈系统决策日志 |
+| [1.task\B.todo\v0.1\v0.1-r2036-medium-user-feedback-system\design.md](./1.task\B.todo\v0.1\v0.1-r2036-medium-user-feedback-system\design.md) | REQ-2036 用户反馈系统技术设计文档 | REQ-2036 用户反馈系统技术设计文档 |
+| [1.task\B.todo\v0.1\v0.1-r2036-medium-user-feedback-system\README.md](./1.task\B.todo\v0.1\v0.1-r2036-medium-user-feedback-system\README.md) | REQ-2036 用户反馈系统任务包 README | REQ-2036 用户反馈系统任务包 README |
+| [1.task\B.todo\v0.1\v0.1-r2036-medium-user-feedback-system\REQ-original.md](./1.task\B.todo\v0.1\v0.1-r2036-medium-user-feedback-system\REQ-original.md) | REQ-2036 用户反馈系统需求文档（冻结副本） | REQ-2036 用户反馈系统需求文档（冻结副本） |
+| [1.task\B.todo\v0.1\v0.1-r2036-medium-user-feedback-system\REQ.md](./1.task\B.todo\v0.1\v0.1-r2036-medium-user-feedback-system\REQ.md) | REQ-2036 用户反馈系统需求文档（工作副本） | REQ-2036 用户反馈系统需求文档（工作副本） |
+| [1.task\B.todo\v0.1\v0.1-r2036-medium-user-feedback-system\tasks.md](./1.task\B.todo\v0.1\v0.1-r2036-medium-user-feedback-system\tasks.md) | REQ-2036 用户反馈系统任务拆解 | REQ-2036 用户反馈系统任务拆解 |
+
 ## 1.task\B.todo\v0.1\v0.1-r7001-complex-p2-security-fix
 
 | 文件 | 标题 | 描述 |
@@ -85,6 +96,7 @@ description: "docs 目录索引（自动生成）"
 | --- | --- | --- |
 | [1.task\B.todo\v0.1\v0.1-r7010-p1-audit-p1-fix\decision_log.md](./1.task\B.todo\v0.1\v0.1-r7010-p1-audit-p1-fix\decision_log.md) | REQ-7010 决策留痕 | REQ-7010 决策留痕 |
 | [1.task\B.todo\v0.1\v0.1-r7010-p1-audit-p1-fix\design.md](./1.task\B.todo\v0.1\v0.1-r7010-p1-audit-p1-fix\design.md) | REQ-7010 方案设计 | REQ-7010 方案设计 |
+| [1.task\B.todo\v0.1\v0.1-r7010-p1-audit-p1-fix\handoff.md](./1.task\B.todo\v0.1\v0.1-r7010-p1-audit-p1-fix\handoff.md) | > 交接时间：2026-07-02 | - |
 | [1.task\B.todo\v0.1\v0.1-r7010-p1-audit-p1-fix\README.md](./1.task\B.todo\v0.1\v0.1-r7010-p1-audit-p1-fix\README.md) | REQ-7010 全量审计 P1 关键问题修复任务总线 | REQ-7010 全量审计 P1 关键问题修复任务总线 |
 | [1.task\B.todo\v0.1\v0.1-r7010-p1-audit-p1-fix\REQ-7010-original.md](./1.task\B.todo\v0.1\v0.1-r7010-p1-audit-p1-fix\REQ-7010-original.md) | REQ-7010 全量审计 P1 关键问题修复 | REQ-7010 全量审计 P1 关键问题修复 |
 | [1.task\B.todo\v0.1\v0.1-r7010-p1-audit-p1-fix\REQ-7010.md](./1.task\B.todo\v0.1\v0.1-r7010-p1-audit-p1-fix\REQ-7010.md) | REQ-7010 全量审计 P1 关键问题修复 | REQ-7010 全量审计 P1 关键问题修复 |
