@@ -6,8 +6,8 @@ import { tokenService } from "../services/auth/TokenService";
  * 检查 Authorization: Bearer <token> header
  */
 export function authMiddleware(req: Request, res: Response, next: NextFunction): void {
-  // 跳过健康检查端点
-  if (req.path === "/api/health" || req.path === "/api/health/ready") {
+  // 跳过健康检查端点（中间件挂载在 /api，req.path 是相对路径）
+  if (req.path === "/health" || req.path === "/health/ready") {
     next();
     return;
   }

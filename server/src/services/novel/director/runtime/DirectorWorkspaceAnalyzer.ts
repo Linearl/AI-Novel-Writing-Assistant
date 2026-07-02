@@ -21,7 +21,7 @@ import {
 } from "../../../../prompting/prompts/novel/directorManualEditImpact.prompts";
 import { DirectorRuntimeStore } from "./DirectorRuntimeStore";
 import { loadDirectorWorkspaceInventory } from "./DirectorWorkspaceInventoryLoader";
-export { buildManualEditInventoryFromArtifacts, buildManualEditFallbackDecision } from "./DirectorWorkspaceInterpretation.js";
+export { buildManualEditInventoryFromArtifacts, buildManualEditFallbackDecision } from "./DirectorWorkspaceInterpretation";
 import {
   buildManualEditInventoryFromArtifacts,
   buildManualEditFallbackDecision,
