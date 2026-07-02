@@ -69,6 +69,7 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1\v0.1-r7009-complex-p2-security-fix\REQ-original.md](./1.task\B.todo\v0.1\v0.1-r7009-complex-p2-security-fix\REQ-original.md) | P2 安全问题修复需求文档（原始版） | P2 安全问题修复需求文档（原始版） |
 | [1.task\B.todo\v0.1\v0.1-r7009-complex-p2-security-fix\REQ.md](./1.task\B.todo\v0.1\v0.1-r7009-complex-p2-security-fix\REQ.md) | P2 问题修复需求文档 | P2 问题修复需求文档 |
 | [1.task\B.todo\v0.1\v0.1-r7009-complex-p2-security-fix\T15-directory-assessment.md](./1.task\B.todo\v0.1\v0.1-r7009-complex-p2-security-fix\T15-directory-assessment.md) | T15 server/src directory restructure assessment — identify flat directories exceeding 12-file threshold and recommend sub-directory organization | T15 server/src directory restructure assessment — identify flat directories exceeding 12-file threshold and recommend sub-directory organization |
+| [1.task\B.todo\v0.1\v0.1-r7009-complex-p2-security-fix\T32-better-sqlite3-assessment.md](./1.task\B.todo\v0.1\v0.1-r7009-complex-p2-security-fix\T32-better-sqlite3-assessment.md) | better-sqlite3 迁移可行性评估 | better-sqlite3 迁移可行性评估 |
 | [1.task\B.todo\v0.1\v0.1-r7009-complex-p2-security-fix\tasks.md](./1.task\B.todo\v0.1\v0.1-r7009-complex-p2-security-fix\tasks.md) | P2 问题修复任务清单 | P2 问题修复任务清单 |
 
 ## 1.task\B.todo\v0.1\v0.1-r7011-medium-p3-quality-fix

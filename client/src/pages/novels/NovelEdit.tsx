@@ -101,6 +101,7 @@ import {
   patchNovelBasicForm,
 } from "./novelBasicInfo.shared";
 import { useStructuredOutlineWorkspaceStore } from "./stores/useStructuredOutlineWorkspaceStore";
+import { useNovelEditTaskDrawerStore } from "./stores/useNovelEditTaskDrawerStore";
 import {
   applyVolumeChapterBatch,
   buildVolumePlanningReadiness,
@@ -117,7 +118,8 @@ export default function NovelEdit() {
   const llm = useLLMStore();
   const queryClient = useQueryClient();
   const { activeTab, setActiveTab, directorTaskId, setDirectorTaskId, selectedChapterId, setSelectedChapterId, selectedVolumeId, setSelectedVolumeId, taskPanelOpen, clearTaskPanelOpen } = useNovelEditWorkflow(id);
-  const [isTaskDrawerOpen, setIsTaskDrawerOpen] = useState(false);
+  const taskDrawer = useNovelEditTaskDrawerStore();
+  const { isTaskDrawerOpen, setIsTaskDrawerOpen } = { isTaskDrawerOpen: taskDrawer.isOpen, setIsTaskDrawerOpen: (v: boolean) => taskDrawer.setIsOpen(v) };
   const [autoOpenedFailedTaskId, setAutoOpenedFailedTaskId] = useState("");
   const [retryOverride, setRetryOverride] = useState<LLMSelectorValue>({ provider: llm.provider, model: llm.model, temperature: llm.temperature });
   const [basicForm, setBasicForm] = useState(() => createDefaultNovelBasicFormState());
@@ -145,8 +147,8 @@ export default function NovelEdit() {
   const [chapterStrategy, setChapterStrategy] = useState<ChapterExecutionStrategy>({ runMode: "fast", wordSize: "medium", conflictLevel: 60, pace: "balanced", aiFreedom: "medium" });
   const [activeChapterStream, setActiveChapterStream] = useState<{ chapterId: string; chapterLabel: string } | null>(null);
   const [activeRepairStream, setActiveRepairStream] = useState<{ chapterId: string; chapterLabel: string } | null>(null);
-  const [isDirectorExitActionExpanded, setIsDirectorExitActionExpanded] = useState(false);
-  const [dismissedTakeoverSignature, setDismissedTakeoverSignature] = useState("");
+  const [isDirectorExitActionExpanded, setIsDirectorExitActionExpanded] = [taskDrawer.isDirectorExitActionExpanded, taskDrawer.setDirectorExitActionExpanded] as const;
+  const [dismissedTakeoverSignature, setDismissedTakeoverSignature] = [taskDrawer.dismissedTakeoverSignature, taskDrawer.setDismissedTakeoverSignature] as const;
   const [characterMessage, setCharacterMessage] = useState("");
   const [repairBeforeContent, setRepairBeforeContent] = useState("");
   const [repairAfterContent, setRepairAfterContent] = useState("");
