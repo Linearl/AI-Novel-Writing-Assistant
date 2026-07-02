@@ -25,14 +25,7 @@ export interface StructuredFallbackSettings {
   maxTokens: number | null;
 }
 
-function isMissingTableError(error: unknown): boolean {
-  return (
-    typeof error === "object"
-    && error !== null
-    && "code" in error
-    && (error as { code?: string }).code === "P2021"
-  );
-}
+import { isMissingTableError } from "../platform/dbErrors";
 
 function normalizeProvider(value: string | undefined | null): LLMProvider {
   const trimmed = value?.trim();

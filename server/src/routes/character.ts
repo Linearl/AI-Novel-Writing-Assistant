@@ -1,10 +1,10 @@
 import { Router } from "express";
 import type { ApiResponse } from "@ai-novel/shared/types/api";
 import { z } from "zod";
-import { prisma } from "../db/prisma";
 import { llmProviderSchema } from "../llm/providerSchema";
 import { authMiddleware } from "../middleware/auth";
 import { validate } from "../middleware/validate";
+import { baseCharacterService } from "../services/character/BaseCharacterService";
 import { characterLibrarySyncService } from "../services/character/CharacterLibrarySyncService";
 import { characterGenerateConstraintsSchema, generateBaseCharacterFromAI } from "../services/character/characterGenerate";
 
@@ -53,24 +53,10 @@ router.use(authMiddleware);
 router.get("/", validate({ query: listQuerySchema }), async (req, res, next) => {
   try {
     const query = req.query as z.infer<typeof listQuerySchema>;
-    const data = await prisma.baseCharacter.findMany({
-      where: {
-        category: query.category ? { equals: query.category } : undefined,
-        tags: query.tags ? { contains: query.tags } : undefined,
-        OR: query.search
-          ? [
-              { name: { contains: query.search } },
-              { personality: { contains: query.search } },
-              { background: { contains: query.search } },
-              { appearance: { contains: query.search } },
-              { weaknesses: { contains: query.search } },
-              { interests: { contains: query.search } },
-              { keyEvents: { contains: query.search } },
-              { tags: { contains: query.search } },
-            ]
-          : undefined,
-      },
-      orderBy: { updatedAt: "desc" },
+    const data = await baseCharacterService.list({
+      category: query.category,
+      tags: query.tags,
+      search: query.search,
     });
     res.status(200).json({
       success: true,
@@ -84,12 +70,7 @@ router.get("/", validate({ query: listQuerySchema }), async (req, res, next) => 
 
 router.post("/", validate({ body: baseCharacterSchema }), async (req, res, next) => {
   try {
-    const data = await prisma.baseCharacter.create({
-      data: {
-        ...req.body,
-        tags: req.body.tags ?? "",
-      },
-    });
+    const data = await baseCharacterService.create(req.body);
     await characterLibrarySyncService.createBaseRevision(data.id, "创建角色库角色。", "manual_base_character_create");
     res.status(201).json({
       success: true,
@@ -104,9 +85,7 @@ router.post("/", validate({ body: baseCharacterSchema }), async (req, res, next)
 router.get("/:id", validate({ params: idSchema }), async (req, res, next) => {
   try {
     const { id } = req.params as z.infer<typeof idSchema>;
-    const data = await prisma.baseCharacter.findUnique({
-      where: { id },
-    });
+    const data = await baseCharacterService.findById(id);
     if (!data) {
       res.status(404).json({
         success: false,
@@ -130,10 +109,7 @@ router.put(
   async (req, res, next) => {
     try {
       const { id } = req.params as z.infer<typeof idSchema>;
-      const data = await prisma.baseCharacter.update({
-        where: { id },
-        data: req.body as z.infer<typeof updateBaseCharacterSchema>,
-      });
+      const data = await baseCharacterService.update(id, req.body as Record<string, unknown>);
       const revision = await characterLibrarySyncService.createBaseRevision(
         data.id,
         "更新角色库基础设定。",
@@ -154,7 +130,7 @@ router.put(
 router.delete("/:id", validate({ params: idSchema }), async (req, res, next) => {
   try {
     const { id } = req.params as z.infer<typeof idSchema>;
-    await prisma.baseCharacter.delete({ where: { id } });
+    await baseCharacterService.delete(id);
     res.status(200).json({
       success: true,
       message: "删除角色成功。",

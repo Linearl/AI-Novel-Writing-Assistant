@@ -126,15 +126,17 @@ export class ChapterTimelineFinalizationService {
     })) {
       return null;
     }
-    const novel = await prisma.novel.findUnique({
-      where: { id: input.novelId },
-      select: { title: true },
-    });
-    const timelineContext = await timelineContextService.buildForChapter({
-      novelId: input.novelId,
-      chapterId: previousChapter.id,
-      chapterIndex: previousChapter.order,
-    }).catch(() => null);
+    const [novel, timelineContext] = await Promise.all([
+      prisma.novel.findUnique({
+        where: { id: input.novelId },
+        select: { title: true },
+      }),
+      timelineContextService.buildForChapter({
+        novelId: input.novelId,
+        chapterId: previousChapter.id,
+        chapterIndex: previousChapter.order,
+      }).catch(() => null),
+    ]);
     const contextPackage = {
       chapter: {
         id: previousChapter.id,

@@ -46,14 +46,7 @@ const EMBEDDING_MODEL_FALLBACKS: Partial<Record<string, string[]>> = {
   ollama: ["nomic-embed-text", "mxbai-embed-large", "bge-m3", "all-minilm"],
 };
 
-function isMissingTableError(error: unknown): boolean {
-  return (
-    typeof error === "object"
-    && error !== null
-    && "code" in error
-    && (error as { code?: string }).code === "P2021"
-  );
-}
+import { isMissingTableError } from "../../platform/dbErrors";
 
 function uniqueModels(models: string[]): string[] {
   return Array.from(new Set(models.map((item) => item.trim()).filter(Boolean)));

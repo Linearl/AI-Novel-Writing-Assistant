@@ -10,6 +10,7 @@ import type {
 } from "@ai-novel/shared/types/worldWizard";
 import { WORLD_LAYER_ORDER } from "./worldTemplates";
 import { normalizeWorldStructuredData } from "./worldStructure";
+import { safeParseJSON } from "../../platform/json";
 
 export const LAYER_STATUSES = ["pending", "generated", "confirmed", "stale"] as const;
 export type LayerStatus = (typeof LAYER_STATUSES)[number];
@@ -298,16 +299,7 @@ export function extractJSONArray(source: string): string {
   return text.slice(first, last + 1);
 }
 
-export function safeParseJSON<T>(raw: string | null | undefined, fallback: T): T {
-  if (!raw) {
-    return fallback;
-  }
-  try {
-    return JSON.parse(raw) as T;
-  } catch {
-    return fallback;
-  }
-}
+export { safeParseJSON } from "../../platform/json";
 
 export function nowISO(): string {
   return new Date().toISOString();

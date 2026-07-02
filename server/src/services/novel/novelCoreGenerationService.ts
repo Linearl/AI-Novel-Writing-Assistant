@@ -441,15 +441,17 @@ export class NovelCoreGenerationService {
     const hook = payload.hook ?? "";
     const expectation = payload.nextExpectation ?? "";
 
-    await prisma.chapter.update({
-      where: { id: chapter.id },
-      data: { hook, expectation },
-    });
-    await prisma.chapterSummary.upsert({
-      where: { chapterId: chapter.id },
-      update: { hook },
-      create: { novelId, chapterId: chapter.id, summary: briefSummary(chapter.content ?? ""), hook },
-    });
+    await Promise.all([
+      prisma.chapter.update({
+        where: { id: chapter.id },
+        data: { hook, expectation },
+      }),
+      prisma.chapterSummary.upsert({
+        where: { chapterId: chapter.id },
+        update: { hook },
+        create: { novelId, chapterId: chapter.id, summary: briefSummary(chapter.content ?? ""), hook },
+      }),
+    ]);
 
     queueRagUpsert("chapter", chapter.id);
     queueRagUpsert("chapter_summary", chapter.id);

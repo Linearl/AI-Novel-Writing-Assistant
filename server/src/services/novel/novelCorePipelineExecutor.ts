@@ -45,6 +45,51 @@ export interface PipelineExecutorDeps {
   chapterRuntimeCoordinator: ChapterRuntimeCoordinator;
 }
 
+interface EmptyContentEvent {
+  attempt: number;
+  willRetry: boolean;
+  contentLength: number;
+  rawContentLength: number;
+  error: { details: { source: string } };
+}
+
+function handleEmptyContent(
+  event: EmptyContentEvent,
+  context: {
+    jobId: string;
+    novelId: string;
+    chapter: { id: string; order: number; title: string };
+    runtimePayload: PipelinePayload;
+    qualityAlertDetails: string[];
+  },
+): void {
+  const { jobId, novelId, chapter, runtimePayload, qualityAlertDetails } = context;
+  const detail = buildEmptyChapterDetail(chapter);
+  const meta = {
+    jobId,
+    workflowTaskId: runtimePayload.workflowTaskId,
+    novelId,
+    chapterId: chapter.id,
+    chapterOrder: chapter.order,
+    provider: runtimePayload.provider,
+    model: runtimePayload.model,
+    runMode: runtimePayload.runMode,
+    emptyAttempt: event.attempt,
+    willRetry: event.willRetry,
+    contentLength: event.contentLength,
+    rawContentLength: event.rawContentLength,
+    source: event.error.details.source,
+  };
+  if (event.willRetry) {
+    logPipelineWarn("章节生成未返回正文，正在重试当前章", meta);
+    return;
+  }
+  if (!qualityAlertDetails.includes(detail)) {
+    qualityAlertDetails.push(detail);
+  }
+  logPipelineError("章节生成连续未返回正文，已暂停流水线", meta);
+}
+
 export async function executePipeline(
   deps: PipelineExecutorDeps,
   jobId: string,
@@ -269,30 +314,13 @@ export async function executePipeline(
               await applyChapterStage(stage);
             },
             onEmptyContent: async (event) => {
-              const detail = buildEmptyChapterDetail(chapter);
-              const meta = {
+              handleEmptyContent(event, {
                 jobId,
-                workflowTaskId: runtimePayload.workflowTaskId,
                 novelId,
-                chapterId: chapter.id,
-                chapterOrder: chapter.order,
-                provider: runtimePayload.provider,
-                model: runtimePayload.model,
-                runMode: runtimePayload.runMode,
-                emptyAttempt: event.attempt,
-                willRetry: event.willRetry,
-                contentLength: event.contentLength,
-                rawContentLength: event.rawContentLength,
-                source: event.error.details.source,
-              };
-              if (event.willRetry) {
-                logPipelineWarn("章节生成未返回正文，正在重试当前章", meta);
-                return;
-              }
-              if (!qualityAlertDetails.includes(detail)) {
-                qualityAlertDetails.push(detail);
-              }
-              logPipelineError("章节生成连续未返回正文，已暂停流水线", meta);
+                chapter,
+                runtimePayload,
+                qualityAlertDetails,
+              });
             },
           },
         ).finally(() => {

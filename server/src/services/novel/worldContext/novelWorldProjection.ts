@@ -1,5 +1,6 @@
 import type { NovelWorldHandbook } from "@ai-novel/shared/types/novelWorld";
 import { normalizeWorldStructuredData } from "../../world/worldStructure";
+import { safeJsonParse } from "../../../platform/json";
 
 export interface NovelWorldHandbookSource {
   title: string | null;
@@ -7,16 +8,7 @@ export interface NovelWorldHandbookSource {
   structuredDataJson: string | null;
 }
 
-export function safeJsonParse<T>(raw: string | null | undefined, fallback: T): T {
-  if (!raw?.trim()) {
-    return fallback;
-  }
-  try {
-    return JSON.parse(raw) as T;
-  } catch {
-    return fallback;
-  }
-}
+export { safeJsonParse } from "../../../platform/json";
 
 export function parseCommercialTags(raw: string | null | undefined): string[] {
   if (!raw?.trim()) {

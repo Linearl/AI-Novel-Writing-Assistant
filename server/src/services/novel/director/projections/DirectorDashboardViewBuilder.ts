@@ -145,61 +145,46 @@ function buildMode(input: {
   return "idle";
 }
 
+const STATUS_LABEL: Record<DirectorDashboardMode, string> = {
+  idle: "暂未启动",
+  queued: "等待执行",
+  running: "AI 接管中",
+  waiting_user: "等待确认",
+  recovering: "等待恢复",
+  failed: "执行异常",
+  completed: "已完成",
+};
+
 function statusLabel(mode: DirectorDashboardMode): string {
-  switch (mode) {
-    case "queued":
-      return "等待执行";
-    case "running":
-      return "AI 接管中";
-    case "waiting_user":
-      return "等待确认";
-    case "recovering":
-      return "等待恢复";
-    case "failed":
-      return "执行异常";
-    case "completed":
-      return "已完成";
-    default:
-      return "暂未启动";
-  }
+  return STATUS_LABEL[mode];
 }
+
+const HEADLINE_FOR_MODE: Record<DirectorDashboardMode, string> = {
+  idle: "",
+  queued: "等待自动导演",
+  running: "正在自动导演",
+  waiting_user: "等待确认",
+  recovering: "等待恢复",
+  failed: "执行受阻",
+  completed: "导演已完成",
+};
 
 function headlineForMode(mode: DirectorDashboardMode, displayState: DirectorDisplayState): string {
-  switch (mode) {
-    case "queued":
-      return "等待自动导演";
-    case "running":
-      return "正在自动导演";
-    case "waiting_user":
-      return "等待确认";
-    case "recovering":
-      return "等待恢复";
-    case "failed":
-      return "执行受阻";
-    case "completed":
-      return "导演已完成";
-    default:
-      return displayState.headline;
-  }
+  return HEADLINE_FOR_MODE[mode] || displayState.headline;
 }
 
+const DESCRIPTION_FOR_MODE: Record<DirectorDashboardMode, string> = {
+  idle: "",
+  queued: "任务已进入后台队列，执行器领取后会继续推进。",
+  running: "AI 正在后台接管这本书的开书流程。你可以继续手动操作当前项目；如果与自动导演同时改同一块内容，以最新写入结果为准。",
+  waiting_user: "当前导演流程停在需要确认的位置。你可以先查看结果，再决定是否继续。",
+  recovering: "后台执行器连接中断后正在恢复，系统会优先从最近进度继续。",
+  failed: "当前导演流程停在最近一步。可以先查看执行详情，再决定是否重试或继续。",
+  completed: "本轮导演流程已收尾，你可以继续推进章节、查看结果，或发起下一轮自动导演。",
+};
+
 function descriptionForMode(mode: DirectorDashboardMode, displayState: DirectorDisplayState): string {
-  switch (mode) {
-    case "queued":
-      return "任务已进入后台队列，执行器领取后会继续推进。";
-    case "running":
-      return "AI 正在后台接管这本书的开书流程。你可以继续手动操作当前项目；如果与自动导演同时改同一块内容，以最新写入结果为准。";
-    case "waiting_user":
-      return "当前导演流程停在需要确认的位置。你可以先查看结果，再决定是否继续。";
-    case "recovering":
-      return "后台执行器连接中断后正在恢复，系统会优先从最近进度继续。";
-    case "failed":
-      return "当前导演流程停在最近一步。可以先查看执行详情，再决定是否重试或继续。";
-    case "completed":
-      return "本轮导演流程已收尾，你可以继续推进章节、查看结果，或发起下一轮自动导演。";
-    default:
-      return displayState.description;
-  }
+  return DESCRIPTION_FOR_MODE[mode] || displayState.description;
 }
 
 function buildProgress(input: {

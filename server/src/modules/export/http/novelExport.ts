@@ -3,6 +3,7 @@ import { z } from "zod";
 import { NOVEL_EXPORT_FORMAT_VALUES, NOVEL_EXPORT_SCOPE_VALUES } from "@ai-novel/shared/types/novelExport";
 import { authMiddleware } from "../../../middleware/auth";
 import { validate } from "../../../middleware/validate";
+import { logger } from "../../../services/logging/LoggerService";
 import { novelExportService } from "../novelExport.service";
 
 const router = Router();
@@ -25,7 +26,11 @@ router.get(
     try {
       const { id } = req.params as z.infer<typeof idParamsSchema>;
       const { format, scope } = exportQuerySchema.parse(req.query);
+      const startMs = Date.now();
+      logger.info(`[export] Start: novelId=${id} format=${format} scope=${scope}`);
       const data = await novelExportService.buildExportContent(id, format, scope);
+      const elapsedMs = Date.now() - startMs;
+      logger.info(`[export] Complete: novelId=${id} format=${format} scope=${scope} size=${data.content.length} chars elapsed=${elapsedMs}ms`);
       res.setHeader("Content-Type", data.contentType);
       res.setHeader("Content-Disposition", `attachment; filename="${encodeURIComponent(data.fileName)}"`);
       res.status(200).send(data.content);

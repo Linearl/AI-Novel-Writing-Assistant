@@ -102,9 +102,31 @@ import {
   hasReliableStructuredLayerSource,
 } from "./worldServiceHelpers";
 
+export interface WorldListPaginationInput {
+  limit?: number;
+  offset?: number;
+}
+
+export interface WorldListResult {
+  items: Awaited<ReturnType<typeof prisma.world.findMany>>;
+  total: number;
+  limit: number;
+  offset: number;
+}
+
 export class WorldService {
-  async listWorlds() {
-    return prisma.world.findMany({ orderBy: { updatedAt: "desc" } });
+  async listWorlds(input?: WorldListPaginationInput): Promise<WorldListResult> {
+    const limit = Math.min(Math.max(input?.limit ?? 50, 1), 200);
+    const offset = Math.max(input?.offset ?? 0, 0);
+    const [items, total] = await Promise.all([
+      prisma.world.findMany({
+        orderBy: { updatedAt: "desc" },
+        skip: offset,
+        take: limit,
+      }),
+      prisma.world.count(),
+    ]);
+    return { items, total, limit, offset };
   }
 
   async getTemplates() {

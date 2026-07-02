@@ -4,21 +4,13 @@
  */
 
 import type { WorldLocation, WorldRule } from "@ai-novel/shared/types/world";
+import { safeParseJSON } from "../../platform/json";
 
 /* ------------------------------------------------------------------ */
 /*  Low-level parsing helpers                                          */
 /* ------------------------------------------------------------------ */
 
-export function safeParseJSON<T>(raw: string | null | undefined, fallback: T): T {
-  if (!raw?.trim()) {
-    return fallback;
-  }
-  try {
-    return JSON.parse(raw) as T;
-  } catch {
-    return fallback;
-  }
-}
+export { safeParseJSON } from "../../platform/json";
 
 export function normalizeText(raw: unknown, fallback = ""): string {
   if (typeof raw === "string") {

@@ -10,23 +10,7 @@ import { prisma } from "../../db/prisma";
 const APPROVAL_POINT_CODES_KEY = "autoDirector.approvalPreference.approvalPointCodes";
 const ALL_KEYS = [APPROVAL_POINT_CODES_KEY] as const;
 
-function isMissingTableError(error: unknown): boolean {
-  return (
-    typeof error === "object"
-    && error !== null
-    && "code" in error
-    && (error as { code?: string }).code === "P2021"
-  );
-}
-
-function isDbUnavailableError(error: unknown): boolean {
-  if (!error || typeof error !== "object") {
-    return false;
-  }
-  const code = "code" in error ? (error as { code?: string }).code : undefined;
-  const message = "message" in error ? String((error as { message?: unknown }).message ?? "") : "";
-  return code === "P1001" || /can't reach database server/i.test(message);
-}
+import { isMissingTableError, isDbUnavailableError } from "../../platform/dbErrors";
 
 function parsePointCodes(value: string | null | undefined, hasStoredValue: boolean) {
   if (value == null) {

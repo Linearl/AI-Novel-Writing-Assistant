@@ -51,23 +51,7 @@ export interface SaveAutoDirectorChannelSettingsInput {
   wecom?: Partial<AutoDirectorChannelConfig>;
 }
 
-function isMissingTableError(error: unknown): boolean {
-  return (
-    typeof error === "object"
-    && error !== null
-    && "code" in error
-    && (error as { code?: string }).code === "P2021"
-  );
-}
-
-function isDbUnavailableError(error: unknown): boolean {
-  if (!error || typeof error !== "object") {
-    return false;
-  }
-  const code = "code" in error ? (error as { code?: string }).code : undefined;
-  const message = "message" in error ? String((error as { message?: unknown }).message ?? "") : "";
-  return code === "P1001" || /can't reach database server/i.test(message);
-}
+import { isMissingTableError, isDbUnavailableError } from "../../platform/dbErrors";
 
 function trimText(value: string | null | undefined): string {
   return typeof value === "string" ? value.trim() : "";

@@ -1,14 +1,8 @@
 import { prisma } from "../../db/prisma";
 import type { EmbeddingProvider } from "../../config/rag";
 
-export function isMissingTableError(error: unknown): boolean {
-  return (
-    typeof error === "object"
-    && error !== null
-    && "code" in error
-    && (error as { code?: string }).code === "P2021"
-  );
-}
+import { isMissingTableError } from "../../platform/dbErrors";
+export { isMissingTableError } from "../../platform/dbErrors";
 
 export function normalizeOptionalText(value: string | null | undefined): string | undefined {
   if (typeof value !== "string") {

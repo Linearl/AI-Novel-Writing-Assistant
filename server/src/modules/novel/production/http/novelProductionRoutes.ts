@@ -6,7 +6,7 @@ import { validate } from "../../../../middleware/validate";
 import type { NovelDraftOptimizeService } from "../../../../services/novel/NovelDraftOptimizeService";
 import type { NovelApplicationServices } from "../../../../services/novel/application/NovelApplicationContracts";
 import { timelineContextService, timelineRepository } from "../../../../modules/timeline";
-import { prisma } from "../../../../db/prisma";
+import { chapterService } from "../../../../services/novel/ChapterService";
 
 interface RegisterNovelProductionRoutesInput {
   router: Router;
@@ -175,10 +175,7 @@ export function registerNovelProductionRoutes(input: RegisterNovelProductionRout
     async (req, res, next) => {
       try {
         const { id, chapterId } = req.params as z.infer<typeof chapterTimelineParamsSchema>;
-        const chapter = await prisma.chapter.findFirst({
-          where: { id: chapterId, novelId: id },
-          select: { order: true },
-        });
+        const chapter = await chapterService.findById(id, chapterId);
         if (!chapter) {
           res.status(404).json({ success: false, error: "Chapter not found." } satisfies ApiResponse<null>);
           return;

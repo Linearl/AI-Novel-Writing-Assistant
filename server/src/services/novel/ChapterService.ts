@@ -82,4 +82,35 @@ export class ChapterService {
       throw new Error("章节不存在。");
     }
   }
+
+  async findById(novelId: string, chapterId: string) {
+    return prisma.chapter.findFirst({
+      where: { id: chapterId, novelId },
+      select: { order: true },
+    });
+  }
+
+  async listRepairVersions(novelId: string, chapterId: string) {
+    const versions = await prisma.chapterRepairVersion.findMany({
+      where: { novelId, chapterId },
+      orderBy: { versionIndex: "asc" },
+      select: {
+        id: true,
+        versionIndex: true,
+        content: true,
+        repairMode: true,
+        issuesJson: true,
+        tokenUsageJson: true,
+        userInstruction: true,
+        createdAt: true,
+      },
+    });
+    return versions.map((v) => ({
+      ...v,
+      issues: v.issuesJson ? JSON.parse(v.issuesJson) : null,
+      tokenUsage: v.tokenUsageJson ? JSON.parse(v.tokenUsageJson) : null,
+    }));
+  }
 }
+
+export const chapterService = new ChapterService();

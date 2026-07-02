@@ -136,31 +136,40 @@ export function buildConstraintEngine(plan: StoryMacroEditablePlan): StoryConstr
   };
 }
 
+type ExpansionField = keyof StoryExpansion;
+
+const EXPANSION_FIELDS: ReadonlySet<string> = new Set<string>([
+  "expanded_premise",
+  "protagonist_core",
+  "conflict_engine",
+  "mystery_box",
+  "emotional_line",
+  "tone_reference",
+  "conflict_layers",
+  "setpiece_seeds",
+]);
+
+const DECOMPOSITION_FIELDS: ReadonlySet<string> = new Set<string>([
+  "selling_point",
+  "core_conflict",
+  "main_hook",
+  "progression_loop",
+  "growth_path",
+  "ending_flavor",
+  "major_payoffs",
+]);
+
 export function getEditablePlanFieldValue(plan: StoryMacroEditablePlan, field: StoryMacroField): StoryMacroFieldValue {
-  switch (field) {
-    case "expanded_premise":
-    case "protagonist_core":
-    case "conflict_engine":
-    case "mystery_box":
-    case "emotional_line":
-    case "tone_reference":
-      return plan.expansion[field];
-    case "conflict_layers":
-      return plan.expansion.conflict_layers;
-    case "setpiece_seeds":
-      return plan.expansion.setpiece_seeds;
-    case "selling_point":
-    case "core_conflict":
-    case "main_hook":
-    case "progression_loop":
-    case "growth_path":
-    case "ending_flavor":
-      return plan.decomposition[field];
-    case "major_payoffs":
-      return plan.decomposition.major_payoffs;
-    case "constraints":
-      return plan.constraints;
+  if (field === "constraints") {
+    return plan.constraints;
   }
+  if (EXPANSION_FIELDS.has(field)) {
+    return plan.expansion[field as ExpansionField];
+  }
+  if (DECOMPOSITION_FIELDS.has(field)) {
+    return plan.decomposition[field as keyof StoryDecomposition];
+  }
+  return undefined as unknown as StoryMacroFieldValue;
 }
 
 export function setEditablePlanFieldValue(

@@ -88,36 +88,15 @@ function resolveVolumeReference(volumes: VolumePlan[], value: unknown): string |
   return volumes.find((volume) => volume.sortOrder === sortOrder)?.id ?? null;
 }
 
+import { resolveRebalanceDirection } from "./rebalanceDirectionMap";
+
 function normalizeRebalanceDirection(value: unknown, actions: string[]): VolumeRebalanceDecision["direction"] {
   if (actions.length === 1 && actions[0].toLowerCase() === "hold") {
     return "hold";
   }
 
   const normalized = normalizeText(value)?.toLowerCase().replace(/[\s-]+/g, "_");
-  switch (normalized) {
-    case "pull_forward":
-    case "pullforward":
-    case "backward":
-    case "back":
-      return "pull_forward";
-    case "push_back":
-    case "pushback":
-    case "forward":
-    case "next":
-      return "push_back";
-    case "tighten_current":
-    case "tighten":
-    case "compress_current":
-      return "tighten_current";
-    case "expand_adjacent":
-    case "expand":
-    case "expand_neighbor":
-    case "expand_neighbour":
-    case "adjacent":
-      return "expand_adjacent";
-    default:
-      return "hold";
-  }
+  return resolveRebalanceDirection(normalized ?? "") ?? "hold";
 }
 
 function normalizeStrategyVolume(raw: unknown, index: number): VolumeStrategyVolume | null {

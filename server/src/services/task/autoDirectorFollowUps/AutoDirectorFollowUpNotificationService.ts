@@ -21,21 +21,7 @@ import {
 import { resolveAutoDirectorFollowUpReason } from "./autoDirectorFollowUpReasonResolver";
 import { extractBlockedAutoDirectorValidationResult } from "./autoDirectorFollowUpValidationResult";
 
-function isMissingTableError(error: unknown): boolean {
-  return typeof error === "object"
-    && error !== null
-    && "code" in error
-    && (error as { code?: string }).code === "P2021";
-}
-
-function isDbUnavailableError(error: unknown): boolean {
-  if (!error || typeof error !== "object") {
-    return false;
-  }
-  const code = "code" in error ? (error as { code?: string }).code : undefined;
-  const message = "message" in error ? String((error as { message?: unknown }).message ?? "") : "";
-  return code === "P1001" || /can't reach database server/i.test(message);
-}
+import { isMissingTableError, isDbUnavailableError } from "../../../platform/dbErrors";
 
 function parseExecutionScopeLabel(seedPayloadJson: string | null | undefined): string | null {
   if (!seedPayloadJson?.trim()) {

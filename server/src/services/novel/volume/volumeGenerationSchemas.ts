@@ -89,6 +89,8 @@ function normalizeRebalanceSeverity(value: unknown): unknown {
   return value;
 }
 
+import { resolveRebalanceDirection } from "./rebalanceDirectionMap";
+
 function normalizeRebalanceDirection(value: unknown, actions?: unknown): unknown {
   const normalizedActions = normalizeStringArray(actions);
   const normalizedActionList = Array.isArray(normalizedActions)
@@ -104,35 +106,7 @@ function normalizeRebalanceDirection(value: unknown, actions?: unknown): unknown
   }
 
   const normalized = value.trim().toLowerCase().replace(/[\s-]+/g, "_");
-  switch (normalized) {
-    case "pull_forward":
-    case "pullforward":
-    case "backward":
-    case "back":
-      return "pull_forward";
-    case "push_back":
-    case "pushback":
-    case "forward":
-    case "next":
-      return "push_back";
-    case "tighten_current":
-    case "tighten":
-    case "compress_current":
-      return "tighten_current";
-    case "expand_adjacent":
-    case "expand":
-    case "expand_neighbor":
-    case "expand_neighbour":
-    case "adjacent":
-      return "expand_adjacent";
-    case "hold":
-    case "no_change":
-    case "none":
-    case "stable":
-      return "hold";
-    default:
-      return value;
-  }
+  return resolveRebalanceDirection(normalized) ?? value;
 }
 
 function normalizeBeatPayload(raw: unknown): unknown {

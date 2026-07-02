@@ -26,10 +26,17 @@ function registerWorldCrudRoutes(router: Router) {
     } catch (error) { next(error); }
   });
 
-  router.get("/", async (_req: any, res: any, next: any) => {
+  router.get("/", async (req: any, res: any, next: any) => {
     try {
-      const data = await worldService.listWorlds();
-      res.status(200).json({ success: true, data, message: "World list loaded." });
+      const limit = req.query.limit != null ? Number(req.query.limit) : undefined;
+      const offset = req.query.offset != null ? Number(req.query.offset) : undefined;
+      const result = await worldService.listWorlds({ limit, offset });
+      res.status(200).json({
+        success: true,
+        data: result.items,
+        meta: { total: result.total, limit: result.limit, offset: result.offset },
+        message: "World list loaded.",
+      });
     } catch (error) { next(error); }
   });
 
