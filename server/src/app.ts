@@ -221,7 +221,7 @@ function resolveServerStartOptions(options?: ServerStartOptions): {
   const allowLan = options?.allowLan ?? parseEnvFlag(process.env.ALLOW_LAN, process.env.NODE_ENV !== "production");
   return {
     allowLan,
-    port: options?.port ?? Number(process.env.PORT ?? 3000),
+    port: options?.port ?? Number(process.env.AI_NOVEL_SERVER_PORT ?? process.env.PORT ?? 3000),
     host: options?.host ?? process.env.HOST ?? (allowLan ? "0.0.0.0" : "localhost"),
   };
 }
