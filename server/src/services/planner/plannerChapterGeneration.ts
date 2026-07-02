@@ -1,4 +1,4 @@
-import type { AuditReport, ReplanResult } from "@ai-novel/shared/types/novel";
+import type { AuditReport, ReplanResult, StoryPlan } from "@ai-novel/shared/types/novel";
 import { prisma } from "../../db/prisma";
 import { characterDynamicsQueryService } from "../novel/dynamics/CharacterDynamicsQueryService";
 import { contextAssemblyService } from "../novel/production/ContextAssemblyService";
@@ -116,10 +116,10 @@ function buildPlannerStateGoalText(input: {
 
 /** Dependencies injected from PlannerService to avoid circular reference. */
 export interface PlannerChapterGenerationDeps {
-  getBookPlan: (novelId: string) => Promise<any>;
-  listArcPlans: (novelId: string) => Promise<any[]>;
+  getBookPlan: (novelId: string) => Promise<StoryPlan | null>;
+  listArcPlans: (novelId: string) => Promise<StoryPlan[]>;
   resolvePlannerStyleEngineSummary: (novelId: string, chapterId?: string, taskStyleProfileId?: string) => Promise<string>;
-  getChapterPlan: (novelId: string, chapterId: string) => Promise<any>;
+  getChapterPlan: (novelId: string, chapterId: string) => Promise<StoryPlan | null>;
 }
 
 export async function generateChapterPlan(

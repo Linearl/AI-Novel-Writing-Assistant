@@ -254,23 +254,22 @@ export function logStructuredInvokeEvent(input: {
   fallbackUsed?: boolean;
   reasoningForcedOff?: boolean;
 }): void {
-  logger.info(
-    [
-      "[structured.invoke]",
-      `event=${input.event}`,
-      `label=${input.label}`,
-      `provider=${input.provider ?? "default"}`,
-      `model=${input.model ?? "default"}`,
-      `taskType=${input.taskType ?? "planner"}`,
-      input.strategy ? `strategy=${input.strategy}` : "",
-      input.errorCategory ? `errorCategory=${input.errorCategory}` : "",
-      typeof input.repairAttempt === "number" ? `repairAttempt=${input.repairAttempt}` : "",
-      typeof input.latencyMs === "number" ? `latencyMs=${input.latencyMs}` : "",
-      typeof input.rawChars === "number" ? `rawChars=${input.rawChars}` : "",
-      input.fallbackUsed ? "fallbackUsed=true" : "",
-      input.reasoningForcedOff ? "reasoningForcedOff=true" : "",
-    ].filter(Boolean).join(" "),
-  );
+  const meta: Record<string, unknown> = {
+    event: input.event,
+    label: input.label,
+    provider: input.provider ?? "default",
+    model: input.model ?? "default",
+    taskType: input.taskType ?? "planner",
+  };
+  if (input.strategy) meta.strategy = input.strategy;
+  if (input.errorCategory) meta.errorCategory = input.errorCategory;
+  if (typeof input.repairAttempt === "number") meta.repairAttempt = input.repairAttempt;
+  if (typeof input.latencyMs === "number") meta.latencyMs = input.latencyMs;
+  if (typeof input.rawChars === "number") meta.rawChars = input.rawChars;
+  if (input.fallbackUsed) meta.fallbackUsed = true;
+  if (input.reasoningForcedOff) meta.reasoningForcedOff = true;
+
+  logger.info("[structured.invoke]", meta);
 }
 
 export function buildStructuredError(input: {

@@ -1,4 +1,5 @@
-import fs from "node:fs";
+import fs from "node:fs/promises";
+import { createReadStream } from "node:fs";
 import path from "node:path";
 import readline from "node:readline";
 import { resolveLogsRoot } from "../../runtime/appPaths";
@@ -35,12 +36,15 @@ export interface LogQueryResult {
 
 const MAX_SCAN_DAYS = 30;
 
-function getLogFiles(): string[] {
+async function getLogFiles(): Promise<string[]> {
   const logsDir = path.join(resolveLogsRoot(), "app");
-  if (!fs.existsSync(logsDir)) {
+  try {
+    await fs.access(logsDir);
+  } catch {
     return [];
   }
-  const files = fs.readdirSync(logsDir)
+  const entries = await fs.readdir(logsDir);
+  const files = entries
     .filter((f) => f.startsWith("app-") && f.endsWith(".log") && !f.endsWith(".gz"))
     .sort()
     .reverse()
@@ -94,11 +98,11 @@ function matchesFilter(entry: LogEntry, params: LogQueryParams): boolean {
 }
 
 async function readAndFilterEntries(params: LogQueryParams): Promise<LogEntry[]> {
-  const files = getLogFiles();
+  const files = await getLogFiles();
   const allEntries: LogEntry[] = [];
 
   for (const filePath of files) {
-    const fileStream = fs.createReadStream(filePath, { encoding: "utf-8" });
+    const fileStream = createReadStream(filePath, { encoding: "utf-8" });
     const rl = readline.createInterface({ input: fileStream, crlfDelay: Infinity });
 
     for await (const line of rl) {

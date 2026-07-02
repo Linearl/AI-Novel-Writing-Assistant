@@ -295,40 +295,48 @@ export class NovelProductionService {
       select: { id: true, order: true },
     });
     const existingByOrder = new Map(existing.map((item) => [item.order, item.id]));
-    let createdCount = 0;
-    let updatedCount = 0;
+
+    const toUpdate: Array<{ id: string; title: string; expectation: string | null }> = [];
+    const toCreate: Array<{
+      novelId: string;
+      title: string;
+      order: number;
+      content: string;
+      expectation: string | null;
+      generationState: "planned";
+    }> = [];
 
     for (const chapter of chapters) {
       const existingId = existingByOrder.get(chapter.order);
       if (existingId) {
-        await prisma.chapter.update({
-          where: { id: existingId },
-          data: {
-            title: chapter.title,
-            expectation: chapter.summary,
-          },
-        });
-        updatedCount += 1;
+        toUpdate.push({ id: existingId, title: chapter.title, expectation: chapter.summary });
       } else {
-        await prisma.chapter.create({
-          data: {
-            novelId,
-            title: chapter.title,
-            order: chapter.order,
-            content: "",
-            expectation: chapter.summary,
-            generationState: "planned",
-          },
+        toCreate.push({
+          novelId,
+          title: chapter.title,
+          order: chapter.order,
+          content: "",
+          expectation: chapter.summary,
+          generationState: "planned",
         });
-        createdCount += 1;
       }
     }
+
+    await prisma.$transaction([
+      ...toUpdate.map((item) =>
+        prisma.chapter.update({
+          where: { id: item.id },
+          data: { title: item.title, expectation: item.expectation },
+        }),
+      ),
+      ...(toCreate.length > 0 ? [prisma.chapter.createMany({ data: toCreate })] : []),
+    ]);
 
     return {
       novelId,
       chapterCount: chapters.length,
-      createdCount,
-      updatedCount,
+      createdCount: toCreate.length,
+      updatedCount: toUpdate.length,
       summary: `已同步 ${chapters.length} 个章节目录。`,
     };
   }

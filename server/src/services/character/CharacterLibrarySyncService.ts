@@ -357,46 +357,77 @@ export class CharacterLibrarySyncService {
       include: { character: true },
     });
 
-    const rows = [];
+    if (links.length === 0) {
+      return [];
+    }
+
+    const existingProposals = await prisma.characterSyncProposal.findMany({
+      where: {
+        baseCharacterId,
+        baseRevisionId,
+        direction: "library_to_novel",
+        status: "pending_review",
+      },
+    });
+    const existingKey = new Map(
+      existingProposals.map((p) => [`${p.novelId}:${p.characterId}`, p]),
+    );
+
+    const rows: typeof existingProposals = [];
+    const toCreate: typeof existingProposals = [];
+
     for (const link of links) {
-      const existing = await prisma.characterSyncProposal.findFirst({
+      const key = `${link.novelId}:${link.characterId}`;
+      const existing = existingKey.get(key);
+      if (existing) {
+        rows.push(existing);
+        continue;
+      }
+      toCreate.push({
+        id: "", // placeholder, will be assigned by DB
+        novelId: link.novelId,
+        characterId: link.characterId,
+        baseCharacterId,
+        baseRevisionId,
+        direction: "library_to_novel" as const,
+        status: "pending_review" as const,
+        confidence: null,
+        summary: `角色库《${baseSnapshot.name}》有新版本，可选择是否应用到《${link.character.name}》。`,
+        payloadJson: toJson({
+          baseSnapshot,
+          applyableFields: [...APPLY_TO_NOVEL_FIELDS],
+          warnings: ["应用后只会改变当前小说中的这个角色，不会影响角色库或其他小说。"],
+          scopeNote: "这次更新不会自动影响其他小说。",
+        }),
+        safeUpdatesJson: toJson(buildLibraryUpdateFields(baseSnapshot)),
+        novelOnlyUpdatesJson: toJson([]),
+        riskyUpdatesJson: toJson([]),
+        recommendedAction: "review_before_apply" as const,
+        sourceType: "base_character_revision" as const,
+        sourceRefId: baseRevisionId,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+    }
+
+    if (toCreate.length > 0) {
+      await prisma.characterSyncProposal.createMany({
+        data: toCreate.map((row) => {
+          const { id: _id, ...data } = row;
+          return data;
+        }),
+      });
+      // Re-fetch to return full records with IDs
+      const createdProposals = await prisma.characterSyncProposal.findMany({
         where: {
-          novelId: link.novelId,
-          characterId: link.characterId,
           baseCharacterId,
           baseRevisionId,
           direction: "library_to_novel",
           status: "pending_review",
         },
       });
-      if (existing) {
-        rows.push(existing);
-        continue;
-      }
-      rows.push(await prisma.characterSyncProposal.create({
-        data: {
-          novelId: link.novelId,
-          characterId: link.characterId,
-          baseCharacterId,
-          baseRevisionId,
-          direction: "library_to_novel",
-          status: "pending_review",
-          confidence: null,
-          summary: `角色库《${baseSnapshot.name}》有新版本，可选择是否应用到《${link.character.name}》。`,
-          payloadJson: toJson({
-            baseSnapshot,
-            applyableFields: [...APPLY_TO_NOVEL_FIELDS],
-            warnings: ["应用后只会改变当前小说中的这个角色，不会影响角色库或其他小说。"],
-            scopeNote: "这次更新不会自动影响其他小说。",
-          }),
-          safeUpdatesJson: toJson(buildLibraryUpdateFields(baseSnapshot)),
-          novelOnlyUpdatesJson: toJson([]),
-          riskyUpdatesJson: toJson([]),
-          recommendedAction: "review_before_apply",
-          sourceType: "base_character_revision",
-          sourceRefId: baseRevisionId,
-        },
-      }));
+      const createdKeys = new Set(toCreate.map((r) => `${r.novelId}:${r.characterId}`));
+      rows.push(...createdProposals.filter((p) => createdKeys.has(`${p.novelId}:${p.characterId}`) && !existingKey.has(`${p.novelId}:${p.characterId}`)));
     }
     return rows.map(mapProposal);
   }

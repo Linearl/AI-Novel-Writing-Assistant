@@ -97,6 +97,8 @@ export default function ChatPage() {
   const novelIdFromUrl = searchParams.get("novelId")?.trim() ?? "";
   const llm = useLLMStore();
   const chatStore = useChatStore();
+  const chatHydrated = useChatStore((s) => s.hydrated);
+  const chatHydrate = useChatStore((s) => s.hydrate);
   const [chatMode, setChatMode] = useState<ChatMode>("standard");
   const [contextMode, setContextMode] = useState<ContextMode>("global");
   const [enableRag, setEnableRag] = useState(true);
@@ -114,17 +116,18 @@ export default function ChatPage() {
   const [runtimeResetToken, setRuntimeResetToken] = useState(0);
 
   useEffect(() => {
-    if (!chatStore.hydrated) {
-      void chatStore.hydrate();
+    if (!chatHydrated) {
+      void chatHydrate();
     }
-  }, [chatStore]);
+  }, [chatHydrated, chatHydrate]);
 
+  const chatCreateSession = useChatStore((s) => s.createSession);
   useEffect(() => {
-    if (!chatStore.hydrated || chatStore.currentSessionId || chatStore.sessions.length > 0) {
+    if (!chatHydrated || chatStore.currentSessionId || chatStore.sessions.length > 0) {
       return;
     }
-    void chatStore.createSession("新对话");
-  }, [chatStore, chatStore.currentSessionId, chatStore.hydrated, chatStore.sessions.length]);
+    void chatCreateSession("新对话");
+  }, [chatHydrated, chatCreateSession, chatStore.currentSessionId, chatStore.sessions.length]);
 
   useEffect(() => {
     if (novelIdFromUrl) {

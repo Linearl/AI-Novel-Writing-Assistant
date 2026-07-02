@@ -212,6 +212,7 @@ description: "docs 目录索引（自动生成）"
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
 | [3.analysis\report\2026-06-26-ll-workflow-core-init-收口报告.md](./3.analysis\report\2026-06-26-ll-workflow-core-init-收口报告.md) | **执行时间**:2026-06-26 | - |
+| [3.analysis\report\2026-07-02-positive-findings.md](./3.analysis\report\2026-07-02-positive-findings.md) | r7011/r7012 审计正面发现汇总 — 安全、质量、稳定性、可观测性维度的已验证良好实践 | r7011/r7012 审计正面发现汇总 — 安全、质量、稳定性、可观测性维度的已验证良好实践 |
 
 ## 4.misc
 

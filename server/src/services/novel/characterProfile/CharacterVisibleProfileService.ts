@@ -395,12 +395,23 @@ export class CharacterVisibleProfileService {
     novelId: string;
     results: CharacterVisibleProfileApplyResult[];
   }> {
-    const results: CharacterVisibleProfileApplyResult[] = [];
-    for (const item of items) {
-      results.push(await this.applyCharacterVisibleProfile(novelId, item.characterId, item.fields, {
-        overwriteExisting: item.overwriteExisting,
-      }));
-    }
+    const characterIds = items.map((item) => item.characterId);
+    const characters = await prisma.character.findMany({
+      where: { id: { in: characterIds }, novelId },
+    });
+    const characterMap = new Map(characters.map((c) => [c.id, c]));
+
+    const results = await Promise.all(
+      items.map(async (item) => {
+        const character = characterMap.get(item.characterId);
+        if (!character) {
+          throw new Error("角色不存在");
+        }
+        return this.applyCharacterVisibleProfile(novelId, item.characterId, item.fields, {
+          overwriteExisting: item.overwriteExisting,
+        });
+      }),
+    );
     return { novelId, results };
   }
 
@@ -413,8 +424,13 @@ export class CharacterVisibleProfileService {
     const results: CharacterVisibleProfileSuggestion[] = [];
     const skippedCharacters: CharacterVisibleProfileBatchResult["skippedCharacters"] = [];
 
+    const characters = await prisma.character.findMany({
+      where: { id: { in: uniqueIds }, novelId },
+    });
+    const characterMap = new Map(characters.map((c) => [c.id, c]));
+
     for (const characterId of uniqueIds) {
-      const character = await prisma.character.findFirst({ where: { id: characterId, novelId } });
+      const character = characterMap.get(characterId);
       if (!character) {
         skippedCharacters.push({ characterId, characterName: characterId, reason: "角色不存在" });
         continue;

@@ -1,6 +1,57 @@
 import { createContextBlock } from "../../prompting/core/contextBudget";
 import type { PromptContextBlock } from "../../prompting/core/promptTypes";
 
+/** Input fields used by the core context block builders. */
+interface CoreContextBlockInput {
+  storyModeBlock: string;
+  novelTitle: string;
+  description: string | null;
+  genreName?: string | null;
+  targetAudience: string | null;
+  bookSellingPoint: string | null;
+  competingFeel: string | null;
+  first30ChapterPromise: string | null;
+  narrativePov?: string | null;
+  pacePreference?: string | null;
+  emotionIntensity?: string | null;
+  styleTone?: string | null;
+  chapterExpectation: string | null;
+  chapterTaskSheet: string | null;
+  chapterTargetWordCount?: number | null;
+  bible: string | null;
+  styleEngine?: string | null;
+  outline: string | null;
+  structuredOutline: string | null;
+  mappedVolumes: Array<{
+    sortOrder: number;
+    title: string;
+    summary: string | null;
+    mainPromise: string | null;
+    climax: string | null;
+    updatedAt: string;
+    chapters: Array<{ chapterOrder: number; title: string; summary: string | null }>;
+  }>;
+  stateDrivenDirective: string;
+  defaultMetadata: string;
+  currentVolumeWindow: string;
+  storyMacroSummary: string;
+  payoffLedgerSummary: string;
+  bookPlan: string;
+  arcPlans: string;
+  characters: string;
+  recentSummaries: string;
+  plotBeats: string;
+  stateSnapshot: string;
+  openAuditIssues: string;
+  recentDecisions: string;
+  stateDrivenGoal: string;
+  replanContext: string;
+  characterDynamicsSummary: string;
+  characterVolumeAssignments: string;
+  characterRelationStages: string;
+  characterCandidateGuards: string;
+}
+
 function buildBlockContent(label: string, value: string): string {
   return `${label}：${value.trim() || "无"}`;
 }
@@ -212,7 +263,7 @@ export function buildArcPlanContextBlocks(input: {
 }
 
 // Sub-function: Build core context blocks
-function buildCoreContextBlocks(input: any, volumeOutline: string, volumeSummary: string): PromptContextBlock[] {
+function buildCoreContextBlocks(input: CoreContextBlockInput, volumeOutline: string, volumeSummary: string): PromptContextBlock[] {
   return [
     createContextBlock({ id: "story_mode", group: "story_mode", priority: 95, content: input.storyModeBlock || "故事模式：无" }),
     createContextBlock({ id: "novel_overview", group: "novel_overview", priority: 100, required: true, content: [`小说：${input.novelTitle}`, buildBlockContent("简介", input.description ?? "")].join("\n") }),
@@ -229,7 +280,7 @@ function buildCoreContextBlocks(input: any, volumeOutline: string, volumeSummary
 }
 
 // Sub-function: Build story and state context blocks
-function buildStoryAndStateContextBlocks(input: any): PromptContextBlock[] {
+function buildStoryAndStateContextBlocks(input: CoreContextBlockInput): PromptContextBlock[] {
   return [
     createContextBlock({ id: "book_plan", group: "book_plan", priority: 88, content: buildBlockContent("全书规划", input.bookPlan) }),
     createContextBlock({ id: "arc_plans", group: "arc_plans", priority: 82, content: buildBlockContent("阶段规划", input.arcPlans) }),
@@ -244,7 +295,7 @@ function buildStoryAndStateContextBlocks(input: any): PromptContextBlock[] {
 }
 
 // Sub-function: Build character dynamics context blocks
-function buildCharacterDynamicsContextBlocks(input: any): PromptContextBlock[] {
+function buildCharacterDynamicsContextBlocks(input: CoreContextBlockInput): PromptContextBlock[] {
   return [
     createContextBlock({ id: "character_dynamics_summary", group: "character_dynamics", priority: 89, content: buildBlockContent("动态角色系统总览", input.characterDynamicsSummary) }),
     createContextBlock({ id: "character_volume_assignments", group: "character_dynamics", priority: 88, content: buildBlockContent("当前卷角色职责与缺席风险", input.characterVolumeAssignments) }),

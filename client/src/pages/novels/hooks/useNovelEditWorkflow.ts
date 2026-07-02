@@ -57,7 +57,7 @@ export function useNovelEditWorkflow(novelId: string) {
       return;
     }
     bootstrapMutation.mutate();
-  }, [novelId, workflowTaskId]);
+  }, [novelId, workflowTaskId, bootstrapMutation]);
 
   const activeTab = useMemo(
     () => normalizeNovelWorkspaceTab(searchParams.get("stage")),

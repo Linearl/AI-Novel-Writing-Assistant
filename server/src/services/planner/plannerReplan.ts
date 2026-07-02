@@ -1,4 +1,5 @@
-import type { AuditReport, ReplanResult } from "@ai-novel/shared/types/novel";
+import type { AuditReport, ReplanResult, StoryPlan } from "@ai-novel/shared/types/novel";
+import type { GenerateChapterPlanOptions } from "./plannerChapterGeneration";
 import { prisma } from "../../db/prisma";
 import { contextAssemblyService } from "../novel/production/ContextAssemblyService";
 import { payoffLedgerSyncService } from "../payoff/PayoffLedgerSyncService";
@@ -15,8 +16,8 @@ interface ReplanInput {
   reason: string;
 }
 
-type GetChapterPlanFn = (novelId: string, chapterId: string) => Promise<any>;
-type GenerateChapterPlanFn = (novelId: string, chapterId: string, options?: any) => Promise<any>;
+type GetChapterPlanFn = (novelId: string, chapterId: string) => Promise<StoryPlan | null>;
+type GenerateChapterPlanFn = (novelId: string, chapterId: string, options?: GenerateChapterPlanOptions) => Promise<StoryPlan>;
 
 async function replan(
   novelId: string,

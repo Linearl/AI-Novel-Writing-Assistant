@@ -1,4 +1,5 @@
-import fs from "node:fs";
+import fs from "node:fs/promises";
+import fsSync from "node:fs";
 import path from "node:path";
 import readline from "node:readline";
 
@@ -100,7 +101,7 @@ export async function buildNovelPromptTraceReport(params: {
 }): Promise<NovelPromptTraceReport> {
   const date = params.date?.trim() || new Date().toISOString().slice(0, 10);
   const logDir = resolveLlmLogDir(date);
-  if (!fs.existsSync(logDir)) {
+  if (!await fs.access(logDir).then(() => true).catch(() => false)) {
     return {
       chapters: [],
       stages: [],
@@ -109,14 +110,15 @@ export async function buildNovelPromptTraceReport(params: {
     };
   }
 
-  const files = fs.readdirSync(logDir)
+  const dirEntries = await fs.readdir(logDir);
+  const files = dirEntries
     .filter((file) => file.endsWith(".llm.jsonl"))
     .map((file) => path.join(logDir, file));
   const requestMetaById = new Map<string, PromptMetaRecord>();
   const actualPromptTokensById = new Map<string, number>();
 
   for (const file of files) {
-    const stream = fs.createReadStream(file, { encoding: "utf8" });
+    const stream = fsSync.createReadStream(file, { encoding: "utf8" });
     const reader = readline.createInterface({
       input: stream,
       crlfDelay: Infinity,

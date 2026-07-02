@@ -4,6 +4,7 @@ import type { TaskType } from "./modelRouter";
 import type { PromptInvocationMeta } from "../prompting/core/promptTypes";
 import { appendLlmSessionLog } from "./sessionLogFile";
 import { logger } from "../services/logging/LoggerService";
+import { trackLlmOperationStart, trackLlmOperationEnd } from "./llmOperationTracker";
 
 const LLM_DEBUG_PATCHED = Symbol("LLM_DEBUG_PATCHED");
 const LOG_TRUE_VALUES = new Set(["1", "true", "on", "yes"]);
@@ -510,15 +511,19 @@ function wrapLoggedStream(stream: AsyncIterable<unknown>, meta: LLMDebugMeta, re
           }
           yield chunk;
         }
+        const latencyMs = Date.now() - startedAt;
         logLLMResponse(
           "stream",
           { content: chunks.join("") },
           meta,
           requestId,
-          Date.now() - startedAt,
+          latencyMs,
         );
+        trackLlmOperationEnd({ requestId, status: "completed", latencyMs });
       } catch (error) {
-        logLLMError("stream", error, meta, requestId, Date.now() - startedAt);
+        const latencyMs = Date.now() - startedAt;
+        logLLMError("stream", error, meta, requestId, latencyMs);
+        trackLlmOperationEnd({ requestId, status: "failed", latencyMs, error: error instanceof Error ? error.message : String(error) });
         throw error;
       }
     },
@@ -543,12 +548,17 @@ export function attachLLMDebugLogging(llm: ChatOpenAI, meta: LLMDebugMeta): Chat
     const requestId = nextRequestId("invoke");
     const startedAt = Date.now();
     logLLMRequest("invoke", args[0], meta, requestId);
+    trackLlmOperationStart({ requestId, method: "invoke", provider: meta.provider, model: meta.model, taskType: meta.taskType, promptMeta: meta.promptMeta });
     try {
       const result = await originalInvoke(...args);
-      logLLMResponse("invoke", result, meta, requestId, Date.now() - startedAt);
+      const latencyMs = Date.now() - startedAt;
+      logLLMResponse("invoke", result, meta, requestId, latencyMs);
+      trackLlmOperationEnd({ requestId, status: "completed", latencyMs });
       return result;
     } catch (error) {
-      logLLMError("invoke", error, meta, requestId, Date.now() - startedAt);
+      const latencyMs = Date.now() - startedAt;
+      logLLMError("invoke", error, meta, requestId, latencyMs);
+      trackLlmOperationEnd({ requestId, status: "failed", latencyMs, error: error instanceof Error ? error.message : String(error) });
       throw error;
     }
   }) as ChatOpenAI["invoke"];
@@ -557,11 +567,14 @@ export function attachLLMDebugLogging(llm: ChatOpenAI, meta: LLMDebugMeta): Chat
     const requestId = nextRequestId("stream");
     const startedAt = Date.now();
     logLLMRequest("stream", args[0], meta, requestId);
+    trackLlmOperationStart({ requestId, method: "stream", provider: meta.provider, model: meta.model, taskType: meta.taskType, promptMeta: meta.promptMeta });
     try {
       const stream = await originalStream(...args);
       return wrapLoggedStream(stream as AsyncIterable<unknown>, meta, requestId, startedAt) as Awaited<ReturnType<ChatOpenAI["stream"]>>;
     } catch (error) {
-      logLLMError("stream", error, meta, requestId, Date.now() - startedAt);
+      const latencyMs = Date.now() - startedAt;
+      logLLMError("stream", error, meta, requestId, latencyMs);
+      trackLlmOperationEnd({ requestId, status: "failed", latencyMs, error: error instanceof Error ? error.message : String(error) });
       throw error;
     }
   }) as ChatOpenAI["stream"];
@@ -570,12 +583,17 @@ export function attachLLMDebugLogging(llm: ChatOpenAI, meta: LLMDebugMeta): Chat
     const requestId = nextRequestId("batch");
     const startedAt = Date.now();
     logLLMRequest("batch", args[0], meta, requestId);
+    trackLlmOperationStart({ requestId, method: "batch", provider: meta.provider, model: meta.model, taskType: meta.taskType, promptMeta: meta.promptMeta });
     try {
       const result = await originalBatch(...args);
-      logLLMResponse("batch", result, meta, requestId, Date.now() - startedAt);
+      const latencyMs = Date.now() - startedAt;
+      logLLMResponse("batch", result, meta, requestId, latencyMs);
+      trackLlmOperationEnd({ requestId, status: "completed", latencyMs });
       return result;
     } catch (error) {
-      logLLMError("batch", error, meta, requestId, Date.now() - startedAt);
+      const latencyMs = Date.now() - startedAt;
+      logLLMError("batch", error, meta, requestId, latencyMs);
+      trackLlmOperationEnd({ requestId, status: "failed", latencyMs, error: error instanceof Error ? error.message : String(error) });
       throw error;
     }
   }) as ChatOpenAI["batch"];

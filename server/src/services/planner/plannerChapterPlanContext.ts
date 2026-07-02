@@ -1,5 +1,10 @@
+import type { StoryPlan, Character, CreativeDecision } from "@ai-novel/shared/types/novel";
+import type { CanonicalTimelineEventState } from "@ai-novel/shared/types/canonicalState";
+import type { Prisma } from "@prisma/client";
 import { prisma } from "../../db/prisma";
 import type { PromptContextBlock } from "../../prompting/core/promptTypes";
+import type { StateDrivenContextBundle } from "../novel/production/ContextAssemblyService";
+import type { PlannerPlanMetadata } from "./plannerPlanMetadata";
 import { characterDynamicsQueryService } from "../novel/dynamics/CharacterDynamicsQueryService";
 import { contextAssemblyService } from "../novel/production/ContextAssemblyService";
 import { buildStateContextBlockFromCanonical } from "../novel/state/CanonicalStateService";
@@ -47,8 +52,8 @@ interface GenerateChapterPlanContextInput {
       replannedFromPlanId: string | null;
     };
   };
-  getBookPlan: (novelId: string) => Promise<any>;
-  listArcPlans: (novelId: string) => Promise<any[]>;
+  getBookPlan: (novelId: string) => Promise<StoryPlan | null>;
+  listArcPlans: (novelId: string) => Promise<StoryPlan[]>;
   resolveStyleEngine: (novelId: string, chapterId?: string, taskStyleProfileId?: string) => Promise<string>;
 }
 
@@ -81,8 +86,12 @@ function buildReplanContextBlock(replanContext: NonNullable<GenerateChapterPlanC
   ].filter(Boolean).join("\n");
 }
 
+type VolumePlanWithChapters = Prisma.VolumePlanGetPayload<{
+  include: { chapters: { orderBy: { chapterOrder: "asc" } } };
+}>;
+
 function mapVolumePlansToPlannerVolumes(
-  volumePlans: any[],
+  volumePlans: VolumePlanWithChapters[],
   novelId: string,
 ): PlannerMappedVolume[] {
   const mappedVolumes = volumePlans.map((volume) => ({
@@ -100,7 +109,7 @@ function mapVolumePlansToPlannerVolumes(
     openPayoffs: volume.openPayoffsJson ? JSON.parse(volume.openPayoffsJson) as string[] : [],
     status: volume.status,
     sourceVersionId: volume.sourceVersionId,
-    chapters: volume.chapters.map((item: any) => ({
+    chapters: volume.chapters.map((item) => ({
       id: item.id,
       volumeId: item.volumeId,
       chapterOrder: item.chapterOrder,
@@ -127,7 +136,7 @@ function mapVolumePlansToPlannerVolumes(
     climax: volume.climax,
     openPayoffs: volume.openPayoffs,
     updatedAt: volume.updatedAt,
-    chapters: volume.chapters.map((item: any) => ({
+    chapters: volume.chapters.map((item) => ({
       chapterOrder: item.chapterOrder,
       title: item.title,
       summary: item.summary,
@@ -135,22 +144,42 @@ function mapVolumePlansToPlannerVolumes(
   }));
 }
 
+/** Prisma select shape for novel in fetchChapterPlanData. */
+type NovelSelectResult = Prisma.NovelGetPayload<{
+  select: {
+    id: true; title: true; description: true; outline: true; structuredOutline: true; estimatedChapterCount: true;
+    genre: { select: { name: true } }; targetAudience: true; bookSellingPoint: true; competingFeel: true;
+    first30ChapterPromise: true; narrativePov: true; pacePreference: true; emotionIntensity: true; styleTone: true;
+    primaryStoryMode: { select: { id: true; name: true; description: true; template: true; parentId: true; profileJson: true; createdAt: true; updatedAt: true } };
+    secondaryStoryMode: { select: { id: true; name: true; description: true; template: true; parentId: true; profileJson: true; createdAt: true; updatedAt: true } };
+  };
+}>;
+
+/** Prisma select shape for chapter in fetchChapterPlanData. */
+type ChapterSelectResult = Prisma.ChapterGetPayload<{
+  select: {
+    id: true; title: true; order: true; expectation: true; content: true;
+    targetWordCount: true; conflictLevel: true; revealLevel: true; mustAvoid: true;
+    hook: true; taskSheet: true; sceneCards: true;
+  };
+}>;
+
 interface ChapterPlanContextResult {
-  novel: any;
-  chapter: any;
-  bible: any;
-  plotBeats: any[];
-  summaries: any[];
-  characters: any[];
-  bookPlan: any;
-  arcPlans: any[];
-  recentDecisions: any[];
+  novel: NovelSelectResult;
+  chapter: ChapterSelectResult;
+  bible: { rawContent: string | null } | null;
+  plotBeats: Array<{ chapterOrder: number | null; title: string; content: string }>;
+  summaries: Array<{ summary: string }>;
+  characters: Array<Pick<Character, "id" | "name" | "role" | "currentGoal" | "currentState">>;
+  bookPlan: StoryPlan | null;
+  arcPlans: StoryPlan[];
+  recentDecisions: Pick<CreativeDecision, "category" | "content" | "importance">[];
   openAuditIssues: string[];
   styleEngine: string;
   plannerVolumes: PlannerMappedVolume[];
   storyModeBlock: string;
-  defaultMetadata: any;
-  resolvedStateDrivenContext: any;
+  defaultMetadata: PlannerPlanMetadata;
+  resolvedStateDrivenContext: StateDrivenContextBundle;
   plannerStateGoalText: string;
   replanContextBlock: string;
   contextBlocks: PromptContextBlock[];
@@ -158,7 +187,14 @@ interface ChapterPlanContextResult {
 }
 
 // Sub-function: Fetch chapter plan data from database
-async function fetchChapterPlanData(novelId: string, chapterId: string, options: any, getBookPlan: any, listArcPlans: any, resolveStyleEngine: any) {
+async function fetchChapterPlanData(
+  novelId: string,
+  chapterId: string,
+  options: GenerateChapterPlanContextInput["options"],
+  getBookPlan: GenerateChapterPlanContextInput["getBookPlan"],
+  listArcPlans: GenerateChapterPlanContextInput["listArcPlans"],
+  resolveStyleEngine: GenerateChapterPlanContextInput["resolveStyleEngine"],
+) {
   const [novel, chapter, bible, plotBeats, summaries, characters, bookPlan, arcPlans, volumePlans, recentAuditReports, recentDecisions, storyMacroPlanRow, styleEngine, pendingReviewProposalCount] = await Promise.all([
     prisma.novel.findUnique({
       where: { id: novelId },
@@ -219,7 +255,7 @@ async function fetchChapterPlanContext(input: GenerateChapterPlanContextInput): 
     targetRelationships: resolvedStateDrivenContext.chapterStateGoal?.targetRelationships ?? [],
     targetPayoffs: resolvedStateDrivenContext.chapterStateGoal?.targetPayoffs ?? [],
     protectedSecrets: resolvedStateDrivenContext.protectedSecrets,
-    recentTimeline: resolvedStateDrivenContext.recentTimeline.map((item: any) => item.summary),
+    recentTimeline: resolvedStateDrivenContext.recentTimeline.map((item: CanonicalTimelineEventState) => item.summary),
   });
   const replanContextBlock = options.replanContext ? buildReplanContextBlock(options.replanContext) : "无";
   const contextBlocks = buildChapterPlanContextBlocks({
@@ -231,13 +267,13 @@ async function fetchChapterPlanContext(input: GenerateChapterPlanContextInput): 
     styleEngine, outline: novel.outline, structuredOutline: novel.structuredOutline,
     mappedVolumes: plannerVolumes.map((volume) => ({ sortOrder: volume.sortOrder, title: volume.title, summary: volume.summary, mainPromise: volume.mainPromise, climax: volume.climax, updatedAt: volume.updatedAt, chapters: volume.chapters })),
     bookPlan: bookPlan ? `${bookPlan.title} | ${bookPlan.objective}${bookPlan.phaseLabel ? ` | 阶段=${bookPlan.phaseLabel}` : ""}` : "无",
-    arcPlans: arcPlans.length > 0 ? arcPlans.map((plan: any) => `${plan.externalRef ?? "-"} ${plan.title} | ${plan.objective}${plan.phaseLabel ? ` | 阶段=${plan.phaseLabel}` : ""}`).join("\n") : "无",
-    characters: characters.map((item: any) => `${item.id}|${item.name}|${item.role}|goal=${item.currentGoal ?? ""}|state=${item.currentState ?? ""}`).join("\n") || "无",
-    recentSummaries: summaries.map((item: any) => `${item.summary}`).join("\n") || "无",
-    plotBeats: plotBeats.map((item: any) => `${item.chapterOrder ?? "-"} ${item.title} ${item.content}`).join("\n") || "无",
+    arcPlans: arcPlans.length > 0 ? arcPlans.map((plan) => `${plan.externalRef ?? "-"} ${plan.title} | ${plan.objective}${plan.phaseLabel ? ` | 阶段=${plan.phaseLabel}` : ""}`).join("\n") : "无",
+    characters: characters.map((item) => `${item.id}|${item.name}|${item.role}|goal=${item.currentGoal ?? ""}|state=${item.currentState ?? ""}`).join("\n") || "无",
+    recentSummaries: summaries.map((item) => `${item.summary}`).join("\n") || "无",
+    plotBeats: plotBeats.map((item) => `${item.chapterOrder ?? "-"} ${item.title} ${item.content}`).join("\n") || "无",
     stateSnapshot: buildStateContextBlockFromCanonical(resolvedStateDrivenContext.snapshot),
     openAuditIssues: openAuditIssues.join("\n") || "无",
-    recentDecisions: recentDecisions.map((item: any) => `${item.category}/${item.importance}: ${item.content}`).join("\n") || "无",
+    recentDecisions: recentDecisions.map((item) => `${item.category}/${item.importance}: ${item.content}`).join("\n") || "无",
     characterDynamicsSummary: characterDynamicsContext.summary, characterVolumeAssignments: characterDynamicsContext.volumeAssignments,
     characterRelationStages: characterDynamicsContext.relationStages, characterCandidateGuards: characterDynamicsContext.candidateGuards,
     stateDrivenDirective: buildPlannerStateDrivenDirective({ nextAction: resolvedStateDrivenContext.nextAction, pendingReviewProposalCount, openAuditIssueCount: openAuditIssues.length }),
