@@ -214,232 +214,48 @@ function withStatus(input: {
   };
 }
 
+// Sub-function: Build core checklist items
+function buildCoreChecklistItems(novel: NovelSetupSource, statuses: { premiseStatus: "missing" | "partial" | "ready"; storyPromiseStatus: "missing" | "partial" | "ready"; directionSignals: number; storyModeSignals: number; narrativeSignals: number; productionSignals: number; chapterScaleStatus: "missing" | "partial" | "ready" }) {
+  return [
+    withStatus({ key: "premise", label: "核心设定", status: statuses.premiseStatus, summary: statuses.premiseStatus === "ready" ? "主角、冲突和故事目标已经明确。" : statuses.premiseStatus === "partial" ? "已有简介，但冲突和故事承诺还不够稳定。" : "还缺清晰的一句话设定，需要先说清主角、冲突和目标。", currentValue: compactText(novel.description), requiredForProduction: true, recommendedAction: "请先补齐当前小说的核心设定，明确主角、核心冲突、目标与题材承诺，并整理成可直接写入简介的版本。", optionPrompt: "基于当前标题和已有信息，为这本小说提供 3 套核心设定备选。每套都要包含主角、核心冲突、目标和题材气质。" }),
+    withStatus({ key: "story_promise", label: "故事承诺", status: statuses.storyPromiseStatus, summary: statuses.storyPromiseStatus === "ready" ? "主线卖点、情绪落点和读者预期已经明确。" : statuses.storyPromiseStatus === "partial" ? "已有基础设定，但主线承诺和阅读期待还不够鲜明。" : "还缺这本书最核心的故事承诺和阅读预期。", currentValue: compactText(novel.bible?.mainPromise ?? novel.description), requiredForProduction: true, recommendedAction: "请结合当前设定，补齐这本书的故事承诺：主线卖点、情绪走向、结局预期，以及读者为什么会想追下去。", optionPrompt: "基于当前设定，为这本小说提供 3 套故事承诺备选。每套都要说明卖点、情绪走向和读者期待。" }),
+    withStatus({ key: "direction", label: "题材与风格", status: statuses.directionSignals >= 2 ? "ready" : statuses.directionSignals === 1 ? "partial" : "missing", summary: statuses.directionSignals >= 2 ? "题材类型和风格气质都已确定。" : statuses.directionSignals === 1 ? "已有部分方向信息，建议补齐题材或风格基调。" : "还没有明确题材和风格气质。", currentValue: joinCurrentValues([novel.genre?.name ?? null, compactText(novel.styleTone, 36)]), requiredForProduction: true, recommendedAction: "请为当前小说明确题材标签和风格气质，说明它更偏热血、悬疑、治愈、黑暗还是轻松，并给出一句风格说明。", optionPrompt: "结合当前设定，为这本小说提供 3 套题材与风格组合备选，并说明各自适合的读者感受。" }),
+    withStatus({ key: "story_mode", label: "流派模式", status: statuses.storyModeSignals >= 2 ? "ready" : statuses.storyModeSignals === 1 ? "partial" : "missing", summary: statuses.storyModeSignals >= 2 ? "主副流派模式都已明确，后续规划有稳定控制轴。" : statuses.storyModeSignals === 1 ? "已设置部分流派模式，但建议至少补齐主模式以稳定后续规划。" : "还没有定义这本书靠什么推进、靠什么兑现以及冲突边界。", currentValue: joinCurrentValues([novel.primaryStoryMode?.name ?? null, novel.secondaryStoryMode?.name ?? null]), requiredForProduction: true, recommendedAction: "请先确定当前小说的主流派模式，必要时再补充一个副流派模式。这样系统才能稳定约束后续的故事规划、角色设计和卷章生成。", optionPrompt: "基于当前题材、卖点和前 30 章承诺，为这本小说提供 3 套主副流派模式组合建议，并说明各自的推进逻辑、读者奖励和冲突边界。" }),
+    withStatus({ key: "narrative", label: "叙事配置", status: statuses.narrativeSignals >= 2 ? "ready" : statuses.narrativeSignals > 0 ? "partial" : "missing", summary: statuses.narrativeSignals >= 2 ? "叙事视角和节奏偏好都已确定。" : statuses.narrativeSignals > 0 ? "已有部分叙事配置，建议补齐视角与节奏。" : "还没有确定叙事视角与推进节奏。", currentValue: joinCurrentValues([narrativePovLabel(novel.narrativePov), pacePreferenceLabel(novel.pacePreference)]), requiredForProduction: true, recommendedAction: "请确定这本书更适合使用什么叙事视角、什么推进节奏，并简要说明原因。", optionPrompt: "基于当前题材和设定，为这本小说提供 3 套叙事配置备选。每套都包含视角和节奏，并说明优缺点。" }),
+    withStatus({ key: "production_preferences", label: "生产偏好", status: statuses.productionSignals >= 3 ? "ready" : statuses.productionSignals > 0 ? "partial" : "missing", summary: statuses.productionSignals >= 3 ? "创作协作方式、情绪强度和 AI 自由度都已明确。" : statuses.productionSignals > 0 ? "已有部分生产偏好，但还不够稳定。" : "还没有确定协作模式、情绪强度和 AI 自由度。", currentValue: joinCurrentValues([projectModeLabel(novel.projectMode), emotionIntensityLabel(novel.emotionIntensity), aiFreedomLabel(novel.aiFreedom)]), requiredForProduction: true, recommendedAction: "请补齐当前小说的生产偏好，包括协作模式、情绪强度和 AI 自由度，说明哪些部分必须保守、哪些可以放开创作。", optionPrompt: "基于当前题材和目标，为这本小说提供 3 套生产偏好备选。每套都要包含协作模式、情绪强度和 AI 自由度。" }),
+    withStatus({ key: "chapter_scale", label: "章节规格", status: statuses.chapterScaleStatus, summary: statuses.chapterScaleStatus === "ready" ? "默认章长和章节粒度已明确。" : statuses.chapterScaleStatus === "partial" ? "已有章节规划，但还没确认默认章长。" : "还没有确认单章大致字数和章节粒度。", currentValue: typeof novel.defaultChapterLength === "number" && novel.defaultChapterLength > 0 ? `默认章长约 ${novel.defaultChapterLength} 字` : novel._count.chapters > 0 ? `已有 ${novel._count.chapters} 个章节目录` : null, requiredForProduction: true, recommendedAction: "请结合题材和节奏，确认这本书的默认章长范围，以及单章更偏事件推进、情绪推进还是信息揭示。", optionPrompt: "基于当前题材和节奏，为这本小说提供 3 套章节规格备选。每套都包含建议章长和单章推进方式。" }),
+  ];
+}
+
+// Sub-function: Build world and outline checklist items
+function buildWorldAndOutlineChecklistItems(novel: NovelSetupSource, worldSignal: any, statuses: { worldStatus: "missing" | "partial" | "ready"; worldRulesStatus: "missing" | "partial" | "ready"; characterStatus: "missing" | "partial" | "ready"; outlineStatus: "missing" | "partial" | "ready"; hasBibleWorldRuleNotes: boolean }) {
+  return [
+    withStatus({ key: "world", label: "世界观基础", status: statuses.worldStatus, summary: statuses.worldStatus === "ready" ? `本书世界${worldSignal.title ? `《${worldSignal.title}》` : ""}已整理为本书世界手册。` : statuses.worldStatus === "partial" ? "存在世界种子，建议整理成本书世界手册。" : "还缺世界观种子或基本舞台信息。", currentValue: worldSignal.title ?? worldSignal.summary ?? novel.world?.name ?? compactText(novel.bible?.coreSetting, 48), requiredForProduction: true, recommendedAction: "请先在本书世界里补齐故事舞台、时代背景、基础规则以及会影响主线冲突的环境设定。", optionPrompt: "结合当前题材和核心设定，为这本小说提供 3 套本书世界基础设定备选，并说明各自的冲突潜力。" }),
+    withStatus({ key: "world_rules", label: "规则边界", status: statuses.worldRulesStatus, summary: statuses.worldRulesStatus === "ready" ? "本书世界手册里已有可遵守的规则边界。" : statuses.worldRulesStatus === "partial" ? statuses.hasBibleWorldRuleNotes ? "已有规则文字记录，建议整理进本书世界手册。" : "世界框架存在，建议补齐关键规则与禁忌。" : "还没有整理出会约束剧情的世界规则或禁忌。", currentValue: worldSignal.rulePreview ?? compactText(novel.bible?.worldRules ?? novel.bible?.forbiddenRules, 56), requiredForProduction: false, recommendedAction: "请在本书世界手册里提炼必须遵守的世界规则、禁忌和硬边界，尤其是会直接影响剧情推进与角色行动的部分。", optionPrompt: "基于当前设定，为这本小说提供 3 套本书世界规则与禁忌备选，每套都要说明会如何影响剧情。" }),
+    withStatus({ key: "characters", label: "角色基础", status: statuses.characterStatus, summary: statuses.characterStatus === "ready" ? `已有 ${novel._count.characters} 个角色进入当前小说。` : statuses.characterStatus === "partial" ? "已有角色弧线描述，但还没形成稳定角色清单。" : "还没有主角和核心角色草案。", currentValue: novel._count.characters > 0 ? `${novel._count.characters} 个角色` : compactText(novel.bible?.characterArcs, 48), requiredForProduction: true, recommendedAction: "请先整理当前小说的主角与核心角色，至少明确角色定位、目标、阻力和彼此冲突关系。", optionPrompt: "基于当前设定，为这本小说提供 3 组核心角色阵容备选，每组都说明主角、对手与关键关系。" }),
+    withStatus({ key: "outline", label: "大纲与章节计划", status: statuses.outlineStatus, summary: statuses.outlineStatus === "ready" ? "已有结构化大纲或可执行章节规划。" : statuses.outlineStatus === "partial" ? "已有故事走向，但还没拆成稳定的章节规划。" : "还没有可执行的大纲和章节推进计划。", currentValue: novel.structuredOutline?.trim() ? "已生成结构化大纲" : novel.outline?.trim() ? "已生成发展走向" : novel._count.chapters > 0 ? `已有 ${novel._count.chapters} 个章节目录` : null, requiredForProduction: true, recommendedAction: "请把当前设定整理成可执行的大纲，并拆出章节推进计划，至少明确开篇、前中后段转折和结局落点。", optionPrompt: "基于当前设定，为这本小说提供 3 套大纲推进方案备选，并说明各自的章节节奏。" }),
+  ];
+}
+
 function buildChecklist(novel: NovelSetupSource): CreativeHubNovelSetupChecklistItem[] {
   const novelWorldSignal = buildNovelWorldSetupSignal(novel.novelWorld);
   const premiseLength = novel.description?.trim().length ?? 0;
   const premiseStatus = premiseLength >= 80 ? "ready" : premiseLength > 0 ? "partial" : "missing";
-  const storyPromiseStatus = hasText(novel.bible?.mainPromise)
-    ? "ready"
-    : premiseLength >= 80
-      ? "partial"
-      : "missing";
+  const storyPromiseStatus = hasText(novel.bible?.mainPromise) ? "ready" : premiseLength >= 80 ? "partial" : "missing";
   const directionSignals = [Boolean(novel.genre?.name), hasText(novel.styleTone)].filter(Boolean).length;
   const storyModeSignals = [Boolean(novel.primaryStoryMode?.name), Boolean(novel.secondaryStoryMode?.name)].filter(Boolean).length;
   const narrativeSignals = [Boolean(novel.narrativePov), Boolean(novel.pacePreference)].filter(Boolean).length;
-  const productionSignals = [
-    Boolean(novel.projectMode),
-    Boolean(novel.emotionIntensity),
-    Boolean(novel.aiFreedom),
-  ].filter(Boolean).length;
-  const chapterScaleStatus = typeof novel.defaultChapterLength === "number" && novel.defaultChapterLength > 0
-    ? "ready"
-    : novel._count.chapters > 0 || hasText(novel.structuredOutline)
-      ? "partial"
-      : "missing";
-  const worldStatus = novelWorldSignal.hasWorld
-    ? "ready"
-    : novel.novelWorld || novel.world
-      ? "partial"
-      : hasText(novel.bible?.coreSetting)
-        ? "partial"
-        : "missing";
+  const productionSignals = [Boolean(novel.projectMode), Boolean(novel.emotionIntensity), Boolean(novel.aiFreedom)].filter(Boolean).length;
+  const chapterScaleStatus = typeof novel.defaultChapterLength === "number" && novel.defaultChapterLength > 0 ? "ready" : novel._count.chapters > 0 || hasText(novel.structuredOutline) ? "partial" : "missing";
+  const worldStatus = novelWorldSignal.hasWorld ? "ready" : novel.novelWorld || novel.world ? "partial" : hasText(novel.bible?.coreSetting) ? "partial" : "missing";
   const hasBibleWorldRuleNotes = hasText(novel.bible?.worldRules) || hasText(novel.bible?.forbiddenRules);
-  const worldRulesStatus = novelWorldSignal.hasRules
-    ? "ready"
-    : novelWorldSignal.hasWorld || novel.novelWorld || novel.world || hasText(novel.bible?.coreSetting) || hasBibleWorldRuleNotes
-        ? "partial"
-        : "missing";
-  const characterStatus = novel._count.characters > 0
-    ? "ready"
-    : hasText(novel.bible?.characterArcs)
-      ? "partial"
-      : "missing";
-  const outlineStatus = novel.structuredOutline?.trim()
-    ? "ready"
-    : novel._count.chapters > 0 || hasText(novel.outline)
-      ? "partial"
-      : "missing";
+  const worldRulesStatus = novelWorldSignal.hasRules ? "ready" : novelWorldSignal.hasWorld || novel.novelWorld || novel.world || hasText(novel.bible?.coreSetting) || hasBibleWorldRuleNotes ? "partial" : "missing";
+  const characterStatus = novel._count.characters > 0 ? "ready" : hasText(novel.bible?.characterArcs) ? "partial" : "missing";
+  const outlineStatus = novel.structuredOutline?.trim() ? "ready" : novel._count.chapters > 0 || hasText(novel.outline) ? "partial" : "missing";
 
   return [
-    withStatus({
-      key: "premise",
-      label: "核心设定",
-      status: premiseStatus,
-      summary: premiseStatus === "ready"
-        ? "主角、冲突和故事目标已经明确。"
-        : premiseStatus === "partial"
-          ? "已有简介，但冲突和故事承诺还不够稳定。"
-          : "还缺清晰的一句话设定，需要先说清主角、冲突和目标。",
-      currentValue: compactText(novel.description),
-      requiredForProduction: true,
-      recommendedAction: "请先补齐当前小说的核心设定，明确主角、核心冲突、目标与题材承诺，并整理成可直接写入简介的版本。",
-      optionPrompt: "基于当前标题和已有信息，为这本小说提供 3 套核心设定备选。每套都要包含主角、核心冲突、目标和题材气质。",
-    }),
-    withStatus({
-      key: "story_promise",
-      label: "故事承诺",
-      status: storyPromiseStatus,
-      summary: storyPromiseStatus === "ready"
-        ? "主线卖点、情绪落点和读者预期已经明确。"
-        : storyPromiseStatus === "partial"
-          ? "已有基础设定，但主线承诺和阅读期待还不够鲜明。"
-          : "还缺这本书最核心的故事承诺和阅读预期。",
-      currentValue: compactText(novel.bible?.mainPromise ?? novel.description),
-      requiredForProduction: true,
-      recommendedAction: "请结合当前设定，补齐这本书的故事承诺：主线卖点、情绪走向、结局预期，以及读者为什么会想追下去。",
-      optionPrompt: "基于当前设定，为这本小说提供 3 套故事承诺备选。每套都要说明卖点、情绪走向和读者期待。",
-    }),
-    withStatus({
-      key: "direction",
-      label: "题材与风格",
-      status: directionSignals >= 2 ? "ready" : directionSignals === 1 ? "partial" : "missing",
-      summary: directionSignals >= 2
-        ? "题材类型和风格气质都已确定。"
-        : directionSignals === 1
-          ? "已有部分方向信息，建议补齐题材或风格基调。"
-          : "还没有明确题材和风格气质。",
-      currentValue: joinCurrentValues([novel.genre?.name ?? null, compactText(novel.styleTone, 36)]),
-      requiredForProduction: true,
-      recommendedAction: "请为当前小说明确题材标签和风格气质，说明它更偏热血、悬疑、治愈、黑暗还是轻松，并给出一句风格说明。",
-      optionPrompt: "结合当前设定，为这本小说提供 3 套题材与风格组合备选，并说明各自适合的读者感受。",
-    }),
-    withStatus({
-      key: "story_mode",
-      label: "流派模式",
-      status: storyModeSignals >= 2 ? "ready" : storyModeSignals === 1 ? "partial" : "missing",
-      summary: storyModeSignals >= 2
-        ? "主副流派模式都已明确，后续规划有稳定控制轴。"
-        : storyModeSignals === 1
-          ? "已设置部分流派模式，但建议至少补齐主模式以稳定后续规划。"
-          : "还没有定义这本书靠什么推进、靠什么兑现以及冲突边界。",
-      currentValue: joinCurrentValues([novel.primaryStoryMode?.name ?? null, novel.secondaryStoryMode?.name ?? null]),
-      requiredForProduction: true,
-      recommendedAction: "请先确定当前小说的主流派模式，必要时再补充一个副流派模式。这样系统才能稳定约束后续的故事规划、角色设计和卷章生成。",
-      optionPrompt: "基于当前题材、卖点和前 30 章承诺，为这本小说提供 3 套主副流派模式组合建议，并说明各自的推进逻辑、读者奖励和冲突边界。",
-    }),
-    withStatus({
-      key: "narrative",
-      label: "叙事配置",
-      status: narrativeSignals >= 2 ? "ready" : narrativeSignals > 0 ? "partial" : "missing",
-      summary: narrativeSignals >= 2
-        ? "叙事视角和节奏偏好都已确定。"
-        : narrativeSignals > 0
-          ? "已有部分叙事配置，建议补齐视角与节奏。"
-          : "还没有确定叙事视角与推进节奏。",
-      currentValue: joinCurrentValues([
-        narrativePovLabel(novel.narrativePov),
-        pacePreferenceLabel(novel.pacePreference),
-      ]),
-      requiredForProduction: true,
-      recommendedAction: "请确定这本书更适合使用什么叙事视角、什么推进节奏，并简要说明原因。",
-      optionPrompt: "基于当前题材和设定，为这本小说提供 3 套叙事配置备选。每套都包含视角和节奏，并说明优缺点。",
-    }),
-    withStatus({
-      key: "production_preferences",
-      label: "生产偏好",
-      status: productionSignals >= 3 ? "ready" : productionSignals > 0 ? "partial" : "missing",
-      summary: productionSignals >= 3
-        ? "创作协作方式、情绪强度和 AI 自由度都已明确。"
-        : productionSignals > 0
-          ? "已有部分生产偏好，但还不够稳定。"
-          : "还没有确定协作模式、情绪强度和 AI 自由度。",
-      currentValue: joinCurrentValues([
-        projectModeLabel(novel.projectMode),
-        emotionIntensityLabel(novel.emotionIntensity),
-        aiFreedomLabel(novel.aiFreedom),
-      ]),
-      requiredForProduction: true,
-      recommendedAction: "请补齐当前小说的生产偏好，包括协作模式、情绪强度和 AI 自由度，说明哪些部分必须保守、哪些可以放开创作。",
-      optionPrompt: "基于当前题材和目标，为这本小说提供 3 套生产偏好备选。每套都要包含协作模式、情绪强度和 AI 自由度。",
-    }),
-    withStatus({
-      key: "chapter_scale",
-      label: "章节规格",
-      status: chapterScaleStatus,
-      summary: chapterScaleStatus === "ready"
-        ? "默认章长和章节粒度已明确。"
-        : chapterScaleStatus === "partial"
-          ? "已有章节规划，但还没确认默认章长。"
-          : "还没有确认单章大致字数和章节粒度。",
-      currentValue: typeof novel.defaultChapterLength === "number" && novel.defaultChapterLength > 0
-        ? `默认章长约 ${novel.defaultChapterLength} 字`
-        : novel._count.chapters > 0
-          ? `已有 ${novel._count.chapters} 个章节目录`
-          : null,
-      requiredForProduction: true,
-      recommendedAction: "请结合题材和节奏，确认这本书的默认章长范围，以及单章更偏事件推进、情绪推进还是信息揭示。",
-      optionPrompt: "基于当前题材和节奏，为这本小说提供 3 套章节规格备选。每套都包含建议章长和单章推进方式。",
-    }),
-    withStatus({
-      key: "world",
-      label: "世界观基础",
-      status: worldStatus,
-      summary: worldStatus === "ready"
-        ? `本书世界${novelWorldSignal.title ? `《${novelWorldSignal.title}》` : ""}已整理为本书世界手册。`
-        : worldStatus === "partial"
-          ? "存在世界种子，建议整理成本书世界手册。"
-          : "还缺世界观种子或基本舞台信息。",
-      currentValue: novelWorldSignal.title
-        ?? novelWorldSignal.summary
-        ?? novel.world?.name
-        ?? compactText(novel.bible?.coreSetting, 48),
-      requiredForProduction: true,
-      recommendedAction: "请先在本书世界里补齐故事舞台、时代背景、基础规则以及会影响主线冲突的环境设定。",
-      optionPrompt: "结合当前题材和核心设定，为这本小说提供 3 套本书世界基础设定备选，并说明各自的冲突潜力。",
-    }),
-    withStatus({
-      key: "world_rules",
-      label: "规则边界",
-      status: worldRulesStatus,
-      summary: worldRulesStatus === "ready"
-        ? "本书世界手册里已有可遵守的规则边界。"
-        : worldRulesStatus === "partial"
-          ? hasBibleWorldRuleNotes
-            ? "已有规则文字记录，建议整理进本书世界手册。"
-            : "世界框架存在，建议补齐关键规则与禁忌。"
-          : "还没有整理出会约束剧情的世界规则或禁忌。",
-      currentValue: novelWorldSignal.rulePreview
-        ?? compactText(novel.bible?.worldRules ?? novel.bible?.forbiddenRules, 56),
-      requiredForProduction: false,
-      recommendedAction: "请在本书世界手册里提炼必须遵守的世界规则、禁忌和硬边界，尤其是会直接影响剧情推进与角色行动的部分。",
-      optionPrompt: "基于当前设定，为这本小说提供 3 套本书世界规则与禁忌备选，每套都要说明会如何影响剧情。",
-    }),
-    withStatus({
-      key: "characters",
-      label: "角色基础",
-      status: characterStatus,
-      summary: characterStatus === "ready"
-        ? `已有 ${novel._count.characters} 个角色进入当前小说。`
-        : characterStatus === "partial"
-          ? "已有角色弧线描述，但还没形成稳定角色清单。"
-          : "还没有主角和核心角色草案。",
-      currentValue: novel._count.characters > 0
-        ? `${novel._count.characters} 个角色`
-        : compactText(novel.bible?.characterArcs, 48),
-      requiredForProduction: true,
-      recommendedAction: "请先整理当前小说的主角与核心角色，至少明确角色定位、目标、阻力和彼此冲突关系。",
-      optionPrompt: "基于当前设定，为这本小说提供 3 组核心角色阵容备选，每组都说明主角、对手与关键关系。",
-    }),
-    withStatus({
-      key: "outline",
-      label: "大纲与章节计划",
-      status: outlineStatus,
-      summary: outlineStatus === "ready"
-        ? "已有结构化大纲或可执行章节规划。"
-        : outlineStatus === "partial"
-          ? "已有故事走向，但还没拆成稳定的章节规划。"
-          : "还没有可执行的大纲和章节推进计划。",
-      currentValue: novel.structuredOutline?.trim()
-        ? "已生成结构化大纲"
-        : novel.outline?.trim()
-          ? "已生成发展走向"
-          : novel._count.chapters > 0
-            ? `已有 ${novel._count.chapters} 个章节目录`
-            : null,
-      requiredForProduction: true,
-      recommendedAction: "请把当前设定整理成可执行的大纲，并拆出章节推进计划，至少明确开篇、前中后段转折和结局落点。",
-      optionPrompt: "基于当前设定，为这本小说提供 3 套大纲推进方案备选，并说明各自的章节节奏。",
-    }),
+    ...buildCoreChecklistItems(novel, { premiseStatus, storyPromiseStatus, directionSignals, storyModeSignals, narrativeSignals, productionSignals, chapterScaleStatus }),
+    ...buildWorldAndOutlineChecklistItems(novel, novelWorldSignal, { worldStatus, worldRulesStatus, characterStatus, outlineStatus, hasBibleWorldRuleNotes }),
   ];
 }
 
