@@ -1,0 +1,1 @@
+../.claude/skills/ll-workflow-core/templates/scripts/req-sync.js
