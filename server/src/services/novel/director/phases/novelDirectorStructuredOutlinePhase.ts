@@ -329,6 +329,78 @@ async function runChapterDetailBundleStep(params: {
   return result;
 }
 
+// Sub-function: Finalize structured outline phase
+async function finalizeStructuredOutlinePhase(params: {
+  taskId: string;
+  novelId: string;
+  request: DirectorConfirmRequest;
+  workspace: VolumePlanDocument;
+  firstVolume: VolumePlanDocument["volumes"][number];
+  detailPlan: any;
+  dependencies: DirectorPhaseDependencies;
+  callbacks: DirectorPhaseCallbacks;
+}) {
+  const { taskId, novelId, request, workspace, firstVolume, detailPlan, dependencies, callbacks } = params;
+
+  const preparedVolumeIds = resolveStructuredOutlineRecoveryCursor({ workspace, plan: detailPlan }).preparedVolumeIds;
+  const maxPreparedChapterOrder = Math.max(0, ...flattenPreparedOutlineChapters(workspace).map((chapter) => chapter.chapterOrder));
+  const targetChapterRange = resolveDirectorAutoExecutionPlanChapterRange(detailPlan);
+  if (targetChapterRange && maxPreparedChapterOrder < targetChapterRange.endOrder) {
+    throw new Error(`当前已生成的章节规划最多只覆盖到第 ${maxPreparedChapterOrder} 章，不能直接自动执行${buildChapterOrderRangeLabel(targetChapterRange.startOrder, targetChapterRange.endOrder)}。`);
+  }
+
+  await callbacks.markDirectorTaskRunning(taskId, "structured_outline", "chapter_sync", "正在同步已准备章节到执行区", DIRECTOR_PROGRESS.chapterSync);
+  logMemoryUsage({ event: "before_sync_write", component: "runDirectorStructuredOutlinePhase", taskId, novelId, stage: "structured_outline", itemKey: "chapter_sync", scope: "structured_outline", entrypoint: "auto_director", volumeCount: workspace.volumes.length, chapterCount: workspace.volumes.reduce((sum, volume) => sum + volume.chapters.length, 0), beatSheetCount: workspace.beatSheets.length });
+
+  const persistedOutlineWorkspace = await dependencies.volumeService.updateVolumesWithOptions(novelId, workspace, {
+    volumeUpdateReason: "chapter_execution_contract_refined", syncPayoffLedger: false,
+    memoryTelemetry: { taskId, stage: "structured_outline", itemKey: "chapter_sync", scope: "structured_outline", entrypoint: "auto_director" },
+  });
+  await dependencies.volumeService.syncVolumeChaptersWithOptions(novelId, { volumes: persistedOutlineWorkspace.volumes, preserveContent: true, applyDeletes: false, executionContractChapterRange: targetChapterRange ?? undefined }, { emitEvent: false, syncPayoffLedger: false });
+  await dependencies.characterDynamicsService.rebuildDynamics(novelId, { sourceType: "rebuild_projection" }).catch((error) => {
+    logger.warn(`[director.structured_outline] event=character_dynamics_rebuild_failed taskId=${taskId} novelId=${novelId} error=${JSON.stringify(error instanceof Error ? error.message : String(error))}`);
+  });
+
+  const syncCursor = resolveStructuredOutlineRecoveryCursor({ workspace: persistedOutlineWorkspace, plan: detailPlan });
+  const selectedChapters = syncCursor.selectedChapters;
+  if (selectedChapters.length === 0) throw new Error("自动导演未能准备出可执行的章节范围。");
+  const selectedChapterOrders = selectedChapters.map((chapter) => chapter.chapterOrder).sort((left, right) => left - right);
+  if (targetChapterRange) {
+    const missingOrders = findMissingSelectedChapterOrders(selectedChapterOrders, targetChapterRange);
+    if (missingOrders.length > 0) throw new Error(`自动导演已准备的章节规划缺少第 ${missingOrders.slice(0, 5).join("、")} 章，不能直接自动执行${buildChapterOrderRangeLabel(targetChapterRange.startOrder, targetChapterRange.endOrder)}。`);
+  }
+  const autoExecutionScopeLabel = syncCursor.scopeLabel;
+  const downstreamResetRange = { startOrder: selectedChapterOrders[0] ?? 1, endOrder: selectedChapterOrders[selectedChapterOrders.length - 1] ?? selectedChapterOrders[0] ?? 1 };
+  await resetDirectorDownstreamChapterState(novelId, downstreamResetRange);
+
+  await callbacks.markDirectorTaskRunning(taskId, "structured_outline", "chapter_detail_bundle", `${autoExecutionScopeLabel}细化已完成，正在同步章节执行资源`, DIRECTOR_PROGRESS.chapterDetailDone, { chapterId: selectedChapters[0]?.id ?? null, volumeId: selectedChapters[0]?.volumeId ?? null });
+  const persistedChapters = await dependencies.novelContextService.listChapters(novelId);
+  if (persistedChapters.length === 0) throw new Error("自动导演已生成拆章结果，但章节资源没有成功同步到执行区。");
+  const persistedChapterByOrder = new Map(persistedChapters.map((chapter) => [chapter.order, chapter] as const));
+  if (!isFullBookAutopilotRunMode(request.runMode)) {
+    const missingExecutionContextOrders = selectedChapterOrders.filter((order) => { const chapter = persistedChapterByOrder.get(order); return !chapter || !hasDirectorSyncedChapterExecutionContext(chapter); });
+    if (missingExecutionContextOrders.length > 0) throw new Error(`${autoExecutionScopeLabel}还有第 ${missingExecutionContextOrders.slice(0, 5).join("、")} 章缺少已同步的章节执行上下文，不能直接进入章节执行。请先补齐基础章节信息。`);
+  }
+
+  await dependencies.novelContextService.updateNovel(novelId, { projectStatus: "in_progress", storylineStatus: "in_progress", outlineStatus: "in_progress" });
+
+  const autoExecutionState = buildDirectorAutoExecutionState({
+    range: { startOrder: selectedChapterOrders[0] ?? 1, endOrder: selectedChapterOrders[selectedChapterOrders.length - 1] ?? selectedChapterOrders[0] ?? 1, totalChapterCount: targetChapterRange ? countDirectorAutoExecutionChapterRange(targetChapterRange) : selectedChapters.length, firstChapterId: selectedChapters[0]?.id ?? null },
+    chapters: persistedChapters.map((chapter) => ({ id: chapter.id, order: chapter.order, content: chapter.content ?? null, conflictLevel: chapter.conflictLevel ?? null, revealLevel: chapter.revealLevel ?? null, targetWordCount: chapter.targetWordCount ?? null, mustAvoid: chapter.mustAvoid ?? null, taskSheet: chapter.taskSheet ?? null, sceneCards: chapter.sceneCards ?? null, generationState: chapter.generationState ?? null, chapterStatus: chapter.chapterStatus ?? null })),
+    plan: detailPlan, scopeLabel: autoExecutionScopeLabel, volumeTitle: detailPlan.mode === "volume" ? selectedChapters[0]?.volumeTitle ?? null : null, preparedVolumeIds,
+  });
+
+  const pausedSession = buildDirectorSessionState({ runMode: request.runMode, phase: "chapter_execution", isBackgroundRunning: false });
+  const chapterResumeTarget = buildNovelEditResumeTarget({ novelId, taskId, stage: "chapter", volumeId: selectedChapters[0]?.volumeId ?? firstVolume.id, chapterId: selectedChapters[0]?.id ?? null });
+  await dependencies.workflowService.recordCheckpoint(taskId, {
+    stage: "chapter_execution", checkpointType: "chapter_batch_ready",
+    checkpointSummary: `《${request.candidate.workingTitle.trim() || request.title?.trim() || "当前项目"}》已准备好${autoExecutionScopeLabel}的章节执行资源。`,
+    itemLabel: `${autoExecutionScopeLabel}已可进入章节执行`, volumeId: selectedChapters[0]?.volumeId ?? firstVolume.id, chapterId: selectedChapters[0]?.id ?? null, progress: DIRECTOR_PROGRESS.chapterBatchReady,
+    seedPayload: callbacks.buildDirectorSeedPayload(request, novelId, { directorSession: pausedSession, resumeTarget: chapterResumeTarget, autoExecution: autoExecutionState }),
+  });
+  logMemoryUsage({ event: "done", component: "runDirectorStructuredOutlinePhase", taskId, novelId, stage: "structured_outline", itemKey: "chapter_batch_ready", scope: autoExecutionScopeLabel, entrypoint: "auto_director", volumeCount: persistedOutlineWorkspace.volumes.length, chapterCount: persistedOutlineWorkspace.volumes.reduce((sum, volume) => sum + volume.chapters.length, 0), beatSheetCount: persistedOutlineWorkspace.beatSheets.length });
+}
+
 export async function runDirectorStructuredOutlinePhase(input: {
   taskId: string;
   novelId: string;
@@ -455,195 +527,15 @@ export async function runDirectorStructuredOutlinePhase(input: {
     }
   }
 
-  const preparedVolumeIds = resolveStructuredOutlineRecoveryCursor({
+  // Finalize: sync chapters and record checkpoint
+  await finalizeStructuredOutlinePhase({
+    taskId,
+    novelId,
+    request,
     workspace,
-    plan: detailPlan,
-  }).preparedVolumeIds;
-  const maxPreparedChapterOrder = Math.max(
-    0,
-    ...flattenPreparedOutlineChapters(workspace).map((chapter) => chapter.chapterOrder),
-  );
-  const targetChapterRange = resolveDirectorAutoExecutionPlanChapterRange(detailPlan);
-  if (targetChapterRange && maxPreparedChapterOrder < targetChapterRange.endOrder) {
-    throw new Error(
-      `当前已生成的章节规划最多只覆盖到第 ${maxPreparedChapterOrder} 章，不能直接自动执行${buildChapterOrderRangeLabel(targetChapterRange.startOrder, targetChapterRange.endOrder)}。`,
-    );
-  }
-
-  await callbacks.markDirectorTaskRunning(
-    taskId,
-    "structured_outline",
-    "chapter_sync",
-    "正在同步已准备章节到执行区",
-    DIRECTOR_PROGRESS.chapterSync,
-  );
-  logMemoryUsage({
-    event: "before_sync_write",
-    component: "runDirectorStructuredOutlinePhase",
-    taskId,
-    novelId,
-    stage: "structured_outline",
-    itemKey: "chapter_sync",
-    scope: "structured_outline",
-    entrypoint: "auto_director",
-    volumeCount: workspace.volumes.length,
-    chapterCount: workspace.volumes.reduce((sum, volume) => sum + volume.chapters.length, 0),
-    beatSheetCount: workspace.beatSheets.length,
-  });
-  const persistedOutlineWorkspace = await dependencies.volumeService.updateVolumesWithOptions(novelId, workspace, {
-    volumeUpdateReason: "chapter_execution_contract_refined",
-    syncPayoffLedger: false,
-    memoryTelemetry: {
-      taskId,
-      stage: "structured_outline",
-      itemKey: "chapter_sync",
-      scope: "structured_outline",
-      entrypoint: "auto_director",
-    },
-  });
-  await dependencies.volumeService.syncVolumeChaptersWithOptions(novelId, {
-    volumes: persistedOutlineWorkspace.volumes,
-    // Structured outline sync refreshes execution contracts; generated prose stays protected.
-    preserveContent: true,
-    applyDeletes: false,
-    executionContractChapterRange: targetChapterRange ?? undefined,
-  }, {
-    emitEvent: false,
-    syncPayoffLedger: false,
-  });
-  await dependencies.characterDynamicsService.rebuildDynamics(novelId, {
-    sourceType: "rebuild_projection",
-  }).catch((error) => {
-    logger.warn(
-      `[director.structured_outline] event=character_dynamics_rebuild_failed taskId=${taskId} novelId=${novelId} error=${JSON.stringify(error instanceof Error ? error.message : String(error))}`,
-    );
-  });
-
-  const syncCursor = resolveStructuredOutlineRecoveryCursor({
-    workspace: persistedOutlineWorkspace,
-    plan: detailPlan,
-  });
-  const selectedChapters = syncCursor.selectedChapters;
-  if (selectedChapters.length === 0) {
-    throw new Error("自动导演未能准备出可执行的章节范围。");
-  }
-  const selectedChapterOrders = selectedChapters.map((chapter) => chapter.chapterOrder).sort((left, right) => left - right);
-  if (targetChapterRange) {
-    const missingOrders = findMissingSelectedChapterOrders(selectedChapterOrders, targetChapterRange);
-    if (missingOrders.length > 0) {
-      throw new Error(
-        `自动导演已准备的章节规划缺少第 ${missingOrders.slice(0, 5).join("、")} 章，不能直接自动执行${buildChapterOrderRangeLabel(targetChapterRange.startOrder, targetChapterRange.endOrder)}。`,
-      );
-    }
-  }
-  const autoExecutionScopeLabel = syncCursor.scopeLabel;
-  const downstreamResetRange = {
-    startOrder: selectedChapterOrders[0] ?? 1,
-    endOrder: selectedChapterOrders[selectedChapterOrders.length - 1] ?? selectedChapterOrders[0] ?? 1,
-  };
-  await resetDirectorDownstreamChapterState(novelId, downstreamResetRange);
-
-  await callbacks.markDirectorTaskRunning(
-    taskId,
-    "structured_outline",
-    "chapter_detail_bundle",
-    `${autoExecutionScopeLabel}细化已完成，正在同步章节执行资源`,
-    DIRECTOR_PROGRESS.chapterDetailDone,
-    {
-      chapterId: selectedChapters[0]?.id ?? null,
-      volumeId: selectedChapters[0]?.volumeId ?? null,
-    },
-  );
-  const persistedChapters = await dependencies.novelContextService.listChapters(novelId);
-  if (persistedChapters.length === 0) {
-    throw new Error("自动导演已生成拆章结果，但章节资源没有成功同步到执行区。");
-  }
-  const persistedChapterByOrder = new Map(persistedChapters.map((chapter) => [chapter.order, chapter] as const));
-  // 懒规划（JIT）模式：task sheet 尚未预生成属预期状态，跳过执行上下文完整性检查。
-  // 非 autopilot 路径仍做完整性检查，确保手动执行有完整 task sheet。
-  if (!isFullBookAutopilotRunMode(request.runMode)) {
-    const missingExecutionContextOrders = selectedChapterOrders.filter((order) => {
-      const chapter = persistedChapterByOrder.get(order);
-      return !chapter || !hasDirectorSyncedChapterExecutionContext(chapter);
-    });
-    if (missingExecutionContextOrders.length > 0) {
-      throw new Error(
-        `${autoExecutionScopeLabel}还有第 ${missingExecutionContextOrders.slice(0, 5).join("、")} 章缺少已同步的章节执行上下文，不能直接进入章节执行。请先补齐基础章节信息。`,
-      );
-    }
-  }
-
-  await dependencies.novelContextService.updateNovel(novelId, {
-    projectStatus: "in_progress",
-    storylineStatus: "in_progress",
-    outlineStatus: "in_progress",
-  });
-
-  const autoExecutionState = buildDirectorAutoExecutionState({
-    range: {
-      startOrder: selectedChapterOrders[0] ?? 1,
-      endOrder: selectedChapterOrders[selectedChapterOrders.length - 1] ?? selectedChapterOrders[0] ?? 1,
-      totalChapterCount: targetChapterRange
-        ? countDirectorAutoExecutionChapterRange(targetChapterRange)
-        : selectedChapters.length,
-      firstChapterId: selectedChapters[0]?.id ?? null,
-    },
-    chapters: persistedChapters.map((chapter) => ({
-      id: chapter.id,
-      order: chapter.order,
-      content: chapter.content ?? null,
-      conflictLevel: chapter.conflictLevel ?? null,
-      revealLevel: chapter.revealLevel ?? null,
-      targetWordCount: chapter.targetWordCount ?? null,
-      mustAvoid: chapter.mustAvoid ?? null,
-      taskSheet: chapter.taskSheet ?? null,
-      sceneCards: chapter.sceneCards ?? null,
-      generationState: chapter.generationState ?? null,
-      chapterStatus: chapter.chapterStatus ?? null,
-    })),
-    plan: detailPlan,
-    scopeLabel: autoExecutionScopeLabel,
-    volumeTitle: detailPlan.mode === "volume" ? selectedChapters[0]?.volumeTitle ?? null : null,
-    preparedVolumeIds,
-  });
-
-  const pausedSession = buildDirectorSessionState({
-    runMode: request.runMode,
-    phase: "chapter_execution",
-    isBackgroundRunning: false,
-  });
-  const chapterResumeTarget = buildNovelEditResumeTarget({
-    novelId,
-    taskId,
-    stage: "chapter",
-    volumeId: selectedChapters[0]?.volumeId ?? firstVolume.id,
-    chapterId: selectedChapters[0]?.id ?? null,
-  });
-  await dependencies.workflowService.recordCheckpoint(taskId, {
-    stage: "chapter_execution",
-    checkpointType: "chapter_batch_ready",
-    checkpointSummary: `《${request.candidate.workingTitle.trim() || request.title?.trim() || "当前项目"}》已准备好${autoExecutionScopeLabel}的章节执行资源。`,
-    itemLabel: `${autoExecutionScopeLabel}已可进入章节执行`,
-    volumeId: selectedChapters[0]?.volumeId ?? firstVolume.id,
-    chapterId: selectedChapters[0]?.id ?? null,
-    progress: DIRECTOR_PROGRESS.chapterBatchReady,
-    seedPayload: callbacks.buildDirectorSeedPayload(request, novelId, {
-      directorSession: pausedSession,
-      resumeTarget: chapterResumeTarget,
-      autoExecution: autoExecutionState,
-    }),
-  });
-  logMemoryUsage({
-    event: "done",
-    component: "runDirectorStructuredOutlinePhase",
-    taskId,
-    novelId,
-    stage: "structured_outline",
-    itemKey: "chapter_batch_ready",
-    scope: autoExecutionScopeLabel,
-    entrypoint: "auto_director",
-    volumeCount: persistedOutlineWorkspace.volumes.length,
-    chapterCount: persistedOutlineWorkspace.volumes.reduce((sum, volume) => sum + volume.chapters.length, 0),
-    beatSheetCount: persistedOutlineWorkspace.beatSheets.length,
+    firstVolume,
+    detailPlan,
+    dependencies,
+    callbacks,
   });
 }
