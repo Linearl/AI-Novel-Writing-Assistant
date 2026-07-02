@@ -79,7 +79,10 @@ description: "需求任务总清单（SSOT）"
 | 7006 | 移除时间线旧 JSON 字段 | p1 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r7006-simple-timeline-idsjson-removal/README.md` |  |
 | 7007 | World.structureJson 关系提取为独立表 | p1 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r7007-medium-world-structure-json-relation-extract/README.md` |  |
 | 7008 | Streaming Loop Recovery Enhance | p8 | 🚧 进行中 | MiMo Code 源码分析 | 0.1 | 2026-07-01T21:22:00.000Z | 2026-07-01T21:22:00.000Z | `B.todo/v0.1-r7008-medium-streaming-loop-recovery-enhance/README.md` |  |
-| 7010 | Audit P1 Fix | p8 | ✅ 已完成 | - | 0.1 | - | 2026-07-02T18:40:00+08:00 | `B.todo/v0.1-r7010-p1-audit-p1-fix/README.md` |  |
+| 7009 | P2 Security Fix | p8 | 🚧 进行中 | 2026-07-01-全量代码审计-full | 0.1 | 2026-07-01T18:23:00.000Z | 2026-07-01T18:23:00.000Z | `B.todo/v0.1-r7009-complex-p2-security-fix/README.md` |  |
+| 7010 | Audit P1 Fix | p8 | ✅ 已完成 | - | 0.1 | - | 2026-07-02T18:40:00+08:00 | `B.2.done/v0.1-r7010-p1-audit-p1-fix/README.md` |  |
+| 7011 | P3 Quality Fix | p8 | 🚧 进行中 | 2026-07-01-全量代码审计-full | 0.1 | 2026-07-01T20:40:00.000Z | 2026-07-01T20:40:00.000Z | `B.todo/v0.1-r7011-medium-p3-quality-fix/README.md` |  |
+| 7012 | P4 Low Priority Fix | p8 | 🚧 进行中 | 2026-07-01-全量代码审计-full | 0.1 | 2026-07-01T20:41:00.000Z | 2026-07-01T20:41:00.000Z | `B.todo/v0.1-r7012-simple-p4-low-priority-fix/README.md` |  |
 
 ---
 
@@ -92,6 +95,9 @@ description: "需求任务总清单（SSOT）"
 | 编号 | 任务标题 | 文档 |
 | --- | --- | --- |
 | 7008 | Streaming Loop Recovery Enhance | `B.todo/v0.1-r7008-medium-streaming-loop-recovery-enhance/README.md` |
+| 7009 | P2 Security Fix | `B.todo/v0.1-r7009-complex-p2-security-fix/README.md` |
+| 7011 | P3 Quality Fix | `B.todo/v0.1-r7011-medium-p3-quality-fix/README.md` |
+| 7012 | P4 Low Priority Fix | `B.todo/v0.1-r7012-simple-p4-low-priority-fix/README.md` |
 
 ### 4.2 📋 待办
 
@@ -152,6 +158,6 @@ description: "需求任务总清单（SSOT）"
 | 7004 | JSON 软引用 FK 缺失修复 | `B.2.done/v0.1-r7004-medium-json-soft-ref-fk-fix/README.md` |
 | 7005 | P2 零散 IdsJson 字段迁移为边表 | `B.2.done/v0.1-r7005-simple-p2-scattered-idsjson-edge-tables/README.md` |
 | 7007 | World.structureJson 关系提取为独立表 | `B.2.done/v0.1-r7007-medium-world-structure-json-relation-extract/README.md` |
-| 7010 | Audit P1 Fix | `B.todo/v0.1-r7010-p1-audit-p1-fix/README.md` |
+| 7010 | Audit P1 Fix | `B.2.done/v0.1-r7010-p1-audit-p1-fix/README.md` |
 
 ---

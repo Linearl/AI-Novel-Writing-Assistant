@@ -8,7 +8,7 @@ updated: 2026-07-01
 
 # P2 安全问题修复
 
-> 任务编号：REQ-7001
+> 任务编号：REQ-7009
 > 复杂度：complex
 > 来源：2026-07-01-全量代码审计-full
 
@@ -27,7 +27,7 @@ updated: 2026-07-01
 
 ## 修复方案
 
-详见 [REQ-7001.md](./REQ-7001.md) 和 [design.md](./design.md)
+详见 [REQ-7009.md](./REQ-7009.md) 和 [design.md](./design.md)
 
 ## 验证标准
 
