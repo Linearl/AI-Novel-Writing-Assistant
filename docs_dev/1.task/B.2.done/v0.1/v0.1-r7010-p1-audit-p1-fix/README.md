@@ -6,7 +6,8 @@ description: "REQ-7010 全量审计 P1 关键问题修复任务总线"
 
 > 创建日期：2026-07-01
 > 目标版本：v0.1
-> 状态：📋 待办
+> 状态：✅ 完成
+> 更新日期：2026-07-02
 
 ---
 
@@ -51,16 +52,17 @@ description: "REQ-7010 全量审计 P1 关键问题修复任务总线"
 | 时间 | 状态 | 说明 |
 | ---- | ---- | ---- |
 | 2026-07-01 | 📋 激活 | 从全量审计报告创建 |
+| 2026-07-02 | ✅ 完成 | 7 项 P1 全部修复，T7 最后 3 个函数拆分完成 |
 
 ---
 
 ## 4. 执行清单
 
-- [ ] STB-008: 添加进程保护（unhandledRejection/uncaughtException/SIGTERM/SIGINT）
-- [ ] SEC-001: 实现静态 API Token 认证
-- [ ] SEC-002: 添加 express-rate-limit 速率限制
-- [ ] OBS-001: 迁移 server 端 console.* 到 LoggerService
-- [ ] ARCH-001: 引入中介层解耦 novel ↔ planner 循环引用
-- [ ] QUA-001: 拆分 30 个超大文件（<400 行）
-- [ ] QUA-002: 拆分关键超长函数（<50 行）
-- [ ] 全量验证（typecheck + test + build）
+- [x] STB-008: 添加进程保护（unhandledRejection/uncaughtException/SIGTERM/SIGINT）
+- [x] SEC-001: 实现静态 API Token 认证
+- [x] SEC-002: 添加 express-rate-limit 速率限制
+- [x] OBS-001: 迁移 server 端 console.* 到 LoggerService
+- [x] ARCH-001: 引入中介层解耦 novel ↔ planner 循环引用
+- [x] QUA-001: 拆分 30 个超大文件（<400 行）
+- [x] QUA-002: 拆分关键超长函数（<50 行）
+- [x] 全量验证（typecheck + test + build）

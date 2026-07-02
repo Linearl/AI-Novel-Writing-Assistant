@@ -1,10 +1,9 @@
 import { Router } from "express";
 import type { ApiResponse } from "@ai-novel/shared/types/api";
-import { authMiddleware } from "../middleware/auth";
 
 const router = Router();
 
-router.use(authMiddleware);
+// 不挂载 authMiddleware — 全局层已在 /api 跳过 /health 认证
 
 router.get("/", (_req, res) => {
   const response: ApiResponse<{ status: string; timestamp: string }> = {

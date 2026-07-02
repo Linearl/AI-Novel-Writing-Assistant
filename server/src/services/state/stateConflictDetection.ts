@@ -135,72 +135,81 @@ export function detectStateDiffConflicts(input: DetectStateDiffConflictsInput): 
   const conflicts = new Map<string, StateDiffConflictCandidate>();
   const characterNameById = new Map(input.characters.map((item) => [item.id, item.name]));
 
-  const previousCharacterMap = new Map(
+  detectCharacterGoalShifts(input, characterNameById, trackedConflictKeys, conflicts);
+  detectRelationJumps(input, characterNameById, trackedConflictKeys, conflicts);
+  detectInformationRegressions(input, trackedConflictKeys, conflicts);
+  detectForeshadowRegressions(input, trackedConflictKeys, conflicts);
+
+  return {
+    trackedConflictKeys: Array.from(trackedConflictKeys),
+    conflicts: Array.from(conflicts.values()),
+  };
+}
+
+function detectCharacterGoalShifts(
+  input: DetectStateDiffConflictsInput,
+  characterNameById: Map<string, string>,
+  trackedKeys: Set<string>,
+  conflicts: Map<string, StateDiffConflictCandidate>,
+): void {
+  const previousMap = new Map(
     (input.previousSnapshot?.characterStates ?? []).map((item) => [item.characterId, item]),
   );
-  for (const currentState of input.currentSnapshot.characterStates) {
-    const previousState = previousCharacterMap.get(currentState.characterId);
-    const previousGoal = normalizeText(previousState?.currentGoal);
-    const currentGoal = normalizeText(currentState.currentGoal);
-    if (!previousGoal || !currentGoal) {
-      continue;
-    }
-    const conflictKey = `character_goal_shift:${currentState.characterId}`;
-    trackedConflictKeys.add(conflictKey);
-    if (!valuesDiffer(previousGoal, currentGoal)) {
-      continue;
-    }
-    const characterName = characterNameById.get(currentState.characterId) ?? currentState.characterId;
+  for (const current of input.currentSnapshot.characterStates) {
+    const previous = previousMap.get(current.characterId);
+    const previousGoal = normalizeText(previous?.currentGoal);
+    const currentGoal = normalizeText(current.currentGoal);
+    if (!previousGoal || !currentGoal) continue;
+    const conflictKey = `character_goal_shift:${current.characterId}`;
+    trackedKeys.add(conflictKey);
+    if (!valuesDiffer(previousGoal, currentGoal)) continue;
+    const name = characterNameById.get(current.characterId) ?? current.characterId;
     conflicts.set(conflictKey, {
       conflictKey,
       conflictType: "character_goal_shift",
-      title: `${characterName} goal changed`,
-      summary: `${characterName} current goal changed from "${previousGoal}" to "${currentGoal}". Confirm this chapter includes a clear transition trigger.`,
+      title: `${name} goal changed`,
+      summary: `${name} current goal changed from "${previousGoal}" to "${currentGoal}". Confirm this chapter includes a clear transition trigger.`,
       severity: "medium",
       evidence: [
         `Previous goal: ${previousGoal}`,
-        previousState?.summary ? `Previous state: ${normalizeText(previousState.summary)}` : "",
+        previous?.summary ? `Previous state: ${normalizeText(previous.summary)}` : "",
         `Current goal: ${currentGoal}`,
-        currentState.summary ? `Current state: ${normalizeText(currentState.summary)}` : "",
+        current.summary ? `Current state: ${normalizeText(current.summary)}` : "",
       ].filter(Boolean),
-      affectedCharacterIds: [currentState.characterId],
+      affectedCharacterIds: [current.characterId],
       resolutionHint: "If this is an intentional turn, make the trigger explicit in the chapter or plan. Otherwise restore the prior goal.",
     });
   }
+}
 
-  const previousRelationMap = new Map(
+function detectRelationJumps(
+  input: DetectStateDiffConflictsInput,
+  characterNameById: Map<string, string>,
+  trackedKeys: Set<string>,
+  conflicts: Map<string, StateDiffConflictCandidate>,
+): void {
+  const previousMap = new Map(
     (input.previousSnapshot?.relationStates ?? []).map((item) => [`${item.sourceCharacterId}:${item.targetCharacterId}`, item]),
   );
-  for (const currentState of input.currentSnapshot.relationStates) {
-    const relationKey = `${currentState.sourceCharacterId}:${currentState.targetCharacterId}`;
-    const previousState = previousRelationMap.get(relationKey);
-    if (!previousState) {
-      continue;
-    }
+  for (const current of input.currentSnapshot.relationStates) {
+    const relationKey = `${current.sourceCharacterId}:${current.targetCharacterId}`;
+    const previous = previousMap.get(relationKey);
+    if (!previous) continue;
     const comparableScores = [
-      ["trust", previousState.trustScore, currentState.trustScore],
-      ["intimacy", previousState.intimacyScore, currentState.intimacyScore],
-      ["conflict", previousState.conflictScore, currentState.conflictScore],
-      ["dependency", previousState.dependencyScore, currentState.dependencyScore],
+      ["trust", previous.trustScore, current.trustScore],
+      ["intimacy", previous.intimacyScore, current.intimacyScore],
+      ["conflict", previous.conflictScore, current.conflictScore],
+      ["dependency", previous.dependencyScore, current.dependencyScore],
     ].filter((item): item is [string, number, number] => typeof item[1] === "number" && typeof item[2] === "number");
-    if (comparableScores.length === 0) {
-      continue;
-    }
+    if (comparableScores.length === 0) continue;
     const conflictKey = `relation_jump:${relationKey}`;
-    trackedConflictKeys.add(conflictKey);
+    trackedKeys.add(conflictKey);
     const changedScores = comparableScores
-      .map(([label, previousValue, currentValue]) => ({
-        label,
-        previousValue,
-        currentValue,
-        delta: Math.abs(currentValue - previousValue),
-      }))
+      .map(([label, prev, curr]) => ({ label, previousValue: prev, currentValue: curr, delta: Math.abs(curr - prev) }))
       .filter((item) => item.delta >= 35);
-    if (changedScores.length === 0) {
-      continue;
-    }
-    const sourceName = characterNameById.get(currentState.sourceCharacterId) ?? currentState.sourceCharacterId;
-    const targetName = characterNameById.get(currentState.targetCharacterId) ?? currentState.targetCharacterId;
+    if (changedScores.length === 0) continue;
+    const sourceName = characterNameById.get(current.sourceCharacterId) ?? current.sourceCharacterId;
+    const targetName = characterNameById.get(current.targetCharacterId) ?? current.targetCharacterId;
     const maxDelta = Math.max(...changedScores.map((item) => item.delta));
     conflicts.set(conflictKey, {
       conflictKey,
@@ -209,69 +218,77 @@ export function detectStateDiffConflicts(input: DetectStateDiffConflictsInput): 
       summary: `${sourceName} and ${targetName} relation metrics changed sharply: ${changedScores.map((item) => `${item.label} ${item.previousValue}->${item.currentValue}`).join(", ")}.`,
       severity: maxDelta >= 60 ? "high" : "medium",
       evidence: [
-        previousState.summary ? `Previous relation: ${normalizeText(previousState.summary)}` : "",
-        currentState.summary ? `Current relation: ${normalizeText(currentState.summary)}` : "",
+        previous.summary ? `Previous relation: ${normalizeText(previous.summary)}` : "",
+        current.summary ? `Current relation: ${normalizeText(current.summary)}` : "",
       ].filter(Boolean),
-      affectedCharacterIds: [currentState.sourceCharacterId, currentState.targetCharacterId],
+      affectedCharacterIds: [current.sourceCharacterId, current.targetCharacterId],
       resolutionHint: "Make the causal event explicit, or soften the state extraction by revising the chapter/summary if the change is not real.",
     });
   }
+}
 
-  const previousInformationMap = new Map(
+function detectInformationRegressions(
+  input: DetectStateDiffConflictsInput,
+  trackedKeys: Set<string>,
+  conflicts: Map<string, StateDiffConflictCandidate>,
+): void {
+  const previousMap = new Map(
     (input.previousSnapshot?.informationStates ?? []).map((item) => [
       `${item.holderType}:${item.holderRefId ?? "-"}:${normalizeKeySegment(item.fact)}`,
       item,
     ]),
   );
-  for (const currentState of input.currentSnapshot.informationStates) {
-    const infoKey = `${currentState.holderType}:${currentState.holderRefId ?? "-"}:${normalizeKeySegment(currentState.fact)}`;
-    const previousState = previousInformationMap.get(infoKey);
-    if (!previousState) {
-      continue;
-    }
+  for (const current of input.currentSnapshot.informationStates) {
+    const infoKey = `${current.holderType}:${current.holderRefId ?? "-"}:${normalizeKeySegment(current.fact)}`;
+    const previous = previousMap.get(infoKey);
+    if (!previous) continue;
     const conflictKey = `information_regression:${infoKey}`;
-    trackedConflictKeys.add(conflictKey);
-    const previousRank = rankInformationStatus(previousState.status);
-    const currentRank = rankInformationStatus(currentState.status);
-    if (currentRank >= previousRank) {
-      continue;
-    }
+    trackedKeys.add(conflictKey);
+    const previousRank = rankInformationStatus(previous.status);
+    const currentRank = rankInformationStatus(current.status);
+    if (currentRank >= previousRank) continue;
     conflicts.set(conflictKey, {
       conflictKey,
       conflictType: "information_regression",
       title: "Knowledge state regressed",
-      summary: `Fact "${normalizeText(currentState.fact)}" moved from "${normalizeText(previousState.status) || "known"}" to "${normalizeText(currentState.status) || "unknown"}".`,
+      summary: `Fact "${normalizeText(current.fact)}" moved from "${normalizeText(previous.status) || "known"}" to "${normalizeText(current.status) || "unknown"}".`,
       severity: previousRank - currentRank >= 2 ? "high" : "medium",
       evidence: [
-        previousState.summary ? `Previous knowledge: ${normalizeText(previousState.summary)}` : "",
-        currentState.summary ? `Current knowledge: ${normalizeText(currentState.summary)}` : "",
+        previous.summary ? `Previous knowledge: ${normalizeText(previous.summary)}` : "",
+        current.summary ? `Current knowledge: ${normalizeText(current.summary)}` : "",
       ].filter(Boolean),
-      affectedCharacterIds: currentState.holderType === "character" && currentState.holderRefId ? [currentState.holderRefId] : [],
+      affectedCharacterIds: current.holderType === "character" && current.holderRefId ? [current.holderRefId] : [],
       resolutionHint: "Confirm whether the knowledge should truly be forgotten or hidden again. Otherwise keep the higher-confidence state.",
     });
   }
+}
 
-  const previousForeshadowMap = new Map(
+function detectForeshadowRegressions(
+  input: DetectStateDiffConflictsInput,
+  trackedKeys: Set<string>,
+  conflicts: Map<string, StateDiffConflictCandidate>,
+): void {
+  const previousMap = new Map(
     (input.previousSnapshot?.foreshadowStates ?? []).map((item) => [normalizeKeySegment(item.title), item]),
   );
-  for (const currentState of input.currentSnapshot.foreshadowStates) {
-    const foreshadowKey = normalizeKeySegment(currentState.title);
-    const previousState = previousForeshadowMap.get(foreshadowKey);
+  for (const current of input.currentSnapshot.foreshadowStates) {
+    const foreshadowKey = normalizeKeySegment(current.title);
+    const previous = previousMap.get(foreshadowKey);
+
+    // Regression check
     const regressionKey = `foreshadow_regression:${foreshadowKey}`;
-    if (previousState) {
-      trackedConflictKeys.add(regressionKey);
-      const previousRank = rankForeshadowStatus(previousState.status);
-      const currentRank = rankForeshadowStatus(currentState.status);
-      if (currentRank + 1 < previousRank) {
+    if (previous) {
+      trackedKeys.add(regressionKey);
+      if (rankForeshadowStatus(current.status) + 1 < rankForeshadowStatus(previous.status)) {
         conflicts.set(regressionKey, {
           conflictKey: regressionKey,
           conflictType: "foreshadow_regression",
-          title: `${normalizeText(currentState.title)} regressed`,
-          summary: `Foreshadow "${normalizeText(currentState.title)}" moved from "${normalizeText(previousState.status) || "resolved"}" back to "${normalizeText(currentState.status) || "setup"}".`,
+          title: `${normalizeText(current.title)} regressed`,
+          summary: `Foreshadow "${normalizeText(current.title)}" moved from "${normalizeText(previous.status) || "resolved"}" back to "${normalizeText(current.status) || "setup"}".`,
           severity: "high",
           evidence: [
-            previousState.summary ? `Previous foreshadow: ${normalizeText(previousState.summary)}` : "",
-            currentState.summary ? `Current foreshadow: ${normalizeText(currentState.summary)}` : "",
+            previous.summary ? `Previous foreshadow: ${normalizeText(previous.summary)}` : "",
+            current.summary ? `Current foreshadow: ${normalizeText(current.summary)}` : "",
           ].filter(Boolean),
           affectedCharacterIds: [],
           resolutionHint: "Do not reopen resolved foreshadowing unless the chapter explicitly creates a new thread.",
@@ -279,27 +296,22 @@ export function detectStateDiffConflicts(input: DetectStateDiffConflictsInput): 
       }
     }
 
+    // Missing setup check
     const setupMissingKey = `foreshadow_missing_setup:${foreshadowKey}`;
-    const currentRank = rankForeshadowStatus(currentState.status);
-    if (currentRank >= 3) {
-      trackedConflictKeys.add(setupMissingKey);
-      if (!previousState && !normalizeText(currentState.setupChapterId)) {
+    if (rankForeshadowStatus(current.status) >= 3) {
+      trackedKeys.add(setupMissingKey);
+      if (!previous && !normalizeText(current.setupChapterId)) {
         conflicts.set(setupMissingKey, {
           conflictKey: setupMissingKey,
           conflictType: "foreshadow_missing_setup",
-          title: `${normalizeText(currentState.title)} paid off without setup`,
-          summary: `Foreshadow "${normalizeText(currentState.title)}" looks like a payoff/resolution, but no prior setup state was found.`,
+          title: `${normalizeText(current.title)} paid off without setup`,
+          summary: `Foreshadow "${normalizeText(current.title)}" looks like a payoff/resolution, but no prior setup state was found.`,
           severity: "high",
-          evidence: [currentState.summary ? `Current foreshadow: ${normalizeText(currentState.summary)}` : ""].filter(Boolean),
+          evidence: [current.summary ? `Current foreshadow: ${normalizeText(current.summary)}` : ""].filter(Boolean),
           affectedCharacterIds: [],
           resolutionHint: "Either add the missing setup earlier, or downgrade the current state to setup/active until the payoff chapter arrives.",
         });
       }
     }
   }
-
-  return {
-    trackedConflictKeys: Array.from(trackedConflictKeys),
-    conflicts: Array.from(conflicts.values()),
-  };
 }
