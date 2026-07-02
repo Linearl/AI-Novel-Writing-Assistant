@@ -357,6 +357,39 @@ function buildCheckpointSnapshot(input: {
   };
 }
 
+// Sub-function: Fetch takeover data from database
+async function fetchTakeoverData(novelId: string, input: any) {
+  const [novelRow, storyMacroPlan, assets, workspace, activeTask, latestTask, chapterRows, activePipelineJob] = await Promise.all([
+    prisma.novel.findUnique({
+      where: { id: novelId },
+      select: {
+        id: true, title: true, description: true, targetAudience: true, bookSellingPoint: true, competingFeel: true,
+        first30ChapterPromise: true, commercialTagsJson: true, genreId: true, primaryStoryModeId: true, secondaryStoryModeId: true,
+        worldId: true, writingMode: true, projectMode: true, narrativePov: true, pacePreference: true, styleTone: true,
+        emotionIntensity: true, aiFreedom: true, defaultChapterLength: true, estimatedChapterCount: true,
+        projectStatus: true, storylineStatus: true, outlineStatus: true, resourceReadyScore: true,
+        sourceNovelId: true, sourceKnowledgeDocumentId: true, continuationBookAnalysisId: true, continuationBookAnalysisSections: true, bookContract: true,
+      },
+    }),
+    input.getStoryMacroPlan(novelId).catch(() => null),
+    input.getDirectorAssetSnapshot(novelId),
+    input.getVolumeWorkspace(novelId).catch(() => null),
+    input.findActiveAutoDirectorTask(novelId),
+    input.findLatestAutoDirectorTask(novelId),
+    prisma.chapter.findMany({
+      where: { novelId },
+      orderBy: { order: "asc" },
+      select: { id: true, order: true, expectation: true, generationState: true, chapterStatus: true, content: true, targetWordCount: true, conflictLevel: true, revealLevel: true, mustAvoid: true, taskSheet: true, sceneCards: true },
+    }),
+    prisma.generationJob.findFirst({
+      where: { novelId, status: { in: ["queued", "running"] }, finishedAt: null },
+      orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
+      select: { id: true, status: true, currentStage: true, currentItemLabel: true, completedCount: true, totalCount: true, startOrder: true, endOrder: true },
+    }),
+  ]);
+  return { novelRow, storyMacroPlan, assets, workspace, activeTask, latestTask, chapterRows, activePipelineJob };
+}
+
 export async function loadDirectorTakeoverState(input: {
   novelId: string;
   autoExecutionPlan?: DirectorAutoExecutionPlan | null;
@@ -387,84 +420,9 @@ export async function loadDirectorTakeoverState(input: {
     lastError?: string | null;
   } | null>;
 }): Promise<DirectorTakeoverLoadedState> {
-  const [novelRow, storyMacroPlan, assets, workspace, activeTask, latestTask, chapterRows, activePipelineJob] = await Promise.all([
-    prisma.novel.findUnique({
-      where: { id: input.novelId },
-      select: {
-        id: true,
-        title: true,
-        description: true,
-        targetAudience: true,
-        bookSellingPoint: true,
-        competingFeel: true,
-        first30ChapterPromise: true,
-        commercialTagsJson: true,
-        genreId: true,
-        primaryStoryModeId: true,
-        secondaryStoryModeId: true,
-        worldId: true,
-        writingMode: true,
-        projectMode: true,
-        narrativePov: true,
-        pacePreference: true,
-        styleTone: true,
-        emotionIntensity: true,
-        aiFreedom: true,
-        defaultChapterLength: true,
-        estimatedChapterCount: true,
-        projectStatus: true,
-        storylineStatus: true,
-        outlineStatus: true,
-        resourceReadyScore: true,
-        sourceNovelId: true,
-        sourceKnowledgeDocumentId: true,
-        continuationBookAnalysisId: true,
-        continuationBookAnalysisSections: true,
-        bookContract: true,
-      },
-    }),
-    input.getStoryMacroPlan(input.novelId).catch(() => null),
-    input.getDirectorAssetSnapshot(input.novelId),
-    input.getVolumeWorkspace(input.novelId).catch(() => null),
-    input.findActiveAutoDirectorTask(input.novelId),
-    input.findLatestAutoDirectorTask(input.novelId),
-    prisma.chapter.findMany({
-      where: { novelId: input.novelId },
-      orderBy: { order: "asc" },
-      select: {
-        id: true,
-        order: true,
-        expectation: true,
-        generationState: true,
-        chapterStatus: true,
-        content: true,
-        targetWordCount: true,
-        conflictLevel: true,
-        revealLevel: true,
-        mustAvoid: true,
-        taskSheet: true,
-        sceneCards: true,
-      },
-    }),
-    prisma.generationJob.findFirst({
-      where: {
-        novelId: input.novelId,
-        status: { in: ["queued", "running"] },
-        finishedAt: null,
-      },
-      orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
-      select: {
-        id: true,
-        status: true,
-        currentStage: true,
-        currentItemLabel: true,
-        completedCount: true,
-        totalCount: true,
-        startOrder: true,
-        endOrder: true,
-      },
-    }),
-  ]);
+  const data = await fetchTakeoverData(input.novelId, input);
+  const { novelRow, storyMacroPlan, assets, workspace, activeTask, latestTask, chapterRows, activePipelineJob } = data;
+
   if (!novelRow) {
     throw new Error("小说不存在。");
   }
@@ -475,15 +433,13 @@ export async function loadDirectorTakeoverState(input: {
   const firstVolume = workspace?.volumes[0] ?? null;
   const firstVolumeBeatSheetReady = Boolean(
     firstVolume
-    && workspace?.beatSheets.some((sheet) => sheet.volumeId === firstVolume.id && sheet.beats.length > 0),
+    && workspace?.beatSheets.some((sheet: any) => sheet.volumeId === firstVolume.id && sheet.beats.length > 0),
   );
-  const firstVolumePreparedChapterCount = firstVolume?.chapters.filter((chapter) => hasPreparedOutlineChapterExecutionDetail(chapter)).length ?? 0;
+  const firstVolumePreparedChapterCount = firstVolume?.chapters.filter((chapter: any) => hasPreparedOutlineChapterExecutionDetail(chapter)).length ?? 0;
   const generatedChapterCount = chapterRows.filter((chapter) => Boolean(chapter.content?.trim())).length;
   const approvedChapterCount = chapterRows.filter((chapter) => chapter.generationState === "approved" || chapter.generationState === "published").length;
   const pendingRepairChapterCount = chapterRows.filter((chapter) => {
-    if (!chapter.content?.trim()) {
-      return false;
-    }
+    if (!chapter.content?.trim()) return false;
     return chapter.generationState !== "approved" && chapter.generationState !== "published";
   }).length;
   const latestSeedPayload = parseSeedPayload<DirectorWorkflowSeedPayload>(latestTask?.seedPayloadJson) ?? null;
@@ -493,17 +449,9 @@ export async function loadDirectorTakeoverState(input: {
     state: latestSeedPayload?.autoExecution ?? null,
   });
   const requestedAutoExecutionPlan = input.autoExecutionPlan ?? null;
-  const effectiveAutoExecutionPlan = requestedAutoExecutionPlan
-    ?? latestSeedPayload?.autoExecutionPlan
-    ?? reconciledLatestAutoExecutionState
-    ?? null;
+  const effectiveAutoExecutionPlan = requestedAutoExecutionPlan ?? latestSeedPayload?.autoExecutionPlan ?? reconciledLatestAutoExecutionState ?? null;
   const allowLazyChapterPlanning = isFullBookAutopilotRunMode(latestSeedPayload?.runMode);
-  const structuredOutlineCursor = workspace
-    ? resolveStructuredOutlineRecoveryCursor({
-        workspace,
-        plan: effectiveAutoExecutionPlan,
-      })
-    : null;
+  const structuredOutlineCursor = workspace ? resolveStructuredOutlineRecoveryCursor({ workspace, plan: effectiveAutoExecutionPlan }) : null;
   const missingExecutionContractOrders = computeMissingExecutionContractOrders({
     chapterRows: chapterRows as TakeoverChapterRow[],
     plan: effectiveAutoExecutionPlan,
@@ -511,55 +459,25 @@ export async function loadDirectorTakeoverState(input: {
     allowLazyChapterPlanning,
   });
   const chapterOrderMap = new Map(chapterRows.map((chapter) => [chapter.id, chapter.order]));
-  const activePipelineSnapshot = activePipelineJob
-    ? {
-        id: activePipelineJob.id,
-        status: activePipelineJob.status,
-        currentStage: activePipelineJob.currentStage ?? null,
-        currentItemLabel: activePipelineJob.currentItemLabel ?? null,
-        completedCount: activePipelineJob.completedCount,
-        totalCount: activePipelineJob.totalCount,
-        startOrder: activePipelineJob.startOrder,
-        endOrder: activePipelineJob.endOrder,
-      }
-    : null;
-  const latestCheckpoint = buildCheckpointSnapshot({
-    task: latestTask,
-    chapterOrderMap,
-  });
+  const activePipelineSnapshot = activePipelineJob ? {
+    id: activePipelineJob.id, status: activePipelineJob.status,
+    currentStage: activePipelineJob.currentStage ?? null, currentItemLabel: activePipelineJob.currentItemLabel ?? null,
+    completedCount: activePipelineJob.completedCount, totalCount: activePipelineJob.totalCount,
+    startOrder: activePipelineJob.startOrder, endOrder: activePipelineJob.endOrder,
+  } : null;
+  const latestCheckpoint = buildCheckpointSnapshot({ task: latestTask, chapterOrderMap });
 
-  const executableRangeFromState = requestedAutoExecutionPlan
-    ? null
-    : buildPreparedRangeFromState(
-        chapterRows as TakeoverChapterRow[],
-        reconciledLatestAutoExecutionState,
-        { allowLazyChapterPlanning },
-      );
-  const executableRangeFromSyncedChapters = structuredOutlineCursor
-    && (structuredOutlineCursor.step === "chapter_sync" || structuredOutlineCursor.step === "completed")
-    ? buildPreparedRangeFromSyncedChapters(
-        chapterRows as TakeoverChapterRow[],
-        structuredOutlineCursor.selectedChapters.map((chapter) => chapter.chapterOrder),
-        { allowLazyChapterPlanning },
-      )
+  const executableRangeFromState = requestedAutoExecutionPlan ? null : buildPreparedRangeFromState(chapterRows as TakeoverChapterRow[], reconciledLatestAutoExecutionState, { allowLazyChapterPlanning });
+  const executableRangeFromSyncedChapters = structuredOutlineCursor && (structuredOutlineCursor.step === "chapter_sync" || structuredOutlineCursor.step === "completed")
+    ? buildPreparedRangeFromSyncedChapters(chapterRows as TakeoverChapterRow[], structuredOutlineCursor.selectedChapters.map((chapter) => chapter.chapterOrder), { allowLazyChapterPlanning })
     : null;
   const executableRange = applyAutoExecutionStateCursorToExecutableRange(
-    executableRangeFromState
-    ? {
-        startOrder: executableRangeFromState.startOrder,
-        endOrder: executableRangeFromState.endOrder,
-        totalChapterCount: executableRangeFromState.totalChapterCount,
-        nextChapterId: executableRangeFromState.nextChapterId,
-        nextChapterOrder: executableRangeFromState.nextChapterOrder,
-      }
-    : executableRangeFromSyncedChapters,
+    executableRangeFromState ? { startOrder: executableRangeFromState.startOrder, endOrder: executableRangeFromState.endOrder, totalChapterCount: executableRangeFromState.totalChapterCount, nextChapterId: executableRangeFromState.nextChapterId, nextChapterOrder: executableRangeFromState.nextChapterOrder } : executableRangeFromSyncedChapters,
     reconciledLatestAutoExecutionState,
   );
 
   return {
-    novel,
-    storyMacroPlan,
-    bookContract: novel.bookContract ?? null,
+    novel, storyMacroPlan, bookContract: novel.bookContract ?? null,
     snapshot: {
       ...assets,
       hasStoryMacroPlan: Boolean(storyMacroPlan?.storyInput?.trim() && storyMacroPlan.decomposition),
@@ -568,21 +486,15 @@ export async function loadDirectorTakeoverState(input: {
       firstVolumeId: assets.firstVolumeId,
       volumeChapterRanges: assets.volumeChapterRanges,
       structuredOutlineChapterOrders: assets.structuredOutlineChapterOrders,
-      firstVolumeBeatSheetReady,
-      firstVolumePreparedChapterCount,
+      firstVolumeBeatSheetReady, firstVolumePreparedChapterCount,
       structuredOutlineRecoveryStep: structuredOutlineCursor?.step ?? null,
-      generatedChapterCount,
-      approvedChapterCount,
-      pendingRepairChapterCount,
+      generatedChapterCount, approvedChapterCount, pendingRepairChapterCount,
       hasUnpreparedChaptersInRange: missingExecutionContractOrders.length > 0,
       missingExecutionContractOrders,
     },
-    activeTaskId: activeTask?.id ?? null,
-    hasActiveTask: Boolean(activeTask),
-    latestTaskId: latestTask?.id ?? null,
-    activePipelineJob: activePipelineSnapshot,
-    latestCheckpoint,
-    executableRange,
+    activeTaskId: activeTask?.id ?? null, hasActiveTask: Boolean(activeTask),
+    latestTaskId: latestTask?.id ?? null, activePipelineJob: activePipelineSnapshot,
+    latestCheckpoint, executableRange,
     latestAutoExecutionState: reconciledLatestAutoExecutionState,
   };
 }
