@@ -127,7 +127,7 @@ export function registerNovelSnapshotCharacterRoutes(
     async (req, res, next) => {
       try {
         const { id } = req.params as z.infer<typeof idParamsSchema>;
-        const data = await novelService.createCharacter(id, req.body as any);
+        const data = await novelService.createCharacter(id, req.body as z.infer<typeof characterSchema>);
         res.status(201).json({
           success: true,
           data,
@@ -151,7 +151,7 @@ export function registerNovelSnapshotCharacterRoutes(
         const data = await novelService.updateCharacter(
           id,
           charId,
-          req.body as any,
+          req.body as z.infer<typeof updateCharacterSchema>,
         );
         res.status(200).json({
           success: true,
@@ -203,7 +203,7 @@ export function registerNovelSnapshotCharacterRoutes(
         const { id } = req.params as z.infer<typeof idParamsSchema>;
         const data = await novelService.syncAllCharacterTimeline(
           id,
-          req.body as any,
+          req.body as z.infer<typeof characterTimelineSyncSchema>,
         );
         res.status(200).json({
           success: true,
@@ -225,7 +225,7 @@ export function registerNovelSnapshotCharacterRoutes(
         const data = await novelService.syncCharacterTimeline(
           id,
           charId,
-          req.body as any,
+          req.body as z.infer<typeof characterTimelineSyncSchema>,
         );
         res.status(200).json({
           success: true,
@@ -244,7 +244,7 @@ export function registerNovelSnapshotCharacterRoutes(
     async (req, res, next) => {
       try {
         const { id, charId } = req.params as z.infer<typeof characterParamsSchema>;
-        const data = await novelService.evolveCharacter(id, charId, req.body as any);
+        const data = await novelService.evolveCharacter(id, charId, req.body as z.infer<typeof llmGenerateSchema>);
         res.status(200).json({
           success: true,
           data,
@@ -265,7 +265,7 @@ export function registerNovelSnapshotCharacterRoutes(
         const data = await novelService.checkCharacterAgainstWorld(
           id,
           charId,
-          req.body as any,
+          req.body as z.infer<typeof llmGenerateSchema>,
         );
         res.status(200).json({
           success: true,
@@ -286,7 +286,7 @@ export function registerNovelSnapshotCharacterRoutes(
         const { id } = req.params as z.infer<typeof idParamsSchema>;
         const { stream, onDone } = await novelService.createBibleStream(
           id,
-          req.body as any,
+          req.body as z.infer<typeof llmGenerateSchema>,
         );
         await streamToSSE(res, stream, onDone);
       } catch (error) {

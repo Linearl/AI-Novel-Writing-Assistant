@@ -33,7 +33,7 @@ const adapter = databaseUrl.startsWith("file:")
   ? (() => {
       const timeout = resolveSqliteBusyTimeout(process.env.SQLITE_BUSY_TIMEOUT_MS);
       const sqlitePath = resolveSqliteDatabasePath(databaseUrl);
-      fs.mkdirSync(path.dirname(sqlitePath), { recursive: true });
+      fs.mkdirSync(path.dirname(sqlitePath), { recursive: true, mode: 0o700 });
       configureSqliteRuntimePragmas(sqlitePath, {
         busyTimeoutMs: timeout,
       });

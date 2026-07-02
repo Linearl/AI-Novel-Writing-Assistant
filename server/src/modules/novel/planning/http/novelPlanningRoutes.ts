@@ -110,7 +110,7 @@ export function registerNovelPlanningRoutes(input: RegisterNovelPlanningRoutesIn
     async (req, res, next) => {
       try {
         const { id } = req.params as z.infer<typeof idParamsSchema>;
-        const data = await novelService.rebuildNovelState(id, req.body as any);
+        const data = await novelService.rebuildNovelState(id, req.body as z.infer<typeof llmGenerateSchema>);
         res.status(200).json({
           success: true,
           data,
@@ -128,7 +128,7 @@ export function registerNovelPlanningRoutes(input: RegisterNovelPlanningRoutesIn
     async (req, res, next) => {
       try {
         const { id } = req.params as z.infer<typeof idParamsSchema>;
-        const data = await novelService.generateBookPlan(id, req.body as any);
+        const data = await novelService.generateBookPlan(id, req.body as z.infer<typeof llmGenerateSchema>);
         res.status(200).json({
           success: true,
           data,
@@ -146,7 +146,7 @@ export function registerNovelPlanningRoutes(input: RegisterNovelPlanningRoutesIn
     async (req, res, next) => {
       try {
         const { id, arcId } = req.params as z.infer<typeof arcPlanParamsSchema>;
-        const data = await novelService.generateArcPlan(id, arcId, req.body as any);
+        const data = await novelService.generateArcPlan(id, arcId, req.body as z.infer<typeof llmGenerateSchema>);
         res.status(200).json({
           success: true,
           data,
@@ -167,7 +167,7 @@ export function registerNovelPlanningRoutes(input: RegisterNovelPlanningRoutesIn
         const data = await novelService.generateChapterPlan(
           id,
           chapterId,
-          req.body as any,
+          req.body as z.infer<typeof llmGenerateSchema>,
         );
         res.status(200).json({
           success: true,
@@ -204,7 +204,7 @@ export function registerNovelPlanningRoutes(input: RegisterNovelPlanningRoutesIn
     async (req, res, next) => {
       try {
         const { id } = req.params as z.infer<typeof idParamsSchema>;
-        const data = await novelService.replanNovel(id, req.body as any);
+        const data = await novelService.replanNovel(id, req.body as z.infer<typeof replanSchema>);
         res.status(200).json({
           success: true,
           data,

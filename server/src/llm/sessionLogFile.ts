@@ -170,9 +170,15 @@ function appendSessionLog(kind: "llm" | "llm-repair", entry: unknown): void {
   }
 
   try {
-    fs.mkdirSync(path.dirname(logPath), { recursive: true });
+    // Restrict log directory/file permissions on Unix-like systems (no-op on Windows).
+    fs.mkdirSync(path.dirname(logPath), { recursive: true, mode: 0o700 });
     rotateLogFileIfNeeded(logPath, resolveLogRetentionConfig());
     fs.appendFileSync(logPath, `${JSON.stringify(toJsonSafeValue(entry))}\n`, "utf8");
+    try {
+      fs.chmodSync(logPath, 0o600);
+    } catch {
+      // chmod may fail on Windows or certain mounted filesystems; log files still get created.
+    }
     const announced = kind === "llm" ? announcedLogPath : announcedRepairLogPath;
     if (announced !== logPath) {
       if (kind === "llm") {

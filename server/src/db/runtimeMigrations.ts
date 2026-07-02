@@ -364,7 +364,7 @@ export async function ensureRuntimeDatabaseReady(): Promise<void> {
     throw new Error(`Desktop runtime migrations were not found at ${migrationsDir}.`);
   }
 
-  fs.mkdirSync(path.dirname(databasePath), { recursive: true });
+  fs.mkdirSync(path.dirname(databasePath), { recursive: true, mode: 0o700 });
   const database = new Database(databasePath);
 
   try {

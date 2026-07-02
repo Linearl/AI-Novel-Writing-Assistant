@@ -91,7 +91,7 @@ export function registerNovelCharacterDynamicsRoutes(
     async (req, res, next) => {
       try {
         const { id, candidateId } = req.params as z.infer<typeof candidateParamsSchema>;
-        const data = await novelService.confirmCharacterCandidate(id, candidateId, req.body as any);
+        const data = await novelService.confirmCharacterCandidate(id, candidateId, req.body as z.infer<typeof confirmCandidateInputSchema>);
         res.status(200).json({
           success: true,
           data,
@@ -109,7 +109,7 @@ export function registerNovelCharacterDynamicsRoutes(
     async (req, res, next) => {
       try {
         const { id, candidateId } = req.params as z.infer<typeof candidateParamsSchema>;
-        const data = await novelService.mergeCharacterCandidate(id, candidateId, req.body as any);
+        const data = await novelService.mergeCharacterCandidate(id, candidateId, req.body as z.infer<typeof mergeCandidateInputSchema>);
         res.status(200).json({
           success: true,
           data,
@@ -127,7 +127,7 @@ export function registerNovelCharacterDynamicsRoutes(
     async (req, res, next) => {
       try {
         const { id, characterId } = req.params as z.infer<typeof dynamicCharacterParamsSchema>;
-        const data = await novelService.updateCharacterDynamicState(id, characterId, req.body as any);
+        const data = await novelService.updateCharacterDynamicState(id, characterId, req.body as z.infer<typeof updateCharacterDynamicStateInputSchema>);
         res.status(200).json({
           success: true,
           data,
@@ -145,7 +145,7 @@ export function registerNovelCharacterDynamicsRoutes(
     async (req, res, next) => {
       try {
         const { id, relationId } = req.params as z.infer<typeof dynamicRelationParamsSchema>;
-        const data = await novelService.updateCharacterRelationStage(id, relationId, req.body as any);
+        const data = await novelService.updateCharacterRelationStage(id, relationId, req.body as z.infer<typeof updateRelationStageInputSchema>);
         res.status(200).json({
           success: true,
           data,

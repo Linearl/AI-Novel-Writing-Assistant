@@ -38,21 +38,21 @@ export function validateFilePath(userInput: string, baseDir: string): string {
 
 ### 1.2 SEC-004: CSRF 保护
 
-**核心思路**：使用 `csrf-csrf` 库，自动生成和验证 token。
+**结论：不适用（Resolved — Not Applicable）**
 
-```typescript
-// server/src/middleware/csrf.ts
-import { doubleCsrf } from 'csrf-csrf'
+经代码审计确认，本项目不使用 Cookie/Session 认证，CSRF 攻击向量不存在。
 
-const { doubleCsrfProtection, generateCsrfToken } = doubleCsrf({
-  getSecret: () => process.env.CSRF_SECRET,
-  cookieName: 'x-csrf-token',
-  size: 64,
-  ignoredMethods: ['GET', 'HEAD', 'OPTIONS'],
-})
+**审计依据：**
 
-export { doubleCsrfProtection, generateCsrfToken }
-```
+1. **Server 端**（`server/src/middleware/auth.ts`）：所有 `/api` 路由通过 `authMiddleware` 保护，该中间件仅检查 `Authorization: Bearer <token>` 请求头。项目中无 `cookie-parser`、`express-session`、`csurf` 等任何 Cookie/Session 中间件。
+
+2. **Client 端**（`client/src/api/client.ts`）：axios 实例无任何请求拦截器附加 `Authorization` 头。`client/src/api/creativeHub.ts` 使用原生 `fetch()` 发送 SSE 流式请求，仅设置 `Content-Type: application/json`，无 Cookie 或 Token 附加逻辑。全局搜索 `client/src` 中 `API_TOKEN`、`apiToken`、`Bearer`、`Authorization` 均无匹配。
+
+3. **CORS 配置**（`server/src/app.ts`）：虽启用了 `credentials: true`，但实际无 Cookie 被设置或发送。`Content-Type: application/json` 已触发浏览器 CORS 预检请求，跨域写操作已被阻断。
+
+**CSRF 攻击前提**：浏览器自动在同源/credentialed 请求中附加 Cookie。本系统不使用 Cookie 认证，浏览器不会自动附加 Bearer Token，因此 CSRF 不适用。
+
+**若未来引入 Cookie/Session 认证**：需重新评估并实现 `csrf-csrf` 或等效方案。
 
 ### 1.3 SEC-005: 错误响应脱敏
 

@@ -54,7 +54,7 @@ export function registerNovelChapterRoutes(input: RegisterNovelChapterRoutesInpu
     async (req, res, next) => {
       try {
         const { id } = req.params as z.infer<typeof idParamsSchema>;
-        const data = await novelService.createChapter(id, req.body as any);
+        const data = await novelService.createChapter(id, req.body as z.infer<typeof chapterSchema>);
         res.status(201).json({
           success: true,
           data,
@@ -75,7 +75,7 @@ export function registerNovelChapterRoutes(input: RegisterNovelChapterRoutesInpu
         const data = await novelService.updateChapter(
           id,
           chapterId,
-          req.body as any,
+          req.body as z.infer<typeof updateChapterSchema>,
         );
         res.status(200).json({
           success: true,
@@ -140,7 +140,7 @@ export function registerNovelChapterRoutes(input: RegisterNovelChapterRoutesInpu
     async (req, res, next) => {
       try {
         const { id, chapterId } = req.params as z.infer<typeof chapterParamsSchema>;
-        const data = await novelService.ensureChapterExecutionContract(id, chapterId, req.body as any);
+        const data = await novelService.ensureChapterExecutionContract(id, chapterId, req.body as z.infer<typeof chapterExecutionContractSchema>);
         res.status(200).json({
           success: true,
           data,

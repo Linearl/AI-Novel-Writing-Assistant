@@ -78,7 +78,7 @@ export function registerNovelCharacterSyncRoutes(input: RegisterNovelCharacterSy
     async (req, res, next) => {
       try {
         const { id } = req.params as z.infer<typeof idParamsSchema>;
-        const data = await characterLibrarySyncService.importBaseCharacterToNovel(id, req.body as any);
+        const data = await characterLibrarySyncService.importBaseCharacterToNovel(id, req.body as z.infer<typeof importBaseCharacterToNovelInputSchema>);
         await characterDynamicsService.rebuildDynamics(id, { sourceType: "rebuild_projection" }).catch(() => null);
         res.status(201).json({
           success: true,
@@ -123,7 +123,7 @@ export function registerNovelCharacterSyncRoutes(input: RegisterNovelCharacterSy
     async (req, res, next) => {
       try {
         const { id, charId } = req.params as z.infer<typeof characterParamsSchema>;
-        const data = await characterLibrarySyncService.saveNovelCharacterToLibrary(id, charId, req.body as any);
+        const data = await characterLibrarySyncService.saveNovelCharacterToLibrary(id, charId, req.body as z.infer<typeof novelCharacterSaveToLibraryInputSchema>);
         res.status(201).json({
           success: true,
           data,

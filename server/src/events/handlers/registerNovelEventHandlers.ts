@@ -97,7 +97,7 @@ export function registerNovelEventHandlers(
 ): void {
   const sideEffectJobs = options.sideEffectJobs ?? novelSideEffectJobService;
 
-  eventBus.on("volume:updated", async (event) => {
+  eventBus.on("volume:updated", async function handleVolumeUpdated(event) {
     if (event.type !== "volume:updated") {
       return;
     }
@@ -115,7 +115,7 @@ export function registerNovelEventHandlers(
     });
   }, 90);
 
-  eventBus.on("pipeline:completed", async (event) => {
+  eventBus.on("pipeline:completed", async function handlePipelineCompleted(event) {
     if (event.type !== "pipeline:completed" || event.payload.status !== "succeeded") {
       return;
     }

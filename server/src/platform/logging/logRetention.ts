@@ -215,6 +215,12 @@ export function rotateLogFileIfNeeded(
   }
   const rotatedPath = buildRotatedPath(filePath, new Date());
   fs.renameSync(filePath, rotatedPath);
+  // Restrict rotated log file permissions on Unix-like systems (no-op on Windows).
+  try {
+    fs.chmodSync(rotatedPath, 0o600);
+  } catch {
+    // chmod may fail on Windows or certain mounted filesystems.
+  }
   return {
     rotated: true,
     sourcePath: filePath,

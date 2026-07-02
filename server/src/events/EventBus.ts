@@ -7,6 +7,27 @@ interface HandlerEntry {
   priority: number;
 }
 
+function summarizePayload(event: NovelEvent): string {
+  switch (event.type) {
+    case "chapter:updated":
+      return `novelId=${event.payload.novelId} chapterId=${event.payload.chapterId} order=${event.payload.chapterOrder}`;
+    case "chapter:reviewed":
+      return `novelId=${event.payload.novelId} chapterId=${event.payload.chapterId} score=${event.payload.qualityScore ?? "n/a"}`;
+    case "character:changed":
+      return `novelId=${event.payload.novelId} characterId=${event.payload.characterId}`;
+    case "volume:updated":
+      return `novelId=${event.payload.novelId} reason=${event.payload.reason}`;
+    case "world:updated":
+      return `worldId=${event.payload.worldId}`;
+    case "outline:revised":
+      return `novelId=${event.payload.novelId} stage=${event.payload.stage}`;
+    case "pipeline:completed":
+      return `novelId=${event.payload.novelId} jobId=${event.payload.jobId} status=${event.payload.status}`;
+    default:
+      return JSON.stringify(event);
+  }
+}
+
 export class EventBus {
   private handlers = new Map<NovelEventType, HandlerEntry[]>();
 
@@ -30,7 +51,13 @@ export class EventBus {
       try {
         await handler(event);
       } catch (err) {
-        logger.error(`[EventBus] handler error for ${event.type}:`, err);
+        const handlerLabel = handler.name || "anonymous";
+        logger.error(`[EventBus] handler "${handlerLabel}" failed for ${event.type}`, {
+          eventType: event.type,
+          payload: summarizePayload(event),
+          error: err instanceof Error ? err.message : String(err),
+          stack: err instanceof Error ? err.stack : undefined,
+        });
       }
     }
   }

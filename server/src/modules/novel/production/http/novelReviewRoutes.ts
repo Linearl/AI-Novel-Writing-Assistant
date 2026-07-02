@@ -44,7 +44,7 @@ export function registerNovelReviewRoutes(input: RegisterNovelReviewRoutesInput)
     async (req, res, next) => {
       try {
         const { id, chapterId } = req.params as z.infer<typeof chapterParamsSchema>;
-        const data = await novelService.reviewChapter(id, chapterId, req.body as any);
+        const data = await novelService.reviewChapter(id, chapterId, req.body as z.infer<typeof reviewSchema>);
         res.status(200).json({
           success: true,
           data,
@@ -62,7 +62,7 @@ export function registerNovelReviewRoutes(input: RegisterNovelReviewRoutesInput)
     async (req, res, next) => {
       try {
         const { id, chapterId } = req.params as z.infer<typeof chapterParamsSchema>;
-        const data = await novelService.auditChapter(id, chapterId, "continuity", req.body as any);
+        const data = await novelService.auditChapter(id, chapterId, "continuity", req.body as z.infer<typeof reviewSchema>);
         res.status(200).json({
           success: true,
           data,
@@ -80,7 +80,7 @@ export function registerNovelReviewRoutes(input: RegisterNovelReviewRoutesInput)
     async (req, res, next) => {
       try {
         const { id, chapterId } = req.params as z.infer<typeof chapterParamsSchema>;
-        const data = await novelService.auditChapter(id, chapterId, "character", req.body as any);
+        const data = await novelService.auditChapter(id, chapterId, "character", req.body as z.infer<typeof reviewSchema>);
         res.status(200).json({
           success: true,
           data,
@@ -98,7 +98,7 @@ export function registerNovelReviewRoutes(input: RegisterNovelReviewRoutesInput)
     async (req, res, next) => {
       try {
         const { id, chapterId } = req.params as z.infer<typeof chapterParamsSchema>;
-        const data = await novelService.auditChapter(id, chapterId, "plot", req.body as any);
+        const data = await novelService.auditChapter(id, chapterId, "plot", req.body as z.infer<typeof reviewSchema>);
         res.status(200).json({
           success: true,
           data,
@@ -116,7 +116,7 @@ export function registerNovelReviewRoutes(input: RegisterNovelReviewRoutesInput)
     async (req, res, next) => {
       try {
         const { id, chapterId } = req.params as z.infer<typeof chapterParamsSchema>;
-        const data = await novelService.auditChapter(id, chapterId, "full", req.body as any);
+        const data = await novelService.auditChapter(id, chapterId, "full", req.body as z.infer<typeof reviewSchema>);
         res.status(200).json({
           success: true,
           data,

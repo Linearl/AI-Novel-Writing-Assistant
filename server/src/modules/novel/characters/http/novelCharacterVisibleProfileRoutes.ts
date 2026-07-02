@@ -66,7 +66,7 @@ export function registerNovelCharacterVisibleProfileRoutes(
     async (req, res, next) => {
       try {
         const { id, charId } = req.params as z.infer<typeof characterParamsSchema>;
-        const data = await novelService.generateCharacterVisibleProfile(id, charId, req.body as any);
+        const data = await novelService.generateCharacterVisibleProfile(id, charId, req.body as z.infer<typeof visibleProfileGenerateSchema>);
         res.status(200).json({
           success: true,
           data,
@@ -105,7 +105,7 @@ export function registerNovelCharacterVisibleProfileRoutes(
     async (req, res, next) => {
       try {
         const { id } = req.params as z.infer<typeof idParamsSchema>;
-        const data = await novelService.generateBatchCharacterVisibleProfiles(id, req.body as any);
+        const data = await novelService.generateBatchCharacterVisibleProfiles(id, req.body as z.infer<typeof visibleProfileGenerateSchema>);
         res.status(200).json({
           success: true,
           data,

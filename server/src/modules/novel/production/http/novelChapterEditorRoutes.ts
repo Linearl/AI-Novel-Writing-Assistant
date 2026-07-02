@@ -59,7 +59,7 @@ export function registerNovelChapterEditorRoutes(input: RegisterNovelChapterEdit
     async (req, res, next) => {
       try {
         const { id, chapterId } = req.params as z.infer<typeof chapterParamsSchema>;
-        const data = await novelService.previewChapterAiRevision(id, chapterId, req.body as any);
+        const data = await novelService.previewChapterAiRevision(id, chapterId, req.body as z.infer<typeof aiRevisionPreviewSchema>);
         res.status(200).json({
           success: true,
           data,
@@ -98,7 +98,7 @@ export function registerNovelChapterEditorRoutes(input: RegisterNovelChapterEdit
     async (req, res, next) => {
       try {
         const { id, chapterId } = req.params as z.infer<typeof chapterParamsSchema>;
-        const data = await novelService.previewChapterRewrite(id, chapterId, req.body as any);
+        const data = await novelService.previewChapterRewrite(id, chapterId, req.body as z.infer<typeof rewritePreviewSchema>);
         res.status(200).json({
           success: true,
           data,
