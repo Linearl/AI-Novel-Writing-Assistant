@@ -1,21 +1,22 @@
 import { Prisma } from "@prisma/client";
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
 import type {
-  StyleExtractionDraft,
   StyleExtractionSourceProcessingMode,
-  StyleFeatureDecision,
 } from "@ai-novel/shared/types/styleEngine";
 import { prisma } from "../../db/prisma";
-import { runWithLlmUsageTracking } from "../../llm/usageTracking";
 import { AppError } from "../../middleware/errorHandler";
 import { getStyleEngineRuntimeSettings } from "../settings/StyleEngineRuntimeSettingsService";
 import {
   buildStyleExtractionSourceInput,
-  resolveStyleExtractionInputText,
   resolveTaskProfileSource,
   type StyleExtractionTaskSourceType,
 } from "./StyleExtractionSourceInput";
 import { StyleProfileService } from "./StyleProfileService";
+import { executeStyleExtractionTask } from "./styleExtractionTaskExecutor";
+import {
+  isMissingStyleExtractionTaskTableError,
+  parseTimeoutMs,
+  writeTaskLog,
+} from "./styleExtractionTaskUtils";
 
 type PresetKey = "imitate" | "balanced" | "transfer";
 
@@ -33,104 +34,12 @@ interface CreateStyleExtractionTaskInput {
   maxRetries?: number;
 }
 
-function parseTimeoutMs(rawValue: string | undefined, fallback: number, min: number, max: number): number {
-  const parsed = Number(rawValue ?? "");
-  if (!Number.isFinite(parsed)) {
-    return fallback;
-  }
-  const value = Math.floor(parsed);
-  return Math.max(min, Math.min(max, value));
-}
-
 const STYLE_EXTRACTION_HEARTBEAT_INTERVAL_MS = parseTimeoutMs(
   process.env.STYLE_EXTRACTION_TASK_HEARTBEAT_INTERVAL_MS,
   10_000,
   5_000,
   60_000,
 );
-
-function stripStructuredOutputPrefix(message: string): string {
-  return message.replace(/^\[STRUCTURED_OUTPUT:[a-z_]+\]\s*/iu, "").trim();
-}
-
-function isTimeoutError(error: unknown): boolean {
-  if (!(error instanceof Error)) {
-    return false;
-  }
-  const haystack = `${error.name} ${error.message}`.toLowerCase();
-  return error.name === "TimeoutError" || /timed out|timeout|超时/u.test(haystack);
-}
-
-function isAbortError(error: unknown): boolean {
-  if (!(error instanceof Error)) {
-    return false;
-  }
-  const haystack = `${error.name} ${error.message}`.toLowerCase();
-  return error.name === "AbortError" || /aborted|abort|中止/u.test(haystack);
-}
-
-function normalizeTaskError(error: unknown): string {
-  if (isTimeoutError(error)) {
-    return "写法提取请求超时，模型长时间没有返回结果。可以在系统设置调高写法提取超时后重试，或切换更稳定的模型。";
-  }
-  if (isAbortError(error)) {
-    return "写法提取已中止。";
-  }
-  if (error instanceof Error && error.message.trim()) {
-    return stripStructuredOutputPrefix(error.message.trim());
-  }
-  return "写法提取任务失败，但没有记录到明确原因。";
-}
-
-function buildExtractionDecisions(
-  draft: StyleExtractionDraft,
-  presetKey: PresetKey,
-): Array<{ featureId: string; decision: StyleFeatureDecision }> {
-  const preset = draft.presets.find((item) => item.key === presetKey);
-  if (preset?.decisions?.length) {
-    return preset.decisions;
-  }
-  return draft.features.map((feature) => ({
-    featureId: feature.id,
-    decision: "keep",
-  }));
-}
-
-function isMissingStyleExtractionTaskTableError(error: unknown): boolean {
-  return error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2021";
-}
-
-function formatLogValue(value: unknown): string {
-  if (value == null) {
-    return "null";
-  }
-  if (typeof value === "number" || typeof value === "boolean") {
-    return String(value);
-  }
-  if (typeof value === "string") {
-    return JSON.stringify(value);
-  }
-  try {
-    return JSON.stringify(value);
-  } catch {
-    return JSON.stringify(String(value));
-  }
-}
-
-function writeTaskLog(
-  level: "info" | "warn",
-  event: string,
-  payload: Record<string, unknown>,
-): void {
-  const parts = ["[style.extraction.task]", `event=${event}`];
-  for (const [key, value] of Object.entries(payload)) {
-    if (value === undefined) {
-      continue;
-    }
-    parts.push(`${key}=${formatLogValue(value)}`);
-  }
-  console[level](parts.join(" "));
-}
 
 export class StyleExtractionTaskService {
   private readonly queue: string[] = [];
@@ -407,253 +316,18 @@ export class StyleExtractionTaskService {
   }
 
   private async executeTask(taskId: string): Promise<void> {
-    const task = await prisma.styleExtractionTask.findUnique({
-      where: { id: taskId },
+    await executeStyleExtractionTask(taskId, {
+      ensureNotCancelled: (id) => this.ensureNotCancelled(id),
+      startTaskHeartbeat: (id) => this.startTaskHeartbeat(id),
+      markSucceeded: (id, profileId, profileName, summary) => this.markSucceeded(id, profileId, profileName, summary),
+      markCancelled: (id, progress) => this.markCancelled(id, progress),
+      resolveTaskProgress: (id, fallback) => this.resolveTaskProgress(id, fallback),
+      isCancellationRequested: (id) => this.isCancellationRequested(id),
+      enqueueTask: (id) => this.enqueueTask(id),
+      activeControllers: this.activeControllers,
+      styleProfileService: this.styleProfileService,
+      logTaskEvent: (event, payload, level) => this.logTaskEvent(event, payload, level),
     });
-    if (!task) {
-      return;
-    }
-    if ((task.status !== "queued" && task.status !== "running") || task.pendingManualRecovery) {
-      this.logTaskEvent("task_skipped", {
-        taskId,
-        status: task.status,
-        pendingManualRecovery: task.pendingManualRecovery,
-      });
-      return;
-    }
-    if (task.cancelRequestedAt) {
-      await this.markCancelled(task.id, task.progress);
-      return;
-    }
-
-    const taskSource = resolveTaskProfileSource(task);
-    if (!taskSource) {
-      const errorMessage = "知识库原文写法提取任务缺少来源文档 ID，无法安全生成写法。";
-      await prisma.styleExtractionTask.update({
-        where: { id: task.id },
-        data: {
-          status: "failed",
-          progress: 1,
-          error: errorMessage,
-          heartbeatAt: null,
-          currentStage: null,
-          currentItemKey: null,
-          currentItemLabel: task.name,
-          cancelRequestedAt: null,
-          finishedAt: new Date(),
-        },
-      });
-      this.logTaskEvent("task_failed_missing_source_ref", {
-        taskId: task.id,
-        sourceType: task.sourceType,
-      }, "warn");
-      return;
-    }
-
-    const existingProfile = task.createdStyleProfileId
-      ? await prisma.styleProfile.findUnique({
-          where: { id: task.createdStyleProfileId },
-          select: { id: true, name: true },
-        })
-      : await prisma.styleProfile.findFirst({
-          where: {
-            sourceType: taskSource.sourceType,
-            sourceRefId: taskSource.sourceRefId,
-            ...(taskSource.sourceType === "from_knowledge_document"
-              ? {
-                  name: task.name,
-                  sourceContent: task.sourceText,
-                }
-              : {}),
-          },
-          select: { id: true, name: true },
-        });
-    if (existingProfile) {
-      this.logTaskEvent("task_reused_existing_profile", {
-        taskId: task.id,
-        profileId: existingProfile.id,
-        profileName: existingProfile.name,
-      });
-      await this.markSucceeded(task.id, existingProfile.id, existingProfile.name, task.summary);
-      return;
-    }
-
-    const runtimeSettings = await getStyleEngineRuntimeSettings();
-    const styleExtractionTimeoutMs = runtimeSettings.styleExtractionTimeoutMs;
-    const extractionInputText = resolveStyleExtractionInputText(task);
-
-    await prisma.styleExtractionTask.update({
-      where: { id: task.id },
-      data: {
-        status: "running",
-        pendingManualRecovery: false,
-        progress: 0.08,
-        error: null,
-        startedAt: task.startedAt ?? new Date(),
-        heartbeatAt: new Date(),
-        currentStage: "extracting_features",
-        currentItemKey: task.id,
-        currentItemLabel: task.name,
-      },
-    });
-
-    const controller = new AbortController();
-    this.activeControllers.set(task.id, controller);
-    const stopHeartbeat = this.startTaskHeartbeat(task.id);
-    this.logTaskEvent("task_started", {
-      taskId: task.id,
-      sourceType: taskSource.sourceType,
-      sourceRefId: taskSource.sourceRefId,
-      provider: task.provider,
-      model: task.model,
-      sourceProcessingMode: task.sourceProcessingMode,
-      sourceTextChars: task.sourceText.length,
-      sourceInputChars: extractionInputText.length,
-      timeoutMs: styleExtractionTimeoutMs,
-      retryCount: task.retryCount,
-      maxRetries: task.maxRetries,
-    });
-
-    try {
-      await this.ensureNotCancelled(task.id);
-      const extractStartedAt = Date.now();
-      const draft = await runWithLlmUsageTracking({
-        styleExtractionTaskId: task.id,
-      }, () => this.styleProfileService.extractFromText({
-        name: task.name,
-        sourceText: extractionInputText,
-        category: task.category ?? undefined,
-        provider: task.provider as LLMProvider,
-        model: task.model ?? undefined,
-        temperature: task.temperature ?? undefined,
-        timeoutMs: styleExtractionTimeoutMs,
-        signal: controller.signal,
-      }));
-      this.logTaskEvent("features_extracted", {
-        taskId: task.id,
-        latencyMs: Date.now() - extractStartedAt,
-        featureCount: draft.features.length,
-        summary: draft.summary,
-      });
-
-      await this.ensureNotCancelled(task.id);
-      await prisma.styleExtractionTask.update({
-        where: { id: task.id },
-        data: {
-          progress: 0.58,
-          summary: draft.summary,
-          heartbeatAt: new Date(),
-          currentStage: "building_profile",
-          currentItemKey: task.id,
-          currentItemLabel: task.name,
-        },
-      });
-
-      const presetKey = (task.presetKey as PresetKey) || "balanced";
-      const decisions = buildExtractionDecisions(draft, presetKey);
-
-      await this.ensureNotCancelled(task.id);
-      await prisma.styleExtractionTask.update({
-        where: { id: task.id },
-        data: {
-          progress: 0.82,
-          heartbeatAt: new Date(),
-          currentStage: "saving_profile",
-          currentItemKey: task.id,
-          currentItemLabel: task.name,
-        },
-      });
-
-      const saveStartedAt = Date.now();
-      const profile = await this.styleProfileService.createProfileFromExtraction({
-        name: task.name,
-        sourceText: task.sourceText,
-        category: task.category ?? undefined,
-        draft,
-        presetKey,
-        decisions,
-        sourceType: taskSource.sourceType,
-        sourceRefId: taskSource.sourceRefId,
-      });
-      this.logTaskEvent("profile_created", {
-        taskId: task.id,
-        profileId: profile.id,
-        profileName: profile.name,
-        latencyMs: Date.now() - saveStartedAt,
-      });
-
-      await this.markSucceeded(task.id, profile.id, profile.name, draft.summary);
-    } catch (error) {
-      if (error instanceof AppError && error.message === "STYLE_EXTRACTION_TASK_CANCELLED") {
-        await this.markCancelled(task.id, await this.resolveTaskProgress(task.id, task.progress));
-        return;
-      }
-      if (isAbortError(error) && await this.isCancellationRequested(task.id)) {
-        await this.markCancelled(task.id, await this.resolveTaskProgress(task.id, task.progress));
-        return;
-      }
-
-      const errorMessage = normalizeTaskError(error);
-      const shouldRetry = !isTimeoutError(error) && task.retryCount < task.maxRetries;
-      if (shouldRetry) {
-        this.logTaskEvent("task_requeued_after_error", {
-          taskId: task.id,
-          retryCount: task.retryCount + 1,
-          maxRetries: task.maxRetries,
-          errorMessage,
-          rawError: error instanceof Error ? {
-            name: error.name,
-            message: error.message,
-          } : String(error),
-        }, "warn");
-        await prisma.styleExtractionTask.update({
-          where: { id: task.id },
-          data: {
-            status: "queued",
-            pendingManualRecovery: false,
-            progress: 0,
-            retryCount: { increment: 1 },
-            error: errorMessage,
-            heartbeatAt: null,
-            currentStage: "queued",
-            currentItemKey: null,
-            currentItemLabel: task.name,
-            cancelRequestedAt: null,
-          },
-        });
-        setTimeout(() => this.enqueueTask(task.id), 1500);
-      } else {
-        this.logTaskEvent("task_failed", {
-          taskId: task.id,
-          retryCount: task.retryCount,
-          maxRetries: task.maxRetries,
-          errorMessage,
-          rawError: error instanceof Error ? {
-            name: error.name,
-            message: error.message,
-          } : String(error),
-        }, "warn");
-        await prisma.styleExtractionTask.update({
-          where: { id: task.id },
-          data: {
-            status: "failed",
-            progress: 1,
-            error: errorMessage,
-            heartbeatAt: null,
-            currentStage: null,
-            currentItemKey: null,
-            currentItemLabel: task.name,
-            cancelRequestedAt: null,
-            finishedAt: new Date(),
-          },
-        });
-      }
-    } finally {
-      stopHeartbeat();
-      if (this.activeControllers.get(task.id) === controller) {
-        this.activeControllers.delete(task.id);
-      }
-    }
   }
 
   private async ensureNotCancelled(taskId: string): Promise<void> {

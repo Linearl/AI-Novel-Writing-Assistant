@@ -29,46 +29,26 @@ import type {
   DirectorTakeoverRequest,
   DirectorTakeoverResponse,
 } from "@ai-novel/shared/types/novelDirector";
-import { isFullBookAutopilotRunMode } from "@ai-novel/shared/types/novelDirector";
 import { BookContractService } from "../BookContractService";
 import { CharacterPreparationService } from "../characterPrep/CharacterPreparationService";
 import { CharacterDynamicsService } from "../dynamics/CharacterDynamicsService";
 import { NovelContextService } from "../NovelContextService";
-import { getSharedNovelServices } from "../application/sharedNovelServices";
-import { novelFramingSuggestionService } from "../NovelFramingSuggestionService";
-import { StoryMacroPlanService } from "../storyMacro/StoryMacroPlanService";
-import { NovelVolumeService } from "../volume/NovelVolumeService";
-import { NovelWorkflowService } from "../workflow/NovelWorkflowService";
-import { NovelDirectorCandidateStageService } from "./phases/novelDirectorCandidateStage";
-import { resolveDirectorBookFraming } from "./runtime/novelDirectorFraming";
 import {
   applyDirectorRunModeContract,
   buildDirectorWorkflowSeedPayload,
 } from "./runtime/novelDirectorHelpers";
-import {
-  buildDirectorTakeoverInput,
-  buildDirectorTakeoverReadiness,
-  isTakeoverStructuredOutlineReadyForValidation,
-} from "./runtime/novelDirectorTakeover";
+import { getSharedNovelServices } from "../application/sharedNovelServices";
+import { StoryMacroPlanService } from "../storyMacro/StoryMacroPlanService";
+import { NovelVolumeService } from "../volume/NovelVolumeService";
+import { NovelWorkflowService } from "../workflow/NovelWorkflowService";
+import { NovelDirectorCandidateStageService } from "./phases/novelDirectorCandidateStage";
 import { NovelDirectorAutoExecutionRuntime } from "./automation/novelDirectorAutoExecutionRuntime";
-import {
-  loadDirectorTakeoverState,
-} from "./runtime/novelDirectorTakeoverRuntime";
-import { startDirectorTakeoverExecution } from "./runtime/novelDirectorTakeoverExecution";
-import {
-  resetDirectorTakeoverCurrentStep,
-  resetDirectorTakeoverDownstreamState,
-} from "./runtime/novelDirectorTakeoverReset";
-import { cancelContinueExistingReplacedRuns } from "./runtime/novelDirectorTakeoverContinue";
 import { StyleBindingService } from "../../styleEngine/StyleBindingService";
 import { StyleProfileService } from "../../styleEngine/StyleProfileService";
 import {
   assertHighMemoryDirectorStartAllowed,
   releaseHighMemoryDirectorReservations,
 } from "./runtime/autoDirectorMemorySafety";
-import {
-  validateAutoDirectorTakeoverRequest,
-} from "./runtime/autoDirectorValidationService";
 import {
   normalizeDirectorAutoApprovalConfig,
   shouldAutoApproveDirectorApprovalPoint,
@@ -90,6 +70,13 @@ import { NovelDirectorContinueRuntime } from "./runtime/novelDirectorContinueRun
 import { prisma } from "../../../db/prisma";
 import { loadPersistentDirectorRuntimeProjection } from "./projections/novelDirectorRuntimeProjection";
 import { logger } from "../../logging/LoggerService";
+import {
+  loadDirectorTakeoverState,
+} from "./runtime/novelDirectorTakeoverRuntime";
+import {
+  buildDirectorTakeoverReadiness,
+} from "./runtime/novelDirectorTakeover";
+import { executeStartTakeover } from "./novelDirectorTakeoverHandler";
 
 function isWorkflowTaskCancelledError(error: unknown): boolean {
   const message = error instanceof Error ? error.message : String(error);
@@ -503,168 +490,21 @@ export class NovelDirectorService {
   async startTakeover(input: DirectorTakeoverRequest, options: {
     workflowTaskId?: string | null;
   } = {}): Promise<DirectorTakeoverResponse> {
-    const commandTaskId = options.workflowTaskId?.trim() || null;
-    const takeoverState = await loadDirectorTakeoverState({
-      novelId: input.novelId,
-      autoExecutionPlan: input.autoExecutionPlan,
-      getStoryMacroPlan: (targetNovelId) => this.storyMacroService.getPlan(targetNovelId),
-      getDirectorAssetSnapshot: (targetNovelId) => this.getDirectorAssetSnapshot(targetNovelId),
-      getVolumeWorkspace: (targetNovelId) => this.volumeService.getVolumes(targetNovelId),
-      findActiveAutoDirectorTask: async (targetNovelId) => {
-        if (!commandTaskId) {
-          return this.workflowService.findActiveTaskByNovelAndLane(targetNovelId, "auto_director");
-        }
-        const rows = await this.workflowService.listVisibleTasksByNovelAndLane(targetNovelId, "auto_director");
-        return rows.find((row) => row.id !== commandTaskId && ["queued", "running", "waiting_approval"].includes(row.status)) ?? null;
-      },
-      findLatestAutoDirectorTask: async (targetNovelId) => {
-        if (!commandTaskId) {
-          return this.workflowService.findLatestVisibleTaskByNovelId(targetNovelId, "auto_director");
-        }
-        const rows = await this.workflowService.listVisibleTasksByNovelAndLane(targetNovelId, "auto_director");
-        return rows.find((row) => row.id !== commandTaskId) ?? null;
-      },
-    });
-    const takeoverStrategy = input.strategy ?? (input.startPhase ? "restart_current_step" : "continue_existing");
-    if (takeoverState.hasActiveTask && takeoverStrategy !== "continue_existing") {
-      throw new Error("当前已有自动导演任务在运行或等待审核，请先继续或取消当前任务。");
-    }
-    const takeoverValidation = validateAutoDirectorTakeoverRequest({
-      source: "takeover",
-      request: input,
-      assets: {
-        hasProjectSetup: true,
-        hasStoryMacroPlan: takeoverState.snapshot.hasStoryMacroPlan,
-        hasBookContract: takeoverState.snapshot.hasBookContract,
-        characterCount: takeoverState.snapshot.characterCount,
-        volumeCount: takeoverState.snapshot.volumeCount,
-        hasVolumeStrategyPlan: takeoverState.snapshot.hasVolumeStrategyPlan,
-        hasStructuredOutline: isTakeoverStructuredOutlineReadyForValidation(takeoverState.snapshot),
-        plannedChapterCount: takeoverState.snapshot.plannedChapterCount,
-        totalChapterCount: takeoverState.snapshot.chapterCount,
-        volumeChapterRanges: takeoverState.snapshot.volumeChapterRanges,
-        structuredOutlineChapterOrders: takeoverState.snapshot.structuredOutlineChapterOrders,
-      },
-    });
-    if (!takeoverValidation.allowed) {
-      throw new AppError(takeoverValidation.blockingReasons.join("；") || "当前接管请求需要先重新校验。", 409);
-    }
-
-    const takeoverDirectorInput = buildDirectorTakeoverInput({
-      novel: takeoverState.novel,
-      storyMacroPlan: takeoverState.storyMacroPlan,
-      bookContract: takeoverState.bookContract,
-      runMode: input.runMode,
-    });
-    const directorInput = applyDirectorRunModeContract(await this.enrichDirectorStyleContext({
-      ...takeoverDirectorInput,
-      styleProfileId: input.styleProfileId ?? takeoverDirectorInput.styleProfileId,
-      postGenerationStyleReviewEnabled: input.postGenerationStyleReviewEnabled ?? takeoverDirectorInput.postGenerationStyleReviewEnabled,
-      autoExecutionPlan: input.autoExecutionPlan,
-      autoApproval: input.autoApproval,
-      provider: input.provider ?? takeoverDirectorInput.provider,
-      model: input.model?.trim() || takeoverDirectorInput.model,
-      temperature: typeof input.temperature === "number" ? input.temperature : takeoverDirectorInput.temperature,
-    }));
-    const isFullBookAutopilot = isFullBookAutopilotRunMode(directorInput.runMode);
-    if (typeof input.postGenerationStyleReviewEnabled === "boolean") {
-      await this.novelService.updateNovel(input.novelId, {
-        postGenerationStyleReviewEnabled: input.postGenerationStyleReviewEnabled,
-      });
-    }
-    await this.ensurePrimaryNovelStyleBinding(input.novelId, directorInput.styleProfileId);
-    const takeoverWorkspaceAnalysis = await this.directorRuntime.analyzeWorkspace({
-      novelId: input.novelId,
-    });
-    const response = await startDirectorTakeoverExecution({
-      request: input,
-      takeoverState,
-      directorInput,
+    return executeStartTakeover(input, options, {
       workflowService: this.workflowService,
-      autoExecutionRuntime: {
-        prepareRequestedAutoExecution: (payload) => this.autoExecutionRuntime.prepareRequestedAutoExecution(payload),
-        runFromReady: (payload) => this.directorRuntimeOrchestrator.runChapterExecutionNode(payload),
-      },
-      buildDirectorSeedPayload: (request, novelId, extra) => buildDirectorWorkflowSeedPayload(request, novelId, extra),
-      scheduleBackgroundRun: (taskId, runner) => this.scheduleBackgroundRun(taskId, async () => {
-        await this.directorRuntime.initializeRun({
-          taskId,
-          novelId: input.novelId,
-          entrypoint: "takeover",
-          policyMode: isFullBookAutopilot ? "auto_safe_scope" : "run_until_gate",
-          summary: "AI 自动导演接管已并入统一运行时。",
-        });
-        await this.directorRuntime.recordWorkspaceAnalysis({
-          taskId,
-          analysis: takeoverWorkspaceAnalysis,
-        });
-        // Runtime initialization makes the takeover bookkeeping module complete.
-        // Run the scheduled continuation directly so phase/chapter execution is not skipped.
-        await runner();
-      }),
-      runDirectorPipeline: (payload) => this.directorPipelineRuntime.runPipeline(payload),
-      assertHighMemoryStartAllowed: (payload) => this.assertHighMemoryDirectorStartAllowed(payload),
-      createRewriteSnapshot: async ({ novelId, label }) => {
-        const snapshot = await this.novelService.createNovelSnapshot(novelId, "before_pipeline", label);
-        return {
-          snapshotId: snapshot.id,
-          label: snapshot.label ?? label,
-          restoreEntry: "version_history",
-        };
-      },
-      recordRewriteSnapshotMilestone: ({ taskId, summary }) => this.workflowService.recordRewriteSnapshotMilestone(taskId, {
-        summary,
-      }),
-      workflowTaskId: commandTaskId,
-      prepareRestartStep: async ({ plan, takeoverState: currentTakeoverState, directorInput }) => {
-        await resetDirectorTakeoverCurrentStep({
-          novelId: input.novelId,
-          plan,
-          autoExecutionPlan: directorInput.autoExecutionPlan,
-          takeoverState: currentTakeoverState,
-          deps: {
-            getVolumeWorkspace: (targetNovelId) => this.volumeService.getVolumes(targetNovelId),
-            updateVolumeWorkspace: (targetNovelId, payload) => this.volumeService.updateVolumes(targetNovelId, payload),
-            cancelPipelineJob: (jobId) => this.novelService.cancelPipelineJob(jobId),
-          },
-        });
-      },
-      resetDownstreamState: async ({ plan, takeoverState: currentTakeoverState, directorInput }) => {
-        await resetDirectorTakeoverDownstreamState({
-          novelId: input.novelId,
-          plan,
-          autoExecutionPlan: directorInput.autoExecutionPlan,
-          takeoverState: currentTakeoverState,
-          deps: {
-            getVolumeWorkspace: (targetNovelId) => this.volumeService.getVolumes(targetNovelId),
-            updateVolumeWorkspace: (targetNovelId, payload) => this.volumeService.updateVolumes(targetNovelId, payload),
-            cancelPipelineJob: (jobId) => this.novelService.cancelPipelineJob(jobId),
-          },
-        });
-      },
-      cancelReplacedRuns: async ({ replacementTaskId, directorInput, takeoverState: currentTakeoverState }) => {
-        await cancelContinueExistingReplacedRuns({
-          novelId: input.novelId,
-          replacementTaskId,
-          autoExecutionPlan: directorInput.autoExecutionPlan,
-          resolvedRange: currentTakeoverState.executableRange,
-          getVolumeWorkspace: (targetNovelId) => this.volumeService.getVolumes(targetNovelId),
-          cancelPipelineJob: (jobId) => this.novelService.cancelPipelineJob(jobId),
-        });
-      },
+      storyMacroService: this.storyMacroService,
+      volumeService: this.volumeService,
+      novelService: this.novelService,
+      directorRuntime: this.directorRuntime,
+      directorPipelineRuntime: this.directorPipelineRuntime,
+      autoExecutionRuntime: this.autoExecutionRuntime,
+      directorRuntimeOrchestrator: this.directorRuntimeOrchestrator,
+      novelContextService: this.novelContextService,
+      getDirectorAssetSnapshot: (novelId) => this.getDirectorAssetSnapshot(novelId),
+      enrichDirectorStyleContext: (dirInput) => this.enrichDirectorStyleContext(dirInput),
+      ensurePrimaryNovelStyleBinding: (novelId, styleProfileId) => this.ensurePrimaryNovelStyleBinding(novelId, styleProfileId),
+      scheduleBackgroundRun: (taskId, runner) => this.scheduleBackgroundRun(taskId, runner),
     });
-    await this.directorRuntime.initializeRun({
-      taskId: response.workflowTaskId,
-      novelId: input.novelId,
-      entrypoint: "takeover",
-      policyMode: "run_until_gate",
-      summary: "AI 自动导演接管已并入统一运行时。",
-    });
-    await this.directorRuntime.recordWorkspaceAnalysis({
-      taskId: response.workflowTaskId,
-      analysis: takeoverWorkspaceAnalysis,
-    });
-    return response;
   }
 
   async generateCandidates(input: DirectorCandidatesRequest): Promise<DirectorCandidatesResponse> {
