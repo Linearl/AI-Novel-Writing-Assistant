@@ -1,9 +1,9 @@
 ---
 description: "P2 安全问题修复任务包 — 基于 2026-07-01 全量代码审计"
-status: in_progress
+status: done
 priority: p2
 created: 2026-07-01
-updated: 2026-07-01
+updated: 2026-07-02
 ---
 
 # P2 安全问题修复
@@ -31,16 +31,16 @@ updated: 2026-07-01
 
 ## 验证标准
 
-- [ ] `pnpm typecheck` 通过
-- [ ] `pnpm test` 通过
-- [ ] 路径遍历测试用例通过
-- [ ] 错误响应不包含内部信息
-- [ ] 所有 raw query 参数化验证
+- [x] `pnpm typecheck` 通过
+- [x] `pnpm test` 通过
+- [x] 路径遍历测试用例通过
+- [x] 错误响应不包含内部信息
+- [x] 所有 raw query 参数化验证
 
 ## 状态
 
 - [x] 需求分析
 - [x] 设计文档
-- [ ] 代码实现
-- [ ] 测试验证
-- [ ] 完成归档
+- [x] 代码实现
+- [x] 测试验证
+- [x] 完成归档
