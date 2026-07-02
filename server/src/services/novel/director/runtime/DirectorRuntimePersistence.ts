@@ -80,6 +80,67 @@ export function buildDirectorRuntimePersistenceDelta(
   };
 }
 
+// Sub-function: Persist director steps
+async function persistDirectorSteps(params: { runId: string; taskId: string; novelId: string | null; steps: DirectorRuntimePersistenceDelta["steps"] }) {
+  const { runId, taskId, novelId, steps } = params;
+  for (const step of steps) {
+    await prisma.directorStepRun.upsert({
+      where: { idempotencyKey: step.idempotencyKey },
+      create: {
+        runId, taskId, novelId,
+        idempotencyKey: step.idempotencyKey,
+        nodeKey: step.nodeKey, label: step.label, status: step.status,
+        targetType: step.targetType ?? null, targetId: step.targetId ?? null,
+        startedAt: dateFromIso(step.startedAt) ?? new Date(),
+        finishedAt: dateFromIso(step.finishedAt),
+        error: step.error ?? null,
+        producedArtifactsJson: step.producedArtifacts ? stringifyJson(step.producedArtifacts) : null,
+        policyDecisionJson: step.policyDecision ? stringifyJson(step.policyDecision) : null,
+      },
+      update: {
+        runId, novelId,
+        nodeKey: step.nodeKey, label: step.label, status: step.status,
+        targetType: step.targetType ?? null, targetId: step.targetId ?? null,
+        startedAt: dateFromIso(step.startedAt) ?? new Date(),
+        finishedAt: dateFromIso(step.finishedAt),
+        error: step.error ?? null,
+        producedArtifactsJson: step.producedArtifacts ? stringifyJson(step.producedArtifacts) : null,
+        policyDecisionJson: step.policyDecision ? stringifyJson(step.policyDecision) : null,
+      },
+    });
+  }
+}
+
+// Sub-function: Persist director events
+async function persistDirectorEvents(params: { runId: string; taskId: string; novelId: string | null; events: DirectorRuntimePersistenceDelta["events"] }) {
+  const { runId, taskId, novelId, events } = params;
+  for (const event of events) {
+    await prisma.directorEvent.upsert({
+      where: { id: event.eventId },
+      create: {
+        id: event.eventId, runId, taskId,
+        novelId: event.novelId ?? novelId,
+        type: event.type,
+        nodeKey: event.nodeKey ?? null, artifactId: event.artifactId ?? null, artifactType: event.artifactType ?? null,
+        summary: event.summary,
+        affectedScope: event.affectedScope ?? null, severity: event.severity ?? null,
+        metadataJson: event.metadata ? stringifyJson(event.metadata) : null,
+        occurredAt: dateFromIso(event.occurredAt) ?? new Date(),
+      },
+      update: {
+        runId,
+        novelId: event.novelId ?? novelId,
+        type: event.type,
+        nodeKey: event.nodeKey ?? null, artifactId: event.artifactId ?? null, artifactType: event.artifactType ?? null,
+        summary: event.summary,
+        affectedScope: event.affectedScope ?? null, severity: event.severity ?? null,
+        metadataJson: event.metadata ? stringifyJson(event.metadata) : null,
+        occurredAt: dateFromIso(event.occurredAt) ?? new Date(),
+      },
+    });
+  }
+}
+
 export async function persistDirectorRuntimeSnapshot(input: {
   taskId: string;
   novelId?: string | null;
@@ -121,84 +182,10 @@ export async function persistDirectorRuntimeSnapshot(input: {
         update: runUpdate,
       });
 
-      for (const step of delta.steps) {
-        await prisma.directorStepRun.upsert({
-          where: { idempotencyKey: step.idempotencyKey },
-          create: {
-            runId: snapshot.runId,
-            taskId: input.taskId,
-            novelId,
-            idempotencyKey: step.idempotencyKey,
-            nodeKey: step.nodeKey,
-            label: step.label,
-            status: step.status,
-            targetType: step.targetType ?? null,
-            targetId: step.targetId ?? null,
-            startedAt: dateFromIso(step.startedAt) ?? new Date(),
-            finishedAt: dateFromIso(step.finishedAt),
-            error: step.error ?? null,
-            producedArtifactsJson: step.producedArtifacts
-              ? stringifyJson(step.producedArtifacts)
-              : null,
-            policyDecisionJson: step.policyDecision
-              ? stringifyJson(step.policyDecision)
-              : null,
-          },
-          update: {
-            runId: snapshot.runId,
-            novelId,
-            nodeKey: step.nodeKey,
-            label: step.label,
-            status: step.status,
-            targetType: step.targetType ?? null,
-            targetId: step.targetId ?? null,
-            startedAt: dateFromIso(step.startedAt) ?? new Date(),
-            finishedAt: dateFromIso(step.finishedAt),
-            error: step.error ?? null,
-            producedArtifactsJson: step.producedArtifacts
-              ? stringifyJson(step.producedArtifacts)
-              : null,
-            policyDecisionJson: step.policyDecision
-              ? stringifyJson(step.policyDecision)
-              : null,
-          },
-        });
-      }
+      await persistDirectorSteps({ runId: snapshot.runId, taskId: input.taskId, novelId, steps: delta.steps });
+      await persistDirectorEvents({ runId: snapshot.runId, taskId: input.taskId, novelId, events: delta.events });
 
-      for (const event of delta.events) {
-        await prisma.directorEvent.upsert({
-          where: { id: event.eventId },
-          create: {
-            id: event.eventId,
-            runId: snapshot.runId,
-            taskId: input.taskId,
-            novelId: event.novelId ?? novelId,
-            type: event.type,
-            nodeKey: event.nodeKey ?? null,
-            artifactId: event.artifactId ?? null,
-            artifactType: event.artifactType ?? null,
-            summary: event.summary,
-            affectedScope: event.affectedScope ?? null,
-            severity: event.severity ?? null,
-            metadataJson: event.metadata ? stringifyJson(event.metadata) : null,
-            occurredAt: dateFromIso(event.occurredAt) ?? new Date(),
-          },
-          update: {
-            runId: snapshot.runId,
-            novelId: event.novelId ?? novelId,
-            type: event.type,
-            nodeKey: event.nodeKey ?? null,
-            artifactId: event.artifactId ?? null,
-            artifactType: event.artifactType ?? null,
-            summary: event.summary,
-            affectedScope: event.affectedScope ?? null,
-            severity: event.severity ?? null,
-            metadataJson: event.metadata ? stringifyJson(event.metadata) : null,
-            occurredAt: dateFromIso(event.occurredAt) ?? new Date(),
-          },
-        });
-      }
-
+      // Persist artifacts and dependencies (complex logic, keeping inline for now)
       const snapshotArtifactIds = new Set(snapshot.artifacts.map((artifact) => artifact.id));
       const normalizedArtifacts = delta.artifacts.map((artifact) => normalizeDirectorArtifactRef({
         ...artifact,
@@ -206,130 +193,66 @@ export async function persistDirectorRuntimeSnapshot(input: {
       }));
       for (const normalized of normalizedArtifacts) {
         const create = {
-          id: normalized.id,
-          runId: normalized.runId ?? snapshot.runId,
-          novelId: normalized.novelId,
-          taskId: input.taskId,
-          artifactType: normalized.artifactType,
-          targetType: normalized.targetType,
-          targetId: normalized.targetId ?? null,
-          version: normalized.version,
-          status: normalized.status,
-          source: normalized.source,
-          contentTable: normalized.contentRef.table,
-          contentId: normalized.contentRef.id,
-          contentHash: normalized.contentHash ?? null,
-          schemaVersion: normalized.schemaVersion,
-          promptAssetKey: normalized.promptAssetKey ?? null,
-          promptVersion: normalized.promptVersion ?? null,
-          modelRoute: normalized.modelRoute ?? null,
-          sourceStepRunId: normalized.sourceStepRunId ?? null,
+          id: normalized.id, runId: normalized.runId ?? snapshot.runId, novelId: normalized.novelId, taskId: input.taskId,
+          artifactType: normalized.artifactType, targetType: normalized.targetType, targetId: normalized.targetId ?? null,
+          version: normalized.version, status: normalized.status, source: normalized.source,
+          contentTable: normalized.contentRef.table, contentId: normalized.contentRef.id,
+          contentHash: normalized.contentHash ?? null, schemaVersion: normalized.schemaVersion,
+          promptAssetKey: normalized.promptAssetKey ?? null, promptVersion: normalized.promptVersion ?? null,
+          modelRoute: normalized.modelRoute ?? null, sourceStepRunId: normalized.sourceStepRunId ?? null,
           protectedUserContent: normalized.protectedUserContent ?? null,
           artifactUpdatedAt: dateFromIso(normalized.updatedAt),
         };
         const update = {
-          runId: normalized.runId ?? snapshot.runId,
-          taskId: input.taskId,
-          version: normalized.version,
-          status: normalized.status,
-          source: normalized.source,
-          contentHash: normalized.contentHash ?? null,
-          schemaVersion: normalized.schemaVersion,
-          promptAssetKey: normalized.promptAssetKey ?? null,
-          promptVersion: normalized.promptVersion ?? null,
-          modelRoute: normalized.modelRoute ?? null,
-          sourceStepRunId: normalized.sourceStepRunId ?? null,
+          runId: normalized.runId ?? snapshot.runId, taskId: input.taskId,
+          version: normalized.version, status: normalized.status, source: normalized.source,
+          contentHash: normalized.contentHash ?? null, schemaVersion: normalized.schemaVersion,
+          promptAssetKey: normalized.promptAssetKey ?? null, promptVersion: normalized.promptVersion ?? null,
+          modelRoute: normalized.modelRoute ?? null, sourceStepRunId: normalized.sourceStepRunId ?? null,
           protectedUserContent: normalized.protectedUserContent ?? null,
           artifactUpdatedAt: dateFromIso(normalized.updatedAt),
         };
         try {
-          await prisma.directorArtifact.upsert({
-            where: { id: normalized.id },
-            create,
-            update,
-          });
+          await prisma.directorArtifact.upsert({ where: { id: normalized.id }, create, update });
         } catch (error) {
-          if (!isPrismaUniqueConstraintError(error)) {
-            throw error;
-          }
-          await prisma.directorArtifact.update({
-            where: { id: normalized.id },
-            data: update,
-          });
+          if (!isPrismaUniqueConstraintError(error)) throw error;
+          await prisma.directorArtifact.update({ where: { id: normalized.id }, data: update });
         }
       }
 
+      // Persist artifact dependencies
       const referencedArtifactIds = Array.from(new Set(
-        normalizedArtifacts.flatMap((artifact) => (
-          artifact.dependsOn ?? []
-        ).map((dependency) => dependency.artifactId))
+        normalizedArtifacts.flatMap((artifact) => (artifact.dependsOn ?? []).map((dependency) => dependency.artifactId))
           .filter((artifactId) => snapshotArtifactIds.has(artifactId)),
       ));
       const existingReferencedArtifactIds = referencedArtifactIds.length > 0
-        ? new Set((await prisma.directorArtifact.findMany({
-          where: { id: { in: referencedArtifactIds } },
-          select: { id: true },
-        })).map((artifact) => artifact.id))
+        ? new Set((await prisma.directorArtifact.findMany({ where: { id: { in: referencedArtifactIds } }, select: { id: true } })).map((artifact) => artifact.id))
         : new Set<string>();
-      const persistedArtifactIds = new Set([
-        ...normalizedArtifacts.map((artifact) => artifact.id),
-        ...existingReferencedArtifactIds,
-      ]);
+      const persistedArtifactIds = new Set([...normalizedArtifacts.map((artifact) => artifact.id), ...existingReferencedArtifactIds]);
 
       for (const normalized of normalizedArtifacts) {
         const dependencyMap = new Map<string, NonNullable<typeof normalized.dependsOn>[number]>();
         for (const dependency of normalized.dependsOn ?? []) {
-          if (!persistedArtifactIds.has(dependency.artifactId)) {
-            continue;
-          }
+          if (!persistedArtifactIds.has(dependency.artifactId)) continue;
           dependencyMap.set(dependency.artifactId, dependency);
         }
         const dependencies = [...dependencyMap.values()];
         if (dependencies.length > 0) {
           await prisma.directorArtifactDependency.deleteMany({
-            where: {
-              artifactId: normalized.id,
-              dependsOnArtifactId: {
-                notIn: dependencies.map((dependency) => dependency.artifactId),
-              },
-            },
+            where: { artifactId: normalized.id, dependsOnArtifactId: { notIn: dependencies.map((d) => d.artifactId) } },
           });
         } else {
-          await prisma.directorArtifactDependency.deleteMany({
-            where: { artifactId: normalized.id },
-          });
+          await prisma.directorArtifactDependency.deleteMany({ where: { artifactId: normalized.id } });
         }
         for (const dependency of dependencies) {
-          const where = {
-            artifactId_dependsOnArtifactId: {
-              artifactId: normalized.id,
-              dependsOnArtifactId: dependency.artifactId,
-            },
-          };
-          const data = {
-            dependsOnVersion: dependency.version ?? null,
-          };
+          const where = { artifactId_dependsOnArtifactId: { artifactId: normalized.id, dependsOnArtifactId: dependency.artifactId } };
+          const data = { dependsOnVersion: dependency.version ?? null };
           try {
-            await prisma.directorArtifactDependency.upsert({
-              where,
-              create: {
-                artifactId: normalized.id,
-                dependsOnArtifactId: dependency.artifactId,
-                ...data,
-              },
-              update: data,
-            });
+            await prisma.directorArtifactDependency.upsert({ where, create: { artifactId: normalized.id, dependsOnArtifactId: dependency.artifactId, ...data }, update: data });
           } catch (error) {
-            if (isPrismaForeignKeyConstraintError(error)) {
-              continue;
-            }
-            if (!isPrismaUniqueConstraintError(error)) {
-              throw error;
-            }
-            await prisma.directorArtifactDependency.update({
-              where,
-              data,
-            });
+            if (isPrismaForeignKeyConstraintError(error)) continue;
+            if (!isPrismaUniqueConstraintError(error)) throw error;
+            await prisma.directorArtifactDependency.update({ where, data });
           }
         }
       }
