@@ -6,9 +6,10 @@
 #
 # Design rules:
 #   1. NEVER touch port 3000 - that is the published release version
-#   2. Dev suite uses 3100 (server) + 5173 (client), fully isolated
-#   3. Desktop in dev mode is "external": reuses our 3100 dev server
-#      (set AI_NOVEL_DESKTOP_SERVER_MODE=external + AI_NOVEL_SERVER_PORT=3100)
+#   2. Dev suite prefers 3100 (server) + 5173 (client), but auto-avoids
+#      occupied ports by scanning upward (3101, 3102, ... / 5174, 5175, ...)
+#   3. Desktop in dev mode is "external": reuses our dev server
+#      (set AI_NOVEL_DESKTOP_SERVER_MODE=external + AI_NOVEL_SERVER_PORT=<resolved>)
 #   4. Logs flow through scripts/run-with-log.cjs -> .logs\<session>\
 
 [CmdletBinding()]
@@ -66,16 +67,16 @@ Usage:
 Options:
   -Help, -h            Show this help
   -Mode <dev|desktop>  Start mode (default: dev)
-                       dev     = shared + server(3100) + client(5173)
+                       dev     = shared + server + client
                        desktop = dev suite + Electron
   -Stop                Stop all dev processes (never touches 3000 release)
   -Restart             -Stop then start
   -Status              Show running processes / ports / health
 
 Port contract:
-  3000  Published release (do not touch)
-  3100  Dev server (managed by this script)
-  5173  Dev client (managed by this script)
+  3000     Published release (do not touch)
+  3100+    Dev server (auto-avoids occupied ports, scans upward)
+  5173+    Dev client (auto-avoids occupied ports, scans upward)
 
 Logs:
   .logs\<session-name>\   stdout/stderr per process
@@ -107,6 +108,23 @@ function Get-PortOwner {
         Name = if ($proc) { $proc.Name } else { "?" }
         Cmd  = if ($proc) { (($proc.CommandLine -split ' ') | Select-Object -First 3) -join ' ' } else { "?" }
     }
+}
+
+<#  Find an available port starting from $PreferredPort, scanning upward.
+    Returns the first port that is not currently listening.
+    Scans up to $MaxScan ports above the preferred port. #>
+function Find-AvailablePort {
+    param(
+        [int]$PreferredPort,
+        [int]$MaxScan = 20
+    )
+    for ($i = 0; $i -le $MaxScan; $i++) {
+        $candidate = $PreferredPort + $i
+        if (-not (Test-PortListening -Port $candidate)) {
+            return $candidate
+        }
+    }
+    return $null
 }
 
 function Test-ServerHealth {
@@ -158,7 +176,8 @@ function Start-DevProcess {
     param(
         [string]$Name,
         [string]$Command,
-        [string]$WorkingDir = $ProjectRoot.Path
+        [string]$WorkingDir = $ProjectRoot.Path,
+        [hashtable]$ExtraEnv = @{}
     )
 
     $logSession = "dev-$Name-$(Get-Date -Format 'yyyyMMdd-HHmmss')"
@@ -177,15 +196,33 @@ function Start-DevProcess {
 
     Write-Info "starting [$Name] -> $Command"
     Write-Info "         log -> $logPath"
+    if ($ExtraEnv.Count -gt 0) {
+        $envDesc = ($ExtraEnv.GetEnumerator() | ForEach-Object { "$($_.Key)=$($_.Value)" }) -join ", "
+        Write-Info "         env -> $envDesc"
+    }
 
-    $proc = Start-Process `
-        -FilePath "node" `
-        -ArgumentList $nodeArgs `
-        -WorkingDirectory $WorkingDir `
-        -WindowStyle Hidden `
-        -RedirectStandardOutput (Join-Path $logPath "stdout.log") `
-        -RedirectStandardError  (Join-Path $logPath "stderr.log") `
-        -PassThru
+    # Apply per-process env vars (save → set → launch → restore)
+    $savedEnv = @{}
+    foreach ($key in $ExtraEnv.Keys) {
+        $savedEnv[$key] = [Environment]::GetEnvironmentVariable($key, "Process")
+        [Environment]::SetEnvironmentVariable($key, $ExtraEnv[$key], "Process")
+    }
+
+    try {
+        $proc = Start-Process `
+            -FilePath "node" `
+            -ArgumentList $nodeArgs `
+            -WorkingDirectory $WorkingDir `
+            -WindowStyle Hidden `
+            -RedirectStandardOutput (Join-Path $logPath "stdout.log") `
+            -RedirectStandardError  (Join-Path $logPath "stderr.log") `
+            -PassThru
+    } finally {
+        # Restore original env vars so they don't leak to the next process
+        foreach ($key in $savedEnv.Keys) {
+            [Environment]::SetEnvironmentVariable($key, $savedEnv[$key], "Process")
+        }
+    }
 
     return @{
         Name    = $Name
@@ -282,7 +319,7 @@ function Stop-DevAll {
         }
     }
 
-    Write-Info "waiting for 3100 / 5173 to release..."
+    Write-Info "waiting for $DevServerPort / $DevClientPort to release..."
     for ($i = 0; $i -lt 10; $i++) {
         Start-Sleep -Seconds 1
         $srvStill = Test-PortListening -Port $DevServerPort
@@ -325,26 +362,35 @@ function Stop-DevAll {
     if (-not $srvFinal -and -not $cliFinal) {
         Write-Ok "ports released after sweep"
     } else {
-        Write-Warn "ports may not be fully released (3100=$srvFinal, 5173=$cliFinal)"
+        Write-Warn "ports may not be fully released ($DevServerPort=$srvFinal, $DevClientPort=$cliFinal)"
     }
 }
 
 # ─── Start dev suite ────────────────────────────────────────
 function Start-DevSuite {
-    Write-Stage "Starting dev suite (3100 server + 5173 client)"
+    Write-Stage "Starting dev suite (server + client)"
 
     if (Test-PortListening -Port $ReleasePort) {
         $relOwner = Get-PortOwner -Port $ReleasePort
         Write-Ok "release port $ReleasePort is running (PID=$($relOwner.Pid)), we read-only"
     }
 
-    if (Test-PortListening -Port $DevServerPort) {
-        $occ = Get-PortOwner -Port $DevServerPort
-        throw "port $DevServerPort busy: PID=$($occ.Pid) Name=$($occ.Name). Run -Stop first or kill manually."
+    # Port avoidance: if preferred port is busy, scan upward for the next free one
+    $script:DevServerPort = Find-AvailablePort -PreferredPort $DevServerPort
+    if (-not $script:DevServerPort) {
+        throw "no available port found starting from 3100 (scanned 20 ports). Free up ports and retry."
     }
-    if (Test-PortListening -Port $DevClientPort) {
-        $occ = Get-PortOwner -Port $DevClientPort
-        throw "port $DevClientPort busy: PID=$($occ.Pid) Name=$($occ.Name). Run -Stop first or kill manually."
+    if ($script:DevServerPort -ne 3100) {
+        $occ = Get-PortOwner -Port 3100
+        Write-Warn "port 3100 busy (PID=$($occ.Pid) Name=$($occ.Name)), using $script:DevServerPort instead"
+    }
+
+    $script:DevClientPort = Find-AvailablePort -PreferredPort $DevClientPort
+    if (-not $script:DevClientPort) {
+        throw "no available port found starting from 5173 (scanned 20 ports). Free up ports and retry."
+    }
+    if ($script:DevClientPort -ne 5173) {
+        Write-Warn "port 5173 busy, using $script:DevClientPort instead"
     }
 
     # 1. shared (build artifacts consumed by server)
@@ -352,64 +398,61 @@ function Start-DevSuite {
     Write-Info "waiting for shared to build..."
     Start-Sleep -Seconds 3
 
-    # 2. server (3100)
-    Start-DevProcess -Name "server" -Command "pnpm --filter @ai-novel/server dev"
-    Write-Info "waiting for server 3100..."
+    # 2. server — AI_NOVEL_SERVER_PORT tells Express which port to listen on
+    Start-DevProcess -Name "server" -Command "pnpm --filter @ai-novel/server dev" -ExtraEnv @{ AI_NOVEL_SERVER_PORT = "$script:DevServerPort" }
+    Write-Info "waiting for server $script:DevServerPort..."
     $ok = $false
     for ($i = 0; $i -lt 30; $i++) {
         Start-Sleep -Seconds 2
-        if (Test-ServerHealth -Port $DevServerPort) { $ok = $true; break }
+        if (Test-ServerHealth -Port $script:DevServerPort) { $ok = $true; break }
     }
     if (-not $ok) {
-        throw "server did not become healthy in 60s. Check .logs\dev-server-*\stderr.log"
+        throw "server did not become healthy in 60s on port $script:DevServerPort. Check .logs\dev-server-*\stderr.log"
     }
-    Write-Ok "server healthy: http://127.0.0.1:$DevServerPort/api/health"
+    Write-Ok "server healthy: http://127.0.0.1:$script:DevServerPort/api/health"
 
-    # 3. client (5173) — PORT must be set so Vite proxy targets the dev server, not :3000
-    $savedPort = $env:PORT
-    $env:PORT = "$DevServerPort"
-    Start-DevProcess -Name "client" -Command "pnpm --filter @ai-novel/client dev"
-    $env:PORT = $savedPort
-    Write-Info "waiting for client 5173..."
+    # 3. client — AI_NOVEL_PROXY_TARGET_PORT tells Vite proxy where to forward API calls;
+    #    --port tells Vite which port to listen on itself.
+    Start-DevProcess -Name "client" -Command "pnpm --filter @ai-novel/client dev --port $script:DevClientPort" -ExtraEnv @{ AI_NOVEL_PROXY_TARGET_PORT = "$script:DevServerPort" }
+    Write-Info "waiting for client $script:DevClientPort..."
     $ok = $false
     for ($i = 0; $i -lt 30; $i++) {
         Start-Sleep -Seconds 2
-        if (Test-ClientReady -Port $DevClientPort) { $ok = $true; break }
+        if (Test-ClientReady -Port $script:DevClientPort) { $ok = $true; break }
     }
     if (-not $ok) {
-        throw "client did not become ready in 60s. Check .logs\dev-client-*\stderr.log"
+        throw "client did not become ready in 60s on port $script:DevClientPort. Check .logs\dev-client-*\stderr.log"
     }
-    Write-Ok "client ready: http://127.0.0.1:$DevClientPort"
+    Write-Ok "client ready: http://127.0.0.1:$script:DevClientPort"
 }
 
-# ─── Start desktop (Electron, external mode -> 3100) ──────
+# ─── Start desktop (Electron, external mode -> dev server) ──────
 function Start-Desktop {
-    Write-Stage "Starting Electron desktop (external mode -> 3100)"
+    Write-Stage "Starting Electron desktop (external mode -> $script:DevServerPort)"
 
-    if (-not (Test-ServerHealth -Port $DevServerPort)) {
-        throw "server 3100 unhealthy; cannot start desktop in external mode."
+    if (-not (Test-ServerHealth -Port $script:DevServerPort)) {
+        throw "server $script:DevServerPort unhealthy; cannot start desktop in external mode."
     }
-    if (-not (Test-ClientReady -Port $DevClientPort)) {
-        throw "client 5173 not ready; desktop has no UI to load."
+    if (-not (Test-ClientReady -Port $script:DevClientPort)) {
+        throw "client $script:DevClientPort not ready; desktop has no UI to load."
     }
 
     $env:AI_NOVEL_DESKTOP_SERVER_MODE = "external"
-    $env:AI_NOVEL_SERVER_PORT = "$DevServerPort"
-    $env:PORT = "$DevServerPort"
+    $env:AI_NOVEL_SERVER_PORT = "$script:DevServerPort"
     $env:AI_NOVEL_APP_DATA_DIR = Join-Path $env:LOCALAPPDATA "AI-Novel-DevData"
 
     $logSession = "dev-desktop-$(Get-Date -Format 'yyyyMMdd-HHmmss')"
     $logPath = Join-Path $LogsDir $logSession
     New-Item -ItemType Directory -Force -Path $logPath | Out-Null
 
-    Write-Info "starting desktop -> npx electron . (PORT=$DevServerPort, external)"
+    Write-Info "starting desktop -> npx electron . (AI_NOVEL_SERVER_PORT=$script:DevServerPort, external)"
     Write-Info "            log -> $logPath"
 
 # Electron refuses a relative path that PowerShell hands it via -WorkingDirectory
 # when the path contains non-ASCII. Wrap with cmd /c cd /d so the path is parsed
 # in cmd's own codepage and the resulting cwd is delivered intact to npx.
     $desktopDir = Join-Path $ProjectRoot "desktop"
-    $cmdLine = "cd /d `"$desktopDir`" && set AI_NOVEL_DESKTOP_SERVER_MODE=external&set AI_NOVEL_SERVER_PORT=$DevServerPort&set PORT=$DevServerPort&set AI_NOVEL_APP_DATA_DIR=%LOCALAPPDATA%\AI-Novel-DevData&npx.cmd electron ."
+    $cmdLine = "cd /d `"$desktopDir`" && set AI_NOVEL_DESKTOP_SERVER_MODE=external&set AI_NOVEL_SERVER_PORT=$script:DevServerPort&set AI_NOVEL_APP_DATA_DIR=%LOCALAPPDATA%\AI-Novel-DevData&npx.cmd electron ."
 
     $proc = Start-Process `
         -FilePath "cmd.exe" `
@@ -419,7 +462,7 @@ function Start-Desktop {
         -RedirectStandardError  (Join-Path $logPath "stderr.log") `
         -PassThru
 
-    Write-Ok "desktop launched: PID=$($proc.Id) (connects to 3100)"
+    Write-Ok "desktop launched: PID=$($proc.Id) (connects to $script:DevServerPort)"
 }
 
 # ─── Main flow ────────────────────────────────────────────────
@@ -470,7 +513,7 @@ Write-Ok "ai-novel started"
 Write-Host "  - server:  http://127.0.0.1:$DevServerPort"  -ForegroundColor Green
 Write-Host "  - client:  http://127.0.0.1:$DevClientPort"  -ForegroundColor Green
 if ($Mode -eq "desktop") {
-    Write-Host "  - desktop: Electron launched (connected to 3100 dev server)" -ForegroundColor Green
+    Write-Host "  - desktop: Electron launched (connected to $DevServerPort dev server)" -ForegroundColor Green
 }
 Write-Host "  - logs:    $LogsDir"  -ForegroundColor DarkGray
 Write-Host ""

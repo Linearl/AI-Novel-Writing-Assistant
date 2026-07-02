@@ -41,10 +41,10 @@ function clearStaleOptimizeCache(rootDir: string): void {
 function resolveDevProxyTarget(): string {
   const configuredHost = process.env.HOST?.trim();
 
-  // 优先从环境变量读取，否则从 server/.env 文件读取 PORT。
-  // server 通过 dotenv 加载 server/.env，但 Vite 进程不会自动加载它，
-  // 导致 process.env.PORT 未定义时回退到 3000，而 server 实际监听 3100。
-  let port = Number(process.env.PORT);
+  // 优先读 AI_NOVEL_PROXY_TARGET_PORT（脚本显式设置的代理目标端口），
+  // 其次读 PORT（兼容手动启动），再次从 server/.env 文件读取，
+  // 最终回退到 3000。
+  let port = Number(process.env.AI_NOVEL_PROXY_TARGET_PORT ?? process.env.PORT);
   if (!Number.isFinite(port) || port <= 0) {
     try {
       const serverEnvPath = path.resolve(__dirname, "../server/.env");
