@@ -243,6 +243,52 @@ async function generateBeatChapterBlock(params: {
   return generated.output;
 }
 
+// Sub-function: Generate chapter blocks for beat plans
+async function generateChapterBlocksForPlans(params: {
+  document: VolumePlanDocument;
+  novel: VolumeGenerationNovel;
+  workspace: VolumeWorkspace;
+  storyMacroPlan: StoryMacroPlanResult;
+  options: VolumeGenerateOptions;
+  targetVolume: any;
+  targetBeatSheet: any;
+  beatPlans: any[];
+  plansToRun: any[];
+  existingBeatBlocks: any[];
+  fullVolumeResumeState: any;
+  generationMode: "full_volume" | "single_beat";
+  notifyPhase: (label: string) => Promise<void>;
+  notifyIntermediateDocument?: (event: VolumeIntermediateDocumentEvent) => void | Promise<void>;
+}): Promise<GeneratedVolumeChapterBlock[]> {
+  const { document, novel, workspace, storyMacroPlan, options, targetVolume, targetBeatSheet, beatPlans, plansToRun, existingBeatBlocks, fullVolumeResumeState, generationMode, notifyPhase, notifyIntermediateDocument } = params;
+  const generatedBlocks: GeneratedVolumeChapterBlock[] = [];
+
+  for (const beatPlan of plansToRun) {
+    await notifyPhase(
+      generationMode === "single_beat"
+        ? `正在重写第 ${targetVolume.sortOrder} 卷节奏段：${beatPlan.beat.label}`
+        : `正在生成第 ${targetVolume.sortOrder} 卷节奏段：${beatPlan.beat.label}`,
+    );
+
+    const currentBeatIndex = beatPlans.findIndex((plan) => plan.beat.key === beatPlan.beat.key);
+    const generatedBlock = await generateBeatChapterBlock({
+      document, workspace, novel, storyMacroPlan, options, targetVolume, targetBeatSheet, beatPlan,
+      previousBeat: currentBeatIndex > 0 ? beatPlans[currentBeatIndex - 1]?.beat ?? null : null,
+      nextBeat: currentBeatIndex < beatPlans.length - 1 ? beatPlans[currentBeatIndex + 1]?.beat ?? null : null,
+      previousBeatChapterSummary: buildPreviousBeatSummary({ generationMode, generatedBlocks, existingBeatBlocks, preservedBeatBlocks: fullVolumeResumeState?.preservedBeatBlocks, targetBeatIndex: currentBeatIndex }),
+      preservedBeatChapterSummary: generationMode === "single_beat" ? buildPreservedBeatSummary({ existingBeatBlocks, targetBeatKey: beatPlan.beat.key }) : null,
+    });
+    generatedBlocks.push(generatedBlock);
+
+    const intermediateDocument = mergeChapterList(document, targetVolume.id, targetBeatSheet, generatedBlocks, {
+      generationMode, targetBeatKey: options.targetBeatKey, resumeFromBeatKey: fullVolumeResumeState?.resumeBeatKey, markAsPartial: true,
+    });
+    await notifyIntermediateDocument?.({ scope: "chapter_list", document: intermediateDocument, isFinal: false, targetVolumeId: targetVolume.id, targetBeatKey: beatPlan.beat.key, generationMode });
+  }
+
+  return generatedBlocks;
+}
+
 export async function generateBeatChunkedChapterList(params: {
   document: VolumePlanDocument;
   novel: VolumeGenerationNovel;
@@ -258,205 +304,47 @@ export async function generateBeatChunkedChapterList(params: {
   const { document, novel, workspace, storyMacroPlan, options } = params;
   const targetVolume = getTargetVolume(document, options.targetVolumeId);
   const targetBeatSheet = getBeatSheet(document, targetVolume.id);
-  logMemoryUsage({
-    event: "start",
-    component: "generateBeatChunkedChapterList",
-    taskId: options.taskId,
-    novelId: document.novelId,
-    stage: "structured_outline",
-    itemKey: "chapter_list",
-    scope: options.generationMode ?? "full_volume",
-    entrypoint: options.entrypoint,
-    volumeId: targetVolume.id,
-    volumeCount: document.volumes.length,
-    chapterCount: document.volumes.reduce((sum, volume) => sum + volume.chapters.length, 0),
-    beatSheetCount: document.beatSheets.length,
-  });
-  if (!targetBeatSheet) {
-    throw new Error("当前卷还没有节奏板，不能直接拆章节列表。");
-  }
+  logMemoryUsage({ event: "start", component: "generateBeatChunkedChapterList", taskId: options.taskId, novelId: document.novelId, stage: "structured_outline", itemKey: "chapter_list", scope: options.generationMode ?? "full_volume", entrypoint: options.entrypoint, volumeId: targetVolume.id, volumeCount: document.volumes.length, chapterCount: document.volumes.reduce((sum, volume) => sum + volume.chapters.length, 0), beatSheetCount: document.beatSheets.length });
+  if (!targetBeatSheet) throw new Error("当前卷还没有节奏板，不能直接拆章节列表。");
 
   const chapterBudget = deriveChapterBudget({ novel, workspace, options });
-  const chapterBudgets = allocateChapterBudgets({
-    volumeCount: Math.max(document.volumes.length, 1),
-    chapterBudget,
-    existingVolumes: document.volumes,
-  });
+  const chapterBudgets = allocateChapterBudgets({ volumeCount: Math.max(document.volumes.length, 1), chapterBudget, existingVolumes: document.volumes });
   const targetIndex = document.volumes.findIndex((volume) => volume.id === targetVolume.id);
   const beatSheetRequiredChapterCount = inferRequiredChapterCountFromBeatSheet(targetBeatSheet);
-  const fallbackTargetChapterCount = chapterBudgets[targetIndex]
-    ?? Math.max(3, Math.round(chapterBudget / Math.max(document.volumes.length, 1)));
-  // Legacy or partially generated workspaces may only carry a few seed chapters for the opening beat.
-  // Those placeholders should not shrink the trusted chapter budget below the planned volume size.
+  const fallbackTargetChapterCount = chapterBudgets[targetIndex] ?? Math.max(3, Math.round(chapterBudget / Math.max(document.volumes.length, 1)));
   const budgetedTargetChapterCount = Math.max(targetVolume.chapters.length, fallbackTargetChapterCount);
-  const resolvedTargetChapterCount = resolveTargetChapterCount({
-    budgetedChapterCount: budgetedTargetChapterCount,
-    beatSheetRequiredChapterCount,
-  });
-  if (!resolvedTargetChapterCount.beatSheetCountAccepted && beatSheetRequiredChapterCount > 0) {
-    throw new Error("当前卷节奏板的章节跨度异常，建议先重生成节奏板，再继续生成章节标题。");
-  }
+  const resolvedTargetChapterCount = resolveTargetChapterCount({ budgetedChapterCount: budgetedTargetChapterCount, beatSheetRequiredChapterCount });
+  if (!resolvedTargetChapterCount.beatSheetCountAccepted && beatSheetRequiredChapterCount > 0) throw new Error("当前卷节奏板的章节跨度异常，建议先重生成节奏板，再继续生成章节标题。");
   if (resolvedTargetChapterCount.targetChapterCount >= 20) {
-    const beatSheetCoverage = validateBeatSheetChapterCoverage({
-      beatSheet: targetBeatSheet,
-      targetChapterCount: resolvedTargetChapterCount.targetChapterCount,
-    });
-    if (!beatSheetCoverage.accepted) {
-      throw new Error(`${beatSheetCoverage.message ?? "当前卷节奏板章节跨度没有覆盖目标章数。"}建议先重生成节奏板，再继续生成章节标题。`);
-    }
+    const beatSheetCoverage = validateBeatSheetChapterCoverage({ beatSheet: targetBeatSheet, targetChapterCount: resolvedTargetChapterCount.targetChapterCount });
+    if (!beatSheetCoverage.accepted) throw new Error(`${beatSheetCoverage.message ?? "当前卷节奏板章节跨度没有覆盖目标章数。"}建议先重生成节奏板，再继续生成章节标题。`);
   }
 
   const generationMode = options.generationMode ?? "full_volume";
   const beatPlans = buildBeatGenerationPlans(targetBeatSheet);
-  const existingBeatBlocks = buildExistingBeatBlocks({
-    volume: targetVolume,
-    beatSheet: targetBeatSheet,
+  const existingBeatBlocks = buildExistingBeatBlocks({ volume: targetVolume, beatSheet: targetBeatSheet });
+  const fullVolumeResumeState = generationMode === "full_volume" ? resolveFullVolumeResumeState({ beatPlans, existingBeatBlocks }) : null;
+  const targetBeatIndex = generationMode === "single_beat" ? beatPlans.findIndex((plan) => plan.beat.key === options.targetBeatKey) : -1;
+  if (generationMode === "single_beat" && targetBeatIndex < 0) throw new Error("目标节奏段不存在，无法重生章节标题。");
+
+  const plansToRun = generationMode === "single_beat" ? [beatPlans[targetBeatIndex]] : beatPlans.slice(fullVolumeResumeState?.resumeBeatIndex ?? 0);
+  if (generationMode === "full_volume" && fullVolumeResumeState?.isAlreadyComplete && !isVolumeChapterListPartiallyPersisted(targetVolume)) {
+    return { mergedDocument: document, mergedWorkspace: { ...workspace, ...document } };
+  }
+
+  const generatedBlocks = await generateChapterBlocksForPlans({
+    document, novel, workspace, storyMacroPlan, options, targetVolume, targetBeatSheet, beatPlans, plansToRun, existingBeatBlocks, fullVolumeResumeState, generationMode, notifyPhase: params.notifyPhase, notifyIntermediateDocument: params.notifyIntermediateDocument,
   });
-  const fullVolumeResumeState = generationMode === "full_volume"
-    ? resolveFullVolumeResumeState({
-      beatPlans,
-      existingBeatBlocks,
-    })
-    : null;
-  const targetBeatIndex = generationMode === "single_beat"
-    ? beatPlans.findIndex((plan) => plan.beat.key === options.targetBeatKey)
-    : -1;
-  if (generationMode === "single_beat" && targetBeatIndex < 0) {
-    throw new Error("目标节奏段不存在，无法重生章节标题。");
-  }
 
-  const generatedBlocks: GeneratedVolumeChapterBlock[] = [];
-  const plansToRun = generationMode === "single_beat"
-    ? [beatPlans[targetBeatIndex]]
-    : beatPlans.slice(fullVolumeResumeState?.resumeBeatIndex ?? 0);
-
-  if (
-    generationMode === "full_volume"
-    && fullVolumeResumeState?.isAlreadyComplete
-    && !isVolumeChapterListPartiallyPersisted(targetVolume)
-  ) {
-    return {
-      mergedDocument: document,
-      mergedWorkspace: {
-        ...workspace,
-        ...document,
-      },
-    };
-  }
-
-  for (const beatPlan of plansToRun) {
-    await params.notifyPhase(
-      generationMode === "single_beat"
-        ? `正在重写第 ${targetVolume.sortOrder} 卷节奏段：${beatPlan.beat.label}`
-        : `正在生成第 ${targetVolume.sortOrder} 卷节奏段：${beatPlan.beat.label}`,
-    );
-
-    const currentBeatIndex = beatPlans.findIndex((plan) => plan.beat.key === beatPlan.beat.key);
-    const generatedBlock = await generateBeatChapterBlock({
-      document,
-      workspace,
-      novel,
-      storyMacroPlan,
-      options,
-      targetVolume,
-      targetBeatSheet,
-      beatPlan,
-      previousBeat: currentBeatIndex > 0 ? beatPlans[currentBeatIndex - 1]?.beat ?? null : null,
-      nextBeat: currentBeatIndex < beatPlans.length - 1 ? beatPlans[currentBeatIndex + 1]?.beat ?? null : null,
-      previousBeatChapterSummary: buildPreviousBeatSummary({
-        generationMode,
-        generatedBlocks,
-        existingBeatBlocks,
-        preservedBeatBlocks: fullVolumeResumeState?.preservedBeatBlocks,
-        targetBeatIndex: currentBeatIndex,
-      }),
-      preservedBeatChapterSummary: generationMode === "single_beat"
-        ? buildPreservedBeatSummary({
-          existingBeatBlocks,
-          targetBeatKey: beatPlan.beat.key,
-        })
-        : null,
-    });
-    generatedBlocks.push(generatedBlock);
-
-    const intermediateDocument = mergeChapterList(
-      document,
-      targetVolume.id,
-      targetBeatSheet,
-      generatedBlocks,
-      {
-        generationMode,
-        targetBeatKey: options.targetBeatKey,
-        resumeFromBeatKey: fullVolumeResumeState?.resumeBeatKey,
-        markAsPartial: true,
-      },
-    );
-    await params.notifyIntermediateDocument?.({
-      scope: "chapter_list",
-      document: intermediateDocument,
-      isFinal: false,
-      targetVolumeId: targetVolume.id,
-      targetBeatKey: beatPlan.beat.key,
-      generationMode,
-    });
-  }
-
-  logMemoryUsage({
-    event: "before_merge",
-    component: "mergeChapterList",
-    taskId: options.taskId,
-    novelId: document.novelId,
-    stage: "structured_outline",
-    itemKey: "chapter_list",
-    scope: generationMode,
-    entrypoint: options.entrypoint,
-    volumeId: targetVolume.id,
-    chapterCount: generatedBlocks.reduce((sum, block) => sum + block.chapters.length, 0),
-  });
+  logMemoryUsage({ event: "before_merge", component: "mergeChapterList", taskId: options.taskId, novelId: document.novelId, stage: "structured_outline", itemKey: "chapter_list", scope: generationMode, entrypoint: options.entrypoint, volumeId: targetVolume.id, chapterCount: generatedBlocks.reduce((sum, block) => sum + block.chapters.length, 0) });
   const mergedDocument = generatedBlocks.length > 0
-    ? mergeChapterList(
-      document,
-      targetVolume.id,
-      targetBeatSheet,
-      generatedBlocks,
-      {
-        generationMode,
-        targetBeatKey: options.targetBeatKey,
-        resumeFromBeatKey: fullVolumeResumeState?.resumeBeatKey,
-        markAsPartial: false,
-      },
-    )
+    ? mergeChapterList(document, targetVolume.id, targetBeatSheet, generatedBlocks, { generationMode, targetBeatKey: options.targetBeatKey, resumeFromBeatKey: fullVolumeResumeState?.resumeBeatKey, markAsPartial: false })
     : setVolumeChapterListPartialStatus(document, targetVolume.id, false);
   const mergedVolume = mergedDocument.volumes.find((volume) => volume.id === targetVolume.id);
-  if (!mergedVolume) {
-    throw new Error("当前卷章节列表已生成，但合并结果丢失了目标卷。");
-  }
-  assertMergedVolumeChapterList({
-    volume: mergedVolume,
-    beatSheet: targetBeatSheet,
-  });
-  logMemoryUsage({
-    event: "after_merge",
-    component: "mergeChapterList",
-    taskId: options.taskId,
-    novelId: document.novelId,
-    stage: "structured_outline",
-    itemKey: "chapter_list",
-    scope: generationMode,
-    entrypoint: options.entrypoint,
-    volumeId: targetVolume.id,
-    volumeCount: mergedDocument.volumes.length,
-    chapterCount: mergedDocument.volumes.reduce((sum, volume) => sum + volume.chapters.length, 0),
-    beatSheetCount: mergedDocument.beatSheets.length,
-  });
-  await params.notifyIntermediateDocument?.({
-    scope: "chapter_list",
-    document: mergedDocument,
-    isFinal: true,
-    targetVolumeId: targetVolume.id,
-    targetBeatKey: generatedBlocks[generatedBlocks.length - 1]?.beatKey,
-    generationMode,
-  });
+  if (!mergedVolume) throw new Error("当前卷章节列表已生成，但合并结果丢失了目标卷。");
+  assertMergedVolumeChapterList({ volume: mergedVolume, beatSheet: targetBeatSheet });
+  logMemoryUsage({ event: "after_merge", component: "mergeChapterList", taskId: options.taskId, novelId: document.novelId, stage: "structured_outline", itemKey: "chapter_list", scope: generationMode, entrypoint: options.entrypoint, volumeId: targetVolume.id, volumeCount: mergedDocument.volumes.length, chapterCount: mergedDocument.volumes.reduce((sum, volume) => sum + volume.chapters.length, 0), beatSheetCount: mergedDocument.beatSheets.length });
+  await params.notifyIntermediateDocument?.({ scope: "chapter_list", document: mergedDocument, isFinal: true, targetVolumeId: targetVolume.id, targetBeatKey: generatedBlocks[generatedBlocks.length - 1]?.beatKey, generationMode });
 
   return {
     mergedDocument,
