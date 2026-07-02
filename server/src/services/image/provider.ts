@@ -311,9 +311,9 @@ export async function generateImagesByProvider(input: ImageProviderGenerateInput
   }
 
   const { apiKey, baseURL: defaultBaseURL } = await resolveProviderSecret(input.provider);
-  // MiniMax 图像生成使用不同的 baseURL
+  // MiniMax 图像生成使用不同的 baseURL，可通过 MINIMAX_IMAGE_BASE_URL 覆盖
   const baseURL = input.provider === "minimax"
-    ? "https://api.minimaxi.com"
+    ? normalizeBaseUrl(process.env.MINIMAX_IMAGE_BASE_URL ?? "https://api.minimaxi.com")
     : defaultBaseURL;
   const controller = new AbortController();
   const timeoutMs = imageGenerationConfig.httpTimeoutMs;

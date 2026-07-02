@@ -23,7 +23,7 @@ function snapshotCreatedAtMs(value: Date | string): number {
 }
 
 export function resolveNovelSnapshotRetentionCount(
-  env: { NOVEL_SNAPSHOT_RETENTION_COUNT?: string } = process.env,
+  env: { NOVEL_SNAPSHOT_RETENTION_COUNT?: string } = process.env as { NOVEL_SNAPSHOT_RETENTION_COUNT?: string },
 ): number {
   const rawValue = env.NOVEL_SNAPSHOT_RETENTION_COUNT?.trim();
   if (!rawValue) {
