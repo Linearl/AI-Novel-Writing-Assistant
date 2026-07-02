@@ -14,6 +14,7 @@ import path from "path";
 import { prisma } from "../../db/prisma";
 import { AppError } from "../../middleware/errorHandler";
 import { resolveGeneratedImagesRoot } from "../../runtime/appPaths";
+import { assertSafePath } from "../../platform/security/safePath";
 import {
   generateImagesByProvider,
   isImageProviderSupported,
@@ -81,7 +82,10 @@ const IMAGE_EXTS: Array<[string, string]> = [
 ];
 
 function dramaCharacterDir(charId: string): string {
-  return path.join(resolveGeneratedImagesRoot(), DRAMA_IMAGES_DIR, charId);
+  const storageRoot = resolveGeneratedImagesRoot();
+  const dir = path.join(storageRoot, DRAMA_IMAGES_DIR, charId);
+  assertSafePath(dir, path.join(storageRoot, DRAMA_IMAGES_DIR));
+  return dir;
 }
 
 function currentCharacterSheetUrl(characterId: string): string {

@@ -263,7 +263,7 @@ export interface CharacterTimelineSyncOptions {
   endOrder?: number;
 }
 
-const QUALITY_THRESHOLD = { coherence: 80, repetition: 75, engagement: 75 };
+export const QUALITY_THRESHOLD = { coherence: 80, repetition: 75, engagement: 75 } as const;
 type BeatStatus = "planned" | "completed" | "skipped";
 
 const CONTINUATION_ANALYSIS_SECTION_KEYS: BookAnalysisSectionKey[] = [

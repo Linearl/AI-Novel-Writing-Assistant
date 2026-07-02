@@ -13,6 +13,7 @@ import sharp from "sharp";
 import { prisma } from "../../db/prisma";
 import { AppError } from "../../middleware/errorHandler";
 import { resolveGeneratedImagesRoot } from "../../runtime/appPaths";
+import { assertSafePath } from "../../platform/security/safePath";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -190,7 +191,10 @@ function escapeXml(s: string): string {
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function letteredPanelDir(panelId: string): string {
-  return path.join(resolveGeneratedImagesRoot(), COMIC_LETTERED_DIR, panelId);
+  const storageRoot = resolveGeneratedImagesRoot();
+  const dir = path.join(storageRoot, COMIC_LETTERED_DIR, panelId);
+  assertSafePath(dir, path.join(storageRoot, COMIC_LETTERED_DIR));
+  return dir;
 }
 
 function letteredPanelUrl(panelId: string): string {
@@ -198,7 +202,9 @@ function letteredPanelUrl(panelId: string): string {
 }
 
 async function findPanelImageBuffer(panelId: string): Promise<Buffer> {
-  const rawDir = path.join(resolveGeneratedImagesRoot(), "comic-panels", panelId);
+  const storageRoot = resolveGeneratedImagesRoot();
+  const rawDir = path.join(storageRoot, "comic-panels", panelId);
+  assertSafePath(rawDir, path.join(storageRoot, "comic-panels"));
   let entries: string[];
   try { entries = await fs.readdir(rawDir); } catch { throw new AppError("格子图尚未生成，请先生成图像。", 400); }
   const file = entries.find((f) => /^panel\.(png|jpg|webp)$/i.test(f));

@@ -5,6 +5,7 @@ import type { LLMProvider } from "@ai-novel/shared/types/llm";
 import { prisma } from "../../../db/prisma";
 import { AppError } from "../../../middleware/errorHandler";
 import { resolveGeneratedImagesRoot } from "../../../runtime/appPaths";
+import { assertSafePath } from "../../../platform/security/safePath";
 import {
   generateImagesByProvider,
   isImageProviderSupported,
@@ -69,7 +70,10 @@ const KEYFRAME_EXTS: Array<[string, string]> = [
 ];
 
 function dramaShotDir(shotId: string): string {
-  return path.join(resolveGeneratedImagesRoot(), DRAMA_SHOT_IMAGES_DIR, shotId);
+  const storageRoot = resolveGeneratedImagesRoot();
+  const dir = path.join(storageRoot, DRAMA_SHOT_IMAGES_DIR, shotId);
+  assertSafePath(dir, path.join(storageRoot, DRAMA_SHOT_IMAGES_DIR));
+  return dir;
 }
 
 function currentKeyframeUrl(shotId: string): string {

@@ -4,6 +4,7 @@ import type {
   DirectorMarkTaskRunningCallback,
   DirectorMutatingStage,
 } from "../phases/novelDirectorPhaseTypes";
+import { PIPELINE_HEARTBEAT_INTERVAL_MS } from "../../novelCorePipelineHelpers";
 
 export type DirectorTrackedStage = DirectorMutatingStage;
 
@@ -57,7 +58,8 @@ export async function runDirectorTrackedStep<T>(input: {
   }) => Promise<T>;
 }): Promise<T> {
   const startedAt = Date.now();
-  const heartbeatMs = Math.max(5000, input.heartbeatMs ?? 15000);
+  const HEARTBEAT_FLOOR_MS = 5000;
+  const heartbeatMs = Math.max(HEARTBEAT_FLOOR_MS, input.heartbeatMs ?? PIPELINE_HEARTBEAT_INTERVAL_MS);
   const abortController = new AbortController();
   let currentItemKey = input.itemKey;
   let currentLabel = input.itemLabel;

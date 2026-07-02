@@ -38,9 +38,12 @@ export class MockTTSProvider implements TTSProviderPort {
   }
 }
 
+/** Default timeout for media generation HTTP requests (2 minutes). */
+const DEFAULT_MEDIA_TIMEOUT_MS = 120_000;
+
 function normalizeTimeoutMs(value: unknown): number {
   const numeric = Number(value);
-  return Number.isFinite(numeric) && numeric > 0 ? numeric : 120000;
+  return Number.isFinite(numeric) && numeric > 0 ? numeric : DEFAULT_MEDIA_TIMEOUT_MS;
 }
 
 function normalizeCostValue(value: unknown): number {

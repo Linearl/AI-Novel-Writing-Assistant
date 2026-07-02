@@ -13,6 +13,7 @@ import sharp from "sharp";
 import { prisma } from "../../db/prisma";
 import { AppError } from "../../middleware/errorHandler";
 import { resolveGeneratedImagesRoot } from "../../runtime/appPaths";
+import { assertSafePath } from "../../platform/security/safePath";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

@@ -15,6 +15,7 @@ import {
 import { authMiddleware } from "../middleware/auth";
 import { validate } from "../middleware/validate";
 import { creativeHubService } from "../creativeHub/CreativeHubService";
+import { PIPELINE_HEARTBEAT_INTERVAL_MS } from "../services/novel/novelCorePipelineHelpers";
 
 const router = Router();
 
@@ -86,7 +87,7 @@ function initCreativeHubSSE(res: Response): () => void {
   res.flushHeaders?.();
   const heartbeat = setInterval(() => {
     writeCreativeHubFrame(res, { event: "metadata", data: { ping: true } });
-  }, 15000);
+  }, PIPELINE_HEARTBEAT_INTERVAL_MS);
   return () => clearInterval(heartbeat);
 }
 

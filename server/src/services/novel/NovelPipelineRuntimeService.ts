@@ -6,6 +6,8 @@ const SERVER_RESTART_RECOVERY_MESSAGE = "章节流水线任务因服务重启中
 const STALE_PIPELINE_RECOVERY_MESSAGE = "章节流水线任务心跳超时，正在尝试恢复。";
 const DEFAULT_WATCHDOG_INTERVAL_MS = 60000;
 const DEFAULT_STALE_THRESHOLD_MS = 3 * 60 * 1000;
+const MIN_STALE_THRESHOLD_MS = 10000;
+const MIN_WATCHDOG_INTERVAL_MS = 15000;
 
 interface PipelineRecoveryPort {
   listPendingCancellationPipelineJobs(): Promise<Array<{ id: string; status: string }>>;
@@ -49,7 +51,7 @@ export class NovelPipelineRuntimeService {
   }
 
   async recoverStalePipelineJobs(now = new Date(), staleThresholdMs = DEFAULT_STALE_THRESHOLD_MS): Promise<void> {
-    const cutoff = new Date(now.getTime() - Math.max(10000, staleThresholdMs));
+    const cutoff = new Date(now.getTime() - Math.max(MIN_STALE_THRESHOLD_MS, staleThresholdMs));
     const rows = await this.pipelineService.listStaleRecoverablePipelineJobs(cutoff);
     await this.recoverJobs(rows, STALE_PIPELINE_RECOVERY_MESSAGE);
   }
@@ -61,7 +63,7 @@ export class NovelPipelineRuntimeService {
     if (this.watchdogTimer) {
       return;
     }
-    const intervalMs = Math.max(15000, input.intervalMs ?? DEFAULT_WATCHDOG_INTERVAL_MS);
+    const intervalMs = Math.max(MIN_WATCHDOG_INTERVAL_MS, input.intervalMs ?? DEFAULT_WATCHDOG_INTERVAL_MS);
     const staleThresholdMs = Math.max(intervalMs * 2, input.staleThresholdMs ?? DEFAULT_STALE_THRESHOLD_MS);
     this.watchdogTimer = setInterval(() => {
       void this.recoverStalePipelineJobs(new Date(), staleThresholdMs).catch((error) => {

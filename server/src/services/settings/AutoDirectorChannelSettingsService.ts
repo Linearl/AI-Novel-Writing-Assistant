@@ -1,4 +1,5 @@
 import { prisma } from "../../db/prisma";
+import { DEFAULT_APP_BASE_URL } from "../../config/constants";
 
 const BASE_URL_KEY = "autoDirector.baseUrl";
 const DINGTALK_WEBHOOK_KEY = "autoDirector.channels.dingtalk.webhookUrl";
@@ -260,5 +261,5 @@ export async function saveAutoDirectorChannelSettings(
 }
 
 export function resolveAutoDirectorBaseUrl(baseUrl?: string | null): string {
-  return trimText(baseUrl) || getDefaultBaseUrl() || "http://localhost:3000";
+  return trimText(baseUrl) || getDefaultBaseUrl() || DEFAULT_APP_BASE_URL;
 }

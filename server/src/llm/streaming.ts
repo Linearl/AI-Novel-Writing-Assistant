@@ -1,6 +1,7 @@
 import type { Response } from "express";
 import type { BaseMessageChunk } from "@langchain/core/messages";
 import type { SSEFrame } from "@ai-novel/shared/types/api";
+import { PIPELINE_HEARTBEAT_INTERVAL_MS } from "../services/novel/novelCorePipelineHelpers";
 
 export type WritableSSEFrame = Extract<
   SSEFrame,
@@ -66,7 +67,7 @@ export function initSSE(res: Response): () => void {
 
   const heartbeat = setInterval(() => {
     writeSSEFrame(res, { type: "ping" });
-  }, 15000);
+  }, PIPELINE_HEARTBEAT_INTERVAL_MS);
   heartbeat.unref();
 
   return () => clearInterval(heartbeat);

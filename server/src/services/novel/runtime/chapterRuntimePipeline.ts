@@ -9,6 +9,7 @@ import {
   type ChapterEmptyContentError,
 } from "./chapterEmptyContentError";
 import { runChapterRepairText } from "./repair/chapterRepairRuntime";
+import { QUALITY_THRESHOLD } from "../novelCoreShared";
 
 export interface PipelineRuntimeHooks {
   onCheckCancelled?: () => Promise<void>;
@@ -135,7 +136,6 @@ interface RunPipelineChapterDeps {
   markChapterNeedsRepair: (chapterId: string) => Promise<void>;
 }
 
-const QUALITY_THRESHOLD = { coherence: 80, repetition: 75, engagement: 75 };
 const EMPTY_CONTENT_GENERATION_RETRY_LIMIT = 1;
 const NON_PATCHABLE_REVIEW_ISSUE_CODES = new Set(["acceptance_gate_unavailable"]);
 

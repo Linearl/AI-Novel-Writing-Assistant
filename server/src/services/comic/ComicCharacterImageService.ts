@@ -14,6 +14,7 @@ import sharp from "sharp";
 import { prisma } from "../../db/prisma";
 import { AppError } from "../../middleware/errorHandler";
 import { resolveGeneratedImagesRoot } from "../../runtime/appPaths";
+import { assertSafePath } from "../../platform/security/safePath";
 import {
   generateImagesByProvider,
   isImageProviderSupported,
@@ -87,7 +88,10 @@ const EXPRESSION_LABELS: Record<CharacterExpressionId, string> = {
 };
 
 function comicCharacterDir(charId: string): string {
-  return path.join(resolveGeneratedImagesRoot(), COMIC_CHARS_DIR, charId);
+  const storageRoot = resolveGeneratedImagesRoot();
+  const dir = path.join(storageRoot, COMIC_CHARS_DIR, charId);
+  assertSafePath(dir, path.join(storageRoot, COMIC_CHARS_DIR));
+  return dir;
 }
 
 function sheetUrl(charId: string): string {

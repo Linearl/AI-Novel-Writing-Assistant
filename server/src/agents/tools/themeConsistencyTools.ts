@@ -6,6 +6,9 @@ import {
 } from "../../prompting/prompts/novel/themeAnalysis.prompt";
 import type { AgentToolName } from "../types";
 import type { AgentToolDefinition } from "./toolTypes";
+
+/** Max output tokens for theme analysis LLM calls. */
+const THEME_ANALYSIS_MAX_TOKENS = 1500;
 import {
   analyzeMotifTrackingInputSchema,
   analyzeMotifTrackingOutputSchema,
@@ -374,7 +377,7 @@ export const themeConsistencyToolDefinitions: Partial<
       const result = await runStructuredPrompt({
         asset: themeAnalysisPrompt,
         promptInput: { themeHierarchy, chapterSummaries, analysisTask },
-        options: { maxTokens: 1500 },
+        options: { maxTokens: THEME_ANALYSIS_MAX_TOKENS },
       });
 
       return analyzeThemeConsistencyOutputSchema.parse({
@@ -466,7 +469,7 @@ export const themeConsistencyToolDefinitions: Partial<
           chapterSummaries,
           threshold: input.threshold,
         },
-        options: { maxTokens: 1500 },
+        options: { maxTokens: THEME_ANALYSIS_MAX_TOKENS },
       });
 
       return analyzeMotifTrackingOutputSchema.parse({

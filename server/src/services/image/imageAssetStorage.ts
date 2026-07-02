@@ -5,6 +5,7 @@ import type { S3Client } from "@aws-sdk/client-s3";
 import { imageStorageConfig, isS3ImageStorageEnabled } from "../../config/imageStorage";
 import { AppError } from "../../middleware/errorHandler";
 import { resolveGeneratedImagesRoot } from "../../runtime/appPaths";
+import { assertSafePath } from "../../platform/security/safePath";
 import {
   deleteImageObject,
   normalizeStorageKey,
@@ -242,6 +243,9 @@ export async function resolveImageAssetFile(input: ImageAssetFileInput): Promise
     throw new AppError("Image asset is not stored locally yet.", 404);
   }
 
+  // Path traversal protection: ensure resolved path stays within storage root.
+  assertSafePath(localPath, resolveGeneratedImagesRoot());
+
   try {
     await fs.access(localPath);
   } catch {
@@ -291,6 +295,10 @@ export async function removeLocalImageAssetFile(input: {
     return;
   }
 
+  // Path traversal protection: prevent deletion of files outside storage root.
+  const storageRoot = input.storageRoot ?? resolveGeneratedImagesRoot();
+  assertSafePath(localPath, storageRoot);
+
   try {
     await fs.unlink(localPath);
   } catch (error) {
@@ -300,7 +308,6 @@ export async function removeLocalImageAssetFile(input: {
     }
   }
 
-  const storageRoot = input.storageRoot ?? resolveGeneratedImagesRoot();
   let currentDirectory = path.dirname(localPath);
   const normalizedStorageRoot = path.resolve(storageRoot);
 

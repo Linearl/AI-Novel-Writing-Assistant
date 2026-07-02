@@ -17,12 +17,15 @@ function resolveSqliteDatabasePath(databaseUrl: string): string {
   return path.isAbsolute(filePath) ? filePath : resolveDatabaseFilePath(filePath);
 }
 
+/** Default SQLite busy timeout (15 seconds). */
+const DEFAULT_SQLITE_BUSY_TIMEOUT_MS = 15_000;
+
 function resolveSqliteBusyTimeout(timeoutValue?: string): number {
   const parsed = Number(timeoutValue);
   if (Number.isFinite(parsed) && parsed >= 0) {
     return parsed;
   }
-  return 15000;
+  return DEFAULT_SQLITE_BUSY_TIMEOUT_MS;
 }
 
 const databaseUrl = getDatabaseUrl();
