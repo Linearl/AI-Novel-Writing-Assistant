@@ -66,6 +66,7 @@ export class RagWorker {
     this.timer = setInterval(() => {
       void this.tick();
     }, ragConfig.workerPollMs);
+    this.timer.unref();
     void this.tick();
   }
 

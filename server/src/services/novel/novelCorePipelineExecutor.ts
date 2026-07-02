@@ -237,6 +237,12 @@ export async function executePipeline(
               totalCount,
               stage: activeStage,
             }),
+          }).catch((error) => {
+            logPipelineWarn("heartbeat_write_failed", {
+              jobId,
+              chapterId: chapter.id,
+              error: error instanceof Error ? error.message : String(error),
+            });
           });
         }, PIPELINE_HEARTBEAT_INTERVAL_MS);
         heartbeatTimer.unref?.();

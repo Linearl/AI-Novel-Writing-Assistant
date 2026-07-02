@@ -19,6 +19,7 @@ export class BookAnalysisWatchdogService {
         logger.warn("Failed to recover timed out book analyses.", error);
       });
     }, BOOK_ANALYSIS_WATCHDOG_INTERVAL_MS);
+    this.watchdogTimer.unref();
   }
 
   stopWatchdog(): void {

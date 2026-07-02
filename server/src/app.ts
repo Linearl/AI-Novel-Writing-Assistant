@@ -8,6 +8,7 @@ import morgan from "morgan";
 import type { ApiResponse } from "@ai-novel/shared/types/api";
 import { ensureRuntimeDatabaseReady } from "./db/runtimeMigrations";
 import { errorHandler } from "./middleware/errorHandler";
+import { requestIdMiddleware } from "./middleware/requestId";
 import { authMiddleware } from "./middleware/auth";
 import { globalLimiter, llmLimiter } from "./middleware/rateLimiter";
 import { loadProviderApiKeys } from "./llm/factory";
@@ -107,6 +108,7 @@ export function createApp() {
     }),
   );
   app.use(helmet());
+  app.use(requestIdMiddleware);
   app.use(morgan((tokens, req, res) => {
     const method = tokens.method(req, res) ?? "-";
     const url = tokens.url(req, res) ?? "-";

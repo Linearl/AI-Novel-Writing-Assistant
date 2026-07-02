@@ -272,20 +272,27 @@ export function errorHandler(
   }
 
   if (error instanceof AppError) {
+    const isProduction = process.env.NODE_ENV === "production";
     const detail = typeof error.details === "string" ? error.details : undefined;
+    const clientMessage = isProduction && error.statusCode >= 500
+      ? "服务器内部错误，请稍后重试。"
+      : error.message;
+    const clientDetail = isProduction && error.statusCode >= 500 ? undefined : detail;
     setRequestErrorMessage(res, error.message, detail);
     if (error.statusCode >= 500) {
       logServerError(req, error);
     }
     res.status(error.statusCode).json({
       success: false,
-      error: error.message,
-      message: detail,
+      error: clientMessage,
+      message: clientDetail,
     });
     return;
   }
 
-  const message = error instanceof Error ? error.message : "服务器发生未知错误。";
+  const isProduction = process.env.NODE_ENV === "production";
+  const rawMessage = error instanceof Error ? error.message : "服务器发生未知错误。";
+  const message = isProduction ? "服务器内部错误，请稍后重试。" : rawMessage;
   const upstreamConnectionMessage = formatUpstreamConnectionError(error);
   if (upstreamConnectionMessage) {
     setRequestErrorMessage(res, upstreamConnectionMessage);

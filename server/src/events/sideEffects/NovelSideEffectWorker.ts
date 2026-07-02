@@ -47,6 +47,7 @@ export class NovelSideEffectWorker {
     this.timer = setInterval(() => {
       void this.tick();
     }, this.pollMs);
+    this.timer.unref();
     void this.tick();
   }
 
@@ -78,6 +79,8 @@ export class NovelSideEffectWorker {
         const forceDead = error instanceof UnsupportedNovelSideEffectPayloadError;
         await this.jobService.markFailedOrDead(job, error, { forceDead });
       }
+    } catch (error) {
+      logger.warn("[novel-side-effect-worker] tick failed unexpectedly", error);
     } finally {
       this.isTicking = false;
     }

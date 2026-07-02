@@ -67,6 +67,7 @@ export function initSSE(res: Response): () => void {
   const heartbeat = setInterval(() => {
     writeSSEFrame(res, { type: "ping" });
   }, 15000);
+  heartbeat.unref();
 
   return () => clearInterval(heartbeat);
 }

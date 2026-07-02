@@ -150,6 +150,7 @@ export class DirectorTaskQueue {
     };
     renew();
     const timer = setInterval(renew, Math.max(100, Math.floor(this.leaseMs / 3)));
+    timer.unref();
     return () => clearInterval(timer);
   }
 
