@@ -16,6 +16,7 @@ import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import FeedbackDialog from "@/components/feedback/FeedbackDialog";
 
 const DIRECTOR_CREATE_LINK = "/novels/create?mode=director";
 
@@ -262,6 +263,16 @@ export default function HelpPage() {
               </div>
             ))}
           </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>反馈与建议</CardTitle>
+          <CardDescription>遇到 Bug 或有功能建议？请通过下方按钮提交反馈。</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <FeedbackDialog />
         </CardContent>
       </Card>
     </div>

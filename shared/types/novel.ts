@@ -515,7 +515,6 @@ export interface OpenConflict {
   severity: string;
   status: string;
   evidenceJson?: string | null;
-  affectedCharacterIdsJson?: string | null;
   resolutionHint?: string | null;
   lastSeenChapterOrder?: number | null;
   createdAt: string;
@@ -683,7 +682,6 @@ export interface StoryPlan {
   riskNotesJson?: string | null;
   mustAdvanceJson?: string | null;
   mustPreserveJson?: string | null;
-  sourceIssueIdsJson?: string | null;
   replannedFromPlanId?: string | null;
   hookTarget?: string | null;
   status: string;

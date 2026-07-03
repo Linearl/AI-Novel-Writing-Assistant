@@ -90,7 +90,7 @@ export function mapPlan(plan: Awaited<ReturnType<typeof plannerMediator.getChapt
     riskNotes: parseJsonStringArray(plan.riskNotesJson),
     mustAdvance: parseJsonStringArray(plan.mustAdvanceJson),
     mustPreserve: parseJsonStringArray(plan.mustPreserveJson),
-    sourceIssueIds: (plan as any).edgeIssueIds ?? parseJsonStringArray(plan.sourceIssueIdsJson),
+    sourceIssueIds: (plan as any).edgeIssueIds ?? [],
     replannedFromPlanId: plan.replannedFromPlanId ?? null,
     hookTarget: plan.hookTarget ?? null,
     rawPlanJson: plan.rawPlanJson ?? null,

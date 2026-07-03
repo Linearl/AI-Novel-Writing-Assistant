@@ -206,7 +206,6 @@ function buildPlanDataFields(input: PersistPlanInput) {
     riskNotesJson: JSON.stringify(input.riskNotes),
     mustAdvanceJson: JSON.stringify(sanitizeCreativeMustAdvanceItems(input.mustAdvance)),
     mustPreserveJson: JSON.stringify(input.mustPreserve),
-    sourceIssueIdsJson: JSON.stringify(input.sourceIssueIds),
     replannedFromPlanId: input.replannedFromPlanId,
     hookTarget: input.hookTarget,
     status: input.status ?? "draft",

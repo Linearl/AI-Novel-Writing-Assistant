@@ -27,3 +27,17 @@ export const llmLimiter = rateLimit({
     error: "LLM rate limit exceeded, please try again later",
   },
 });
+
+/**
+ * Feedback 端点速率限制：30 req/min
+ */
+export const feedbackLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 30,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    error: "Feedback rate limit exceeded, please try again later",
+  },
+});

@@ -81,7 +81,6 @@ function normalizeConflict(row: {
     severity: row.severity,
     status: row.status,
     evidenceJson: row.evidenceJson,
-    affectedCharacterIdsJson: null,
     resolutionHint: row.resolutionHint,
     lastSeenChapterOrder: row.lastSeenChapterOrder,
     createdAt: row.createdAt.toISOString(),
@@ -336,7 +335,6 @@ export class PayoffLedgerSyncService {
               ...data,
             },
           });
-          // REQ-7005: affectedCharacterIdsJson is always [] here, no edge rows needed
         }
       }
     });

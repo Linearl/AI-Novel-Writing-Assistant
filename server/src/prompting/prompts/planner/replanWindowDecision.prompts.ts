@@ -9,7 +9,7 @@ export interface ReplanWindowDecisionPromptInput {
   targetChapterOrder: number;
   requestedWindowSize: number;
   availableChapterOrdersJson: string;
-  sourceIssueIdsJson: string;
+  sourceIssuesJson: string;
   auditReportsJson: string;
   payoffSummaryJson: string;
   canonicalStateJson: string;
@@ -53,7 +53,7 @@ export const replanWindowDecisionPrompt: PromptAsset<
       `锚点章节：第${input.targetChapterOrder}章`,
       `请求窗口大小：${input.requestedWindowSize}`,
       `可选章节：${input.availableChapterOrdersJson}`,
-      `来源问题：${input.sourceIssueIdsJson}`,
+      `来源问题：${input.sourceIssuesJson}`,
       "",
       "【审校报告】",
       input.auditReportsJson,

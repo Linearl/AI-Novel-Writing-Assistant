@@ -205,7 +205,6 @@ export class CharacterResourceLedgerService {
       status: payload.statusAfter,
       readerKnows: payload.visibilityAfter.readerKnows,
       holderKnows: payload.visibilityAfter.holderKnows,
-      knownByCharacterIdsJson: stringifyJson(payload.visibilityAfter.knownByCharacterIds),
       introducedChapterId: existing?.introducedChapterId ?? input.chapterId ?? null,
       introducedChapterOrder: existing?.introducedChapterOrder ?? input.chapterOrder ?? null,
       lastTouchedChapterId: input.chapterId ?? null,

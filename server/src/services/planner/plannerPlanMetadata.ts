@@ -180,11 +180,9 @@ export function readPlanMetadataFromPlan(
     | "phaseLabel"
     | "mustAdvanceJson"
     | "mustPreserveJson"
-    | "sourceIssueIdsJson"
     | "replannedFromPlanId"
     | "rawPlanJson"
   > & {
-    /** REQ-7005: edge table override — when populated, used instead of sourceIssueIdsJson */
     edgeIssueIds?: string[];
   },
 ): PlannerPlanMetadata {
@@ -194,8 +192,7 @@ export function readPlanMetadataFromPlan(
     phaseLabel: plan.phaseLabel ?? fallback.phaseLabel,
     mustAdvance: sanitizeCreativeMustAdvanceItems(parseStoredStringArray(plan.mustAdvanceJson)).slice(0, 5),
     mustPreserve: parseStoredStringArray(plan.mustPreserveJson).slice(0, 5),
-    // REQ-7005: prefer edge table data over JSON fallback
-    sourceIssueIds: (plan.edgeIssueIds ?? parseStoredStringArray(plan.sourceIssueIdsJson)).slice(0, 12),
+    sourceIssueIds: (plan.edgeIssueIds ?? []).slice(0, 12),
     replannedFromPlanId: plan.replannedFromPlanId ?? fallback.replannedFromPlanId,
   };
 
@@ -219,7 +216,6 @@ export function enrichStoryPlan<T extends StoryPlan>(plan: T): T {
     phaseLabel: metadata.phaseLabel,
     mustAdvanceJson: JSON.stringify(metadata.mustAdvance),
     mustPreserveJson: JSON.stringify(metadata.mustPreserve),
-    sourceIssueIdsJson: JSON.stringify(metadata.sourceIssueIds),
     replannedFromPlanId: metadata.replannedFromPlanId,
   };
 }

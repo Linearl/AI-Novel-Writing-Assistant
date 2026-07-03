@@ -400,12 +400,6 @@ export class PrismaTimelineRepository implements TimelineRepository {
         chapterIndex: input.chapterIndex,
         storyDayIndex: input.storyDayIndex ?? null,
         timeLabel: input.timeLabel,
-        startsAfterIdsJson: stringifyJson(input.startsAfterEventIds),
-        plannedEventIdsJson: stringifyJson(input.plannedEventIds),
-        endedWithIdsJson: stringifyJson(input.endedWithEventIds),
-        previousHookIdsJson: stringifyJson(input.previousHookIds),
-        nextHookIdsJson: stringifyJson(input.nextHookIds),
-        forbiddenEventIdsJson: stringifyJson(input.forbiddenEventIds),
       };
       const anchor = await tx.chapterTimeAnchor.upsert({
         where: { novelId_chapterId: { novelId: input.novelId, chapterId: input.chapterId } },

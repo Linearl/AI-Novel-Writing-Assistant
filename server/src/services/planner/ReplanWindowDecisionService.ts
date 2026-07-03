@@ -43,7 +43,7 @@ export class ReplanWindowDecisionService {
         targetChapterOrder: input.targetChapterOrder,
         requestedWindowSize,
         availableChapterOrdersJson: compactJson(input.availableChapterOrders),
-        sourceIssueIdsJson: compactJson(input.sourceIssueIds),
+        sourceIssuesJson: compactJson(input.sourceIssueIds),
         auditReportsJson: compactJson(input.auditReports),
         payoffSummaryJson: compactJson(input.ledgerSummary),
         canonicalStateJson: compactJson(input.snapshot),

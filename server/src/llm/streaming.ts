@@ -2,6 +2,9 @@ import type { Response } from "express";
 import type { BaseMessageChunk } from "@langchain/core/messages";
 import type { SSEFrame } from "@ai-novel/shared/types/api";
 import { PIPELINE_HEARTBEAT_INTERVAL_MS } from "../services/novel/novelCorePipelineHelpers";
+import { RepetitionMonitor } from "./repetition/monitor";
+import { buildMonitorConfigFromEnv } from "./repetition/config";
+import { logger } from "../services/logging/LoggerService";
 
 export type WritableSSEFrame = Extract<
   SSEFrame,
@@ -83,6 +86,7 @@ export async function streamToSSE(
 ): Promise<void> {
   const disposeHeartbeat = initSSE(res);
   let fullContent = "";
+  const monitor = new RepetitionMonitor(buildMonitorConfigFromEnv());
 
   try {
     for await (const chunk of stream) {
@@ -94,6 +98,29 @@ export async function streamToSSE(
         continue;
       }
       fullContent += text;
+
+      // Run repetition detection on each chunk.
+      monitor.processChunk(text);
+
+      if (monitor.shouldStop()) {
+        logger.warn("[streaming] Repetition loop detected — stopping stream", {
+          escalation: monitor.getEscalationCount(),
+          lastAction: monitor.getRecoveryAction(),
+        });
+        break;
+      }
+
+      if (monitor.shouldRecover()) {
+        const msg = monitor.getRecoveryMessage();
+        logger.info("[streaming] Repetition recovery triggered", {
+          action: monitor.getRecoveryAction(),
+          escalation: monitor.getEscalationCount(),
+        });
+        // Inject recovery message as a chunk so the client receives it.
+        writeSSEFrame(res, { type: "chunk", content: msg });
+        fullContent += msg;
+      }
+
       writeSSEFrame(res, { type: "chunk", content: text });
     }
 

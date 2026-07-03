@@ -34,6 +34,8 @@ const WorldWorkspace = lazy(() => import("@/pages/worlds/WorldWorkspace"));
 const WritingFormulaPage = lazy(() => import("@/pages/writingFormula/WritingFormulaPage"));
 const CharacterLibrary = lazy(() => import("@/pages/characters/CharacterLibrary"));
 const LogCenterPage = lazy(() => import("@/pages/logs/LogCenterPage"));
+const FeedbackListPage = lazy(() => import("@/pages/feedback/FeedbackList"));
+const FeedbackDetailPage = lazy(() => import("@/pages/feedback/FeedbackDetail"));
 
 const routes: RouteObject[] = [
   {
@@ -80,6 +82,8 @@ const routes: RouteObject[] = [
       { path: "writing-formula", element: <Navigate to="/style-engine" replace /> },
       { path: "base-characters", element: <CharacterLibrary /> },
       { path: "logs", element: <LogCenterPage /> },
+      { path: "feedback", element: <FeedbackListPage /> },
+      { path: "feedback/:folderName", element: <FeedbackDetailPage /> },
       { path: "*", element: <Navigate to="/" replace /> },
     ],
   },

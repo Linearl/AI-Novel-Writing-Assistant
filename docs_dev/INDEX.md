@@ -131,6 +131,7 @@ description: "docs 目录索引（自动生成）"
 | [1.task\todolist\2026-06-29-v0.1-第二轮任务包开发.md](./1.task\todolist\2026-06-29-v0.1-第二轮任务包开发.md) | v0.1 第二轮任务包开发 — 6 个待开发任务包分阶段追踪清单 | v0.1 第二轮任务包开发 — 6 个待开发任务包分阶段追踪清单 |
 | [1.task\todolist\2026-06-30-v0.1-第四轮任务包开发.md](./1.task\todolist\2026-06-30-v0.1-第四轮任务包开发.md) | v0.1 第四轮任务包开发 — 8 个待开发任务包分批次追踪清单 | v0.1 第四轮任务包开发 — 8 个待开发任务包分批次追踪清单 |
 | [1.task\todolist\2026-07-02-p2p3p4-audit-fix-todolist.md](./1.task\todolist\2026-07-02-p2p3p4-audit-fix-todolist.md) | P2/P3/P4 审计修复 — 分阶段执行追踪清单 | P2/P3/P4 审计修复 — 分阶段执行追踪清单 |
+| [1.task\todolist\2026-07-03-v01-remaining-todolist.md](./1.task\todolist\2026-07-03-v01-remaining-todolist.md) | v0.1 剩余任务包 — 分阶段执行追踪清单 | v0.1 剩余任务包 — 分阶段执行追踪清单 |
 
 ## 3.analysis\diagnosis\01-active
 

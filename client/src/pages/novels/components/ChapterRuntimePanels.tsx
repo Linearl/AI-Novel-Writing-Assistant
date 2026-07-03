@@ -38,7 +38,7 @@ function buildPlanView(runtimePackage: ChapterRuntimePackage | null, chapterPlan
     riskNotes: parseStringArray(chapterPlan.riskNotesJson),
     mustAdvance: parseStringArray(chapterPlan.mustAdvanceJson),
     mustPreserve: parseStringArray(chapterPlan.mustPreserveJson),
-    sourceIssueIds: parseStringArray(chapterPlan.sourceIssueIdsJson),
+    sourceIssueIds: [],
     replannedFromPlanId: chapterPlan.replannedFromPlanId ?? null,
     hookTarget: chapterPlan.hookTarget ?? null,
     rawPlanJson: chapterPlan.rawPlanJson ?? null,

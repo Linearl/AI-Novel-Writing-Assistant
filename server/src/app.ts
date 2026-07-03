@@ -11,8 +11,9 @@ import { ensureRuntimeDatabaseReady } from "./db/runtimeMigrations";
 import { errorHandler } from "./middleware/errorHandler";
 import { requestIdMiddleware } from "./middleware/requestId";
 import { authMiddleware } from "./middleware/auth";
-import { globalLimiter, llmLimiter } from "./middleware/rateLimiter";
+import { globalLimiter, llmLimiter, feedbackLimiter } from "./middleware/rateLimiter";
 import { loadProviderApiKeys } from "./llm/factory";
+import feedbackRouter from "./modules/feedback/feedbackRoutes";
 import astrologyRouter from "./routes/astrology";
 import agentCatalogRouter from "./routes/agentCatalog";
 import agentRunsRouter from "./routes/agentRuns";
@@ -132,6 +133,9 @@ export function createApp() {
   // LLM 端点速率限制
   app.use("/api/llm", llmLimiter);
 
+  // Feedback 端点速率限制
+  app.use("/api/feedback", feedbackLimiter);
+
   app.use("/api/health", healthRouter);
   app.use("/api/agent-catalog", agentCatalogRouter);
   app.use("/api/agent-runs", agentRunsRouter);
@@ -163,6 +167,7 @@ export function createApp() {
   app.use("/api/settings/auto-director", settingsAutoDirectorRouter);
   app.use("/api/auto-director/channel-callbacks", autoDirectorChannelCallbacksRouter);
   app.use("/api/settings", settingsRouter);
+  app.use("/api/feedback", feedbackRouter);
   app.use("/api/astrology", astrologyRouter);
 
   app.use((_req, res) => {

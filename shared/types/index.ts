@@ -50,4 +50,5 @@ export * from "./title";
 export * from "./volumePlanning";
 export * from "./world";
 export * from "./worldWizard";
+export * from "./feedback";
 export * from "./writingFormula";

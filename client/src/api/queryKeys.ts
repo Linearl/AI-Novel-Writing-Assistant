@@ -151,6 +151,11 @@ export const queryKeys = {
     autoDirectorChannels: ["settings", "auto-director-channels"] as const,
     autoDirectorApprovalPreferences: ["settings", "auto-director-approval-preferences"] as const,
   },
+  feedback: {
+    list: (params: string) => ["feedback", "list", params] as const,
+    detail: (folderName: string) => ["feedback", "detail", folderName] as const,
+    comments: (folderName: string) => ["feedback", "comments", folderName] as const,
+  },
   novelsKnowledge: {
     bindings: (id: string) => ["novels", "knowledge-documents", id] as const,
   },
