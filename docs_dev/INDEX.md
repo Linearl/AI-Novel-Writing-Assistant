@@ -59,39 +59,6 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1\v0.1-r7008-medium-streaming-loop-recovery-enhance\REQ.md](./1.task\B.todo\v0.1\v0.1-r7008-medium-streaming-loop-recovery-enhance\REQ.md) | 流式循环检测分级恢复增强需求文档 | 流式循环检测分级恢复增强需求文档 |
 | [1.task\B.todo\v0.1\v0.1-r7008-medium-streaming-loop-recovery-enhance\tasks.md](./1.task\B.todo\v0.1\v0.1-r7008-medium-streaming-loop-recovery-enhance\tasks.md) | 流式循环检测分级恢复增强任务清单 | 流式循环检测分级恢复增强任务清单 |
 
-## 1.task\B.todo\v0.1\v0.1-r7009-complex-p2-security-fix
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r7009-complex-p2-security-fix\decision_log.md](./1.task\B.todo\v0.1\v0.1-r7009-complex-p2-security-fix\decision_log.md) | P2 问题修复决策记录 | P2 问题修复决策记录 |
-| [1.task\B.todo\v0.1\v0.1-r7009-complex-p2-security-fix\design.md](./1.task\B.todo\v0.1\v0.1-r7009-complex-p2-security-fix\design.md) | P2 问题修复技术设计文档 | P2 问题修复技术设计文档 |
-| [1.task\B.todo\v0.1\v0.1-r7009-complex-p2-security-fix\README.md](./1.task\B.todo\v0.1\v0.1-r7009-complex-p2-security-fix\README.md) | P2 安全问题修复任务包 — 基于 2026-07-01 全量代码审计 | P2 安全问题修复任务包 — 基于 2026-07-01 全量代码审计 |
-| [1.task\B.todo\v0.1\v0.1-r7009-complex-p2-security-fix\REQ-original.md](./1.task\B.todo\v0.1\v0.1-r7009-complex-p2-security-fix\REQ-original.md) | P2 安全问题修复需求文档（原始版） | P2 安全问题修复需求文档（原始版） |
-| [1.task\B.todo\v0.1\v0.1-r7009-complex-p2-security-fix\REQ.md](./1.task\B.todo\v0.1\v0.1-r7009-complex-p2-security-fix\REQ.md) | P2 问题修复需求文档 | P2 问题修复需求文档 |
-| [1.task\B.todo\v0.1\v0.1-r7009-complex-p2-security-fix\T15-directory-assessment.md](./1.task\B.todo\v0.1\v0.1-r7009-complex-p2-security-fix\T15-directory-assessment.md) | T15 server/src directory restructure assessment — identify flat directories exceeding 12-file threshold and recommend sub-directory organization | T15 server/src directory restructure assessment — identify flat directories exceeding 12-file threshold and recommend sub-directory organization |
-| [1.task\B.todo\v0.1\v0.1-r7009-complex-p2-security-fix\T32-better-sqlite3-assessment.md](./1.task\B.todo\v0.1\v0.1-r7009-complex-p2-security-fix\T32-better-sqlite3-assessment.md) | better-sqlite3 迁移可行性评估 | better-sqlite3 迁移可行性评估 |
-| [1.task\B.todo\v0.1\v0.1-r7009-complex-p2-security-fix\tasks.md](./1.task\B.todo\v0.1\v0.1-r7009-complex-p2-security-fix\tasks.md) | P2 问题修复任务清单 | P2 问题修复任务清单 |
-
-## 1.task\B.todo\v0.1\v0.1-r7011-medium-p3-quality-fix
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r7011-medium-p3-quality-fix\decision_log.md](./1.task\B.todo\v0.1\v0.1-r7011-medium-p3-quality-fix\decision_log.md) | P3 问题修复决策记录 | P3 问题修复决策记录 |
-| [1.task\B.todo\v0.1\v0.1-r7011-medium-p3-quality-fix\design.md](./1.task\B.todo\v0.1\v0.1-r7011-medium-p3-quality-fix\design.md) | P3 问题修复技术设计文档 | P3 问题修复技术设计文档 |
-| [1.task\B.todo\v0.1\v0.1-r7011-medium-p3-quality-fix\README.md](./1.task\B.todo\v0.1\v0.1-r7011-medium-p3-quality-fix\README.md) | P3 代码质量问题修复任务包 — 基于 2026-07-01 全量代码审计 | P3 代码质量问题修复任务包 — 基于 2026-07-01 全量代码审计 |
-| [1.task\B.todo\v0.1\v0.1-r7011-medium-p3-quality-fix\REQ.md](./1.task\B.todo\v0.1\v0.1-r7011-medium-p3-quality-fix\REQ.md) | P3 问题修复需求文档 | P3 问题修复需求文档 |
-| [1.task\B.todo\v0.1\v0.1-r7011-medium-p3-quality-fix\tasks.md](./1.task\B.todo\v0.1\v0.1-r7011-medium-p3-quality-fix\tasks.md) | P3 问题修复任务清单 | P3 问题修复任务清单 |
-
-## 1.task\B.todo\v0.1\v0.1-r7012-simple-p4-low-priority-fix
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r7012-simple-p4-low-priority-fix\decision_log.md](./1.task\B.todo\v0.1\v0.1-r7012-simple-p4-low-priority-fix\decision_log.md) | P4 问题修复决策记录 | P4 问题修复决策记录 |
-| [1.task\B.todo\v0.1\v0.1-r7012-simple-p4-low-priority-fix\design.md](./1.task\B.todo\v0.1\v0.1-r7012-simple-p4-low-priority-fix\design.md) | P4 问题修复技术设计文档 | P4 问题修复技术设计文档 |
-| [1.task\B.todo\v0.1\v0.1-r7012-simple-p4-low-priority-fix\README.md](./1.task\B.todo\v0.1\v0.1-r7012-simple-p4-low-priority-fix\README.md) | P4 低优先级问题修复任务包 — 基于 2026-07-01 全量代码审计 | P4 低优先级问题修复任务包 — 基于 2026-07-01 全量代码审计 |
-| [1.task\B.todo\v0.1\v0.1-r7012-simple-p4-low-priority-fix\REQ.md](./1.task\B.todo\v0.1\v0.1-r7012-simple-p4-low-priority-fix\REQ.md) | P4 问题修复需求文档 | P4 问题修复需求文档 |
-| [1.task\B.todo\v0.1\v0.1-r7012-simple-p4-low-priority-fix\tasks.md](./1.task\B.todo\v0.1\v0.1-r7012-simple-p4-low-priority-fix\tasks.md) | P4 问题修复任务清单 | P4 问题修复任务清单 |
-
 ## 1.task\template
 
 | 文件 | 标题 | 描述 |
