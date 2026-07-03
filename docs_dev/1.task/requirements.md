@@ -50,7 +50,7 @@ description: "需求任务总清单（SSOT）"
 | 2032 | 角色弧光可视化 (Character Arc Visualization) | p2 | ✅ 已完成 | REQ-2029 后续迭代，依赖 REQ-2031 | 0.1 | 2026-06-30 | - | `B.2.done/v0.1-r2032-complex-character-arc-visualization/README.md` | 后端聚合 API + recharts 时间线图 + visx/纯 SVG 关系网络图，集成到角色管理页面 |
 | 2033 | 主题一致性纯数据工具层 (Theme Consistency Data Tools) | p2 | ✅ 已完成 | REQ-2029 后续迭代 | 0.1 | 2026-06-30 | - | `B.2.done/v0.1-r2033-medium-theme-consistency-data-tools/README.md` | 3 个 inspect tool: payoff 健康度、卷主题覆盖率、主题层级聚合，纯规则无 LLM |
 | 2034 | 主题一致性 LLM 分析层 (Theme Consistency LLM Analysis) | p2 | ✅ 已完成 | REQ-2029 后续迭代，依赖 REQ-2033 | 0.1 | 2026-06-30 | - | `B.2.done/v0.1-r2034-medium-theme-consistency-llm-analysis/README.md` | 2 个 inspect tool + 1 个 PromptAsset: 主题偏移检测、母题持续性检查，LLM 语义分析 |
-| 2036 | 用户反馈系统 | p3 | ✅ 已完成 | - | 0.1 | 2026-07-02T09:45:00.000Z | 2026-07-03T10:00:00+08:00 | `B.todo/v0.1-r2036-medium-user-feedback-system/README.md` |  |
+| 2036 | 用户反馈系统 | p3 | ✅ 已完成 | - | 0.1 | 2026-07-02T09:45:00.000Z | 2026-07-03T10:00:00+08:00 | `B.2.done/v0.1-r2036-M2-user-feedback-system/README.md` |  |
 | 2013 | Director Failed Retry Entry | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2013-medium-director-failed-retry-entry/README.md` |  |
 | 2014 | Chapter Token Budget Dynamic | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2014-medium-chapter-token-budget-dynamic/README.md` |  |
 
@@ -76,13 +76,13 @@ description: "需求任务总清单（SSOT）"
 | 7003 | Server 超大文件分批拆分 | p2 | ✅ 已完成 | 2026-06-28-health-check.md | 0.1 | - | - | `B.2.done/v0.1-r7003-complex-server-large-file-refactor/README.md` |  |
 | 7004 | JSON 软引用 FK 缺失修复 | p1 | ✅ 已完成 | 2026-06-30-图数据库能力诊断.md | 0.1 | - | - | `B.2.done/v0.1-r7004-medium-json-soft-ref-fk-fix/README.md` |  |
 | 7005 | P2 零散 IdsJson 字段迁移为边表 | p2 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r7005-simple-p2-scattered-idsjson-edge-tables/README.md` |  |
-| 7006 | 移除时间线旧 JSON 字段 | p8 | ✅ 已完成 | - | 0.1 | - | 2026-07-03T10:00:00+08:00 | `B.todo/v0.1-r7006-simple-timeline-idsjson-removal/README.md` |  |
+| 7006 | 移除时间线旧 JSON 字段 | p8 | ✅ 已完成 | - | 0.1 | - | 2026-07-03T10:00:00+08:00 | `B.2.done/v0.1-r7006-S2-timeline-idsjson-removal/README.md` |  |
 | 7007 | World.structureJson 关系提取为独立表 | p1 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r7007-medium-world-structure-json-relation-extract/README.md` |  |
-| 7008 | Streaming Loop Recovery Enhance | p8 | ✅ 已完成 | MiMo Code 源码分析 | 0.1 | 2026-07-01T21:22:00.000Z | 2026-07-03T10:00:00+08:00 | `B.todo/v0.1-r7008-medium-streaming-loop-recovery-enhance/README.md` |  |
-| 7009 | P2 Security Fix | p8 | ✅ 已完成 | 2026-07-01-全量代码审计-full | 0.1 | 2026-07-01T18:23:00.000Z | 2026-07-02T23:00:00+08:00 | `B.2.done/v0.1-r7009-complex-p2-security-fix/README.md` |  |
+| 7008 | Streaming Loop Recovery Enhance | p8 | ✅ 已完成 | MiMo Code 源码分析 | 0.1 | 2026-07-01T21:22:00.000Z | 2026-07-03T10:00:00+08:00 | `B.2.done/v0.1-r7008-M2-streaming-loop-recovery-enhance/README.md` |  |
+| 7009 | Security Fix | p8 | ✅ 已完成 | 2026-07-01-全量代码审计-full | 0.1 | 2026-07-01T18:23:00.000Z | 2026-07-02T23:00:00+08:00 | `B.2.done/v0.1-r7009-complex-p2-security-fix/README.md` |  |
 | 7010 | Audit P1 Fix | p8 | ✅ 已完成 | - | 0.1 | - | 2026-07-02T18:40:00+08:00 | `B.2.done/v0.1-r7010-p1-audit-p1-fix/README.md` |  |
-| 7011 | P3 Quality Fix | p8 | ✅ 已完成 | 2026-07-01-全量代码审计-full | 0.1 | 2026-07-01T20:40:00.000Z | 2026-07-02T23:00:00+08:00 | `B.2.done/v0.1-r7011-medium-p3-quality-fix/README.md` |  |
-| 7012 | P4 Low Priority Fix | p8 | ✅ 已完成 | 2026-07-01-全量代码审计-full | 0.1 | 2026-07-01T20:41:00.000Z | 2026-07-02T23:00:00+08:00 | `B.2.done/v0.1-r7012-simple-p4-low-priority-fix/README.md` |  |
+| 7011 | Quality Fix | p8 | ✅ 已完成 | 2026-07-01-全量代码审计-full | 0.1 | 2026-07-01T20:40:00.000Z | 2026-07-02T23:00:00+08:00 | `B.2.done/v0.1-r7011-medium-p3-quality-fix/README.md` |  |
+| 7012 | Low Priority Fix | p8 | ✅ 已完成 | 2026-07-01-全量代码审计-full | 0.1 | 2026-07-01T20:41:00.000Z | 2026-07-02T23:00:00+08:00 | `B.2.done/v0.1-r7012-simple-p4-low-priority-fix/README.md` |  |
 
 ---
 
@@ -134,7 +134,7 @@ description: "需求任务总清单（SSOT）"
 | 2032 | 角色弧光可视化 (Character Arc Visualization) | `B.2.done/v0.1-r2032-complex-character-arc-visualization/README.md` |
 | 2033 | 主题一致性纯数据工具层 (Theme Consistency Data Tools) | `B.2.done/v0.1-r2033-medium-theme-consistency-data-tools/README.md` |
 | 2034 | 主题一致性 LLM 分析层 (Theme Consistency LLM Analysis) | `B.2.done/v0.1-r2034-medium-theme-consistency-llm-analysis/README.md` |
-| 2036 | 用户反馈系统 | `B.todo/v0.1-r2036-medium-user-feedback-system/README.md` |
+| 2036 | 用户反馈系统 | `B.2.done/v0.1-r2036-M2-user-feedback-system/README.md` |
 | 3001 | Task Batch Archive | `B.2.done/v0.1-r3001-medium-task-batch-archive/README.md` |
 | 3002 | 导演进度规划资源缺失 Checklist 可视化 | `B.2.done/v0.1-r3002-medium-director-planning-checklist/README.md` |
 | 3003 | 小说项目对话存档 | `B.2.done/v0.1-r3003-medium-repair-progress-dialog/README.md` |
@@ -147,12 +147,12 @@ description: "需求任务总清单（SSOT）"
 | 7003 | Server 超大文件分批拆分 | `B.2.done/v0.1-r7003-complex-server-large-file-refactor/README.md` |
 | 7004 | JSON 软引用 FK 缺失修复 | `B.2.done/v0.1-r7004-medium-json-soft-ref-fk-fix/README.md` |
 | 7005 | P2 零散 IdsJson 字段迁移为边表 | `B.2.done/v0.1-r7005-simple-p2-scattered-idsjson-edge-tables/README.md` |
-| 7006 | 移除时间线旧 JSON 字段 | `B.todo/v0.1-r7006-simple-timeline-idsjson-removal/README.md` |
+| 7006 | 移除时间线旧 JSON 字段 | `B.2.done/v0.1-r7006-S2-timeline-idsjson-removal/README.md` |
 | 7007 | World.structureJson 关系提取为独立表 | `B.2.done/v0.1-r7007-medium-world-structure-json-relation-extract/README.md` |
-| 7008 | Streaming Loop Recovery Enhance | `B.todo/v0.1-r7008-medium-streaming-loop-recovery-enhance/README.md` |
-| 7009 | P2 Security Fix | `B.2.done/v0.1-r7009-complex-p2-security-fix/README.md` |
+| 7008 | Streaming Loop Recovery Enhance | `B.2.done/v0.1-r7008-M2-streaming-loop-recovery-enhance/README.md` |
+| 7009 | Security Fix | `B.2.done/v0.1-r7009-complex-p2-security-fix/README.md` |
 | 7010 | Audit P1 Fix | `B.2.done/v0.1-r7010-p1-audit-p1-fix/README.md` |
-| 7011 | P3 Quality Fix | `B.2.done/v0.1-r7011-medium-p3-quality-fix/README.md` |
-| 7012 | P4 Low Priority Fix | `B.2.done/v0.1-r7012-simple-p4-low-priority-fix/README.md` |
+| 7011 | Quality Fix | `B.2.done/v0.1-r7011-medium-p3-quality-fix/README.md` |
+| 7012 | Low Priority Fix | `B.2.done/v0.1-r7012-simple-p4-low-priority-fix/README.md` |
 
 ---

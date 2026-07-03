@@ -27,42 +27,6 @@ description: "docs 目录索引（自动生成）"
 | --- | --- | --- |
 | [1.task\B.todo\任务包六件套构成-编号分类规则-自动归档机制.md](./1.task\B.todo\任务包六件套构成-编号分类规则-自动归档机制.md) | --- | - |
 
-## 1.task\B.todo\v0.1\v0.1-r2036-medium-user-feedback-system
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r2036-medium-user-feedback-system\decision_log.md](./1.task\B.todo\v0.1\v0.1-r2036-medium-user-feedback-system\decision_log.md) | REQ-2036 用户反馈系统决策日志 | REQ-2036 用户反馈系统决策日志 |
-| [1.task\B.todo\v0.1\v0.1-r2036-medium-user-feedback-system\design.md](./1.task\B.todo\v0.1\v0.1-r2036-medium-user-feedback-system\design.md) | REQ-2036 用户反馈系统技术设计文档 | REQ-2036 用户反馈系统技术设计文档 |
-| [1.task\B.todo\v0.1\v0.1-r2036-medium-user-feedback-system\README.md](./1.task\B.todo\v0.1\v0.1-r2036-medium-user-feedback-system\README.md) | REQ-2036 用户反馈系统任务包 README | REQ-2036 用户反馈系统任务包 README |
-| [1.task\B.todo\v0.1\v0.1-r2036-medium-user-feedback-system\REQ-2036-original.md](./1.task\B.todo\v0.1\v0.1-r2036-medium-user-feedback-system\REQ-2036-original.md) | REQ-2036 用户反馈系统需求文档（冻结副本） | REQ-2036 用户反馈系统需求文档（冻结副本） |
-| [1.task\B.todo\v0.1\v0.1-r2036-medium-user-feedback-system\REQ-2036.md](./1.task\B.todo\v0.1\v0.1-r2036-medium-user-feedback-system\REQ-2036.md) | REQ-2036 用户反馈系统需求文档（工作副本） | REQ-2036 用户反馈系统需求文档（工作副本） |
-| [1.task\B.todo\v0.1\v0.1-r2036-medium-user-feedback-system\REQ-original.md](./1.task\B.todo\v0.1\v0.1-r2036-medium-user-feedback-system\REQ-original.md) | REQ-2036 用户反馈系统需求文档（冻结副本） | REQ-2036 用户反馈系统需求文档（冻结副本） |
-| [1.task\B.todo\v0.1\v0.1-r2036-medium-user-feedback-system\REQ.md](./1.task\B.todo\v0.1\v0.1-r2036-medium-user-feedback-system\REQ.md) | REQ-2036 用户反馈系统需求文档（工作副本） | REQ-2036 用户反馈系统需求文档（工作副本） |
-| [1.task\B.todo\v0.1\v0.1-r2036-medium-user-feedback-system\tasks.md](./1.task\B.todo\v0.1\v0.1-r2036-medium-user-feedback-system\tasks.md) | REQ-2036 用户反馈系统任务拆解 | REQ-2036 用户反馈系统任务拆解 |
-
-## 1.task\B.todo\v0.1\v0.1-r7006-simple-timeline-idsjson-removal
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r7006-simple-timeline-idsjson-removal\decision_log.md](./1.task\B.todo\v0.1\v0.1-r7006-simple-timeline-idsjson-removal\decision_log.md) | REQ-7006 移除时间线旧 JSON 字段 — 决策日志 | REQ-7006 移除时间线旧 JSON 字段 — 决策日志 |
-| [1.task\B.todo\v0.1\v0.1-r7006-simple-timeline-idsjson-removal\design.md](./1.task\B.todo\v0.1\v0.1-r7006-simple-timeline-idsjson-removal\design.md) | REQ-7006 移除时间线旧 JSON 字段 — 方案设计 | REQ-7006 移除时间线旧 JSON 字段 — 方案设计 |
-| [1.task\B.todo\v0.1\v0.1-r7006-simple-timeline-idsjson-removal\README.md](./1.task\B.todo\v0.1\v0.1-r7006-simple-timeline-idsjson-removal\README.md) | REQ-7006 T1.6 移除时间线旧 JSON 字段任务总线 | REQ-7006 T1.6 移除时间线旧 JSON 字段任务总线 |
-| [1.task\B.todo\v0.1\v0.1-r7006-simple-timeline-idsjson-removal\REQ-7006-original.md](./1.task\B.todo\v0.1\v0.1-r7006-simple-timeline-idsjson-removal\REQ-7006-original.md) | REQ-7006 移除时间线旧 JSON 字段 — 需求冻结副本 | REQ-7006 移除时间线旧 JSON 字段 — 需求冻结副本 |
-| [1.task\B.todo\v0.1\v0.1-r7006-simple-timeline-idsjson-removal\REQ-7006.md](./1.task\B.todo\v0.1\v0.1-r7006-simple-timeline-idsjson-removal\REQ-7006.md) | REQ-7006 移除时间线旧 JSON 字段 — 需求工作副本 | REQ-7006 移除时间线旧 JSON 字段 — 需求工作副本 |
-| [1.task\B.todo\v0.1\v0.1-r7006-simple-timeline-idsjson-removal\tasks.md](./1.task\B.todo\v0.1\v0.1-r7006-simple-timeline-idsjson-removal\tasks.md) | REQ-7006 移除时间线旧 JSON 字段 — 任务拆解 | REQ-7006 移除时间线旧 JSON 字段 — 任务拆解 |
-
-## 1.task\B.todo\v0.1\v0.1-r7008-medium-streaming-loop-recovery-enhance
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r7008-medium-streaming-loop-recovery-enhance\decision_log.md](./1.task\B.todo\v0.1\v0.1-r7008-medium-streaming-loop-recovery-enhance\decision_log.md) | 流式循环检测分级恢复增强决策记录 | 流式循环检测分级恢复增强决策记录 |
-| [1.task\B.todo\v0.1\v0.1-r7008-medium-streaming-loop-recovery-enhance\design.md](./1.task\B.todo\v0.1\v0.1-r7008-medium-streaming-loop-recovery-enhance\design.md) | 流式循环检测分级恢复增强技术设计文档 | 流式循环检测分级恢复增强技术设计文档 |
-| [1.task\B.todo\v0.1\v0.1-r7008-medium-streaming-loop-recovery-enhance\README.md](./1.task\B.todo\v0.1\v0.1-r7008-medium-streaming-loop-recovery-enhance\README.md) | 流式循环检测分级恢复增强 — 参考 MiMo Code TextNgramMonitor 设计 | 流式循环检测分级恢复增强 — 参考 MiMo Code TextNgramMonitor 设计 |
-| [1.task\B.todo\v0.1\v0.1-r7008-medium-streaming-loop-recovery-enhance\REQ-7008-original.md](./1.task\B.todo\v0.1\v0.1-r7008-medium-streaming-loop-recovery-enhance\REQ-7008-original.md) | 流式循环检测分级恢复增强需求文档 | 流式循环检测分级恢复增强需求文档 |
-| [1.task\B.todo\v0.1\v0.1-r7008-medium-streaming-loop-recovery-enhance\REQ-7008.md](./1.task\B.todo\v0.1\v0.1-r7008-medium-streaming-loop-recovery-enhance\REQ-7008.md) | 流式循环检测分级恢复增强需求文档 | 流式循环检测分级恢复增强需求文档 |
-| [1.task\B.todo\v0.1\v0.1-r7008-medium-streaming-loop-recovery-enhance\REQ.md](./1.task\B.todo\v0.1\v0.1-r7008-medium-streaming-loop-recovery-enhance\REQ.md) | 流式循环检测分级恢复增强需求文档 | 流式循环检测分级恢复增强需求文档 |
-| [1.task\B.todo\v0.1\v0.1-r7008-medium-streaming-loop-recovery-enhance\tasks.md](./1.task\B.todo\v0.1\v0.1-r7008-medium-streaming-loop-recovery-enhance\tasks.md) | 流式循环检测分级恢复增强任务清单 | 流式循环检测分级恢复增强任务清单 |
-
 ## 1.task\template
 
 | 文件 | 标题 | 描述 |
@@ -201,6 +165,7 @@ description: "docs 目录索引（自动生成）"
 | [4.misc\issues\2026-06-29-missing-repair-button-after-review.md](./4.misc\issues\2026-06-29-missing-repair-button-after-review.md) | 章节完成审校后（`generationState === "reviewed"`），正文窗口正确显示"查看建议"和"一键修复"按钮，但右侧 AI 执行台没有显示 | - |
 | [4.misc\issues\2026-06-29-skipcompleted-filters-unplanned-chapters.md](./4.misc\issues\2026-06-29-skipcompleted-filters-unplanned-chapters.md) | skipCompleted 过滤器与自动导演"待处理"定义冲突，导致无内容章节触发 pipeline 报错 | skipCompleted 过滤器与自动导演"待处理"定义冲突，导致无内容章节触发 pipeline 报错 |
 | [4.misc\issues\2026-06-30-json-soft-ref-fk-deficiency.md](./4.misc\issues\2026-06-30-json-soft-ref-fk-deficiency.md) | 上游项目 JSON 软引用 FK 缺失问题 — 供上游作者参考的 issue 分析 | 上游项目 JSON 软引用 FK 缺失问题 — 供上游作者参考的 issue 分析 |
+| [4.misc\issues\2026-07-03-novelcreate-bootstrap-polling-loop.md](./4.misc\issues\2026-07-03-novelcreate-bootstrap-polling-loop.md) | NovelCreate.tsx 中 useEffect + setSearchParams 形成无限循环，bootstrap 接口被以 ~1200 req/s 的速率疯狂调用 | NovelCreate.tsx 中 useEffect + setSearchParams 形成无限循环，bootstrap 接口被以 ~1200 req/s 的速率疯狂调用 |
 | [4.misc\issues\rag-worker-ui-toggle-ignored.md](./4.misc\issues\rag-worker-ui-toggle-ignored.md) | **状态**: 已修复 (local) | 待提交 upstream | - |
 | [4.misc\issues\sse-buffer-flush-missing-done-frame.md](./4.misc\issues\sse-buffer-flush-missing-done-frame.md) | **状态**: 已修复 | - |
 
