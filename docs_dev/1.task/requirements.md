@@ -54,7 +54,10 @@ description: "需求任务总清单（SSOT）"
 | 2036 | 用户反馈系统 | p3 | ✅ 已完成 | - | 0.1 | 2026-07-02T09:45:00.000Z | 2026-07-03T10:00:00+08:00 | `B.2.done/v0.1-r2036-M2-user-feedback-system/README.md` |  |
 | 2037 | 角色退场状态机 | p1 | 📋 待办 | 竞品分析-游蜂写作 | 0.1 | 2026-07-03 | - | `B.todo/v0.1-r2037-C2-character-exit-state-machine/README.md` | 四态状态机：active/exited/dead/frozen，含自动推断 |
 | 2038 | 设定一致性前置校验 | p2 | 📋 待办 | 竞品分析-游蜂写作 | 0.1 | 2026-07-03 | - | `B.todo/v0.1-r2038-C2-setting-consistency-pre-check/README.md` | 先做 LLM 内置校验，后续迭代加变更 diff |
-| 2039 | Idle Recovery | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2039-simple-idle-recovery/README.md` |  |
+| 2039 | 闲置后网络连接自动恢复 | p2 | 📋 待办 | 用户反馈 | 0.1 | 2026-07-03 | - | `B.todo/v0.1-r2039-simple-idle-recovery/README.md` | 闲置后 TCP 连接回收导致报错 |
+| 2040 | 资产 TXT 导入导出 | p2 | 📋 待办 | 竞品分析-游蜂写作 | 0.1 | 2026-07-03 | - | `B.todo/v0.1-r2040-M2-asset-txt-import-export/README.md` | 设定/大纲/关系网/正文独立 TXT 导入导出 |
+| 2041 | 伏笔埋收可视化追踪 | p2 | 📋 待办 | 竞品分析-游蜂写作 | 0.1 | 2026-07-03 | - | `B.todo/v0.1-r2041-M2-payoff-ledger-visualization/README.md` | payoff ledger 增强 + auto-director 集成 + UI 可视化 |
+| 2042 | 自适应字数控制与水文检测 | p2 | 📋 待办 | 竞品分析讨论 | 0.1 | 2026-07-03 | - | `B.todo/v0.1-r2042-M2-adaptive-word-count-control/README.md` | 章节角色系数 + 水文检测 + 自动 compress/expand |
 | 2013 | Director Failed Retry Entry | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2013-medium-director-failed-retry-entry/README.md` |  |
 | 2014 | Chapter Token Budget Dynamic | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2014-medium-chapter-token-budget-dynamic/README.md` |  |
 
@@ -69,7 +72,7 @@ description: "需求任务总清单（SSOT）"
 | 3006 | 修复详情弹窗增强 | p4 | ✅ 已完成 | - | 0.1 | 2026-06-28T00:00:00.000Z | 2026-06-29T00:00:00.000Z | `B.2.done/v0.1-r3006-medium-repair-detail-dialog-enhancement/README.md` |  |
 | 3007 | 世界生成阶段进度显示 | p3 | ✅ 已完成 | 用户体验反馈 | 0.1 | 2026-06-29 | 2026-06-29 | `B.2.done/v0.1-r3007-medium-world-gen-stage-progress/README.md` | 步骤 2 骨架生成按钮需显示阶段进度 |
 | 3008 | 日志中心 | p4 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r3008-medium-log-center/README.md` |  |
-| 3009 | Tab Switch Perf | p4 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r3009-medium-tab-switch-perf/README.md` |  |
+| 3009 | Tab 切换性能优化 | p3 | 📋 待办 | 性能分析 | 0.1 | 2026-07-03 | - | `B.todo/v0.1-r3009-medium-tab-switch-perf/README.md` | NovelEdit tab 切换延迟优化 |
 | 3004 | Novel Conversation Archive | p4 | 📋 待办 | - | 0.1 | 2026-06-26T00:00:00.000Z | 2026-06-26T00:00:00.000Z | `B.todo/v0.1-r3004-medium-novel-conversation-archive/README.md` |  |
 
 ### 3.6 技术债务和重构任务（7xxx）
@@ -102,8 +105,11 @@ description: "需求任务总清单（SSOT）"
 | 2035 | 大纲终稿锁定 | `B.todo/v0.1-r2035-C2-outline-final-draft-lock/README.md` |
 | 2037 | 角色退场状态机 | `B.todo/v0.1-r2037-C2-character-exit-state-machine/README.md` |
 | 2038 | 设定一致性前置校验 | `B.todo/v0.1-r2038-C2-setting-consistency-pre-check/README.md` |
-| 2039 | Idle Recovery | `B.todo/v0.1-r2039-simple-idle-recovery/README.md` |
-| 3009 | Tab Switch Perf | `B.todo/v0.1-r3009-medium-tab-switch-perf/README.md` |
+| 2039 | 闲置后网络连接自动恢复 | `B.todo/v0.1-r2039-simple-idle-recovery/README.md` |
+| 2040 | 资产 TXT 导入导出 | `B.todo/v0.1-r2040-M2-asset-txt-import-export/README.md` |
+| 2041 | 伏笔埋收可视化追踪 | `B.todo/v0.1-r2041-M2-payoff-ledger-visualization/README.md` |
+| 2042 | 自适应字数控制与水文检测 | `B.todo/v0.1-r2042-M2-adaptive-word-count-control/README.md` |
+| 3009 | Tab 切换性能优化 | `B.todo/v0.1-r3009-medium-tab-switch-perf/README.md` |
 | 2013 | Director Failed Retry Entry | `B.todo/v0.1-r2013-medium-director-failed-retry-entry/README.md` |
 | 2014 | Chapter Token Budget Dynamic | `B.todo/v0.1-r2014-medium-chapter-token-budget-dynamic/README.md` |
 | 3004 | Novel Conversation Archive | `B.todo/v0.1-r3004-medium-novel-conversation-archive/README.md` |

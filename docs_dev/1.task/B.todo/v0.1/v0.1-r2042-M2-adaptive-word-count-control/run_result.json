@@ -1,0 +1,11 @@
+{
+  "reqId": "REQ-2042",
+  "title": "自适应字数控制与水文检测",
+  "priority": "P2",
+  "version": "v0.1",
+  "status": "pending",
+  "createdAt": "2026-07-03",
+  "completedAt": null,
+  "source": "竞品分析讨论",
+  "note": "章节角色系数 + 水文检测 + 自动 compress/expand"
+}

@@ -60,19 +60,60 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1\v0.1-r2038-C2-setting-consistency-pre-check\REQ-2038-setting-consistency-pre-check.md](./1.task\B.todo\v0.1\v0.1-r2038-C2-setting-consistency-pre-check\REQ-2038-setting-consistency-pre-check.md) | REQ-2038 设定一致性前置校验需求文档（工作副本） | REQ-2038 设定一致性前置校验需求文档（工作副本） |
 | [1.task\B.todo\v0.1\v0.1-r2038-C2-setting-consistency-pre-check\tasks.md](./1.task\B.todo\v0.1\v0.1-r2038-C2-setting-consistency-pre-check\tasks.md) | REQ-2038 设定一致性前置校验任务拆解 | REQ-2038 设定一致性前置校验任务拆解 |
 
-## 1.task\B.todo\v0.1\v0.1-r2039-simple-idle-recovery
+## 1.task\B.todo\v0.1\v0.1-r2039-C1-idle-network-recovery
 
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r2039-simple-idle-recovery\REQ-2039.md](./1.task\B.todo\v0.1\v0.1-r2039-simple-idle-recovery\REQ-2039.md) | REQ-2039 闲置后页面报错自动恢复 | REQ-2039 闲置后页面报错自动恢复 |
-| [1.task\B.todo\v0.1\v0.1-r2039-simple-idle-recovery\tasks.md](./1.task\B.todo\v0.1\v0.1-r2039-simple-idle-recovery\tasks.md) | REQ-2039 闲置恢复任务拆解 | REQ-2039 闲置恢复任务拆解 |
+| [1.task\B.todo\v0.1\v0.1-r2039-C1-idle-network-recovery\decision_log.md](./1.task\B.todo\v0.1\v0.1-r2039-C1-idle-network-recovery\decision_log.md) | REQ-2039 网络连接自动恢复 决策留痕 | REQ-2039 网络连接自动恢复 决策留痕 |
+| [1.task\B.todo\v0.1\v0.1-r2039-C1-idle-network-recovery\design.md](./1.task\B.todo\v0.1\v0.1-r2039-C1-idle-network-recovery\design.md) | REQ-2039 网络连接自动恢复 方案设计 | REQ-2039 网络连接自动恢复 方案设计 |
+| [1.task\B.todo\v0.1\v0.1-r2039-C1-idle-network-recovery\README.md](./1.task\B.todo\v0.1\v0.1-r2039-C1-idle-network-recovery\README.md) | REQ-2039 网络连接自动恢复 任务总线 | REQ-2039 网络连接自动恢复 任务总线 |
+| [1.task\B.todo\v0.1\v0.1-r2039-C1-idle-network-recovery\REQ-2039-idle-network-recovery-original.md](./1.task\B.todo\v0.1\v0.1-r2039-C1-idle-network-recovery\REQ-2039-idle-network-recovery-original.md) | REQ-2039 闲置后页面报错自动恢复 | REQ-2039 闲置后页面报错自动恢复 |
+| [1.task\B.todo\v0.1\v0.1-r2039-C1-idle-network-recovery\REQ-2039-idle-network-recovery.md](./1.task\B.todo\v0.1\v0.1-r2039-C1-idle-network-recovery\REQ-2039-idle-network-recovery.md) | REQ-2039 闲置后页面报错自动恢复 | REQ-2039 闲置后页面报错自动恢复 |
+| [1.task\B.todo\v0.1\v0.1-r2039-C1-idle-network-recovery\tasks.md](./1.task\B.todo\v0.1\v0.1-r2039-C1-idle-network-recovery\tasks.md) | REQ-2039 闲置恢复任务拆解 | REQ-2039 闲置恢复任务拆解 |
 
-## 1.task\B.todo\v0.1\v0.1-r3009-medium-tab-switch-perf
+## 1.task\B.todo\v0.1\v0.1-r2040-M2-asset-txt-import-export
 
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r3009-medium-tab-switch-perf\REQ-3009.md](./1.task\B.todo\v0.1\v0.1-r3009-medium-tab-switch-perf\REQ-3009.md) | REQ-3009 Tab 切换性能优化 | REQ-3009 Tab 切换性能优化 |
-| [1.task\B.todo\v0.1\v0.1-r3009-medium-tab-switch-perf\tasks.md](./1.task\B.todo\v0.1\v0.1-r3009-medium-tab-switch-perf\tasks.md) | REQ-3009 Tab 切换性能优化任务拆解 | REQ-3009 Tab 切换性能优化任务拆解 |
+| [1.task\B.todo\v0.1\v0.1-r2040-M2-asset-txt-import-export\decision_log.md](./1.task\B.todo\v0.1\v0.1-r2040-M2-asset-txt-import-export\decision_log.md) | REQ-2040 资产 TXT 导入导出决策日志 | REQ-2040 资产 TXT 导入导出决策日志 |
+| [1.task\B.todo\v0.1\v0.1-r2040-M2-asset-txt-import-export\design.md](./1.task\B.todo\v0.1\v0.1-r2040-M2-asset-txt-import-export\design.md) | REQ-2040 资产 TXT 导入导出技术设计文档 | REQ-2040 资产 TXT 导入导出技术设计文档 |
+| [1.task\B.todo\v0.1\v0.1-r2040-M2-asset-txt-import-export\README.md](./1.task\B.todo\v0.1\v0.1-r2040-M2-asset-txt-import-export\README.md) | REQ-2040 资产 TXT 导入导出任务包 README | REQ-2040 资产 TXT 导入导出任务包 README |
+| [1.task\B.todo\v0.1\v0.1-r2040-M2-asset-txt-import-export\REQ-2040-asset-txt-import-export-original.md](./1.task\B.todo\v0.1\v0.1-r2040-M2-asset-txt-import-export\REQ-2040-asset-txt-import-export-original.md) | REQ-2040 资产 TXT 导入导出需求文档（冻结副本） | REQ-2040 资产 TXT 导入导出需求文档（冻结副本） |
+| [1.task\B.todo\v0.1\v0.1-r2040-M2-asset-txt-import-export\REQ-2040-asset-txt-import-export.md](./1.task\B.todo\v0.1\v0.1-r2040-M2-asset-txt-import-export\REQ-2040-asset-txt-import-export.md) | REQ-2040 资产 TXT 导入导出需求文档（工作副本） | REQ-2040 资产 TXT 导入导出需求文档（工作副本） |
+| [1.task\B.todo\v0.1\v0.1-r2040-M2-asset-txt-import-export\tasks.md](./1.task\B.todo\v0.1\v0.1-r2040-M2-asset-txt-import-export\tasks.md) | REQ-2040 资产 TXT 导入导出任务拆解 | REQ-2040 资产 TXT 导入导出任务拆解 |
+
+## 1.task\B.todo\v0.1\v0.1-r2041-M2-payoff-ledger-visualization
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.1\v0.1-r2041-M2-payoff-ledger-visualization\decision_log.md](./1.task\B.todo\v0.1\v0.1-r2041-M2-payoff-ledger-visualization\decision_log.md) | REQ-2041 伏笔埋收可视化追踪 决策留痕 | REQ-2041 伏笔埋收可视化追踪 决策留痕 |
+| [1.task\B.todo\v0.1\v0.1-r2041-M2-payoff-ledger-visualization\design.md](./1.task\B.todo\v0.1\v0.1-r2041-M2-payoff-ledger-visualization\design.md) | REQ-2041 伏笔埋收可视化追踪 方案设计 | REQ-2041 伏笔埋收可视化追踪 方案设计 |
+| [1.task\B.todo\v0.1\v0.1-r2041-M2-payoff-ledger-visualization\README.md](./1.task\B.todo\v0.1\v0.1-r2041-M2-payoff-ledger-visualization\README.md) | REQ-2041 伏笔埋收可视化追踪 任务总线 | REQ-2041 伏笔埋收可视化追踪 任务总线 |
+| [1.task\B.todo\v0.1\v0.1-r2041-M2-payoff-ledger-visualization\REQ-2041-payoff-ledger-visualization-original.md](./1.task\B.todo\v0.1\v0.1-r2041-M2-payoff-ledger-visualization\REQ-2041-payoff-ledger-visualization-original.md) | REQ-2041 伏笔埋收可视化追踪 需求文档（冻结副本） | REQ-2041 伏笔埋收可视化追踪 需求文档（冻结副本） |
+| [1.task\B.todo\v0.1\v0.1-r2041-M2-payoff-ledger-visualization\REQ-2041-payoff-ledger-visualization.md](./1.task\B.todo\v0.1\v0.1-r2041-M2-payoff-ledger-visualization\REQ-2041-payoff-ledger-visualization.md) | REQ-2041 伏笔埋收可视化追踪 需求文档（工作副本） | REQ-2041 伏笔埋收可视化追踪 需求文档（工作副本） |
+| [1.task\B.todo\v0.1\v0.1-r2041-M2-payoff-ledger-visualization\tasks.md](./1.task\B.todo\v0.1\v0.1-r2041-M2-payoff-ledger-visualization\tasks.md) | REQ-2041 任务拆解 | REQ-2041 任务拆解 |
+
+## 1.task\B.todo\v0.1\v0.1-r2042-M2-adaptive-word-count-control
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.1\v0.1-r2042-M2-adaptive-word-count-control\decision_log.md](./1.task\B.todo\v0.1\v0.1-r2042-M2-adaptive-word-count-control\decision_log.md) | REQ-2042 自适应字数控制与水文检测 决策留痕 | REQ-2042 自适应字数控制与水文检测 决策留痕 |
+| [1.task\B.todo\v0.1\v0.1-r2042-M2-adaptive-word-count-control\design.md](./1.task\B.todo\v0.1\v0.1-r2042-M2-adaptive-word-count-control\design.md) | REQ-2042 自适应字数控制与水文检测 方案设计 | REQ-2042 自适应字数控制与水文检测 方案设计 |
+| [1.task\B.todo\v0.1\v0.1-r2042-M2-adaptive-word-count-control\README.md](./1.task\B.todo\v0.1\v0.1-r2042-M2-adaptive-word-count-control\README.md) | REQ-2042 自适应字数控制与水文检测 任务总线 | REQ-2042 自适应字数控制与水文检测 任务总线 |
+| [1.task\B.todo\v0.1\v0.1-r2042-M2-adaptive-word-count-control\REQ-2042-adaptive-word-count-control-original.md](./1.task\B.todo\v0.1\v0.1-r2042-M2-adaptive-word-count-control\REQ-2042-adaptive-word-count-control-original.md) | REQ-2042 自适应字数控制与水文检测 需求文档（冻结副本） | REQ-2042 自适应字数控制与水文检测 需求文档（冻结副本） |
+| [1.task\B.todo\v0.1\v0.1-r2042-M2-adaptive-word-count-control\REQ-2042-adaptive-word-count-control.md](./1.task\B.todo\v0.1\v0.1-r2042-M2-adaptive-word-count-control\REQ-2042-adaptive-word-count-control.md) | REQ-2042 自适应字数控制与水文检测 需求文档（工作副本） | REQ-2042 自适应字数控制与水文检测 需求文档（工作副本） |
+| [1.task\B.todo\v0.1\v0.1-r2042-M2-adaptive-word-count-control\tasks.md](./1.task\B.todo\v0.1\v0.1-r2042-M2-adaptive-word-count-control\tasks.md) | REQ-2042 任务拆解 | REQ-2042 任务拆解 |
+
+## 1.task\B.todo\v0.1\v0.1-r3009-C2-tab-switch-performance
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.1\v0.1-r3009-C2-tab-switch-performance\decision_log.md](./1.task\B.todo\v0.1\v0.1-r3009-C2-tab-switch-performance\decision_log.md) | REQ-3009 Tab 切换性能优化 决策留痕 | REQ-3009 Tab 切换性能优化 决策留痕 |
+| [1.task\B.todo\v0.1\v0.1-r3009-C2-tab-switch-performance\design.md](./1.task\B.todo\v0.1\v0.1-r3009-C2-tab-switch-performance\design.md) | REQ-3009 Tab 切换性能优化 方案设计 | REQ-3009 Tab 切换性能优化 方案设计 |
+| [1.task\B.todo\v0.1\v0.1-r3009-C2-tab-switch-performance\README.md](./1.task\B.todo\v0.1\v0.1-r3009-C2-tab-switch-performance\README.md) | REQ-3009 Tab 切换性能优化 任务总线 | REQ-3009 Tab 切换性能优化 任务总线 |
+| [1.task\B.todo\v0.1\v0.1-r3009-C2-tab-switch-performance\REQ-3009-tab-switch-performance-original.md](./1.task\B.todo\v0.1\v0.1-r3009-C2-tab-switch-performance\REQ-3009-tab-switch-performance-original.md) | REQ-3009 Tab 切换性能优化 | REQ-3009 Tab 切换性能优化 |
+| [1.task\B.todo\v0.1\v0.1-r3009-C2-tab-switch-performance\REQ-3009-tab-switch-performance.md](./1.task\B.todo\v0.1\v0.1-r3009-C2-tab-switch-performance\REQ-3009-tab-switch-performance.md) | REQ-3009 Tab 切换性能优化 | REQ-3009 Tab 切换性能优化 |
+| [1.task\B.todo\v0.1\v0.1-r3009-C2-tab-switch-performance\tasks.md](./1.task\B.todo\v0.1\v0.1-r3009-C2-tab-switch-performance\tasks.md) | REQ-3009 Tab 切换性能优化任务拆解 | REQ-3009 Tab 切换性能优化任务拆解 |
 
 ## 1.task\template
 

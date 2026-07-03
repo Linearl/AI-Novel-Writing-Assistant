@@ -1,0 +1,11 @@
+{
+  "reqId": "REQ-2039",
+  "title": "闲置后网络连接自动恢复",
+  "priority": "P2",
+  "version": "v0.1",
+  "status": "pending",
+  "createdAt": "2026-07-03",
+  "completedAt": null,
+  "source": "用户反馈",
+  "note": "闲置后 TCP 连接回收导致报错"
+}
