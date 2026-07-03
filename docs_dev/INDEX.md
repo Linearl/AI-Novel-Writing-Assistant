@@ -34,6 +34,8 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1\v0.1-r2036-medium-user-feedback-system\decision_log.md](./1.task\B.todo\v0.1\v0.1-r2036-medium-user-feedback-system\decision_log.md) | REQ-2036 用户反馈系统决策日志 | REQ-2036 用户反馈系统决策日志 |
 | [1.task\B.todo\v0.1\v0.1-r2036-medium-user-feedback-system\design.md](./1.task\B.todo\v0.1\v0.1-r2036-medium-user-feedback-system\design.md) | REQ-2036 用户反馈系统技术设计文档 | REQ-2036 用户反馈系统技术设计文档 |
 | [1.task\B.todo\v0.1\v0.1-r2036-medium-user-feedback-system\README.md](./1.task\B.todo\v0.1\v0.1-r2036-medium-user-feedback-system\README.md) | REQ-2036 用户反馈系统任务包 README | REQ-2036 用户反馈系统任务包 README |
+| [1.task\B.todo\v0.1\v0.1-r2036-medium-user-feedback-system\REQ-2036-original.md](./1.task\B.todo\v0.1\v0.1-r2036-medium-user-feedback-system\REQ-2036-original.md) | REQ-2036 用户反馈系统需求文档（冻结副本） | REQ-2036 用户反馈系统需求文档（冻结副本） |
+| [1.task\B.todo\v0.1\v0.1-r2036-medium-user-feedback-system\REQ-2036.md](./1.task\B.todo\v0.1\v0.1-r2036-medium-user-feedback-system\REQ-2036.md) | REQ-2036 用户反馈系统需求文档（工作副本） | REQ-2036 用户反馈系统需求文档（工作副本） |
 | [1.task\B.todo\v0.1\v0.1-r2036-medium-user-feedback-system\REQ-original.md](./1.task\B.todo\v0.1\v0.1-r2036-medium-user-feedback-system\REQ-original.md) | REQ-2036 用户反馈系统需求文档（冻结副本） | REQ-2036 用户反馈系统需求文档（冻结副本） |
 | [1.task\B.todo\v0.1\v0.1-r2036-medium-user-feedback-system\REQ.md](./1.task\B.todo\v0.1\v0.1-r2036-medium-user-feedback-system\REQ.md) | REQ-2036 用户反馈系统需求文档（工作副本） | REQ-2036 用户反馈系统需求文档（工作副本） |
 | [1.task\B.todo\v0.1\v0.1-r2036-medium-user-feedback-system\tasks.md](./1.task\B.todo\v0.1\v0.1-r2036-medium-user-feedback-system\tasks.md) | REQ-2036 用户反馈系统任务拆解 | REQ-2036 用户反馈系统任务拆解 |
@@ -56,6 +58,8 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1\v0.1-r7008-medium-streaming-loop-recovery-enhance\decision_log.md](./1.task\B.todo\v0.1\v0.1-r7008-medium-streaming-loop-recovery-enhance\decision_log.md) | 流式循环检测分级恢复增强决策记录 | 流式循环检测分级恢复增强决策记录 |
 | [1.task\B.todo\v0.1\v0.1-r7008-medium-streaming-loop-recovery-enhance\design.md](./1.task\B.todo\v0.1\v0.1-r7008-medium-streaming-loop-recovery-enhance\design.md) | 流式循环检测分级恢复增强技术设计文档 | 流式循环检测分级恢复增强技术设计文档 |
 | [1.task\B.todo\v0.1\v0.1-r7008-medium-streaming-loop-recovery-enhance\README.md](./1.task\B.todo\v0.1\v0.1-r7008-medium-streaming-loop-recovery-enhance\README.md) | 流式循环检测分级恢复增强 — 参考 MiMo Code TextNgramMonitor 设计 | 流式循环检测分级恢复增强 — 参考 MiMo Code TextNgramMonitor 设计 |
+| [1.task\B.todo\v0.1\v0.1-r7008-medium-streaming-loop-recovery-enhance\REQ-7008-original.md](./1.task\B.todo\v0.1\v0.1-r7008-medium-streaming-loop-recovery-enhance\REQ-7008-original.md) | 流式循环检测分级恢复增强需求文档 | 流式循环检测分级恢复增强需求文档 |
+| [1.task\B.todo\v0.1\v0.1-r7008-medium-streaming-loop-recovery-enhance\REQ-7008.md](./1.task\B.todo\v0.1\v0.1-r7008-medium-streaming-loop-recovery-enhance\REQ-7008.md) | 流式循环检测分级恢复增强需求文档 | 流式循环检测分级恢复增强需求文档 |
 | [1.task\B.todo\v0.1\v0.1-r7008-medium-streaming-loop-recovery-enhance\REQ.md](./1.task\B.todo\v0.1\v0.1-r7008-medium-streaming-loop-recovery-enhance\REQ.md) | 流式循环检测分级恢复增强需求文档 | 流式循环检测分级恢复增强需求文档 |
 | [1.task\B.todo\v0.1\v0.1-r7008-medium-streaming-loop-recovery-enhance\tasks.md](./1.task\B.todo\v0.1\v0.1-r7008-medium-streaming-loop-recovery-enhance\tasks.md) | 流式循环检测分级恢复增强任务清单 | 流式循环检测分级恢复增强任务清单 |
 

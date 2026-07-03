@@ -1,9 +1,9 @@
 ---
 description: "REQ-2036 用户反馈系统任务包 README"
-status: requirements_ready
+status: done
 priority: p3
 created: 2026-07-02
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # REQ-2036: 用户反馈系统
@@ -17,7 +17,7 @@ updated: 2026-07-02
 | 类型 | 核心功能开发 (2xxx) |
 | 复杂度 | medium |
 | 优先级 | p3 |
-| 状态 | requirements_ready |
+| 状态 | done |
 | 目标版本 | v0.1 |
 | 创建日期 | 2026-07-02 |
 

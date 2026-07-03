@@ -10,13 +10,13 @@ description: "流式循环检测分级恢复增强任务清单"
 - **对应需求**：分词支持
 - **优先级**：P3
 - **预估工作量**：2h
-- **状态**：⬜ 待开始
+- **状态**：✅ 完成
 
 **任务内容**：
-1. 创建 `server/src/llm/repetition/tokenizer.ts`
-2. 实现 `tokenizeForNgram` 函数
-3. 支持中日韩字符分词
-4. 单元测试覆盖
+1. [x] 创建 `server/src/llm/repetition/tokenizer.ts`
+2. [x] 实现 `tokenizeForNgram` 函数
+3. [x] 支持中日韩字符分词
+4. [x] 单元测试覆盖
 
 ## 阶段二：检测器实现（第 2 天）
 
@@ -24,13 +24,13 @@ description: "流式循环检测分级恢复增强任务清单"
 - **对应需求**：检测算法优化
 - **优先级**：P3
 - **预估工作量**：3h
-- **状态**：⬜ 待开始
+- **状态**：✅ 完成
 
 **任务内容**：
-1. 创建 `server/src/llm/repetition/detector.ts`
-2. 实现 `detectConsecutiveRepeat` 函数
-3. 对比现有 n-gram 重复率算法
-4. 单元测试覆盖
+1. [x] 创建 `server/src/llm/repetition/detector.ts`
+2. [x] 实现 `detectConsecutiveRepeat` 函数
+3. [x] 对比现有 n-gram 重复率算法
+4. [x] 单元测试覆盖
 
 ## 阶段三：恢复器实现（第 3 天）
 
@@ -38,13 +38,13 @@ description: "流式循环检测分级恢复增强任务清单"
 - **对应需求**：分级恢复机制
 - **优先级**：P3
 - **预估工作量**：3h
-- **状态**：⬜ 待开始
+- **状态**：✅ 完成
 
 **任务内容**：
-1. 创建 `server/src/llm/repetition/recovery.ts`
-2. 实现 `RepetitionRecovery` 类
-3. 实现恢复消息（RECOVERY_REMIND, RECOVERY_REPLAN）
-4. 单元测试覆盖
+1. [x] 创建 `server/src/llm/repetition/recovery.ts`
+2. [x] 实现 `RepetitionRecovery` 类
+3. [x] 实现恢复消息（RECOVERY_REMIND, RECOVERY_REPLAN）
+4. [x] 单元测试覆盖
 
 ## 阶段四：监控器整合（第 4 天）
 
@@ -52,13 +52,13 @@ description: "流式循环检测分级恢复增强任务清单"
 - **对应需求**：模块整合
 - **优先级**：P3
 - **预估工作量**：3h
-- **状态**：⬜ 待开始
+- **状态**：✅ 完成
 
 **任务内容**：
-1. 创建 `server/src/llm/repetition/monitor.ts`
-2. 整合分词器、检测器、恢复器
-3. 实现 `RepetitionMonitor` 类
-4. 单元测试覆盖
+1. [x] 创建 `server/src/llm/repetition/monitor.ts`
+2. [x] 整合分词器、检测器、恢复器
+3. [x] 实现 `RepetitionMonitor` 类
+4. [x] 单元测试覆盖
 
 ## 阶段五：配置与集成（第 5 天）
 
@@ -66,24 +66,24 @@ description: "流式循环检测分级恢复增强任务清单"
 - **对应需求**：配置灵活性
 - **优先级**：P3
 - **预估工作量**：2h
-- **状态**：⬜ 待开始
+- **状态**：✅ 完成
 
 **任务内容**：
-1. 创建 `server/src/llm/repetition/config.ts`
-2. 实现环境变量配置
-3. 配置项文档
+1. [x] 创建 `server/src/llm/repetition/config.ts`
+2. [x] 实现环境变量配置
+3. [x] 配置项文档
 
 ### T6. 流式管道集成
 - **对应需求**：与现有系统集成
 - **优先级**：P3
 - **预估工作量**：3h
-- **状态**：⬜ 待开始
+- **状态**：✅ 完成
 
 **任务内容**：
-1. 修改 `server/src/llm/streaming.ts`
-2. 集成 `RepetitionMonitor`
-3. 处理恢复动作（提醒/重规划/停止）
-4. 集成测试
+1. [x] 修改 `server/src/llm/streaming.ts`
+2. [x] 集成 `RepetitionMonitor`
+3. [x] 处理恢复动作（提醒/重规划/停止）
+4. [x] 集成测试
 
 ## 阶段六：测试与验证（第 6 天）
 
@@ -91,13 +91,13 @@ description: "流式循环检测分级恢复增强任务清单"
 - **对应需求**：验证改进效果
 - **优先级**：P3
 - **预估工作量**：3h
-- **状态**：⬜ 待开始
+- **状态**：✅ 完成
 
 **任务内容**：
-1. 编写集成测试
-2. 模拟循环场景
-3. 验证分级恢复效果
-4. 性能测试
+1. [x] 编写集成测试
+2. [x] 模拟循环场景
+3. [x] 验证分级恢复效果
+4. [x] 性能测试
 
 ## 依赖关系
 

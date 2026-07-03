@@ -1,9 +1,9 @@
 ---
 description: "流式循环检测分级恢复增强 — 参考 MiMo Code TextNgramMonitor 设计"
-status: in_progress
+status: done
 priority: p3
 created: 2026-07-01
-updated: 2026-07-01
+updated: 2026-07-03
 ---
 
 # 流式循环检测分级恢复增强
@@ -32,15 +32,15 @@ updated: 2026-07-01
 
 ## 验证标准
 
-- [ ] `pnpm typecheck` 通过
-- [ ] `pnpm test` 通过
-- [ ] 单元测试覆盖分级恢复逻辑
-- [ ] 模拟循环场景验证恢复效果
+- [x] `pnpm typecheck` 通过
+- [x] `pnpm test` 通过
+- [x] 单元测试覆盖分级恢复逻辑
+- [x] 模拟循环场景验证恢复效果
 
 ## 状态
 
 - [x] 需求分析
 - [x] 设计文档
-- [ ] 代码实现
-- [ ] 测试验证
-- [ ] 完成归档
+- [x] 代码实现
+- [x] 测试验证
+- [x] 完成归档
