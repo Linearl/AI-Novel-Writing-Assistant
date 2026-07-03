@@ -50,7 +50,11 @@ description: "需求任务总清单（SSOT）"
 | 2032 | 角色弧光可视化 (Character Arc Visualization) | p2 | ✅ 已完成 | REQ-2029 后续迭代，依赖 REQ-2031 | 0.1 | 2026-06-30 | - | `B.2.done/v0.1-r2032-complex-character-arc-visualization/README.md` | 后端聚合 API + recharts 时间线图 + visx/纯 SVG 关系网络图，集成到角色管理页面 |
 | 2033 | 主题一致性纯数据工具层 (Theme Consistency Data Tools) | p2 | ✅ 已完成 | REQ-2029 后续迭代 | 0.1 | 2026-06-30 | - | `B.2.done/v0.1-r2033-medium-theme-consistency-data-tools/README.md` | 3 个 inspect tool: payoff 健康度、卷主题覆盖率、主题层级聚合，纯规则无 LLM |
 | 2034 | 主题一致性 LLM 分析层 (Theme Consistency LLM Analysis) | p2 | ✅ 已完成 | REQ-2029 后续迭代，依赖 REQ-2033 | 0.1 | 2026-06-30 | - | `B.2.done/v0.1-r2034-medium-theme-consistency-llm-analysis/README.md` | 2 个 inspect tool + 1 个 PromptAsset: 主题偏移检测、母题持续性检查，LLM 语义分析 |
+| 2035 | 大纲终稿锁定 | p1 | 📋 待办 | 竞品分析-游蜂写作 | 0.1 | 2026-07-03 | - | `B.todo/v0.1-r2035-C2-outline-final-draft-lock/README.md` | 章节级锁定机制 |
 | 2036 | 用户反馈系统 | p3 | ✅ 已完成 | - | 0.1 | 2026-07-02T09:45:00.000Z | 2026-07-03T10:00:00+08:00 | `B.2.done/v0.1-r2036-M2-user-feedback-system/README.md` |  |
+| 2037 | 角色退场状态机 | p1 | 📋 待办 | 竞品分析-游蜂写作 | 0.1 | 2026-07-03 | - | `B.todo/v0.1-r2037-C2-character-exit-state-machine/README.md` | 四态状态机：active/exited/dead/frozen，含自动推断 |
+| 2038 | 设定一致性前置校验 | p2 | 📋 待办 | 竞品分析-游蜂写作 | 0.1 | 2026-07-03 | - | `B.todo/v0.1-r2038-C2-setting-consistency-pre-check/README.md` | 先做 LLM 内置校验，后续迭代加变更 diff |
+| 2039 | Idle Recovery | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2039-simple-idle-recovery/README.md` |  |
 | 2013 | Director Failed Retry Entry | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2013-medium-director-failed-retry-entry/README.md` |  |
 | 2014 | Chapter Token Budget Dynamic | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2014-medium-chapter-token-budget-dynamic/README.md` |  |
 
@@ -65,6 +69,7 @@ description: "需求任务总清单（SSOT）"
 | 3006 | 修复详情弹窗增强 | p4 | ✅ 已完成 | - | 0.1 | 2026-06-28T00:00:00.000Z | 2026-06-29T00:00:00.000Z | `B.2.done/v0.1-r3006-medium-repair-detail-dialog-enhancement/README.md` |  |
 | 3007 | 世界生成阶段进度显示 | p3 | ✅ 已完成 | 用户体验反馈 | 0.1 | 2026-06-29 | 2026-06-29 | `B.2.done/v0.1-r3007-medium-world-gen-stage-progress/README.md` | 步骤 2 骨架生成按钮需显示阶段进度 |
 | 3008 | 日志中心 | p4 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r3008-medium-log-center/README.md` |  |
+| 3009 | Tab Switch Perf | p4 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r3009-medium-tab-switch-perf/README.md` |  |
 | 3004 | Novel Conversation Archive | p4 | 📋 待办 | - | 0.1 | 2026-06-26T00:00:00.000Z | 2026-06-26T00:00:00.000Z | `B.todo/v0.1-r3004-medium-novel-conversation-archive/README.md` |  |
 
 ### 3.6 技术债务和重构任务（7xxx）
@@ -94,6 +99,11 @@ description: "需求任务总清单（SSOT）"
 
 | 编号 | 任务标题 | 文档 |
 | --- | --- | --- |
+| 2035 | 大纲终稿锁定 | `B.todo/v0.1-r2035-C2-outline-final-draft-lock/README.md` |
+| 2037 | 角色退场状态机 | `B.todo/v0.1-r2037-C2-character-exit-state-machine/README.md` |
+| 2038 | 设定一致性前置校验 | `B.todo/v0.1-r2038-C2-setting-consistency-pre-check/README.md` |
+| 2039 | Idle Recovery | `B.todo/v0.1-r2039-simple-idle-recovery/README.md` |
+| 3009 | Tab Switch Perf | `B.todo/v0.1-r3009-medium-tab-switch-perf/README.md` |
 | 2013 | Director Failed Retry Entry | `B.todo/v0.1-r2013-medium-director-failed-retry-entry/README.md` |
 | 2014 | Chapter Token Budget Dynamic | `B.todo/v0.1-r2014-medium-chapter-token-budget-dynamic/README.md` |
 | 3004 | Novel Conversation Archive | `B.todo/v0.1-r3004-medium-novel-conversation-archive/README.md` |

@@ -27,6 +27,53 @@ description: "docs 目录索引（自动生成）"
 | --- | --- | --- |
 | [1.task\B.todo\任务包六件套构成-编号分类规则-自动归档机制.md](./1.task\B.todo\任务包六件套构成-编号分类规则-自动归档机制.md) | --- | - |
 
+## 1.task\B.todo\v0.1\v0.1-r2035-C2-outline-final-draft-lock
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.1\v0.1-r2035-C2-outline-final-draft-lock\decision_log.md](./1.task\B.todo\v0.1\v0.1-r2035-C2-outline-final-draft-lock\decision_log.md) | REQ-2035 大纲终稿锁定 决策留痕 | REQ-2035 大纲终稿锁定 决策留痕 |
+| [1.task\B.todo\v0.1\v0.1-r2035-C2-outline-final-draft-lock\design.md](./1.task\B.todo\v0.1\v0.1-r2035-C2-outline-final-draft-lock\design.md) | REQ-2035 大纲终稿锁定 方案设计 | REQ-2035 大纲终稿锁定 方案设计 |
+| [1.task\B.todo\v0.1\v0.1-r2035-C2-outline-final-draft-lock\README.md](./1.task\B.todo\v0.1\v0.1-r2035-C2-outline-final-draft-lock\README.md) | REQ-2035 大纲终稿锁定 任务总线 | REQ-2035 大纲终稿锁定 任务总线 |
+| [1.task\B.todo\v0.1\v0.1-r2035-C2-outline-final-draft-lock\REQ-2035-outline-final-draft-lock-original.md](./1.task\B.todo\v0.1\v0.1-r2035-C2-outline-final-draft-lock\REQ-2035-outline-final-draft-lock-original.md) | REQ-2035 大纲终稿锁定 需求文档（冻结副本） | REQ-2035 大纲终稿锁定 需求文档（冻结副本） |
+| [1.task\B.todo\v0.1\v0.1-r2035-C2-outline-final-draft-lock\REQ-2035-outline-final-draft-lock.md](./1.task\B.todo\v0.1\v0.1-r2035-C2-outline-final-draft-lock\REQ-2035-outline-final-draft-lock.md) | REQ-2035 大纲终稿锁定 需求文档（工作副本） | REQ-2035 大纲终稿锁定 需求文档（工作副本） |
+| [1.task\B.todo\v0.1\v0.1-r2035-C2-outline-final-draft-lock\tasks.md](./1.task\B.todo\v0.1\v0.1-r2035-C2-outline-final-draft-lock\tasks.md) | REQ-2035 任务拆解 | REQ-2035 任务拆解 |
+
+## 1.task\B.todo\v0.1\v0.1-r2037-C2-character-exit-state-machine
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.1\v0.1-r2037-C2-character-exit-state-machine\decision_log.md](./1.task\B.todo\v0.1\v0.1-r2037-C2-character-exit-state-machine\decision_log.md) | REQ-2037 决策留痕 | REQ-2037 决策留痕 |
+| [1.task\B.todo\v0.1\v0.1-r2037-C2-character-exit-state-machine\design.md](./1.task\B.todo\v0.1\v0.1-r2037-C2-character-exit-state-machine\design.md) | REQ-2037 方案设计 | REQ-2037 方案设计 |
+| [1.task\B.todo\v0.1\v0.1-r2037-C2-character-exit-state-machine\README.md](./1.task\B.todo\v0.1\v0.1-r2037-C2-character-exit-state-machine\README.md) | REQ-2037 角色退场状态机 任务总线 | REQ-2037 角色退场状态机 任务总线 |
+| [1.task\B.todo\v0.1\v0.1-r2037-C2-character-exit-state-machine\REQ-2037-character-exit-state-machine-original.md](./1.task\B.todo\v0.1\v0.1-r2037-C2-character-exit-state-machine\REQ-2037-character-exit-state-machine-original.md) | REQ-2037 角色退场状态机 需求冻结副本 | REQ-2037 角色退场状态机 需求冻结副本 |
+| [1.task\B.todo\v0.1\v0.1-r2037-C2-character-exit-state-machine\REQ-2037-character-exit-state-machine.md](./1.task\B.todo\v0.1\v0.1-r2037-C2-character-exit-state-machine\REQ-2037-character-exit-state-machine.md) | REQ-2037 角色退场状态机 需求冻结副本 | REQ-2037 角色退场状态机 需求冻结副本 |
+| [1.task\B.todo\v0.1\v0.1-r2037-C2-character-exit-state-machine\tasks.md](./1.task\B.todo\v0.1\v0.1-r2037-C2-character-exit-state-machine\tasks.md) | REQ-2037 任务拆解 | REQ-2037 任务拆解 |
+
+## 1.task\B.todo\v0.1\v0.1-r2038-C2-setting-consistency-pre-check
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.1\v0.1-r2038-C2-setting-consistency-pre-check\decision_log.md](./1.task\B.todo\v0.1\v0.1-r2038-C2-setting-consistency-pre-check\decision_log.md) | REQ-2038 设定一致性前置校验决策日志 | REQ-2038 设定一致性前置校验决策日志 |
+| [1.task\B.todo\v0.1\v0.1-r2038-C2-setting-consistency-pre-check\design.md](./1.task\B.todo\v0.1\v0.1-r2038-C2-setting-consistency-pre-check\design.md) | REQ-2038 设定一致性前置校验技术设计文档 | REQ-2038 设定一致性前置校验技术设计文档 |
+| [1.task\B.todo\v0.1\v0.1-r2038-C2-setting-consistency-pre-check\README.md](./1.task\B.todo\v0.1\v0.1-r2038-C2-setting-consistency-pre-check\README.md) | REQ-2038 设定一致性前置校验任务包 README | REQ-2038 设定一致性前置校验任务包 README |
+| [1.task\B.todo\v0.1\v0.1-r2038-C2-setting-consistency-pre-check\REQ-2038-setting-consistency-pre-check-original.md](./1.task\B.todo\v0.1\v0.1-r2038-C2-setting-consistency-pre-check\REQ-2038-setting-consistency-pre-check-original.md) | REQ-2038 设定一致性前置校验需求文档（冻结副本） | REQ-2038 设定一致性前置校验需求文档（冻结副本） |
+| [1.task\B.todo\v0.1\v0.1-r2038-C2-setting-consistency-pre-check\REQ-2038-setting-consistency-pre-check.md](./1.task\B.todo\v0.1\v0.1-r2038-C2-setting-consistency-pre-check\REQ-2038-setting-consistency-pre-check.md) | REQ-2038 设定一致性前置校验需求文档（工作副本） | REQ-2038 设定一致性前置校验需求文档（工作副本） |
+| [1.task\B.todo\v0.1\v0.1-r2038-C2-setting-consistency-pre-check\tasks.md](./1.task\B.todo\v0.1\v0.1-r2038-C2-setting-consistency-pre-check\tasks.md) | REQ-2038 设定一致性前置校验任务拆解 | REQ-2038 设定一致性前置校验任务拆解 |
+
+## 1.task\B.todo\v0.1\v0.1-r2039-simple-idle-recovery
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.1\v0.1-r2039-simple-idle-recovery\REQ-2039.md](./1.task\B.todo\v0.1\v0.1-r2039-simple-idle-recovery\REQ-2039.md) | REQ-2039 闲置后页面报错自动恢复 | REQ-2039 闲置后页面报错自动恢复 |
+| [1.task\B.todo\v0.1\v0.1-r2039-simple-idle-recovery\tasks.md](./1.task\B.todo\v0.1\v0.1-r2039-simple-idle-recovery\tasks.md) | REQ-2039 闲置恢复任务拆解 | REQ-2039 闲置恢复任务拆解 |
+
+## 1.task\B.todo\v0.1\v0.1-r3009-medium-tab-switch-perf
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.1\v0.1-r3009-medium-tab-switch-perf\REQ-3009.md](./1.task\B.todo\v0.1\v0.1-r3009-medium-tab-switch-perf\REQ-3009.md) | REQ-3009 Tab 切换性能优化 | REQ-3009 Tab 切换性能优化 |
+| [1.task\B.todo\v0.1\v0.1-r3009-medium-tab-switch-perf\tasks.md](./1.task\B.todo\v0.1\v0.1-r3009-medium-tab-switch-perf\tasks.md) | REQ-3009 Tab 切换性能优化任务拆解 | REQ-3009 Tab 切换性能优化任务拆解 |
+
 ## 1.task\template
 
 | 文件 | 标题 | 描述 |
@@ -151,6 +198,7 @@ description: "docs 目录索引（自动生成）"
 | --- | --- | --- |
 | [3.analysis\report\2026-06-26-ll-workflow-core-init-收口报告.md](./3.analysis\report\2026-06-26-ll-workflow-core-init-收口报告.md) | **执行时间**:2026-06-26 | - |
 | [3.analysis\report\2026-07-02-positive-findings.md](./3.analysis\report\2026-07-02-positive-findings.md) | r7011/r7012 审计正面发现汇总 — 安全、质量、稳定性、可观测性维度的已验证良好实践 | r7011/r7012 审计正面发现汇总 — 安全、质量、稳定性、可观测性维度的已验证良好实践 |
+| [3.analysis\report\2026-07-03-竞品分析-游蜂写作.md](./3.analysis\report\2026-07-03-竞品分析-游蜂写作.md) | 竞品"游蜂写作"产品分析，对比 ai-novel 项目的功能差距与可借鉴的设计思路 | 竞品"游蜂写作"产品分析，对比 ai-novel 项目的功能差距与可借鉴的设计思路 |
 
 ## 4.misc
 

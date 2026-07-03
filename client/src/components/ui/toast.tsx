@@ -27,7 +27,7 @@ function Toaster(props: ToasterProps) {
 }
 
 const ERROR_TOAST_DEFAULTS: ExternalToast = {
-  duration: Number.POSITIVE_INFINITY,
+  duration: 5000,
   closeButton: true,
   dismissible: true,
 };

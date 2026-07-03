@@ -1,0 +1,11 @@
+{
+  "reqId": "REQ-2037",
+  "title": "角色退场状态机",
+  "priority": "P1",
+  "version": "v0.1",
+  "status": "pending",
+  "createdAt": "2026-07-03",
+  "completedAt": null,
+  "source": "竞品分析-游蜂写作",
+  "note": "四态状态机：active/exited/dead/frozen，含自动推断"
+}
