@@ -2,6 +2,7 @@ import "dotenv/config";
 import type { Server } from "node:http";
 import os from "node:os";
 import cors from "cors";
+import compression from "compression";
 import express from "express";
 import helmet from "helmet";
 import morgan from "morgan";
@@ -93,6 +94,8 @@ export function createApp() {
       .map((item) => item.trim())
       .filter(Boolean)
     : [];
+
+  app.use(compression({ threshold: 1024 }));
 
   const allowLan = parseEnvFlag(process.env.ALLOW_LAN, process.env.NODE_ENV !== "production");
   app.use(

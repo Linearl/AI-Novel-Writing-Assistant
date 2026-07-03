@@ -97,6 +97,40 @@ function shouldSyncSlimVolumeResponseToChapterExecution(body: unknown): boolean 
   return scope === "chapter_detail";
 }
 
+function buildSlimVolumeGetResponse(
+  document: VolumePlanDocument,
+): VolumePlanDocument {
+  return {
+    ...document,
+    volumes: document.volumes.map((volume) => ({
+      ...volume,
+      chapters: volume.chapters.map((chapter) => ({
+        id: chapter.id,
+        volumeId: chapter.volumeId,
+        chapterId: chapter.chapterId,
+        chapterOrder: chapter.chapterOrder,
+        beatKey: chapter.beatKey,
+        title: chapter.title,
+        summary: chapter.summary,
+        purpose: chapter.purpose,
+        exclusiveEvent: chapter.exclusiveEvent,
+        endingState: chapter.endingState,
+        nextChapterEntryState: chapter.nextChapterEntryState,
+        conflictLevel: chapter.conflictLevel,
+        revealLevel: chapter.revealLevel,
+        targetWordCount: chapter.targetWordCount,
+        mustAvoid: chapter.mustAvoid,
+        payoffRefs: chapter.payoffRefs,
+        createdAt: chapter.createdAt,
+        updatedAt: chapter.updatedAt,
+      })),
+    })),
+    derivedOutline: "",
+    derivedStructuredOutline: "",
+    critiqueReport: null,
+  };
+}
+
 // Sub-function: Register volume CRUD routes
 function registerVolumeCrudRoutes(params: { router: any; novelService: any; idParamsSchema: any; volumeDocumentSchema: any; volumeGenerateSchema: any }) {
   const { router, novelService, idParamsSchema, volumeDocumentSchema, volumeGenerateSchema } = params;
@@ -105,7 +139,7 @@ function registerVolumeCrudRoutes(params: { router: any; novelService: any; idPa
     try {
       const { id } = req.params;
       const data = await novelService.getVolumes(id);
-      res.status(200).json({ success: true, data, message: "Volume workspace loaded." });
+      res.status(200).json({ success: true, data: buildSlimVolumeGetResponse(data), message: "Volume workspace loaded." });
     } catch (error) { next(error); }
   });
 
