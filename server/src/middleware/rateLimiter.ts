@@ -5,7 +5,7 @@ import rateLimit from "express-rate-limit";
  */
 export const globalLimiter = rateLimit({
   windowMs: 60 * 1000, // 1 分钟
-  max: 100,
+  max: 50000,
   standardHeaders: true, // 返回 RateLimit-* headers
   legacyHeaders: false,
   message: {
@@ -19,7 +19,7 @@ export const globalLimiter = rateLimit({
  */
 export const llmLimiter = rateLimit({
   windowMs: 60 * 1000, // 1 分钟
-  max: 20,
+  max: 5000,
   standardHeaders: true,
   legacyHeaders: false,
   message: {

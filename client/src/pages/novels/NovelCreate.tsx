@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { UnifiedTaskDetail } from "@ai-novel/shared/types/task";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -32,6 +32,7 @@ export default function NovelCreate() {
 
   const workflowTaskIdFromQuery = searchParams.get("workflowTaskId") ?? "";
   const workflowMode = searchParams.get("mode");
+  const lastBootstrapRef = useRef<string>("");
 
   const worldListQuery = useQuery({
     queryKey: queryKeys.worlds.all,
@@ -117,11 +118,17 @@ export default function NovelCreate() {
   useEffect(() => {
     if (!workflowTaskIdFromQuery) {
       setRestoredWorkflowTask(null);
+      lastBootstrapRef.current = "";
       if (workflowMode !== "director") {
         setDirectorWorkflowTaskId("");
       }
       return;
     }
+    const dedupeKey = `${workflowTaskIdFromQuery}:${workflowMode ?? ""}`;
+    if (lastBootstrapRef.current === dedupeKey) {
+      return;
+    }
+    lastBootstrapRef.current = dedupeKey;
     restoreWorkflowMutation.mutate();
   }, [workflowTaskIdFromQuery, workflowMode]);
 

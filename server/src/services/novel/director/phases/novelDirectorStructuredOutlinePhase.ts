@@ -229,7 +229,9 @@ async function runChapterListStep(params: {
   callbacks: DirectorPhaseCallbacks;
 }): Promise<VolumePlanDocument> {
   const { taskId, novelId, request, workspace, targetVolume, dependencies, callbacks } = params;
-  let result = await runDirectorTrackedStep({
+  // workspace 作为初始值，避免 onIntermediateDocument 回调触发 TDZ
+  let result: VolumePlanDocument = workspace;
+  result = await runDirectorTrackedStep({
     taskId,
     stage: "structured_outline",
     itemKey: "chapter_list",
