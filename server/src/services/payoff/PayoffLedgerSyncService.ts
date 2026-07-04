@@ -1,8 +1,10 @@
 import type { LLMProvider } from "@ai-novel/shared/types/llm";
 import type { AuditReport, OpenConflict, PayoffLedgerResponse } from "@ai-novel/shared/types/novel";
 import type { PayoffLedgerItem } from "@ai-novel/shared/types/payoffLedger";
+import { NORMALIZED_STATUS_MAP } from "@ai-novel/shared/types/payoffLedger";
 import { prisma } from "../../db/prisma";
 import { runStructuredPrompt } from "../../prompting/core/promptRunner";
+import { payoffDetectionPrompt } from "../../prompting/prompts/payoff/payoffDetection.prompts";
 import { payoffLedgerSyncPrompt } from "../../prompting/prompts/payoff/payoffLedgerSync.prompts";
 import {
   appendStaleRiskSignal,
@@ -11,6 +13,7 @@ import {
   clearStaleRiskSignal,
   dedupeRiskSignals,
   mapPayoffLedgerRow,
+  normalizePayoffLedgerIdentity,
   resolvePayoffLedgerSyncLedgerKey,
   sanitizePayoffLedgerSyncItem,
   serializeLedgerJson,
@@ -528,6 +531,188 @@ export class PayoffLedgerSyncService {
       createdAt: now,
       updatedAt: now,
     }];
+  }
+
+  /**
+   * T7: 章节生成后自动检测新埋设伏笔。
+   *
+   * 流程：
+   * 1. 读取章节内容
+   * 2. 调用 LLM (payoffDetectionPrompt) 分析内容提取伏笔候选
+   * 3. 与现有 ledger 去重（标题相似度匹配）
+   * 4. 新伏笔写入 ledger，状态为 setup (normalizedStatus: planted)
+   * 5. 返回写入的条目数量
+   */
+  async detectNewPayoffsAfterGeneration(
+    novelId: string,
+    chapterId: string,
+    chapterOrder: number,
+    chapterTitle: string,
+    chapterContent: string,
+    options: PayoffLedgerSyncOptions = {},
+  ): Promise<{ detected: number; inserted: number }> {
+    if (!chapterContent?.trim()) {
+      return { detected: 0, inserted: 0 };
+    }
+
+    try {
+      // 1. 读取已有伏笔用于去重
+      const existingRows = await this.loadLedgerRows(novelId);
+      const existingSummaries = existingRows
+        .map((row) => `- ${row.title}（${row.currentStatus}）：${row.summary}`)
+        .join("\n") || "无";
+
+      // 2. 调用 LLM 检测
+      const result = await runStructuredPrompt({
+        asset: payoffDetectionPrompt,
+        promptInput: {
+          novelTitle: (await prisma.novel.findUnique({ where: { id: novelId }, select: { title: true } }))?.title ?? "",
+          chapterOrder,
+          chapterTitle,
+          chapterContent,
+          existingLedgerSummaries: existingSummaries,
+        },
+        options: {
+          provider: options.provider,
+          model: options.model,
+          temperature: options.temperature ?? 0.2,
+        },
+      });
+
+      const detected = result.output.detectedPayoffs;
+      if (detected.length === 0) {
+        return { detected: 0, inserted: 0 };
+      }
+
+      // 3. 去重：与已有伏笔标题匹配
+      const existingIdentities = new Set(
+        existingRows.map((row) => normalizePayoffLedgerIdentity(row.title)),
+      );
+
+      const novelTitle = (await prisma.novel.findUnique({ where: { id: novelId }, select: { title: true } }))?.title ?? "";
+      const novelIdPrefix = novelId.slice(0, 8);
+      const now = new Date();
+      let insertedCount = 0;
+
+      // 4. 写入新伏笔
+      for (const candidate of detected) {
+        const identity = normalizePayoffLedgerIdentity(candidate.title);
+        if (existingIdentities.has(identity)) {
+          continue; // 跳过重复
+        }
+
+        const ledgerKey = `detect:${novelIdPrefix}:${chapterOrder}:${identity.slice(0, 30)}`;
+
+        try {
+          await prisma.payoffLedgerItem.create({
+            data: {
+              novelId,
+              ledgerKey,
+              title: candidate.title,
+              summary: candidate.summary,
+              scopeType: candidate.scopeType,
+              currentStatus: "setup",
+              normalizedStatus: "planted",
+              setupChapterId: chapterId,
+              firstSeenChapterOrder: chapterOrder,
+              lastTouchedChapterOrder: chapterOrder,
+              lastTouchedChapterId: chapterId,
+              sourceRefsJson: serializeLedgerJson([{
+                kind: "chapter_payoff_ref",
+                refLabel: `第${chapterOrder}章《${chapterTitle}》自动生成检测`,
+                chapterId,
+                chapterOrder,
+              }]),
+              evidenceJson: serializeLedgerJson([{
+                summary: candidate.evidenceSummary,
+                chapterId,
+                chapterOrder,
+              }]),
+              riskSignalsJson: serializeLedgerJson([]),
+              statusReason: `由 AI 章节生成后检测自动创建（confidence: ${candidate.confidence}）`,
+              confidence: candidate.confidence,
+              updatedAt: now,
+            },
+          });
+          insertedCount++;
+        } catch {
+          // ledgerKey 唯一约束冲突，跳过
+          continue;
+        }
+      }
+
+      return { detected: detected.length, inserted: insertedCount };
+    } catch {
+      // 伏笔检测失败不影响章节生成流程
+      return { detected: 0, inserted: 0 };
+    }
+  }
+
+  /**
+   * T8: 章节生成前检查未回收伏笔，生成回收提醒上下文。
+   *
+   * 流程：
+   * 1. 查询所有 planted/active 状态伏笔
+   * 2. 计算 chaptersElapsed（当前章节序号 - 埋设章节序号）
+   * 3. 按 chaptersElapsed 降序排序，取前 5 条
+   * 4. 返回格式化的提醒文本
+   */
+  async buildPayoffReminderContext(
+    novelId: string,
+    currentChapterOrder: number,
+  ): Promise<string> {
+    const rows = await this.loadLedgerRows(novelId);
+    const activeItems = rows.filter((row) => {
+      const ns = row.normalizedStatus ?? NORMALIZED_STATUS_MAP[row.currentStatus];
+      return ns === "planted" || ns === "active";
+    });
+
+    if (activeItems.length === 0) {
+      return "";
+    }
+
+    // 预加载章节 order 映射
+    const chapterIds = activeItems
+      .map((row) => row.setupChapterId)
+      .filter((id): id is string => id != null);
+    const chapters = chapterIds.length > 0
+      ? await prisma.chapter.findMany({
+          where: { id: { in: chapterIds } },
+          select: { id: true, order: true },
+        })
+      : [];
+    const chapterOrderMap = new Map(chapters.map((ch) => [ch.id, ch.order]));
+
+    // 计算 chaptersElapsed 并排序
+    const withElapsed = activeItems.map((row) => {
+      const setupOrder = row.setupChapterId
+        ? (chapterOrderMap.get(row.setupChapterId) ?? row.firstSeenChapterOrder ?? 0)
+        : row.firstSeenChapterOrder ?? 0;
+      const elapsed = Math.max(0, currentChapterOrder - setupOrder);
+      return { row, elapsed };
+    });
+
+    withElapsed.sort((a, b) => b.elapsed - a.elapsed);
+
+    // 取前 5 条最紧迫的
+    const topItems = withElapsed.slice(0, 5);
+    if (topItems.length === 0) {
+      return "";
+    }
+
+    const lines = topItems.map(({ row, elapsed }) => {
+      const ns = row.normalizedStatus ?? NORMALIZED_STATUS_MAP[row.currentStatus];
+      const statusLabel = ns === "planted" ? "已埋设" : "进行中";
+      const elapsedText = elapsed > 0 ? `跨越 ${elapsed} 章` : "本章埋设";
+      return `- [${statusLabel}] ${row.title}：${row.summary}（${elapsedText}）`;
+    });
+
+    return [
+      "以下伏笔需要在本章或近期章节中回收：",
+      ...lines,
+      "",
+      "请在本章创作中优先安排回收上述伏笔，或在剧情中自然推进。",
+    ].join("\n");
   }
 }
 
