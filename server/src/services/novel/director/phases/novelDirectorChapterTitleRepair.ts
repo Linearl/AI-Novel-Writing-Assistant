@@ -1,4 +1,5 @@
 import type { DirectorConfirmRequest } from "@ai-novel/shared/types/novelDirector";
+import { prisma } from "../../../../db/prisma";
 import { buildNovelEditResumeTarget } from "../../workflow/novelWorkflow.shared";
 import { getChapterTitleDiversityIssue } from "../../volume/chapterTitleDiversity";
 import type { NovelVolumeService } from "../../volume/NovelVolumeService";
@@ -87,6 +88,17 @@ export async function repairDirectorChapterTitles(input: {
     });
   }
 
+  const lockedChapterTitles = new Map<string, string>();
+  const lockedChapterIds = (
+    await prisma.chapter.findMany({
+      where: { novelId: input.novelId, locked: true },
+      select: { id: true, title: true },
+    })
+  );
+  for (const row of lockedChapterIds) {
+    lockedChapterTitles.set(row.id, row.title);
+  }
+
   const repairedWorkspace = await input.volumeService.generateVolumes(input.novelId, {
     provider: input.request.provider,
     model: input.request.model,
@@ -107,6 +119,16 @@ export async function repairDirectorChapterTitles(input: {
       });
     },
   });
+  if (lockedChapterTitles.size > 0) {
+    for (const volume of repairedWorkspace.volumes) {
+      for (const chapter of volume.chapters) {
+        const lockedTitle = chapter.chapterId ? lockedChapterTitles.get(chapter.chapterId) : undefined;
+        if (lockedTitle !== undefined) {
+          chapter.title = lockedTitle;
+        }
+      }
+    }
+  }
   const persistedWorkspace = await input.volumeService.updateVolumes(input.novelId, repairedWorkspace);
   const repairedVolume = persistedWorkspace.volumes.find((volume) => volume.id === targetVolume.id);
   if (!repairedVolume) {

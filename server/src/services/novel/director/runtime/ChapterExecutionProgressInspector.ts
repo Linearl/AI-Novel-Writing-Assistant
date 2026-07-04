@@ -87,6 +87,7 @@ export class ChapterExecutionProgressInspector {
         taskSheet: true,
         sceneCards: true,
         expectation: true,
+        locked: true,
         generationState: true,
         chapterStatus: true,
         repairHistory: true,
@@ -96,7 +97,9 @@ export class ChapterExecutionProgressInspector {
         canonicalStateVersions: { select: { id: true }, take: 1 },
       },
     });
-    const matrix = chapters.map((chapter) => this.inspectChapterRow(chapter));
+    const matrix = chapters
+      .filter((chapter) => !chapter.locked)
+      .map((chapter) => this.inspectChapterRow(chapter));
     const active = matrix.find((chapter) => (
       chapter.status === "running" && chapter.evidence.chapterStatus === "generating"
     )) ?? null;

@@ -14,6 +14,7 @@ interface RegisterNovelChapterRoutesInput {
     | "deleteChapter"
     | "softDeleteChapter"
     | "restoreChapter"
+    | "toggleChapterLock"
     | "ensureChapterExecutionContract"
   >;
   idParamsSchema: z.ZodType<{ id: string }>;
@@ -21,6 +22,7 @@ interface RegisterNovelChapterRoutesInput {
   chapterSchema: z.ZodTypeAny;
   updateChapterSchema: z.ZodTypeAny;
   chapterExecutionContractSchema: z.ZodTypeAny;
+  chapterLockToggleSchema: z.ZodTypeAny;
 }
 
 export function registerNovelChapterRoutes(input: RegisterNovelChapterRoutesInput): void {
@@ -32,6 +34,7 @@ export function registerNovelChapterRoutes(input: RegisterNovelChapterRoutesInpu
     chapterSchema,
     updateChapterSchema,
     chapterExecutionContractSchema,
+    chapterLockToggleSchema,
   } = input;
 
   router.get("/:id/chapters", validate({ params: idParamsSchema }), async (req, res, next) => {
@@ -145,6 +148,25 @@ export function registerNovelChapterRoutes(input: RegisterNovelChapterRoutesInpu
           success: true,
           data,
           message: "Chapter execution contract generated.",
+        } satisfies ApiResponse<typeof data>);
+      } catch (error) {
+        next(error);
+      }
+    },
+  );
+
+  router.patch(
+    "/:id/chapters/:chapterId/lock",
+    validate({ params: chapterParamsSchema, body: chapterLockToggleSchema }),
+    async (req, res, next) => {
+      try {
+        const { id, chapterId } = req.params as z.infer<typeof chapterParamsSchema>;
+        const { locked } = req.body as { locked: boolean };
+        const data = await novelService.toggleChapterLock(id, chapterId, locked);
+        res.status(200).json({
+          success: true,
+          data,
+          message: locked ? "章节已锁定。" : "章节已解锁。",
         } satisfies ApiResponse<typeof data>);
       } catch (error) {
         next(error);

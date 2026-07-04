@@ -210,6 +210,7 @@ export interface Chapter {
   riskFlags?: string | null;
   hook?: string | null;
   expectation?: string | null;
+  locked: boolean;
   novelId: string;
   createdAt: string;
   updatedAt: string;

@@ -124,6 +124,10 @@ export class DefaultNovelApplicationServices {
     return this.core.restoreChapter(...args);
   }
 
+  toggleChapterLock(...args: Parameters<NovelCoreService["toggleChapterLock"]>) {
+    return this.core.toggleChapterLock(...args);
+  }
+
   listCharacters(...args: Parameters<NovelCoreService["listCharacters"]>) {
     return this.core.listCharacters(...args);
   }

@@ -501,7 +501,7 @@ export async function executeReplan(
     prisma.chapter.findMany({
       where: { novelId },
       orderBy: { order: "asc" },
-      select: { id: true, order: true },
+      select: { id: true, order: true, locked: true },
     }),
     prisma.auditReport.findMany({
       where: { novelId, chapterId: targetChapter.id },
@@ -575,9 +575,13 @@ export async function executeReplan(
     updatedAt: report.updatedAt.toISOString(),
   }));
   const requestedWindowSize = input.windowSize ?? 3;
+  const unlockedChapters = allChapters.filter((item) => !item.locked);
+  if (unlockedChapters.length === 0) {
+    throw new Error("所有章节均已锁定，无法重规划。");
+  }
   const replanDecision = await replanWindowDecisionService.decide({
     requestedWindowSize,
-    availableChapterOrders: allChapters.map((item) => item.order),
+    availableChapterOrders: unlockedChapters.map((item) => item.order),
     targetChapterOrder: targetChapter.order,
     triggerType: input.triggerType ?? "manual",
     reason: input.reason,
@@ -593,7 +597,7 @@ export async function executeReplan(
     temperature: input.temperature,
   });
   const affectedChapterOrderSet = new Set(replanDecision.affectedChapterOrders);
-  const affectedChapters = allChapters.filter((item) => affectedChapterOrderSet.has(item.order));
+  const affectedChapters = allChapters.filter((item) => affectedChapterOrderSet.has(item.order) && !item.locked);
   if (affectedChapters.length === 0) {
     throw new Error("当前小说没有可重规划的章节。");
   }

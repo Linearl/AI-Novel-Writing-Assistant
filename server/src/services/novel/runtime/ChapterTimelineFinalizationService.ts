@@ -113,10 +113,14 @@ export class ChapterTimelineFinalizationService {
         order: true,
         content: true,
         expectation: true,
+        locked: true,
       },
     });
     const previousContent = previousChapter?.content?.trim();
     if (!previousChapter || !previousContent) {
+      return null;
+    }
+    if (previousChapter.locked) {
       return null;
     }
     if (await this.hasCurrentFinalization({

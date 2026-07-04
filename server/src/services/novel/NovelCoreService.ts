@@ -107,6 +107,10 @@ export class NovelCoreService {
     return this.crudService.restoreChapter(novelId, chapterId);
   }
 
+  async toggleChapterLock(novelId: string, chapterId: string, locked: boolean) {
+    return this.crudService.toggleChapterLock(novelId, chapterId, locked);
+  }
+
   async listCharacters(novelId: string) {
     return this.characterService.listCharacters(novelId);
   }

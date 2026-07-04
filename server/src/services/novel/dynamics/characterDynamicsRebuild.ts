@@ -77,18 +77,32 @@ export async function rebuildDynamics(
     return queryService.getOverview(novelId);
   }
 
-  const projectionVolumePlans = context.volumePlans.filter((volume) => volume.chapters.length > 0);
+  const lockedChapterIds = new Set(
+    (await prisma.chapter.findMany({
+      where: { novelId, locked: true },
+      select: { id: true },
+    })).map((c) => c.id),
+  );
+  const contextWithLockedFilter = {
+    ...context,
+    volumePlans: context.volumePlans.map((volume) => ({
+      ...volume,
+      chapters: volume.chapters.filter((chapter) => chapter.chapterId !== null && !lockedChapterIds.has(chapter.chapterId)),
+    })),
+  };
+
+  const projectionVolumePlans = contextWithLockedFilter.volumePlans.filter((volume) => volume.chapters.length > 0);
   if (projectionVolumePlans.length === 0) {
     return queryService.getOverview(novelId);
   }
 
   const projection = await generateVolumeProjection({
-    ...context,
+    ...contextWithLockedFilter,
     volumePlans: projectionVolumePlans,
   });
   const sourceType = options.sourceType ?? "rebuild_projection";
-  const characterIdByName = new Map(context.characters.map((character) => [normalizeName(character.name), character.id]));
-  const volumeBySortOrder = new Map(context.volumePlans.map((volume) => [volume.sortOrder, volume]));
+  const characterIdByName = new Map(contextWithLockedFilter.characters.map((character) => [normalizeName(character.name), character.id]));
+  const volumeBySortOrder = new Map(contextWithLockedFilter.volumePlans.map((volume) => [volume.sortOrder, volume]));
   const mergedAssignments = mergeProjectionAssignments(projection.assignments);
   const validAssignments = mergedAssignments.filter((assignment) => (
     characterIdByName.has(normalizeName(assignment.characterName))

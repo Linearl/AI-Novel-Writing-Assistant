@@ -94,6 +94,7 @@ function mapExportChapter(raw: {
   riskFlags: string | null;
   hook: string | null;
   expectation: string | null;
+  locked: boolean;
   novelId: string;
   createdAt: Date | string;
   updatedAt: Date | string;
@@ -130,6 +131,7 @@ function mapExportChapter(raw: {
     riskFlags: raw.riskFlags,
     hook: raw.hook,
     expectation: raw.expectation,
+    locked: raw.locked,
     novelId: raw.novelId,
     createdAt: toIsoString(raw.createdAt),
     updatedAt: toIsoString(raw.updatedAt),

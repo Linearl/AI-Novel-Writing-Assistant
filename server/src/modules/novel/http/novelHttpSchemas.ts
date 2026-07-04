@@ -12,6 +12,10 @@ export const chapterParamsSchema = z.object({
   chapterId: z.string().trim().min(1),
 });
 
+export const chapterLockToggleSchema = z.object({
+  locked: z.boolean(),
+});
+
 export const arcPlanParamsSchema = z.object({
   id: z.string().trim().min(1),
   arcId: z.string().trim().min(1),

@@ -20,6 +20,7 @@ export interface NovelApplicationServices {
   deleteChapter: NovelApplicationMethod;
   softDeleteChapter: NovelApplicationMethod;
   restoreChapter: NovelApplicationMethod;
+  toggleChapterLock: NovelApplicationMethod;
   listCharacters: NovelApplicationMethod;
   createCharacter: NovelApplicationMethod;
   updateCharacter: NovelApplicationMethod;
@@ -129,6 +130,7 @@ export const novelApplicationServiceMethodNames = [
   "deleteChapter",
   "softDeleteChapter",
   "restoreChapter",
+  "toggleChapterLock",
   "listCharacters",
   "createCharacter",
   "updateCharacter",
