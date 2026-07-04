@@ -1,8 +1,14 @@
 import type { Chapter, ChapterEditorDiagnosticCard, ChapterEditorWorkspaceResponse } from "@ai-novel/shared/types/novel";
+import { Download } from "lucide-react";
+import { exportChapterTxt } from "@/api/novel/txtIo";
 import { Button } from "@/components/ui/button";
+import { toast } from "@/components/ui/toast";
+import { createDownload } from "@/pages/novels/novelEditHelpers";
+import WordCountIndicator from "../WordCountIndicator";
 
 interface ChapterEditorSidebarProps {
   chapter: Chapter;
+  novelTitle?: string;
   workspace: ChapterEditorWorkspaceResponse | null;
   workspaceStatus: "loading" | "ready" | "error";
   wordCount: number;
@@ -34,6 +40,7 @@ function LoadingBar(props: { widthClassName?: string }) {
 export default function ChapterEditorSidebar(props: ChapterEditorSidebarProps) {
   const {
     chapter,
+    novelTitle,
     workspace,
     workspaceStatus,
     wordCount,
@@ -47,6 +54,20 @@ export default function ChapterEditorSidebar(props: ChapterEditorSidebarProps) {
     onFocusDiagnostic,
     onRunDiagnostic,
   } = props;
+
+  const handleExportChapterTxt = async () => {
+    try {
+      const { blob, fileName } = await exportChapterTxt(
+        props.chapter.novelId ?? "",
+        chapter.id,
+        novelTitle ?? "未命名小说",
+      );
+      createDownload(blob, fileName);
+      toast.success("章节正文 TXT 已导出。");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "章节导出失败。");
+    }
+  };
 
   const recommendedTask = workspace?.recommendedTask ?? null;
   const macroContext = workspace?.macroContext ?? null;
@@ -77,6 +98,13 @@ export default function ChapterEditorSidebar(props: ChapterEditorSidebarProps) {
                 <MetaChip label={isWorkspaceLoading ? "LLM 分析中" : `问题 ${workspace?.chapterMeta.openIssueCount ?? 0}`} />
               </div>
 
+              <WordCountIndicator
+                actualWordCount={wordCount}
+                wordCountTarget={chapter.wordCountTarget}
+                waterContentAnalysis={chapter.waterContentAnalysis}
+                variant="sidebar"
+              />
+
               {isWorkspaceLoading ? (
                 <div className="space-y-2 pt-1">
                   <LoadingBar widthClassName="w-full" />
@@ -103,6 +131,10 @@ export default function ChapterEditorSidebar(props: ChapterEditorSidebarProps) {
                   版本入口
                 </Button>
               ) : null}
+              <Button size="sm" variant="outline" onClick={handleExportChapterTxt} className="w-full">
+                <Download className="size-3.5" />
+                导出 TXT
+              </Button>
             </div>
           </div>
         </div>

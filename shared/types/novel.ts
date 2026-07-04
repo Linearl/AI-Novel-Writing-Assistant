@@ -86,6 +86,8 @@ export type {
 
 export type {
   PayoffLedgerItem,
+  PayoffLedgerListResponse,
+  PayoffLedgerNormalizedStatus,
   PayoffLedgerResponse,
   PayoffLedgerScopeType,
   PayoffLedgerSourceRef,

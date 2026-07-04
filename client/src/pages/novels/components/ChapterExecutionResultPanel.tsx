@@ -13,6 +13,7 @@ import {
   resolveDisplayedChapterStatus,
   type AssetTabKey,
 } from "./chapterExecution.shared";
+import WordCountIndicator from "./WordCountIndicator";
 
 interface ChapterExecutionResultPanelProps {
   selectedChapter: Chapter | undefined;
@@ -163,6 +164,12 @@ export default function ChapterExecutionResultPanel(props: ChapterExecutionResul
                   </Badge>
                   <Badge variant="outline">{chapterLabel}</Badge>
                   <Badge variant="outline">当前展示 {contentPanelWordCount} 字</Badge>
+                  <WordCountIndicator
+                    actualWordCount={contentPanelWordCount}
+                    wordCountTarget={selectedChapter.wordCountTarget}
+                    waterContentAnalysis={selectedChapter.waterContentAnalysis}
+                    variant="compact"
+                  />
                 </div>
                 <div>
                   <div className="text-base font-semibold text-foreground">{chapterTitle}</div>

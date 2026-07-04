@@ -1,4 +1,5 @@
 import type { Chapter } from "@ai-novel/shared/types/novel";
+import { Lock, LockOpen } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,6 +13,7 @@ import {
   type QueueFilterKey,
   type QueueFilterOption,
 } from "./chapterExecution.shared";
+import WordCountIndicator from "./WordCountIndicator";
 
 interface ChapterExecutionQueueCardProps {
   chapters: Chapter[];
@@ -23,6 +25,8 @@ interface ChapterExecutionQueueCardProps {
   repairStreamingChapterId?: string | null;
   onQueueFilterChange: (filter: QueueFilterKey) => void;
   onSelectChapter: (chapterId: string) => void;
+  onToggleLock?: (chapterId: string, locked: boolean) => void;
+  togglingLockChapterId?: string | null;
 }
 
 export default function ChapterExecutionQueueCard(props: ChapterExecutionQueueCardProps) {
@@ -36,6 +40,8 @@ export default function ChapterExecutionQueueCard(props: ChapterExecutionQueueCa
     repairStreamingChapterId,
     onQueueFilterChange,
     onSelectChapter,
+    onToggleLock,
+    togglingLockChapterId,
   } = props;
 
   return (
@@ -80,6 +86,8 @@ export default function ChapterExecutionQueueCard(props: ChapterExecutionQueueCa
               const isStreamingTarget = streamingChapterId === chapter.id;
               const isRepairTarget = repairStreamingChapterId === chapter.id;
               const displayedStatus = resolveDisplayedChapterStatus(chapter);
+              const isLocked = chapter.locked;
+              const isTogglingLock = togglingLockChapterId === chapter.id;
 
               return (
                 <button
@@ -90,28 +98,54 @@ export default function ChapterExecutionQueueCard(props: ChapterExecutionQueueCa
                     isSelected
                       ? "border-primary bg-primary/5 shadow-sm"
                       : "border-border/70 bg-background hover:border-primary/30 hover:bg-muted/35"
-                  }`}
+                  } ${isLocked ? "opacity-75" : ""}`}
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0 space-y-2">
-                      <div className="text-sm font-semibold leading-6 text-foreground">
+                      <div className={`text-sm font-semibold leading-6 ${isLocked ? "text-muted-foreground" : "text-foreground"}`}>
                         第{chapter.order}章 {chapter.title || "未命名章节"}
                       </div>
                       <div className="line-clamp-2 text-xs leading-6 text-muted-foreground">
                         {resolveChapterQueuePreview(chapter)}
                       </div>
                     </div>
-                    <Badge
-                      variant={isSelected ? "default" : "outline"}
-                      className="min-w-[60px] shrink-0 justify-center rounded-full px-2 py-1 text-[11px]"
-                      title={chapterStatusDescription(displayedStatus)}
-                      aria-label={chapterStatusDescription(displayedStatus)}
-                    >
-                      {chapterStatusLabel(displayedStatus)}
-                    </Badge>
+                    <div className="flex shrink-0 items-center gap-1.5">
+                      {onToggleLock ? (
+                        <button
+                          type="button"
+                          disabled={isTogglingLock}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onToggleLock(chapter.id, !isLocked);
+                          }}
+                          className={`inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg transition ${
+                            isLocked
+                              ? "bg-amber-100 text-amber-700 hover:bg-amber-200"
+                              : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                          } disabled:opacity-50`}
+                          title={isLocked ? "点击解锁此章节" : "点击锁定此章节（防止 AI 自动修改）"}
+                          aria-label={isLocked ? "解锁此章节" : "锁定此章节"}
+                        >
+                          {isLocked ? <Lock className="h-3.5 w-3.5" /> : <LockOpen className="h-3.5 w-3.5" />}
+                        </button>
+                      ) : null}
+                      <Badge
+                        variant={isSelected ? "default" : "outline"}
+                        className="min-w-[60px] justify-center rounded-full px-2 py-1 text-[11px]"
+                        title={chapterStatusDescription(displayedStatus)}
+                        aria-label={chapterStatusDescription(displayedStatus)}
+                      >
+                        {chapterStatusLabel(displayedStatus)}
+                      </Badge>
+                    </div>
                   </div>
 
                   <div className="mt-3 flex flex-wrap gap-1.5">
+                    {isLocked ? (
+                      <Badge variant="secondary" className="rounded-full bg-amber-50 px-2 py-1 text-[11px] text-amber-700">
+                        已锁定
+                      </Badge>
+                    ) : null}
                     {isStreamingTarget ? (
                       <Badge className="rounded-full px-2 py-1 text-[11px]">
                         {streamingPhase === "finalizing" ? "收尾中" : "写作中"}
@@ -138,6 +172,15 @@ export default function ChapterExecutionQueueCard(props: ChapterExecutionQueueCa
                       <div>当前字数</div>
                       <div className="mt-1 font-medium text-foreground">{chapter.content?.length ?? 0}</div>
                     </div>
+                  </div>
+
+                  <div className="mt-2">
+                    <WordCountIndicator
+                      actualWordCount={chapter.content?.length ?? 0}
+                      wordCountTarget={chapter.wordCountTarget}
+                      waterContentAnalysis={chapter.waterContentAnalysis}
+                      variant="queue"
+                    />
                   </div>
                 </button>
               );
