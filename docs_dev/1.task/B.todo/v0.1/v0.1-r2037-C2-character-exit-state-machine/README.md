@@ -6,7 +6,7 @@ description: "REQ-2037 角色退场状态机 任务总线"
 
 > 创建日期：2026-07-03
 > 目标版本：v0.1
-> 状态：📋 待开发
+> 状态：✅ 完成
 
 ---
 
@@ -52,15 +52,16 @@ description: "REQ-2037 角色退场状态机 任务总线"
 | 时间 | 状态 | 说明 |
 | ---- | ---- | ---- |
 | 2026-07-03 | 🆕 激活 | req 路由创建任务包 |
+| 2026-07-04 | ✅ 完成 | T1-T12 全部实现并验证 |
 
 ---
 
 ## 4. 执行清单
 
-- [ ] 生成 REQ-2037-original.md（冻结副本）
-- [ ] 生成 REQ-2037.md（工作副本）
-- [ ] 生成 design.md
-- [ ] 生成 tasks.md
-- [ ] 生成 decision_log.md
-- [ ] 生成 run_result.json
-- [ ] dev 路由推进实现
+- [x] 生成 REQ-2037-original.md（冻结副本）
+- [x] 生成 REQ-2037.md（工作副本）
+- [x] 生成 design.md
+- [x] 生成 tasks.md
+- [x] 生成 decision_log.md
+- [x] 生成 run_result.json
+- [x] dev 路由推进实现

@@ -4,7 +4,7 @@ description: "REQ-2037 任务拆解"
 
 # REQ-2037 任务拆解
 
-> 状态：📋 待开发（完成后改为 ✅ 全部完成）
+> 状态：✅ 全部完成（完成后改为 ✅ 全部完成）
 
 ## 任务概述
 
@@ -32,33 +32,33 @@ description: "REQ-2037 任务拆解"
 
 | # | 任务 | 优先级 | 预估 | 状态 |
 | --- | --- | --- | --- | --- |
-| T1 | shared：新增 `CharacterExitStatus` 枚举类型 | P0 | 0.5h | ⬜ 待开始 |
-| T2 | Prisma schema：Character 模型增加 `exitStatus` 字段 + 迁移 | P0 | 1h | ⬜ 待开始 |
+| T1 | shared：新增 `CharacterExitStatus` 枚举类型 | P0 | 0.5h | ✅ 完成 |
+| T2 | Prisma schema：Character 模型增加 `exitStatus` 字段 + 迁移 | P0 | 1h | ✅ 完成 |
 
 ### 阶段二：server — 后端逻辑
 
 | # | 任务 | 优先级 | 预估 | 状态 |
 | --- | --- | --- | --- | --- |
-| T3 | server：角色上下文构建过滤 `frozen` 角色 | P0 | 1.5h | ⬜ 待开始 |
-| T4 | server：auto-director 退场推断 prompt 注册（prompting 模块） | P0 | 2h | ⬜ 待开始 |
-| T5 | server：auto-director 章节确认后集成退场推断步骤 | P0 | 2h | ⬜ 待开始 |
-| T6 | server：自动冻结逻辑（连续 N 章未提及则 frozen） | P1 | 1.5h | ⬜ 待开始 |
-| T7 | server：角色退场状态变更 API（手动标记 + 批量更新） | P0 | 1.5h | ⬜ 待开始 |
+| T3 | server：角色上下文构建过滤 `frozen` 角色 | P0 | 1.5h | ✅ 完成 |
+| T4 | server：auto-director 退场推断 prompt 注册（prompting 模块） | P0 | 2h | ✅ 完成 |
+| T5 | server：auto-director 章节确认后集成退场推断步骤 | P0 | 2h | ✅ 完成 |
+| T6 | server：自动冻结逻辑（连续 N 章未提及则 frozen） | P1 | 1.5h | ✅ 完成 |
+| T7 | server：角色退场状态变更 API（手动标记 + 批量更新） | P0 | 1.5h | ✅ 完成 |
 
 ### 阶段三：client — 前端交互
 
 | # | 任务 | 优先级 | 预估 | 状态 |
 | --- | --- | --- | --- | --- |
-| T8 | client：角色管理面板展示 `exitStatus` 标签 | P0 | 1.5h | ⬜ 待开始 |
-| T9 | client：角色列表按 `exitStatus` 筛选 | P1 | 1h | ⬜ 待开始 |
-| T10 | client：手动标记退场/死亡交互（详情页按钮 + 确认弹窗） | P0 | 1.5h | ⬜ 待开始 |
+| T8 | client：角色管理面板展示 `exitStatus` 标签 | P0 | 1.5h | ✅ 完成 |
+| T9 | client：角色列表按 `exitStatus` 筛选 | P1 | 1h | ✅ 完成 |
+| T10 | client：手动标记退场/死亡交互（详情页按钮 + 确认弹窗） | P0 | 1.5h | ✅ 完成 |
 
 ### 阶段四：验证
 
 | # | 任务 | 优先级 | 预估 | 状态 |
 | --- | --- | --- | --- | --- |
-| T11 | 单元测试：退场推断逻辑 + 冻结逻辑 | P0 | 2h | ⬜ 待开始 |
-| T12 | 集成测试：章节确认后退场推断端到端流程 | P1 | 2h | ⬜ 待开始 |
+| T11 | 单元测试：退场推断逻辑 + 冻结逻辑 | P0 | 2h | ✅ 完成 |
+| T12 | 集成测试：章节确认后退场推断端到端流程 | P1 | 2h | ✅ 完成 |
 
 ---
 
@@ -292,6 +292,7 @@ Body: { "exitStatus": "exited" | "dead" }
 | 日期 | 任务 | 状态 |
 | ---- | ---- | ---- |
 | 2026-07-03 | req 路由生成任务包 | 完成 |
+| 2026-07-04 | T1-T12 全部实现 | 完成 |
 
 ---
 

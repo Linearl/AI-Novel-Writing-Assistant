@@ -48,6 +48,8 @@ import {
 } from "./workflowStepRuntime/WorkflowStepModule";
 import type { DirectorPipelinePhase } from "./recovery/novelDirectorRecovery";
 import { WorldContextGateway } from "../worldContext/WorldContextGateway";
+import { settingConsistencyService } from "../../setting/settingConsistencyService";
+import { logger } from "../../logging/LoggerService";
 
 export interface DirectorPipelineRunInput {
   taskId: string;
@@ -161,6 +163,9 @@ export class NovelDirectorPipelineRuntime {
             approveAutoExecutionScope: approval.approveAutoExecutionScope,
           });
         }
+        // Fire-and-forget: trigger setting consistency check after world setup completes.
+        // Non-blocking — errors are logged, never propagated (auto-director quality gate policy).
+        fireSettingConsistencyCheck(input.novelId, input.input);
         continue;
       }
 
@@ -589,4 +594,63 @@ export class NovelDirectorPipelineRuntime {
   ): Promise<void> {
     await this.executeStructuredOutlineStep(taskId, novelId, input, baseWorkspace);
   }
+}
+
+/* ── REQ-2038: Fire-and-forget consistency check after world setup ──── */
+
+/**
+ * After the world_setup phase completes, assemble the world context data
+ * and trigger a non-blocking consistency check. Errors are logged only —
+ * the auto-director main flow must never be interrupted.
+ */
+function fireSettingConsistencyCheck(
+  novelId: string,
+  request: DirectorConfirmRequest,
+): void {
+  const gateway = new WorldContextGateway();
+  gateway
+    .getWorldContextBlock(novelId, {
+      purpose: "outline",
+      storyInput: request.idea,
+      provider: request.provider,
+      model: request.model,
+      temperature: request.temperature,
+    })
+    .then((block) => {
+      if (!block) {
+        logger.info("[REQ-2038] World context block unavailable, skipping consistency check.", {
+          novelId,
+        });
+        return;
+      }
+      // Assemble settings payload from the world context for the consistency checker
+      const settings: Record<string, unknown> = {
+        coreWorldFrame: block.summaryText,
+        worldRulesText: block.worldRulesText,
+        worldStageText: block.worldStageText,
+        hardRules: block.hardRules,
+        forbiddenCombinations: block.forbiddenCombinations,
+        activeForces: block.activeForces,
+        activeLocations: block.activeLocations,
+      };
+
+      return settingConsistencyService
+        .checkConsistency(novelId, settings, {
+          provider: request.provider,
+          model: request.model,
+        })
+        .then((report) => {
+          logger.info("[REQ-2038] Setting consistency check completed after world setup.", {
+            novelId,
+            overallScore: report.overallScore,
+            contradictionCount: report.contradictions.length,
+          });
+        });
+    })
+    .catch((err: unknown) => {
+      logger.warn("[REQ-2038] Setting consistency check failed (non-blocking).", {
+        novelId,
+        error: err instanceof Error ? err.message : String(err),
+      });
+    });
 }

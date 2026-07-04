@@ -50,10 +50,10 @@ description: "docs 目录索引（自动生成）"
 | --- | --- | --- |
 | [1.task\B.todo\v0.1\v0.1-r2037-C2-character-exit-state-machine\decision_log.md](./1.task\B.todo\v0.1\v0.1-r2037-C2-character-exit-state-machine\decision_log.md) | REQ-2037 决策留痕 | REQ-2037 决策留痕 |
 | [1.task\B.todo\v0.1\v0.1-r2037-C2-character-exit-state-machine\design.md](./1.task\B.todo\v0.1\v0.1-r2037-C2-character-exit-state-machine\design.md) | REQ-2037 方案设计 | REQ-2037 方案设计 |
-| [1.task\B.todo\v0.1\v0.1-r2037-C2-character-exit-state-machine\README.md](./1.task\B.todo\v0.1\v0.1-r2037-C2-character-exit-state-machine\README.md) | REQ-2037 角色退场状态机 任务总线 | REQ-2037 角色退场状态机 任务总线 |
+| [1.task\B.todo\v0.1\v0.1-r2037-C2-character-exit-state-machine\README.md](./1.task\B.todo\v0.1\v0.1-r2037-C2-character-exit-state-machine\README.md) | --- | - |
 | [1.task\B.todo\v0.1\v0.1-r2037-C2-character-exit-state-machine\REQ-2037-character-exit-state-machine-original.md](./1.task\B.todo\v0.1\v0.1-r2037-C2-character-exit-state-machine\REQ-2037-character-exit-state-machine-original.md) | REQ-2037 角色退场状态机 需求冻结副本 | REQ-2037 角色退场状态机 需求冻结副本 |
 | [1.task\B.todo\v0.1\v0.1-r2037-C2-character-exit-state-machine\REQ-2037-character-exit-state-machine.md](./1.task\B.todo\v0.1\v0.1-r2037-C2-character-exit-state-machine\REQ-2037-character-exit-state-machine.md) | REQ-2037 角色退场状态机 需求冻结副本 | REQ-2037 角色退场状态机 需求冻结副本 |
-| [1.task\B.todo\v0.1\v0.1-r2037-C2-character-exit-state-machine\tasks.md](./1.task\B.todo\v0.1\v0.1-r2037-C2-character-exit-state-machine\tasks.md) | REQ-2037 任务拆解 | REQ-2037 任务拆解 |
+| [1.task\B.todo\v0.1\v0.1-r2037-C2-character-exit-state-machine\tasks.md](./1.task\B.todo\v0.1\v0.1-r2037-C2-character-exit-state-machine\tasks.md) | --- | - |
 
 ## 1.task\B.todo\v0.1\v0.1-r2038-C2-setting-consistency-pre-check
 

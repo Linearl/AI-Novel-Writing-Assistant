@@ -15,8 +15,8 @@ description: "REQ-2038 设定一致性前置校验任务拆解"
 | 一 | T1 | BE-001 | 新增设定校验 Prompt | P2 | 2h | done |
 | 一 | T2 | BE-002 | 校验服务实现 | P2 | 4h | done |
 | 一 | T3 | BE-003 | 校验 API 端点 | P2 | 2h | done |
-| 二 | T4 | BE-004 | Auto-Director World Building 集成 | P2 | 3h | |
-| 二 | T5 | BE-005 | 校验报告存储与忽略机制 | P2 | 2h | |
+| 二 | T4 | BE-004 | Auto-Director World Building 集成 | P2 | 3h | done |
+| 二 | T5 | BE-005 | 校验报告存储与忽略机制 | P2 | 2h | done |
 | 三 | T6 | FE-001 | 设定页面校验结果展示 | P2 | 3h | |
 | 三 | T7 | FE-002 | 一键修复功能 | P2 | 3h | |
 | 三 | T8 | FE-003 | 忽略功能 | P2 | 1h | |
@@ -83,10 +83,10 @@ description: "REQ-2038 设定一致性前置校验任务拆解"
 **目标**: world building 阶段完成后自动触发校验
 
 **子任务**:
-- [ ] T4.1 定位 auto-director world building 完成回调
-- [ ] T4.2 在 world building 完成后调用 `settingConsistencyService.checkConsistency()`
-- [ ] T4.3 确保校验不阻断主流程（异步执行 + 错误隔离）
-- [ ] T4.4 校验结果写入项目设定数据
+- [x] T4.1 定位 auto-director world building 完成回调
+- [x] T4.2 在 world building 完成后调用 `settingConsistencyService.checkConsistency()`
+- [x] T4.3 确保校验不阻断主流程（异步执行 + 错误隔离）
+- [x] T4.4 校验结果写入项目设定数据
 
 **验收**: auto-director 执行完 world building 后自动触发校验，主流程不受影响
 
@@ -97,12 +97,14 @@ description: "REQ-2038 设定一致性前置校验任务拆解"
 **目标**: 校验报告持久化，忽略记录保存
 
 **子任务**:
-- [ ] T5.1 定义报告存储路径（`server/data/projects/{projectId}/consistency-reports/`）
-- [ ] T5.2 实现报告写入/读取逻辑
-- [ ] T5.3 忽略记录持久化（与报告同文件或独立 ignore-list 文件）
-- [ ] T5.4 新校验时自动过滤已忽略项
+- [x] T5.1 定义报告存储路径（`server/data/projects/{projectId}/consistency-reports/`）
+- [x] T5.2 实现报告写入/读取逻辑
+- [x] T5.3 忽略记录持久化（与报告同文件或独立 ignore-list 文件）
+- [x] T5.4 新校验时自动过滤已忽略项
 
 **验收**: 报告正确存储，忽略项在新校验中不显示
+
+> 注: T5 全部在 Phase 1 已完成实现（settingConsistencyStorage.ts + settingConsistencyService 中的 ignoreContradiction + API 路由），此处确认完整性。
 
 ---
 
