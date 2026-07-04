@@ -294,8 +294,7 @@ export class NovelCoreCrudService {
             conflictLevel: true,
             revealLevel: true,
             mustAvoid: true,
-            taskSheet: true,
-            sceneCards: true,
+            // taskSheet/sceneCards 仅在章节编辑 tab 需要，通过 chapter detail 端点按需加载
             repairHistory: true,
             qualityScore: true,
             continuityScore: true,

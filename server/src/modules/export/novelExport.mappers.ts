@@ -84,8 +84,8 @@ function mapExportChapter(raw: {
   conflictLevel: number | null;
   revealLevel: number | null;
   mustAvoid: string | null;
-  taskSheet: string | null;
-  sceneCards: string | null;
+  taskSheet?: string | null;
+  sceneCards?: string | null;
   repairHistory: string | null;
   qualityScore: number | null;
   continuityScore: number | null;

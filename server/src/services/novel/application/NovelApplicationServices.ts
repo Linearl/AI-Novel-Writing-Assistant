@@ -83,16 +83,9 @@ export class DefaultNovelApplicationServices {
     if (!novel) {
       return null;
     }
-    const volumeWorkspace = await this.volumeService.getVolumes(id).catch(() => null);
-    if (!volumeWorkspace) {
-      return novel;
-    }
-    return {
-      ...novel,
-      volumes: volumeWorkspace.volumes,
-      volumeSource: volumeWorkspace.source,
-      activeVolumeVersionId: volumeWorkspace.activeVersionId,
-    };
+    // volumes 通过独立端点 /novels/:id/volumes 按需加载，
+    // 不再合并到 novel detail 响应中（减少 75KB payload）
+    return novel;
   }
 
   updateNovel(...args: Parameters<NovelCoreService["updateNovel"]>) {
