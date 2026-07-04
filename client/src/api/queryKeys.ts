@@ -151,6 +151,7 @@ export const queryKeys = {
     structuredFallback: ["settings", "structured-fallback"] as const,
     autoDirectorChannels: ["settings", "auto-director-channels"] as const,
     autoDirectorApprovalPreferences: ["settings", "auto-director-approval-preferences"] as const,
+    consistencyReport: (novelId: string) => ["settings", "consistency-report", novelId] as const,
   },
   feedback: {
     list: (params: string) => ["feedback", "list", params] as const,

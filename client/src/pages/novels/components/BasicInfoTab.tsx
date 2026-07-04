@@ -4,6 +4,7 @@ import NovelBasicInfoForm from "./NovelBasicInfoForm";
 import NovelStyleRecommendationCard from "./NovelStyleRecommendationCard";
 import NovelWorldUsageCard from "./NovelWorldUsageCard";
 import NovelWorldManagerCard from "./NovelWorldManagerCard";
+import SettingConsistencyPanel from "./SettingConsistencyPanel";
 import { BookFramingQuickFillButton } from "./basicInfoForm/BookFramingQuickFillButton";
 import CollapsibleSummary from "./CollapsibleSummary";
 import NovelCreateTitleQuickFill from "./titleWorkshop/NovelCreateTitleQuickFill";
@@ -19,6 +20,8 @@ export default function BasicInfoTab(props: BasicTabProps) {
         entry={props.directorTakeoverEntry}
       />
       <NovelWorldManagerCard
+        novelId={props.novelId}
+        novelTitle={props.basicForm.title}
         view={props.novelWorldView}
         syncDiff={props.novelWorldSyncDiff}
         worldOptions={props.worldOptions}
@@ -46,6 +49,10 @@ export default function BasicInfoTab(props: BasicTabProps) {
           onSave={props.onSaveWorldSliceOverrides}
         />
       </div>
+      <SettingConsistencyPanel
+        novelId={props.novelId}
+        worldSettings={(props.novelWorldView?.handbook ?? {}) as Record<string, unknown>}
+      />
       <Card>
         <CardHeader>
           <CardTitle>书级定位与基本信息</CardTitle>
