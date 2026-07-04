@@ -257,4 +257,5 @@ description: "docs 目录索引（自动生成）"
 | [4.misc\issues\2026-07-03-novelcreate-bootstrap-polling-loop.md](./4.misc\issues\2026-07-03-novelcreate-bootstrap-polling-loop.md) | NovelCreate.tsx 中 useEffect + setSearchParams 形成无限循环，bootstrap 接口被以 ~1200 req/s 的速率疯狂调用 | NovelCreate.tsx 中 useEffect + setSearchParams 形成无限循环，bootstrap 接口被以 ~1200 req/s 的速率疯狂调用 |
 | [4.misc\issues\rag-worker-ui-toggle-ignored.md](./4.misc\issues\rag-worker-ui-toggle-ignored.md) | **状态**: 已修复 (local) | 待提交 upstream | - |
 | [4.misc\issues\sse-buffer-flush-missing-done-frame.md](./4.misc\issues\sse-buffer-flush-missing-done-frame.md) | **状态**: 已修复 | - |
+| [4.misc\issues\useNovelEditWorkflow-bootstrap-loop.md](./4.misc\issues\useNovelEditWorkflow-bootstrap-loop.md) | `useNovelEditWorkflow` hook 中的 `bootstrapMutation` useEffect 依赖 `workflowTaskId` | - |
 
