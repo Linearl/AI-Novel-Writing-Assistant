@@ -54,7 +54,7 @@ description: "需求任务总清单（SSOT）"
 | 2036 | 用户反馈系统 | p3 | ✅ 已完成 | - | 0.1 | 2026-07-02T09:45:00.000Z | 2026-07-03T10:00:00+08:00 | `B.2.done/v0.1-r2036-M2-user-feedback-system/README.md` |  |
 | 2037 | 角色退场状态机 | p1 | 📋 待办 | 竞品分析-游蜂写作 | 0.1 | 2026-07-03 | - | `B.todo/v0.1-r2037-C2-character-exit-state-machine/README.md` | 四态状态机：active/exited/dead/frozen，含自动推断 |
 | 2038 | 设定一致性前置校验 | p2 | 📋 待办 | 竞品分析-游蜂写作 | 0.1 | 2026-07-03 | - | `B.todo/v0.1-r2038-C2-setting-consistency-pre-check/README.md` | 先做 LLM 内置校验，后续迭代加变更 diff |
-| 2039 | 闲置后网络连接自动恢复 | p2 | ✅ 已完成 | 用户反馈 | 0.1 | 2026-07-03 | 2026-07-04 | `B.todo/v0.1-r2039-simple-idle-recovery/README.md` | 闲置后 TCP 连接回收导致报错 |
+| 2039 | 闲置后网络连接自动恢复 | p2 | ✅ 已完成 | 用户反馈 | 0.1 | 2026-07-03 | 2026-07-04 | `B.2.done/v0.1-r2039-C1-idle-network-recovery/README.md` | 闲置后 TCP 连接回收导致报错 |
 | 2040 | 资产 TXT 导入导出 | p2 | 📋 待办 | 竞品分析-游蜂写作 | 0.1 | 2026-07-03 | - | `B.todo/v0.1-r2040-M2-asset-txt-import-export/README.md` | 设定/大纲/关系网/正文独立 TXT 导入导出 |
 | 2041 | 伏笔埋收可视化追踪 | p2 | 📋 待办 | 竞品分析-游蜂写作 | 0.1 | 2026-07-03 | - | `B.todo/v0.1-r2041-M2-payoff-ledger-visualization/README.md` | payoff ledger 增强 + auto-director 集成 + UI 可视化 |
 | 2042 | 自适应字数控制与水文检测 | p2 | 📋 待办 | 竞品分析讨论 | 0.1 | 2026-07-03 | - | `B.todo/v0.1-r2042-M2-adaptive-word-count-control/README.md` | 章节角色系数 + 水文检测 + 自动 compress/expand |
@@ -72,7 +72,7 @@ description: "需求任务总清单（SSOT）"
 | 3006 | 修复详情弹窗增强 | p4 | ✅ 已完成 | - | 0.1 | 2026-06-28T00:00:00.000Z | 2026-06-29T00:00:00.000Z | `B.2.done/v0.1-r3006-medium-repair-detail-dialog-enhancement/README.md` |  |
 | 3007 | 世界生成阶段进度显示 | p3 | ✅ 已完成 | 用户体验反馈 | 0.1 | 2026-06-29 | 2026-06-29 | `B.2.done/v0.1-r3007-medium-world-gen-stage-progress/README.md` | 步骤 2 骨架生成按钮需显示阶段进度 |
 | 3008 | 日志中心 | p4 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r3008-medium-log-center/README.md` |  |
-| 3009 | Tab 切换性能优化 | p3 | ✅ 已完成 | 性能分析 | 0.1 | 2026-07-03 | 2026-07-04 | `B.todo/v0.1-r3009-medium-tab-switch-perf/README.md` | NovelEdit tab 切换延迟优化 |
+| 3009 | Tab 切换性能优化 | p3 | ✅ 已完成 | 性能分析 | 0.1 | 2026-07-03 | 2026-07-04 | `B.2.done/v0.1-r3009-C2-tab-switch-performance/README.md` | NovelEdit tab 切换延迟优化 |
 | 3004 | Novel Conversation Archive | p4 | 📋 待办 | - | 0.1 | 2026-06-26T00:00:00.000Z | 2026-06-26T00:00:00.000Z | `B.todo/v0.1-r3004-medium-novel-conversation-archive/README.md` |  |
 
 ### 3.6 技术债务和重构任务（7xxx）
@@ -149,7 +149,7 @@ description: "需求任务总清单（SSOT）"
 | 2033 | 主题一致性纯数据工具层 (Theme Consistency Data Tools) | `B.2.done/v0.1-r2033-medium-theme-consistency-data-tools/README.md` |
 | 2034 | 主题一致性 LLM 分析层 (Theme Consistency LLM Analysis) | `B.2.done/v0.1-r2034-medium-theme-consistency-llm-analysis/README.md` |
 | 2036 | 用户反馈系统 | `B.2.done/v0.1-r2036-M2-user-feedback-system/README.md` |
-| 2039 | 闲置后网络连接自动恢复 | `B.todo/v0.1-r2039-simple-idle-recovery/README.md` |
+| 2039 | 闲置后网络连接自动恢复 | `B.2.done/v0.1-r2039-C1-idle-network-recovery/README.md` |
 | 3001 | Task Batch Archive | `B.2.done/v0.1-r3001-medium-task-batch-archive/README.md` |
 | 3002 | 导演进度规划资源缺失 Checklist 可视化 | `B.2.done/v0.1-r3002-medium-director-planning-checklist/README.md` |
 | 3003 | 小说项目对话存档 | `B.2.done/v0.1-r3003-medium-repair-progress-dialog/README.md` |
@@ -157,7 +157,7 @@ description: "需求任务总清单（SSOT）"
 | 3006 | 修复详情弹窗增强 | `B.2.done/v0.1-r3006-medium-repair-detail-dialog-enhancement/README.md` |
 | 3007 | 世界生成阶段进度显示 | `B.2.done/v0.1-r3007-medium-world-gen-stage-progress/README.md` |
 | 3008 | 日志中心 | `B.2.done/v0.1-r3008-medium-log-center/README.md` |
-| 3009 | Tab 切换性能优化 | `B.todo/v0.1-r3009-medium-tab-switch-perf/README.md` |
+| 3009 | Tab 切换性能优化 | `B.2.done/v0.1-r3009-C2-tab-switch-performance/README.md` |
 | 7001 | Auto-Director 测试隔离修复 | `B.2.done/v0.1-r7001-simple-auto-director-test-fix/README.md` |
 | 7002 | NovelEdit.tsx 大文件拆分 | `B.2.done/v0.1-r7002-complex-novel-edit-refactor/README.md` |
 | 7003 | Server 超大文件分批拆分 | `B.2.done/v0.1-r7003-complex-server-large-file-refactor/README.md` |
