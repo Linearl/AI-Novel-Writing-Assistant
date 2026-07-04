@@ -88,6 +88,10 @@ export class DefaultNovelApplicationServices {
     return novel;
   }
 
+  async getNovelStructuredOutline(id: string) {
+    return this.core.getNovelStructuredOutline(id);
+  }
+
   updateNovel(...args: Parameters<NovelCoreService["updateNovel"]>) {
     return this.core.updateNovel(...args);
   }

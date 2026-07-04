@@ -39,6 +39,11 @@ export async function getNovelDetail(id: string) {
   return data;
 }
 
+export async function getNovelStructuredOutline(id: string) {
+  const { data } = await apiClient.get<ApiResponse<string | null>>(`/novels/${id}/structured-outline`);
+  return data;
+}
+
 export async function createNovel(payload: {
   title: string;
   description?: string;

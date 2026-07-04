@@ -47,6 +47,10 @@ export class NovelCoreService {
     return this.crudService.getNovelById(id);
   }
 
+  async getNovelStructuredOutline(id: string) {
+    return this.crudService.getNovelStructuredOutline(id);
+  }
+
   async listStorylineVersions(novelId: string) {
     return this.storylineService.listStorylineVersions(novelId);
   }

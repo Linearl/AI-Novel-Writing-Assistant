@@ -140,6 +140,7 @@ interface RegisterNovelBaseRoutesInput {
     | "listNovels"
     | "createNovel"
     | "getNovelById"
+    | "getNovelStructuredOutline"
     | "updateNovel"
     | "deleteNovel"
   >;
@@ -209,6 +210,20 @@ export function registerNovelBaseRoutes(input: RegisterNovelBaseRoutesInput): vo
         data,
         message: "获取小说详情成功。",
       } satisfies ApiResponse<typeof data>);
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  router.get("/:id/structured-outline", validate({ params: idParamsSchema }), async (req, res, next) => {
+    try {
+      const { id } = req.params as z.infer<typeof idParamsSchema>;
+      const outline = await novelService.getNovelStructuredOutline(id);
+      res.status(200).json({
+        success: true,
+        data: outline,
+        message: "获取结构化大纲成功。",
+      } satisfies ApiResponse<string | null>);
     } catch (error) {
       next(error);
     }

@@ -19,6 +19,16 @@ export const apiClient = axios.create({
   timeout: API_TIMEOUT_MS,
 });
 
+// 注入 API Token 到每个请求
+// 优先级：localStorage 运行时设置 > VITE_API_TOKEN 构建时环境变量
+apiClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem("api_token") || import.meta.env.VITE_API_TOKEN;
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 const AUTO_DISMISS_SERVER_ERROR_TOAST = {
   duration: 4000,
   closeButton: false,

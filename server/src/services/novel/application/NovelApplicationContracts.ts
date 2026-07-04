@@ -11,6 +11,7 @@ export interface NovelApplicationServices {
   listNovels: NovelApplicationMethod;
   createNovel: NovelApplicationMethod;
   getNovelById: (...args: Parameters<NovelCoreService["getNovelById"]>) => Promise<NovelDetailWithVolumeWorkspace | null>;
+  getNovelStructuredOutline: (id: string) => Promise<string | null>;
   updateNovel: NovelApplicationMethod;
   deleteNovel: NovelApplicationMethod;
   listChapters: NovelApplicationMethod;
@@ -119,6 +120,7 @@ export const novelApplicationServiceMethodNames = [
   "listNovels",
   "createNovel",
   "getNovelById",
+  "getNovelStructuredOutline",
   "updateNovel",
   "deleteNovel",
   "listChapters",

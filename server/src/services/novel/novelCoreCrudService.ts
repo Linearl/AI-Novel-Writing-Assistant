@@ -328,7 +328,17 @@ export class NovelCoreCrudService {
     if (!row) {
       return null;
     }
-    return normalizeNovelOutput(row);
+    // structuredOutline (58KB) 通过独立端点按需加载，detail 响应中置 null
+    const normalized = normalizeNovelOutput(row);
+    return { ...normalized, structuredOutline: null };
+  }
+
+  async getNovelStructuredOutline(id: string): Promise<string | null> {
+    const row = await prisma.novel.findUnique({
+      where: { id },
+      select: { structuredOutline: true },
+    });
+    return row?.structuredOutline ?? null;
   }
 
   async updateNovel(id: string, input: UpdateNovelInput) {
