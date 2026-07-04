@@ -401,12 +401,14 @@ const generatedVolumeSkeletonSchema = z.object({
 const generatedChapterListItemSchema = z.object({
   title: z.string().trim().min(1),
   summary: z.string().trim().min(1),
+  chapterRole: z.enum(["normal", "transition", "climax", "turning_point"]).default("normal"),
 });
 
 const generatedChapterBeatBlockItemSchema = z.preprocess((raw) => normalizeChapterListItemPayload(raw), z.object({
   title: z.string().trim().min(1),
   summary: z.string().trim().min(1),
   beatKey: z.string().trim().min(1),
+  chapterRole: z.enum(["normal", "transition", "climax", "turning_point"]).default("normal"),
 }));
 
 const generatedVolumeStrategyVolumeSchema = z.object({

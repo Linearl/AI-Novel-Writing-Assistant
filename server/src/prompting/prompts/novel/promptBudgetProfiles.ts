@@ -24,6 +24,9 @@ export const NOVEL_PROMPT_BUDGETS = {
   chapterReview: 2600,
   chapterRepair: 2200,
   chapterSummary: 1000,
+  chapterCompress: 2600,
+  chapterExpand: 2600,
+  waterContentDetection: 2600,
 } as const;
 
 export const RUNTIME_PROMPT_BUDGET_PROFILES: PromptBudgetProfile[] = [

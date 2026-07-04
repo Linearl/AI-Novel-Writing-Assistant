@@ -573,6 +573,18 @@ const promptAssetLoaderEntries: PromptAssetLoaderEntry[] = [
     key: "setting.consistency.check@v1",
     load: () => require("./prompts/setting/settingConsistencyCheck.prompts").settingConsistencyCheckPrompt as UnknownPromptAsset,
   },
+  {
+    key: "novel.chapter.compress@v1",
+    load: () => require("./prompts/novel/compressChapter.prompts").compressChapterPrompt as UnknownPromptAsset,
+  },
+  {
+    key: "novel.chapter.expand@v1",
+    load: () => require("./prompts/novel/expandChapter.prompts").expandChapterPrompt as UnknownPromptAsset,
+  },
+  {
+    key: "novel.water_content.detect@v1",
+    load: () => require("./prompts/novel/waterContentDetection.prompts").waterContentDetectionPrompt as UnknownPromptAsset,
+  },
 ];
 
 const promptAssetLoaderByKey = createPromptAssetLoaderRegistry(promptAssetLoaderEntries);

@@ -311,6 +311,13 @@ enum CharacterGender {
   unknown
 }
 
+enum CharacterExitStatus {
+  active
+  exited
+  dead
+  frozen
+}
+
 model Novel {
   id                String      @id @default(cuid())
   title             String
@@ -619,6 +626,9 @@ model Character {
   arcEnd          String?
   currentState    String?
   currentGoal     String?
+  exitStatus      CharacterExitStatus @default(active)
+  exitNote        String?
+  exitChapterId   String?
   lastEvolvedAt   DateTime?
   novelId         String
   novel           Novel    @relation(fields: [novelId], references: [id], onDelete: Cascade)

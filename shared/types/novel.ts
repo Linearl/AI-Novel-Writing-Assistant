@@ -101,6 +101,31 @@ export type ChapterStatus =
   | "needs_repair"
   | "completed";
 
+/** Chapter narrative role — determines word count coefficient and generation hints. */
+export type ChapterRole = "normal" | "transition" | "climax" | "turning_point";
+
+/** Human-readable labels for chapter roles. */
+export const CHAPTER_ROLE_LABELS: Record<ChapterRole, string> = {
+  normal: "普通章",
+  transition: "过渡章",
+  climax: "高潮章",
+  turning_point: "转折章",
+};
+
+/** Adaptive word count target range for a chapter, computed from base settings and role. */
+export interface WordCountTarget {
+  min: number;
+  max: number;
+  role: ChapterRole;
+}
+
+/** Water content detection result for a chapter. */
+export interface WaterContentAnalysis {
+  score: number;
+  flagged: boolean;
+  analyzedAt?: string;
+}
+
 export type PipelineRunMode = "fast" | "polish";
 export type ArtifactSyncMode = "adaptive" | "deferred" | "strict";
 export type PipelineRepairMode =
@@ -182,6 +207,9 @@ export interface Novel {
   primaryStoryModeId?: string | null;
   secondaryStoryModeId?: string | null;
   worldId?: string | null;
+  baseWordCountMin: number;
+  baseWordCountMax: number;
+  waterContentThreshold: number;
   tokenUsage?: TaskTokenUsageSummary | null;
   createdAt: string;
   updatedAt: string;
@@ -196,6 +224,8 @@ export interface Chapter {
   generationState?: ChapterGenerationState;
   chapterStatus?: ChapterStatus | null;
   targetWordCount?: number | null;
+  wordCountTarget?: WordCountTarget | null;
+  waterContentAnalysis?: WaterContentAnalysis | null;
   conflictLevel?: number | null;
   revealLevel?: number | null;
   mustAvoid?: string | null;
