@@ -155,6 +155,14 @@ export interface ChapterRepairVersion {
   createdAt: string;
 }
 
+export async function toggleChapterLock(novelId: string, chapterId: string, locked: boolean) {
+  const { data } = await apiClient.patch<ApiResponse<{ id: string; locked: boolean }>>(
+    `/novels/${novelId}/chapters/${chapterId}/lock`,
+    { locked },
+  );
+  return data;
+}
+
 export async function getChapterRepairVersions(novelId: string, chapterId: string) {
   const { data } = await apiClient.get<ApiResponse<{ versions: ChapterRepairVersion[] }>>(
     `/novels/${novelId}/chapters/${chapterId}/repair-versions`,

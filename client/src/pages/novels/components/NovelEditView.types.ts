@@ -248,6 +248,7 @@ export interface StructuredTabViewProps extends Omit<
   | "impactResult"
 > {
   novelId: string;
+  novelTitle?: string;
   directorTakeoverEntry?: ReactNode;
   beatSheets: VolumeBeatSheet[];
   rebalanceDecisions: VolumeRebalanceDecision[];
@@ -403,6 +404,8 @@ export interface ChapterTabViewProps {
   streamingChapterLabel?: string | null;
   chapterRunStatus?: Extract<SSEFrame, { type: "run_status" }> | null;
   onAbortStream: () => void;
+  onToggleLockChapter?: (chapterId: string, locked: boolean) => void;
+  togglingLockChapterId?: string | null;
   directorTakeoverEntry?: ReactNode;
 }
 
@@ -472,6 +475,7 @@ export interface PipelineTabViewProps {
 
 export interface CharacterTabViewProps {
   novelId: string;
+  novelTitle?: string;
   llmProvider?: LLMProvider;
   llmModel?: string;
   characterMessage: string;

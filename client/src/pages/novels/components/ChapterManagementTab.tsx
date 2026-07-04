@@ -101,6 +101,8 @@ export default function ChapterManagementTab(props: ChapterTabViewProps) {
     streamingChapterLabel,
     chapterRunStatus,
     onAbortStream,
+    onToggleLockChapter,
+    togglingLockChapterId,
     directorTakeoverEntry,
   } = props;
 
@@ -208,6 +210,8 @@ export default function ChapterManagementTab(props: ChapterTabViewProps) {
               repairStreamingChapterId={repairStreamingChapterId}
               onQueueFilterChange={setQueueFilter}
               onSelectChapter={onSelectChapter}
+              onToggleLock={onToggleLockChapter}
+              togglingLockChapterId={togglingLockChapterId}
             />
           </div>
 

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import PaceCurveChart from "./PaceCurveChart";
+import PayoffLedgerPanel from "./payoff/PayoffLedgerPanel";
 import StructuredOutlineWorkspace from "./StructuredOutlineWorkspace";
 import type { StructuredTabViewProps } from "./NovelEditView.types";
 
@@ -28,6 +29,8 @@ export default function StructuredOutlineTab(props: StructuredTabViewProps) {
           </div>
         )}
       </div>
+
+      <PayoffLedgerPanel novelId={props.novelId} />
     </div>
   );
 }
