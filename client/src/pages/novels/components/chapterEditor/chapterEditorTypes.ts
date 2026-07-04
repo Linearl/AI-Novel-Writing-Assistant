@@ -29,6 +29,7 @@ export interface ChapterEditorSessionState extends Partial<ChapterEditorAiRevisi
 
 export interface ChapterEditorShellProps {
   novelId: string;
+  novelTitle?: string;
   chapter: Chapter | undefined;
   workspace: ChapterEditorWorkspaceResponse | null;
   workspaceStatus: "loading" | "ready" | "error";

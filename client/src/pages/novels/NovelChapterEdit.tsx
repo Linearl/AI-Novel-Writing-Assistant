@@ -63,6 +63,7 @@ export default function NovelChapterEdit() {
       <ChapterEditorShell
         key={`${chapter.id}:${chapter.updatedAt}`}
         novelId={id}
+        novelTitle={detail?.title}
         chapter={chapter}
         workspace={chapterEditorWorkspaceQuery.data?.data ?? null}
         workspaceStatus={chapterEditorWorkspaceQuery.isLoading

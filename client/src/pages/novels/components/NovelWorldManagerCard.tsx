@@ -7,12 +7,16 @@ import type {
   NovelWorldSyncInput,
   NovelWorldView,
 } from "@ai-novel/shared/types/novelWorld";
+import { exportWorldTxt, importWorldTxt } from "@/api/novel/txtIo";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import NovelWorldSourcePanel, { type WorldOption } from "./novelWorld/NovelWorldSourcePanel";
+import TxtIoToolbar from "./TxtIoToolbar";
 
 interface NovelWorldManagerCardProps {
+  novelId: string;
+  novelTitle?: string;
   view?: NovelWorldView | null;
   syncDiff?: NovelWorldSyncDiff | null;
   worldOptions: WorldOption[];
@@ -605,6 +609,25 @@ export default function NovelWorldManagerCard(props: NovelWorldManagerCardProps)
                 <Library className="size-4" />
                 {props.isSavingToLibrary ? "保存中..." : "保存到世界库"}
               </Button>
+            </div>
+          </div>
+        ) : null}
+
+        {novelWorld ? (
+          <div className="rounded-lg border border-border/70 bg-background p-4">
+            <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
+              <div>
+                <div className="text-sm font-medium text-foreground">导入 / 导出 TXT</div>
+                <div className="mt-1 text-sm leading-6 text-muted-foreground">
+                  将世界设定导出为 TXT 文件，或从 TXT 文件导入世界设定。
+                </div>
+              </div>
+              <TxtIoToolbar
+                assetLabel="世界设定"
+                disabled={!novelWorld}
+                onExport={() => exportWorldTxt(props.novelId, props.novelTitle ?? "未命名小说")}
+                onImport={(content, mode) => importWorldTxt(props.novelId, content, mode as "overwrite" | "merge")}
+              />
             </div>
           </div>
         ) : null}

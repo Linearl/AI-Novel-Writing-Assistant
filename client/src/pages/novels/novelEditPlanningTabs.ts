@@ -33,6 +33,7 @@ import type { ExistingOutlineChapter } from "./volumePlan.utils";
 
 interface BuildNovelEditPlanningTabsInput {
   id: string;
+  novelTitle?: string;
   basicForm: NovelBasicFormState;
   genreOptions: BasicTabProps["genreOptions"];
   storyModeOptions: BasicTabProps["storyModeOptions"];
@@ -257,6 +258,7 @@ export function buildNovelEditPlanningTabs(input: BuildNovelEditPlanningTabsInpu
 
   const structuredTab: StructuredTabViewProps = {
     novelId: input.id,
+    novelTitle: input.novelTitle,
     directorTakeoverEntry: input.structuredDirectorTakeoverEntry,
     ...outlineTab,
     beatSheets: input.beatSheets,

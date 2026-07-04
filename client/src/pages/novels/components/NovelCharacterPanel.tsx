@@ -15,6 +15,7 @@ import type {
 } from "@ai-novel/shared/types/novel";
 import type { LLMProvider } from "@ai-novel/shared/types/llm";
 import type { CharacterResourceLedgerItem } from "@ai-novel/shared/types/characterResource";
+import { exportCharactersTxt, importCharactersTxt } from "@/api/novel/txtIo";
 import AiButton from "@/components/common/AiButton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -25,6 +26,7 @@ import CharacterQuickCreateDialog from "./CharacterQuickCreateDialog";
 import CharacterSupplementalDialog from "./CharacterSupplementalDialog";
 import type { QuickCharacterCreatePayload } from "./characterPanel.utils";
 import DirectorTakeoverEntryPanel from "./DirectorTakeoverEntryPanel";
+import TxtIoToolbar from "./TxtIoToolbar";
 
 interface QuickCharacterFormState {
   name: string;
@@ -50,6 +52,7 @@ interface CharacterFormState {
 
 interface NovelCharacterPanelProps {
   novelId: string;
+  novelTitle?: string;
   llmProvider?: LLMProvider;
   llmModel?: string;
   characterMessage: string;
@@ -117,6 +120,7 @@ interface NovelCharacterPanelProps {
 export default function NovelCharacterPanel(props: NovelCharacterPanelProps) {
   const {
     novelId,
+    novelTitle,
     llmProvider,
     llmModel,
     characterMessage,
@@ -332,6 +336,22 @@ export default function NovelCharacterPanel(props: NovelCharacterPanelProps) {
           </div>
         </CardContent>
       </Card>
+
+      <div className="rounded-lg border border-border/70 bg-background p-4">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <div className="text-sm font-medium text-foreground">角色导入 / 导出</div>
+            <div className="mt-1 text-xs leading-5 text-muted-foreground">
+              将角色关系导出为 TXT 文件，或从 TXT 文件导入角色关系。
+            </div>
+          </div>
+          <TxtIoToolbar
+            assetLabel="角色关系"
+            onExport={() => exportCharactersTxt(novelId, novelTitle ?? "未命名小说")}
+            onImport={(content, mode) => importCharactersTxt(novelId, content, mode as "overwrite" | "merge")}
+          />
+        </div>
+      </div>
 
       <CharacterQuickCreateDialog
         isOpen={isCharacterEntryOpen}
