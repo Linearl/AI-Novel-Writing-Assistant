@@ -12,9 +12,9 @@ description: "REQ-2038 设定一致性前置校验任务拆解"
 
 | 阶段 | 序号 | ID | 任务 | 优先级 | 预估 | 状态 |
 |------|---|---|---|---|---|---|
-| 一 | T1 | BE-001 | 新增设定校验 Prompt | P2 | 2h | |
-| 一 | T2 | BE-002 | 校验服务实现 | P2 | 4h | |
-| 一 | T3 | BE-003 | 校验 API 端点 | P2 | 2h | |
+| 一 | T1 | BE-001 | 新增设定校验 Prompt | P2 | 2h | done |
+| 一 | T2 | BE-002 | 校验服务实现 | P2 | 4h | done |
+| 一 | T3 | BE-003 | 校验 API 端点 | P2 | 2h | done |
 | 二 | T4 | BE-004 | Auto-Director World Building 集成 | P2 | 3h | |
 | 二 | T5 | BE-005 | 校验报告存储与忽略机制 | P2 | 2h | |
 | 三 | T6 | FE-001 | 设定页面校验结果展示 | P2 | 3h | |
@@ -31,10 +31,10 @@ description: "REQ-2038 设定一致性前置校验任务拆解"
 **目标**: 在 `prompting/` 注册设定一致性校验 prompt
 
 **子任务**:
-- [ ] T1.1 创建 `server/src/prompting/assets/setting-consistency-check.ts`（PromptAsset 定义）
-- [ ] T1.2 设计 prompt 模板：输入设定 JSON → 输出结构化校验报告
-- [ ] T1.3 在 `prompting/registry.ts` 中注册该 prompt asset
-- [ ] T1.4 添加 shared 类型定义（`SettingConsistencyReport`、`Contradiction`）到 `shared/types/`
+- [x] T1.1 创建 `server/src/prompting/assets/setting-consistency-check.ts`（PromptAsset 定义）
+- [x] T1.2 设计 prompt 模板：输入设定 JSON → 输出结构化校验报告
+- [x] T1.3 在 `prompting/registry.ts` 中注册该 prompt asset
+- [x] T1.4 添加 shared 类型定义（`SettingConsistencyReport`、`Contradiction`）到 `shared/types/`
 
 **验收**: prompt 可通过 registry 获取，shared 类型编译通过
 
@@ -45,12 +45,14 @@ description: "REQ-2038 设定一致性前置校验任务拆解"
 **目标**: 实现设定一致性校验业务逻辑
 
 **子任务**:
-- [ ] T2.1 创建 `server/src/services/setting/settingConsistencyService.ts`
-- [ ] T2.2 实现 `checkConsistency(projectId, settings)` 方法：组装 prompt、调用 LLM、解析结构化输出
-- [ ] T2.3 实现 `getReport(projectId)` 方法：读取最新校验报告
-- [ ] T2.4 实现 `ignoreContradiction(projectId, contradictionId)` 方法
-- [ ] T2.5 实现 `fixContradiction(projectId, contradictionId)` 方法：调用 LLM 修复 + 重新校验
-- [ ] T2.6 添加错误处理（LLM 调用失败、JSON 解析失败的 fallback）
+- [x] T2.1 创建 `server/src/services/setting/settingConsistencyService.ts`
+- [x] T2.2 实现 `checkConsistency(projectId, settings)` 方法：组装 prompt、调用 LLM、解析结构化输出
+- [x] T2.3 实现 `getReport(projectId)` 方法：读取最新校验报告
+- [x] T2.4 实现 `ignoreContradiction(projectId, contradictionId)` 方法
+- [x] T2.5 实现 `fixContradiction(projectId, contradictionId)` 方法：调用 LLM 修复 + 重新校验
+- [x] T2.6 添加错误处理（LLM 调用失败、JSON 解析失败的 fallback）
+
+> 注: fixContradiction 推迟到 Phase 2 (T7) 实现；存储层独立为 settingConsistencyStorage.ts
 
 **验收**: 校验服务可接受设定数据返回结构化报告
 
@@ -61,12 +63,14 @@ description: "REQ-2038 设定一致性前置校验任务拆解"
 **目标**: 暴露校验相关 REST API
 
 **子任务**:
-- [ ] T3.1 创建路由文件（模块 http 入口内或独立路由）
-- [ ] T3.2 实现 `POST /api/projects/:projectId/settings/consistency-check`
-- [ ] T3.3 实现 `GET /api/projects/:projectId/settings/consistency-report`
-- [ ] T3.4 实现 `POST /api/projects/:projectId/settings/consistency-report/ignore`
-- [ ] T3.5 实现 `POST /api/projects/:projectId/settings/consistency-report/fix`
-- [ ] T3.6 参数校验（Zod schema）
+- [x] T3.1 创建路由文件（模块 http 入口内或独立路由）
+- [x] T3.2 实现 `POST /api/projects/:projectId/settings/consistency-check`
+- [x] T3.3 实现 `GET /api/projects/:projectId/settings/consistency-report`
+- [x] T3.4 实现 `POST /api/projects/:projectId/settings/consistency-report/ignore`
+- [x] T3.5 实现 `POST /api/projects/:projectId/settings/consistency-report/fix`
+- [x] T3.6 参数校验（Zod schema）
+
+> 注: fix 端点推迟到 Phase 2 (T7) 实现；路由使用 novelId 匹配代码库约定
 
 **验收**: 所有 API 端点可访问且参数校验生效
 

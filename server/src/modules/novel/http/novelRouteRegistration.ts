@@ -12,6 +12,7 @@ import { registerNovelCharacterSyncRoutes } from "../characters/http/novelCharac
 import { registerNovelCharacterVisibleProfileRoutes } from "../characters/http/novelCharacterVisibleProfileRoutes";
 import { registerNovelFramingRoutes } from "../setup/http/novelFramingRoutes";
 import { registerNovelPlanningRoutes } from "../planning/http/novelPlanningRoutes";
+import { createPayoffLedgerCrudRoutes } from "../planning/http/novelPayoffLedgerCrudRoutes";
 import { registerNovelProductionRoutes } from "../production/http/novelProductionRoutes";
 import { registerNovelReviewRoutes } from "../production/http/novelReviewRoutes";
 import { registerNovelSnapshotCharacterRoutes } from "../characters/http/novelSnapshotCharacterRoutes";
@@ -24,6 +25,7 @@ import novelDecisionsRouter from "../state/http/novelDecisions";
 import { createNovelImportRoutes } from "./novelImportRoutes";
 import { createNovelRiskRoutes } from "../risk/http/novelRiskRoutes";
 import { createNovelPaceCurveRoutes } from "../pace/http/novelPaceCurveRoutes";
+import { createNovelSettingConsistencyRoutes } from "../setting/http/novelSettingConsistencyRoutes";
 import type { NovelHttpServices } from "./novelHttpServices";
 import {
   aiRevisionPreviewSchema,
@@ -31,6 +33,7 @@ import {
   auditIssueParamsSchema,
   beatGenerateSchema,
   chapterExecutionContractSchema,
+  chapterLockToggleSchema,
   chapterParamsSchema,
   chapterSchema,
   characterParamsSchema,
@@ -96,6 +99,7 @@ export function registerNovelHttpRoutes(router: Router, services: NovelHttpServi
     chapterSchema,
     updateChapterSchema,
     chapterExecutionContractSchema,
+    chapterLockToggleSchema,
   });
 
   registerNovelChapterEditorRoutes({
@@ -233,4 +237,6 @@ export function registerNovelHttpRoutes(router: Router, services: NovelHttpServi
   router.use(createNovelImportRoutes());
   router.use(createNovelRiskRoutes());
   router.use(createNovelPaceCurveRoutes());
+  router.use(createNovelSettingConsistencyRoutes());
+  router.use(createPayoffLedgerCrudRoutes());
 }

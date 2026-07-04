@@ -569,6 +569,10 @@ const promptAssetLoaderEntries: PromptAssetLoaderEntry[] = [
     key: "narrative.advisor.analysis@v1",
     load: () => require("./prompts/narrative/narrativeAdvisorAnalysisPrompt").narrativeAdvisorAnalysisPrompt as UnknownPromptAsset,
   },
+  {
+    key: "setting.consistency.check@v1",
+    load: () => require("./prompts/setting/settingConsistencyCheck.prompts").settingConsistencyCheckPrompt as UnknownPromptAsset,
+  },
 ];
 
 const promptAssetLoaderByKey = createPromptAssetLoaderRegistry(promptAssetLoaderEntries);
