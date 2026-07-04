@@ -3,11 +3,11 @@ description: "REQ-2039 网络连接自动恢复 任务总线"
 id: REQ-2039
 title: 闲置后网络连接自动恢复
 version: 0.1
-status: requirements_ready
+status: done
 priority: p2
 complexity: C1
 created: 2026-07-03
-updated: 2026-07-03
+updated: 2026-07-04
 tags:
   - resilience
   - react-query
@@ -16,7 +16,7 @@ tags:
 
 > 创建日期：2026-07-03
 > 目标版本：v0.1
-> 状态：📋 待开发
+> 状态：✅ 已完成
 
 ---
 
@@ -54,8 +54,8 @@ tags:
 
 ## 3. 执行清单
 
-- [ ] 任务拆解（tasks.md）
-- [ ] 方案设计（design.md）
-- [ ] 开发实现
-- [ ] 测试验证
+- [x] 任务拆解（tasks.md）
+- [x] 方案设计（design.md）
+- [x] 开发实现
+- [x] 测试验证
 - [ ] 归档

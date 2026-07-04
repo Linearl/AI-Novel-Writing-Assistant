@@ -3,9 +3,9 @@
   "title": "Tab 切换性能优化",
   "priority": "P3",
   "version": "v0.1",
-  "status": "pending",
+  "status": "done",
   "createdAt": "2026-07-03",
-  "completedAt": null,
+  "completedAt": "2026-07-04",
   "source": "性能分析",
   "note": "NovelEdit tab 切换延迟优化"
 }

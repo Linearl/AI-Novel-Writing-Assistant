@@ -27,6 +27,12 @@ description: "docs 目录索引（自动生成）"
 | --- | --- | --- |
 | [1.task\B.todo\任务包六件套构成-编号分类规则-自动归档机制.md](./1.task\B.todo\任务包六件套构成-编号分类规则-自动归档机制.md) | --- | - |
 
+## 1.task\B.todo\v0.1
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.1\todolist.md](./1.task\B.todo\v0.1\todolist.md) | v0.1 版本 — 全量任务包分阶段开发追踪清单 | v0.1 版本 — 全量任务包分阶段开发追踪清单 |
+
 ## 1.task\B.todo\v0.1\v0.1-r2035-C2-outline-final-draft-lock
 
 | 文件 | 标题 | 描述 |

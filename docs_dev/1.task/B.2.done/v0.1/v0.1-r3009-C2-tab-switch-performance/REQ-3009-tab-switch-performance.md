@@ -3,7 +3,7 @@ description: "REQ-3009 Tab 切换性能优化"
 id: REQ-3009
 title: Tab 切换性能优化
 version: 0.1
-status: requirements_ready
+status: done
 priority: p3
 complexity: medium
 created: 2026-07-03

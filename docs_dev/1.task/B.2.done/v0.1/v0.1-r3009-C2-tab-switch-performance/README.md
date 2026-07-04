@@ -3,7 +3,7 @@ description: "REQ-3009 Tab 切换性能优化 任务总线"
 id: REQ-3009
 title: Tab 切换性能优化
 version: 0.1
-status: requirements_ready
+status: done
 priority: p3
 complexity: C2
 created: 2026-07-03
@@ -54,8 +54,8 @@ NovelEdit 页面 Tab 切换响应慢，组件过于庞大（30+ state、20+ quer
 
 ## 3. 执行清单
 
-- [ ] 任务拆解（tasks.md）
-- [ ] 方案设计（design.md）
-- [ ] 开发实现
-- [ ] 测试验证
-- [ ] 归档
+- [x] 任务拆解（tasks.md）
+- [x] 方案设计（design.md）
+- [x] 开发实现
+- [x] 测试验证
+- [x] 归档
