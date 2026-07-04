@@ -26,6 +26,7 @@ import { createNovelImportRoutes } from "./novelImportRoutes";
 import { createNovelRiskRoutes } from "../risk/http/novelRiskRoutes";
 import { createNovelPaceCurveRoutes } from "../pace/http/novelPaceCurveRoutes";
 import { createNovelSettingConsistencyRoutes } from "../setting/http/novelSettingConsistencyRoutes";
+import { registerNovelTxtImportExportRoutes } from "./novelTxtImportExportRoutes";
 import type { NovelHttpServices } from "./novelHttpServices";
 import {
   aiRevisionPreviewSchema,
@@ -239,4 +240,5 @@ export function registerNovelHttpRoutes(router: Router, services: NovelHttpServi
   router.use(createNovelPaceCurveRoutes());
   router.use(createNovelSettingConsistencyRoutes());
   router.use(createPayoffLedgerCrudRoutes());
+  registerNovelTxtImportExportRoutes({ router });
 }

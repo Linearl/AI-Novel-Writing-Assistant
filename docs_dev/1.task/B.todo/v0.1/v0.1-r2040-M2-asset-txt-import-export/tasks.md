@@ -12,13 +12,13 @@ description: "REQ-2040 资产 TXT 导入导出任务拆解"
 
 | 阶段 | 序号 | ID | 任务 | 优先级 | 预估 | 状态 |
 |------|---|---|---|---|---|---|
-| 一 | T1 | BE-001 | 世界设定 TXT 导出 endpoint | P2 | 2h | |
-| 一 | T2 | BE-002 | 世界设定 TXT 导入 endpoint | P2 | 2h | |
-| 二 | T3 | BE-003 | 大纲 TXT 导出 endpoint | P2 | 1.5h | |
-| 二 | T4 | BE-004 | 大纲 TXT 导入 endpoint | P2 | 1.5h | |
-| 三 | T5 | BE-005 | 关系网 TXT 导出 endpoint | P2 | 2h | |
-| 三 | T6 | BE-006 | 关系网 TXT 导入 endpoint | P2 | 2h | |
-| 三 | T7 | BE-007 | 章节正文 TXT 导出 endpoint | P2 | 1h | |
+| 一 | T1 | BE-001 | 世界设定 TXT 导出 endpoint | P2 | 2h | done |
+| 一 | T2 | BE-002 | 世界设定 TXT 导入 endpoint | P2 | 2h | done |
+| 二 | T3 | BE-003 | 大纲 TXT 导出 endpoint | P2 | 1.5h | done |
+| 二 | T4 | BE-004 | 大纲 TXT 导入 endpoint | P2 | 1.5h | done |
+| 三 | T5 | BE-005 | 关系网 TXT 导出 endpoint | P2 | 2h | done |
+| 三 | T6 | BE-006 | 关系网 TXT 导入 endpoint | P2 | 2h | done |
+| 三 | T7 | BE-007 | 章节正文 TXT 导出 endpoint | P2 | 1h | done |
 | 四 | T8 | FE-001 | 世界设定页面增加导入/导出按钮 | P2 | 2h | |
 | 四 | T9 | FE-002 | 大纲页面增加导入/导出按钮 | P2 | 1.5h | |
 | 四 | T10 | FE-003 | 关系网页面增加导入/导出按钮 | P2 | 1.5h | |
@@ -34,10 +34,10 @@ description: "REQ-2040 资产 TXT 导入导出任务拆解"
 **目标**: 实现世界设定 TXT 导出 API
 
 **子任务**:
-- [ ] T1.1 创建 TXT 导出工具函数（`server/src/modules/world/` 或 `services/` 下）
-- [ ] T1.2 读取项目世界设定数据，按 `字段名=值` 格式序列化
-- [ ] T1.3 挂载 `GET /api/projects/:id/world/export/txt` 端点
-- [ ] T1.4 返回 `text/plain` 响应 + `Content-Disposition: attachment` 头
+- [x] T1.1 创建 TXT 导出工具函数（`server/src/modules/world/` 或 `services/` 下）
+- [x] T1.2 读取项目世界设定数据，按 `字段名=值` 格式序列化
+- [x] T1.3 挂载 `GET /api/projects/:id/world/export/txt` 端点
+- [x] T1.4 返回 `text/plain` 响应 + `Content-Disposition: attachment` 头
 
 **验收**: 调用 API 可下载 UTF-8 TXT 文件，内容与项目设定一致
 
@@ -48,10 +48,10 @@ description: "REQ-2040 资产 TXT 导入导出任务拆解"
 **目标**: 实现世界设定 TXT 导入 API
 
 **子任务**:
-- [ ] T2.1 实现 TXT 解析函数：按行分割 → 识别 `字段名=值` → 校验字段合法性
-- [ ] T2.2 挂载 `POST /api/projects/:id/world/import/txt` 端点（multipart 或 raw body）
-- [ ] T2.3 实现合并/覆盖两种导入模式
-- [ ] T2.4 错误处理：空文件返回 400，格式错误返回具体行号提示
+- [x] T2.1 实现 TXT 解析函数：按行分割 → 识别 `字段名=值` → 校验字段合法性
+- [x] T2.2 挂载 `POST /api/projects/:id/world/import/txt` 端点（multipart 或 raw body）
+- [x] T2.3 实现合并/覆盖两种导入模式
+- [x] T2.4 错误处理：空文件返回 400，格式错误返回具体行号提示
 
 **验收**: 合法 TXT 文件可成功导入世界设定，错误格式给出明确提示
 
@@ -64,9 +64,9 @@ description: "REQ-2040 资产 TXT 导入导出任务拆解"
 **目标**: 实现大纲 TXT 导出 API
 
 **子任务**:
-- [ ] T3.1 实现大纲序列化：按 `章节标题-----章节摘要` 格式生成 TXT
-- [ ] T3.2 挂载 `GET /api/projects/:id/outline/export/txt` 端点
-- [ ] T3.3 处理空摘要的情况（标题后直接跟分隔符）
+- [x] T3.1 实现大纲序列化：按 `章节标题-----章节摘要` 格式生成 TXT
+- [x] T3.2 挂载 `GET /api/projects/:id/outline/export/txt` 端点
+- [x] T3.3 处理空摘要的情况（标题后直接跟分隔符）
 
 **验收**: 导出 TXT 可清晰展示章节结构和摘要
 
@@ -77,10 +77,10 @@ description: "REQ-2040 资产 TXT 导入导出任务拆解"
 **目标**: 实现大纲 TXT 导入 API
 
 **子任务**:
-- [ ] T4.1 实现 TXT 解析：按行分割 → 以 `-----` 分隔标题和摘要
-- [ ] T4.2 挂载 `POST /api/projects/:id/outline/import/txt` 端点
-- [ ] T4.3 实现覆盖/追加两种模式
-- [ ] T4.4 错误处理：缺少分隔符的行返回警告
+- [x] T4.1 实现 TXT 解析：按行分割 → 以 `-----` 分隔标题和摘要
+- [x] T4.2 挂载 `POST /api/projects/:id/outline/import/txt` 端点
+- [x] T4.3 实现覆盖/追加两种模式
+- [x] T4.4 错误处理：缺少分隔符的行返回警告
 
 **验收**: 合法 TXT 可成功导入大纲，章节顺序保持一致
 
@@ -93,9 +93,9 @@ description: "REQ-2040 资产 TXT 导入导出任务拆解"
 **目标**: 实现关系网 TXT 导出 API
 
 **子任务**:
-- [ ] T5.1 读取角色数据，按 `角色名|关系类型|目标角色|状态` 格式序列化关系
-- [ ] T5.2 导出角色基础档案为 `角色名=属性值` 块
-- [ ] T5.3 挂载 `GET /api/projects/:id/characters/export/txt` 端点
+- [x] T5.1 读取角色数据，按 `角色名|关系类型|目标角色|状态` 格式序列化关系
+- [x] T5.2 导出角色基础档案为 `角色名=属性值` 块
+- [x] T5.3 挂载 `GET /api/projects/:id/characters/export/txt` 端点
 
 **验收**: 导出文件包含完整角色档案和关系数据
 
@@ -106,10 +106,10 @@ description: "REQ-2040 资产 TXT 导入导出任务拆解"
 **目标**: 实现关系网 TXT 导入 API
 
 **子任务**:
-- [ ] T6.1 实现 TXT 解析：识别 `|` 分隔的关系行和 `=` 分隔的角色属性块
-- [ ] T6.2 挂载 `POST /api/projects/:id/characters/import/txt` 端点
-- [ ] T6.3 冲突处理：已存在的角色/关系如何合并
-- [ ] T6.4 错误处理：字段缺失返回具体行号提示
+- [x] T6.1 实现 TXT 解析：识别 `|` 分隔的关系行和 `=` 分隔的角色属性块
+- [x] T6.2 挂载 `POST /api/projects/:id/characters/import/txt` 端点
+- [x] T6.3 冲突处理：已存在的角色/关系如何合并
+- [x] T6.4 错误处理：字段缺失返回具体行号提示
 
 **验收**: 合法 TXT 可成功导入角色和关系数据
 
@@ -120,9 +120,9 @@ description: "REQ-2040 资产 TXT 导入导出任务拆解"
 **目标**: 实现章节正文纯文本导出
 
 **子任务**:
-- [ ] T7.1 读取章节正文，去除 markdown 格式标记（保留纯文本）
-- [ ] T7.2 挂载 `GET /api/projects/:id/chapters/:chapterId/export/txt` 端点
-- [ ] T7.3 段落间保持空行分隔
+- [x] T7.1 读取章节正文，去除 markdown 格式标记（保留纯文本）
+- [x] T7.2 挂载 `GET /api/projects/:id/chapters/:chapterId/export/txt` 端点
+- [x] T7.3 段落间保持空行分隔
 
 **验收**: 导出的 TXT 为纯文本，可在任意文本编辑器打开
 

@@ -33,41 +33,41 @@ update_time: 2026-07-03
 
 | # | 任务 | 优先级 | 预估 | 状态 |
 | --- | --- | --- | --- | --- |
-| T1 | shared/types：Chapter 类型增加 wordCountTarget 字段（min/max/role） | P0 | 1h | ⬜ 待开始 |
-| T2 | shared/types：章节角色枚举类型定义（normal/transition/climax/turning_point） | P0 | 0.5h | ⬜ 待开始 |
-| T3 | shared：构建验证（`pnpm --filter @ai-novel/shared build`） | P0 | 0.5h | ⬜ 待开始 |
+| T1 | shared/types：Chapter 类型增加 wordCountTarget 字段（min/max/role） | P0 | 1h | ✅ 完成 |
+| T2 | shared/types：章节角色枚举类型定义（normal/transition/climax/turning_point） | P0 | 0.5h | ✅ 完成 |
+| T3 | shared：构建验证（`pnpm --filter @ai-novel/shared build`） | P0 | 0.5h | ✅ 完成 |
 
 ### 阶段二：server 层 — auto-director 章节角色标注
 
 | # | 任务 | 优先级 | 预估 | 状态 |
 | --- | --- | --- | --- | --- |
-| T4 | auto-director volume planning / beat sheet：标注章节角色（normal/transition/climax/turning_point） | P0 | 2h | ⬜ 待开始 |
-| T5 | 系数计算逻辑：根据章节角色 + 基准字数范围计算 min/max | P0 | 1h | ⬜ 待开始 |
-| T6 | 基准字数范围配置：settings 中可配置（默认 3000~4000） | P1 | 1h | ⬜ 待开始 |
+| T4 | auto-director volume planning / beat sheet：标注章节角色（normal/transition/climax/turning_point） | P0 | 2h | ✅ 完成 |
+| T5 | 系数计算逻辑：根据章节角色 + 基准字数范围计算 min/max | P0 | 1h | ✅ 完成 |
+| T6 | 基准字数范围配置：settings 中可配置（默认 3000~4000） | P1 | 1h | ✅ 完成 |
 
 ### 阶段三：server 层 — generation pipeline 字数约束
 
 | # | 任务 | 优先级 | 预估 | 状态 |
 | --- | --- | --- | --- | --- |
-| T7 | generation prompt 注入：将字数范围（min/max/role）作为 soft target 注入生成 prompt | P0 | 2h | ⬜ 待开始 |
-| T8 | compress 能力实现/增强：超限时 AI 精简冗余描写 | P0 | 2h | ⬜ 待开始 |
-| T9 | expand 能力实现/增强：不足时 AI 补充缺失内容 | P1 | 2h | ⬜ 待开始 |
+| T7 | generation prompt 注入：将字数范围（min/max/role）作为 soft target 注入生成 prompt | P0 | 2h | ✅ 完成 |
+| T8 | compress 能力实现/增强：超限时 AI 精简冗余描写 | P0 | 2h | ✅ 完成 |
+| T9 | expand 能力实现/增强：不足时 AI 补充缺失内容 | P1 | 2h | ✅ 完成 |
 
 ### 阶段四：server 层 — 生成后字数检测
 
 | # | 任务 | 优先级 | 预估 | 状态 |
 | --- | --- | --- | --- | --- |
-| T10 | 字数检测逻辑：实际字数 vs 目标范围比较 + 超限/不足判断 | P0 | 1.5h | ⬜ 待开始 |
-| T11 | 自动 compress/expand 触发：检测结果驱动 compress 或 expand 执行 | P0 | 2h | ⬜ 待开始 |
-| T12 | 检测循环保护：compress/expand 后重新检测，防止无限循环（最多 2 轮） | P1 | 1h | ⬜ 待开始 |
+| T10 | 字数检测逻辑：实际字数 vs 目标范围比较 + 超限/不足判断 | P0 | 1.5h | ✅ 完成 |
+| T11 | 自动 compress/expand 触发：检测结果驱动 compress 或 expand 执行 | P0 | 2h | ✅ 完成 |
+| T12 | 检测循环保护：compress/expand 后重新检测，防止无限循环（最多 2 轮） | P1 | 1h | ✅ 完成 |
 
 ### 阶段五：server 层 — 水文检测
 
 | # | 任务 | 优先级 | 预估 | 状态 |
 | --- | --- | --- | --- | --- |
-| T13 | 水文检测 prompt 设计与注册（PromptAsset） | P0 | 2h | ⬜ 待开始 |
-| T14 | 水文检测服务：调用 LLM 分析无效描写密度 | P0 | 2h | ⬜ 待开始 |
-| T15 | 水文超标处理：密度 > 30% 时标记 + 建议精简 | P1 | 1.5h | ⬜ 待开始 |
+| T13 | 水文检测 prompt 设计与注册（PromptAsset） | P0 | 2h | ✅ 完成 |
+| T14 | 水文检测服务：调用 LLM 分析无效描写密度 | P0 | 2h | ✅ 完成 |
+| T15 | 水文超标处理：密度 > 30% 时标记 + 建议精简 | P1 | 1.5h | ✅ 完成 |
 
 ### 阶段六：client 层 — 字数目标展示
 
@@ -472,6 +472,7 @@ function checkWordCount(actual: number, target: { min: number; max: number }):
 | 日期 | 任务 | 状态 |
 | ---- | ---- | ---- |
 | 2026-07-03 | req 路由生成任务包 | 完成 |
+| 2026-07-04 | Phase 1-5（T1-T15）shared + server 实现 | 完成 |
 
 ---
 
