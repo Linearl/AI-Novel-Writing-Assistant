@@ -55,3 +55,7 @@ server/logs/
 worktree/*/
 !worktree/.slots.json
 !worktree/.gitkeep
+
+# Tool configs
+.archon/
+.reasonix/
