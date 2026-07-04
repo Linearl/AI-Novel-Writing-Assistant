@@ -303,6 +303,7 @@ export class NovelCoreCrudService {
             riskFlags: true,
             hook: true,
             expectation: true,
+            locked: true,
             novelId: true,
             createdAt: true,
             updatedAt: true,
@@ -398,6 +399,7 @@ export class NovelCoreCrudService {
       competingFeel: _ignoreCompetingFeel,
       first30ChapterPromise: _ignoreFirst30ChapterPromise,
       commercialTags: _ignoreCommercialTags,
+      payoffExpiryThreshold: _ignorePayoffExpiryThreshold,
       ...restInput
     } = input;
 
@@ -412,6 +414,7 @@ export class NovelCoreCrudService {
       where: { id },
       data: {
         ...restInput,
+        payoffExpiryThreshold: input.payoffExpiryThreshold ?? undefined,
         sourceNovelId: nextWritingMode === "continuation" ? nextSourceNovelId : null,
         sourceKnowledgeDocumentId: nextWritingMode === "continuation" ? nextSourceKnowledgeDocumentId : null,
         continuationBookAnalysisId: normalizedNextContinuationBookAnalysisId,
@@ -593,6 +596,21 @@ export class NovelCoreCrudService {
     return prisma.chapter.update({
       where: { id: chapterId },
       data: { deletedAt: null },
+    });
+  }
+
+  async toggleChapterLock(novelId: string, chapterId: string, locked: boolean) {
+    const found = await prisma.chapter.findFirst({
+      where: { id: chapterId, novelId },
+      select: { id: true },
+    });
+    if (!found) {
+      throw new Error("章节不存在。");
+    }
+    return prisma.chapter.update({
+      where: { id: chapterId },
+      data: { locked },
+      select: { id: true, locked: true },
     });
   }
 }

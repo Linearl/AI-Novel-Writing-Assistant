@@ -279,6 +279,13 @@ enum PayoffLedgerStatus {
   overdue
 }
 
+enum PayoffLedgerNormalizedStatus {
+  planted
+  active
+  resolved
+  expired
+}
+
 enum StyleBindingTargetType {
   novel
   chapter
@@ -401,6 +408,7 @@ model Novel {
   novelWorld         NovelWorld?
   factEntries        NovelFactEntry[]
   risks              NovelRisk[]
+  payoffExpiryThreshold Int       @default(20)
   createdAt          DateTime    @default(now())
   updatedAt         DateTime    @updatedAt
 
@@ -497,6 +505,7 @@ model Chapter {
   riskFlags       String?
   hook            String?
   expectation     String?
+  locked          Boolean                @default(false)
   novelId         String
   novel           Novel                  @relation(fields: [novelId], references: [id], onDelete: Cascade)
   chapterSummary  ChapterSummary?
@@ -2434,6 +2443,8 @@ model PayoffLedgerItem {
   summary               String
   scopeType             PayoffLedgerScopeType
   currentStatus         PayoffLedgerStatus
+  normalizedStatus      PayoffLedgerNormalizedStatus?
+  chaptersElapsed       Int                   @default(0)
   targetStartChapterOrder Int?
   targetEndChapterOrder Int?
   firstSeenChapterOrder Int?
@@ -2457,6 +2468,7 @@ model PayoffLedgerItem {
 
   @@unique([novelId, ledgerKey])
   @@index([novelId, currentStatus, updatedAt])
+  @@index([novelId, normalizedStatus])
   @@index([novelId, targetEndChapterOrder])
   @@index([lastTouchedChapterId])
   @@index([setupChapterId])

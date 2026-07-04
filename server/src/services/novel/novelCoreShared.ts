@@ -74,6 +74,7 @@ export interface UpdateNovelInput {
   worldId?: string | null;
   outline?: string | null;
   structuredOutline?: string | null;
+  payoffExpiryThreshold?: number | null;
 }
 
 export interface ChapterInput {

@@ -1,11 +1,13 @@
 import type {
   PayoffLedgerItem,
+  PayoffLedgerNormalizedStatus,
   PayoffLedgerResponse,
   PayoffLedgerRiskSignal,
   PayoffLedgerSourceRef,
   PayoffLedgerStatus,
   PayoffLedgerSummary,
 } from "@ai-novel/shared/types/payoffLedger";
+import { NORMALIZED_STATUS_MAP } from "@ai-novel/shared/types/payoffLedger";
 
 type PayoffLedgerRowLike = {
   id: string;
@@ -15,6 +17,8 @@ type PayoffLedgerRowLike = {
   summary: string;
   scopeType: "book" | "volume" | "chapter";
   currentStatus: "setup" | "hinted" | "pending_payoff" | "paid_off" | "failed" | "overdue";
+  normalizedStatus: PayoffLedgerNormalizedStatus | null;
+  chaptersElapsed: number;
   targetStartChapterOrder: number | null;
   targetEndChapterOrder: number | null;
   firstSeenChapterOrder: number | null;
@@ -196,6 +200,7 @@ export function sanitizePayoffLedgerSyncItem<T extends PayoffLedgerSyncCandidate
 }
 
 export function mapPayoffLedgerRow(row: PayoffLedgerRowLike): PayoffLedgerItem {
+  const normalizedStatus = row.normalizedStatus ?? NORMALIZED_STATUS_MAP[row.currentStatus];
   return {
     id: row.id,
     novelId: row.novelId,
@@ -204,6 +209,7 @@ export function mapPayoffLedgerRow(row: PayoffLedgerRowLike): PayoffLedgerItem {
     summary: row.summary,
     scopeType: row.scopeType,
     currentStatus: row.currentStatus,
+    normalizedStatus,
     targetStartChapterOrder: row.targetStartChapterOrder,
     targetEndChapterOrder: row.targetEndChapterOrder,
     firstSeenChapterOrder: row.firstSeenChapterOrder,
@@ -212,6 +218,11 @@ export function mapPayoffLedgerRow(row: PayoffLedgerRowLike): PayoffLedgerItem {
     setupChapterId: row.setupChapterId,
     payoffChapterId: row.payoffChapterId,
     lastSnapshotId: row.lastSnapshotId,
+    plantedAt: row.setupChapterId ? row.createdAt.toISOString() : null,
+    resolvedAt: (row.currentStatus === "paid_off" || row.currentStatus === "failed")
+      ? row.updatedAt.toISOString()
+      : null,
+    chaptersElapsed: row.chaptersElapsed,
     sourceRefs: safeParseJson<PayoffLedgerSourceRef[]>(row.sourceRefsJson, []),
     evidence: safeParseJson(row.evidenceJson, []),
     riskSignals: safeParseJson<PayoffLedgerRiskSignal[]>(row.riskSignalsJson, []),

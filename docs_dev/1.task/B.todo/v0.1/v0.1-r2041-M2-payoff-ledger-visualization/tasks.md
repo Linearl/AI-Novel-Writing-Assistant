@@ -33,17 +33,17 @@ update_time: 2026-07-03
 
 | # | 任务 | 优先级 | 预估 | 状态 |
 | --- | --- | --- | --- | --- |
-| T1 | shared/types：PayoffLedger 类型增加 plantedChapterId、resolvedChapterId、expiredAt 等字段 | P0 | 1h | ⬜ 待开始 |
-| T2 | shared/types：状态枚举从 6 值收敛为 4 值（planted/active/resolved/expired），保留向后兼容映射 | P0 | 1h | ⬜ 待开始 |
-| T3 | shared：构建验证（`pnpm --filter @ai-novel/shared build`） | P0 | 0.5h | ⬜ 待开始 |
+| T1 | shared/types：PayoffLedger 类型增加 normalizedStatus、plantedAt、resolvedAt、chaptersElapsed 等字段 | P0 | 1h | ✅ 已完成 |
+| T2 | shared/types：状态枚举从 6 值收敛为 4 值（planted/active/resolved/expired），保留向后兼容映射 | P0 | 1h | ✅ 已完成 |
+| T3 | shared：构建验证（`pnpm --filter @ai-novel/shared build`） | P0 | 0.5h | ✅ 已完成 |
 
 ### 阶段二：server 层 — 服务增强
 
 | # | 任务 | 优先级 | 预估 | 状态 |
 | --- | --- | --- | --- | --- |
-| T4 | payoff ledger CRUD：创建/查询/更新 API 端点 | P0 | 2h | ⬜ 待开始 |
-| T5 | payoff ledger 服务：伏笔状态自动更新逻辑（基于章节数计算过期） | P0 | 1.5h | ⬜ 待开始 |
-| T6 | 过期阈值配置：支持用户配置伏笔过期章节数阈值（默认 20） | P1 | 1h | ⬜ 待开始 |
+| T4 | payoff ledger CRUD：创建/查询/更新 API 端点 | P0 | 2h | ✅ 已完成 |
+| T5 | payoff ledger 服务：伏笔状态自动更新逻辑（基于章节数计算过期） | P0 | 1.5h | ✅ 已完成 |
+| T6 | 过期阈值配置：支持用户配置伏笔过期章节数阈值（默认 20） | P1 | 1h | ✅ 已完成 |
 
 ### 阶段三：server 层 — auto-director 集成
 
@@ -79,8 +79,8 @@ update_time: 2026-07-03
   - `chaptersElapsed: z.number().default(0)` — 跨越章节数
 
 **DoD**:
-- [ ] 类型定义包含新增字段
-- [ ] 构建 shared 通过
+- [x] 类型定义包含新增字段
+- [x] 构建 shared 通过
 
 ---
 
@@ -99,8 +99,8 @@ update_time: 2026-07-03
 - overdue → expired
 
 **DoD**:
-- [ ] 新旧状态枚举并存，不破坏现有代码
-- [ ] 新增 `normalizedStatus` 字段
+- [x] 新旧状态枚举并存，不破坏现有代码
+- [x] 新增 `normalizedStatus` 字段
 
 ---
 
@@ -109,7 +109,7 @@ update_time: 2026-07-03
 **目标**: 验证 shared 包构建通过，类型兼容。
 
 **DoD**:
-- [ ] `pnpm --filter @ai-novel/shared build` 通过
+- [x] `pnpm --filter @ai-novel/shared build` 通过
 
 ---
 
@@ -127,9 +127,9 @@ update_time: 2026-07-03
 - `PATCH /api/payoff-ledger/:itemId` — 更新伏笔条目（状态、描述等）
 
 **DoD**:
-- [ ] 三个端点可用
-- [ ] 支持按 status 参数筛选
-- [ ] 返回数据包含新增字段
+- [x] 三个端点可用
+- [x] 支持按 status 参数筛选
+- [x] 返回数据包含新增字段
 
 ---
 
@@ -146,8 +146,8 @@ update_time: 2026-07-03
 - 差值超过阈值（默认 20）则更新为 expired
 
 **DoD**:
-- [ ] 过期检测逻辑正确
-- [ ] 被动触发（查询时检测）和主动触发（手动刷新）均可用
+- [x] 过期检测逻辑正确
+- [x] 被动触发（查询时检测）和主动触发（手动刷新）均可用
 
 ---
 
@@ -160,9 +160,9 @@ update_time: 2026-07-03
 - `server/src/modules/novel/` — 设置读写 API 支持该字段
 
 **DoD**:
-- [ ] 默认值 20 章
-- [ ] 用户可通过 settings 修改
-- [ ] 修改后即时生效
+- [x] 默认值 20 章
+- [x] 用户可通过 settings 修改
+- [x] 修改后即时生效
 
 ---
 
@@ -320,6 +320,7 @@ update_time: 2026-07-03
 | 日期 | 任务 | 状态 |
 | ---- | ---- | ---- |
 | 2026-07-03 | req 路由生成任务包 | 完成 |
+| 2026-07-03 | Phase1+2 (T1-T6) shared types + server CRUD | 完成 |
 
 ---
 

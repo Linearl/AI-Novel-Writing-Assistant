@@ -2,6 +2,24 @@ export type PayoffLedgerScopeType = "book" | "volume" | "chapter";
 
 export type PayoffLedgerStatus = "setup" | "hinted" | "pending_payoff" | "paid_off" | "failed" | "overdue";
 
+export type PayoffLedgerNormalizedStatus = "planted" | "active" | "resolved" | "expired";
+
+/**
+ * 映射关系：
+ * - setup / hinted → planted
+ * - pending_payoff → active
+ * - paid_off / failed → resolved
+ * - overdue → expired
+ */
+export const NORMALIZED_STATUS_MAP: Record<PayoffLedgerStatus, PayoffLedgerNormalizedStatus> = {
+  setup: "planted",
+  hinted: "planted",
+  pending_payoff: "active",
+  paid_off: "resolved",
+  failed: "resolved",
+  overdue: "expired",
+};
+
 export interface PayoffLedgerSourceRef {
   kind: "major_payoff" | "volume_open_payoff" | "chapter_payoff_ref" | "foreshadow_state" | "open_conflict" | "audit_issue";
   refId?: string | null;
@@ -33,6 +51,7 @@ export interface PayoffLedgerItem {
   summary: string;
   scopeType: PayoffLedgerScopeType;
   currentStatus: PayoffLedgerStatus;
+  normalizedStatus?: PayoffLedgerNormalizedStatus;
   targetStartChapterOrder?: number | null;
   targetEndChapterOrder?: number | null;
   firstSeenChapterOrder?: number | null;
@@ -41,6 +60,9 @@ export interface PayoffLedgerItem {
   setupChapterId?: string | null;
   payoffChapterId?: string | null;
   lastSnapshotId?: string | null;
+  plantedAt?: string | null;
+  resolvedAt?: string | null;
+  chaptersElapsed?: number;
   sourceRefs: PayoffLedgerSourceRef[];
   evidence: PayoffLedgerEvidence[];
   riskSignals: PayoffLedgerRiskSignal[];
@@ -64,4 +86,12 @@ export interface PayoffLedgerResponse {
   summary: PayoffLedgerSummary;
   items: PayoffLedgerItem[];
   updatedAt?: string | null;
+}
+
+export interface PayoffLedgerListResponse {
+  items: PayoffLedgerItem[];
+  total: number;
+  page: number;
+  pageSize: number;
+  summary: PayoffLedgerSummary;
 }

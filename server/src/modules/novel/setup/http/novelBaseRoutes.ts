@@ -58,6 +58,7 @@ const createNovelSchema = z.object({
   storylineStatus: z.enum(["not_started", "in_progress", "completed", "rework", "blocked"]).optional(),
   outlineStatus: z.enum(["not_started", "in_progress", "completed", "rework", "blocked"]).optional(),
   resourceReadyScore: z.number().int().min(0).max(100).optional(),
+  payoffExpiryThreshold: z.number().int().min(1).max(200).default(20).optional(),
 });
 
 const updateNovelSchema = z.object({
@@ -93,6 +94,7 @@ const updateNovelSchema = z.object({
   storylineStatus: z.enum(["not_started", "in_progress", "completed", "rework", "blocked"]).nullable().optional(),
   outlineStatus: z.enum(["not_started", "in_progress", "completed", "rework", "blocked"]).nullable().optional(),
   resourceReadyScore: z.number().int().min(0).max(100).nullable().optional(),
+  payoffExpiryThreshold: z.number().int().min(1).max(200).nullable().optional(),
 });
 
 const knowledgeBindingsSchema = z.object({

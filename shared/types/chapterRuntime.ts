@@ -22,6 +22,7 @@ const chapterGenerationStateSchema = z.enum(["planned", "drafted", "reviewed", "
 const storyPlanRoleSchema = z.enum(["setup", "progress", "pressure", "turn", "payoff", "cooldown"]);
 const payoffLedgerScopeTypeSchema = z.enum(["book", "volume", "chapter"]);
 const payoffLedgerStatusSchema = z.enum(["setup", "hinted", "pending_payoff", "paid_off", "failed", "overdue"]);
+const payoffLedgerNormalizedStatusSchema = z.enum(["planted", "active", "resolved", "expired"]);
 const styleBindingTargetTypeSchema = z.enum(["novel", "chapter", "task"]);
 const styleDetectionRuleTypeSchema = z.enum(["style", "character", "forbidden", "risk", "encourage"]);
 const antiAiSeveritySchema = z.enum(["low", "medium", "high"]);
@@ -222,6 +223,7 @@ export const runtimePayoffLedgerItemSchema = z.object({
   summary: z.string(),
   scopeType: payoffLedgerScopeTypeSchema,
   currentStatus: payoffLedgerStatusSchema,
+  normalizedStatus: payoffLedgerNormalizedStatusSchema.optional(),
   targetStartChapterOrder: z.number().int().nullable().optional(),
   targetEndChapterOrder: z.number().int().nullable().optional(),
   firstSeenChapterOrder: z.number().int().nullable().optional(),
@@ -230,6 +232,9 @@ export const runtimePayoffLedgerItemSchema = z.object({
   setupChapterId: z.string().nullable().optional(),
   payoffChapterId: z.string().nullable().optional(),
   lastSnapshotId: z.string().nullable().optional(),
+  plantedAt: z.string().nullable().optional(),
+  resolvedAt: z.string().nullable().optional(),
+  chaptersElapsed: z.number().int().nonnegative().optional(),
   sourceRefs: z.array(runtimePayoffLedgerSourceRefSchema).default([]),
   evidence: z.array(runtimePayoffLedgerEvidenceSchema).default([]),
   riskSignals: z.array(runtimePayoffLedgerRiskSignalSchema).default([]),
