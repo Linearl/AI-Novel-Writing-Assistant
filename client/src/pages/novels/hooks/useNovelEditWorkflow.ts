@@ -57,7 +57,8 @@ export function useNovelEditWorkflow(novelId: string) {
       return;
     }
     bootstrapMutation.mutate();
-  }, [novelId, workflowTaskId, bootstrapMutation]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [novelId]);
 
   const activeTab = useMemo(
     () => normalizeNovelWorkspaceTab(searchParams.get("stage")),

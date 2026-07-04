@@ -55,7 +55,11 @@ export function useSSE(options?: UseSSEOptions) {
       }
 
       if (frame.type === "tool_call" || frame.type === "tool_result" || frame.type === "approval_required" || frame.type === "approval_resolved") {
-        setEvents((prev) => [...prev, frame]);
+        setEvents((prev) => {
+          const next = [...prev, frame];
+          // 防止无限增长：最多保留最近 200 条事件
+          return next.length > 200 ? next.slice(-200) : next;
+        });
         if (frame.type === "approval_required") {
           setPendingApprovals((prev) => {
             const exists = prev.some((item) => item.approvalId === frame.approvalId);

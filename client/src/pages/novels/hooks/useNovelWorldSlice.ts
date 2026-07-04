@@ -48,12 +48,14 @@ export function useNovelWorldSlice({
     queryKey: queryKeys.novels.novelWorld(novelId),
     queryFn: () => getNovelWorld(novelId),
     enabled: Boolean(novelId && enabled),
+    staleTime: 60_000,
   });
 
   const worldSliceQuery = useQuery({
     queryKey: queryKeys.novels.worldSlice(novelId),
     queryFn: () => getNovelWorldSlice(novelId),
     enabled: Boolean(novelId && enabled),
+    staleTime: 60_000,
   });
 
   const refreshWorldSliceMutation = useMutation({
@@ -86,6 +88,7 @@ export function useNovelWorldSlice({
       && enabled
       && novelWorldQuery.data?.data?.novelWorld?.sourceWorldId,
     ),
+    staleTime: 60_000,
   });
 
   const importNovelWorldMutation = useMutation({

@@ -101,6 +101,7 @@ export function useNovelStoryMacro(input: UseNovelStoryMacroInput): {
     queryKey: queryKeys.novels.storyMacro(novelId),
     queryFn: () => getNovelStoryMacroPlan(novelId),
     enabled: Boolean(novelId && enabled),
+    staleTime: 60_000,
   });
 
   const invalidatePlan = async () => {

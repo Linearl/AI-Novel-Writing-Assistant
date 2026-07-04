@@ -54,6 +54,7 @@ export function useVolumeVersionControl({
     queryKey: queryKeys.novels.volumeVersions(novelId),
     queryFn: () => listVolumeVersions(novelId),
     enabled: Boolean(novelId),
+    staleTime: 60_000,
   });
 
   const versions = volumeVersionsQuery.data?.data ?? [];

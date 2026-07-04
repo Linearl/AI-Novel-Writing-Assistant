@@ -274,7 +274,7 @@ export class DirectorTaskSnapshotService {
       runtime,
       projection,
       recentEvents: runtime?.events.slice(-50) ?? [],
-      artifacts: runtime?.artifacts ?? [],
+      artifacts: (runtime?.artifacts ?? []).slice(-100),
       currentFactStepId: factStep?.module.id ?? null,
       currentFactStepLabel: factStep?.module.label ?? null,
       currentFactEvidence: factStep?.facts.evidence ?? factStep?.progress.evidence ?? null,

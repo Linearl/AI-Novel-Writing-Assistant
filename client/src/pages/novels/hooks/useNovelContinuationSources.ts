@@ -25,6 +25,7 @@ export function useNovelContinuationSources(id: string, basicForm: ContinuationS
       const secondPage = await getNovelList({ page: 2, limit: 100 });
       return [...firstItems, ...(secondPage.data?.items ?? [])];
     },
+    staleTime: 300_000,
   });
 
   const sourceKnowledgeListQuery = useQuery({
@@ -33,6 +34,7 @@ export function useNovelContinuationSources(id: string, basicForm: ContinuationS
       const response = await listKnowledgeDocuments({ status: "enabled" });
       return response.data ?? [];
     },
+    staleTime: 300_000,
   });
 
   const sourceBookAnalysesQuery = useQuery({
@@ -50,6 +52,7 @@ export function useNovelContinuationSources(id: string, basicForm: ContinuationS
         || (basicForm.continuationSourceType === "knowledge_document" && Boolean(basicForm.sourceKnowledgeDocumentId))
       )
     ),
+    staleTime: 60_000,
     queryFn: async () => {
       if (basicForm.continuationSourceType === "knowledge_document") {
         if (!basicForm.sourceKnowledgeDocumentId) {
