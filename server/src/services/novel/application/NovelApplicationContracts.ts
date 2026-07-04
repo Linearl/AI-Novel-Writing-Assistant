@@ -30,6 +30,7 @@ export interface NovelApplicationServices {
   syncAllCharacterTimeline: NovelApplicationMethod;
   evolveCharacter: NovelApplicationMethod;
   checkCharacterAgainstWorld: NovelApplicationMethod;
+  setCharacterExitStatus: NovelApplicationMethod;
   createNovelSnapshot: NovelApplicationMethod;
   listNovelSnapshots: NovelApplicationMethod;
   restoreFromSnapshot: NovelApplicationMethod;
@@ -140,6 +141,7 @@ export const novelApplicationServiceMethodNames = [
   "syncAllCharacterTimeline",
   "evolveCharacter",
   "checkCharacterAgainstWorld",
+  "setCharacterExitStatus",
   "createNovelSnapshot",
   "listNovelSnapshots",
   "restoreFromSnapshot",

@@ -1,5 +1,7 @@
 import type { LLMProvider } from "./llm";
 
+export type CharacterExitStatus = "active" | "exited" | "dead" | "frozen";
+
 export type CharacterCastRole =
   | "protagonist"
   | "antagonist"
@@ -65,6 +67,9 @@ export interface Character {
   arcEnd?: string | null;
   currentState?: string | null;
   currentGoal?: string | null;
+  exitStatus?: CharacterExitStatus;
+  exitNote?: string | null;
+  exitChapterId?: string | null;
   lastEvolvedAt?: string | null;
   novelId: string;
   baseCharacterId?: string | null;

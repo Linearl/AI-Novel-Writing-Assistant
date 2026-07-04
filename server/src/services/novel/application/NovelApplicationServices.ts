@@ -19,6 +19,7 @@ import { ChapterRuntimeCoordinator } from "../runtime/ChapterRuntimeCoordinator"
 import { NovelVolumeService } from "../volume/NovelVolumeService";
 import { NovelChapterEditorService } from "../chapterEditor/NovelChapterEditorService";
 import { ChapterEditorWorkspaceService } from "../chapterEditor/ChapterEditorWorkspaceService";
+import { characterExitInferenceService } from "../characterExit/characterExitInferenceService";
 import type { NovelApplicationServices } from "./NovelApplicationContracts";
 import type { NovelSnapshotListItem } from "@ai-novel/shared/types/novel";
 
@@ -170,6 +171,15 @@ export class DefaultNovelApplicationServices {
 
   checkCharacterAgainstWorld(...args: Parameters<NovelCoreService["checkCharacterAgainstWorld"]>) {
     return this.core.checkCharacterAgainstWorld(...args);
+  }
+
+  setCharacterExitStatus(
+    novelId: string,
+    characterId: string,
+    exitStatus: "exited" | "dead",
+    exitNote?: string,
+  ) {
+    return characterExitInferenceService.setExitStatus(novelId, characterId, exitStatus, exitNote);
   }
 
   async createNovelSnapshot(novelId: string, triggerType: "manual" | "auto_milestone" | "before_pipeline", label?: string) {

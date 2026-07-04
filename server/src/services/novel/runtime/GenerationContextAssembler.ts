@@ -469,6 +469,23 @@ export class GenerationContextAssembler {
       });
     }
 
+    // T8: 注入未回收伏笔提醒到生成上下文
+    try {
+      const payoffReminder = await payoffLedgerSyncService.buildPayoffReminderContext(novelId, chapter.order);
+      if (payoffReminder) {
+        chapterWriteContext.completedMilestones = [
+          ...chapterWriteContext.completedMilestones,
+          `[伏笔回收提醒] ${payoffReminder}`,
+        ];
+      }
+    } catch (error) {
+      logger.warn("[context-assembler] payoff reminder injection failed", {
+        novelId,
+        chapterOrder: chapter.order,
+        error: error instanceof Error ? error.message : String(error),
+      });
+    }
+
     const partialPackageForReview = {
       ...sharedFields,
       ragContext: "",

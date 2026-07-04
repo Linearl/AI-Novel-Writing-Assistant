@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { CharacterExitBadge } from "@/components/character/CharacterExitBadge";
 import CharacterAssetSidebar from "./CharacterAssetSidebar";
 import CharacterFocusSummary from "./CharacterFocusSummary";
 import { isProtagonistCharacter } from "./characterAssetWorkspace.helpers";
@@ -68,6 +69,8 @@ interface CharacterAssetWorkspaceProps {
   pendingCharacterResourceCount?: number;
   onBackfillCharacterResources?: () => void;
   isBackfillingCharacterResources?: boolean;
+  onSetExitStatus?: (characterId: string, exitStatus: "exited" | "dead", exitNote?: string) => void;
+  isSettingExitStatus?: boolean;
 }
 
 const VISIBLE_PROFILE_FIELDS: Array<{ key: CharacterVisibleProfileField; label: string; placeholder: string }> = [
@@ -201,6 +204,8 @@ export default function CharacterAssetWorkspace(props: CharacterAssetWorkspacePr
     pendingCharacterResourceCount = 0,
     onBackfillCharacterResources,
     isBackfillingCharacterResources = false,
+    onSetExitStatus,
+    isSettingExitStatus = false,
   } = props;
   const [visibleProfileGuidance, setVisibleProfileGuidance] = useState("");
 
@@ -576,6 +581,42 @@ export default function CharacterAssetWorkspace(props: CharacterAssetWorkspacePr
                     {isCheckingWorld ? "检查中..." : "检查世界一致性"}
                   </AiButton>
                 </div>
+                {selectedCharacter && (selectedCharacter.exitStatus ?? "active") === "active" && onSetExitStatus && (
+                  <div className="flex flex-wrap items-center gap-2 pt-2">
+                    <span className="text-xs text-muted-foreground">退场管理：</span>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      disabled={isSettingExitStatus}
+                      onClick={() => {
+                        const confirmed = window.confirm(
+                          `确认将「${selectedCharacter.name}」标记为已退场？退场后该角色不再参与后续章节生成上下文。`,
+                        );
+                        if (confirmed) {
+                          onSetExitStatus(selectedCharacter.id, "exited");
+                        }
+                      }}
+                    >
+                      标记退场
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="destructive"
+                      disabled={isSettingExitStatus}
+                      onClick={() => {
+                        const confirmed = window.confirm(
+                          `确认将「${selectedCharacter.name}」标记为已死亡？死亡后该角色不再参与后续章节生成上下文。`,
+                        );
+                        if (confirmed) {
+                          onSetExitStatus(selectedCharacter.id, "dead");
+                        }
+                      }}
+                    >
+                      标记死亡
+                    </Button>
+                    <CharacterExitBadge status={selectedCharacter.exitStatus} />
+                  </div>
+                )}
               </div>
             </details>
 

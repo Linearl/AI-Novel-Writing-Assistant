@@ -406,6 +406,10 @@ const promptAssetLoaderEntries: PromptAssetLoaderEntry[] = [
     load: () => require("./prompts/payoff/payoffLedgerSync.prompts").payoffLedgerSyncPrompt as UnknownPromptAsset,
   },
   {
+    key: "novel.payoff_detection@v1",
+    load: () => require("./prompts/payoff/payoffDetection.prompts").payoffDetectionPrompt as UnknownPromptAsset,
+  },
+  {
     key: "state.snapshot.extract@v4",
     load: () => require("./prompts/state/state.prompts").stateSnapshotPrompt as UnknownPromptAsset,
   },

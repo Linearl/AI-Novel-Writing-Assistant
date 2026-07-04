@@ -456,3 +456,17 @@ export async function getCharacterRelationEvolution(id: string, charId: string) 
   >(`/novels/${id}/characters/${charId}/relations`);
   return data;
 }
+
+// --- Character Exit Status (REQ-2037) ---
+
+export async function setCharacterExitStatus(
+  id: string,
+  charId: string,
+  payload: { exitStatus: "exited" | "dead"; exitNote?: string },
+) {
+  const { data } = await apiClient.patch<ApiResponse<Character>>(
+    `/novels/${id}/characters/${charId}/exit-status`,
+    payload,
+  );
+  return data;
+}

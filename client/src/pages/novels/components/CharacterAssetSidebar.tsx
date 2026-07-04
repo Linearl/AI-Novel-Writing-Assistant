@@ -1,6 +1,9 @@
+import { useState } from "react";
 import type { Character } from "@ai-novel/shared/types/novel";
+import type { CharacterExitStatus } from "@ai-novel/shared/types/novelCharacter";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { CharacterExitBadge } from "@/components/character/CharacterExitBadge";
 import { isProtagonistCharacter } from "./characterAssetWorkspace.helpers";
 
 interface CharacterAssetSidebarProps {
@@ -11,6 +14,14 @@ interface CharacterAssetSidebarProps {
   isDeletingCharacter: boolean;
   deletingCharacterId: string;
 }
+
+const EXIT_FILTER_OPTIONS: Array<{ value: CharacterExitStatus | "all"; label: string }> = [
+  { value: "all", label: "全部" },
+  { value: "active", label: "活跃" },
+  { value: "exited", label: "已退场" },
+  { value: "dead", label: "已死亡" },
+  { value: "frozen", label: "已冻结" },
+];
 
 function getCharacterCardClass(isSelected: boolean, isProtagonist: boolean): string {
   const selectedClass = isProtagonist
@@ -67,6 +78,7 @@ function CharacterCard(props: {
         <div className="flex flex-wrap items-center gap-2">
           <div className="truncate font-medium">{character.name}</div>
           {isProtagonist ? <Badge variant="secondary">主角</Badge> : null}
+          <CharacterExitBadge status={character.exitStatus} />
         </div>
         <div className="mt-1 text-xs text-muted-foreground">
           {isProtagonist ? `身份：${character.role || "待补全"}` : `${supportingLabel}：${supportingLine}`}
@@ -99,11 +111,36 @@ export default function CharacterAssetSidebar(props: CharacterAssetSidebarProps)
     isDeletingCharacter,
     deletingCharacterId,
   } = props;
-  const protagonist = characters.find(isProtagonistCharacter);
-  const supportingCharacters = characters.filter((character) => !isProtagonistCharacter(character));
+  const [exitFilter, setExitFilter] = useState<CharacterExitStatus | "all">("all");
+
+  const filteredCharacters = characters.filter((character) => {
+    if (exitFilter === "all") return true;
+    return (character.exitStatus ?? "active") === exitFilter;
+  });
+  const protagonist = filteredCharacters.find(isProtagonistCharacter);
+  const supportingCharacters = filteredCharacters.filter((character) => !isProtagonistCharacter(character));
 
   return (
     <div className="space-y-4">
+      <div className="flex flex-wrap gap-1">
+        {EXIT_FILTER_OPTIONS.map((option) => {
+          const count = option.value === "all"
+            ? characters.length
+            : characters.filter((c) => (c.exitStatus ?? "active") === option.value).length;
+          return (
+            <Button
+              key={option.value}
+              size="sm"
+              variant={exitFilter === option.value ? "default" : "ghost"}
+              className="h-7 text-xs"
+              onClick={() => setExitFilter(option.value)}
+            >
+              {option.label}({count})
+            </Button>
+          );
+        })}
+      </div>
+
       <section className="space-y-2">
         <div className="flex items-center justify-between gap-2">
           <div className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">Protagonist</div>

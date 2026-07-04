@@ -104,6 +104,8 @@ interface NovelCharacterPanelProps {
   pendingCharacterResourceCount?: number;
   onBackfillCharacterResources?: () => void;
   isBackfillingCharacterResources?: boolean;
+  onSetExitStatus?: (characterId: string, exitStatus: "exited" | "dead", exitNote?: string) => void;
+  isSettingExitStatus?: boolean;
   characterForm: CharacterFormState;
   onCharacterFormChange: (field: keyof CharacterFormState, value: string) => void;
   onSaveCharacter: () => void;
@@ -163,6 +165,8 @@ export default function NovelCharacterPanel(props: NovelCharacterPanelProps) {
     pendingCharacterResourceCount = 0,
     onBackfillCharacterResources,
     isBackfillingCharacterResources = false,
+    onSetExitStatus,
+    isSettingExitStatus = false,
     characterForm,
     onCharacterFormChange,
     onSaveCharacter,
@@ -420,6 +424,8 @@ export default function NovelCharacterPanel(props: NovelCharacterPanelProps) {
         pendingCharacterResourceCount={pendingCharacterResourceCount}
         onBackfillCharacterResources={onBackfillCharacterResources}
         isBackfillingCharacterResources={isBackfillingCharacterResources}
+        onSetExitStatus={onSetExitStatus}
+        isSettingExitStatus={isSettingExitStatus}
       />
     </div>
   );
