@@ -96,9 +96,9 @@ update_time: 2026-07-03
   ```
 
 **DoD**:
-- [ ] 类型定义包含 wordCountTarget 字段
-- [ ] 字段为 optional（不影响未标注的旧章节）
-- [ ] 构建 shared 通过
+- [x] 类型定义包含 wordCountTarget 字段
+- [x] 字段为 optional（不影响未标注的旧章节）
+- [x] 构建 shared 通过
 
 ---
 
@@ -113,8 +113,8 @@ update_time: 2026-07-03
   ```
 
 **DoD**:
-- [ ] 枚举包含 4 种角色
-- [ ] 与 wordCountTarget.role 字段关联
+- [x] 枚举包含 4 种角色
+- [x] 与 wordCountTarget.role 字段关联
 
 ---
 
@@ -123,7 +123,7 @@ update_time: 2026-07-03
 **目标**: 验证 shared 包构建通过，类型兼容。
 
 **DoD**:
-- [ ] `pnpm --filter @ai-novel/shared build` 通过
+- [x] `pnpm --filter @ai-novel/shared build` 通过
 
 ---
 
@@ -143,9 +143,9 @@ update_time: 2026-07-03
 - 其余 → normal
 
 **DoD**:
-- [ ] beat sheet 生成后每章包含 role 字段
-- [ ] role 标注写入 Chapter 的 wordCountTarget.role
-- [ ] prompt 在 registry 中注册
+- [x] beat sheet 生成后每章包含 role 字段
+- [x] role 标注写入 Chapter 的 wordCountTarget.role
+- [x] prompt 在 registry 中注册
 
 ---
 
@@ -181,8 +181,8 @@ function calculateWordCountTarget(
 | turning_point | 1.0 | 2.5 |
 
 **DoD**:
-- [ ] 计算函数正确实现系数表
-- [ ] 单元测试覆盖 4 种角色
+- [x] 计算函数正确实现系数表
+- [x] 单元测试覆盖 4 种角色
 
 ---
 
@@ -195,9 +195,9 @@ function calculateWordCountTarget(
 - `server/src/modules/novel/` — 设置读写 API 支持该字段
 
 **DoD**:
-- [ ] 默认值 3000 / 4000
-- [ ] 用户可通过 settings 修改
-- [ ] 修改后即时生效
+- [x] 默认值 3000 / 4000
+- [x] 用户可通过 settings 修改
+- [x] 修改后即时生效
 
 ---
 
@@ -216,9 +216,9 @@ function calculateWordCountTarget(
 ```
 
 **DoD**:
-- [ ] prompt 中包含字数范围信息
-- [ ] 不同角色有不同的生成指引语
-- [ ] prompt 在 registry 中注册
+- [x] prompt 中包含字数范围信息
+- [x] 不同角色有不同的生成指引语
+- [x] prompt 在 registry 中注册
 
 ---
 
@@ -236,9 +236,9 @@ function calculateWordCountTarget(
 - 保持叙事连贯性和角色声音一致性
 
 **DoD**:
-- [ ] compress 后字数降至 max 以下
-- [ ] 内容连贯性不被破坏
-- [ ] prompt 在 registry 中注册
+- [x] compress 后字数降至 max 以下
+- [x] 内容连贯性不被破坏
+- [x] prompt 在 registry 中注册
 
 ---
 
@@ -256,9 +256,9 @@ function calculateWordCountTarget(
 - 与上下文保持一致
 
 **DoD**:
-- [ ] expand 后字数达到 min 以上
-- [ ] 内容风格与原文一致
-- [ ] prompt 在 registry 中注册
+- [x] expand 后字数达到 min 以上
+- [x] 内容风格与原文一致
+- [x] prompt 在 registry 中注册
 
 ---
 
@@ -280,8 +280,8 @@ function checkWordCount(actual: number, target: { min: number; max: number }):
 ```
 
 **DoD**:
-- [ ] 检测逻辑正确
-- [ ] 返回值清晰区分超限/不足/达标
+- [x] 检测逻辑正确
+- [x] 返回值清晰区分超限/不足/达标
 
 ---
 
@@ -298,9 +298,9 @@ function checkWordCount(actual: number, target: { min: number; max: number }):
 - ok → 跳过，进入水文检测
 
 **DoD**:
-- [ ] 超限自动触发 compress
-- [ ] 不足自动触发 expand
-- [ ] compress/expand 后重新检测字数
+- [x] 超限自动触发 compress
+- [x] 不足自动触发 expand
+- [x] compress/expand 后重新检测字数
 
 ---
 
@@ -317,9 +317,9 @@ function checkWordCount(actual: number, target: { min: number; max: number }):
 - 记录日志供排查
 
 **DoD**:
-- [ ] 最多 2 轮循环
-- [ ] 超过轮次上限不阻断流程
-- [ ] 日志记录完整
+- [x] 最多 2 轮循环
+- [x] 超过轮次上限不阻断流程
+- [x] 日志记录完整
 
 ---
 
@@ -336,9 +336,9 @@ function checkWordCount(actual: number, target: { min: number; max: number }):
 - 输出：JSON 格式，包含无效段落列表和密度百分比
 
 **DoD**:
-- [ ] prompt 注册于 prompting registry
-- [ ] 输出结构化 JSON
-- [ ] 覆盖主要水文类型（重复描写、无关对话、过度铺陈）
+- [x] prompt 注册于 prompting registry
+- [x] 输出结构化 JSON
+- [x] 覆盖主要水文类型（重复描写、无关对话、过度铺陈）
 
 ---
 
@@ -357,9 +357,9 @@ function checkWordCount(actual: number, target: { min: number; max: number }):
 4. 返回检测结果
 
 **DoD**:
-- [ ] 可调用 LLM 执行水文检测
-- [ ] 返回无效描写密度百分比
-- [ ] LLM 调用失败时 graceful 降级（跳过检测，记录日志）
+- [x] 可调用 LLM 执行水文检测
+- [x] 返回无效描写密度百分比
+- [x] LLM 调用失败时 graceful 降级（跳过检测，记录日志）
 
 ---
 
@@ -377,9 +377,9 @@ function checkWordCount(actual: number, target: { min: number; max: number }):
 - 可选：自动触发精简（由配置控制）
 
 **DoD**:
-- [ ] 超标阈值可配置（默认 30%）
-- [ ] 超标结果写入章节元数据
-- [ ] 不阻断章节生成流程
+- [x] 超标阈值可配置（默认 30%）
+- [x] 超标结果写入章节元数据
+- [x] 不阻断章节生成流程
 
 ---
 
@@ -395,8 +395,8 @@ function checkWordCount(actual: number, target: { min: number; max: number }):
 - 章节角色：如 "高潮章"
 
 **DoD**:
-- [ ] 字数目标范围正确显示
-- [ ] 无 wordCountTarget 的旧章节显示默认或不显示
+- [x] 字数目标范围正确显示
+- [x] 无 wordCountTarget 的旧章节显示默认或不显示
 
 ---
 
@@ -412,8 +412,8 @@ function checkWordCount(actual: number, target: { min: number; max: number }):
 - 或文字标签：实际字数 / 目标范围 + 颜色标识
 
 **DoD**:
-- [ ] 实际字数与目标范围直观对比
-- [ ] 超限/不足有醒目颜色标识
+- [x] 实际字数与目标范围直观对比
+- [x] 超限/不足有醒目颜色标识
 
 ---
 
@@ -429,8 +429,8 @@ function checkWordCount(actual: number, target: { min: number; max: number }):
 - hover 时显示无效描写密度百分比
 
 **DoD**:
-- [ ] 水文超标章节有醒目警告标记
-- [ ] hover 显示详细信息
+- [x] 水文超标章节有醒目警告标记
+- [x] hover 显示详细信息
 
 ---
 

@@ -3,9 +3,9 @@
   "title": "大纲终稿锁定",
   "priority": "P1",
   "version": "v0.1",
-  "status": "pending",
+  "status": "done",
   "createdAt": "2026-07-03",
-  "completedAt": null,
+  "completedAt": "2026-07-05T01:28:55.535Z",
   "source": "竞品分析-游蜂写作",
   "note": "章节级锁定机制"
 }

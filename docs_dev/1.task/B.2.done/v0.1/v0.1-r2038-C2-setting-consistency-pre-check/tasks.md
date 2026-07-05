@@ -161,9 +161,9 @@ description: "REQ-2038 设定一致性前置校验任务拆解"
 
 **子任务**:
 - [x] T9.1 `pnpm typecheck` 通过
-- [ ] T9.2 `pnpm test:all` 通过
-- [ ] T9.3 手动验证：设定页面触发校验 → 查看结果 → 一键修复 → 忽略
-- [ ] T9.4 手动验证：auto-director world building 后自动校验
+- [x] T9.2 `pnpm test:all` 通过
+- [x] T9.3 手动验证：设定页面触发校验 → 查看结果 → 一键修复 → 忽略
+- [x] T9.4 手动验证：auto-director world building 后自动校验
 
 **验收**: 全量类型检查 + 测试通过 + E2E 手动验证通过
 
@@ -183,10 +183,10 @@ description: "REQ-2038 设定一致性前置校验任务拆解"
 
 ## DoD (Definition of Done)
 
-- [ ] 所有子任务完成
-- [ ] typecheck 通过
-- [ ] test 通过
-- [ ] build 通过
-- [ ] 决策日志更新
-- [ ] README 状态标记为 done
-- [ ] run_result.json status 更新为 done
+- [x] 所有子任务完成
+- [x] typecheck 通过
+- [x] test 通过
+- [x] build 通过
+- [x] 决策日志更新
+- [x] README 状态标记为 done
+- [x] run_result.json status 更新为 done

@@ -1,9 +1,9 @@
 ---
 description: "REQ-2038 设定一致性前置校验任务包 README"
-status: pending
+status: done
 priority: p2
 created: 2026-07-03
-updated: 2026-07-03
+updated: 2026-07-05
 ---
 
 # REQ-2038: 设定一致性前置校验

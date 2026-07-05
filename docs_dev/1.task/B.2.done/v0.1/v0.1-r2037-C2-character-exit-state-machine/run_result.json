@@ -3,9 +3,9 @@
   "title": "角色退场状态机",
   "priority": "P1",
   "version": "v0.1",
-  "status": "pending",
+  "status": "done",
   "createdAt": "2026-07-03",
-  "completedAt": null,
+  "completedAt": "2026-07-05T01:28:55.981Z",
   "source": "竞品分析-游蜂写作",
   "note": "四态状态机：active/exited/dead/frozen，含自动推断"
 }

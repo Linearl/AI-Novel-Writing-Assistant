@@ -73,8 +73,8 @@ description: "REQ-2037 任务拆解"
 - `shared/types/index.ts` — 导出新枚举
 
 **DoD**:
-- [ ] 枚举值包含 `active`、`exited`、`dead`、`frozen`
-- [ ] shared 包构建通过
+- [x] 枚举值包含 `active`、`exited`、`dead`、`frozen`
+- [x] shared 包构建通过
 
 ---
 
@@ -89,9 +89,9 @@ description: "REQ-2037 任务拆解"
 - 执行 `pnpm db:migrate` 生成迁移文件
 
 **DoD**:
-- [ ] SQLite 和 PostgreSQL schema 均包含新字段
-- [ ] 默认值为 `active`
-- [ ] 迁移成功执行，现有数据不受影响
+- [x] SQLite 和 PostgreSQL schema 均包含新字段
+- [x] 默认值为 `active`
+- [x] 迁移成功执行，现有数据不受影响
 
 ---
 
@@ -105,9 +105,9 @@ description: "REQ-2037 任务拆解"
 - 相关角色列表查询点（需排查所有角色列表查询）
 
 **DoD**:
-- [ ] `frozen` 角色不出现在章节生成的角色上下文中
-- [ ] `active` 角色正常纳入
-- [ ] 不影响其他模块的角色查询（角色管理页面仍显示全部角色）
+- [x] `frozen` 角色不出现在章节生成的角色上下文中
+- [x] `active` 角色正常纳入
+- [x] 不影响其他模块的角色查询（角色管理页面仍显示全部角色）
 
 ---
 
@@ -120,9 +120,9 @@ description: "REQ-2037 任务拆解"
 - `server/src/prompting/registry.ts` — 注册新 prompt asset
 
 **DoD**:
-- [ ] Prompt 接收章节正文和角色列表
-- [ ] 输出结构化 JSON（exitEvents 数组，含 characterId、exitType、confidence、evidence）
-- [ ] 在 prompting registry 中注册
+- [x] Prompt 接收章节正文和角色列表
+- [x] 输出结构化 JSON（exitEvents 数组，含 characterId、exitType、confidence、evidence）
+- [x] 在 prompting registry 中注册
 
 ---
 
@@ -136,10 +136,10 @@ description: "REQ-2037 任务拆解"
 - 新增 `server/src/services/novel/characterExit/characterExitInferenceService.ts` — 推断逻辑封装
 
 **DoD**:
-- [ ] 章节确认后自动触发退场推断
-- [ ] 高置信度（>= 0.7）事件自动更新 Character.exitStatus
-- [ ] 推断结果记录到数据库（含证据和置信度）
-- [ ] 推断失败不阻断章节确认流程
+- [x] 章节确认后自动触发退场推断
+- [x] 高置信度（>= 0.7）事件自动更新 Character.exitStatus
+- [x] 推断结果记录到数据库（含证据和置信度）
+- [x] 推断失败不阻断章节确认流程
 
 ---
 
@@ -152,9 +152,9 @@ description: "REQ-2037 任务拆解"
 - 在 auto-director 执行流程中（或章节确认后）调用冻结检查
 
 **DoD**:
-- [ ] 检查 `exited` / `dead` 角色在最近 N 章正文中是否被提及
-- [ ] 未提及则自动更新为 `frozen`
-- [ ] N 值可配置（默认 5）
+- [x] 检查 `exited` / `dead` 角色在最近 N 章正文中是否被提及
+- [x] 未提及则自动更新为 `frozen`
+- [x] N 值可配置（默认 5）
 
 ---
 
@@ -174,10 +174,10 @@ Body: { "exitStatus": "exited" | "dead" }
 ```
 
 **DoD**:
-- [ ] 仅允许将 `active` 角色标记为 `exited` 或 `dead`
-- [ ] 不允许手动设置 `frozen`（`frozen` 仅由系统自动判定）
-- [ ] 返回更新后的角色信息
-- [ ] 输入校验（exitStatus 仅接受 exited/dead）
+- [x] 仅允许将 `active` 角色标记为 `exited` 或 `dead`
+- [x] 不允许手动设置 `frozen`（`frozen` 仅由系统自动判定）
+- [x] 返回更新后的角色信息
+- [x] 输入校验（exitStatus 仅接受 exited/dead）
 
 ---
 
@@ -190,8 +190,8 @@ Body: { "exitStatus": "exited" | "dead" }
 - 标签样式：`活跃`（绿色）/ `已退场`（灰色）/ `已死亡`（红色）/ `已冻结`（蓝色）
 
 **DoD**:
-- [ ] 四种状态均有对应标签和颜色
-- [ ] 标签清晰可辨，不干扰角色基本信息阅读
+- [x] 四种状态均有对应标签和颜色
+- [x] 标签清晰可辨，不干扰角色基本信息阅读
 
 ---
 
@@ -204,9 +204,9 @@ Body: { "exitStatus": "exited" | "dead" }
 - 筛选选项：全部 / 活跃 / 已退场 / 已死亡 / 已冻结
 
 **DoD**:
-- [ ] 默认筛选为"活跃"（最常用视图）
-- [ ] 切换筛选后列表实时更新
-- [ ] 筛选器显示各状态角色数量
+- [x] 默认筛选为"活跃"（最常用视图）
+- [x] 切换筛选后列表实时更新
+- [x] 筛选器显示各状态角色数量
 
 ---
 
@@ -220,10 +220,10 @@ Body: { "exitStatus": "exited" | "dead" }
 - 调用 PATCH API 更新状态
 
 **DoD**:
-- [ ] 仅 `active` 角色显示标记按钮
-- [ ] 点击后弹出确认对话框
-- [ ] 确认后调用 API，成功后 UI 实时更新
-- [ ] `frozen` 状态下不显示任何标记按钮
+- [x] 仅 `active` 角色显示标记按钮
+- [x] 点击后弹出确认对话框
+- [x] 确认后调用 API，成功后 UI 实时更新
+- [x] `frozen` 状态下不显示任何标记按钮
 
 ---
 
@@ -237,10 +237,10 @@ Body: { "exitStatus": "exited" | "dead" }
 - `characterExitFreeze.test.ts` — 冻结逻辑测试
 
 **DoD**:
-- [ ] 测试退场推断 LLM 输出解析
-- [ ] 测试置信度阈值过滤
-- [ ] 测试冻结条件（连续 N 章未提及）
-- [ ] 测试状态转换合法性（不可逆约束）
+- [x] 测试退场推断 LLM 输出解析
+- [x] 测试置信度阈值过滤
+- [x] 测试冻结条件（连续 N 章未提及）
+- [x] 测试状态转换合法性（不可逆约束）
 
 ---
 
@@ -252,8 +252,8 @@ Body: { "exitStatus": "exited" | "dead" }
 - `server/tests/characterExit/characterExitInference.integration.test.ts`
 
 **DoD**:
-- [ ] 模拟章节确认 → 自动触发推断 → 数据库更新
-- [ ] 验证 frozen 角色不出现在下一章上下文
+- [x] 模拟章节确认 → 自动触发推断 → 数据库更新
+- [x] 验证 frozen 角色不出现在下一章上下文
 
 ---
 
