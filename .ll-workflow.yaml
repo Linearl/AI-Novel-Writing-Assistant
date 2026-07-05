@@ -1,6 +1,12 @@
 version: "1.0"
 base_profile: default
 
+variables:
+  # 内部解析变量，供 slots 中的 ${ } 引用
+  # workflow 引擎在运行时根据 userTarget / workspaceRoot 解析
+  docs: docs_dev
+  worktree: "."
+
 project:
   name: ai-novel
   type: fullstack

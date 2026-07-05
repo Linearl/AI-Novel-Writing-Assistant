@@ -50,14 +50,14 @@ description: "需求任务总清单（SSOT）"
 | 2032 | 角色弧光可视化 (Character Arc Visualization) | p2 | ✅ 已完成 | REQ-2029 后续迭代，依赖 REQ-2031 | 0.1 | 2026-06-30 | - | `B.2.done/v0.1-r2032-complex-character-arc-visualization/README.md` | 后端聚合 API + recharts 时间线图 + visx/纯 SVG 关系网络图，集成到角色管理页面 |
 | 2033 | 主题一致性纯数据工具层 (Theme Consistency Data Tools) | p2 | ✅ 已完成 | REQ-2029 后续迭代 | 0.1 | 2026-06-30 | - | `B.2.done/v0.1-r2033-medium-theme-consistency-data-tools/README.md` | 3 个 inspect tool: payoff 健康度、卷主题覆盖率、主题层级聚合，纯规则无 LLM |
 | 2034 | 主题一致性 LLM 分析层 (Theme Consistency LLM Analysis) | p2 | ✅ 已完成 | REQ-2029 后续迭代，依赖 REQ-2033 | 0.1 | 2026-06-30 | - | `B.2.done/v0.1-r2034-medium-theme-consistency-llm-analysis/README.md` | 2 个 inspect tool + 1 个 PromptAsset: 主题偏移检测、母题持续性检查，LLM 语义分析 |
-| 2035 | 大纲终稿锁定 | p1 | ✅ 已完成 | 竞品分析-游蜂写作 | 0.1 | 2026-07-03 | 2026-07-05T01:28:55.535Z | `B.todo/v0.1-r2035-C2-outline-final-draft-lock/README.md` | 章节级锁定机制 |
+| 2035 | 大纲终稿锁定 | p1 | ✅ 已完成 | 竞品分析-游蜂写作 | 0.1 | 2026-07-03 | 2026-07-05T01:28:55.535Z | `B.2.done/v0.1-r2035-C2-outline-final-draft-lock/README.md` | 章节级锁定机制 |
 | 2036 | 用户反馈系统 | p3 | ✅ 已完成 | - | 0.1 | 2026-07-02T09:45:00.000Z | 2026-07-03T10:00:00+08:00 | `B.2.done/v0.1-r2036-M2-user-feedback-system/README.md` |  |
-| 2037 | 角色退场状态机 | p1 | ✅ 已完成 | 竞品分析-游蜂写作 | 0.1 | 2026-07-03 | 2026-07-05T01:28:55.981Z | `B.todo/v0.1-r2037-C2-character-exit-state-machine/README.md` | 四态状态机：active/exited/dead/frozen，含自动推断 |
-| 2038 | 设定一致性前置校验 | p2 | ✅ 已完成 | 竞品分析-游蜂写作 | 0.1 | 2026-07-03 | 2026-07-05T01:28:56.433Z | `B.todo/v0.1-r2038-C2-setting-consistency-pre-check/README.md` | 先做 LLM 内置校验，后续迭代加变更 diff |
+| 2037 | 角色退场状态机 | p1 | ✅ 已完成 | 竞品分析-游蜂写作 | 0.1 | 2026-07-03 | 2026-07-05T01:28:55.981Z | `B.2.done/v0.1-r2037-C2-character-exit-state-machine/README.md` | 四态状态机：active/exited/dead/frozen，含自动推断 |
+| 2038 | 设定一致性前置校验 | p2 | ✅ 已完成 | 竞品分析-游蜂写作 | 0.1 | 2026-07-03 | 2026-07-05T01:28:56.433Z | `B.2.done/v0.1-r2038-C2-setting-consistency-pre-check/README.md` | 先做 LLM 内置校验，后续迭代加变更 diff |
 | 2039 | 闲置后网络连接自动恢复 | p2 | ✅ 已完成 | 用户反馈 | 0.1 | 2026-07-03 | 2026-07-04 | `B.2.done/v0.1-r2039-C1-idle-network-recovery/README.md` | 闲置后 TCP 连接回收导致报错 |
-| 2040 | 资产 TXT 导入导出 | p2 | ✅ 已完成 | 竞品分析-游蜂写作 | 0.1 | 2026-07-03 | 2026-07-05T01:28:56.883Z | `B.todo/v0.1-r2040-M2-asset-txt-import-export/README.md` | 设定/大纲/关系网/正文独立 TXT 导入导出 |
-| 2041 | 伏笔埋收可视化追踪 | p2 | ✅ 已完成 | 竞品分析-游蜂写作 | 0.1 | 2026-07-03 | 2026-07-05T01:28:57.419Z | `B.todo/v0.1-r2041-M2-payoff-ledger-visualization/README.md` | payoff ledger 增强 + auto-director 集成 + UI 可视化 |
-| 2042 | 自适应字数控制与水文检测 | p2 | ✅ 已完成 | 竞品分析讨论 | 0.1 | 2026-07-03 | 2026-07-05T01:28:57.909Z | `B.todo/v0.1-r2042-M2-adaptive-word-count-control/README.md` | 章节角色系数 + 水文检测 + 自动 compress/expand |
+| 2040 | 资产 TXT 导入导出 | p2 | ✅ 已完成 | 竞品分析-游蜂写作 | 0.1 | 2026-07-03 | 2026-07-05T01:28:56.883Z | `B.2.done/v0.1-r2040-M2-asset-txt-import-export/README.md` | 设定/大纲/关系网/正文独立 TXT 导入导出 |
+| 2041 | 伏笔埋收可视化追踪 | p2 | ✅ 已完成 | 竞品分析-游蜂写作 | 0.1 | 2026-07-03 | 2026-07-05T01:28:57.419Z | `B.2.done/v0.1-r2041-M2-payoff-ledger-visualization/README.md` | payoff ledger 增强 + auto-director 集成 + UI 可视化 |
+| 2042 | 自适应字数控制与水文检测 | p2 | ✅ 已完成 | 竞品分析讨论 | 0.1 | 2026-07-03 | 2026-07-05T01:28:57.909Z | `B.2.done/v0.1-r2042-M2-adaptive-word-count-control/README.md` | 章节角色系数 + 水文检测 + 自动 compress/expand |
 | 2013 | Director Failed Retry Entry | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2013-medium-director-failed-retry-entry/README.md` |  |
 | 2014 | Chapter Token Budget Dynamic | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2014-medium-chapter-token-budget-dynamic/README.md` |  |
 
@@ -142,14 +142,14 @@ description: "需求任务总清单（SSOT）"
 | 2032 | 角色弧光可视化 (Character Arc Visualization) | `B.2.done/v0.1-r2032-complex-character-arc-visualization/README.md` |
 | 2033 | 主题一致性纯数据工具层 (Theme Consistency Data Tools) | `B.2.done/v0.1-r2033-medium-theme-consistency-data-tools/README.md` |
 | 2034 | 主题一致性 LLM 分析层 (Theme Consistency LLM Analysis) | `B.2.done/v0.1-r2034-medium-theme-consistency-llm-analysis/README.md` |
-| 2035 | 大纲终稿锁定 | `B.todo/v0.1-r2035-C2-outline-final-draft-lock/README.md` |
+| 2035 | 大纲终稿锁定 | `B.2.done/v0.1-r2035-C2-outline-final-draft-lock/README.md` |
 | 2036 | 用户反馈系统 | `B.2.done/v0.1-r2036-M2-user-feedback-system/README.md` |
-| 2037 | 角色退场状态机 | `B.todo/v0.1-r2037-C2-character-exit-state-machine/README.md` |
-| 2038 | 设定一致性前置校验 | `B.todo/v0.1-r2038-C2-setting-consistency-pre-check/README.md` |
+| 2037 | 角色退场状态机 | `B.2.done/v0.1-r2037-C2-character-exit-state-machine/README.md` |
+| 2038 | 设定一致性前置校验 | `B.2.done/v0.1-r2038-C2-setting-consistency-pre-check/README.md` |
 | 2039 | 闲置后网络连接自动恢复 | `B.2.done/v0.1-r2039-C1-idle-network-recovery/README.md` |
-| 2040 | 资产 TXT 导入导出 | `B.todo/v0.1-r2040-M2-asset-txt-import-export/README.md` |
-| 2041 | 伏笔埋收可视化追踪 | `B.todo/v0.1-r2041-M2-payoff-ledger-visualization/README.md` |
-| 2042 | 自适应字数控制与水文检测 | `B.todo/v0.1-r2042-M2-adaptive-word-count-control/README.md` |
+| 2040 | 资产 TXT 导入导出 | `B.2.done/v0.1-r2040-M2-asset-txt-import-export/README.md` |
+| 2041 | 伏笔埋收可视化追踪 | `B.2.done/v0.1-r2041-M2-payoff-ledger-visualization/README.md` |
+| 2042 | 自适应字数控制与水文检测 | `B.2.done/v0.1-r2042-M2-adaptive-word-count-control/README.md` |
 | 3001 | Task Batch Archive | `B.2.done/v0.1-r3001-medium-task-batch-archive/README.md` |
 | 3002 | 导演进度规划资源缺失 Checklist 可视化 | `B.2.done/v0.1-r3002-medium-director-planning-checklist/README.md` |
 | 3003 | 小说项目对话存档 | `B.2.done/v0.1-r3003-medium-repair-progress-dialog/README.md` |
