@@ -15,13 +15,9 @@ import {
   extractCharacterEventLines,
   LLMGenerateOptions,
 } from "./novelCoreShared";
-import { zodCharacterImportResult } from "./novelCoreCharacterShared";
+import { zodCharacterImportResult, zodImportCharactersWithRelationsSchema } from "./novelCoreCharacterShared";
 import type { LLMProvider } from "@ai-novel/shared/types/llm";
 import { serializeCharacterProhibitions } from "./characters/characterHardFacts";
-
-const characterImportSchema = z.object({
-  characters: z.array(zodCharacterImportResult),
-});
 
 export class NovelCoreCharacterService {
   private readonly worldContextGateway = new WorldContextGateway();
@@ -387,36 +383,40 @@ export class NovelCoreCharacterService {
     options?: { provider?: LLMProvider; model?: string },
   ): Promise<z.infer<typeof zodCharacterImportResult>[]> {
     const systemPrompt = [
-      "你是角色信息提取器。严格从素材文本中提取角色，禁止编造任何信息。",
+      "你是角色信息提取器。严格从素材文本中提取角色和关系，禁止编造任何信息。",
       "",
       "【铁律】",
-      "1. 只提取素材中明确出现的角色。角色名必须逐字抄录，不得改写、翻译或近似",
-      "2. 如果素材没有提到某字段，该字段留空字符串，不得猜测",
-      "3. 素材中没提到的角色一个都不要加",
+      "1. 只提取素材中明确出现的角色和关系",
+      "2. 角色名必须逐字抄录，不得改写、翻译或近似",
+      "3. 如果素材没有提到某字段，该字段留空，不得猜测",
+      "4. 素材中没提到的角色一个都不要加",
+      "5. relations 中的 sourceName/targetName 必须与 characters 中的 name 完全一致",
       "",
       "【字段说明】",
-      "name: 角色姓名，逐字从原文摘录",
-      "role: 角色定位，原文明确说了的才填（如\"主角\"、\"反派\"、\"女主\"），不确定填\"未指定\"",
-      "gender: male/female/other/unknown",
-      "personality: 性格描述，原文明确提到的才填",
-      "background: 背景/身世摘要，只填原文已有的",
-      "relationToProtagonist: 与主角的关系，原文提了才填",
-      "storyFunction: 故事中承担的功能/作用，原文提了才填",
+      "characters[].name: 角色姓名，逐字从原文摘录",
+      "characters[].role: 角色定位（主角/反派/配角/女主/未指定）",
+      "characters[].gender: male/female/other/unknown",
+      "characters[].personality: 性格描述",
+      "characters[].background: 背景/身世摘要",
+      "characters[].relationToProtagonist: 与主角的关系",
+      "characters[].storyFunction: 故事中的功能/作用",
       "",
-      "输出纯 JSON：{\"characters\": [...]}",
+      "relations 字段: 素材中明确提到的角色间关系，每条包含:",
+      "sourceName: 关系来源角色名（如\"江夜\"）",
+      "targetName: 关系目标角色名（如\"季星灼\"）",
+      "surfaceRelation: 表面关系描述（如\"前恋人/背叛者\"、\"救赎与被救赎\"）",
+      "hiddenTension: 隐藏的情感张力（选填）",
+      "conflictSource: 冲突来源（选填）",
+      "",
+      "输出纯 JSON：{\"characters\": [...], \"relations\": [...]}",
     ].join("\n");
 
-    const userPrompt = `请从以下素材中提取所有角色信息：\n\n---\n${outlineText.slice(0, 8000)}\n---`;
+    const userPrompt = `请从以下素材中提取所有角色和关系信息：\n\n---\n${outlineText.slice(0, 8000)}\n---`;
 
-    const messages = [
-      { role: "system" as const, content: systemPrompt },
-      { role: "user" as const, content: userPrompt },
-    ];
-
-    const result = await invokeStructuredLlm<{ characters: z.infer<typeof zodCharacterImportResult>[] }>({
+    const result = await invokeStructuredLlm<z.infer<typeof zodImportCharactersWithRelationsSchema>>({
       systemPrompt,
       userPrompt,
-      schema: characterImportSchema,
+      schema: zodImportCharactersWithRelationsSchema,
       label: "novel.character.import-from-outline",
       taskType: "planner",
       temperature: 0.2,
@@ -425,8 +425,9 @@ export class NovelCoreCharacterService {
     });
 
     const created: z.infer<typeof zodCharacterImportResult>[] = [];
+    const nameToId = new Map<string, string>();
     for (const char of result.characters) {
-      await this.createCharacter(novelId, {
+      const record = await this.createCharacter(novelId, {
         name: char.name,
         role: char.role,
         gender: char.gender,
@@ -436,6 +437,39 @@ export class NovelCoreCharacterService {
         storyFunction: char.storyFunction,
       });
       created.push(char);
+      nameToId.set(char.name, record.id);
+    }
+
+    // 创建关系
+    if (result.relations && result.relations.length > 0) {
+      for (const rel of result.relations) {
+        const sourceId = nameToId.get(rel.sourceName);
+        const targetId = nameToId.get(rel.targetName);
+        if (sourceId && targetId) {
+          await prisma.characterRelation.upsert({
+            where: {
+              novelId_sourceCharacterId_targetCharacterId: {
+                novelId,
+                sourceCharacterId: sourceId,
+                targetCharacterId: targetId,
+              },
+            },
+            create: {
+              novelId,
+              sourceCharacterId: sourceId,
+              targetCharacterId: targetId,
+              surfaceRelation: rel.surfaceRelation,
+              ...(rel.hiddenTension ? { hiddenTension: rel.hiddenTension } : {}),
+              ...(rel.conflictSource ? { conflictSource: rel.conflictSource } : {}),
+            },
+            update: {
+              surfaceRelation: rel.surfaceRelation,
+              ...(rel.hiddenTension ? { hiddenTension: rel.hiddenTension } : {}),
+              ...(rel.conflictSource ? { conflictSource: rel.conflictSource } : {}),
+            },
+          });
+        }
+      }
     }
     return created;
   }
