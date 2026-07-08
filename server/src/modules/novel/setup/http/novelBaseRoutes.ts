@@ -59,6 +59,7 @@ const createNovelSchema = z.object({
   outlineStatus: z.enum(["not_started", "in_progress", "completed", "rework", "blocked"]).optional(),
   resourceReadyScore: z.number().int().min(0).max(100).optional(),
   payoffExpiryThreshold: z.number().int().min(1).max(200).default(20).optional(),
+  outline: z.string().trim().optional(),
 });
 
 const updateNovelSchema = z.object({

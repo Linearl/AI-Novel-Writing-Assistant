@@ -255,6 +255,7 @@ export class NovelCoreCrudService {
         storylineStatus: input.storylineStatus,
         outlineStatus: input.outlineStatus,
         resourceReadyScore: input.resourceReadyScore,
+        outline: input.outline ?? null,
         sourceNovelId: writingMode === "continuation" ? sourceNovelId : null,
         sourceKnowledgeDocumentId: writingMode === "continuation" ? sourceKnowledgeDocumentId : null,
         continuationBookAnalysisId: normalizedContinuationBookAnalysisId,

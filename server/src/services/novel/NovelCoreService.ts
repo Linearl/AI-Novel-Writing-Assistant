@@ -18,6 +18,7 @@ import {
   TitleGenerateOptions,
   UpdateNovelInput,
 } from "./novelCoreShared";
+import type { LLMProvider } from "@ai-novel/shared/types/llm";
 import { NovelCoreCharacterService } from "./novelCoreCharacterService";
 import { NovelCoreCrudService } from "./novelCoreCrudService";
 import { NovelCoreGenerationService } from "./novelCoreGenerationService";
@@ -149,6 +150,14 @@ export class NovelCoreService {
 
   async checkCharacterAgainstWorld(novelId: string, characterId: string, options: LLMGenerateOptions = {}) {
     return this.characterService.checkCharacterAgainstWorld(novelId, characterId, options);
+  }
+
+  async importCharactersFromOutline(
+    novelId: string,
+    outlineText: string,
+    options?: { provider?: LLMProvider; model?: string },
+  ) {
+    return this.characterService.importCharactersFromOutline(novelId, outlineText, options);
   }
 
   async createOutlineStream(novelId: string, options: OutlineGenerateOptions = {}) {
