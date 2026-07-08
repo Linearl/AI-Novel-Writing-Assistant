@@ -257,7 +257,10 @@ export default function NovelWorkspaceRail(props: NovelWorkspaceRailProps) {
 
   const stepReadiness = useMemo(() => {
     const basicReady = Boolean(novelDetail?.title?.trim());
-    const outlineReady = Boolean(workspace?.strategyPlan) || (workspace?.volumes ?? []).some((volume) => hasVolumePlanContent(volume));
+    const strategyPlan = workspace?.strategyPlan;
+    const outlineReady = Boolean(strategyPlan?.volumes?.length)
+      || Boolean(strategyPlan?.readerRewardLadder?.trim())
+      || (workspace?.volumes ?? []).filter((volume) => hasVolumePlanContent(volume)).length >= 2;
     const structuredReady = (workspace?.beatSheets ?? []).some((sheet) => sheet.beats.length > 0)
       || (workspace?.volumes ?? []).some((volume) => volume.chapters.some((chapter) => hasChapterPlanContent(chapter)));
     const chapterReady = (novelDetail?.chapters ?? []).some((chapter) => Boolean(chapter.content?.trim()));
