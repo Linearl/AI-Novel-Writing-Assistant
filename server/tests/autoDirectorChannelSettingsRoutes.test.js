@@ -2,6 +2,8 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const http = require("node:http");
 
+process.env.API_TOKEN = "test-token";
+
 const { createApp } = require("../dist/app.js");
 const { prisma } = require("../dist/db/prisma.js");
 
@@ -59,7 +61,9 @@ test("auto director channel settings routes expose saved config and allow cleari
   const port = await listen(server);
 
   try {
-    const getResponse = await fetch(`http://127.0.0.1:${port}/api/settings/auto-director/channels`);
+    const getResponse = await fetch(`http://127.0.0.1:${port}/api/settings/auto-director/channels`, {
+      headers: { Authorization: "Bearer test-token" },
+    });
     assert.equal(getResponse.status, 200);
     const getPayload = await getResponse.json();
     assert.equal(getPayload.success, true);
@@ -73,6 +77,7 @@ test("auto director channel settings routes expose saved config and allow cleari
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
       },
       body: JSON.stringify({
         baseUrl: "",

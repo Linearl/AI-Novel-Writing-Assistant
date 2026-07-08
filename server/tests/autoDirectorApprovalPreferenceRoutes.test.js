@@ -2,6 +2,8 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const http = require("node:http");
 
+process.env.API_TOKEN = "test-token";
+
 const { createApp } = require("../dist/app.js");
 const { prisma } = require("../dist/db/prisma.js");
 
@@ -49,7 +51,9 @@ test("auto director approval preferences expose defaults and persist concrete ap
   const port = await listen(server);
 
   try {
-    const getResponse = await fetch(`http://127.0.0.1:${port}/api/settings/auto-director/approval-preferences`);
+    const getResponse = await fetch(`http://127.0.0.1:${port}/api/settings/auto-director/approval-preferences`, {
+      headers: { Authorization: "Bearer test-token" },
+    });
     assert.equal(getResponse.status, 200);
     const getPayload = await getResponse.json();
     assert.equal(getPayload.success, true);
@@ -69,6 +73,7 @@ test("auto director approval preferences expose defaults and persist concrete ap
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
       },
       body: JSON.stringify({
         approvalPointCodes: [
@@ -97,6 +102,7 @@ test("auto director approval preferences expose defaults and persist concrete ap
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
       },
       body: JSON.stringify({
         approvalPointCodes: ["not_a_real_point"],

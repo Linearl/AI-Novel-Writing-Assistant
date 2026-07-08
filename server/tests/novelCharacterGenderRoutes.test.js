@@ -2,6 +2,8 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const http = require("node:http");
 
+process.env.API_TOKEN = "test-token";
+
 const { createApp } = require("../dist/app.js");
 const {
   DefaultNovelApplicationServices,
@@ -139,7 +141,10 @@ test("character routes accept and return gender fields", async () => {
   try {
     const createResponse = await fetch(`http://127.0.0.1:${port}/api/novels/novel_gender/characters`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
+      },
       body: JSON.stringify({
         name: "刘雪婷",
         role: "主角",
@@ -153,7 +158,10 @@ test("character routes accept and return gender fields", async () => {
 
     const updateResponse = await fetch(`http://127.0.0.1:${port}/api/novels/novel_gender/characters/char_1`, {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
+      },
       body: JSON.stringify({
         gender: "other",
       }),
@@ -165,7 +173,10 @@ test("character routes accept and return gender fields", async () => {
 
     const supplementalResponse = await fetch(`http://127.0.0.1:${port}/api/novels/novel_gender/character-prep/supplemental-characters/apply`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
+      },
       body: JSON.stringify({
         name: "赵成",
         role: "宫廷前辈",
@@ -214,7 +225,10 @@ test("character cast apply route runs post-apply enhancements in background mode
   try {
     const response = await fetch(`http://127.0.0.1:${port}/api/novels/novel_cast/character-prep/cast-options/option_1/apply`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
+      },
       body: JSON.stringify({
         provider: "deepseek",
         model: "deepseek-chat",

@@ -2,6 +2,8 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const http = require("node:http");
 
+process.env.API_TOKEN = "test-token";
+
 const { createApp } = require("../dist/app.js");
 const {
   characterLibrarySyncService,
@@ -114,7 +116,10 @@ test("character sync routes expose import and save entrypoints without touching 
   try {
     const importResponse = await fetch(`http://127.0.0.1:${port}/api/novels/novel_a/characters/import-base-character`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
+      },
       body: JSON.stringify({
         baseCharacterId: "base_1",
         mode: "linked",
@@ -128,7 +133,10 @@ test("character sync routes expose import and save entrypoints without touching 
 
     const saveResponse = await fetch(`http://127.0.0.1:${port}/api/novels/novel_a/characters/char_1/library-sync/save-to-library`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
+      },
       body: JSON.stringify({
         baseCharacter: {
           name: "林青",

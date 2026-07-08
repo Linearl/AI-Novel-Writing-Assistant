@@ -1,6 +1,9 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const http = require("node:http");
+
+process.env.API_TOKEN = "test-token";
+
 const { createApp } = require("../dist/app.js");
 const { recoveryTaskService } = require("../dist/services/task/RecoveryTaskService.js");
 const { taskCenterService } = require("../dist/services/task/TaskCenterService.js");
@@ -105,13 +108,17 @@ test("task recovery routes expose overview, recovery candidates, and resume acti
   const port = await listen(server);
 
   try {
-    const overviewResponse = await fetch(`http://127.0.0.1:${port}/api/tasks/overview`);
+    const overviewResponse = await fetch(`http://127.0.0.1:${port}/api/tasks/overview`, {
+      headers: { Authorization: "Bearer test-token" },
+    });
     assert.equal(overviewResponse.status, 200);
     const overviewPayload = await overviewResponse.json();
     assert.equal(overviewPayload.success, true);
     assert.equal(overviewPayload.data.failedCount, 3);
 
-    const candidatesResponse = await fetch(`http://127.0.0.1:${port}/api/tasks/recovery-candidates`);
+    const candidatesResponse = await fetch(`http://127.0.0.1:${port}/api/tasks/recovery-candidates`, {
+      headers: { Authorization: "Bearer test-token" },
+    });
     assert.equal(candidatesResponse.status, 200);
     const candidatesPayload = await candidatesResponse.json();
     assert.equal(candidatesPayload.success, true);
@@ -119,6 +126,7 @@ test("task recovery routes expose overview, recovery candidates, and resume acti
 
     const resumeSingleResponse = await fetch(`http://127.0.0.1:${port}/api/tasks/recovery-candidates/novel_workflow/workflow-1/resume`, {
       method: "POST",
+      headers: { Authorization: "Bearer test-token" },
     });
     assert.equal(resumeSingleResponse.status, 202);
     const resumeSinglePayload = await resumeSingleResponse.json();
@@ -127,6 +135,7 @@ test("task recovery routes expose overview, recovery candidates, and resume acti
 
     const resumeAllResponse = await fetch(`http://127.0.0.1:${port}/api/tasks/recovery-candidates/resume-all`, {
       method: "POST",
+      headers: { Authorization: "Bearer test-token" },
     });
     assert.equal(resumeAllResponse.status, 202);
     const resumeAllPayload = await resumeAllResponse.json();

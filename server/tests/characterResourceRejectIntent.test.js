@@ -2,6 +2,8 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const http = require("node:http");
 
+process.env.API_TOKEN = "test-token";
+
 const { createApp } = require("../dist/app.js");
 const { prisma } = require("../dist/db/prisma.js");
 
@@ -46,7 +48,10 @@ test("character resource reject API saves intent to validationNotesJson", async 
       `http://127.0.0.1:${port}/api/novels/novel-1/character-resource-proposals/proposal-1/reject`,
       {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer test-token",
+        },
         body: JSON.stringify({
           intent: "保留原角色性格不变",
           reason: "不符合故事走向",
@@ -102,7 +107,10 @@ test("character resource reject API works without intent (simple reject)", async
       `http://127.0.0.1:${port}/api/novels/novel-1/character-resource-proposals/proposal-2/reject`,
       {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer test-token",
+        },
       },
     );
 
@@ -160,6 +168,9 @@ test("character resource proposal mapProposal extracts rejectedIntent from valid
   try {
     const response = await fetch(
       `http://127.0.0.1:${port}/api/novels/novel-1/character-resources`,
+      {
+        headers: { Authorization: "Bearer test-token" },
+      },
     );
 
     assert.equal(response.status, 200);

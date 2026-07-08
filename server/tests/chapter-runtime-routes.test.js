@@ -1,6 +1,9 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const http = require("node:http");
+
+process.env.API_TOKEN = "test-token";
+
 const { createApp } = require("../dist/app.js");
 const { DefaultNovelApplicationServices } = require("../dist/services/novel/application/NovelApplicationServices.js");
 
@@ -225,6 +228,7 @@ test("runtime chapter route emits runtime_package before done", async () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
       },
       body: JSON.stringify({
         taskStyleProfileId: "style-task-1",
@@ -279,6 +283,7 @@ test("legacy generate route keeps chunk and done without runtime_package", async
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
       },
       body: JSON.stringify({}),
     });
@@ -326,6 +331,7 @@ test("repair route keeps the existing SSE contract", async () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
       },
       body: JSON.stringify({
         reviewIssues: [{

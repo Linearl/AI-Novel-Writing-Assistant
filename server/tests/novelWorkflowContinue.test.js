@@ -2,6 +2,8 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const http = require("node:http");
 
+process.env.API_TOKEN = "test-token";
+
 const { createApp } = require("../dist/app.js");
 const { DirectorCommandService } = require("../dist/services/novel/director/commands/DirectorCommandService.js");
 const { NovelWorkflowService } = require("../dist/services/novel/workflow/NovelWorkflowService.js");
@@ -50,7 +52,9 @@ test("novel workflow auto director route prefers the active auto director task o
   const port = await listen(server);
 
   try {
-    const response = await fetch(`http://127.0.0.1:${port}/api/novel-workflows/novels/novel-active/auto-director`);
+    const response = await fetch(`http://127.0.0.1:${port}/api/novel-workflows/novels/novel-active/auto-director`, {
+      headers: { Authorization: "Bearer test-token" },
+    });
     assert.equal(response.status, 200);
     const payload = await response.json();
     assert.equal(payload.success, true);
@@ -95,7 +99,9 @@ test("novel workflow auto director route returns null when only historical visib
   const port = await listen(server);
 
   try {
-    const response = await fetch(`http://127.0.0.1:${port}/api/novel-workflows/novels/novel-idle/auto-director`);
+    const response = await fetch(`http://127.0.0.1:${port}/api/novel-workflows/novels/novel-idle/auto-director`, {
+      headers: { Authorization: "Bearer test-token" },
+    });
     assert.equal(response.status, 200);
     const payload = await response.json();
     assert.equal(payload.success, true);
@@ -146,7 +152,10 @@ test("novel workflow continue route enqueues auto_execute_range continuation mod
   try {
     const response = await fetch(`http://127.0.0.1:${port}/api/novel-workflows/workflow-auto-exec/continue`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
+      },
       body: JSON.stringify({
         continuationMode: "auto_execute_range",
       }),

@@ -1,6 +1,9 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const http = require("node:http");
+
+process.env.API_TOKEN = "test-token";
+
 const { createApp } = require("../dist/app.js");
 const {
   DefaultNovelApplicationServices,
@@ -502,7 +505,9 @@ test("GET workspace and POST ai-revision-preview routes return the new editor pa
   const port = await listen(server);
 
   try {
-    const workspaceResponse = await fetch(`http://127.0.0.1:${port}/api/novels/novel-1/chapters/chapter-1/editor/workspace`);
+    const workspaceResponse = await fetch(`http://127.0.0.1:${port}/api/novels/novel-1/chapters/chapter-1/editor/workspace`, {
+      headers: { Authorization: "Bearer test-token" },
+    });
     assert.equal(workspaceResponse.status, 200);
     const workspacePayload = await workspaceResponse.json();
     assert.equal(workspacePayload.success, true);
@@ -512,6 +517,7 @@ test("GET workspace and POST ai-revision-preview routes return the new editor pa
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
       },
       body: JSON.stringify({
         source: "freeform",

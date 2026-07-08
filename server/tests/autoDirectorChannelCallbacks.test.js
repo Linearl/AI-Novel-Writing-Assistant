@@ -2,6 +2,8 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const http = require("node:http");
 
+process.env.API_TOKEN = "test-token";
+
 const { createApp } = require("../dist/app.js");
 const { AutoDirectorFollowUpActionExecutor } = require("../dist/services/task/autoDirectorFollowUps/AutoDirectorFollowUpActionExecutor.js");
 const { signWeComMarkdownCallback } = require("../dist/services/task/autoDirectorFollowUps/wecomMarkdownCallback.js");
@@ -55,6 +57,7 @@ test("auto director channel callback route executes dingtalk low-risk actions th
       headers: {
         "Content-Type": "application/json",
         "x-auto-director-dingtalk-token": "ding-callback-token",
+        Authorization: "Bearer test-token",
       },
       body: JSON.stringify({
         userId: "ding_user_1",
@@ -130,6 +133,7 @@ test("auto director channel callback route executes wecom low-risk actions throu
       headers: {
         "Content-Type": "application/json",
         "x-auto-director-wecom-token": "wecom-callback-token",
+        Authorization: "Bearer test-token",
       },
       body: JSON.stringify({
         userId: "wecom_user_1",
@@ -215,6 +219,9 @@ test("auto director channel callback route executes wecom low-risk actions throu
 
     const response = await fetch(
       `http://127.0.0.1:${port}/api/auto-director/channel-callbacks/wecom/execute?${query.toString()}`,
+      {
+        headers: { Authorization: "Bearer test-token" },
+      },
     );
 
     assert.equal(response.status, 200);

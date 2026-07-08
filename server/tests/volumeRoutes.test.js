@@ -1,6 +1,10 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const http = require("node:http");
+
+// Set API_TOKEN before importing app so auth middleware can validate
+process.env.API_TOKEN = "test-token";
+
 const { createApp } = require("../dist/app.js");
 const {
   DefaultNovelApplicationServices,
@@ -194,7 +198,7 @@ function createSyncPreview() {
   };
 }
 
-test("volume routes cover workspace, versions, impact analysis, sync and legacy migration contracts", async () => {
+test("卷路由覆盖工作区、版本、影响分析、同步和遗留迁移契约", async () => {
   const originalMethods = {
     getVolumes: DefaultNovelApplicationServices.prototype.getVolumes,
     generateVolumes: DefaultNovelApplicationServices.prototype.generateVolumes,
@@ -234,7 +238,9 @@ test("volume routes cover workspace, versions, impact analysis, sync and legacy 
   const server = http.createServer(app);
   const port = await listen(server);
   try {
-    const getResponse = await fetch(`http://127.0.0.1:${port}/api/novels/${novelId}/volumes`);
+    const getResponse = await fetch(`http://127.0.0.1:${port}/api/novels/${novelId}/volumes`, {
+      headers: { Authorization: "Bearer test-token" },
+    });
     assert.equal(getResponse.status, 200);
     const getPayload = await getResponse.json();
     assert.equal(getPayload.data.workspaceVersion, "v2");
@@ -245,6 +251,7 @@ test("volume routes cover workspace, versions, impact analysis, sync and legacy 
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
       },
       body: JSON.stringify({ scope: "strategy" }),
     });
@@ -254,6 +261,7 @@ test("volume routes cover workspace, versions, impact analysis, sync and legacy 
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
       },
       body: JSON.stringify({
         scope: "chapter_list",
@@ -274,6 +282,7 @@ test("volume routes cover workspace, versions, impact analysis, sync and legacy 
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
       },
       body: JSON.stringify({
         scope: "beat_sheet",
@@ -293,6 +302,7 @@ test("volume routes cover workspace, versions, impact analysis, sync and legacy 
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
       },
       body: JSON.stringify({
         volumes: [createVolume()],
@@ -304,7 +314,9 @@ test("volume routes cover workspace, versions, impact analysis, sync and legacy 
     const draftPayload = await draftResponse.json();
     assert.equal(draftPayload.data.version, 3);
 
-    const versionsResponse = await fetch(`http://127.0.0.1:${port}/api/novels/${novelId}/volumes/versions`);
+    const versionsResponse = await fetch(`http://127.0.0.1:${port}/api/novels/${novelId}/volumes/versions`, {
+      headers: { Authorization: "Bearer test-token" },
+    });
     assert.equal(versionsResponse.status, 200);
     const versionsPayload = await versionsResponse.json();
     assert.equal(versionsPayload.data.length, 2);
@@ -312,6 +324,7 @@ test("volume routes cover workspace, versions, impact analysis, sync and legacy 
 
     const activateResponse = await fetch(`http://127.0.0.1:${port}/api/novels/${novelId}/volumes/versions/version-2/activate`, {
       method: "POST",
+      headers: { Authorization: "Bearer test-token" },
     });
     assert.equal(activateResponse.status, 200);
     const activatePayload = await activateResponse.json();
@@ -319,12 +332,15 @@ test("volume routes cover workspace, versions, impact analysis, sync and legacy 
 
     const freezeResponse = await fetch(`http://127.0.0.1:${port}/api/novels/${novelId}/volumes/versions/version-2/freeze`, {
       method: "POST",
+      headers: { Authorization: "Bearer test-token" },
     });
     assert.equal(freezeResponse.status, 200);
     const freezePayload = await freezeResponse.json();
     assert.equal(freezePayload.data.status, "frozen");
 
-    const diffResponse = await fetch(`http://127.0.0.1:${port}/api/novels/${novelId}/volumes/versions/version-2/diff?compareVersion=1`);
+    const diffResponse = await fetch(`http://127.0.0.1:${port}/api/novels/${novelId}/volumes/versions/version-2/diff?compareVersion=1`, {
+      headers: { Authorization: "Bearer test-token" },
+    });
     assert.equal(diffResponse.status, 200);
     const diffPayload = await diffResponse.json();
     assert.equal(diffPayload.data.changedChapterCount, 1);
@@ -334,6 +350,7 @@ test("volume routes cover workspace, versions, impact analysis, sync and legacy 
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
       },
       body: JSON.stringify({
         volumes: [createVolume()],
@@ -348,6 +365,7 @@ test("volume routes cover workspace, versions, impact analysis, sync and legacy 
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
       },
       body: JSON.stringify({
         volumes: [createVolume()],
@@ -362,6 +380,7 @@ test("volume routes cover workspace, versions, impact analysis, sync and legacy 
 
     const migrateResponse = await fetch(`http://127.0.0.1:${port}/api/novels/${novelId}/volumes/migrate-legacy`, {
       method: "POST",
+      headers: { Authorization: "Bearer test-token" },
     });
     assert.equal(migrateResponse.status, 200);
     const migratePayload = await migrateResponse.json();
@@ -371,6 +390,7 @@ test("volume routes cover workspace, versions, impact analysis, sync and legacy 
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
       },
       body: JSON.stringify({
         volumes: [createVolume()],
@@ -383,6 +403,7 @@ test("volume routes cover workspace, versions, impact analysis, sync and legacy 
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
       },
       body: JSON.stringify({ scope: "chapter_list" }),
     });
@@ -393,7 +414,7 @@ test("volume routes cover workspace, versions, impact analysis, sync and legacy 
   }
 });
 
-test("volume generate route returns user-correctable 409 for duplicate high-memory work", async () => {
+test("卷生成路由对重复高内存任务返回用户可修正的 409", async () => {
   const originalGenerateVolumes = DefaultNovelApplicationServices.prototype.generateVolumes;
   DefaultNovelApplicationServices.prototype.generateVolumes = async () => {
     throw new AppError("当前小说已有高内存卷规划生成正在处理同一范围，请稍后再试。", 409);
@@ -407,6 +428,7 @@ test("volume generate route returns user-correctable 409 for duplicate high-memo
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
       },
       body: JSON.stringify({
         scope: "chapter_list",

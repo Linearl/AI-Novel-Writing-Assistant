@@ -1,6 +1,9 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const http = require("node:http");
+
+process.env.API_TOKEN = "test-token";
+
 const { createApp } = require("../dist/app.js");
 const { StyleCompiler } = require("../dist/services/styleEngine/StyleCompiler.js");
 const { buildStyleExtractionSourceInput } = require("../dist/services/styleEngine/StyleExtractionSourceInput.js");
@@ -822,13 +825,15 @@ test("style engine routes return mocked payloads", async () => {
   const port = await listen(server);
 
   try {
-    const listResponse = await fetch(`http://127.0.0.1:${port}/api/style-profiles`);
+    const listResponse = await fetch(`http://127.0.0.1:${port}/api/style-profiles`, {
+      headers: { Authorization: "Bearer test-token" },
+    });
     assert.equal(listResponse.status, 200);
     assert.equal((await listResponse.json()).data[0].id, fakeProfile.id);
 
     const fromAnalysisResponse = await fetch(`http://127.0.0.1:${port}/api/style-profiles/from-book-analysis`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", Authorization: "Bearer test-token" },
       body: JSON.stringify({ bookAnalysisId: "analysis-1", name: "拆书写法" }),
     });
     assert.equal(fromAnalysisResponse.status, 201);
@@ -836,7 +841,7 @@ test("style engine routes return mocked payloads", async () => {
 
     const extractionResponse = await fetch(`http://127.0.0.1:${port}/api/style-extractions/from-text`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", Authorization: "Bearer test-token" },
       body: JSON.stringify({ name: "提取写法", sourceText: "测试文本内容" }),
     });
     assert.equal(extractionResponse.status, 200);
@@ -844,7 +849,7 @@ test("style engine routes return mocked payloads", async () => {
 
     const knowledgeTaskResponse = await fetch(`http://127.0.0.1:${port}/api/style-extraction-tasks/from-knowledge-document`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", Authorization: "Bearer test-token" },
       body: JSON.stringify({
         documentId: "knowledge-doc-1",
         name: "知识库写法",
@@ -862,7 +867,7 @@ test("style engine routes return mocked payloads", async () => {
 
     const fromTextResponse = await fetch(`http://127.0.0.1:${port}/api/style-profiles/from-text`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", Authorization: "Bearer test-token" },
       body: JSON.stringify({ name: "鎻愬彇鍐欐硶", sourceText: "娴嬭瘯鏂囨湰鍐呭" }),
     });
     assert.equal(fromTextResponse.status, 201);
@@ -872,7 +877,7 @@ test("style engine routes return mocked payloads", async () => {
 
     const fromExtractionResponse = await fetch(`http://127.0.0.1:${port}/api/style-profiles/from-extraction`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", Authorization: "Bearer test-token" },
       body: JSON.stringify({
         name: "提取写法",
         sourceText: "测试文本内容",
@@ -886,7 +891,7 @@ test("style engine routes return mocked payloads", async () => {
 
     const bindingResponse = await fetch(`http://127.0.0.1:${port}/api/style-bindings`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", Authorization: "Bearer test-token" },
       body: JSON.stringify({
         styleProfileId: fakeProfile.id,
         targetType: "chapter",
@@ -898,7 +903,9 @@ test("style engine routes return mocked payloads", async () => {
     assert.equal(bindingResponse.status, 201);
     assert.equal((await bindingResponse.json()).data.targetType, "chapter");
 
-    const effectiveRulesResponse = await fetch(`http://127.0.0.1:${port}/api/anti-ai-rules/effective?styleProfileId=${fakeProfile.id}`);
+    const effectiveRulesResponse = await fetch(`http://127.0.0.1:${port}/api/anti-ai-rules/effective?styleProfileId=${fakeProfile.id}`, {
+      headers: { Authorization: "Bearer test-token" },
+    });
     assert.equal(effectiveRulesResponse.status, 200);
     const effectiveRulesPayload = await effectiveRulesResponse.json();
     assert.equal(effectiveRulesPayload.data.effectiveStyleProfileId, fakeProfile.id);
@@ -909,7 +916,7 @@ test("style engine routes return mocked payloads", async () => {
 
     const aiDraftResponse = await fetch(`http://127.0.0.1:${port}/api/anti-ai-rules/ai-draft`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", Authorization: "Bearer test-token" },
       body: JSON.stringify({
         mode: "create",
         instruction: "减少模板感表达",
@@ -922,7 +929,7 @@ test("style engine routes return mocked payloads", async () => {
 
     const detectResponse = await fetch(`http://127.0.0.1:${port}/api/style-detection/check`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", Authorization: "Bearer test-token" },
       body: JSON.stringify({
         styleProfileId: fakeProfile.id,
         previewAntiAiRuleIds: ["rule-preview"],
@@ -935,7 +942,7 @@ test("style engine routes return mocked payloads", async () => {
 
     const rewriteResponse = await fetch(`http://127.0.0.1:${port}/api/style-detection/rewrite`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", Authorization: "Bearer test-token" },
       body: JSON.stringify({
         styleProfileId: fakeProfile.id,
         previewAntiAiRuleIds: ["rule-preview"],

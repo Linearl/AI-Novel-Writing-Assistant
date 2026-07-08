@@ -2,6 +2,8 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const http = require("node:http");
 
+process.env.API_TOKEN = "test-token";
+
 const { createApp } = require("../dist/app.js");
 const { AutoDirectorFollowUpService } = require("../dist/services/task/autoDirectorFollowUps/AutoDirectorFollowUpService.js");
 const { AutoDirectorFollowUpActionExecutor } = require("../dist/services/task/autoDirectorFollowUps/AutoDirectorFollowUpActionExecutor.js");
@@ -188,7 +190,9 @@ test("auto director follow-up routes expose overview, list, detail, and action e
   const port = await listen(server);
 
   try {
-    const overviewResponse = await fetch(`http://127.0.0.1:${port}/api/auto-director/follow-ups/overview`);
+    const overviewResponse = await fetch(`http://127.0.0.1:${port}/api/auto-director/follow-ups/overview`, {
+      headers: { Authorization: "Bearer test-token" },
+    });
     assert.equal(overviewResponse.status, 200);
     const overviewPayload = await overviewResponse.json();
     assert.equal(overviewPayload.success, true);
@@ -196,6 +200,9 @@ test("auto director follow-up routes expose overview, list, detail, and action e
 
     const listResponse = await fetch(
       `http://127.0.0.1:${port}/api/auto-director/follow-ups?section=pending&reason=chapter_batch_execution_pending&supportsBatch=true&page=1&pageSize=20`,
+      {
+        headers: { Authorization: "Bearer test-token" },
+      },
     );
     assert.equal(listResponse.status, 200);
     const listPayload = await listResponse.json();
@@ -204,18 +211,25 @@ test("auto director follow-up routes expose overview, list, detail, and action e
 
     const validationListResponse = await fetch(
       `http://127.0.0.1:${port}/api/auto-director/follow-ups?section=needs_validation&reason=validation_required&page=1&pageSize=20`,
+      {
+        headers: { Authorization: "Bearer test-token" },
+      },
     );
     assert.equal(validationListResponse.status, 200);
     const validationListPayload = await validationListResponse.json();
     assert.equal(validationListPayload.success, true);
 
-    const detailResponse = await fetch(`http://127.0.0.1:${port}/api/auto-director/follow-ups/task_1`);
+    const detailResponse = await fetch(`http://127.0.0.1:${port}/api/auto-director/follow-ups/task_1`, {
+      headers: { Authorization: "Bearer test-token" },
+    });
     assert.equal(detailResponse.status, 200);
     const detailPayload = await detailResponse.json();
     assert.equal(detailPayload.success, true);
     assert.equal(detailPayload.data.taskId, "task_1");
 
-    const revalidationResponse = await fetch(`http://127.0.0.1:${port}/api/auto-director/follow-ups/task_1/revalidation`);
+    const revalidationResponse = await fetch(`http://127.0.0.1:${port}/api/auto-director/follow-ups/task_1/revalidation`, {
+      headers: { Authorization: "Bearer test-token" },
+    });
     assert.equal(revalidationResponse.status, 200);
     const revalidationPayload = await revalidationResponse.json();
     assert.equal(revalidationPayload.success, true);
@@ -223,7 +237,10 @@ test("auto director follow-up routes expose overview, list, detail, and action e
 
     const actionResponse = await fetch(`http://127.0.0.1:${port}/api/auto-director/follow-ups/task_1/actions`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
+      },
       body: JSON.stringify({
         actionCode: "continue_auto_execution",
         idempotencyKey: "route-k1",
@@ -236,7 +253,10 @@ test("auto director follow-up routes expose overview, list, detail, and action e
 
     const safeFixResponse = await fetch(`http://127.0.0.1:${port}/api/auto-director/follow-ups/task_1/actions`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
+      },
       body: JSON.stringify({
         actionCode: "safe_fix_validation",
         idempotencyKey: "route-safe-fix-k1",
@@ -249,7 +269,10 @@ test("auto director follow-up routes expose overview, list, detail, and action e
 
     const batchResponse = await fetch(`http://127.0.0.1:${port}/api/auto-director/follow-ups/batch-actions`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
+      },
       body: JSON.stringify({
         actionCode: "retry_with_task_model",
         taskIds: ["task_1", "task_2"],

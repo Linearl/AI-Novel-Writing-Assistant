@@ -1,6 +1,9 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const http = require("node:http");
+
+process.env.API_TOKEN = "test-token";
+
 const { createApp } = require("../dist/app.js");
 const { AgentTraceStore } = require("../dist/agents/traceStore.js");
 const { creativeHubLangGraph } = require("../dist/creativeHub/CreativeHubLangGraph.js");
@@ -44,6 +47,7 @@ async function safeDeleteNovel(port, novelId) {
   try {
     await fetch(`http://127.0.0.1:${port}/api/novels/${novelId}`, {
       method: "DELETE",
+      headers: { Authorization: "Bearer test-token" },
     });
   } catch {
     // Ignore cleanup failures in shared dev/test environments.
@@ -55,7 +59,9 @@ test("GET /api/llm/model-routes returns success payload", async () => {
   const server = http.createServer(app);
   const port = await listen(server);
   try {
-    const response = await fetch(`http://127.0.0.1:${port}/api/llm/model-routes`);
+    const response = await fetch(`http://127.0.0.1:${port}/api/llm/model-routes`, {
+      headers: { Authorization: "Bearer test-token" },
+    });
     assert.equal(response.status, 200);
     const payload = await response.json();
     assert.equal(payload.success, true);
@@ -87,7 +93,9 @@ test("GET /api/settings/rag/models/openai returns embedding-only models", async 
   const server = http.createServer(app);
   const port = await listen(server);
   try {
-    const response = await httpFetch(`http://127.0.0.1:${port}/api/settings/rag/models/openai`);
+    const response = await httpFetch(`http://127.0.0.1:${port}/api/settings/rag/models/openai`, {
+      headers: { Authorization: "Bearer test-token" },
+    });
     assert.equal(response.status, 200);
     const payload = await response.json();
     assert.equal(payload.success, true);
@@ -120,7 +128,9 @@ test("PUT /api/settings/rag saves extended settings and auto-enqueues reindex", 
   const server = http.createServer(app);
   const port = await listen(server);
   try {
-    const settingsResponse = await fetch(`http://127.0.0.1:${port}/api/settings/rag`);
+    const settingsResponse = await fetch(`http://127.0.0.1:${port}/api/settings/rag`, {
+      headers: { Authorization: "Bearer test-token" },
+    });
     assert.equal(settingsResponse.status, 200);
     const settingsPayload = await settingsResponse.json();
     const current = settingsPayload.data;
@@ -132,6 +142,7 @@ test("PUT /api/settings/rag saves extended settings and auto-enqueues reindex", 
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
       },
       body: JSON.stringify({
         embeddingProvider: current.embeddingProvider,
@@ -170,6 +181,7 @@ test("PUT /api/settings/rag saves extended settings and auto-enqueues reindex", 
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
       },
       body: JSON.stringify({
         embeddingProvider: current.embeddingProvider,
@@ -212,7 +224,9 @@ test("GET and PUT /api/settings/style-engine-runtime saves style extraction time
   const server = http.createServer(app);
   const port = await listen(server);
   try {
-    const settingsResponse = await fetch(`http://127.0.0.1:${port}/api/settings/style-engine-runtime`);
+    const settingsResponse = await fetch(`http://127.0.0.1:${port}/api/settings/style-engine-runtime`, {
+      headers: { Authorization: "Bearer test-token" },
+    });
     assert.equal(settingsResponse.status, 200);
     const settingsPayload = await settingsResponse.json();
     assert.equal(settingsPayload.success, true);
@@ -224,6 +238,7 @@ test("GET and PUT /api/settings/style-engine-runtime saves style extraction time
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
       },
       body: JSON.stringify({
         styleExtractionTimeoutMs: 720000,
@@ -234,7 +249,9 @@ test("GET and PUT /api/settings/style-engine-runtime saves style extraction time
     assert.equal(payload.success, true);
     assert.equal(payload.data.styleExtractionTimeoutMs, 720000);
 
-    const reloadResponse = await fetch(`http://127.0.0.1:${port}/api/settings/style-engine-runtime`);
+    const reloadResponse = await fetch(`http://127.0.0.1:${port}/api/settings/style-engine-runtime`, {
+      headers: { Authorization: "Bearer test-token" },
+    });
     assert.equal(reloadResponse.status, 200);
     const reloadPayload = await reloadResponse.json();
     assert.equal(reloadPayload.data.styleExtractionTimeoutMs, 720000);
@@ -289,7 +306,9 @@ test("GET /api/rag/jobs returns progress snapshots", async () => {
   const server = http.createServer(app);
   const port = await listen(server);
   try {
-    const response = await fetch(`http://127.0.0.1:${port}/api/rag/jobs`);
+    const response = await fetch(`http://127.0.0.1:${port}/api/rag/jobs`, {
+      headers: { Authorization: "Bearer test-token" },
+    });
     assert.equal(response.status, 200);
     const payload = await response.json();
     assert.equal(payload.success, true);
@@ -316,6 +335,7 @@ test("DELETE /api/rag/jobs/finished clears finished job records", async () => {
   try {
     const response = await fetch(`http://127.0.0.1:${port}/api/rag/jobs/finished`, {
       method: "DELETE",
+      headers: { Authorization: "Bearer test-token" },
     });
     assert.equal(response.status, 200);
     const payload = await response.json();
@@ -366,6 +386,7 @@ test("POST /api/llm/model-routes/connectivity returns per-task connectivity stat
   try {
     const response = await fetch(`http://127.0.0.1:${port}/api/llm/model-routes/connectivity`, {
       method: "POST",
+      headers: { Authorization: "Bearer test-token" },
     });
     assert.equal(response.status, 200);
     const payload = await response.json();
@@ -408,7 +429,9 @@ test("GET and PUT /api/llm/structured-fallback expose the global fallback config
   const server = http.createServer(app);
   const port = await listen(server);
   try {
-    const getResponse = await fetch(`http://127.0.0.1:${port}/api/llm/structured-fallback`);
+    const getResponse = await fetch(`http://127.0.0.1:${port}/api/llm/structured-fallback`, {
+      headers: { Authorization: "Bearer test-token" },
+    });
     assert.equal(getResponse.status, 200);
     const getPayload = await getResponse.json();
     assert.equal(getPayload.success, true);
@@ -419,6 +442,7 @@ test("GET and PUT /api/llm/structured-fallback expose the global fallback config
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
       },
       body: JSON.stringify({
         enabled: true,
@@ -493,7 +517,9 @@ test("GET /api/settings/api-keys/balances returns provider balance statuses", as
   const server = http.createServer(app);
   const port = await listen(server);
   try {
-    const response = await fetch(`http://127.0.0.1:${port}/api/settings/api-keys/balances`);
+    const response = await fetch(`http://127.0.0.1:${port}/api/settings/api-keys/balances`, {
+      headers: { Authorization: "Bearer test-token" },
+    });
     assert.equal(response.status, 200);
     const payload = await response.json();
     assert.equal(payload.success, true);
@@ -527,7 +553,9 @@ test("GET /api/settings/api-keys exposes ollama baseURL and optional-key metadat
   const server = http.createServer(app);
   const port = await listen(server);
   try {
-    const response = await fetch(`http://127.0.0.1:${port}/api/settings/api-keys`);
+    const response = await fetch(`http://127.0.0.1:${port}/api/settings/api-keys`, {
+      headers: { Authorization: "Bearer test-token" },
+    });
     assert.equal(response.status, 200);
     const payload = await response.json();
     assert.equal(payload.success, true);
@@ -572,7 +600,9 @@ test("GET /api/settings/api-keys uses lightweight local model metadata", async (
   const server = http.createServer(app);
   const port = await listen(server);
   try {
-    const response = await originalFetch(`http://127.0.0.1:${port}/api/settings/api-keys`);
+    const response = await originalFetch(`http://127.0.0.1:${port}/api/settings/api-keys`, {
+      headers: { Authorization: "Bearer test-token" },
+    });
     assert.equal(response.status, 200);
     const payload = await response.json();
     assert.equal(payload.success, true);
@@ -622,7 +652,9 @@ test("GET and PUT /api/settings/llm-selection persist the top-level model choice
   const server = http.createServer(app);
   const port = await listen(server);
   try {
-    const initialResponse = await fetch(`http://127.0.0.1:${port}/api/settings/llm-selection`);
+    const initialResponse = await fetch(`http://127.0.0.1:${port}/api/settings/llm-selection`, {
+      headers: { Authorization: "Bearer test-token" },
+    });
     assert.equal(initialResponse.status, 200);
     const initialPayload = await initialResponse.json();
     assert.equal(initialPayload.data.provider, "qwen");
@@ -632,6 +664,7 @@ test("GET and PUT /api/settings/llm-selection persist the top-level model choice
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
       },
       body: JSON.stringify({
         provider: "minimax",
@@ -676,7 +709,9 @@ test("GET /api/settings/api-keys exposes custom OpenAI-compatible providers", as
   const server = http.createServer(app);
   const port = await listen(server);
   try {
-    const response = await fetch(`http://127.0.0.1:${port}/api/settings/api-keys`);
+    const response = await fetch(`http://127.0.0.1:${port}/api/settings/api-keys`, {
+      headers: { Authorization: "Bearer test-token" },
+    });
     assert.equal(response.status, 200);
     const payload = await response.json();
     assert.equal(payload.success, true);
@@ -734,6 +769,7 @@ test("PUT /api/settings/api-keys/ollama saves custom baseURL without requiring a
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
       },
       body: JSON.stringify({
         model: "qwen3:8b",
@@ -806,6 +842,7 @@ test("PUT /api/settings/api-keys/minimax updates reasoning toggle", async () => 
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
       },
       body: JSON.stringify({
         reasoningEnabled: false,
@@ -858,6 +895,7 @@ test("POST /api/settings/custom-providers creates a custom provider entry", asyn
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
       },
       body: JSON.stringify({
         name: "StoryHub Gateway",
@@ -907,6 +945,7 @@ test("DELETE /api/settings/custom-providers/:provider removes custom providers n
   try {
     const response = await fetch(`http://127.0.0.1:${port}/api/settings/custom-providers/custom_storyhub`, {
       method: "DELETE",
+      headers: { Authorization: "Bearer test-token" },
     });
     assert.equal(response.status, 200);
     const payload = await response.json();
@@ -951,6 +990,7 @@ test("POST /api/settings/api-keys/:provider/refresh-balance returns provider bal
   try {
     const response = await fetch(`http://127.0.0.1:${port}/api/settings/api-keys/deepseek/refresh-balance`, {
       method: "POST",
+      headers: { Authorization: "Bearer test-token" },
     });
     assert.equal(response.status, 200);
     const payload = await response.json();
@@ -992,6 +1032,7 @@ test("POST /api/llm/test forwards custom baseURL for ollama without apiKey", asy
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
       },
       body: JSON.stringify({
         provider: "ollama",
@@ -1049,6 +1090,7 @@ test("POST /api/llm/test returns structured probe diagnostics when requested", a
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
       },
       body: JSON.stringify({
         provider: "openai",
@@ -1076,7 +1118,9 @@ test("GET /api/agent-catalog returns agents and tools", async () => {
   const server = http.createServer(app);
   const port = await listen(server);
   try {
-    const response = await fetch(`http://127.0.0.1:${port}/api/agent-catalog`);
+    const response = await fetch(`http://127.0.0.1:${port}/api/agent-catalog`, {
+      headers: { Authorization: "Bearer test-token" },
+    });
     assert.equal(response.status, 200);
     const payload = await response.json();
     assert.equal(payload.success, true);
@@ -1098,6 +1142,7 @@ test("creative hub thread create and state routes return success payloads", asyn
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
       },
       body: JSON.stringify({
         title: "测试线程",
@@ -1113,7 +1158,9 @@ test("creative hub thread create and state routes return success payloads", asyn
     assert.ok(createPayload.data.id);
     createdThreadId = createPayload.data.id;
 
-    const stateResponse = await fetch(`http://127.0.0.1:${port}/api/creative-hub/threads/${createPayload.data.id}/state`);
+    const stateResponse = await fetch(`http://127.0.0.1:${port}/api/creative-hub/threads/${createPayload.data.id}/state`, {
+      headers: { Authorization: "Bearer test-token" },
+    });
     assert.equal(stateResponse.status, 200);
     const statePayload = await stateResponse.json();
     assert.equal(statePayload.success, true);
@@ -1137,6 +1184,7 @@ test("novel routes preserve book framing fields through create-get-update cycle"
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
       },
       body: JSON.stringify({
         title: `book-framing-route-${Date.now()}`,
@@ -1155,7 +1203,9 @@ test("novel routes preserve book framing fields through create-get-update cycle"
     assert.deepEqual(createPayload.data.commercialTags, ["逆袭", "强冲突", "职场博弈"]);
     novelId = createPayload.data.id;
 
-    const detailResponse = await fetch(`http://127.0.0.1:${port}/api/novels/${novelId}`);
+    const detailResponse = await fetch(`http://127.0.0.1:${port}/api/novels/${novelId}`, {
+      headers: { Authorization: "Bearer test-token" },
+    });
     assert.equal(detailResponse.status, 200);
     const detailPayload = await detailResponse.json();
     assert.equal(detailPayload.data.bookSellingPoint, "每次现实困局都会撬动更大的利益链。");
@@ -1166,6 +1216,7 @@ test("novel routes preserve book framing fields through create-get-update cycle"
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
       },
       body: JSON.stringify({
         targetAudience: "爱看现实强冲突和关系拉扯的读者",
@@ -1180,7 +1231,9 @@ test("novel routes preserve book framing fields through create-get-update cycle"
     assert.equal(updatePayload.data.competingFeel, null);
     assert.deepEqual(updatePayload.data.commercialTags, ["关系拉扯", "现实高压", "持续钩子"]);
 
-    const detailAfterUpdateResponse = await fetch(`http://127.0.0.1:${port}/api/novels/${novelId}`);
+    const detailAfterUpdateResponse = await fetch(`http://127.0.0.1:${port}/api/novels/${novelId}`, {
+      headers: { Authorization: "Bearer test-token" },
+    });
     assert.equal(detailAfterUpdateResponse.status, 200);
     const detailAfterUpdatePayload = await detailAfterUpdateResponse.json();
     assert.equal(detailAfterUpdatePayload.data.first30ChapterPromise, "前 30 章必须让主角完成第一次强反压。");
@@ -1209,6 +1262,7 @@ test("POST /api/novels/framing/suggest returns book framing suggestion", async (
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
       },
       body: JSON.stringify({
         title: "雾港审判局",
@@ -1303,6 +1357,7 @@ test("creative hub stream route emits turn summary frames", async () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
       },
       body: JSON.stringify({
         messages: [{
@@ -1360,7 +1415,9 @@ test("creative hub state route exposes latest turn summary metadata", async () =
       },
     });
 
-    const response = await fetch(`http://127.0.0.1:${port}/api/creative-hub/threads/${thread.id}/state`);
+    const response = await fetch(`http://127.0.0.1:${port}/api/creative-hub/threads/${thread.id}/state`, {
+      headers: { Authorization: "Bearer test-token" },
+    });
     assert.equal(response.status, 200);
     const payload = await response.json();
     assert.equal(payload.success, true);
@@ -1486,6 +1543,7 @@ test("creative hub interrupt route resumes via langgraph and updates thread stat
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
       },
       body: JSON.stringify({
         action: "approve",
@@ -1576,15 +1634,21 @@ test("novel state and planning routes return success payloads", async () => {
   const server = http.createServer(app);
   const port = await listen(server);
   try {
-    const stateResponse = await fetch(`http://127.0.0.1:${port}/api/novels/${novelId}/state`);
+    const stateResponse = await fetch(`http://127.0.0.1:${port}/api/novels/${novelId}/state`, {
+      headers: { Authorization: "Bearer test-token" },
+    });
     assert.equal(stateResponse.status, 200);
     assert.equal((await stateResponse.json()).success, true);
 
-    const latestSnapshotResponse = await fetch(`http://127.0.0.1:${port}/api/novels/${novelId}/state-snapshots/latest`);
+    const latestSnapshotResponse = await fetch(`http://127.0.0.1:${port}/api/novels/${novelId}/state-snapshots/latest`, {
+      headers: { Authorization: "Bearer test-token" },
+    });
     assert.equal(latestSnapshotResponse.status, 200);
     assert.equal((await latestSnapshotResponse.json()).data.id, snapshot.id);
 
-    const chapterSnapshotResponse = await fetch(`http://127.0.0.1:${port}/api/novels/${novelId}/chapters/${chapterId}/state-snapshot`);
+    const chapterSnapshotResponse = await fetch(`http://127.0.0.1:${port}/api/novels/${novelId}/chapters/${chapterId}/state-snapshot`, {
+      headers: { Authorization: "Bearer test-token" },
+    });
     assert.equal(chapterSnapshotResponse.status, 200);
     assert.equal((await chapterSnapshotResponse.json()).data.sourceChapterId, chapterId);
 
@@ -1592,6 +1656,7 @@ test("novel state and planning routes return success payloads", async () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
       },
       body: JSON.stringify({}),
     });
@@ -1602,6 +1667,7 @@ test("novel state and planning routes return success payloads", async () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
       },
       body: JSON.stringify({}),
     });
@@ -1612,6 +1678,7 @@ test("novel state and planning routes return success payloads", async () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
       },
       body: JSON.stringify({}),
     });
@@ -1622,13 +1689,16 @@ test("novel state and planning routes return success payloads", async () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
       },
       body: JSON.stringify({}),
     });
     assert.equal(chapterPlanGenerateResponse.status, 200);
     assert.equal((await chapterPlanGenerateResponse.json()).data.id, plan.id);
 
-    const chapterPlanResponse = await fetch(`http://127.0.0.1:${port}/api/novels/${novelId}/chapters/${chapterId}/plan`);
+    const chapterPlanResponse = await fetch(`http://127.0.0.1:${port}/api/novels/${novelId}/chapters/${chapterId}/plan`, {
+      headers: { Authorization: "Bearer test-token" },
+    });
     assert.equal(chapterPlanResponse.status, 200);
     assert.equal((await chapterPlanResponse.json()).data.objective, plan.objective);
 
@@ -1636,6 +1706,7 @@ test("novel state and planning routes return success payloads", async () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
       },
       body: JSON.stringify({
         chapterId,
@@ -1745,7 +1816,9 @@ test("novel world slice routes return success payloads", async () => {
   const server = http.createServer(app);
   const port = await listen(server);
   try {
-    const getResponse = await fetch(`http://127.0.0.1:${port}/api/novels/${novelId}/world-slice`);
+    const getResponse = await fetch(`http://127.0.0.1:${port}/api/novels/${novelId}/world-slice`, {
+      headers: { Authorization: "Bearer test-token" },
+    });
     assert.equal(getResponse.status, 200);
     assert.equal((await getResponse.json()).data.worldId, "world-1");
 
@@ -1753,6 +1826,7 @@ test("novel world slice routes return success payloads", async () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
       },
       body: JSON.stringify({
         builderMode: "manual_refresh",
@@ -1765,6 +1839,7 @@ test("novel world slice routes return success payloads", async () => {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
       },
       body: JSON.stringify({
         primaryLocationId: "location-1",
@@ -1844,6 +1919,7 @@ test("novel audit routes return success payloads", async () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
       },
       body: JSON.stringify({}),
     });
@@ -1854,18 +1930,22 @@ test("novel audit routes return success payloads", async () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
       },
       body: JSON.stringify({}),
     });
     assert.equal(continuityAuditResponse.status, 200);
     assert.equal((await continuityAuditResponse.json()).success, true);
 
-    const reportsResponse = await fetch(`http://127.0.0.1:${port}/api/novels/${novelId}/chapters/${chapterId}/audit-reports`);
+    const reportsResponse = await fetch(`http://127.0.0.1:${port}/api/novels/${novelId}/chapters/${chapterId}/audit-reports`, {
+      headers: { Authorization: "Bearer test-token" },
+    });
     assert.equal(reportsResponse.status, 200);
     assert.equal((await reportsResponse.json()).data.length, 1);
 
     const resolveResponse = await fetch(`http://127.0.0.1:${port}/api/novels/${novelId}/audit-issues/${issue.id}/resolve`, {
       method: "POST",
+      headers: { Authorization: "Bearer test-token" },
     });
     assert.equal(resolveResponse.status, 200);
     assert.equal((await resolveResponse.json()).data[0].status, "resolved");
