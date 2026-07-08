@@ -356,8 +356,10 @@ router.get("/style-profiles/:id/export", validate({ params: idSchema }), async (
     const envelope = styleProfileService.buildExportEnvelope(profile);
     const safeName = profile.name.replace(/[^\w一-鿿-]/g, "_");
     const date = new Date().toISOString().slice(0, 10);
+    const asciiFilename = `${safeName}-${date}.json`.replace(/[^\x20-\x7E]/g, "_");
+    const encodedFilename = encodeURIComponent(`${safeName}-${date}.json`);
     res.setHeader("Content-Type", "application/json; charset=utf-8");
-    res.setHeader("Content-Disposition", `attachment; filename="${safeName}-${date}.json"`);
+    res.setHeader("Content-Disposition", `attachment; filename="${asciiFilename}"; filename*=UTF-8''${encodedFilename}`);
     res.status(200).json(envelope);
   } catch (error) {
     next(error);
