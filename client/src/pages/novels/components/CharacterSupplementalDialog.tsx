@@ -6,6 +6,7 @@ import type {
   SupplementalCharacterGenerationMode,
   SupplementalCharacterGenerationResult,
 } from "@ai-novel/shared/types/novel";
+import { useState } from "react";
 import AiButton from "@/components/common/AiButton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -84,6 +85,7 @@ interface CharacterSupplementalDialogProps {
   onSupplementalPromptChange: (value: string) => void;
   supplementalUseWorldContext: boolean;
   onSupplementalUseWorldContextChange: (value: boolean) => void;
+  supplementalPreCheck?: { warnings: string[]; missingFields: string[] };
   onGenerate: () => void;
   isGenerating: boolean;
   supplementalStatusMessage: string;
@@ -109,6 +111,7 @@ export default function CharacterSupplementalDialog(props: CharacterSupplemental
     onSupplementalPromptChange,
     supplementalUseWorldContext,
     onSupplementalUseWorldContextChange,
+    supplementalPreCheck,
     onGenerate,
     isGenerating,
     supplementalStatusMessage,
@@ -116,6 +119,8 @@ export default function CharacterSupplementalDialog(props: CharacterSupplemental
     onApplyCandidate,
     isApplying,
   } = props;
+  const [preCheckDismissed, setPreCheckDismissed] = useState(false);
+  const hasWarnings = Boolean(supplementalPreCheck && supplementalPreCheck.warnings.length > 0 && !preCheckDismissed);
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -221,10 +226,26 @@ export default function CharacterSupplementalDialog(props: CharacterSupplemental
               基于本书世界生成
             </label>
 
+            {hasWarnings ? (
+              <div className="rounded-xl border border-amber-300 bg-amber-50 p-3 text-xs leading-5 text-amber-900">
+                <div className="font-medium">以下素材字段尚未补充，可能影响生成质量：</div>
+                <ul className="mt-1.5 list-disc pl-4 space-y-0.5">
+                  {supplementalPreCheck!.warnings.map((warning) => (
+                    <li key={warning}>{warning}</li>
+                  ))}
+                </ul>
+                <div className="mt-2 flex gap-2">
+                  <Button size="sm" variant="outline" onClick={() => setPreCheckDismissed(true)}>
+                    无视警告，继续生成
+                  </Button>
+                </div>
+              </div>
+            ) : null}
+
             <div className="flex flex-wrap gap-2">
               <AiButton
                 onClick={onGenerate}
-                disabled={isGenerating || (supplementalMode === "linked" && characters.length === 0)}
+                disabled={isGenerating || hasWarnings || (supplementalMode === "linked" && characters.length === 0)}
               >
                 {isGenerating ? "生成中..." : "生成补充角色候选"}
               </AiButton>

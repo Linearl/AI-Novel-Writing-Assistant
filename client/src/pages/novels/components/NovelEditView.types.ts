@@ -566,6 +566,7 @@ export interface CharacterTabViewProps {
   onSaveCharacter: () => void;
   isSavingCharacter: boolean;
   timelineEvents: CharacterTimeline[];
+  supplementalPreCheck?: { warnings: string[]; missingFields: string[] };
   directorTakeoverEntry?: ReactNode;
 }
 

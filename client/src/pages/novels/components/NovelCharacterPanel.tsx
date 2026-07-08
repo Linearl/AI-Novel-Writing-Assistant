@@ -118,6 +118,7 @@ interface NovelCharacterPanelProps {
   onImportFromOutline?: () => void;
   isImportingFromOutline?: boolean;
   hasOutlineCharacters?: boolean;
+  supplementalPreCheck?: { warnings: string[]; missingFields: string[] };
   directorTakeoverEntry?: ReactNode;
 }
 
@@ -184,6 +185,7 @@ export default function NovelCharacterPanel(props: NovelCharacterPanelProps) {
     onImportFromOutline,
     isImportingFromOutline,
     hasOutlineCharacters,
+    supplementalPreCheck,
     directorTakeoverEntry,
   } = props;
 
@@ -410,6 +412,7 @@ export default function NovelCharacterPanel(props: NovelCharacterPanelProps) {
         onSupplementalPromptChange={setSupplementalPrompt}
         supplementalUseWorldContext={supplementalUseWorldContext}
         onSupplementalUseWorldContextChange={setSupplementalUseWorldContext}
+        supplementalPreCheck={supplementalPreCheck}
         onGenerate={handleGenerateSupplementalCharacters}
         isGenerating={isGeneratingSupplementalCharacters}
         supplementalStatusMessage={supplementalStatusMessage}
