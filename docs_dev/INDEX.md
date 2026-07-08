@@ -221,6 +221,7 @@ description: "docs 目录索引（自动生成）"
 
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
+| [4.misc\inspiration-rose-thief.md](./4.misc\inspiration-rose-thief.md) | 《玫瑰窃贼》歌曲衍生小说大纲 — 提取自柳爽同名歌曲，用于新小说灵感注入 | 《玫瑰窃贼》歌曲衍生小说大纲 — 提取自柳爽同名歌曲，用于新小说灵感注入 |
 | [4.misc\novel-outline-bug-system.md](./4.misc\novel-outline-bug-system.md) | > 整理时间：2026-06-25 | 用途：创建新书时的设定输入参考 | - |
 
 ## 4.misc\issues
