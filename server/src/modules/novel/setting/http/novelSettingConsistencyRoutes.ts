@@ -1,10 +1,10 @@
 /**
  * REQ-2038: Setting consistency check — API routes.
  *
- * Endpoints:
- *   POST /novels/:novelId/settings/consistency-check   — trigger async check (returns 202)
- *   GET  /novels/:novelId/settings/consistency-report   — return latest report
- *   POST /novels/:novelId/settings/consistency-report/ignore — ignore a contradiction
+ * Endpoints (relative to /api/novels):
+ *   POST /:novelId/settings/consistency-check   — trigger async check (returns 202)
+ *   GET  /:novelId/settings/consistency-report   — return latest report
+ *   POST /:novelId/settings/consistency-report/ignore — ignore a contradiction
  */
 import { Router } from "express";
 import { z } from "zod";
@@ -36,7 +36,7 @@ export function createNovelSettingConsistencyRoutes(): Router {
   type P = Record<string, string>;
 
   /**
-   * POST /novels/:novelId/settings/consistency-check
+   * POST /:novelId/settings/consistency-check
    * Trigger an async consistency check. Returns 202 Accepted immediately.
    * The client should poll GET .../consistency-report for results.
    *
@@ -44,7 +44,7 @@ export function createNovelSettingConsistencyRoutes(): Router {
    * for Phase 1 simplicity; a future iteration can make it truly async.
    */
   router.post(
-    "/novels/:novelId/settings/consistency-check",
+    "/:novelId/settings/consistency-check",
     validate({ params: novelIdParamsSchema, body: checkConsistencyBodySchema }),
     async (req: Request, res: Response, next: NextFunction) => {
       try {
@@ -69,11 +69,11 @@ export function createNovelSettingConsistencyRoutes(): Router {
   );
 
   /**
-   * GET /novels/:novelId/settings/consistency-report
+   * GET /:novelId/settings/consistency-report
    * Return the latest consistency report for a novel.
    */
   router.get(
-    "/novels/:novelId/settings/consistency-report",
+    "/:novelId/settings/consistency-report",
     validate({ params: novelIdParamsSchema }),
     async (req: Request, res: Response, next: NextFunction) => {
       try {
@@ -100,11 +100,11 @@ export function createNovelSettingConsistencyRoutes(): Router {
   );
 
   /**
-   * POST /novels/:novelId/settings/consistency-report/ignore
+   * POST /:novelId/settings/consistency-report/ignore
    * Mark a contradiction as ignored.
    */
   router.post(
-    "/novels/:novelId/settings/consistency-report/ignore",
+    "/:novelId/settings/consistency-report/ignore",
     validate({ params: novelIdParamsSchema, body: ignoreBodySchema }),
     async (req: Request, res: Response, next: NextFunction) => {
       try {

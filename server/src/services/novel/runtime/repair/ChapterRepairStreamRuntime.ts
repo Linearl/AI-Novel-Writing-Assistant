@@ -237,7 +237,21 @@ export class ChapterRepairStreamRuntime {
       content: repairedContent,
       directorDebugTaskId: input.options.directorDebugTaskId,
     });
-    if (isPass(review.score)) {
+
+    // DEBUG: 记录审核结果
+    const passResult = isPass(review.score);
+    console.log("[RepairStream] Review result:", {
+      chapterId: input.chapterId,
+      score: review.score,
+      isPass: passResult,
+      thresholds: { coherence: 80, repetition: 75, engagement: 75 },
+      coherencePass: review.score.coherence >= 80,
+      repetitionPass: review.score.repetition >= 75,
+      engagementPass: review.score.engagement >= 75,
+    });
+
+    if (passResult) {
+      console.log("[RepairStream] isPass=true, updating chapter status to approved/completed");
       await prisma.chapter.update({
         where: { id: input.chapterId },
         data: {
@@ -245,11 +259,15 @@ export class ChapterRepairStreamRuntime {
           chapterStatus: "completed",
         },
       });
+      console.log("[RepairStream] Chapter status updated successfully");
       if (input.options.auditIssueIds?.length) {
         const resolveAuditIssues = this.deps.resolveAuditIssues
           ?? ((novelId: string, issueIds: string[]) => auditService.resolveIssues(novelId, issueIds));
         await resolveAuditIssues(input.novelId, input.options.auditIssueIds).catch(() => null);
+        console.log("[RepairStream] Audit issues resolved");
       }
+    } else {
+      console.log("[RepairStream] isPass=false, chapter status NOT updated");
     }
 
     input.helpers.writeFrame({

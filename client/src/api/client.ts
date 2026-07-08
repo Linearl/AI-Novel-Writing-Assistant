@@ -1,6 +1,7 @@
 import axios, { AxiosError } from "axios";
 import type { ApiResponse } from "@ai-novel/shared/types/api";
 import { API_BASE_URL, API_TIMEOUT_MS } from "@/lib/constants";
+import { apiLogger } from "@/lib/logger";
 import { toast } from "@/components/ui/toast";
 
 export interface ApiHttpError extends Error {
@@ -19,6 +20,8 @@ export const apiClient = axios.create({
   timeout: API_TIMEOUT_MS,
 });
 
+apiLogger.info("API Client initialized", { baseURL: API_BASE_URL, timeout: API_TIMEOUT_MS });
+
 // 注入 API Token 到每个请求
 // 优先级：localStorage 运行时设置 > VITE_API_TOKEN 构建时环境变量
 apiClient.interceptors.request.use((config) => {
@@ -26,6 +29,12 @@ apiClient.interceptors.request.use((config) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+
+  apiLogger.debug(`Request: ${config.method?.toUpperCase()} ${config.url}`, {
+    params: config.params,
+    data: config.data,
+  });
+
   return config;
 });
 
@@ -35,7 +44,13 @@ const AUTO_DISMISS_SERVER_ERROR_TOAST = {
 } as const;
 
 apiClient.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    apiLogger.debug(`Response: ${response.status} ${response.config.url}`, {
+      status: response.status,
+      data: response.data,
+    });
+    return response;
+  },
   (error: AxiosError<ApiResponse<unknown>>) => {
     const status = error.response?.status;
     const backendError = error.response?.data?.error;
@@ -43,6 +58,16 @@ apiClient.interceptors.response.use(
     const backendErrorId = (error.response?.data as Record<string, unknown> | undefined)?.errorId;
     const errorId = typeof backendErrorId === "string" ? backendErrorId : undefined;
     const silentErrorStatuses = error.config?.silentErrorStatuses ?? [];
+
+    apiLogger.error(`API Error: ${error.config?.method?.toUpperCase()} ${error.config?.url}`, {
+      status,
+      backendError,
+      backendMessage,
+      errorId,
+      code: error.code,
+      message: error.message,
+    }, error);
+
     let title = backendError ?? error.message ?? "请求失败。";
     let description = backendMessage && backendMessage !== backendError ? backendMessage : undefined;
 

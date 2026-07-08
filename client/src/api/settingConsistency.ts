@@ -6,7 +6,7 @@ import type {
   SettingConsistencyReport,
   ConsistencyCheckBody,
 } from "@ai-novel/shared/types/settingConsistency";
-import { apiClient } from "./client";
+import { apiClient, type ApiHttpError } from "./client";
 
 /** Trigger an async consistency check for a novel's world settings. */
 export async function triggerConsistencyCheck(
@@ -20,12 +20,21 @@ export async function triggerConsistencyCheck(
   return data;
 }
 
-/** Fetch the latest consistency report for a novel. */
-export async function getConsistencyReport(novelId: string) {
-  const { data } = await apiClient.get<ApiResponse<SettingConsistencyReport>>(
-    `/novels/${novelId}/settings/consistency-report`,
-  );
-  return data;
+/** Fetch the latest consistency report for a novel. Returns null if no report exists. */
+export async function getConsistencyReport(novelId: string): Promise<ApiResponse<SettingConsistencyReport> | null> {
+  try {
+    const { data } = await apiClient.get<ApiResponse<SettingConsistencyReport>>(
+      `/novels/${novelId}/settings/consistency-report`,
+      { silentErrorStatuses: [404] },
+    );
+    return data;
+  } catch (error) {
+    const httpError = error as ApiHttpError;
+    if (httpError.status === 404) {
+      return null;
+    }
+    throw error;
+  }
 }
 
 /** Ignore a contradiction in the latest report. */

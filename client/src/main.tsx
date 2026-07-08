@@ -8,7 +8,11 @@ import ServerStartupGate from "./components/layout/ServerStartupGate";
 import { APP_RUNTIME } from "./lib/constants";
 import AppRouter from "./router";
 import { Toaster } from "./components/ui/toast";
+import { setupGlobalErrorHandlers } from "./lib/logger";
 import "./index.css";
+
+// 初始化全局错误捕获
+setupGlobalErrorHandlers();
 
 const queryClient = new QueryClient({
   defaultOptions: {

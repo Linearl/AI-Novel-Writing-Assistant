@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { LoaderCircle, RefreshCw } from "lucide-react";
 import { APP_RUNTIME } from "@/lib/constants";
+import { logger } from "@/lib/logger";
 import { Button } from "@/components/ui/button";
 
 interface ServerStartupGateProps {
@@ -11,6 +12,8 @@ type StartupStatus = "checking" | "ready" | "waiting";
 
 const STARTUP_CHECK_INTERVAL_MS = 1000;
 const STARTUP_WAIT_THRESHOLD_MS = 1200;
+// 额外等待时间，确保后台服务完全初始化
+const POST_HEALTH_READY_DELAY_MS = 1500;
 
 function shouldUseStartupGate(): boolean {
   return import.meta.env.DEV && APP_RUNTIME !== "desktop";
@@ -68,21 +71,45 @@ export default function ServerStartupGate({ children }: ServerStartupGateProps) 
       return;
     }
 
-    const abortController = new AbortController();
-    let timeoutId: number | undefined;
-    let intervalId: number | undefined;
+    logger.info("ServerStartupGate: Starting health check", { enabled, status });
 
-    timeoutId = window.setTimeout(() => {
+    const abortController = new AbortController();
+    let waitingTimeoutId: number | undefined;
+    let readyDelayTimeoutId: number | undefined;
+    let intervalId: number | undefined;
+    let probeCount = 0;
+
+    // 超时后显示等待界面
+    waitingTimeoutId = window.setTimeout(() => {
+      logger.warn("ServerStartupGate: Health check timeout, showing waiting screen");
       setStatus((current) => (current === "ready" ? current : "waiting"));
     }, STARTUP_WAIT_THRESHOLD_MS);
 
     async function probe() {
+      probeCount++;
       const ready = await checkServerReady(abortController.signal);
       if (abortController.signal.aborted) {
         return;
       }
       if (ready) {
-        setStatus("ready");
+        logger.info(`ServerStartupGate: Health check passed (attempt ${probeCount}), waiting for backend services`);
+        // 停止轮询
+        if (intervalId !== undefined) {
+          window.clearInterval(intervalId);
+          intervalId = undefined;
+        }
+        // 清除等待超时
+        if (waitingTimeoutId !== undefined) {
+          window.clearTimeout(waitingTimeoutId);
+          waitingTimeoutId = undefined;
+        }
+        // Health 接口就绪后，额外等待一段时间让后台服务完成初始化
+        readyDelayTimeoutId = window.setTimeout(() => {
+          if (!abortController.signal.aborted) {
+            logger.info("ServerStartupGate: Ready to render application");
+            setStatus("ready");
+          }
+        }, POST_HEALTH_READY_DELAY_MS);
       }
     }
 
@@ -93,8 +120,11 @@ export default function ServerStartupGate({ children }: ServerStartupGateProps) 
 
     return () => {
       abortController.abort();
-      if (timeoutId !== undefined) {
-        window.clearTimeout(timeoutId);
+      if (waitingTimeoutId !== undefined) {
+        window.clearTimeout(waitingTimeoutId);
+      }
+      if (readyDelayTimeoutId !== undefined) {
+        window.clearTimeout(readyDelayTimeoutId);
       }
       if (intervalId !== undefined) {
         window.clearInterval(intervalId);
@@ -110,6 +140,7 @@ export default function ServerStartupGate({ children }: ServerStartupGateProps) 
     <ServerStartupScreen
       status={status}
       onRetry={() => {
+        logger.info("ServerStartupGate: Manual retry triggered");
         setStatus("checking");
         setRetryToken((current) => current + 1);
       }}

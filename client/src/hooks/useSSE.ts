@@ -108,11 +108,15 @@ export function useSSE(options?: UseSSEOptions) {
       const controller = new AbortController();
       controllerRef.current = controller;
 
+      // 获取 API Token（与 apiClient 保持一致）
+      const token = localStorage.getItem("api_token") || import.meta.env.VITE_API_TOKEN;
+
       try {
         const response = await fetch(url.startsWith("http") ? url : `${API_BASE_URL}${url}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
             ...(options?.headers ?? {}),
           },
           body: JSON.stringify(body ?? {}),

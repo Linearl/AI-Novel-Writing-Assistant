@@ -10,6 +10,7 @@ import Sidebar from "./Sidebar";
 import MobileSiteShell from "./mobile/MobileSiteShell";
 import { TaskRecoveryProvider } from "./TaskRecoveryContext";
 import TaskRecoveryDialog from "./TaskRecoveryDialog";
+import { ErrorBoundary } from "@/components/common/ErrorBoundary";
 import { useIsMobileViewport } from "./mobile/useIsMobileViewport";
 import {
   AUTO_DIRECTOR_MOBILE_CLASSES,
@@ -130,9 +131,11 @@ export default function AppLayout() {
           </div>
           <main className={useMobileFullWidthContent ? AUTO_DIRECTOR_MOBILE_CLASSES.appMain : DEFAULT_APP_MAIN_CLASS_NAME}>
             <DesktopModelSetupGate />
-            <Suspense fallback={<AppRouteFallback />}>
-              <Outlet />
-            </Suspense>
+            <ErrorBoundary name="PageContent">
+              <Suspense fallback={<AppRouteFallback />}>
+                <Outlet />
+              </Suspense>
+            </ErrorBoundary>
           </main>
         </div>
         <TaskRecoveryDialog />

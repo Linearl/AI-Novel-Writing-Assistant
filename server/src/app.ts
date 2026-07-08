@@ -122,8 +122,11 @@ export function createApp() {
     const responseTime = tokens["response-time"](req, res) ?? "0";
     const contentLength = tokens.res(req, res, "content-length") ?? "0";
     const errorMessage = tokens["error-message"](req, res);
+    const ip = req.ip || req.socket.remoteAddress || "-";
+    const referer = req.get("referer") || req.get("referrer") || "-";
+    const userAgent = req.get("user-agent") || "-";
     const errorSuffix = errorMessage ? ` | error: ${errorMessage}` : "";
-    return `${method} ${url} ${status} ${responseTime} ms - ${contentLength}${errorSuffix}`;
+    return `${method} ${url} ${status} ${responseTime}ms ${contentLength}B | ip=${ip} referer=${referer} ua=${userAgent}${errorSuffix}`;
   }));
   app.use(express.json({ limit: jsonBodyLimit }));
 
@@ -173,7 +176,17 @@ export function createApp() {
   app.use("/api/feedback", feedbackRouter);
   app.use("/api/astrology", astrologyRouter);
 
-  app.use((_req, res) => {
+  app.use((req, res) => {
+    const requestLogger = req.id ? logger.child({ requestId: req.id }) : logger;
+    requestLogger.warn("[404] 接口不存在", {
+      method: req.method,
+      url: req.originalUrl,
+      ip: req.ip || req.socket.remoteAddress,
+      referer: req.get("referer") || req.get("referrer"),
+      origin: req.get("origin"),
+      userAgent: req.get("user-agent"),
+    });
+
     const response: ApiResponse<null> = {
       success: false,
       error: "接口不存在。",

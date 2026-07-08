@@ -106,7 +106,7 @@ export default function SettingConsistencyPanel({
   const reportQuery = useQuery({
     queryKey: queryKeys.settings.consistencyReport(novelId),
     queryFn: () => getConsistencyReport(novelId),
-    select: (res) => res.data ?? null,
+    select: (res) => res?.data ?? null,
     retry: false,
   });
 
