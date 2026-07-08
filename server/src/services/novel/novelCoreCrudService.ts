@@ -2,6 +2,7 @@ import { serializeCommercialTagsJson } from "@ai-novel/shared/types/novelFraming
 import type { NovelAutoDirectorTaskSummary } from "@ai-novel/shared/types/novel";
 import { prisma } from "../../db/prisma";
 import { AppError } from "../../middleware/errorHandler";
+import { logger } from "../logging/LoggerService";
 import { mapNovelAutoDirectorTaskSummary } from "../task/novelWorkflowTaskSummary";
 import { getArchivedTaskIdSet } from "../task/taskArchive";
 import { NovelWorkflowService } from "./workflow/NovelWorkflowService";
@@ -10,6 +11,7 @@ import { NovelVolumeService } from "./volume/NovelVolumeService";
 import { STORY_WORLD_SLICE_SCHEMA_VERSION } from "./storyWorldSlice/storyWorldSlicePersistence";
 import { syncChapterArtifacts } from "./novelChapterArtifacts";
 import { listNovelTokenUsageByNovelIds } from "./novelTokenUsageSummary";
+import { ChapterEditDiffService } from "../styleEngine/ChapterEditDiffService";
 import {
   ChapterInput,
   CreateNovelInput,
@@ -27,6 +29,7 @@ export class NovelCoreCrudService {
   private readonly novelContinuationService = new NovelContinuationService();
   private readonly workflowService = new NovelWorkflowService();
   private readonly volumeService = new NovelVolumeService();
+  private readonly chapterEditDiffService = new ChapterEditDiffService();
 
   private validateStoryModeSelection(primaryStoryModeId?: string | null, secondaryStoryModeId?: string | null): void {
     if (primaryStoryModeId && secondaryStoryModeId && primaryStoryModeId === secondaryStoryModeId) {
@@ -516,6 +519,16 @@ export class NovelCoreCrudService {
       throw new Error("章节不存在");
     }
 
+    // 捕获更新前的内容，用于判断是否有实质变更
+    let beforeContent: string | null = null;
+    if (typeof input.content === "string") {
+      const beforeChapter = await prisma.chapter.findUnique({
+        where: { id: chapterId },
+        select: { content: true },
+      });
+      beforeContent = beforeChapter?.content ?? null;
+    }
+
     const chapter = await prisma.chapter.update({
       where: { id: chapterId },
       data: {
@@ -555,7 +568,58 @@ export class NovelCoreCrudService {
       sceneCards: chapter.sceneCards,
     }).catch(() => null);
     queueRagUpsert("chapter", chapterId);
+
+    // 异步触发风格提取：仅在内容有实质变更时触发
+    if (typeof input.content === "string" && beforeContent !== input.content) {
+      this.triggerAutoStyleExtraction(novelId, beforeContent ?? "", input.content);
+    }
+
     return chapter;
+  }
+
+  /**
+   * 章节内容保存后异步触发风格提取。
+   * - extractAntiAiRules：从 diff 中提取反 AI 规则
+   * - forkStyleFromDiff：基于编辑偏好 fork 新写法画像
+   *
+   * 仅做 fire-and-forget 调用，失败时仅记录日志，不影响主流程。
+   */
+  private triggerAutoStyleExtraction(novelId: string, beforeText: string, afterText: string): void {
+    setImmediate(() => {
+      const input = { novelId, beforeText, afterText };
+      this.chapterEditDiffService.extractAntiAiRules(input)
+        .then((result) => {
+          const draftCount = result.drafts?.length ?? 0;
+          if (draftCount > 0) {
+            logger.info("[auto-style-extract] extractAntiAiRules succeeded", {
+              novelId,
+              draftCount,
+              intentSummary: result.intentSummary,
+            });
+          }
+        })
+        .catch((err) => {
+          logger.warn("[auto-style-extract] extractAntiAiRules failed", {
+            novelId,
+            error: err instanceof Error ? err.message : String(err),
+          });
+        });
+
+      this.chapterEditDiffService.forkStyleFromDiff(input)
+        .then((result) => {
+          logger.info("[auto-style-extract] forkStyleFromDiff succeeded", {
+            novelId,
+            newProfileId: result.newProfile.id,
+            suggestedName: result.suggestedName,
+          });
+        })
+        .catch((err) => {
+          logger.warn("[auto-style-extract] forkStyleFromDiff failed", {
+            novelId,
+            error: err instanceof Error ? err.message : String(err),
+          });
+        });
+    });
   }
 
   async deleteChapter(novelId: string, chapterId: string) {

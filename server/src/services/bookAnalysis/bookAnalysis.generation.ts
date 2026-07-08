@@ -2,6 +2,7 @@ import type { BookAnalysisSectionKey } from "@ai-novel/shared/types/bookAnalysis
 import type { LLMProvider } from "@ai-novel/shared/types/llm";
 import { prisma } from "../../db/prisma";
 import { AppError } from "../../middleware/errorHandler";
+import { logger } from "../logging/LoggerService";
 import { BookAnalysisSourceCacheService } from "./bookAnalysis.cache";
 import { getBookAnalysisSectionConcurrency } from "./bookAnalysis.config";
 import { runWithConcurrency } from "./bookAnalysis.concurrent";
@@ -170,10 +171,11 @@ export class BookAnalysisGenerationService {
         });
 
         await this.ensureNotCancelled(analysisId);
+        const succeeded = errors.length === 0;
         await prisma.bookAnalysis.update({
           where: { id: analysisId },
           data: {
-            status: errors.length > 0 ? "failed" : "succeeded",
+            status: succeeded ? "succeeded" : "failed",
             progress: 1,
             summary,
             lastError: errors.length > 0 ? errors.join(" | ") : null,
@@ -184,6 +186,9 @@ export class BookAnalysisGenerationService {
             cancelRequestedAt: null,
           },
         });
+        if (succeeded) {
+          this.triggerAutoStyleProfileCreation(analysisId);
+        }
       } catch (error) {
         if (error instanceof AnalysisCancelledError) {
           await this.markCancelled(analysisId);
@@ -302,10 +307,11 @@ export class BookAnalysisGenerationService {
                 },
               );
 
+        const singleSucceeded = !sectionStatuses.some((item) => !item.frozen && item.status === "failed");
         await prisma.bookAnalysis.update({
           where: { id: analysisId },
           data: {
-            status: sectionStatuses.some((item) => !item.frozen && item.status === "failed") ? "failed" : "succeeded",
+            status: singleSucceeded ? "succeeded" : "failed",
             progress: 1,
             summary: buildAnalysisSummaryFromContent(overview),
             lastError: null,
@@ -316,6 +322,9 @@ export class BookAnalysisGenerationService {
             cancelRequestedAt: null,
           },
         });
+        if (singleSucceeded) {
+          this.triggerAutoStyleProfileCreation(analysisId);
+        }
       } catch (error) {
         if (error instanceof AnalysisCancelledError) {
           await this.markCancelled(analysisId);
@@ -513,5 +522,85 @@ export class BookAnalysisGenerationService {
         cancelRequestedAt: null,
       },
     });
+  }
+
+  /**
+   * 拆书完成后异步自动生成写法画像并绑定关联小说。
+   *
+   * 查找所有 continuationBookAnalysisId 指向该分析的小说，
+   * 为每本小说异步调用 StyleProfileService.createFromBookAnalysis
+   * 并自动创建 StyleBinding，将画像绑定到对应小说。
+   *
+   * 仅做 fire-and-forget 调用，失败时仅记录日志。
+   */
+  private triggerAutoStyleProfileCreation(analysisId: string): void {
+    setImmediate(() => {
+      void this.autoCreateStyleProfilesForAnalysis(analysisId);
+    });
+  }
+
+  private async autoCreateStyleProfilesForAnalysis(analysisId: string): Promise<void> {
+    try {
+      const analysis = await prisma.bookAnalysis.findUnique({
+        where: { id: analysisId },
+        select: { title: true },
+      });
+      if (!analysis) {
+        return;
+      }
+
+      const linkedNovels = await prisma.novel.findMany({
+        where: { continuationBookAnalysisId: analysisId },
+        select: { id: true, title: true },
+      });
+      if (linkedNovels.length === 0) {
+        return;
+      }
+
+      // 延迟导入避免循环依赖
+      const { StyleProfileService } = await import("../styleEngine/StyleProfileService");
+
+      for (const novel of linkedNovels) {
+        try {
+          const profileService = new StyleProfileService();
+          const profileName = `${analysis.title} - ${novel.title}`;
+          const profile = await profileService.createFromBookAnalysis({
+            bookAnalysisId: analysisId,
+            name: profileName,
+          });
+
+          // 自动创建 StyleBinding，将画像绑定到对应小说
+          await prisma.styleBinding.create({
+            data: {
+              styleProfileId: profile.id,
+              targetType: "novel",
+              targetId: novel.id,
+              priority: 1,
+              weight: 1,
+              enabled: true,
+            },
+          });
+
+          logger.info("[auto-style-profile] createFromBookAnalysis succeeded", {
+            analysisId,
+            novelId: novel.id,
+            novelTitle: novel.title,
+            profileId: profile.id,
+            profileName: profile.name,
+          });
+        } catch (err) {
+          logger.warn("[auto-style-profile] createFromBookAnalysis failed for novel", {
+            analysisId,
+            novelId: novel.id,
+            error: err instanceof Error ? err.message : String(err),
+          });
+        }
+      }
+    } catch (err) {
+      logger.warn("[auto-style-profile] autoCreateStyleProfilesForAnalysis failed", {
+        analysisId,
+        error: err instanceof Error ? err.message : String(err),
+      });
+    }
   }
 }
