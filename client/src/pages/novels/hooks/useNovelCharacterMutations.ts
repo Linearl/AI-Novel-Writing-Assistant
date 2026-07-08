@@ -12,6 +12,7 @@ import {
   generateCharacterVisibleProfile,
   generateSupplementalCharacters,
   getCharacterTimeline,
+  importCharactersFromOutline,
   syncAllCharacterTimeline,
   syncCharacterTimeline,
   updateNovelCharacter,
@@ -367,6 +368,24 @@ export function useNovelCharacterMutations(input: UseNovelCharacterMutationsInpu
     },
   });
 
+  const importFromOutlineMutation = useMutation({
+    mutationFn: async (outlineText: string) => {
+      return importCharactersFromOutline(id, {
+        outlineText,
+        provider: llm.provider,
+        model: llm.model,
+      });
+    },
+    onSuccess: async (response) => {
+      const count = response.data?.length ?? 0;
+      setCharacterMessage(count > 0 ? `已从素材导入 ${count} 个角色。` : "素材中未识别到角色信息。");
+      await invalidateCharacterViews(queryClient, id, selectedCharacterId || "none");
+    },
+    onError: (error) => {
+      setCharacterMessage(error instanceof Error ? error.message : "从素材导入角色失败。");
+    },
+  });
+
   return {
     characterTimelineQuery,
     syncTimelineMutation,
@@ -383,5 +402,6 @@ export function useNovelCharacterMutations(input: UseNovelCharacterMutationsInpu
     deleteCharacterMutation,
     generateSupplementalCharacterMutation,
     applySupplementalCharacterMutation,
+    importFromOutlineMutation,
   };
 }

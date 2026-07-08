@@ -114,6 +114,9 @@ interface NovelCharacterPanelProps {
   onSaveCharacter: () => void;
   isSavingCharacter: boolean;
   timelineEvents: CharacterTimeline[];
+  onImportFromOutline?: () => void;
+  isImportingFromOutline?: boolean;
+  hasOutlineCharacters?: boolean;
   directorTakeoverEntry?: ReactNode;
 }
 
@@ -176,6 +179,9 @@ export default function NovelCharacterPanel(props: NovelCharacterPanelProps) {
     onSaveCharacter,
     isSavingCharacter,
     timelineEvents,
+    onImportFromOutline,
+    isImportingFromOutline,
+    hasOutlineCharacters,
     directorTakeoverEntry,
   } = props;
 
@@ -315,6 +321,15 @@ export default function NovelCharacterPanel(props: NovelCharacterPanelProps) {
             <AiButton variant="outline" onClick={handleOpenSupplementalDialog}>
               补充角色
             </AiButton>
+            {onImportFromOutline ? (
+              <AiButton
+                variant="outline"
+                onClick={onImportFromOutline}
+                disabled={isImportingFromOutline}
+              >
+                {isImportingFromOutline ? "导入中..." : "从素材导入角色"}
+              </AiButton>
+            ) : null}
             <AiButton
               variant="secondary"
               onClick={onEvolveCharacter}

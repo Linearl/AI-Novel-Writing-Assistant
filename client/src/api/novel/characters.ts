@@ -470,3 +470,30 @@ export async function setCharacterExitStatus(
   );
   return data;
 }
+
+// --- Import Characters from Outline (REQ-3010) ---
+
+export interface ImportCharactersFromOutlineOptions {
+  outlineText: string;
+  provider?: string;
+  model?: string;
+}
+
+export async function importCharactersFromOutline(
+  id: string,
+  options: ImportCharactersFromOutlineOptions,
+) {
+  const { data } = await apiClient.post<ApiResponse<Array<{
+    name: string;
+    role: string;
+    gender?: string;
+    personality?: string;
+    background?: string;
+    relationToProtagonist?: string;
+    storyFunction?: string;
+  }>>>(
+    `/novels/${id}/characters/import-from-outline`,
+    options,
+  );
+  return data;
+}
