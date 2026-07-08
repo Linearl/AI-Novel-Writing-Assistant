@@ -1,5 +1,7 @@
 import { prisma } from "../../db/prisma";
 import { runStructuredPrompt } from "../../prompting/core/promptRunner";
+import { invokeStructuredLlm } from "../../llm/structuredInvoke";
+import { z } from "zod";
 import {
   characterEvolutionPrompt,
   characterWorldCheckPrompt,
@@ -13,7 +15,13 @@ import {
   extractCharacterEventLines,
   LLMGenerateOptions,
 } from "./novelCoreShared";
+import { zodCharacterImportResult } from "./novelCoreCharacterShared";
+import type { LLMProvider } from "@ai-novel/shared/types/llm";
 import { serializeCharacterProhibitions } from "./characters/characterHardFacts";
+
+const characterImportSchema = z.object({
+  characters: z.array(zodCharacterImportResult),
+});
 
 export class NovelCoreCharacterService {
   private readonly worldContextGateway = new WorldContextGateway();
@@ -371,5 +379,64 @@ export class NovelCoreCharacterService {
         issues: [] as Array<{ severity: "warn" | "error"; message: string; suggestion?: string }>,
       };
     }
+  }
+
+  async importCharactersFromOutline(
+    novelId: string,
+    outlineText: string,
+    options?: { provider?: LLMProvider; model?: string },
+  ): Promise<z.infer<typeof zodCharacterImportResult>[]> {
+    const systemPrompt = [
+      "你是角色信息提取器。严格从素材文本中提取角色，禁止编造任何信息。",
+      "",
+      "【铁律】",
+      "1. 只提取素材中明确出现的角色。角色名必须逐字抄录，不得改写、翻译或近似",
+      "2. 如果素材没有提到某字段，该字段留空字符串，不得猜测",
+      "3. 素材中没提到的角色一个都不要加",
+      "",
+      "【字段说明】",
+      "name: 角色姓名，逐字从原文摘录",
+      "role: 角色定位，原文明确说了的才填（如\"主角\"、\"反派\"、\"女主\"），不确定填\"未指定\"",
+      "gender: male/female/other/unknown",
+      "personality: 性格描述，原文明确提到的才填",
+      "background: 背景/身世摘要，只填原文已有的",
+      "relationToProtagonist: 与主角的关系，原文提了才填",
+      "storyFunction: 故事中承担的功能/作用，原文提了才填",
+      "",
+      "输出纯 JSON：{\"characters\": [...]}",
+    ].join("\n");
+
+    const userPrompt = `请从以下素材中提取所有角色信息：\n\n---\n${outlineText.slice(0, 8000)}\n---`;
+
+    const messages = [
+      { role: "system" as const, content: systemPrompt },
+      { role: "user" as const, content: userPrompt },
+    ];
+
+    const result = await invokeStructuredLlm<{ characters: z.infer<typeof zodCharacterImportResult>[] }>({
+      systemPrompt,
+      userPrompt,
+      schema: characterImportSchema,
+      label: "novel.character.import-from-outline",
+      taskType: "planner",
+      temperature: 0.2,
+      provider: options?.provider as LLMProvider | undefined,
+      model: options?.model,
+    });
+
+    const created: z.infer<typeof zodCharacterImportResult>[] = [];
+    for (const char of result.characters) {
+      await this.createCharacter(novelId, {
+        name: char.name,
+        role: char.role,
+        gender: char.gender,
+        personality: char.personality,
+        background: char.background,
+        relationToProtagonist: char.relationToProtagonist,
+        storyFunction: char.storyFunction,
+      });
+      created.push(char);
+    }
+    return created;
   }
 }

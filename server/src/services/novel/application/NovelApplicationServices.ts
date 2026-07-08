@@ -675,6 +675,10 @@ export class DefaultNovelApplicationServices {
   rebuildCharacterDynamics(...args: Parameters<CharacterDynamicsService["rebuildDynamics"]>) {
     return this.characterDynamicsService.rebuildDynamics(...args);
   }
+
+  importCharactersFromOutline(...args: Parameters<NovelCoreService["importCharactersFromOutline"]>) {
+    return this.core.importCharactersFromOutline(...args);
+  }
 }
 
 export function createNovelApplicationServices(): NovelApplicationServices {

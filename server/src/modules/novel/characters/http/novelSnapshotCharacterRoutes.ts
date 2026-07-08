@@ -30,6 +30,7 @@ interface RegisterNovelSnapshotCharacterRoutesInput {
     | "createNovelSnapshot"
     | "listNovelSnapshots"
     | "restoreFromSnapshot"
+    | "importCharactersFromOutline"
   >;
   idParamsSchema: z.ZodType<{ id: string }>;
   characterParamsSchema: z.ZodType<{ id: string; charId: string }>;
@@ -293,6 +294,32 @@ export function registerNovelSnapshotCharacterRoutes(
         if (forwardBusinessError(error, next)) {
           return;
         }
+        next(error);
+      }
+    },
+  );
+
+  const importCharactersSchema = z.object({
+    outlineText: z.string().trim().min(1),
+    provider: z.string().optional(),
+    model: z.string().optional(),
+  });
+
+  router.post(
+    "/:id/characters/import-from-outline",
+    validate({ params: idParamsSchema, body: importCharactersSchema }),
+    async (req, res, next) => {
+      try {
+        const { id } = req.params as z.infer<typeof idParamsSchema>;
+        const { outlineText, provider, model } = req.body as z.infer<typeof importCharactersSchema>;
+        const parsed = await novelService.importCharactersFromOutline(id, outlineText, { provider, model });
+        res.status(201).json({
+          success: true,
+          data: parsed,
+          message: `已从素材导入 ${parsed.length} 个角色。`,
+        } satisfies ApiResponse<typeof parsed>);
+      } catch (error) {
+        if (forwardBusinessError(error, next)) return;
         next(error);
       }
     },
