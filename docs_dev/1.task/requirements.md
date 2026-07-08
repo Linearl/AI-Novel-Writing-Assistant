@@ -96,7 +96,7 @@ description: "需求任务总清单（SSOT）"
 | 7010 | Audit P1 Fix | p8 | ✅ 已完成 | - | 0.1 | - | 2026-07-02T18:40:00+08:00 | `B.2.done/v0.1-r7010-p1-audit-p1-fix/README.md` |  |
 | 7011 | Quality Fix | p8 | ✅ 已完成 | 2026-07-01-全量代码审计-full | 0.1 | 2026-07-01T20:40:00.000Z | 2026-07-02T23:00:00+08:00 | `B.2.done/v0.1-r7011-medium-p3-quality-fix/README.md` |  |
 | 7012 | Low Priority Fix | p8 | ✅ 已完成 | 2026-07-01-全量代码审计-full | 0.1 | 2026-07-01T20:41:00.000Z | 2026-07-02T23:00:00+08:00 | `B.2.done/v0.1-r7012-simple-p4-low-priority-fix/README.md` |  |
-| 7013 | Remove Comic Drama | p8 | 📋 待办 | - | 0.1 | 2026-07-08T00:00:00.000Z | 2026-07-08T00:00:00.000Z | `B.todo/v0.1-r7013-simple-remove-comic-drama/README.md` |  |
+| 7013 | Remove Comic Drama | p8 | ✅ 已完成 | - | 0.1 | 2026-07-08T00:00:00.000Z | 2026-07-08T08:00:00.000Z | `B.todo/v0.1-r7013-simple-remove-comic-drama/README.md` |  |
 
 ---
 
@@ -113,7 +113,6 @@ description: "需求任务总清单（SSOT）"
 | 2045 | Chapter Rhythm Tension | `B.todo/v0.1-r2045-complex-chapter-rhythm-tension/README.md` |
 | 2046 | Style Profile Export Import | `B.todo/v0.1-r2046-medium-style-profile-export-import/README.md` |
 | 3010 | Create Page Material Import | `B.todo/v0.1-r3010-medium-create-page-material-import/README.md` |
-| 7013 | Remove Comic Drama | `B.todo/v0.1-r7013-simple-remove-comic-drama/README.md` |
 | 2013 | Director Failed Retry Entry | `B.todo/v0.1-r2013-medium-director-failed-retry-entry/README.md` |
 | 2014 | Chapter Token Budget Dynamic | `B.todo/v0.1-r2014-medium-chapter-token-budget-dynamic/README.md` |
 | 3004 | Novel Conversation Archive | `B.todo/v0.1-r3004-medium-novel-conversation-archive/README.md` |
@@ -182,5 +181,6 @@ description: "需求任务总清单（SSOT）"
 | 7010 | Audit P1 Fix | `B.2.done/v0.1-r7010-p1-audit-p1-fix/README.md` |
 | 7011 | Quality Fix | `B.2.done/v0.1-r7011-medium-p3-quality-fix/README.md` |
 | 7012 | Low Priority Fix | `B.2.done/v0.1-r7012-simple-p4-low-priority-fix/README.md` |
+| 7013 | Remove Comic Drama | `B.todo/v0.1-r7013-simple-remove-comic-drama/README.md` |
 
 ---

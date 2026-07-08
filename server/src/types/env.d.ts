@@ -251,39 +251,6 @@ declare namespace NodeJS {
     /** Book analysis cache segment version */
     BOOK_ANALYSIS_CACHE_SEGMENT_VERSION?: string;
 
-    // ── Drama / Video / TTS ───────────────────────────────────────────
-    /** Drama cost currency (default: "CNY") */
-    DRAMA_COST_CURRENCY?: string;
-    /** Drama image cost per image */
-    DRAMA_IMAGE_COST_PER_IMAGE?: string;
-    /** Drama video mock cost per second */
-    DRAMA_VIDEO_MOCK_COST_PER_SECOND?: string;
-    /** Drama video HTTP create endpoint URL */
-    DRAMA_VIDEO_HTTP_CREATE_URL?: string;
-    /** Drama video HTTP status endpoint URL */
-    DRAMA_VIDEO_HTTP_STATUS_URL?: string;
-    DRAMA_VIDEO_HTTP_PROVIDER_ID?: string;
-    DRAMA_VIDEO_HTTP_PROVIDER_LABEL?: string;
-    DRAMA_VIDEO_HTTP_PROVIDER_DESCRIPTION?: string;
-    DRAMA_VIDEO_HTTP_API_KEY?: string;
-    DRAMA_VIDEO_HTTP_TIMEOUT_MS?: string;
-    DRAMA_VIDEO_HTTP_SUPPORTS_REF_IMAGES?: string;
-    DRAMA_VIDEO_HTTP_COST_PER_SECOND?: string;
-    DRAMA_VIDEO_HTTP_COST_CURRENCY?: string;
-    /** Drama video reference image base URL */
-    DRAMA_VIDEO_REF_IMAGE_BASE_URL?: string;
-    /** Drama TTS mock cost per second */
-    DRAMA_TTS_MOCK_COST_PER_SECOND?: string;
-    /** Drama TTS HTTP synthesize endpoint URL */
-    DRAMA_TTS_HTTP_SYNTHESIZE_URL?: string;
-    DRAMA_TTS_HTTP_PROVIDER_ID?: string;
-    DRAMA_TTS_HTTP_PROVIDER_LABEL?: string;
-    DRAMA_TTS_HTTP_PROVIDER_DESCRIPTION?: string;
-    DRAMA_TTS_HTTP_API_KEY?: string;
-    DRAMA_TTS_HTTP_TIMEOUT_MS?: string;
-    DRAMA_TTS_HTTP_COST_PER_SECOND?: string;
-    DRAMA_TTS_HTTP_COST_CURRENCY?: string;
-
     // ── Auth ──────────────────────────────────────────────────────────
     /** API bearer token for authentication */
     API_TOKEN?: string;

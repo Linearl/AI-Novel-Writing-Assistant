@@ -20,6 +20,6 @@ export function safeParseJSON<T>(raw: string | null | undefined, fallback: T): T
 }
 
 /**
- * Alias kept for backward compatibility with drama module consumers.
+ * Alias for safeParseJSON.
  */
 export const safeJsonParse = safeParseJSON;

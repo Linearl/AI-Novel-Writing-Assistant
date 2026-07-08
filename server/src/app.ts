@@ -31,8 +31,6 @@ import knowledgeRouter from "./routes/knowledge";
 import llmRouter from "./routes/llm";
 import llmTrackingRouter from "./routes/llmTracking";
 import novelRouter from "./modules/novel/http/novel";
-import dramaRouter from "./modules/drama/http/dramaRoutes";
-import comicRouter from "./modules/comic/http/comicRoutes";
 import novelDirectorRouter from "./services/novel/director/http/novelDirector";
 import novelExportRouter from "./modules/export/http/novelExport";
 import novelWorkflowsRouter from "./services/novel/director/http/novelWorkflows";
@@ -158,8 +156,6 @@ export function createApp() {
   app.use("/api/novels/director", novelDirectorRouter);
   app.use("/api/novel-workflows", novelWorkflowsRouter);
   app.use("/api/novels", novelExportRouter);
-  app.use("/api/drama", dramaRouter);
-  app.use("/api/comic", comicRouter);
   app.use("/api/worlds", worldRouter);
   app.use("/api/rag", ragRouter);
   app.use("/api/base-characters", characterRouter);

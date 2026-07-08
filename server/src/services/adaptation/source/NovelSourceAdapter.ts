@@ -1,10 +1,8 @@
 /**
  * 小说内容源适配器（novel_import）——共享层版本
  *
- * drama 与 comic 共用此适配器。唯一通过 prisma 只读访问 novel 相关表，
+ * 唯一通过 prisma 只读访问 novel 相关表，
  * 不 import 任何 services/novel/* 业务逻辑（由 CI 守卫强制）。
- *
- * loadChapterText：按章节区间取原文，供 comic 分格脚本提取对白。
  */
 import { prisma } from "../../../db/prisma";
 import type { SourceContentPort } from "./SourceContentPort";
