@@ -59,7 +59,7 @@ description: "需求任务总清单（SSOT）"
 | 2041 | 伏笔埋收可视化追踪 | p2 | ✅ 已完成 | 竞品分析-游蜂写作 | 0.1 | 2026-07-03 | 2026-07-05T01:28:57.419Z | `B.2.done/v0.1-r2041-M2-payoff-ledger-visualization/README.md` | payoff ledger 增强 + auto-director 集成 + UI 可视化 |
 | 2042 | 自适应字数控制与水文检测 | p2 | ✅ 已完成 | 竞品分析讨论 | 0.1 | 2026-07-03 | 2026-07-05T01:28:57.909Z | `B.2.done/v0.1-r2042-M2-adaptive-word-count-control/README.md` | 章节角色系数 + 水文检测 + 自动 compress/expand |
 | 2043 | Style Engine Auto Close Loop | p3 | ✅ 已完成 | - | 0.1 | 2026-07-08T00:00:00.000Z | 2026-07-08T08:30:00.000Z | `B.todo/v0.1-r2043-complex-style-engine-auto-close-loop/README.md` |  |
-| 2044 | Inspiration Quick Preview | p3 | 📋 待办 | - | 0.1 | 2026-07-08T00:00:00.000Z | 2026-07-08T00:00:00.000Z | `B.todo/v0.1-r2044-complex-inspiration-quick-preview/README.md` |  |
+| 2044 | Inspiration Quick Preview | p3 | ✅ 已完成 | - | 0.1 | 2026-07-08T00:00:00.000Z | 2026-07-08T09:00:00.000Z | `B.todo/v0.1-r2044-complex-inspiration-quick-preview/README.md` |  |
 | 2045 | Chapter Rhythm Tension | p3 | 📋 待办 | - | 0.1 | 2026-07-08T00:00:00.000Z | 2026-07-08T00:00:00.000Z | `B.todo/v0.1-r2045-complex-chapter-rhythm-tension/README.md` |  |
 | 2046 | Style Profile Export Import | p3 | 📋 待办 | - | 0.1 | 2026-07-08T00:00:00.000Z | 2026-07-08T00:00:00.000Z | `B.todo/v0.1-r2046-medium-style-profile-export-import/README.md` |  |
 | 2013 | Director Failed Retry Entry | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2013-medium-director-failed-retry-entry/README.md` |  |
@@ -77,7 +77,7 @@ description: "需求任务总清单（SSOT）"
 | 3007 | 世界生成阶段进度显示 | p3 | ✅ 已完成 | 用户体验反馈 | 0.1 | 2026-06-29 | 2026-06-29 | `B.2.done/v0.1-r3007-medium-world-gen-stage-progress/README.md` | 步骤 2 骨架生成按钮需显示阶段进度 |
 | 3008 | 日志中心 | p4 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r3008-medium-log-center/README.md` |  |
 | 3009 | Tab 切换性能优化 | p3 | ✅ 已完成 | 性能分析 | 0.1 | 2026-07-03 | 2026-07-04 | `B.2.done/v0.1-r3009-C2-tab-switch-performance/README.md` | NovelEdit tab 切换延迟优化 |
-| 3010 | Create Page Material Import | p4 | 📋 待办 | - | 0.1 | 2026-07-08T00:00:00.000Z | 2026-07-08T00:00:00.000Z | `B.todo/v0.1-r3010-medium-create-page-material-import/README.md` |  |
+| 3010 | Create Page Material Import | p4 | ✅ 已完成 | - | 0.1 | 2026-07-08T00:00:00.000Z | 2026-07-08T09:00:00.000Z | `B.todo/v0.1-r3010-medium-create-page-material-import/README.md` |  |
 | 3004 | Novel Conversation Archive | p4 | 📋 待办 | - | 0.1 | 2026-06-26T00:00:00.000Z | 2026-06-26T00:00:00.000Z | `B.todo/v0.1-r3004-medium-novel-conversation-archive/README.md` |  |
 
 ### 3.6 技术债务和重构任务（7xxx）
@@ -108,10 +108,8 @@ description: "需求任务总清单（SSOT）"
 
 | 编号 | 任务标题 | 文档 |
 | --- | --- | --- |
-| 2044 | Inspiration Quick Preview | `B.todo/v0.1-r2044-complex-inspiration-quick-preview/README.md` |
 | 2045 | Chapter Rhythm Tension | `B.todo/v0.1-r2045-complex-chapter-rhythm-tension/README.md` |
 | 2046 | Style Profile Export Import | `B.todo/v0.1-r2046-medium-style-profile-export-import/README.md` |
-| 3010 | Create Page Material Import | `B.todo/v0.1-r3010-medium-create-page-material-import/README.md` |
 | 2013 | Director Failed Retry Entry | `B.todo/v0.1-r2013-medium-director-failed-retry-entry/README.md` |
 | 2014 | Chapter Token Budget Dynamic | `B.todo/v0.1-r2014-medium-chapter-token-budget-dynamic/README.md` |
 | 3004 | Novel Conversation Archive | `B.todo/v0.1-r3004-medium-novel-conversation-archive/README.md` |
@@ -161,6 +159,7 @@ description: "需求任务总清单（SSOT）"
 | 2041 | 伏笔埋收可视化追踪 | `B.2.done/v0.1-r2041-M2-payoff-ledger-visualization/README.md` |
 | 2042 | 自适应字数控制与水文检测 | `B.2.done/v0.1-r2042-M2-adaptive-word-count-control/README.md` |
 | 2043 | Style Engine Auto Close Loop | `B.todo/v0.1-r2043-complex-style-engine-auto-close-loop/README.md` |
+| 2044 | Inspiration Quick Preview | `B.todo/v0.1-r2044-complex-inspiration-quick-preview/README.md` |
 | 3001 | Task Batch Archive | `B.2.done/v0.1-r3001-medium-task-batch-archive/README.md` |
 | 3002 | 导演进度规划资源缺失 Checklist 可视化 | `B.2.done/v0.1-r3002-medium-director-planning-checklist/README.md` |
 | 3003 | 小说项目对话存档 | `B.2.done/v0.1-r3003-medium-repair-progress-dialog/README.md` |
@@ -169,6 +168,7 @@ description: "需求任务总清单（SSOT）"
 | 3007 | 世界生成阶段进度显示 | `B.2.done/v0.1-r3007-medium-world-gen-stage-progress/README.md` |
 | 3008 | 日志中心 | `B.2.done/v0.1-r3008-medium-log-center/README.md` |
 | 3009 | Tab 切换性能优化 | `B.2.done/v0.1-r3009-C2-tab-switch-performance/README.md` |
+| 3010 | Create Page Material Import | `B.todo/v0.1-r3010-medium-create-page-material-import/README.md` |
 | 7001 | Auto-Director 测试隔离修复 | `B.2.done/v0.1-r7001-simple-auto-director-test-fix/README.md` |
 | 7002 | NovelEdit.tsx 大文件拆分 | `B.2.done/v0.1-r7002-complex-novel-edit-refactor/README.md` |
 | 7003 | Server 超大文件分批拆分 | `B.2.done/v0.1-r7003-complex-server-large-file-refactor/README.md` |

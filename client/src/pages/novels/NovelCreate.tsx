@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { UnifiedTaskDetail } from "@ai-novel/shared/types/task";
+import type { QuickPreviewCandidate } from "@ai-novel/shared/types/novelQuickPreview";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { BOOK_ANALYSIS_SECTIONS } from "@ai-novel/shared/types/bookAnalysis";
@@ -13,7 +14,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import NovelAutoDirectorDialog from "./components/NovelAutoDirectorDialog";
 import NovelBasicInfoForm from "./components/NovelBasicInfoForm";
 import NovelCreateResourceRecommendationCard from "./components/NovelCreateResourceRecommendationCard";
+import QuickPreviewPanel from "./components/QuickPreviewPanel";
 import { BookFramingQuickFillButton } from "./components/basicInfoForm/BookFramingQuickFillButton";
+import MaterialParseDialog from "./components/MaterialParseDialog";
 import NovelCreateTitleQuickFill from "./components/titleWorkshop/NovelCreateTitleQuickFill";
 import { useNovelContinuationSources } from "./hooks/useNovelContinuationSources";
 import {
@@ -27,6 +30,7 @@ export default function NovelCreate() {
   const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
   const [basicForm, setBasicForm] = useState(() => createDefaultNovelBasicFormState());
+  const [inspiration, setInspiration] = useState("");
   const [restoredWorkflowTask, setRestoredWorkflowTask] = useState<UnifiedTaskDetail | null>(null);
   const [directorWorkflowTaskId, setDirectorWorkflowTaskId] = useState("");
 
@@ -176,8 +180,38 @@ export default function NovelCreate() {
     },
   });
 
+  const handleApplyCandidate = (candidate: QuickPreviewCandidate) => {
+    setBasicForm((prev) => patchNovelBasicForm(prev, {
+      title: candidate.title,
+      description: candidate.synopsis,
+    }));
+  };
+
   return (
     <div className="mx-auto max-w-5xl space-y-4">
+      <Card>
+        <CardHeader>
+          <CardTitle>快速预览</CardTitle>
+          <CardDescription>
+            输入一句话灵感或简短描述，AI 会快速生成 3 个不同方向的候选方案（标题 + 梗概 + 正文预览），选定后自动填入创建表单。
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3">
+            <textarea
+              className="border-input bg-background placeholder:text-muted-foreground focus-visible:ring-ring min-h-[80px] w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+              placeholder="例如：一个社恐程序员意外穿越到修仙世界，发现自己写的代码变成了法术..."
+              value={inspiration}
+              onChange={(e) => setInspiration(e.target.value)}
+            />
+            <QuickPreviewPanel
+              inspiration={inspiration}
+              onApplyCandidate={handleApplyCandidate}
+            />
+          </div>
+        </CardContent>
+      </Card>
+
       <Card>
         <CardHeader>
           <CardTitle>创建小说项目</CardTitle>
@@ -252,6 +286,11 @@ export default function NovelCreate() {
               <NovelCreateTitleQuickFill
                 basicForm={basicForm}
                 onApplyTitle={(title) => setBasicForm((prev) => patchNovelBasicForm(prev, { title }))}
+              />
+            )}
+            materialParse={(
+              <MaterialParseDialog
+                onApplyParsed={(patch) => setBasicForm((prev) => patchNovelBasicForm(prev, patch))}
               />
             )}
           />

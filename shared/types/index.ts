@@ -32,6 +32,7 @@ export * from "./novelCharacter";
 export * from "./novelDirector";
 export * from "./novelExport";
 export * from "./novelFraming";
+export * from "./novelQuickPreview";
 export * from "./novelResourceRecommendation";
 export * from "./novelRisk";
 export * from "./novelWorld";

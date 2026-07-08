@@ -11,6 +11,7 @@ import { registerNovelCharacterResourceRoutes } from "../characters/http/novelCh
 import { registerNovelCharacterSyncRoutes } from "../characters/http/novelCharacterSyncRoutes";
 import { registerNovelCharacterVisibleProfileRoutes } from "../characters/http/novelCharacterVisibleProfileRoutes";
 import { registerNovelFramingRoutes } from "../setup/http/novelFramingRoutes";
+import { registerNovelQuickPreviewRoutes } from "../setup/http/novelQuickPreviewRoutes";
 import { registerNovelPlanningRoutes } from "../planning/http/novelPlanningRoutes";
 import { createPayoffLedgerCrudRoutes } from "../planning/http/novelPayoffLedgerCrudRoutes";
 import { registerNovelProductionRoutes } from "../production/http/novelProductionRoutes";
@@ -27,6 +28,7 @@ import { createNovelRiskRoutes } from "../risk/http/novelRiskRoutes";
 import { createNovelPaceCurveRoutes } from "../pace/http/novelPaceCurveRoutes";
 import { createNovelSettingConsistencyRoutes } from "../setting/http/novelSettingConsistencyRoutes";
 import { registerNovelTxtImportExportRoutes } from "./novelTxtImportExportRoutes";
+import { createNovelMaterialParseRoutes } from "./novelMaterialParseRoutes";
 import type { NovelHttpServices } from "./novelHttpServices";
 import {
   aiRevisionPreviewSchema,
@@ -89,6 +91,10 @@ export function registerNovelHttpRoutes(router: Router, services: NovelHttpServi
   });
 
   registerNovelFramingRoutes({
+    router,
+  });
+
+  registerNovelQuickPreviewRoutes({
     router,
   });
 
@@ -241,4 +247,5 @@ export function registerNovelHttpRoutes(router: Router, services: NovelHttpServi
   router.use(createNovelSettingConsistencyRoutes());
   router.use(createPayoffLedgerCrudRoutes());
   registerNovelTxtImportExportRoutes({ router });
+  router.use(createNovelMaterialParseRoutes());
 }

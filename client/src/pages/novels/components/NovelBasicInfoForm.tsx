@@ -74,6 +74,7 @@ interface NovelBasicInfoFormProps {
   projectQuickStart?: ReactNode;
   resourceRecommendation?: ReactNode;
   coverSection?: ReactNode;
+  materialParse?: ReactNode;
 }
 
 export default function NovelBasicInfoForm(props: NovelBasicInfoFormProps) {
@@ -97,6 +98,7 @@ export default function NovelBasicInfoForm(props: NovelBasicInfoFormProps) {
     projectQuickStart,
     resourceRecommendation,
     coverSection,
+    materialParse,
   } = props;
 
   const continuationSourceMissing = basicForm.writingMode === "continuation"
@@ -130,7 +132,10 @@ export default function NovelBasicInfoForm(props: NovelBasicInfoFormProps) {
         description="先定义这是什么作品，以及它是从零开始还是基于既有内容继续创作。"
       >
         <div className="space-y-2">
-          <FieldLabel htmlFor="basic-title">小说标题</FieldLabel>
+          <div className="flex items-center justify-between">
+            <FieldLabel htmlFor="basic-title">小说标题</FieldLabel>
+            {materialParse ? <div>{materialParse}</div> : null}
+          </div>
           <Input
             id="basic-title"
             value={basicForm.title}
