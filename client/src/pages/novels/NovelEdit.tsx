@@ -239,9 +239,12 @@ export default function NovelEdit() {
     const missingFields: string[] = [];
     const hasStoryInput = Boolean(basicForm.description?.trim() || basicForm.outline?.trim());
     if (!hasStoryInput) { warnings.push("故事输入（一句话概述 / 大纲）为空，AI 缺乏方向指引"); missingFields.push("storyInput"); }
-    if (!bible?.coreSetting?.trim()) { warnings.push("故事引擎·核心设定 未填写"); missingFields.push("coreSetting"); }
-    if (!bible?.mainPromise?.trim()) { warnings.push("故事引擎·核心承诺 未填写"); missingFields.push("mainPromise"); }
-    if (!bible?.characterArcs?.trim()) { warnings.push("故事引擎·角色弧光 未填写"); missingFields.push("characterArcs"); }
+    const hasBible = Boolean(bible?.coreSetting?.trim() || bible?.mainPromise?.trim() || bible?.characterArcs?.trim());
+    if (!hasBible && !hasStoryInput) {
+      if (!bible?.coreSetting?.trim()) { warnings.push("故事引擎·核心设定 未填写（可在步骤6流水线页生成 Bible）"); missingFields.push("coreSetting"); }
+      if (!bible?.mainPromise?.trim()) { warnings.push("故事引擎·核心承诺 未填写"); missingFields.push("mainPromise"); }
+      if (!bible?.characterArcs?.trim()) { warnings.push("故事引擎·角色弧光 未填写"); missingFields.push("characterArcs"); }
+    }
     if (!novelDetailQuery.data?.data?.world) { warnings.push("本书世界观尚未建立（可在基础信息页创建）"); missingFields.push("world"); }
     if (!basicForm.genreId?.trim()) { warnings.push("题材/类型 未设置"); missingFields.push("genre"); }
     return { warnings, missingFields };
