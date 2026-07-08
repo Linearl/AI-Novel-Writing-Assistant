@@ -261,12 +261,20 @@ export default function NovelWorkspaceRail(props: NovelWorkspaceRailProps) {
     const structuredReady = (workspace?.beatSheets ?? []).some((sheet) => sheet.beats.length > 0)
       || (workspace?.volumes ?? []).some((volume) => volume.chapters.some((chapter) => hasChapterPlanContent(chapter)));
     const chapterReady = (novelDetail?.chapters ?? []).some((chapter) => Boolean(chapter.content?.trim()));
-    const characterReady = (novelDetail?.characters ?? []).length > 0;
+    const characterReady = (novelDetail?.characters ?? []).length > 0
+      || Boolean(novelDetail?.bible?.characterArcs?.trim());
+    const bibleHasContent = Boolean(
+      novelDetail?.bible?.coreSetting?.trim()
+      || novelDetail?.bible?.mainPromise?.trim()
+      || novelDetail?.bible?.characterArcs?.trim()
+      || novelDetail?.bible?.worldRules?.trim()
+      || novelDetail?.bible?.rawContent?.trim(),
+    );
     const storyMacroReady = characterReady
       || outlineReady
       || structuredReady
       || chapterReady
-      || Boolean(novelDetail?.bible)
+      || bibleHasContent
       || Boolean((novelDetail?.plotBeats ?? []).length);
     const pipelineReady = Boolean(qualitySummary && qualitySummary.overall >= 75);
 
@@ -279,7 +287,7 @@ export default function NovelWorkspaceRail(props: NovelWorkspaceRailProps) {
       chapter: chapterReady,
       pipeline: pipelineReady,
     } satisfies Record<NovelWorkspaceFlowTab, boolean>, effectiveResetSteps);
-  }, [effectiveResetSteps, novelDetail?.bible, novelDetail?.chapters, novelDetail?.characters, novelDetail?.plotBeats, qualitySummary, workspace]);
+  }, [effectiveResetSteps, novelDetail?.bible?.coreSetting, novelDetail?.bible?.mainPromise, novelDetail?.bible?.characterArcs, novelDetail?.bible?.worldRules, novelDetail?.bible?.rawContent, novelDetail?.chapters, novelDetail?.characters, novelDetail?.plotBeats, qualitySummary, workspace]);
 
   const workflowIndex = workflowCurrentTab
     ? NOVEL_WORKSPACE_FLOW_STEPS.findIndex((item) => item.key === workflowCurrentTab)

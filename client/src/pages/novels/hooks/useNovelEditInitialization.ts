@@ -136,6 +136,9 @@ export function useNovelEditInitialization({
       sourceKnowledgeDocumentId: detail.sourceKnowledgeDocumentId ?? "",
       continuationBookAnalysisId: detail.continuationBookAnalysisId ?? "",
       continuationBookAnalysisSections: detail.continuationBookAnalysisSections ?? [],
+      worldSetting: "",
+      characters: "",
+      outline: detail.outline ?? "",
     });
     if (hydrateVolumeDraftFromDetail) {
       setVolumeDraft(detail.volumes ?? []);
