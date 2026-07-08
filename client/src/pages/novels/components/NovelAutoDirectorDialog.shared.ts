@@ -44,6 +44,9 @@ export function buildInitialIdea(basicForm: NovelBasicFormState): string {
     basicForm.description.trim(),
     basicForm.title.trim() ? `我想写一本暂名为《${basicForm.title.trim()}》的小说。` : "",
     basicForm.styleTone.trim() ? `文风希望偏 ${basicForm.styleTone.trim()}。` : "",
+    basicForm.worldSetting.trim() ? `\n【世界观设定】\n${basicForm.worldSetting.trim()}` : "",
+    basicForm.characters.trim() ? `\n【角色阵容】\n${basicForm.characters.trim()}` : "",
+    basicForm.outline.trim() ? `\n【故事大纲】\n${basicForm.outline.trim()}` : "",
   ].filter(Boolean);
   return lines.join("\n");
 }

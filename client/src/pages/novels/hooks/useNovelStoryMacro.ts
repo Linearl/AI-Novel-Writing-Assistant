@@ -60,6 +60,7 @@ const EMPTY_STATE: StoryMacroState = {
 interface UseNovelStoryMacroInput {
   novelId: string;
   enabled?: boolean;
+  fallbackStoryInput?: string;
   llm: {
     provider: LLMProvider;
     model: string;
@@ -86,7 +87,7 @@ export function useNovelStoryMacro(input: UseNovelStoryMacroInput): {
   tab: StoryMacroTabProps;
   ready: boolean;
 } {
-  const { novelId, llm, enabled = true } = input;
+  const { novelId, llm, enabled = true, fallbackStoryInput = "" } = input;
   const queryClient = useQueryClient();
   const [storyInput, setStoryInput] = useState("");
   const [expansion, setExpansion] = useState<StoryExpansion | null>(EMPTY_EXPANSION);
@@ -112,7 +113,7 @@ export function useNovelStoryMacro(input: UseNovelStoryMacroInput): {
   useEffect(() => {
     const plan = planQuery.data?.data;
     if (!plan) {
-      setStoryInput("");
+      setStoryInput(fallbackStoryInput);
       setExpansion(EMPTY_EXPANSION);
       setDecomposition(EMPTY_DECOMPOSITION);
       setConstraints([]);
@@ -126,7 +127,7 @@ export function useNovelStoryMacro(input: UseNovelStoryMacroInput): {
     setConstraints(plan.constraints ?? []);
     setLockedFields(plan.lockedFields ?? {});
     setStoryState(plan.state ?? EMPTY_STATE);
-  }, [planQuery.data?.data]);
+  }, [planQuery.data?.data, fallbackStoryInput]);
 
   const decomposeMutation = useMutation({
     mutationFn: () => decomposeNovelStory(novelId, {
