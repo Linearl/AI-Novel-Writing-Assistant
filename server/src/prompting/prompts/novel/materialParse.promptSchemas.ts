@@ -29,6 +29,8 @@ export const materialParseOutputSchema = z.object({
     .describe("大纲信息摘要：主线脉络、关键剧情转折"),
   genreHint: z.string().trim().max(100).optional()
     .describe("从素材中识别的题材倾向关键词，如修仙、都市、悬疑"),
+  chapterCountHint: z.number().int().min(1).max(2000).optional()
+    .describe("从素材中识别的总章节数或预计章节数。例如素材提到\"30章\"、\"共30章\"、\"约30章\"等，提取数字30"),
 });
 
 export type MaterialParseOutput = z.infer<typeof materialParseOutputSchema>;

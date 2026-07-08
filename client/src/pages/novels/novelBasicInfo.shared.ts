@@ -34,6 +34,9 @@ export interface NovelBasicFormState {
   sourceKnowledgeDocumentId: string;
   continuationBookAnalysisId: string;
   continuationBookAnalysisSections: BookAnalysisSectionKey[];
+  worldSetting: string;
+  characters: string;
+  outline: string;
 }
 
 export interface BasicInfoOption<T extends string> {
@@ -266,6 +269,9 @@ export function createDefaultNovelBasicFormState(): NovelBasicFormState {
     sourceKnowledgeDocumentId: "",
     continuationBookAnalysisId: "",
     continuationBookAnalysisSections: [],
+    worldSetting: "",
+    characters: "",
+    outline: "",
   };
 }
 
@@ -320,6 +326,20 @@ export function patchNovelBasicForm(
   return next;
 }
 
+function buildOutlineFromMaterialFields(basicForm: NovelBasicFormState): string {
+  const sections: string[] = [];
+  if (basicForm.worldSetting.trim()) {
+    sections.push(`【世界观设定】\n${basicForm.worldSetting.trim()}`);
+  }
+  if (basicForm.characters.trim()) {
+    sections.push(`【角色阵容】\n${basicForm.characters.trim()}`);
+  }
+  if (basicForm.outline.trim()) {
+    sections.push(`【故事大纲】\n${basicForm.outline.trim()}`);
+  }
+  return sections.join("\n\n");
+}
+
 export function buildNovelCreatePayload(basicForm: NovelBasicFormState) {
   const commercialTags = normalizeCommercialTags(basicForm.commercialTagsText);
   return {
@@ -370,6 +390,7 @@ export function buildNovelCreatePayload(basicForm: NovelBasicFormState) {
         && basicForm.continuationBookAnalysisId
         ? (basicForm.continuationBookAnalysisSections.length > 0 ? basicForm.continuationBookAnalysisSections : undefined)
         : undefined,
+    outline: buildOutlineFromMaterialFields(basicForm) || undefined,
   };
 }
 

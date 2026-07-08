@@ -14,6 +14,7 @@ export interface MaterialParseResult {
   characters?: string;
   outline?: string;
   genreHint?: string;
+  chapterCountHint?: number;
 }
 
 export interface ParseMaterialPayload {

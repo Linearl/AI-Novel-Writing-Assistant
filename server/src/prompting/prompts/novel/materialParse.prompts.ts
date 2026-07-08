@@ -42,6 +42,7 @@ function buildMaterialParseMessages(
 8. genreHint：如果能从素材判断题材方向（如修仙、都市、悬疑、科幻、历史等），给出 1-3 个关键词。
 9. commercialTagsText：提取或推导 3-6 个适合网文平台的商业标签，逗号分隔。
 10. styleTone：提取或推导 2-4 个风格关键词。
+11. chapterCountHint：如果素材中明确提到总章节数或预计章节数（如"30章"、"共30章"、"约30章"、"预计30章"、"前30章"等），提取该数字。注意区分"前30章承诺"和"全书共30章"——只有明确表示全书总章节数时才提取。
 
 【字段映射指南】
 - 标题、书名 → title
@@ -56,6 +57,7 @@ function buildMaterialParseMessages(
 - 风格、文风、基调 → styleTone
 - 标签、分类、类型 → commercialTagsText
 - 题材、类型倾向 → genreHint
+- 总章节数、预计章节数 → chapterCountHint（数字，如30）
 
 【输出格式】
 只返回一个 JSON 对象，结构固定如下：
@@ -71,7 +73,8 @@ function buildMaterialParseMessages(
   "worldSetting": "字符串或undefined",
   "characters": "字符串或undefined",
   "outline": "字符串或undefined",
-  "genreHint": "字符串或undefined"
+  "genreHint": "字符串或undefined",
+  "chapterCountHint": 数字或undefined
 }
 
 只返回 JSON，不解释分析过程，不输出 Markdown，不输出代码块。${retryInstruction}${forceJsonInstruction}`),

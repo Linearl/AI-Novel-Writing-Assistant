@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import type { NovelBasicFormState } from "../novelBasicInfo.shared";
 import { parseMaterial, type MaterialParseResult } from "@/api/novel/materialParse";
@@ -34,6 +34,7 @@ const FIELD_LABELS: Record<keyof MaterialParseResult, string> = {
   characters: "角色信息",
   outline: "大纲信息",
   genreHint: "题材倾向",
+  chapterCountHint: "预计章节数",
 };
 
 function mapParsedToFormPatch(parsed: MaterialParseResult): Partial<NovelBasicFormState> {
@@ -55,6 +56,8 @@ function buildPreviewRows(parsed: MaterialParseResult): FieldPreviewRow[] {
     const value = parsed[key];
     if (typeof value === "string" && value.trim().length > 0) {
       rows.push({ key, label, value: value.trim() });
+    } else if (typeof value === "number" && Number.isFinite(value) && value > 0) {
+      rows.push({ key, label, value: String(value) });
     }
   }
   return rows;
@@ -66,6 +69,7 @@ export default function MaterialParseDialog({ onApplyParsed }: MaterialParseDial
   const [editValues, setEditValues] = useState<Record<string, string>>({});
   const [previewRows, setPreviewRows] = useState<FieldPreviewRow[]>([]);
   const llm = useLLMStore();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const parseMutation = useMutation({
     mutationFn: () => parseMaterial({
@@ -98,14 +102,21 @@ export default function MaterialParseDialog({ onApplyParsed }: MaterialParseDial
   });
 
   function handleConfirm() {
-    const patch: Partial<NovelBasicFormState> = {};
+    const patch: Record<string, unknown> = {};
     for (const row of previewRows) {
       const edited = editValues[row.key];
       if (edited !== undefined && edited.trim().length > 0) {
-        (patch as Record<string, string>)[row.key] = edited.trim();
+        if (row.key === "chapterCountHint") {
+          const num = Number.parseInt(edited.trim(), 10);
+          if (Number.isFinite(num) && num > 0) {
+            patch.estimatedChapterCount = num;
+          }
+        } else {
+          patch[row.key] = edited.trim();
+        }
       }
     }
-    onApplyParsed(patch);
+    onApplyParsed(patch as Partial<NovelBasicFormState>);
     setOpen(false);
     resetState();
     toast.success("素材已填入表单。");
@@ -123,6 +134,22 @@ export default function MaterialParseDialog({ onApplyParsed }: MaterialParseDial
       resetState();
       parseMutation.reset();
     }
+  }
+
+  function handleFileImport(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const text = e.target?.result;
+      if (typeof text === "string") {
+        setMaterial(text);
+        toast.success(`已导入文件「${file.name}」（${text.length.toLocaleString()} 字）`);
+      }
+    };
+    reader.onerror = () => toast.error("文件读取失败，请重试。");
+    reader.readAsText(file, "utf-8");
+    event.target.value = "";
   }
 
   return (
@@ -174,15 +201,32 @@ export default function MaterialParseDialog({ onApplyParsed }: MaterialParseDial
             <textarea
               value={material}
               onChange={(e) => setMaterial(e.target.value)}
-              placeholder={"在此粘贴你的创作素材，例如：\n\n- 世界观设定\n- 角色小传\n- 故事大纲\n- 灵感笔记\n- 任意格式的创作文档\n\nAI 会自动识别内容类型并拆分到对应的表单字段。"}
+              placeholder={"在此粘贴你的创作素材，例如：\n\n- 世界观设定\n- 角色小传\n- 故事大纲\n- 灵感笔记\n- 任意格式的创作文档\n\nAI 会自动识别内容类型并拆分到对应的表单字段。\n\n也可以点击下方按钮从 .txt / .md 文件导入。"}
               className="h-[400px] w-full resize-none rounded-md border bg-background px-3 py-2 text-sm outline-none transition placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
               disabled={parseMutation.isPending}
             />
             <div className="flex items-center justify-between text-xs text-muted-foreground">
-              <span>
-                已输入 {material.length.toLocaleString()} 字
-                {material.length >= 50000 ? "（已达上限）" : ""}
-              </span>
+              <div className="flex items-center gap-3">
+                <span>
+                  已输入 {material.length.toLocaleString()} 字
+                  {material.length >= 50000 ? "（已达上限）" : ""}
+                </span>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".txt,.md,.text"
+                  className="hidden"
+                  onChange={handleFileImport}
+                />
+                <button
+                  type="button"
+                  className="text-primary underline underline-offset-2 hover:text-primary/80"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={parseMutation.isPending}
+                >
+                  从文件导入
+                </button>
+              </div>
               <span>支持任意格式，建议至少 50 字以获得更好的识别效果</span>
             </div>
           </div>
