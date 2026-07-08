@@ -426,18 +426,44 @@ export class NovelCoreCharacterService {
 
     const created: z.infer<typeof zodCharacterImportResult>[] = [];
     const nameToId = new Map<string, string>();
+
+    // 查找已有角色，避免重复创建
+    const existingCharacters = await prisma.character.findMany({
+      where: { novelId },
+      select: { id: true, name: true },
+    });
+    const existingNameMap = new Map(existingCharacters.map((c) => [c.name, c.id]));
+
     for (const char of result.characters) {
-      const record = await this.createCharacter(novelId, {
-        name: char.name,
-        role: char.role,
-        gender: char.gender,
-        personality: char.personality,
-        background: char.background,
-        relationToProtagonist: char.relationToProtagonist,
-        storyFunction: char.storyFunction,
-      });
+      const existingId = existingNameMap.get(char.name);
+      if (existingId) {
+        // 已有同名角色：仅补全空字段，不覆盖已有数据
+        await prisma.character.update({
+          where: { id: existingId },
+          data: {
+            ...(char.role && char.role !== "未指定" ? { role: char.role } : {}),
+            ...(char.gender ? { gender: char.gender } : {}),
+            ...(char.personality ? { personality: char.personality } : {}),
+            ...(char.background ? { background: char.background } : {}),
+            ...(char.relationToProtagonist ? { relationToProtagonist: char.relationToProtagonist } : {}),
+            ...(char.storyFunction ? { storyFunction: char.storyFunction } : {}),
+          },
+        });
+        nameToId.set(char.name, existingId);
+      } else {
+        // 新角色：创建
+        const record = await this.createCharacter(novelId, {
+          name: char.name,
+          role: char.role,
+          gender: char.gender,
+          personality: char.personality,
+          background: char.background,
+          relationToProtagonist: char.relationToProtagonist,
+          storyFunction: char.storyFunction,
+        });
+        nameToId.set(char.name, record.id);
+      }
       created.push(char);
-      nameToId.set(char.name, record.id);
     }
 
     // 创建关系
