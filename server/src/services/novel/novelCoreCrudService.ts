@@ -478,6 +478,7 @@ export class NovelCoreCrudService {
         content: input.content ?? "",
         expectation: input.expectation,
         chapterStatus: input.chapterStatus,
+        tensionLevel: input.tensionLevel ?? "medium",
         targetWordCount: input.targetWordCount ?? null,
         conflictLevel: input.conflictLevel ?? null,
         revealLevel: input.revealLevel ?? null,
@@ -502,6 +503,7 @@ export class NovelCoreCrudService {
       order: chapter.order,
       title: chapter.title,
       expectation: chapter.expectation,
+      tensionLevel: chapter.tensionLevel,
       targetWordCount: chapter.targetWordCount,
       conflictLevel: chapter.conflictLevel,
       revealLevel: chapter.revealLevel,
@@ -549,6 +551,7 @@ export class NovelCoreCrudService {
         characterScore: input.characterScore,
         pacingScore: input.pacingScore,
         riskFlags: input.riskFlags,
+        tensionLevel: input.tensionLevel,
       },
     });
 
@@ -560,6 +563,7 @@ export class NovelCoreCrudService {
       order: chapter.order,
       title: chapter.title,
       expectation: chapter.expectation,
+      tensionLevel: chapter.tensionLevel,
       targetWordCount: chapter.targetWordCount,
       conflictLevel: chapter.conflictLevel,
       revealLevel: chapter.revealLevel,

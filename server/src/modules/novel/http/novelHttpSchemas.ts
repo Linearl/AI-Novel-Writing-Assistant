@@ -237,6 +237,7 @@ export const updateChapterSchema = z.object({
   characterScore: z.number().int().min(0).max(100).nullable().optional(),
   pacingScore: z.number().int().min(0).max(100).nullable().optional(),
   riskFlags: z.string().nullable().optional(),
+  tensionLevel: z.enum(["low", "medium", "high", "climax"]).nullable().optional(),
 });
 
 export const characterSchema = z.object({

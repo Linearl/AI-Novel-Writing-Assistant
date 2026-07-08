@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import type { TensionLevel } from "@ai-novel/shared/types/novel";
+import { TENSION_LEVEL_LABELS } from "@ai-novel/shared/types/novel";
 import {
   getChapterExecutionDetailStatus,
   type ChapterDetailBatchSelection,
@@ -277,6 +279,21 @@ export default function StructuredChapterDetailCard(props: StructuredChapterDeta
                 value={selectedChapter.title}
                 onChange={(event) => onChapterFieldChange(selectedVolume.id, selectedChapter.id, "title", event.target.value)}
               />
+            </label>
+
+            <label className="space-y-2 text-sm">
+              <span className="text-xs text-muted-foreground">张力等级</span>
+              <select
+                className="w-full rounded-xl border bg-background px-3 py-2 text-sm text-foreground"
+                value={(selectedChapter.tensionLevel as TensionLevel | null) ?? "medium"}
+                onChange={(event) => onChapterFieldChange(selectedVolume.id, selectedChapter.id, "tensionLevel", event.target.value)}
+              >
+                {(Object.keys(TENSION_LEVEL_LABELS) as TensionLevel[]).map((level) => (
+                  <option key={level} value={level}>
+                    {TENSION_LEVEL_LABELS[level]}
+                  </option>
+                ))}
+              </select>
             </label>
 
             <label className="space-y-2 text-sm">

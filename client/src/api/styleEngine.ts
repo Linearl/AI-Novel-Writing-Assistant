@@ -344,3 +344,23 @@ export async function forkStyleFromChapterDiff(payload: ChapterEditDiffExtractRe
   );
   return data;
 }
+
+export async function exportStyleProfile(id: string) {
+  const { data } = await apiClient.get<ApiResponse<unknown>>(`/style-profiles/${id}/export`, {
+    responseType: "blob",
+  });
+  return data;
+}
+
+export async function importStyleProfile(payload: {
+  profileData: Record<string, unknown>;
+  conflictStrategy: "overwrite" | "create_new" | "skip";
+}) {
+  const { data } = await apiClient.post<ApiResponse<{
+    action: "created" | "overwritten" | "skipped" | "error";
+    profileId?: string;
+    profileName: string;
+    message: string;
+  }>>("/style-profiles/import", payload);
+  return data;
+}

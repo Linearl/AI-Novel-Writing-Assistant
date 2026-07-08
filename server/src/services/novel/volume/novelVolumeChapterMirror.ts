@@ -26,6 +26,7 @@ export async function hydrateCanonicalChapterFields(
       mustAvoid: true,
       taskSheet: true,
       sceneCards: true,
+      tensionLevel: true,
     },
   });
   if (chapterRows.length === 0) {
@@ -49,6 +50,7 @@ export async function hydrateCanonicalChapterFields(
         chapterOrder: row.order,
         title: row.title,
         summary: row.expectation?.trim() || chapter.summary,
+        tensionLevel: (row.tensionLevel as import("@ai-novel/shared/types/novel").TensionLevel) ?? chapter.tensionLevel ?? null,
         targetWordCount: row.targetWordCount ?? null,
         conflictLevel: row.conflictLevel ?? null,
         revealLevel: row.revealLevel ?? null,
@@ -74,6 +76,7 @@ export function mirrorChapterIntoDocument(
     order: number;
     title: string;
     expectation?: string | null;
+    tensionLevel?: string | null;
     targetWordCount?: number | null;
     conflictLevel?: number | null;
     revealLevel?: number | null;
@@ -98,6 +101,7 @@ export function mirrorChapterIntoDocument(
         chapterOrder: chapter.order,
         title: chapter.title,
         summary: chapter.expectation?.trim() || item.summary,
+        tensionLevel: (chapter.tensionLevel as import("@ai-novel/shared/types/novel").TensionLevel | null) ?? item.tensionLevel ?? null,
         targetWordCount: chapter.targetWordCount ?? null,
         conflictLevel: chapter.conflictLevel ?? null,
         revealLevel: chapter.revealLevel ?? null,

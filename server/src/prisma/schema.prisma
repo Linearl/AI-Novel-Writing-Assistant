@@ -512,6 +512,7 @@ model Chapter {
   riskFlags       String?
   hook            String?
   expectation     String?
+  tensionLevel    String?                @default("medium")
   locked          Boolean                @default(false)
   novelId         String
   novel           Novel                  @relation(fields: [novelId], references: [id], onDelete: Cascade)

@@ -83,6 +83,7 @@ export interface ChapterInput {
   content?: string;
   expectation?: string;
   chapterStatus?: "unplanned" | "pending_generation" | "generating" | "pending_review" | "needs_repair" | "completed";
+  tensionLevel?: "low" | "medium" | "high" | "climax" | null;
   targetWordCount?: number | null;
   conflictLevel?: number | null;
   revealLevel?: number | null;

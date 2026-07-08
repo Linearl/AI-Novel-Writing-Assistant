@@ -3,6 +3,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import type { TensionLevel } from "@ai-novel/shared/types/novel";
+import { TENSION_LEVEL_LABELS } from "@ai-novel/shared/types/novel";
 import { Trash2 } from "lucide-react";
 import {
   getChapterExecutionDetailStatus,
@@ -50,6 +52,25 @@ function renderChapterDetailStatusBadge(chapter: StructuredChapter) {
     return <Badge>细化中</Badge>;
   }
   return <Badge variant="outline">待细化</Badge>;
+}
+
+const TENSION_LEVEL_VARIANTS: Record<TensionLevel, "default" | "secondary" | "outline" | "destructive"> = {
+  low: "outline",
+  medium: "secondary",
+  high: "default",
+  climax: "destructive",
+};
+
+function renderTensionLevelBadge(chapter: StructuredChapter) {
+  const level = chapter.tensionLevel as TensionLevel | null | undefined;
+  if (!level) {
+    return null;
+  }
+  return (
+    <Badge variant={TENSION_LEVEL_VARIANTS[level]} className="text-[10px]">
+      {TENSION_LEVEL_LABELS[level]}
+    </Badge>
+  );
 }
 
 export default function StructuredChapterListCard(props: StructuredChapterListCardProps) {
@@ -218,7 +239,10 @@ export default function StructuredChapterListCard(props: StructuredChapterListCa
                             >
                               <div className="flex items-center justify-between gap-2">
                                 <Badge variant={isSelected ? "default" : "outline"}>第{chapter.chapterOrder}章</Badge>
-                                {renderChapterDetailStatusBadge(chapter)}
+                                <div className="flex items-center gap-1">
+                                  {renderTensionLevelBadge(chapter)}
+                                  {renderChapterDetailStatusBadge(chapter)}
+                                </div>
                               </div>
                               <div className="mt-2 text-sm font-medium">{chapter.title || `第${chapter.chapterOrder}章`}</div>
                             </button>

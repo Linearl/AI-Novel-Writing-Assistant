@@ -402,6 +402,7 @@ const generatedChapterListItemSchema = z.object({
   title: z.string().trim().min(1),
   summary: z.string().trim().min(1),
   chapterRole: z.enum(["normal", "transition", "climax", "turning_point"]).default("normal"),
+  tensionLevel: z.enum(["low", "medium", "high", "climax"]).default("medium"),
 });
 
 const generatedChapterBeatBlockItemSchema = z.preprocess((raw) => normalizeChapterListItemPayload(raw), z.object({
@@ -409,6 +410,7 @@ const generatedChapterBeatBlockItemSchema = z.preprocess((raw) => normalizeChapt
   summary: z.string().trim().min(1),
   beatKey: z.string().trim().min(1),
   chapterRole: z.enum(["normal", "transition", "climax", "turning_point"]).default("normal"),
+  tensionLevel: z.enum(["low", "medium", "high", "climax"]).default("medium"),
 }));
 
 const generatedVolumeStrategyVolumeSchema = z.object({
@@ -433,6 +435,7 @@ const generatedVolumeBeatSchema = z.preprocess(normalizeBeatPayload, z.object({
   summary: z.string().trim().min(1),
   chapterSpanHint: z.string().trim().min(1),
   mustDeliver: z.array(z.string().trim().min(1)).min(1).max(6),
+  tensionLevel: z.enum(["low", "medium", "high", "climax"]).default("medium"),
 }));
 
 const generatedVolumeCritiqueIssueSchema = z.object({

@@ -117,6 +117,7 @@ export class NovelVolumeService {
       order: number;
       title: string;
       expectation?: string | null;
+      tensionLevel?: string | null;
       targetWordCount?: number | null;
       conflictLevel?: number | null;
       revealLevel?: number | null;

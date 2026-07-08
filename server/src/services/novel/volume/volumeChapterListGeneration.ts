@@ -125,6 +125,7 @@ function buildExistingBeatBlocks(params: {
         beatKey: beat.key,
         title: chapter.title,
         summary: chapter.summary,
+        tensionLevel: chapter.tensionLevel ?? undefined,
       }));
 
     return {

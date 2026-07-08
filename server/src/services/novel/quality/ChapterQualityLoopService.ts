@@ -1,5 +1,5 @@
 import type { ChapterRuntimePackage } from "@ai-novel/shared/types/chapterRuntime";
-import type { QualityScore, ReviewIssue } from "@ai-novel/shared/types/novel";
+import type { QualityScore, ReviewIssue, TensionLevel } from "@ai-novel/shared/types/novel";
 import type { ChapterStatus, Prisma } from "@prisma/client";
 import {
   buildChapterQualityLoopAssessment,
@@ -137,6 +137,7 @@ export class ChapterQualityLoopService {
       select: {
         id: true,
         order: true,
+        tensionLevel: true,
         riskFlags: true,
         repairHistory: true,
         chapterStatus: true,
@@ -150,6 +151,7 @@ export class ChapterQualityLoopService {
     const assessment = buildChapterQualityLoopAssessment({
       chapterId: input.chapterId,
       chapterOrder: input.chapterOrder ?? chapter.order,
+      tensionLevel: chapter.tensionLevel as TensionLevel | null ?? null,
       score: input.score,
       issues: input.issues,
       runtimePackage: input.runtimePackage,

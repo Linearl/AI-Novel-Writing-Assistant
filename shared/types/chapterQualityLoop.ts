@@ -1,5 +1,5 @@
 import type { ChapterRuntimePackage } from "./chapterRuntime.js";
-import type { QualityScore, ReviewIssue } from "./novel.js";
+import type { QualityScore, ReviewIssue, TensionLevel } from "./novel.js";
 import type {
   ChapterExecutionMissingObligation,
   ChapterFailureClassification,
@@ -124,6 +124,7 @@ export function hasContinuableChapterQualityLoopRiskFlags(riskFlags: string | nu
 export interface ChapterQualityLoopAssessmentInput {
   chapterId: string;
   chapterOrder?: number | null;
+  tensionLevel?: TensionLevel | null;
   score: QualityScore;
   issues: ReviewIssue[];
   runtimePackage?: ChapterRuntimePackage | null;
@@ -232,6 +233,38 @@ function maxSeverity(issues: ReviewIssue[]): number {
   return issues.reduce((max, issue) => Math.max(max, SEVERITY_RANK[issue.severity] ?? 0), 0);
 }
 
+/**
+ * Tension-aware quality thresholds.
+ *
+ * - low:      relaxed  (-5 from default floors)
+ * - medium:   default
+ * - high:     strict   (+3 from default floors)
+ * - climax:   very strict (+5 from default floors)
+ */
+interface TensionThresholdAdjustment {
+  hardFloorDelta: number;
+  softFloorDelta: number;
+}
+
+const TENSION_THRESHOLD_ADJUSTMENTS: Record<TensionLevel, TensionThresholdAdjustment> = {
+  low: { hardFloorDelta: -5, softFloorDelta: -5 },
+  medium: { hardFloorDelta: 0, softFloorDelta: 0 },
+  high: { hardFloorDelta: 3, softFloorDelta: 3 },
+  climax: { hardFloorDelta: 5, softFloorDelta: 5 },
+};
+
+function adjustThresholds(
+  hardFloor: number,
+  softFloor: number,
+  tensionLevel: TensionLevel | null | undefined,
+): { hardFloor: number; softFloor: number } {
+  const adjustment = TENSION_THRESHOLD_ADJUSTMENTS[tensionLevel ?? "medium"];
+  return {
+    hardFloor: Math.max(0, hardFloor + adjustment.hardFloorDelta),
+    softFloor: Math.max(0, softFloor + adjustment.softFloorDelta),
+  };
+}
+
 function scoreStatus(value: number, hardFloor: number, softFloor: number): ChapterQualityLoopSignalStatus {
   if (value < hardFloor) {
     return "invalid";
@@ -261,12 +294,15 @@ function buildRetentionSignal(input: ChapterQualityLoopAssessmentInput): Chapter
     || issue.category === "coherence"
     || issue.category === "logic"
   ));
+  const engagementThresholds = adjustThresholds(65, 75, input.tensionLevel);
+  const repetitionThresholds = adjustThresholds(65, 75, input.tensionLevel);
+  const overallThresholds = adjustThresholds(68, 78, input.tensionLevel);
   const scoreDrivenStatus = worseStatus(
     worseStatus(
-      scoreStatus(input.score.engagement, 65, 75),
-      scoreStatus(input.score.repetition, 65, 75),
+      scoreStatus(input.score.engagement, engagementThresholds.hardFloor, engagementThresholds.softFloor),
+      scoreStatus(input.score.repetition, repetitionThresholds.hardFloor, repetitionThresholds.softFloor),
     ),
-    scoreStatus(input.score.overall, 68, 78),
+    scoreStatus(input.score.overall, overallThresholds.hardFloor, overallThresholds.softFloor),
   );
   const severityDrivenStatus = maxSeverity(retentionIssues) >= SEVERITY_RANK.critical
     ? "invalid"
@@ -302,9 +338,10 @@ function buildContinuitySignal(input: ChapterQualityLoopAssessmentInput): Chapte
           ? SEVERITY_RANK.medium
           : 0,
   );
+  const coherenceThresholds = adjustThresholds(0, 75, input.tensionLevel);
   const status = worstSeverity >= SEVERITY_RANK.critical
     ? "invalid"
-    : worstSeverity >= SEVERITY_RANK.high || input.score.coherence < 75
+    : worstSeverity >= SEVERITY_RANK.high || input.score.coherence < coherenceThresholds.softFloor
       ? "risk"
       : "valid";
   return {
@@ -334,7 +371,8 @@ function buildRollingWindowSignal(input: ChapterQualityLoopAssessmentInput): Cha
   const blockingReportIssues = reportIssues.filter((issue) => (
     issue.severity === "high" || issue.severity === "critical"
   ));
-  const status = input.score.overall < 72 || blockingReportIssues.length > 0
+  const overallThresholds = adjustThresholds(0, 72, input.tensionLevel);
+  const status = input.score.overall < overallThresholds.softFloor || blockingReportIssues.length > 0
     ? "risk"
     : "valid";
   return {

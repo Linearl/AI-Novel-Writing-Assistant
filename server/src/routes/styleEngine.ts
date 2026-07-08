@@ -139,6 +139,29 @@ const bindingQuerySchema = z.object({
   styleProfileId: z.string().trim().optional(),
 });
 
+const importSchema = z.object({
+  profileData: z.object({
+    name: z.string().trim().min(1),
+    description: z.string().nullable().optional(),
+    category: z.string().nullable().optional(),
+    tags: z.array(z.string().trim()),
+    applicableGenres: z.array(z.string().trim()),
+    sourceType: z.enum(["manual", "from_text", "from_book_analysis", "from_knowledge_document", "from_current_work"]).optional(),
+    sourceContent: z.string().nullable().optional(),
+    analysisMarkdown: z.string().nullable().optional(),
+    extractedFeatures: z.array(z.record(z.string(), z.unknown())).optional(),
+    extractionPresets: z.array(z.record(z.string(), z.unknown())).optional(),
+    extractionAntiAiRuleKeys: z.array(z.string().trim()).optional(),
+    selectedExtractionPresetKey: z.string().trim().nullable().optional(),
+    narrativeRules: z.record(z.string(), z.unknown()).optional(),
+    characterRules: z.record(z.string(), z.unknown()).optional(),
+    languageRules: z.record(z.string(), z.unknown()).optional(),
+    rhythmRules: z.record(z.string(), z.unknown()).optional(),
+    antiAiRuleKeys: z.array(z.string().trim()).optional(),
+  }),
+  conflictStrategy: z.enum(["overwrite", "create_new", "skip"]),
+});
+
 const effectiveAntiAiRulesQuerySchema = z.object({
   novelId: z.string().trim().optional(),
   chapterId: z.string().trim().optional(),
@@ -314,6 +337,41 @@ router.delete("/style-profiles/:id", validate({ params: idSchema }), async (req,
       success: true,
       message: "删除写法资产成功。",
     } satisfies ApiResponse<null>);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get("/style-profiles/:id/export", validate({ params: idSchema }), async (req, res, next) => {
+  try {
+    const { id } = req.params as z.infer<typeof idSchema>;
+    const profile = await styleProfileService.getProfileById(id);
+    if (!profile) {
+      res.status(404).json({
+        success: false,
+        error: "写法资产不存在。",
+      } satisfies ApiResponse<null>);
+      return;
+    }
+    const envelope = styleProfileService.buildExportEnvelope(profile);
+    const safeName = profile.name.replace(/[^\w一-鿿-]/g, "_");
+    const date = new Date().toISOString().slice(0, 10);
+    res.setHeader("Content-Type", "application/json; charset=utf-8");
+    res.setHeader("Content-Disposition", `attachment; filename="${safeName}-${date}.json"`);
+    res.status(200).json(envelope);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post("/style-profiles/import", validate({ body: importSchema }), async (req, res, next) => {
+  try {
+    const result = await styleProfileService.importProfile(req.body as z.infer<typeof importSchema>);
+    res.status(200).json({
+      success: true,
+      data: result,
+      message: result.message,
+    } satisfies ApiResponse<typeof result>);
   } catch (error) {
     next(error);
   }

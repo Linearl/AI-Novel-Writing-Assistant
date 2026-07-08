@@ -106,6 +106,17 @@ export type ChapterStatus =
 /** Chapter narrative role — determines word count coefficient and generation hints. */
 export type ChapterRole = "normal" | "transition" | "climax" | "turning_point";
 
+/** Chapter tension level — determines quality review strictness. */
+export type TensionLevel = "low" | "medium" | "high" | "climax";
+
+/** Human-readable labels for tension levels. */
+export const TENSION_LEVEL_LABELS: Record<TensionLevel, string> = {
+  low: "低张力",
+  medium: "中张力",
+  high: "高张力",
+  climax: "高潮",
+};
+
 /** Human-readable labels for chapter roles. */
 export const CHAPTER_ROLE_LABELS: Record<ChapterRole, string> = {
   normal: "普通章",
@@ -242,6 +253,7 @@ export interface Chapter {
   riskFlags?: string | null;
   hook?: string | null;
   expectation?: string | null;
+  tensionLevel?: TensionLevel | null;
   locked: boolean;
   novelId: string;
   createdAt: string;
@@ -755,6 +767,7 @@ export interface VolumeChapterPlan {
   title: string;
   summary: string;
   purpose?: string | null;
+  tensionLevel?: TensionLevel | null;
   exclusiveEvent?: string | null;
   endingState?: string | null;
   nextChapterEntryState?: string | null;
@@ -838,6 +851,7 @@ export interface VolumeBeat {
   summary: string;
   chapterSpanHint: string;
   mustDeliver: string[];
+  tensionLevel?: TensionLevel;
 }
 
 export interface VolumeBeatSheet {

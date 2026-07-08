@@ -375,7 +375,7 @@ export function useNovelVolumePlanning({
   const handleChapterFieldChange = (
     volumeId: string,
     chapterId: string,
-    field: keyof Pick<VolumePlan["chapters"][number], "title" | "summary" | "purpose" | "mustAvoid" | "taskSheet">,
+    field: keyof Pick<VolumePlan["chapters"][number], "title" | "summary" | "purpose" | "mustAvoid" | "taskSheet" | "tensionLevel">,
     value: string,
   ) => {
     updateVolumeDraft((prev) => updateChapterTextFieldDraft(prev, volumeId, chapterId, field, value), {

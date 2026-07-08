@@ -11,6 +11,7 @@ interface WritingFormulaLandingProps {
   onOpenWorkbench: (profileId: string) => void;
   onUseProfileForClean: (profileId: string) => void;
   onDeleteProfile: (profileId: string) => void;
+  onExportProfile: (profileId: string) => void;
   deletePending: boolean;
   profileItems: LandingProfileItem[];
   selectedProfileId: string;
@@ -72,6 +73,7 @@ export default function WritingFormulaLanding(props: WritingFormulaLandingProps)
     onOpenWorkbench,
     onUseProfileForClean,
     onDeleteProfile,
+    onExportProfile,
     deletePending,
     profileItems,
     selectedProfileId,
@@ -135,6 +137,17 @@ export default function WritingFormulaLanding(props: WritingFormulaLandingProps)
           </div>
 
           <div className="flex flex-wrap gap-2 xl:justify-end">
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              onClick={(event) => {
+                event.stopPropagation();
+                onExportProfile(profile.id);
+              }}
+            >
+              导出
+            </Button>
             <Button
               type="button"
               size="sm"

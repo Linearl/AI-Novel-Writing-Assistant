@@ -11,6 +11,7 @@ import type {
   ChapterEditorRewritePreviewRequest,
   ChapterEditorRewritePreviewResponse,
   ChapterStatus,
+  TensionLevel,
 } from "@ai-novel/shared/types/novel";
 import { apiClient } from "../client";
 
@@ -39,6 +40,7 @@ export async function createNovelChapter(
     characterScore?: number;
     pacingScore?: number;
     riskFlags?: string;
+    tensionLevel?: TensionLevel;
   },
 ) {
   const { data } = await apiClient.post<ApiResponse<Chapter>>(`/novels/${id}/chapters`, payload);
@@ -66,6 +68,7 @@ export async function updateNovelChapter(
     characterScore: number;
     pacingScore: number;
     riskFlags: string;
+    tensionLevel: TensionLevel;
   }>,
 ) {
   const { data } = await apiClient.put<ApiResponse<Chapter>>(`/novels/${id}/chapters/${chapterId}`, payload);

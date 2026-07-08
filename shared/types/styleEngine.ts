@@ -615,6 +615,43 @@ export interface StyleRecommendationResult {
   recommendedAt: string;
 }
 
+/** StyleProfile export envelope — wraps a profile with metadata for portable JSON format. */
+export interface StyleProfileExportEnvelope {
+  formatVersion: 1;
+  exportedAt: string;
+  profile: StyleProfileExportData;
+}
+
+/** StyleProfile export data — the profile payload without server-generated fields (id, createdAt, updatedAt). */
+export interface StyleProfileExportData {
+  name: string;
+  description?: string | null;
+  category?: string | null;
+  tags: string[];
+  applicableGenres: string[];
+  sourceType: StyleSourceType;
+  sourceContent?: string | null;
+  analysisMarkdown?: string | null;
+  extractedFeatures: StyleProfileFeature[];
+  extractionPresets: StyleExtractionPreset[];
+  extractionAntiAiRuleKeys: string[];
+  selectedExtractionPresetKey?: StyleExtractionPreset["key"] | null;
+  narrativeRules: NarrativeRules;
+  characterRules: CharacterRules;
+  languageRules: LanguageRules;
+  rhythmRules: RhythmRules;
+  antiAiRuleKeys: string[];
+}
+
+export type ConflictStrategy = "overwrite" | "create_new" | "skip";
+
+export interface StyleProfileImportResult {
+  action: "created" | "overwritten" | "skipped" | "error";
+  profileId?: string;
+  profileName: string;
+  message: string;
+}
+
 export interface ResolvedStyleContext {
   matchedBindings: StyleBinding[];
   compiledBlocks: CompiledStylePromptBlocks | null;

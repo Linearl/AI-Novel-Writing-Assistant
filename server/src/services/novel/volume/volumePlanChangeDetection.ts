@@ -17,6 +17,7 @@ export interface ExistingChapterRecord {
   generationState?: Chapter["generationState"] | null;
   chapterStatus?: Chapter["chapterStatus"] | null;
   expectation?: string | null;
+  tensionLevel?: string | null;
   exclusiveEvent?: string | null;
   endingState?: string | null;
   nextChapterEntryState?: string | null;

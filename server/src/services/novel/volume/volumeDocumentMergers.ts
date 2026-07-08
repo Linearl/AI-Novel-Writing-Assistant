@@ -25,6 +25,7 @@ export interface GeneratedVolumeChapterBlock {
     beatKey: string;
     title: string;
     summary: string;
+    tensionLevel?: string;
   }>;
 }
 
@@ -255,6 +256,7 @@ export function mergeChapterList(
           title: chapter.title,
           summary: chapter.summary,
           purpose: existingChapter?.purpose ?? null,
+          tensionLevel: (chapter.tensionLevel as import("@ai-novel/shared/types/novel").TensionLevel | null | undefined) ?? beat.tensionLevel ?? existingChapter?.tensionLevel ?? null,
           exclusiveEvent: existingChapter?.exclusiveEvent ?? null,
           endingState: existingChapter?.endingState ?? null,
           nextChapterEntryState: existingChapter?.nextChapterEntryState ?? null,

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type {
   StyleBinding,
@@ -7,19 +7,23 @@ import type {
 } from "@ai-novel/shared/types/styleEngine";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import OpenInCreativeHubButton from "@/components/creativeHub/OpenInCreativeHubButton";
+import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { getNovelDetail, getNovelList } from "@/api/novel";
 import { queryKeys } from "@/api/queryKeys";
+import { apiClient } from "@/api/client";
 import {
   createStyleBinding,
   deleteStyleBinding,
   deleteStyleProfile,
   detectStyleIssues,
+  exportStyleProfile,
   extractStyleFeaturesFromText,
   getAntiAiRules,
   getStyleBindings,
   getStyleProfiles,
   getStyleTemplates,
+  importStyleProfile,
   rewriteStyleIssues,
   testWriteWithStyleProfile,
   updateStyleProfile,
@@ -93,6 +97,9 @@ export default function WritingFormulaPage() {
   const [testWriteOutput, setTestWriteOutput] = useState("");
   const [detectInput, setDetectInput] = useState("");
   const [rewritePreview, setRewritePreview] = useState("");
+  const [importDialogOpen, setImportDialogOpen] = useState(false);
+  const [importConflictStrategy, setImportConflictStrategy] = useState<"overwrite" | "create_new" | "skip">("create_new");
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const activeMode = normalizeWritingFormulaMode(searchParams.get("mode"));
   const incomingProfileId = searchParams.get("profileId") ?? "";
@@ -388,6 +395,68 @@ export default function WritingFormulaPage() {
     },
   });
 
+  const exportProfileMutation = useMutation({
+    mutationFn: async (profileId: string) => {
+      const response = await apiClient.get(`/style-profiles/${profileId}/export`, {
+        responseType: "blob",
+      });
+      const blob = response.data as Blob;
+      const contentDisposition = response.headers?.["content-disposition"] ?? "";
+      const filenameMatch = contentDisposition.match(/filename="?([^";\n]+)"?/);
+      const filename = filenameMatch ? decodeURIComponent(filenameMatch[1]) : "style-profile.json";
+
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    },
+    onSuccess: () => {
+      setMessage("写法资产导出完成。");
+    },
+  });
+
+  const importProfileMutation = useMutation({
+    mutationFn: async (payload: { profileData: Record<string, unknown>; conflictStrategy: "overwrite" | "create_new" | "skip" }) => {
+      return importStyleProfile(payload);
+    },
+    onSuccess: async (response) => {
+      setMessage(response.data?.message ?? "导入完成。");
+      setImportDialogOpen(false);
+      await refreshStyleData();
+    },
+  });
+
+  const handleImportFileSelect = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const text = await file.text();
+      const parsed = JSON.parse(text) as Record<string, unknown>;
+      const raw = (parsed.profile && typeof parsed.profile === "object" ? parsed.profile : parsed) as Record<string, unknown>;
+
+      if (!raw || typeof raw !== "object" || !raw.name) {
+        setMessage("导入失败：JSON 文件格式不正确，缺少必需的 name 字段。");
+        return;
+      }
+
+      importProfileMutation.mutate({
+        profileData: raw,
+        conflictStrategy: importConflictStrategy,
+      });
+    } catch {
+      setMessage("导入失败：无法解析 JSON 文件。");
+    } finally {
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
+  };
+
   const createBindingMutation = useMutation({
     mutationFn: async () => {
       if (!selectedProfileId) {
@@ -507,6 +576,14 @@ export default function WritingFormulaPage() {
           <div className="text-2xl font-semibold tracking-tight text-slate-950">写法引擎</div>
         </div>
         <OpenInCreativeHubButton bindings={{ styleProfileId: selectedProfileId || null }} label="把这套写法带去创作中枢" />
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={() => setImportDialogOpen(true)}
+        >
+          导入写法
+        </Button>
       </div>
 
       {message ? <div className="rounded-2xl border bg-muted/30 px-4 py-3 text-sm">{message}</div> : null}
@@ -535,6 +612,7 @@ export default function WritingFormulaPage() {
           }
           deleteProfileMutation.mutate(profileId);
         }}
+        onExportProfile={(profileId) => exportProfileMutation.mutate(profileId)}
         deletePending={deleteProfileMutation.isPending}
         profileItems={landingProfileItems}
         selectedProfileId={selectedProfileId}
@@ -680,6 +758,54 @@ export default function WritingFormulaPage() {
           </div>
         </DialogContent>
       </Dialog>
+
+      {importDialogOpen ? (
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept=".json"
+          className="hidden"
+          onChange={handleImportFileSelect}
+        />
+      ) : null}
+      <div
+        className="fixed inset-0 z-50 flex items-center justify-center"
+        style={{ display: importDialogOpen ? undefined : "none" }}
+      >
+        <div className="absolute inset-0 bg-black/40" onClick={() => setImportDialogOpen(false)} />
+        <div className="relative z-10 w-full max-w-md rounded-2xl border bg-white p-6 shadow-xl">
+          <div className="space-y-4">
+            <div>
+              <div className="text-lg font-semibold text-slate-950">导入写法资产</div>
+              <div className="mt-1 text-sm text-slate-500">从 JSON 文件导入写法资产</div>
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-slate-700">冲突处理策略</label>
+              <select
+                value={importConflictStrategy}
+                onChange={(e) => setImportConflictStrategy(e.target.value as "overwrite" | "create_new" | "skip")}
+                className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm"
+              >
+                <option value="create_new">新建（同名时自动加后缀）</option>
+                <option value="overwrite">覆盖（替换同名资产）</option>
+                <option value="skip">跳过（同名时保留原有）</option>
+              </select>
+            </div>
+            <div className="flex justify-end gap-2">
+              <Button type="button" variant="outline" onClick={() => setImportDialogOpen(false)}>
+                取消
+              </Button>
+              <Button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={importProfileMutation.isPending}
+              >
+                {importProfileMutation.isPending ? "导入中..." : "选择文件导入"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

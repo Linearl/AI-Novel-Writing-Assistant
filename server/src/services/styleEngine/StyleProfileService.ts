@@ -3,6 +3,7 @@ import type {
   StyleExtractionPreset,
   StyleFeatureDecision,
   StyleProfile,
+  StyleProfileFeature,
   StyleSourceType,
   StyleTemplate,
 } from "@ai-novel/shared/types/styleEngine";
@@ -174,6 +175,130 @@ export class StyleProfileService {
 
   async deleteProfile(id: string): Promise<void> {
     await prisma.styleProfile.delete({ where: { id } });
+  }
+
+  /**
+   * Build a portable export envelope from a StyleProfile (strips id, timestamps, and anti-AI rule internals).
+   */
+  buildExportEnvelope(profile: StyleProfile) {
+    const exportData = {
+      name: profile.name,
+      description: profile.description,
+      category: profile.category,
+      tags: profile.tags,
+      applicableGenres: profile.applicableGenres,
+      sourceType: profile.sourceType,
+      sourceContent: profile.sourceContent,
+      analysisMarkdown: profile.analysisMarkdown,
+      extractedFeatures: profile.extractedFeatures,
+      extractionPresets: profile.extractionPresets,
+      extractionAntiAiRuleKeys: profile.extractionAntiAiRuleKeys,
+      selectedExtractionPresetKey: profile.selectedExtractionPresetKey,
+      narrativeRules: profile.narrativeRules,
+      characterRules: profile.characterRules,
+      languageRules: profile.languageRules,
+      rhythmRules: profile.rhythmRules,
+      antiAiRuleKeys: profile.antiAiRules.map((rule) => rule.key),
+    };
+    return {
+      formatVersion: 1 as const,
+      exportedAt: new Date().toISOString(),
+      profile: exportData,
+    };
+  }
+
+  /**
+   * Import a StyleProfile from exported JSON data, respecting the conflict strategy.
+   * - overwrite: if a profile with the same name exists, replace it
+   * - create_new: always create a new profile (appends "(imported)" if needed)
+   * - skip: if a profile with the same name exists, skip it
+   */
+  async importProfile(input: {
+    profileData: Record<string, unknown>;
+    conflictStrategy: "overwrite" | "create_new" | "skip";
+  }) {
+    await ensureStyleEngineSeedData();
+    const data = input.profileData as {
+      name: string;
+      description?: string | null;
+      category?: string | null;
+      tags: string[];
+      applicableGenres: string[];
+      sourceType?: StyleSourceType;
+      sourceContent?: string | null;
+      analysisMarkdown?: string | null;
+      extractedFeatures?: StyleProfileFeature[];
+      extractionPresets?: StyleExtractionPreset[];
+      extractionAntiAiRuleKeys?: string[];
+      selectedExtractionPresetKey?: string | null;
+      narrativeRules?: Record<string, unknown>;
+      characterRules?: Record<string, unknown>;
+      languageRules?: Record<string, unknown>;
+      rhythmRules?: Record<string, unknown>;
+      antiAiRuleKeys?: string[];
+    };
+
+    const existingProfiles = await prisma.styleProfile.findMany({
+      select: { id: true, name: true },
+    });
+    const existingByName = existingProfiles.find((p) => p.name === data.name);
+
+    if (existingByName && input.conflictStrategy === "skip") {
+      return {
+        action: "skipped" as const,
+        profileName: data.name,
+        message: `已跳过：已存在同名写法资产"${data.name}"。`,
+      };
+    }
+
+    // Resolve anti-AI rule IDs from keys
+    let antiAiRuleIds: string[] = [];
+    if (data.antiAiRuleKeys && data.antiAiRuleKeys.length > 0) {
+      const resolved = await prisma.antiAiRule.findMany({
+        where: { key: { in: data.antiAiRuleKeys } },
+        select: { id: true },
+      });
+      antiAiRuleIds = resolved.map((r) => r.id);
+    }
+
+    const profileInput = {
+      name: data.name,
+      description: data.description ?? undefined,
+      category: data.category ?? undefined,
+      tags: data.tags ?? [],
+      applicableGenres: data.applicableGenres ?? [],
+      sourceType: (data.sourceType as StyleSourceType) ?? "manual",
+      sourceContent: data.sourceContent ?? undefined,
+      analysisMarkdown: data.analysisMarkdown ?? undefined,
+      extractedFeatures: (data.extractedFeatures as StyleProfileFeature[]) ?? [],
+      extractionPresets: (data.extractionPresets as StyleExtractionPreset[]) ?? [],
+      extractionAntiAiRuleKeys: data.antiAiRuleKeys ?? [],
+      selectedExtractionPresetKey: (data.selectedExtractionPresetKey as "imitate" | "balanced" | "transfer") ?? undefined,
+      narrativeRules: data.narrativeRules ?? {},
+      characterRules: data.characterRules ?? {},
+      languageRules: data.languageRules ?? {},
+      rhythmRules: data.rhythmRules ?? {},
+      antiAiRuleIds,
+    };
+
+    if (existingByName && input.conflictStrategy === "overwrite") {
+      await this.updateProfile(existingByName.id, profileInput as any);
+      return {
+        action: "overwritten" as const,
+        profileId: existingByName.id,
+        profileName: data.name,
+        message: `已覆盖：同名写法资产"${data.name}"已更新。`,
+      };
+    }
+
+    // create_new or first-time name
+    const created = await this.createManualProfile(profileInput as any);
+    return {
+      action: "created" as const,
+      profileId: created.id,
+      profileName: created.name,
+      message: `已导入：写法资产"${created.name}"创建成功。`,
+    };
   }
 
   async listTemplates(): Promise<StyleTemplate[]> {

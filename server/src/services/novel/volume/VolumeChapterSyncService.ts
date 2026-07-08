@@ -96,6 +96,7 @@ export class VolumeChapterSyncService {
         mustAvoid: true,
         taskSheet: true,
         sceneCards: true,
+        tensionLevel: true,
       },
     });
     const plan = buildVolumeSyncPlan(
@@ -118,6 +119,7 @@ export class VolumeChapterSyncService {
             order: item.chapter.chapterOrder,
             content: "",
             expectation: item.chapter.purpose?.trim() || item.chapter.summary,
+            tensionLevel: item.chapter.tensionLevel ?? "medium",
             targetWordCount: item.chapter.targetWordCount ?? null,
             conflictLevel: item.chapter.conflictLevel ?? null,
             revealLevel: item.chapter.revealLevel ?? null,
@@ -140,6 +142,7 @@ export class VolumeChapterSyncService {
             title: item.chapter.title,
             order: item.chapter.chapterOrder,
             expectation: item.chapter.purpose?.trim() || item.chapter.summary,
+            tensionLevel: item.chapter.tensionLevel ?? "medium",
             targetWordCount: item.chapter.targetWordCount ?? null,
             conflictLevel: item.chapter.conflictLevel ?? null,
             revealLevel: item.chapter.revealLevel ?? null,

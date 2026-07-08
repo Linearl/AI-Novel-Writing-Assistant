@@ -53,7 +53,7 @@ export function updateChapterTextFieldDraft(
   volumes: VolumePlan[],
   volumeId: string,
   chapterId: string,
-  field: keyof Pick<VolumePlan["chapters"][number], "title" | "summary" | "purpose" | "mustAvoid" | "taskSheet">,
+  field: keyof Pick<VolumePlan["chapters"][number], "title" | "summary" | "purpose" | "mustAvoid" | "taskSheet" | "tensionLevel">,
   value: string,
 ): VolumePlan[] {
   return volumes.map((volume) => (
