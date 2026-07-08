@@ -58,6 +58,10 @@ description: "需求任务总清单（SSOT）"
 | 2040 | 资产 TXT 导入导出 | p2 | ✅ 已完成 | 竞品分析-游蜂写作 | 0.1 | 2026-07-03 | 2026-07-05T01:28:56.883Z | `B.2.done/v0.1-r2040-M2-asset-txt-import-export/README.md` | 设定/大纲/关系网/正文独立 TXT 导入导出 |
 | 2041 | 伏笔埋收可视化追踪 | p2 | ✅ 已完成 | 竞品分析-游蜂写作 | 0.1 | 2026-07-03 | 2026-07-05T01:28:57.419Z | `B.2.done/v0.1-r2041-M2-payoff-ledger-visualization/README.md` | payoff ledger 增强 + auto-director 集成 + UI 可视化 |
 | 2042 | 自适应字数控制与水文检测 | p2 | ✅ 已完成 | 竞品分析讨论 | 0.1 | 2026-07-03 | 2026-07-05T01:28:57.909Z | `B.2.done/v0.1-r2042-M2-adaptive-word-count-control/README.md` | 章节角色系数 + 水文检测 + 自动 compress/expand |
+| 2043 | Style Engine Auto Close Loop | p3 | 📋 待办 | - | 0.1 | 2026-07-08T00:00:00.000Z | 2026-07-08T00:00:00.000Z | `B.todo/v0.1-r2043-complex-style-engine-auto-close-loop/README.md` |  |
+| 2044 | Inspiration Quick Preview | p3 | 📋 待办 | - | 0.1 | 2026-07-08T00:00:00.000Z | 2026-07-08T00:00:00.000Z | `B.todo/v0.1-r2044-complex-inspiration-quick-preview/README.md` |  |
+| 2045 | Chapter Rhythm Tension | p3 | 📋 待办 | - | 0.1 | 2026-07-08T00:00:00.000Z | 2026-07-08T00:00:00.000Z | `B.todo/v0.1-r2045-complex-chapter-rhythm-tension/README.md` |  |
+| 2046 | Style Profile Export Import | p3 | 📋 待办 | - | 0.1 | 2026-07-08T00:00:00.000Z | 2026-07-08T00:00:00.000Z | `B.todo/v0.1-r2046-medium-style-profile-export-import/README.md` |  |
 | 2013 | Director Failed Retry Entry | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2013-medium-director-failed-retry-entry/README.md` |  |
 | 2014 | Chapter Token Budget Dynamic | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2014-medium-chapter-token-budget-dynamic/README.md` |  |
 
@@ -73,6 +77,7 @@ description: "需求任务总清单（SSOT）"
 | 3007 | 世界生成阶段进度显示 | p3 | ✅ 已完成 | 用户体验反馈 | 0.1 | 2026-06-29 | 2026-06-29 | `B.2.done/v0.1-r3007-medium-world-gen-stage-progress/README.md` | 步骤 2 骨架生成按钮需显示阶段进度 |
 | 3008 | 日志中心 | p4 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r3008-medium-log-center/README.md` |  |
 | 3009 | Tab 切换性能优化 | p3 | ✅ 已完成 | 性能分析 | 0.1 | 2026-07-03 | 2026-07-04 | `B.2.done/v0.1-r3009-C2-tab-switch-performance/README.md` | NovelEdit tab 切换延迟优化 |
+| 3010 | Create Page Material Import | p4 | 📋 待办 | - | 0.1 | 2026-07-08T00:00:00.000Z | 2026-07-08T00:00:00.000Z | `B.todo/v0.1-r3010-medium-create-page-material-import/README.md` |  |
 | 3004 | Novel Conversation Archive | p4 | 📋 待办 | - | 0.1 | 2026-06-26T00:00:00.000Z | 2026-06-26T00:00:00.000Z | `B.todo/v0.1-r3004-medium-novel-conversation-archive/README.md` |  |
 
 ### 3.6 技术债务和重构任务（7xxx）
@@ -91,6 +96,7 @@ description: "需求任务总清单（SSOT）"
 | 7010 | Audit P1 Fix | p8 | ✅ 已完成 | - | 0.1 | - | 2026-07-02T18:40:00+08:00 | `B.2.done/v0.1-r7010-p1-audit-p1-fix/README.md` |  |
 | 7011 | Quality Fix | p8 | ✅ 已完成 | 2026-07-01-全量代码审计-full | 0.1 | 2026-07-01T20:40:00.000Z | 2026-07-02T23:00:00+08:00 | `B.2.done/v0.1-r7011-medium-p3-quality-fix/README.md` |  |
 | 7012 | Low Priority Fix | p8 | ✅ 已完成 | 2026-07-01-全量代码审计-full | 0.1 | 2026-07-01T20:41:00.000Z | 2026-07-02T23:00:00+08:00 | `B.2.done/v0.1-r7012-simple-p4-low-priority-fix/README.md` |  |
+| 7013 | Remove Comic Drama | p8 | 📋 待办 | - | 0.1 | 2026-07-08T00:00:00.000Z | 2026-07-08T00:00:00.000Z | `B.todo/v0.1-r7013-simple-remove-comic-drama/README.md` |  |
 
 ---
 
@@ -102,6 +108,12 @@ description: "需求任务总清单（SSOT）"
 
 | 编号 | 任务标题 | 文档 |
 | --- | --- | --- |
+| 2043 | Style Engine Auto Close Loop | `B.todo/v0.1-r2043-complex-style-engine-auto-close-loop/README.md` |
+| 2044 | Inspiration Quick Preview | `B.todo/v0.1-r2044-complex-inspiration-quick-preview/README.md` |
+| 2045 | Chapter Rhythm Tension | `B.todo/v0.1-r2045-complex-chapter-rhythm-tension/README.md` |
+| 2046 | Style Profile Export Import | `B.todo/v0.1-r2046-medium-style-profile-export-import/README.md` |
+| 3010 | Create Page Material Import | `B.todo/v0.1-r3010-medium-create-page-material-import/README.md` |
+| 7013 | Remove Comic Drama | `B.todo/v0.1-r7013-simple-remove-comic-drama/README.md` |
 | 2013 | Director Failed Retry Entry | `B.todo/v0.1-r2013-medium-director-failed-retry-entry/README.md` |
 | 2014 | Chapter Token Budget Dynamic | `B.todo/v0.1-r2014-medium-chapter-token-budget-dynamic/README.md` |
 | 3004 | Novel Conversation Archive | `B.todo/v0.1-r3004-medium-novel-conversation-archive/README.md` |
