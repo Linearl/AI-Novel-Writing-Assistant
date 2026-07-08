@@ -523,6 +523,7 @@ export interface CharacterTabViewProps {
   batchVisibleProfileResult?: CharacterVisibleProfileBatchResult | null;
   onApplyBatchVisibleProfiles: () => void;
   isApplyingBatchVisibleProfiles: boolean;
+  onDismissBatchVisibleProfiles?: () => void;
   onWorldCheck: () => void;
   isCheckingWorld: boolean;
   selectedCharacter?: Character;

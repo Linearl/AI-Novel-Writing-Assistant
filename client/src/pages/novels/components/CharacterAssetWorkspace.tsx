@@ -65,6 +65,7 @@ interface CharacterAssetWorkspaceProps {
   batchVisibleProfileResult?: CharacterVisibleProfileBatchResult | null;
   onApplyBatchVisibleProfiles: () => void;
   isApplyingBatchVisibleProfiles: boolean;
+  onDismissBatchVisibleProfiles?: () => void;
   characterResources?: CharacterResourceLedgerItem[];
   pendingCharacterResourceCount?: number;
   onBackfillCharacterResources?: () => void;
@@ -200,6 +201,7 @@ export default function CharacterAssetWorkspace(props: CharacterAssetWorkspacePr
     batchVisibleProfileResult,
     onApplyBatchVisibleProfiles,
     isApplyingBatchVisibleProfiles,
+    onDismissBatchVisibleProfiles,
     characterResources = [],
     pendingCharacterResourceCount = 0,
     onBackfillCharacterResources,
@@ -401,13 +403,20 @@ export default function CharacterAssetWorkspace(props: CharacterAssetWorkspacePr
                     <div className="text-sm font-medium">
                       批量建议：{batchApplicableCount} 个角色可写入
                     </div>
-                    <Button
-                      size="sm"
-                      onClick={onApplyBatchVisibleProfiles}
-                      disabled={isApplyingBatchVisibleProfiles || batchApplicableCount === 0}
-                    >
-                      {isApplyingBatchVisibleProfiles ? "写入中..." : "写入批量结果"}
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        onClick={() => onApplyBatchVisibleProfiles()}
+                        disabled={isApplyingBatchVisibleProfiles || batchApplicableCount === 0}
+                      >
+                        {isApplyingBatchVisibleProfiles ? "写入中..." : "写入批量结果"}
+                      </Button>
+                      {onDismissBatchVisibleProfiles ? (
+                        <Button size="sm" variant="ghost" onClick={onDismissBatchVisibleProfiles}>
+                          关闭
+                        </Button>
+                      ) : null}
+                    </div>
                   </div>
                   <div className="mt-2 max-h-64 space-y-2 overflow-auto pr-1">
                     {batchVisibleProfileResult.results.map((result) => (

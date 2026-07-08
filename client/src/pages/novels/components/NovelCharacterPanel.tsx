@@ -100,6 +100,7 @@ interface NovelCharacterPanelProps {
   batchVisibleProfileResult?: CharacterVisibleProfileBatchResult | null;
   onApplyBatchVisibleProfiles: () => void;
   isApplyingBatchVisibleProfiles: boolean;
+  onDismissBatchVisibleProfiles?: () => void;
   onWorldCheck: () => void;
   isCheckingWorld: boolean;
   selectedCharacter?: Character;
@@ -165,6 +166,7 @@ export default function NovelCharacterPanel(props: NovelCharacterPanelProps) {
     batchVisibleProfileResult,
     onApplyBatchVisibleProfiles,
     isApplyingBatchVisibleProfiles,
+    onDismissBatchVisibleProfiles,
     onWorldCheck,
     isCheckingWorld,
     selectedCharacter,
@@ -455,6 +457,7 @@ export default function NovelCharacterPanel(props: NovelCharacterPanelProps) {
         batchVisibleProfileResult={batchVisibleProfileResult}
         onApplyBatchVisibleProfiles={onApplyBatchVisibleProfiles}
         isApplyingBatchVisibleProfiles={isApplyingBatchVisibleProfiles}
+        onDismissBatchVisibleProfiles={onDismissBatchVisibleProfiles}
         characterResources={characterResources}
         pendingCharacterResourceCount={pendingCharacterResourceCount}
         onBackfillCharacterResources={onBackfillCharacterResources}
