@@ -7,7 +7,7 @@
   "createdAt": "2026-07-09",
   "completedAt": "2026-07-09",
   "source": "2026-07-09 前端公共样式与组件诊断报告",
-  "note": "T1+T2+T3+T6 完成：Textarea（~120处）+ StatusBadge（10处）+ LoadingIndicator（31处）+ EmptyState（40处）+ 语义化 token 替换（~500处 slate/amber/emerald/red → muted-foreground/foreground/border/success/warning/destructive）。T5 诊断完成待执行。",
+  "note": "全部完成：Textarea（~120处）+ StatusBadge（10处）+ LoadingIndicator（31处）+ EmptyState（40处）+ 语义化 token（~500处）+ CSS 拆分（739→137行，13个模块文件）。T4 误诊跳过。",
   "reqType": "refactoring",
   "categoryCode": 7,
   "complexity": "medium",
@@ -15,8 +15,8 @@
   "skipDesign": false,
   "tasks": {
     "total": 7,
-    "completed": 5,
+    "completed": 6,
     "skipped": 1,
-    "pending": 1
+    "pending": 0
   }
 }

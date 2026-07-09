@@ -1,0 +1,5 @@
+/* Mobile worlds route — all shared selectors moved to _shared.css */
+
+@media (max-width: 767px) {
+  /* Route-specific overrides for .mobile-route-worlds are in _shared.css */
+}

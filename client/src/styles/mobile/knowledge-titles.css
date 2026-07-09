@@ -1,0 +1,19 @@
+/* Mobile knowledge + titles — tab overflow, grid flatten */
+
+@media (max-width: 767px) {
+  .mobile-route-knowledge [role="tablist"],
+  .mobile-route-titles [role="tablist"],
+  .mobile-route-world-workspace [role="tablist"],
+  .mobile-route-style-engine [role="tablist"] {
+    display: flex;
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .mobile-route-knowledge [role="tabpanel"],
+  .mobile-route-titles [role="tabpanel"],
+  .mobile-route-world-workspace [role="tabpanel"],
+  .mobile-route-style-engine [role="tabpanel"] {
+    min-width: 0;
+  }
+}

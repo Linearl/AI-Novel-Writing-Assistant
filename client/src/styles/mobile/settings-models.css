@@ -1,0 +1,9 @@
+/* Mobile settings + model-routes — flex alignment */
+
+@media (max-width: 767px) {
+  .mobile-route-model-routes .flex.items-center.justify-between,
+  .mobile-route-settings .flex.items-center.justify-between {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}

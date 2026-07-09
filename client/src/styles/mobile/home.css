@@ -1,0 +1,78 @@
+/* Mobile home route — flex direction, child ordering, status summary grid */
+
+@media (max-width: 767px) {
+  .mobile-route-home {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mobile-route-home .home-status-summary-grid {
+    order: 2;
+  }
+
+  .mobile-route-home > :nth-child(2) {
+    order: 3;
+  }
+
+  .mobile-route-home > :nth-child(3) {
+    order: 1;
+  }
+
+  .mobile-route-home > :nth-child(4) {
+    order: 4;
+  }
+
+  .mobile-route-home > :nth-child(5) {
+    order: 5;
+  }
+
+  /* ── Status summary grid (shared: home + tasks) ── */
+  .mobile-site-main.mobile-route-home .home-status-summary-grid.grid,
+  .mobile-site-main.mobile-route-tasks .task-status-summary-grid.grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+
+  .mobile-route-home .home-status-summary-grid > .rounded-xl,
+  .mobile-route-tasks .task-status-summary-grid > .rounded-xl {
+    border-radius: 0.75rem;
+    box-shadow: none;
+  }
+
+  .mobile-route-home .home-status-summary-grid .p-6,
+  .mobile-route-tasks .task-status-summary-grid .p-6 {
+    padding: 0.5rem;
+  }
+
+  .mobile-route-home .home-status-summary-grid h3,
+  .mobile-route-tasks .task-status-summary-grid h3,
+  .mobile-route-tasks .task-status-summary-grid .text-2xl {
+    font-size: 1rem;
+    line-height: 1.25rem;
+  }
+
+  .mobile-route-home .home-status-summary-grid p,
+  .mobile-route-tasks .task-status-summary-grid p {
+    font-size: 0.6875rem;
+    line-height: 1rem;
+  }
+
+  .mobile-route-home .home-status-summary-grid .text-xs {
+    display: none;
+  }
+
+  .mobile-route-home > .rounded-xl:nth-of-type(2) {
+    border-color: hsl(var(--primary) / 0.22);
+  }
+
+  .mobile-route-home > .rounded-xl:nth-of-type(3),
+  .mobile-route-home > .rounded-xl:nth-of-type(4),
+  .mobile-route-home > .rounded-xl:nth-of-type(5) {
+    box-shadow: none;
+  }
+
+  /* ── Nested grid flatten ── */
+  .mobile-route-home .grid.md\:grid-cols-2 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

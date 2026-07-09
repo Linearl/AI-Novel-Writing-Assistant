@@ -1,0 +1,201 @@
+/* Mobile card-in-card overrides — grid reset, width, height, flex, border-radius, shadow */
+
+@media (max-width: 767px) {
+  /* ── B. Grid / width / height / flex / border-radius overrides ── */
+  .mobile-site-main .grid[class*="sm:grid-cols"],
+  .mobile-site-main .grid[class*="md:grid-cols"],
+  .mobile-site-main .grid[class*="lg:grid-cols"],
+  .mobile-site-main .grid[class*="xl:grid-cols"],
+  .mobile-page-novel-edit .grid[class*="sm:grid-cols"],
+  .mobile-page-novel-edit .grid[class*="md:grid-cols"],
+  .mobile-page-novel-edit .grid[class*="lg:grid-cols"],
+  .mobile-page-novel-edit .grid[class*="xl:grid-cols"],
+  .mobile-page-chapter-edit .grid[class*="sm:grid-cols"],
+  .mobile-page-chapter-edit .grid[class*="md:grid-cols"],
+  .mobile-page-chapter-edit .grid[class*="lg:grid-cols"],
+  .mobile-page-chapter-edit .grid[class*="xl:grid-cols"] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .mobile-site-main [class*="w-[min"],
+  .mobile-site-main [class*="w-[calc"],
+  .mobile-page-novel-edit [class*="w-[min"],
+  .mobile-page-novel-edit [class*="w-[calc"],
+  .mobile-page-chapter-edit [class*="w-[min"],
+  .mobile-page-chapter-edit [class*="w-[calc"] {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .mobile-site-main [class*="min-h-[70vh"],
+  .mobile-site-main [class*="min-h-[72vh"],
+  .mobile-site-main [class*="h-[84vh"],
+  .mobile-site-main [class*="h-[88vh"],
+  .mobile-site-main [class*="h-[92vh"],
+  .mobile-page-novel-edit [class*="min-h-[70vh"],
+  .mobile-page-novel-edit [class*="min-h-[72vh"],
+  .mobile-page-novel-edit [class*="h-[84vh"],
+  .mobile-page-novel-edit [class*="h-[88vh"],
+  .mobile-page-novel-edit [class*="h-[92vh"],
+  .mobile-page-chapter-edit [class*="min-h-[70vh"],
+  .mobile-page-chapter-edit [class*="min-h-[72vh"],
+  .mobile-page-chapter-edit [class*="h-[84vh"],
+  .mobile-page-chapter-edit [class*="h-[88vh"],
+  .mobile-page-chapter-edit [class*="h-[92vh"] {
+    height: auto;
+    min-height: auto;
+    max-height: none;
+  }
+
+  .mobile-site-main .flex[class*="justify-between"],
+  .mobile-site-main .flex[class*="justify-end"],
+  .mobile-page-novel-edit .flex[class*="justify-between"],
+  .mobile-page-novel-edit .flex[class*="justify-end"],
+  .mobile-page-chapter-edit .flex[class*="justify-between"],
+  .mobile-page-chapter-edit .flex[class*="justify-end"] {
+    gap: 0.5rem;
+  }
+
+  .mobile-site-main .flex[class*="justify-between"] > .flex,
+  .mobile-site-main .flex[class*="justify-end"] > .flex,
+  .mobile-page-novel-edit .flex[class*="justify-between"] > .flex,
+  .mobile-page-novel-edit .flex[class*="justify-end"] > .flex,
+  .mobile-page-chapter-edit .flex[class*="justify-between"] > .flex,
+  .mobile-page-chapter-edit .flex[class*="justify-end"] > .flex {
+    min-width: 0;
+  }
+
+  .mobile-site-main .rounded-3xl,
+  .mobile-page-novel-edit .rounded-3xl,
+  .mobile-page-chapter-edit .rounded-3xl {
+    border-radius: 1.25rem;
+  }
+
+  .mobile-site-main .rounded-xl.border.bg-card,
+  .mobile-site-main .rounded-xl.border.bg-background {
+    border-radius: 1rem;
+    box-shadow: 0 10px 26px rgb(15 23 42 / 0.05);
+  }
+
+  .mobile-site-main .rounded-xl.border.bg-card > .p-6,
+  .mobile-site-main .rounded-xl.border.bg-background > .p-6 {
+    padding: 1rem;
+  }
+
+  .mobile-site-main .rounded-xl.border.bg-card > .p-6.pt-0,
+  .mobile-site-main .rounded-xl.border.bg-background > .p-6.pt-0 {
+    padding-top: 0;
+  }
+
+  /* ── Card-in-card shadow removal ── */
+  .mobile-site-main .rounded-xl.border.bg-card .rounded-xl.border.bg-card,
+  .mobile-site-main .rounded-xl.border.bg-background .rounded-xl.border.bg-background,
+  .mobile-site-main .rounded-xl.border.bg-card .rounded-xl.border.bg-background,
+  .mobile-site-main .rounded-xl.border.bg-background .rounded-xl.border.bg-card {
+    box-shadow: none;
+  }
+
+  .mobile-site-main .rounded-xl.border.bg-card .rounded-xl.border.bg-card .rounded-xl.border.bg-card,
+  .mobile-site-main .rounded-xl.border.bg-background .rounded-xl.border.bg-background .rounded-xl.border.bg-background,
+  .mobile-site-main .rounded-xl.border.bg-card .rounded-xl.border.bg-background .rounded-xl.border.bg-card,
+  .mobile-site-main .rounded-xl.border.bg-background .rounded-xl.border.bg-card .rounded-xl.border.bg-background {
+    border-width: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .mobile-site-main .rounded-xl.border.bg-card .rounded-xl.border.bg-card .rounded-xl.border.bg-card > div,
+  .mobile-site-main .rounded-xl.border.bg-background .rounded-xl.border.bg-background .rounded-xl.border.bg-background > div {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  /* ── Route-level card-in-card shadow removal ── */
+  .mobile-route-creative-hub .rounded-xl.border.bg-card .rounded-xl.border.bg-card,
+  .mobile-route-book-analysis .rounded-xl.border.bg-card .rounded-xl.border.bg-card,
+  .mobile-route-tasks .rounded-xl.border.bg-card .rounded-xl.border.bg-card,
+  .mobile-route-auto-director-follow-ups .rounded-xl.border.bg-card .rounded-xl.border.bg-card,
+  .mobile-route-knowledge .rounded-xl.border.bg-card .rounded-xl.border.bg-card,
+  .mobile-route-genres .rounded-xl.border.bg-card .rounded-xl.border.bg-card,
+  .mobile-route-story-modes .rounded-xl.border.bg-card .rounded-xl.border.bg-card,
+  .mobile-route-titles .rounded-xl.border.bg-card .rounded-xl.border.bg-card,
+  .mobile-route-model-routes .rounded-xl.border.bg-card .rounded-xl.border.bg-card,
+  .mobile-route-settings .rounded-xl.border.bg-card .rounded-xl.border.bg-card,
+  .mobile-route-worlds .rounded-xl.border.bg-card .rounded-xl.border.bg-card,
+  .mobile-route-world-generator .rounded-xl.border.bg-card .rounded-xl.border.bg-card,
+  .mobile-route-world-workspace .rounded-xl.border.bg-card .rounded-xl.border.bg-card,
+  .mobile-route-style-engine .rounded-xl.border.bg-card .rounded-xl.border.bg-card,
+  .mobile-route-anti-ai-rules .rounded-xl.border.bg-card .rounded-xl.border.bg-card,
+  .mobile-route-prompt-workbench .rounded-xl.border.bg-card .rounded-xl.border.bg-card,
+  .mobile-route-base-characters .rounded-xl.border.bg-card .rounded-xl.border.bg-card {
+    border-color: hsl(var(--border) / 0.72);
+    background: hsl(var(--muted) / 0.18);
+    box-shadow: none;
+  }
+
+  /* ── Shared dialog width override ── */
+  .mobile-route-style-engine [role="dialog"],
+  .mobile-route-model-routes [role="dialog"],
+  .mobile-route-settings [role="dialog"],
+  .mobile-route-story-modes [role="dialog"],
+  .mobile-route-genres [role="dialog"],
+  .mobile-route-base-characters [role="dialog"] {
+    width: calc(100vw - 1rem);
+    max-width: calc(100vw - 1rem);
+  }
+
+  /* ── Multi-route grid flatten (shared by 6+ routes) ── */
+  .mobile-route-model-routes .grid.md\:grid-cols-4,
+  .mobile-route-settings .grid.md\:grid-cols-2,
+  .mobile-route-settings .grid.md\:grid-cols-3,
+  .mobile-route-settings .grid.md\:grid-cols-4,
+  .mobile-route-world-generator .grid.md\:grid-cols-2,
+  .mobile-route-world-generator .grid.lg\:grid-cols-2,
+  .mobile-route-world-workspace .grid.md\:grid-cols-2,
+  .mobile-route-world-workspace .grid.lg\:grid-cols-2,
+  .mobile-route-story-modes .grid.md\:grid-cols-2,
+  .mobile-route-story-modes .grid.lg\:grid-cols-2,
+  .mobile-route-genres .grid.md\:grid-cols-2,
+  .mobile-route-genres .grid.lg\:grid-cols-2,
+  .mobile-route-style-engine .grid.md\:grid-cols-2,
+  .mobile-route-style-engine .grid.lg\:grid-cols-2,
+  .mobile-route-style-engine .grid.lg\:grid-cols-3,
+  .mobile-route-style-engine .grid.xl\:grid-cols-4,
+  .mobile-route-knowledge .grid.md\:grid-cols-2,
+  .mobile-route-knowledge .grid.lg\:grid-cols-2,
+  .mobile-route-knowledge .grid.xl\:grid-cols-3,
+  .mobile-route-knowledge .grid.xl\:grid-cols-4 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* ── Multi-route justify-end → stretch ── */
+  .mobile-route-model-routes .flex.items-center.justify-end,
+  .mobile-route-settings .flex.items-center.justify-end,
+  .mobile-route-world-workspace .flex.items-center.justify-end,
+  .mobile-route-world-generator .flex.justify-end,
+  .mobile-route-knowledge .flex.justify-end,
+  .mobile-route-book-analysis .flex.justify-end {
+    justify-content: stretch;
+  }
+
+  .mobile-route-model-routes .flex.items-center.justify-end > *,
+  .mobile-route-settings .flex.items-center.justify-end > *,
+  .mobile-route-world-workspace .flex.items-center.justify-end > *,
+  .mobile-route-world-generator .flex.justify-end > *,
+  .mobile-route-knowledge .flex.justify-end > *,
+  .mobile-route-book-analysis .flex.justify-end > * {
+    flex: 1 1 100%;
+  }
+
+  /* ── Multi-route rounded-xl > .p-6 padding ── */
+  .mobile-route-novel-create .rounded-xl > .p-6,
+  .mobile-route-genres .rounded-xl > .p-6,
+  .mobile-route-story-modes .rounded-xl > .p-6,
+  .mobile-route-titles .rounded-xl > .p-6,
+  .mobile-route-worlds .rounded-xl > .p-6,
+  .mobile-route-world-generator .rounded-xl > .p-6,
+  .mobile-route-world-workspace .rounded-xl > .p-6,
+  .mobile-route-base-characters .rounded-xl > .p-6 {
+    padding: 1rem;
+  }
+}

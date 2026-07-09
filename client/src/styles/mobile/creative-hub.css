@@ -1,0 +1,35 @@
+/* Mobile creative-hub route — grid layout, chat-legacy, book-analysis */
+
+@media (max-width: 767px) {
+  .mobile-route-creative-hub > .grid,
+  .mobile-route-chat-legacy,
+  .mobile-route-book-analysis > .grid {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: auto;
+  }
+
+  .mobile-route-creative-hub > .grid {
+    height: auto;
+  }
+
+  .mobile-route-chat-legacy > .rounded-xl:first-child,
+  .mobile-route-creative-hub > .grid > div:first-child,
+  .mobile-route-book-analysis > .grid > :first-child {
+    order: 1;
+  }
+
+  .mobile-route-chat-legacy > .rounded-xl:nth-child(2),
+  .mobile-route-creative-hub > .grid > div:nth-child(2),
+  .mobile-route-book-analysis > .grid > :nth-child(2) {
+    order: 2;
+  }
+
+  .mobile-route-chat-legacy > :nth-child(3),
+  .mobile-route-creative-hub > .grid > div:nth-child(3) {
+    order: 3;
+  }
+
+  .mobile-route-chat-legacy > .rounded-xl {
+    box-shadow: none;
+  }
+}

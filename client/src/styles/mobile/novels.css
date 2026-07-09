@@ -1,0 +1,5 @@
+/* Mobile novels route — all shared selectors moved to _shared.css */
+
+@media (max-width: 767px) {
+  /* Route-specific overrides for .mobile-route-novels are in _shared.css */
+}

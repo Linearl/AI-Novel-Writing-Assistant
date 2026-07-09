@@ -1,0 +1,43 @@
+/* Mobile tasks route — task filter controls, grid layout */
+
+@media (max-width: 767px) {
+  .mobile-site-main.mobile-route-tasks .task-filter-controls.grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .mobile-route-tasks .task-filter-header {
+    display: none;
+  }
+
+  .mobile-route-tasks .task-filter-controls.p-6 {
+    padding: 0.75rem;
+  }
+
+  .mobile-route-tasks .task-filter-controls select,
+  .mobile-route-tasks .task-filter-controls > input {
+    min-height: 2.25rem;
+    font-size: 0.8125rem;
+  }
+
+  /* ── Grid / layout reset (was shared with creative-hub, book-analysis, auto-director) ── */
+  .mobile-route-tasks > .grid {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: auto;
+  }
+
+  .mobile-route-tasks > .grid > :first-child {
+    order: 1;
+  }
+
+  .mobile-route-tasks > .grid > :nth-child(2) {
+    order: 2;
+  }
+
+  .mobile-route-tasks > .grid > :nth-child(3) {
+    order: 3;
+  }
+
+  .mobile-route-tasks > .grid > .rounded-xl {
+    box-shadow: none;
+  }
+}

@@ -34,7 +34,8 @@ update_time: 2026-07-09
 
 | # | 任务 | 优先级 | 预估 | 状态 |
 | --- | --- | --- | --- | --- |
-| T1 | 技法 MD 文件批量提取与精炼 | P0 | 2h | ⬜ 待开始 |
+| T1 | 技法 MD 文件批量提取与精炼 | P0 | 2h | ✅ 完成（59 个技法） |
+| T1b | 反 AI 规则 YAML 迁移 | P0 | 1h | ⬜ 待开始 |
 | T2 | 数据模型与 DB 同步机制 | P0 | 3h | ⬜ 待开始 |
 | T3 | 后端 API（CRUD + 池子解析 + AI 筛选 prompt） | P0 | 4h | ⬜ 待开始 |
 | T4 | 文笔资料库前端管理页面 | P1 | 3h | ⬜ 待开始 |
@@ -65,6 +66,22 @@ update_time: 2026-07-09
 - 叙事：蒙太奇、跳笔、伏笔、倒着写、倒为因果、预言回响、意象反杀、逆挽、意识流、岐凝
 - 描写：留白、空镜、物候、物化、冷笔触、拟音、把形容词全删掉
 - 节奏：封底、漂亮废话
+
+### T1b: 反 AI 规则 YAML 迁移
+
+**目标**: 将反 AI 规则从 `defaults.ts` 硬编码迁移到 YAML 文件，与文笔技法共享文件-DB 同步模式。
+
+**改动点**:
+- `server/src/data/antiAiRules/*.yaml` — 22 个 YAML 文件（12 条现有 + 10 条新增）
+- `server/src/services/styleEngine/defaults.ts` — 删除 `DEFAULT_ANTI_AI_RULES` 数组
+- `server/src/services/styleEngine/StyleEngineSeedService.ts` — 改为扫描 YAML 目录 seed
+- `temp/anti-ai-rules-import.json` — 已生成的 10 条新规则 JSON（转为 YAML）
+
+**规则清单**:
+- 现有 12 条：forbid-explicit-psychology, forbid-ending-elevation, forbid-theme-summary, forbid-direct-preaching, risk-even-paragraph-length, risk-three-paragraphs-exposition, risk-dialogue-too-functional, risk-repeated-sentence-structure, encourage-useless-action, encourage-reality-gap, encourage-hard-mouth-compensation, encourage-life-noise
+- 新增 10 条：forbid-zombie-emotion-words, forbid-intensifier-adjective, forbid-cliche-metaphor, forbid-emotion-label, forbid-empty-adjective, forbid-sensory-filter, risk-logic-cement, risk-vague-generalization, forbid-cliche-opening, forbid-eye-red-cliche
+
+**依赖**: 与 T2 共享文件扫描同步机制
 
 ### T2: 数据模型与 DB 同步机制
 

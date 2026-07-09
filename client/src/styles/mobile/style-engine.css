@@ -1,0 +1,8 @@
+/* Mobile style-engine route — height override */
+
+@media (max-width: 767px) {
+  .mobile-route-style-engine {
+    height: auto;
+    min-height: auto;
+  }
+}

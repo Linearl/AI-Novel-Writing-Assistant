@@ -1,0 +1,69 @@
+/* Mobile editors — novel-edit, chapter-edit, workspace panel, chapter editor shell */
+
+@media (max-width: 767px) {
+  .mobile-page-novel-edit * {
+    min-width: 0;
+  }
+
+  .mobile-page-novel-edit {
+    overflow-x: hidden;
+  }
+
+  .mobile-novel-step-nav {
+    scrollbar-width: none;
+  }
+
+  .mobile-novel-step-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .mobile-auto-director-status-card {
+    padding: 0.75rem;
+  }
+
+  .mobile-floating-save-button {
+    max-width: calc(100vw - 1.5rem);
+  }
+
+  /* ── Workspace panel shadow removal ── */
+  .mobile-novel-workspace-panel > div > .rounded-xl.border.bg-card.shadow-sm,
+  .mobile-novel-workspace-panel > div > .rounded-xl.border.bg-background.shadow-sm,
+  .mobile-novel-workspace-panel > div > .rounded-xl.border.bg-background\/95 {
+    border-width: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .mobile-novel-workspace-panel > div > .rounded-xl.border.bg-card.shadow-sm > div,
+  .mobile-novel-workspace-panel > div > .rounded-xl.border.bg-background.shadow-sm > div {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .mobile-novel-workspace-panel > div > .rounded-xl.border.bg-card.shadow-sm > div:first-child,
+  .mobile-novel-workspace-panel > div > .rounded-xl.border.bg-background.shadow-sm > div:first-child {
+    padding-top: 0;
+  }
+
+  .mobile-novel-workspace-panel {
+    overflow-x: hidden;
+  }
+
+  /* ── Chapter editor shell ── */
+  .mobile-chapter-editor-shell > div > .flex > .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .mobile-chapter-editor-shell > div > .flex > .grid > :nth-child(1) {
+    order: 2;
+  }
+
+  .mobile-chapter-editor-shell > div > .flex > .grid > :nth-child(2) {
+    order: 1;
+  }
+
+  .mobile-chapter-editor-shell > div > .flex > .grid > :nth-child(3) {
+    order: 3;
+  }
+}

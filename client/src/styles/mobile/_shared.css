@@ -1,0 +1,186 @@
+/* Mobile shared layout utilities — form font-size, overflow-x hidden, width 100% */
+
+@media (max-width: 767px) {
+  /* ── A. Mobile-site-main layout basics ── */
+  .mobile-site-main > div {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .mobile-site-main .mobile-card-flat {
+    border-width: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .mobile-site-main .mobile-card-flat > div {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .mobile-site-main .mobile-stack {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .mobile-site-main .mobile-full-actions > a,
+  .mobile-site-main .mobile-full-actions > button,
+  .mobile-site-main .mobile-full-actions [role="button"] {
+    width: 100%;
+  }
+
+  /* ── C. Form font-size fix (prevent iOS zoom) ── */
+  .mobile-site-main button,
+  .mobile-site-main a[role="button"] {
+    white-space: normal;
+  }
+
+  .mobile-site-main input,
+  .mobile-site-main textarea,
+  .mobile-site-main select {
+    font-size: 16px;
+  }
+
+  /* ── Tab / dialog shared overrides ── */
+  .mobile-site-main [role="tablist"] {
+    max-width: 100%;
+    overflow-x: auto;
+    justify-content: flex-start;
+  }
+
+  .mobile-site-main [role="tab"] {
+    white-space: nowrap;
+  }
+
+  [role="dialog"] {
+    max-width: calc(100vw - 1rem);
+    max-height: 90dvh;
+    overflow-y: auto;
+  }
+
+  [role="dialog"] .grid,
+  .mobile-site-main .grid {
+    max-width: 100%;
+  }
+
+  /* ── D. overflow-x: hidden for all routes ── */
+  .mobile-route-home,
+  .mobile-route-help,
+  .mobile-route-novels,
+  .mobile-route-novel-create,
+  .mobile-route-novel-preview,
+  .mobile-route-creative-hub,
+  .mobile-route-chat-legacy,
+  .mobile-route-book-analysis,
+  .mobile-route-tasks,
+  .mobile-route-auto-director-follow-ups,
+  .mobile-route-knowledge,
+  .mobile-route-genres,
+  .mobile-route-story-modes,
+  .mobile-route-titles,
+  .mobile-route-prompt-workbench,
+  .mobile-route-model-routes,
+  .mobile-route-settings,
+  .mobile-route-worlds,
+  .mobile-route-world-generator,
+  .mobile-route-world-workspace,
+  .mobile-route-style-engine,
+  .mobile-route-anti-ai-rules,
+  .mobile-route-base-characters,
+  .mobile-route-novel-edit,
+  .mobile-route-chapter-edit {
+    overflow-x: hidden;
+  }
+
+  /* ── E. width / max-width for all routes + pages ── */
+  .mobile-route-home,
+  .mobile-route-help,
+  .mobile-route-novels,
+  .mobile-route-novel-create,
+  .mobile-route-novel-preview,
+  .mobile-route-creative-hub,
+  .mobile-route-chat-legacy,
+  .mobile-route-book-analysis,
+  .mobile-route-tasks,
+  .mobile-route-auto-director-follow-ups,
+  .mobile-route-knowledge,
+  .mobile-route-genres,
+  .mobile-route-story-modes,
+  .mobile-route-titles,
+  .mobile-route-prompt-workbench,
+  .mobile-route-model-routes,
+  .mobile-route-settings,
+  .mobile-route-worlds,
+  .mobile-route-world-generator,
+  .mobile-route-world-workspace,
+  .mobile-route-style-engine,
+  .mobile-route-anti-ai-rules,
+  .mobile-route-base-characters,
+  .mobile-route-novel-edit,
+  .mobile-route-chapter-edit,
+  .mobile-page-novel-edit,
+  .mobile-page-chapter-edit {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* ── Multi-route shared flex-wrap / mobile-full-actions layout ── */
+  .mobile-route-home .flex.flex-wrap.items-center.justify-between,
+  .mobile-route-home .flex.flex-wrap.items-start.justify-between,
+  .mobile-route-home .flex.flex-wrap.items-center.gap-2,
+  .mobile-route-novels .flex.flex-wrap.items-center.justify-between,
+  .mobile-route-novels .flex.flex-wrap.gap-2,
+  .mobile-route-novel-create .flex.flex-wrap.gap-2 {
+    align-items: stretch;
+  }
+
+  .mobile-route-home .flex.flex-wrap.items-center.justify-between > *,
+  .mobile-route-home .flex.flex-wrap.items-start.justify-between > *,
+  .mobile-route-home .flex.flex-wrap.items-center.gap-2 > *,
+  .mobile-route-novels .flex.flex-wrap.items-center.justify-between > *,
+  .mobile-route-novels .flex.flex-wrap.gap-2 > *,
+  .mobile-route-novel-create .flex.flex-wrap.gap-2 > * {
+    flex: 1 1 100%;
+  }
+
+  .mobile-route-home .flex.flex-wrap.items-center.gap-2 .inline-flex,
+  .mobile-route-novels .flex.flex-wrap.items-center.gap-2 .inline-flex {
+    flex: 0 1 auto;
+  }
+
+  .mobile-route-home .mobile-full-actions,
+  .mobile-route-novels .mobile-full-actions,
+  .mobile-route-novel-create .mobile-full-actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* ── Multi-route flex alignment (first-child → column) ── */
+  .mobile-route-novels > .flex:first-child,
+  .mobile-route-worlds > .flex:first-child,
+  .mobile-route-base-characters > .flex:first-child,
+  .mobile-route-style-engine > .flex:first-child,
+  .mobile-route-model-routes .flex.items-center.justify-between,
+  .mobile-route-settings .flex.items-center.justify-between {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .mobile-route-novels > .flex:first-child .flex,
+  .mobile-route-worlds > .flex:first-child,
+  .mobile-route-base-characters > .flex:first-child .flex,
+  .mobile-route-style-engine > .flex:first-child .flex {
+    width: 100%;
+  }
+
+  /* ── Multi-route grid flatten ── */
+  .mobile-route-novels > .grid,
+  .mobile-route-novels .grid.md\:grid-cols-2,
+  .mobile-route-worlds .grid.md\:grid-cols-2,
+  .mobile-route-home .grid.md\:grid-cols-2,
+  .mobile-route-base-characters .grid.md\:grid-cols-2,
+  .mobile-route-base-characters .grid.lg\:grid-cols-2 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
