@@ -279,6 +279,51 @@ export class WorldService {
     await prisma.world.delete({ where: { id } });
   }
 
+  async listLinkedNovels(worldId: string): Promise<Array<{ id: string; title: string; linkedVia: "worldId" | "novelWorld" | "both" }>> {
+    const [byWorldId, byNovelWorld] = await Promise.all([
+      prisma.novel.findMany({
+        where: { worldId },
+        select: { id: true, title: true },
+      }),
+      prisma.novelWorld.findMany({
+        where: { sourceWorldId: worldId },
+        select: { novelId: true },
+      }),
+    ]);
+    const novelWorldNovelIds = new Set(byNovelWorld.map((nw) => nw.novelId));
+    const result = new Map<string, { id: string; title: string; linkedVia: "worldId" | "novelWorld" | "both" }>();
+    for (const novel of byWorldId) {
+      result.set(novel.id, { id: novel.id, title: novel.title, linkedVia: novelWorldNovelIds.has(novel.id) ? "both" : "worldId" });
+    }
+    for (const nw of byNovelWorld) {
+      if (!result.has(nw.novelId)) {
+        const novel = await prisma.novel.findUnique({ where: { id: nw.novelId }, select: { id: true, title: true } });
+        if (novel) result.set(novel.id, { id: novel.id, title: novel.title, linkedVia: "novelWorld" });
+      }
+    }
+    return Array.from(result.values());
+  }
+
+  async unlinkNovelFromWorld(worldId: string, novelId: string): Promise<void> {
+    await prisma.$transaction([
+      prisma.novel.updateMany({
+        where: { id: novelId, worldId },
+        data: { worldId: null, storyWorldSliceJson: null, storyWorldSliceOverridesJson: null },
+      }),
+      prisma.novelWorld.deleteMany({
+        where: { novelId, sourceWorldId: worldId },
+      }),
+    ]);
+  }
+
+  async unlinkAllNovelsFromWorld(worldId: string): Promise<number> {
+    const linked = await this.listLinkedNovels(worldId);
+    for (const novel of linked) {
+      await this.unlinkNovelFromWorld(worldId, novel.id);
+    }
+    return linked.length;
+  }
+
   async suggestAxioms(worldId: string, options: { provider?: LLMProvider; model?: string }) {
     const world = await prisma.world.findUnique({ where: { id: worldId } });
     if (!world) { throw new Error("World not found."); }

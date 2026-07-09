@@ -9,6 +9,7 @@ import { deleteWorld, getWorldList } from "@/api/world";
 import { queryKeys } from "@/api/queryKeys";
 import { featureFlags } from "@/config/featureFlags";
 import { toast } from "@/components/ui/toast";
+import WorldUnlinkDialog from "./WorldUnlinkDialog";
 
 interface WorldLibraryCardProjection {
   summary: string;
@@ -383,6 +384,7 @@ export default function WorldList() {
                       <Trash2 className="mr-1 h-4 w-4" aria-hidden="true" />
                       {deleteWorldMutation.isPending && deleteWorldMutation.variables === world.id ? "删除中..." : "删除"}
                     </Button>
+                    <WorldUnlinkDialog worldId={world.id} worldName={world.name} />
                   </div>
                 </CardContent>
               </Card>

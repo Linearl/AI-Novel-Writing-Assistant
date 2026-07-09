@@ -71,6 +71,28 @@ function registerWorldCrudRoutes(router: Router) {
       res.status(200).json({ success: true, message: "World deleted." });
     } catch (error) { next(error); }
   });
+
+  router.get("/:id/linked-novels", validate({ params: worldIdSchema }), async (req: any, res: any, next: any) => {
+    try {
+      const { id } = req.params;
+      const data = await worldService.listLinkedNovels(id);
+      res.status(200).json({ success: true, data, message: "Linked novels loaded." });
+    } catch (error) { next(error); }
+  });
+
+  router.post("/:id/unlink", validate({ params: worldIdSchema }), async (req: any, res: any, next: any) => {
+    try {
+      const { id } = req.params;
+      const novelId = req.body?.novelId as string | undefined;
+      if (novelId) {
+        await worldService.unlinkNovelFromWorld(id, novelId);
+        res.status(200).json({ success: true, data: { unlinked: 1 }, message: "Novel unlinked from world." });
+      } else {
+        const count = await worldService.unlinkAllNovelsFromWorld(id);
+        res.status(200).json({ success: true, data: { unlinked: count }, message: `Unlinked ${count} novels from world.` });
+      }
+    } catch (error) { next(error); }
+  });
 }
 
 // Sub-function: Register world snapshot routes

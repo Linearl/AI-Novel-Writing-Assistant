@@ -195,6 +195,22 @@ export async function deleteWorld(id: string) {
   return data;
 }
 
+export interface LinkedNovel {
+  id: string;
+  title: string;
+  linkedVia: "worldId" | "novelWorld" | "both";
+}
+
+export async function getLinkedNovels(worldId: string) {
+  const { data } = await apiClient.get<ApiResponse<LinkedNovel[]>>(`/worlds/${worldId}/linked-novels`);
+  return data;
+}
+
+export async function unlinkNovelFromWorld(worldId: string, novelId?: string) {
+  const { data } = await apiClient.post<ApiResponse<{ unlinked: number }>>(`/worlds/${worldId}/unlink`, novelId ? { novelId } : {});
+  return data;
+}
+
 export async function getWorldTemplates() {
   const { data } = await apiClient.get<ApiResponse<WorldTemplate[]>>("/worlds/templates");
   return data;
