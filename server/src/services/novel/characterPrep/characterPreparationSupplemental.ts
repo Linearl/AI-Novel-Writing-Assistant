@@ -17,6 +17,7 @@ import { NovelContextService } from "../NovelContextService";
 import { CharacterDynamicsService } from "../dynamics/CharacterDynamicsService";
 import {
   supplementalCharacterCandidateSchema,
+  supplementalCharacterGenerationResponseSchema,
   type SupplementalCharacterGenerationResponseParsed,
 } from "../../../prompting/prompts/novel/characterPreparation.promptSchemas";
 import { buildStoryModePromptBlock, normalizeStoryModeOutput } from "../../storyMode/storyModeProfile";
@@ -24,6 +25,34 @@ import { parseCharacterProhibitionsJson } from "../characters/characterHardFacts
 import { WorldContextGateway } from "../worldContext/WorldContextGateway";
 import { invokeStructuredLlm } from "../../../llm/structuredInvoke";
 import type { LLMProvider } from "@ai-novel/shared/types/llm";
+import { z } from "zod";
+
+const nameExtractionSchema = z.object({
+  names: z.array(z.string()),
+});
+
+/**
+ * 从候选角色文本中提取所有人名，校验是否都在合法名称集合内。
+ * 返回不合法的人名列表。
+ */
+function extractInvalidNames(
+  candidates: z.infer<typeof supplementalCharacterCandidateSchema>[],
+  validNames: Set<string>,
+): string[] {
+  const invalidNames: string[] = [];
+  for (const candidate of candidates) {
+    // 从 relations 的 sourceName/targetName 检查
+    for (const rel of candidate.relations) {
+      if (rel.sourceName && !validNames.has(rel.sourceName) && rel.sourceName !== candidate.name) {
+        invalidNames.push(rel.sourceName);
+      }
+      if (rel.targetName && !validNames.has(rel.targetName) && rel.targetName !== candidate.name) {
+        invalidNames.push(rel.targetName);
+      }
+    }
+  }
+  return [...new Set(invalidNames)];
+}
 
 type CharacterRowForOutput = Awaited<ReturnType<typeof prisma.character.create>>;
 
@@ -361,9 +390,79 @@ export class CharacterPreparationSupplementalService {
     const parsed = result.output;
 
     const requestedCount = typeof options.count === "number" ? options.count : null;
-    const normalizedCandidates = (requestedCount ? parsed.candidates.slice(0, requestedCount) : parsed.candidates)
+    let normalizedCandidates = (requestedCount ? parsed.candidates.slice(0, requestedCount) : parsed.candidates)
       .map((candidate) => supplementalCharacterCandidateSchema.parse(candidate))
       .slice(0, 3);
+
+    // 校验循环：检查候选角色中引用的人名是否都在合法集合内，不通过则反馈 LLM 修正
+    const validNames = new Set(novel.characters.map((c) => c.name));
+    normalizedCandidates.forEach((c) => validNames.add(c.name));
+
+    for (let round = 0; round < 3; round++) {
+      const invalidNames = extractInvalidNames(normalizedCandidates, validNames);
+      if (invalidNames.length === 0) break;
+
+      console.log(`[supplemental] 校验第 ${round + 1} 轮：发现非法人名 ${invalidNames.join("、")}，请求 LLM 修正`);
+
+      // 用 LLM 从描述文本中提取人名并一起校验
+      const textNamesResult = await invokeStructuredLlm<{ names: string[] }>({
+        systemPrompt: "从以下角色候选文本中提取所有人名（不含候选角色自身的名字）。只输出 JSON：{\"names\": [\"人名1\", \"人名2\"]}",
+        userPrompt: normalizedCandidates.map((c) => [
+          `角色名：${c.name}`,
+          `摘要：${c.summary}`,
+          `背景：${c.background}`,
+          `故事作用：${c.storyFunction}`,
+          `与主角关系：${c.relationToProtagonist}`,
+        ].join("\n")).join("\n---\n"),
+        schema: nameExtractionSchema,
+        label: "novel.character.supplemental.name-extract",
+        taskType: "planner",
+        temperature: 0,
+        provider: options?.provider as LLMProvider | undefined,
+        model: options?.model,
+      }).catch(() => ({ names: [] }));
+
+      const allInvalidFromText = textNamesResult.names.filter((n) => !validNames.has(n));
+      const allInvalid = [...new Set([...invalidNames, ...allInvalidFromText])];
+
+      if (allInvalid.length === 0) break;
+
+      // 发送修正请求
+      const repairResult = await invokeStructuredLlm<SupplementalCharacterGenerationResponseParsed>({
+        systemPrompt: [
+          "你是角色修正编辑。以下角色候选中引用了不存在的人名，需要修正。",
+          "",
+          `合法角色名列表：${[...validNames].join("、")}`,
+          "",
+          `非法人名（必须替换为合法角色名或删除对应描述）：${allInvalid.join("、")}`,
+          "",
+          "修正要求：",
+          "1. 将非法人名替换为最合理的合法角色名",
+          "2. 如果某个关系的 sourceName 或 targetName 是非法人名，替换为最匹配的合法角色名",
+          "3. 如果候选角色的描述中提到了非法人名，替换为合法角色名",
+          "4. 不得引入新的非法人名",
+          "5. 输出严格 JSON，保持原有结构",
+        ].join("\n"),
+        userPrompt: JSON.stringify({ candidates: normalizedCandidates }, null, 2),
+        schema: supplementalCharacterGenerationResponseSchema,
+        label: "novel.character.supplemental.repair",
+        taskType: "planner",
+        temperature: 0.2,
+        provider: options?.provider as LLMProvider | undefined,
+        model: options?.model,
+      }).catch(() => null);
+
+      if (repairResult?.candidates) {
+        normalizedCandidates = repairResult.candidates
+          .map((c: SupplementalCharacterGenerationResponseParsed["candidates"][number]) => supplementalCharacterCandidateSchema.parse(c))
+          .slice(0, 3);
+        // 更新合法名称集合
+        normalizedCandidates.forEach((c) => validNames.add(c.name));
+      } else {
+        console.warn(`[supplemental] 校验第 ${round + 1} 轮 LLM 修正失败，保留当前结果`);
+        break;
+      }
+    }
 
     return {
       mode: parsed.mode,
