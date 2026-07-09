@@ -263,6 +263,10 @@ export const characterCastOptionPrompt: PromptAsset<
     new HumanMessage([
       "请基于以下上下文生成角色阵容方案。",
       "",
+      "【阅读提示】",
+      "1. 仔细阅读【故事输入】，准确理解故事的题材、背景和核心人物。小说标题可能是乐队名、隐喻或文学表达，不要望文生义地理解为字面意思。",
+      "2. 所有角色必须能在已有的故事舞台中自然出现，不能凭空引入故事中不存在的组织、场景或身份。",
+      "",
       "【分层上下文】",
       renderSelectedContextBlocks(context),
       "",
@@ -434,6 +438,10 @@ export const characterCastAutoPrompt: PromptAsset<
     new HumanMessage([
       "请基于以下上下文生成自动导演要直接采用的角色阵容。",
       "",
+      "【阅读提示】",
+      "1. 仔细阅读【故事输入】，准确理解故事的题材、背景和核心人物。小说标题可能是乐队名、隐喻或文学表达，不要望文生义地理解为字面意思。",
+      "2. 所有角色必须能在已有的故事舞台中自然出现，不能凭空引入故事中不存在的组织、场景或身份。",
+      "",
       "【分层上下文】",
       renderSelectedContextBlocks(context),
       "",
@@ -581,6 +589,11 @@ export const supplementalCharacterPrompt: PromptAsset<
     ].join("\n")),
     new HumanMessage([
       "请基于以下上下文生成补充角色候选。",
+      "",
+      "【阅读提示】",
+      "1. 仔细阅读【故事输入】，准确理解故事的题材、背景和核心人物。小说标题可能是乐队名、隐喻或文学表达，不要望文生义地理解为字面意思。",
+      "2. 所有候选角色必须能在已有的故事舞台中自然出现，不能凭空引入故事中不存在的组织、场景或身份。",
+      "3. 如果故事是现代都市背景，角色应该是这个世界中真实存在的人。",
       "",
       "【分层上下文】",
       renderSelectedContextBlocks(context),
