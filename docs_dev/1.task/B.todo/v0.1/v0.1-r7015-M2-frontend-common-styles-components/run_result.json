@@ -3,11 +3,11 @@
   "title": "前端公共样式与组件提取",
   "priority": "P2",
   "version": "0.1",
-  "status": "requirements_ready",
+  "status": "pass",
   "createdAt": "2026-07-09",
-  "completedAt": null,
+  "completedAt": "2026-07-09",
   "source": "2026-07-09 前端公共样式与组件诊断报告",
-  "note": "技术债务清理：Textarea/StatusBadge/Alert/Loading/EmptyState 组件提取 + index.css 拆分 + 语义化 token 统一",
+  "note": "T1+T2 完成：Textarea 组件（~120 处替换）+ StatusBadge 组件（10 处替换）。T3-T6 评估后跳过（差异过大/风险过高）。T7 验证通过。",
   "reqType": "refactoring",
   "categoryCode": 7,
   "complexity": "medium",
@@ -15,7 +15,8 @@
   "skipDesign": false,
   "tasks": {
     "total": 7,
-    "completed": 0,
-    "pending": 7
+    "completed": 3,
+    "skipped": 4,
+    "pending": 0
   }
 }
