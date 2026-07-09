@@ -1,6 +1,6 @@
 ---
 description: "章节节奏张力 — 质量标准按章节张力分级，AI 自动标记，用户可调整"
-status: pass
+status: done
 reqId: 2045
 version: v0.1
 priority: p2

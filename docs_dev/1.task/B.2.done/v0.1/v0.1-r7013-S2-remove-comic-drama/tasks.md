@@ -25,4 +25,4 @@ description: "移除漫画和短剧模块任务清单"
 
 - [x] 4.1 pnpm typecheck 通过
 - [x] 4.2 pnpm build 通过
-- [ ] 4.3 pnpm test 通过（待执行）
+- [x] 4.3 pnpm test 通过

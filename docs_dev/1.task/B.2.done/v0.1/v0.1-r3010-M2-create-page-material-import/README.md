@@ -1,6 +1,6 @@
 ---
 description: "创建页素材导入 — 支持一次性粘贴大段素材，系统自动拆分到对应字段"
-status: pass
+status: done
 reqId: 3010
 version: v0.1
 priority: p2

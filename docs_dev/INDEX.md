@@ -48,46 +48,6 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1-r7015-M2-frontend-common-styles-components\REQ-7015-frontend-common-styles-components.md](./1.task\B.todo\v0.1-r7015-M2-frontend-common-styles-components\REQ-7015-frontend-common-styles-components.md) | REQ-7015 前端公共样式与组件提取 | REQ-7015 前端公共样式与组件提取 |
 | [1.task\B.todo\v0.1-r7015-M2-frontend-common-styles-components\tasks.md](./1.task\B.todo\v0.1-r7015-M2-frontend-common-styles-components\tasks.md) | REQ-7015 前端公共样式与组件提取 — 任务拆解 | REQ-7015 前端公共样式与组件提取 — 任务拆解 |
 
-## 1.task\B.todo\v0.1\v0.1-r2044-C2-inspiration-quick-preview
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r2044-C2-inspiration-quick-preview\decision_log.md](./1.task\B.todo\v0.1\v0.1-r2044-C2-inspiration-quick-preview\decision_log.md) | 灵感页快速预览决策日志 | 灵感页快速预览决策日志 |
-| [1.task\B.todo\v0.1\v0.1-r2044-C2-inspiration-quick-preview\design.md](./1.task\B.todo\v0.1\v0.1-r2044-C2-inspiration-quick-preview\design.md) | 灵感页快速预览设计方案 | 灵感页快速预览设计方案 |
-| [1.task\B.todo\v0.1\v0.1-r2044-C2-inspiration-quick-preview\README.md](./1.task\B.todo\v0.1\v0.1-r2044-C2-inspiration-quick-preview\README.md) | 灵感页快速预览 — 输入灵感后 30 秒内看到 3 个方向候选（标题+梗概+500字预览） | 灵感页快速预览 — 输入灵感后 30 秒内看到 3 个方向候选（标题+梗概+500字预览） |
-| [1.task\B.todo\v0.1\v0.1-r2044-C2-inspiration-quick-preview\REQ-2044-inspiration-quick-preview.md](./1.task\B.todo\v0.1\v0.1-r2044-C2-inspiration-quick-preview\REQ-2044-inspiration-quick-preview.md) | 灵感页快速预览需求定义 | 灵感页快速预览需求定义 |
-| [1.task\B.todo\v0.1\v0.1-r2044-C2-inspiration-quick-preview\tasks.md](./1.task\B.todo\v0.1\v0.1-r2044-C2-inspiration-quick-preview\tasks.md) | 灵感页快速预览任务清单 | 灵感页快速预览任务清单 |
-
-## 1.task\B.todo\v0.1\v0.1-r2045-C2-chapter-rhythm-tension
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r2045-C2-chapter-rhythm-tension\decision_log.md](./1.task\B.todo\v0.1\v0.1-r2045-C2-chapter-rhythm-tension\decision_log.md) | 章节节奏张力决策日志 | 章节节奏张力决策日志 |
-| [1.task\B.todo\v0.1\v0.1-r2045-C2-chapter-rhythm-tension\design.md](./1.task\B.todo\v0.1\v0.1-r2045-C2-chapter-rhythm-tension\design.md) | 章节节奏张力设计方案 | 章节节奏张力设计方案 |
-| [1.task\B.todo\v0.1\v0.1-r2045-C2-chapter-rhythm-tension\README.md](./1.task\B.todo\v0.1\v0.1-r2045-C2-chapter-rhythm-tension\README.md) | 章节节奏张力 — 质量标准按章节张力分级，AI 自动标记，用户可调整 | 章节节奏张力 — 质量标准按章节张力分级，AI 自动标记，用户可调整 |
-| [1.task\B.todo\v0.1\v0.1-r2045-C2-chapter-rhythm-tension\REQ-2045-chapter-rhythm-tension.md](./1.task\B.todo\v0.1\v0.1-r2045-C2-chapter-rhythm-tension\REQ-2045-chapter-rhythm-tension.md) | 章节节奏张力需求定义 | 章节节奏张力需求定义 |
-| [1.task\B.todo\v0.1\v0.1-r2045-C2-chapter-rhythm-tension\tasks.md](./1.task\B.todo\v0.1\v0.1-r2045-C2-chapter-rhythm-tension\tasks.md) | 章节节奏张力任务清单 | 章节节奏张力任务清单 |
-
-## 1.task\B.todo\v0.1\v0.1-r3010-M2-create-page-material-import
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r3010-M2-create-page-material-import\decision_log.md](./1.task\B.todo\v0.1\v0.1-r3010-M2-create-page-material-import\decision_log.md) | 创建页素材导入决策日志 | 创建页素材导入决策日志 |
-| [1.task\B.todo\v0.1\v0.1-r3010-M2-create-page-material-import\design.md](./1.task\B.todo\v0.1\v0.1-r3010-M2-create-page-material-import\design.md) | 创建页素材导入设计方案 | 创建页素材导入设计方案 |
-| [1.task\B.todo\v0.1\v0.1-r3010-M2-create-page-material-import\README.md](./1.task\B.todo\v0.1\v0.1-r3010-M2-create-page-material-import\README.md) | 创建页素材导入 — 支持一次性粘贴大段素材，系统自动拆分到对应字段 | 创建页素材导入 — 支持一次性粘贴大段素材，系统自动拆分到对应字段 |
-| [1.task\B.todo\v0.1\v0.1-r3010-M2-create-page-material-import\REQ-3010-create-page-material-import.md](./1.task\B.todo\v0.1\v0.1-r3010-M2-create-page-material-import\REQ-3010-create-page-material-import.md) | 创建页素材导入需求定义 | 创建页素材导入需求定义 |
-| [1.task\B.todo\v0.1\v0.1-r3010-M2-create-page-material-import\tasks.md](./1.task\B.todo\v0.1\v0.1-r3010-M2-create-page-material-import\tasks.md) | 创建页素材导入任务清单 | 创建页素材导入任务清单 |
-
-## 1.task\B.todo\v0.1\v0.1-r7013-S2-remove-comic-drama
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r7013-S2-remove-comic-drama\decision_log.md](./1.task\B.todo\v0.1\v0.1-r7013-S2-remove-comic-drama\decision_log.md) | 移除漫画和短剧模块决策日志 | 移除漫画和短剧模块决策日志 |
-| [1.task\B.todo\v0.1\v0.1-r7013-S2-remove-comic-drama\design.md](./1.task\B.todo\v0.1\v0.1-r7013-S2-remove-comic-drama\design.md) | 移除漫画和短剧模块设计方案 | 移除漫画和短剧模块设计方案 |
-| [1.task\B.todo\v0.1\v0.1-r7013-S2-remove-comic-drama\README.md](./1.task\B.todo\v0.1\v0.1-r7013-S2-remove-comic-drama\README.md) | 移除漫画和短剧模块 — 清理代码库中与核心小说写作无关的跨媒体模块 | 移除漫画和短剧模块 — 清理代码库中与核心小说写作无关的跨媒体模块 |
-| [1.task\B.todo\v0.1\v0.1-r7013-S2-remove-comic-drama\REQ-7013-remove-comic-drama.md](./1.task\B.todo\v0.1\v0.1-r7013-S2-remove-comic-drama\REQ-7013-remove-comic-drama.md) | 移除漫画和短剧模块的需求定义 | 移除漫画和短剧模块的需求定义 |
-| [1.task\B.todo\v0.1\v0.1-r7013-S2-remove-comic-drama\tasks.md](./1.task\B.todo\v0.1\v0.1-r7013-S2-remove-comic-drama\tasks.md) | 移除漫画和短剧模块任务清单 | 移除漫画和短剧模块任务清单 |
-
 ## 1.task\template
 
 | 文件 | 标题 | 描述 |

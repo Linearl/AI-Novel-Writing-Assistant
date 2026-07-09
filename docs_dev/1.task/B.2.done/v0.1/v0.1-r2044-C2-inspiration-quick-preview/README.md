@@ -1,6 +1,6 @@
 ---
 description: "灵感页快速预览 — 输入灵感后 30 秒内看到 3 个方向候选（标题+梗概+500字预览）"
-status: pass
+status: done
 reqId: 2044
 version: v0.1
 priority: p2
