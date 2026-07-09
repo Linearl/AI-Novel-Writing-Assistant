@@ -13,8 +13,6 @@
 | `audit/` | Audit | 审计相关 |
 | `bookAnalysis/` | BookAnalysis | 整本书分析 |
 | `character/` | Character | 角色生成 / 角色相关 |
-| `comic/` | Comic | 漫画 |
-| `drama/` | Drama | 短剧 |
 | `genre/` | Genre | 类型 / 题材 |
 | `helper/` | Helper | 工具型 helper |
 | `image/` | Image | 图片生成 |

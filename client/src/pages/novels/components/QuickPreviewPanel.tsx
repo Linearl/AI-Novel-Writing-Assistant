@@ -1,7 +1,7 @@
 import { useState } from "react";
-import type { QuickPreviewCandidate } from "@ai-novel/shared/types/novelQuickPreview";
+import type { PreviewChapter, QuickPreviewCandidate } from "@ai-novel/shared/types/novelQuickPreview";
 import { useMutation } from "@tanstack/react-query";
-import { generateQuickPreview } from "@/api/novel/quickPreview";
+import { generatePreviewChapters, generateQuickPreview } from "@/api/novel/quickPreview";
 import AiButton from "@/components/common/AiButton";
 import { toast } from "@/components/ui/toast";
 import { useLLMStore } from "@/store/llmStore";
@@ -9,12 +9,14 @@ import { useLLMStore } from "@/store/llmStore";
 interface QuickPreviewPanelProps {
   inspiration: string;
   onApplyCandidate: (candidate: QuickPreviewCandidate) => void;
+  onStartFormalCreation: (candidate: QuickPreviewCandidate, chapters: PreviewChapter[]) => void;
 }
 
 export default function QuickPreviewPanel(props: QuickPreviewPanelProps) {
-  const { inspiration, onApplyCandidate } = props;
+  const { inspiration, onApplyCandidate, onStartFormalCreation } = props;
   const llm = useLLMStore();
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [expandedChapterIndex, setExpandedChapterIndex] = useState<number | null>(null);
 
   const previewMutation = useMutation({
     mutationFn: () => generateQuickPreview({
@@ -35,7 +37,28 @@ export default function QuickPreviewPanel(props: QuickPreviewPanelProps) {
     },
   });
 
+  const chaptersMutation = useMutation({
+    mutationFn: (candidate: QuickPreviewCandidate) => generatePreviewChapters({
+      inspiration,
+      candidate,
+      provider: llm.provider,
+      model: llm.model,
+      temperature: llm.temperature,
+    }),
+    onSuccess: (response) => {
+      if (!response.data?.chapters?.length) {
+        toast.error("AI 没有返回可用的章节内容。");
+        return;
+      }
+      toast.success("前 3 章预览已生成。");
+    },
+    onError: (error) => {
+      toast.error(error instanceof Error ? error.message : "章节生成失败，请稍后再试。");
+    },
+  });
+
   const candidates = previewMutation.data?.data?.candidates ?? [];
+  const generatedChapters = chaptersMutation.data?.data?.chapters ?? [];
 
   const handleGenerate = () => {
     if (!inspiration.trim()) {
@@ -52,6 +75,20 @@ export default function QuickPreviewPanel(props: QuickPreviewPanelProps) {
     }
     onApplyCandidate(candidates[selectedIndex]);
     toast.success("已将选定方向填入创建表单。");
+  };
+
+  const handleGenerateChapters = () => {
+    if (selectedIndex === null || !candidates[selectedIndex]) {
+      return;
+    }
+    chaptersMutation.mutate(candidates[selectedIndex]);
+  };
+
+  const handleStartFormalCreation = () => {
+    if (selectedIndex === null || !candidates[selectedIndex] || generatedChapters.length === 0) {
+      return;
+    }
+    onStartFormalCreation(candidates[selectedIndex], generatedChapters);
   };
 
   return (
@@ -111,17 +148,69 @@ export default function QuickPreviewPanel(props: QuickPreviewPanelProps) {
                   {candidates[selectedIndex].previewText}
                 </p>
               </div>
-              <div className="mt-3 flex justify-end">
+              <div className="mt-3 flex justify-end gap-2">
                 <AiButton
                   type="button"
+                  variant="outline"
                   size="sm"
                   onClick={handleSelectAndApply}
                 >
-                  选用此方向
+                  填入表单
+                </AiButton>
+                <AiButton
+                  type="button"
+                  size="sm"
+                  onClick={handleGenerateChapters}
+                  disabled={chaptersMutation.isPending}
+                >
+                  {chaptersMutation.isPending ? "章节生成中..." : "生成前 3 章"}
                 </AiButton>
               </div>
             </div>
           )}
+        </div>
+      )}
+
+      {generatedChapters.length > 0 && (
+        <div className="space-y-3 rounded-lg border border-primary/20 bg-primary/5 p-4">
+          <div className="flex items-center justify-between">
+            <h4 className="text-sm font-semibold">前 3 章预览</h4>
+            <AiButton
+              type="button"
+              size="sm"
+              onClick={handleStartFormalCreation}
+            >
+              开始正式创作
+            </AiButton>
+          </div>
+          <div className="space-y-3">
+            {generatedChapters.map((chapter, index) => (
+              <div key={index} className="rounded-md border bg-background p-3">
+                <button
+                  type="button"
+                  className="flex w-full items-center justify-between text-left"
+                  onClick={() => setExpandedChapterIndex(
+                    expandedChapterIndex === index ? null : index,
+                  )}
+                >
+                  <span className="text-sm font-medium">
+                    第 {index + 1} 章 {chapter.title}
+                  </span>
+                  <span className="text-muted-foreground text-xs">
+                    {chapter.wordCount} 字
+                    {expandedChapterIndex === index ? " ▲" : " ▼"}
+                  </span>
+                </button>
+                {expandedChapterIndex === index && (
+                  <div className="bg-muted/30 mt-2 max-h-80 overflow-y-auto rounded p-3">
+                    <p className="whitespace-pre-wrap text-xs leading-relaxed">
+                      {chapter.content}
+                    </p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>

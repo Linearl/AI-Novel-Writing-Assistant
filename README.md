@@ -542,7 +542,6 @@ pnpm --filter @ai-novel/server test:book-analysis
 | Creative Hub | `/api/creative-hub` | 统一创作中枢、对话、工具调用 |
 | 导演出口 | `/api/novels/:id/director` | 自动导演启动、恢复、状态查询 |
 | 导出 | `/api/novels/:id/export` | 小说导出为不同格式 |
-| 漫画 | `/api/comics` | 漫画工作台、分格、图片生成 |
 | 世界库 | `/api/setup/world` | 世界模板、结构管理 |
 | 任务中心 | `/api/tasks` | 后台任务排队、执行、失败状态 |
 | 健康检查 | `/api/health` | 服务存活检测 |

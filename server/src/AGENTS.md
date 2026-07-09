@@ -19,7 +19,7 @@
 | `graphs/` | LangGraph 图编排(auto-director 流水线等) |
 | `llm/` | LLM 客户端工厂、Provider、流式、structured invoke、连通性、用法追踪(see `llm/AGENTS.md`) |
 | `middleware/` | Express 中间件 |
-| `modules/` | 模块化业务入口(novel/comic/drama/export/setup/timeline,每个模块自带 `http/`)(see `modules/AGENTS.md`) |
+| `modules/` | 模块化业务入口(novel/export/setup/timeline,每个模块自带 `http/`)(see `modules/AGENTS.md`) |
 | `platform/` | 平台基础设施(logging 等) |
 | `prisma/` | Prisma schema 与迁移(see `prisma/AGENTS.md`) |
 | `prompting/` | Prompt Registry、PromptAsset、上下文/工作流定义(see `prompting/AGENTS.md`) |

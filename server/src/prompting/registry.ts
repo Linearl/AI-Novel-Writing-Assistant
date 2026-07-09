@@ -326,6 +326,10 @@ const promptAssetLoaderEntries: PromptAssetLoaderEntry[] = [
     load: () => require("./prompts/novel/quickPreview.prompts").quickPreviewPrompt as UnknownPromptAsset,
   },
   {
+    key: "novel.quick_preview.generate_chapters@v1",
+    load: () => require("./prompts/novel/quickPreviewChapter.prompts").quickPreviewChapterPrompt as UnknownPromptAsset,
+  },
+  {
     key: "novel.continuation.rewrite_similarity@v1",
     load: () => require("./prompts/novel/continuation.prompts").novelContinuationRewritePrompt as UnknownPromptAsset,
   },

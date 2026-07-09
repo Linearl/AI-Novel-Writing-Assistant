@@ -15,8 +15,6 @@
 | `bookAnalysis/` | 整本书分析能力 |
 | `bootstrap/` | 启动 / 引导 |
 | `character/` | 角色基础能力(被 `novel/characters/` 等复用) |
-| `comic/` | 漫画业务 |
-| `drama/` | 短剧业务(audio/contracts/engine/guidance/production/source/utils/video/visual) |
 | `genre/` | 类型 / 题材 |
 | `image/` | 图片生成(novelCover) |
 | `knowledge/` | 知识库 |

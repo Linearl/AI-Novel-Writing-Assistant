@@ -74,8 +74,10 @@ interface NovelAutoDirectorDialogProps {
   workflowTaskId?: string;
   restoredTask?: UnifiedTaskDetail | null;
   initialOpen?: boolean;
+  initialIdea?: string;
   onWorkflowTaskChange?: (workflowTaskId: string) => void;
   onBasicFormChange?: (patch: Partial<NovelBasicFormState>) => void;
+  onInitialIdeaConsumed?: () => void;
   onConfirmed: (input: {
     novelId: string;
     workflowTaskId?: string;
@@ -94,8 +96,10 @@ export default function NovelAutoDirectorDialog({
   workflowTaskId: workflowTaskIdProp,
   restoredTask,
   initialOpen = false,
+  initialIdea,
   onWorkflowTaskChange,
   onBasicFormChange,
+  onInitialIdeaConsumed,
   onConfirmed,
 }: NovelAutoDirectorDialogProps) {
   const navigate = useNavigate();
@@ -199,8 +203,13 @@ export default function NovelAutoDirectorDialog({
     if (!open || idea.trim()) {
       return;
     }
+    if (initialIdea?.trim()) {
+      setIdea(initialIdea.trim());
+      onInitialIdeaConsumed?.();
+      return;
+    }
     setIdea(buildInitialIdea(directorBasicForm));
-  }, [directorBasicForm, idea, open]);
+  }, [directorBasicForm, idea, initialIdea, onInitialIdeaConsumed, open]);
 
   const styleProfilesQuery = useQuery({
     queryKey: queryKeys.styleEngine.profiles,

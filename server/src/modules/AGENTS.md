@@ -10,8 +10,6 @@
 | Directory | Purpose |
 |-----------|---------|
 | `novel/` | 小说业务 HTTP 与领域处理器(see `novel/AGENTS.md`) |
-| `comic/` | 漫画模块(http)(see `comic/AGENTS.md`) |
-| `drama/` | 短剧模块(http)(see `drama/AGENTS.md`) |
 | `export/` | 导出模块(http) |
 | `setup/` | 设置模块(包含 `world/` 与 `world/http/`) |
 | `timeline/` | 时间线模块 |

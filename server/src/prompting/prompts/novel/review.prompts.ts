@@ -2,9 +2,39 @@ import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 import { z } from "zod";
 import type { PromptAsset } from "../../core/promptTypes";
 import { renderSelectedContextBlocks } from "../../core/renderContextBlocks";
+import type { TensionLevel } from "@ai-novel/shared/types/novel";
 import { fullAuditOutputSchema } from "../../../services/audit/auditSchemas";
 import { chapterSummaryOutputSchema } from "../../../services/novel/chapterSummarySchemas";
 import { NOVEL_PROMPT_BUDGETS } from "./promptBudgetProfiles";
+
+const REVIEW_TENSION_HINTS: Record<TensionLevel, string> = {
+  low: [
+    "本章处于低张力区间。审校时允许情节紧凑度较低，氛围描写和人物互动的比重可以较高。",
+    "pacing 评分不应因叙事节奏偏慢而扣分——低张力章节的慢节奏是合理设计。",
+    "重点审查：氛围是否到位、人物情感是否真实、铺垫是否自然，而非情节推进速度。",
+  ].join("\n"),
+  medium: [
+    "本章处于中等张力区间。审校时以平衡标准评估节奏与叙事密度。",
+  ].join("\n"),
+  high: [
+    "本章处于高张力区间。审校时应要求紧凑的叙事节奏，每一段都应有明确推进功能。",
+    "pacing 评分应严格：任何失速、闲笔或无关过渡都应被标记为问题。",
+    "重点审查：冲突推进是否持续、对话是否有力、段落切换是否干脆利落。",
+  ].join("\n"),
+  climax: [
+    "本章处于高潮张力区间。审校时应以最高标准要求节奏感和情感冲击力。",
+    "pacing 评分应极严格：任何节奏松散、情绪断裂或偏离主线的内容都应被标记为关键问题。",
+    "engagement 评分应重点关注：读者是否在本章感受到最强烈的情感共振。",
+    "重点审查：核心冲突是否集中爆发、短句快节奏是否贯穿始终、结尾是否有足够的情感余韵或悬念张力。",
+  ].join("\n"),
+};
+
+function buildReviewTensionHint(tensionLevel?: string | null): string {
+  if (!tensionLevel || !(tensionLevel in REVIEW_TENSION_HINTS)) {
+    return "";
+  }
+  return REVIEW_TENSION_HINTS[tensionLevel as TensionLevel];
+}
 
 export interface ChapterSummaryPromptInput {
   novelTitle: string;
@@ -18,6 +48,7 @@ export interface ChapterReviewPromptInput {
   chapterTitle: string;
   content: string;
   ragContext: string;
+  tensionLevel?: string | null;
 }
 
 export interface ChapterRepairPromptInput {
@@ -112,22 +143,25 @@ export const chapterReviewPrompt: PromptAsset<
     ],
   },
   outputSchema: fullAuditOutputSchema,
-  render: (input, context) => [
-    new SystemMessage([
-      "repetition scoring: 0 means heavily repetitive, 100 means repetition is well controlled; higher is better.",
-      "你是资深网络小说章节审校编辑。",
-      "你的任务不是重写章节，而是基于正文与给定上下文，对当前章节做结构化质量评估，并输出可供后续修文使用的审查结果。",
-      "",
-      "【任务边界】",
-      "只输出符合 schema 的严格 JSON。",
-      "不要输出 Markdown、解释、注释、代码块或任何额外文本。",
-      "不能脑补未给出的前文、设定或隐藏剧情。",
-      "",
-      "【评分要求】",
-      "score 必须完整包含：coherence、repetition、pacing、voice、engagement、overall。",
-      "每项评分都应基于正文实际表现，不得凭印象打分。",
-      "",
-      "【审查重点】",
+  render: (input, context) => {
+    const tensionHint = buildReviewTensionHint(input.tensionLevel);
+    return [
+      new SystemMessage([
+        "repetition scoring: 0 means heavily repetitive, 100 means repetition is well controlled; higher is better.",
+        "你是资深网络小说章节审校编辑。",
+        "你的任务不是重写章节，而是基于正文与给定上下文，对当前章节做结构化质量评估，并输出可供后续修文使用的审查结果。",
+        "",
+        "【任务边界】",
+        "只输出符合 schema 的严格 JSON。",
+        "不要输出 Markdown、解释、注释、代码块或任何额外文本。",
+        "不能脑补未给出的前文、设定或隐藏剧情。",
+        "",
+        "【评分要求】",
+        "score 必须完整包含：coherence、repetition、pacing、voice、engagement、overall。",
+        "每项评分都应基于正文实际表现，不得凭印象打分。",
+        "",
+        ...(tensionHint ? ["【节奏张力参照】", tensionHint, ""] : []),
+        "【审查重点】",
       "1. coherence：事件衔接、人物行为、因果推进是否清楚稳定。",
       "2. repetition：是否存在信息重复、表达重复、动作重复或功能重复。",
       "3. pacing：节奏是否松散、失衡、过快跳跃或关键处压缩不足。",
@@ -166,7 +200,8 @@ export const chapterReviewPrompt: PromptAsset<
       "",
       "请输出章节审查 JSON。",
     ].join("\n")),
-  ],
+    ];
+  },
 };
 
 export const chapterRepairPrompt: PromptAsset<ChapterRepairPromptInput, string, string> = {

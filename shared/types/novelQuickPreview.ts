@@ -16,3 +16,21 @@ export interface QuickPreviewInput {
   model?: string;
   temperature?: number;
 }
+
+export interface PreviewChapter {
+  title: string;
+  wordCount: number;
+  content: string;
+}
+
+export interface GeneratePreviewChaptersInput {
+  inspiration: string;
+  candidate: QuickPreviewCandidate;
+  provider?: LLMProvider;
+  model?: string;
+  temperature?: number;
+}
+
+export interface GeneratePreviewChaptersResult {
+  chapters: PreviewChapter[];
+}

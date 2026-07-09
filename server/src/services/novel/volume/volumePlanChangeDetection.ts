@@ -110,6 +110,7 @@ function getChapterChangedFields(existing: ExistingChapterRecord, chapter: Volum
   if (!compareNumber(existing.conflictLevel, chapter.conflictLevel)) changed.push("冲突等级");
   if (!compareNumber(existing.revealLevel, chapter.revealLevel)) changed.push("揭露等级");
   if (!compareText(existing.mustAvoid, chapter.mustAvoid)) changed.push("禁止事项");
+  if (!compareText(existing.tensionLevel, chapter.tensionLevel)) changed.push("张力等级");
   if (!compareText(existing.taskSheet, chapter.taskSheet)) changed.push("任务单");
   if (!compareText(existing.sceneCards, chapter.sceneCards)) changed.push("场景预算");
   return changed;
@@ -429,6 +430,7 @@ function collectVolumeChangedFields(beforeVolume: VolumePlan | undefined, afterV
       conflictLevel: beforeChapter.conflictLevel,
       revealLevel: beforeChapter.revealLevel,
       mustAvoid: beforeChapter.mustAvoid,
+      tensionLevel: beforeChapter.tensionLevel,
       taskSheet: beforeChapter.taskSheet,
       sceneCards: beforeChapter.sceneCards,
     }, chapter, "update").length > 0;

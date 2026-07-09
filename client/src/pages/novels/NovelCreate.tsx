@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { UnifiedTaskDetail } from "@ai-novel/shared/types/task";
-import type { QuickPreviewCandidate } from "@ai-novel/shared/types/novelQuickPreview";
+import type { PreviewChapter, QuickPreviewCandidate } from "@ai-novel/shared/types/novelQuickPreview";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { BOOK_ANALYSIS_SECTIONS } from "@ai-novel/shared/types/bookAnalysis";
@@ -33,6 +33,7 @@ export default function NovelCreate() {
   const [inspiration, setInspiration] = useState("");
   const [restoredWorkflowTask, setRestoredWorkflowTask] = useState<UnifiedTaskDetail | null>(null);
   const [directorWorkflowTaskId, setDirectorWorkflowTaskId] = useState("");
+  const [directorIdea, setDirectorIdea] = useState("");
 
   const workflowTaskIdFromQuery = searchParams.get("workflowTaskId") ?? "";
   const workflowMode = searchParams.get("mode");
@@ -184,7 +185,18 @@ export default function NovelCreate() {
     setBasicForm((prev) => patchNovelBasicForm(prev, {
       title: candidate.title,
       description: candidate.synopsis,
+      worldSetting: candidate.previewText,
     }));
+  };
+
+  const handleStartFormalCreation = (candidate: QuickPreviewCandidate, _chapters: PreviewChapter[]) => {
+    setBasicForm((prev) => patchNovelBasicForm(prev, {
+      title: candidate.title,
+      description: candidate.synopsis,
+      worldSetting: candidate.previewText,
+    }));
+    setDirectorIdea(candidate.synopsis);
+    setDirectorWorkflowTaskId("");
   };
 
   return (
@@ -207,6 +219,7 @@ export default function NovelCreate() {
             <QuickPreviewPanel
               inspiration={inspiration}
               onApplyCandidate={handleApplyCandidate}
+              onStartFormalCreation={handleStartFormalCreation}
             />
           </div>
         </CardContent>
@@ -255,7 +268,9 @@ export default function NovelCreate() {
                 worldOptions={worldListQuery.data?.data ?? []}
                 workflowTaskId={directorWorkflowTaskId}
                 restoredTask={restoredWorkflowTask}
-                initialOpen={workflowMode === "director"}
+                initialOpen={workflowMode === "director" || Boolean(directorIdea)}
+                initialIdea={directorIdea}
+                onInitialIdeaConsumed={() => setDirectorIdea("")}
                 onBasicFormChange={(patch) => setBasicForm((prev) => patchNovelBasicForm(prev, patch))}
                 onWorkflowTaskChange={(taskId) => {
                   setDirectorWorkflowTaskId(taskId);

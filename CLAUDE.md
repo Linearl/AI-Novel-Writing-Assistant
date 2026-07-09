@@ -70,7 +70,7 @@ infra/           Docker Compose（Qdrant 等）
 | 目录 | 职责 |
 |------|------|
 | `app.ts` | Express 入口，挂载所有路由 |
-| `modules/` | 模块化产品能力（novel/comic/drama/export/setup），各模块自带 `http/` 入口 |
+| `modules/` | 模块化产品能力（novel/export/setup），各模块自带 `http/` 入口 |
 | `services/` | 业务服务层（`novel/director/` 是自动导演核心） |
 | `routes/` | Express 路由（正逐步收敛到模块 `http/` 入口） |
 | `prompting/` | **Prompt Registry** — 所有产品级 prompt 必须在此注册 |

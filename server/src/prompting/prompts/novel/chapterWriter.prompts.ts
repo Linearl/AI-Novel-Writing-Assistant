@@ -1,13 +1,49 @@
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 import type { PromptAsset } from "../../core/promptTypes";
 import { renderSelectedContextBlocks } from "../../core/renderContextBlocks";
+import type { TensionLevel } from "@ai-novel/shared/types/novel";
 import { NOVEL_PROMPT_BUDGETS } from "./promptBudgetProfiles";
+
+const TENSION_INSTRUCTIONS: Record<TensionLevel, string> = {
+  low: [
+    "本章处于低张力区间，允许舒缓节奏。",
+    "可加大环境描写、内心独白、人物互动的比重，营造氛围与情感铺垫。",
+    "情节推进可以放缓，注重人物关系的细微变化和日常细节的刻画。",
+    "冲突不必密集，允许留白和呼吸空间。",
+  ].join("\n"),
+  medium: [
+    "本章处于中等张力区间，平衡推进。",
+    "叙事密度适中，兼顾情节推进与情感刻画。",
+    "保持稳定的叙事节奏，不要过度压缩也不要过度舒缓。",
+  ].join("\n"),
+  high: [
+    "本章处于高张力区间，紧凑推进。",
+    "减少闲笔与过渡，每一段都应服务于冲突、对抗或关键信息揭示。",
+    "对话应短促有力，动作描写应紧凑，避免长段无关氛围铺陈。",
+    "节奏不能失速，读者的阅读紧迫感必须维持。",
+  ].join("\n"),
+  climax: [
+    "本章处于高潮张力区间，节奏极快，情感集中爆发。",
+    "全文围绕核心冲突或情感高潮展开，不允许偏离主线的支线或闲笔。",
+    "短句、快节奏、高密度信息推进，段落要短，切换要快。",
+    "情感冲击力是首要目标——读者应在本章感受到最强烈的情感共振。",
+    "结尾必须留下最强的钩子或情感余韵。",
+  ].join("\n"),
+};
+
+function buildTensionGuide(tensionLevel?: string | null): string {
+  if (!tensionLevel || !(tensionLevel in TENSION_INSTRUCTIONS)) {
+    return "";
+  }
+  return TENSION_INSTRUCTIONS[tensionLevel as TensionLevel];
+}
 
 export interface ChapterWriterPromptInput {
   novelTitle: string;
   chapterOrder: number;
   chapterTitle: string;
   mode?: "draft" | "continue";
+  tensionLevel?: string | null;
   targetWordCount?: number | null;
   minWordCount?: number | null;
   maxWordCount?: number | null;
@@ -165,6 +201,8 @@ export const chapterWriterPrompt: PromptAsset<ChapterWriterPromptInput, string, 
       ?? "避免以下网文套路：秘境/新副本突然出现打断情节、角色当场进行长串系统介绍、主角出场必打脸、每章结尾靠「突破了」作为唯一高潮。";
     const wordCountHint = slots?.token("writer.wordCountHint") ?? "3000 字左右";
 
+    const tensionGuide = buildTensionGuide(input.tensionLevel);
+
     const hasTarget = typeof input.targetWordCount === "number" && input.targetWordCount > 0;
     const lengthBlock = hasTarget
       ? [
@@ -217,6 +255,7 @@ export const chapterWriterPrompt: PromptAsset<ChapterWriterPromptInput, string, 
         "3. 本章至少出现一次明确的「状态变化」（信息反转、局面升级、关系变化、风险上升或计划转向）。",
         "4. " + endingHook,
         "",
+        ...(tensionGuide ? ["【节奏张力】", tensionGuide, ""] : []),
         "【篇幅要求】",
         lengthBlock,
         "",

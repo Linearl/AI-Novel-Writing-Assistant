@@ -12,6 +12,20 @@ const quickPreviewSchema = z.object({
   temperature: z.number().min(0).max(2).optional(),
 });
 
+const candidateSchema = z.object({
+  title: z.string().trim().min(1),
+  synopsis: z.string().trim().min(1),
+  previewText: z.string().trim().min(1),
+});
+
+const generateChaptersSchema = z.object({
+  inspiration: z.string().trim().min(1, "请输入灵感内容。").max(500, "灵感内容不能超过 500 字。"),
+  candidate: candidateSchema,
+  provider: llmProviderSchema.optional(),
+  model: z.string().trim().optional(),
+  temperature: z.number().min(0).max(2).optional(),
+});
+
 interface RegisterNovelQuickPreviewRoutesInput {
   router: Router;
 }
@@ -30,6 +44,24 @@ export function registerNovelQuickPreviewRoutes(input: RegisterNovelQuickPreview
           success: true,
           data,
           message: "快速预览已生成。",
+        } satisfies ApiResponse<typeof data>);
+      } catch (error) {
+        next(error);
+      }
+    },
+  );
+
+  router.post(
+    "/quick-preview/generate-chapters",
+    validate({ body: generateChaptersSchema }),
+    async (req, res, next) => {
+      try {
+        const body = req.body as z.infer<typeof generateChaptersSchema>;
+        const data = await novelQuickPreviewService.generateChapters(body);
+        res.status(200).json({
+          success: true,
+          data,
+          message: "前 3 章快速预览已生成。",
         } satisfies ApiResponse<typeof data>);
       } catch (error) {
         next(error);
