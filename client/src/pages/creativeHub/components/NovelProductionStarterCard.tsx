@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import type { CreativeHubProductionStatus } from "@ai-novel/shared/types/creativeHub";
 import { getNovelDetail, updateNovel } from "@/api/novel";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/toast";
 
 interface NovelProductionStarterCardProps {
@@ -247,8 +248,8 @@ export default function NovelProductionStarterCard({
             onChange={(event) => setTitle(event.target.value)}
           />
         ) : null}
-        <textarea
-          className="min-h-[88px] w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-slate-400"
+        <Textarea
+          className="min-h-[88px]"
           placeholder="简介 / 核心设定"
           value={description}
           onChange={(event) => setDescription(event.target.value)}

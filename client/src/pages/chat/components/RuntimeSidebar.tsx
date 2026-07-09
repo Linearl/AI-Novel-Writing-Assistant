@@ -3,6 +3,8 @@ import type { AgentStep } from "@ai-novel/shared/types/agent";
 import KnowledgeDocumentPicker from "@/components/knowledge/KnowledgeDocumentPicker";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { StatusBadge } from "@/components/ui/status-badge";
+import { Textarea } from "@/components/ui/textarea";
 
 type ChatMode = "standard" | "agent";
 type ContextMode = "global" | "novel";
@@ -221,9 +223,9 @@ export default function RuntimeSidebar({
               <div className="mb-2 flex items-center justify-between">
                 <div className="text-xs font-medium tracking-wide text-slate-500">审批</div>
                 {approvalCards.length > 0 ? (
-                  <div className="rounded-full bg-amber-50 px-2 py-0.5 text-[11px] font-medium text-amber-700 ring-1 ring-amber-200">
+                  <StatusBadge variant="warning">
                     {approvalCards.length} 项待处理
-                  </div>
+                  </StatusBadge>
                 ) : null}
               </div>
 
@@ -236,8 +238,8 @@ export default function RuntimeSidebar({
                       <div className="mt-2 rounded-lg bg-white p-2 text-sm text-slate-800">{item.summary}</div>
                     </div>
                   ))}
-                  <textarea
-                    className="min-h-[88px] w-full rounded-lg border border-slate-300 bg-slate-50 p-2"
+                  <Textarea
+                    className="min-h-[88px] rounded-lg border-slate-300 bg-slate-50"
                     value={approvalNote}
                     onChange={(event) => onApprovalNoteChange(event.target.value)}
                     placeholder="审批备注（可选）"
@@ -327,8 +329,8 @@ export default function RuntimeSidebar({
 
                 <div>
                   <div className="mb-2 text-xs font-medium tracking-wide text-slate-500">系统提示词</div>
-                  <textarea
-                    className="min-h-[110px] w-full rounded-lg border border-slate-300 p-2"
+                  <Textarea
+                    className="min-h-[110px] rounded-lg border-slate-300"
                     value={systemPrompt}
                     onChange={(event) => onSystemPromptChange(event.target.value)}
                     placeholder="覆盖默认系统提示词。"

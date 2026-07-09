@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { StatusBadge } from "@/components/ui/status-badge";
 import type { BasicInfoOption } from "../../novelBasicInfo.shared";
 
 export function HelpHint({ text }: { text: string }) {
@@ -75,9 +76,9 @@ export function SelectionCard<T extends string>({
       <div className="flex items-center justify-between gap-2">
         <div className="text-sm font-medium text-foreground">{option.label}</div>
         {option.recommended ? (
-          <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-medium text-emerald-700">
+          <StatusBadge variant="success" className="bg-emerald-500/10 text-[10px]">
             推荐
-          </span>
+          </StatusBadge>
         ) : null}
       </div>
       <div className="mt-1 text-xs leading-5 text-muted-foreground">{option.summary}</div>

@@ -14,6 +14,7 @@ import type { WorldStructurePayload } from "@/api/world";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import WorldFactionsSection from "./structure/WorldFactionsSection";
 import WorldRelationsSection from "./structure/WorldRelationsSection";
 
@@ -165,8 +166,7 @@ export default function WorldStructureTab(props: {
             }
             placeholder="整体调性"
           />
-          <textarea
-            className="min-h-[100px] w-full rounded-md border bg-background p-2 text-sm"
+          <Textarea className="min-h-[100px] p-2"
             value={draftStructure.profile.summary}
             onChange={(event) =>
               setDraftStructure((prev) =>
@@ -177,8 +177,7 @@ export default function WorldStructureTab(props: {
             }
             placeholder="世界摘要"
           />
-          <textarea
-            className="min-h-[80px] w-full rounded-md border bg-background p-2 text-sm"
+          <Textarea className="min-h-[80px] p-2"
             value={draftStructure.profile.coreConflict}
             onChange={(event) =>
               setDraftStructure((prev) =>
@@ -241,8 +240,7 @@ export default function WorldStructureTab(props: {
               新增规则
             </Button>
           </div>
-          <textarea
-            className="min-h-[80px] w-full rounded-md border bg-background p-2 text-sm"
+          <Textarea className="min-h-[80px] p-2"
             value={draftStructure.rules.summary}
             onChange={(event) =>
               setDraftStructure((prev) =>
@@ -297,8 +295,7 @@ export default function WorldStructureTab(props: {
                   placeholder="代价"
                 />
               </div>
-              <textarea
-                className="min-h-[80px] w-full rounded-md border bg-background p-2 text-sm"
+              <Textarea className="min-h-[80px] p-2"
                 value={rule.summary}
                 onChange={(event) =>
                   setDraftStructure((prev) =>
@@ -444,8 +441,7 @@ export default function WorldStructureTab(props: {
                   placeholder="地形 / 地貌"
                 />
               </div>
-              <textarea
-                className="min-h-[80px] w-full rounded-md border bg-background p-2 text-sm"
+              <Textarea className="min-h-[80px] p-2"
                 value={location.summary}
                 onChange={(event) =>
                   setDraftStructure((prev) =>

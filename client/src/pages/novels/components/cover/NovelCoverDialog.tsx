@@ -8,6 +8,7 @@ import {
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import type { LLMProvider } from "@ai-novel/shared/types/llm";
+import { StatusBadge } from "@/components/ui/status-badge";
 import {
   deleteImageAsset,
   generateNovelCover,
@@ -24,6 +25,7 @@ import { queryKeys } from "@/api/queryKeys";
 import { getAPIKeySettings } from "@/api/settings";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
 import type { StoryWorldSliceView } from "@ai-novel/shared/types/storyWorldSlice";
 import type { NovelBasicFormState } from "../../novelBasicInfo.shared";
 import {
@@ -356,8 +358,8 @@ export function NovelCoverDialog(props: NovelCoverDialogProps) {
                 系统已经根据当前小说基础信息整理了一版封面输入草稿。你可以直接改，也可以先点“AI优化Prompt”再继续手动调整。
               </div>
             </div>
-            <textarea
-              className="min-h-[190px] max-h-[34vh] w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm leading-7 text-slate-900 shadow-sm outline-none transition focus:border-slate-400 focus:ring-2 focus:ring-slate-200"
+            <Textarea
+              className="min-h-[190px] max-h-[34vh] rounded-2xl border-slate-200 bg-white px-4 py-3 leading-7 text-slate-900 shadow-sm focus:border-slate-400 focus:ring-2 focus:ring-slate-200"
               placeholder="描述这本书想突出什么样的封面主画面。"
               value={sourcePrompt}
               onChange={(event) => updateSourcePrompt(event.target.value)}
@@ -427,8 +429,8 @@ export function NovelCoverDialog(props: NovelCoverDialogProps) {
                 这里展示最终会发送给图像模型的 prompt。你可以直接编辑，也可以在 AI 优化后继续做细调。
               </div>
             </div>
-            <textarea
-              className="min-h-[240px] max-h-[40vh] w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm leading-7 text-slate-900 shadow-sm outline-none transition focus:border-slate-400 focus:ring-2 focus:ring-slate-200"
+            <Textarea
+              className="min-h-[240px] max-h-[40vh] rounded-2xl border-slate-200 bg-white px-4 py-3 leading-7 text-slate-900 shadow-sm focus:border-slate-400 focus:ring-2 focus:ring-slate-200"
               value={finalPromptPreview}
               onChange={(event) => {
                 activateDirectPrompt(event.target.value, "manual");
@@ -583,12 +585,12 @@ export function NovelCoverDialog(props: NovelCoverDialogProps) {
                     </div>
 
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className={asset.isPrimary
-                        ? "rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700"
-                        : "rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700"}
+                      <StatusBadge
+                        variant={asset.isPrimary ? "success" : "info"}
+                        className="px-3 py-1 text-xs"
                       >
                         {asset.isPrimary ? "当前主封面" : "候选图"}
-                      </span>
+                      </StatusBadge>
                       <span className="text-xs text-slate-500">
                         {asset.width && asset.height ? `${asset.width} x ${asset.height}` : "尺寸待定"}
                       </span>

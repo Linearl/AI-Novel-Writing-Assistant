@@ -1,6 +1,7 @@
 import type { LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
 import { Badge } from "@/components/ui/badge";
+import { Textarea } from "@/components/ui/textarea";
 
 export function SectionHeader({
   icon: Icon,
@@ -34,8 +35,8 @@ export function HandbookTextarea(props: {
   minRows?: number;
 }) {
   return (
-    <textarea
-      className="min-h-[96px] w-full rounded-md border bg-background p-3 text-sm leading-6"
+    <Textarea
+      className="min-h-[96px] p-3 leading-6"
       style={{ minHeight: `${(props.minRows ?? 4) * 24 + 24}px` }}
       value={props.value}
       onChange={(event) => props.onChange(event.target.value)}

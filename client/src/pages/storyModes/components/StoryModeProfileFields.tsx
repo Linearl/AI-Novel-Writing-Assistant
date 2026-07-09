@@ -1,4 +1,5 @@
 import type { StoryModeProfile } from "@ai-novel/shared/types/storyMode";
+import { Textarea } from "@/components/ui/textarea";
 
 function linesToList(value: string): string[] {
   return value
@@ -34,47 +35,42 @@ export default function StoryModeProfileFields({
     <div className="grid gap-3">
       <label className="space-y-2 text-sm">
         <span className="font-medium text-foreground">核心驱动</span>
-        <textarea
+        <Textarea
           rows={2}
-          className="w-full rounded-md border bg-background px-3 py-2 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
-          value={value.coreDrive}
+                   value={value.coreDrive}
           onChange={(event) => onChange({ ...value, coreDrive: event.target.value })}
         />
       </label>
       <label className="space-y-2 text-sm">
         <span className="font-medium text-foreground">读者奖励</span>
-        <textarea
+        <Textarea
           rows={2}
-          className="w-full rounded-md border bg-background px-3 py-2 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
-          value={value.readerReward}
+                   value={value.readerReward}
           onChange={(event) => onChange({ ...value, readerReward: event.target.value })}
         />
       </label>
       <div className="grid gap-3 md:grid-cols-2">
         <label className="space-y-2 text-sm">
           <span className="font-medium text-foreground">章节推进单位</span>
-          <textarea
+          <Textarea
             rows={4}
-            className="w-full rounded-md border bg-background px-3 py-2 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
-            value={listToLines(value.progressionUnits)}
+                       value={listToLines(value.progressionUnits)}
             onChange={(event) => updateList("progressionUnits", event.target.value)}
           />
         </label>
         <label className="space-y-2 text-sm">
           <span className="font-medium text-foreground">允许冲突形式</span>
-          <textarea
+          <Textarea
             rows={4}
-            className="w-full rounded-md border bg-background px-3 py-2 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
-            value={listToLines(value.allowedConflictForms)}
+                       value={listToLines(value.allowedConflictForms)}
             onChange={(event) => updateList("allowedConflictForms", event.target.value)}
           />
         </label>
         <label className="space-y-2 text-sm">
           <span className="font-medium text-foreground">禁止冲突形式</span>
-          <textarea
+          <Textarea
             rows={4}
-            className="w-full rounded-md border bg-background px-3 py-2 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
-            value={listToLines(value.forbiddenConflictForms)}
+                       value={listToLines(value.forbiddenConflictForms)}
             onChange={(event) => updateList("forbiddenConflictForms", event.target.value)}
           />
         </label>
@@ -94,47 +90,42 @@ export default function StoryModeProfileFields({
       <div className="grid gap-3 md:grid-cols-2">
         <label className="space-y-2 text-sm">
           <span className="font-medium text-foreground">化解方式</span>
-          <textarea
+          <Textarea
             rows={2}
-            className="w-full rounded-md border bg-background px-3 py-2 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
-            value={value.resolutionStyle}
+                       value={value.resolutionStyle}
             onChange={(event) => onChange({ ...value, resolutionStyle: event.target.value })}
           />
         </label>
         <label className="space-y-2 text-sm">
           <span className="font-medium text-foreground">章节颗粒</span>
-          <textarea
+          <Textarea
             rows={2}
-            className="w-full rounded-md border bg-background px-3 py-2 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
-            value={value.chapterUnit}
+                       value={value.chapterUnit}
             onChange={(event) => onChange({ ...value, chapterUnit: event.target.value })}
           />
         </label>
         <label className="space-y-2 text-sm">
           <span className="font-medium text-foreground">卷末奖励</span>
-          <textarea
+          <Textarea
             rows={2}
-            className="w-full rounded-md border bg-background px-3 py-2 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
-            value={value.volumeReward}
+                       value={value.volumeReward}
             onChange={(event) => onChange({ ...value, volumeReward: event.target.value })}
           />
         </label>
         <label className="space-y-2 text-sm">
           <span className="font-medium text-foreground">必须出现的信号</span>
-          <textarea
+          <Textarea
             rows={4}
-            className="w-full rounded-md border bg-background px-3 py-2 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
-            value={listToLines(value.mandatorySignals)}
+                       value={listToLines(value.mandatorySignals)}
             onChange={(event) => updateList("mandatorySignals", event.target.value)}
           />
         </label>
       </div>
       <label className="space-y-2 text-sm">
         <span className="font-medium text-foreground">必须避免的跑偏信号</span>
-        <textarea
+        <Textarea
           rows={4}
-          className="w-full rounded-md border bg-background px-3 py-2 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
-          value={listToLines(value.antiSignals)}
+                   value={listToLines(value.antiSignals)}
           onChange={(event) => updateList("antiSignals", event.target.value)}
         />
       </label>

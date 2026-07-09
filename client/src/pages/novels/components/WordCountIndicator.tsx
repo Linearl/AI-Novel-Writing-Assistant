@@ -1,6 +1,7 @@
 import type { Chapter, ChapterRole, WaterContentAnalysis, WordCountTarget } from "@ai-novel/shared/types/novel";
 import { CHAPTER_ROLE_LABELS } from "@ai-novel/shared/types/novel";
 import { Badge } from "@/components/ui/badge";
+import { StatusBadge } from "@/components/ui/status-badge";
 import { cn } from "@/lib/utils";
 import { AlertTriangle } from "lucide-react";
 
@@ -144,13 +145,10 @@ function WaterContentBadge(props: { analysis: WaterContentAnalysis }) {
   }
 
   return (
-    <span
-      className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 text-[11px] font-medium text-amber-700 ring-1 ring-inset ring-amber-600/20"
-      title={`水文密度 ${scorePct}%，超过阈值。无效描写占比偏高，建议精简。`}
-    >
+    <StatusBadge variant="warning" className="gap-1" title={`水文密度 ${scorePct}%，超过阈值。无效描写占比偏高，建议精简。`}>
       <AlertTriangle className="h-3 w-3 shrink-0" aria-hidden="true" />
       水文 {scorePct}%
-    </span>
+    </StatusBadge>
   );
 }
 

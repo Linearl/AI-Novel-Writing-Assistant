@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import type { ChapterEditorOperation } from "@ai-novel/shared/types/novel";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import type { SelectionToolbarPosition } from "./chapterEditorTypes";
 import { CHAPTER_EDITOR_OPERATION_LABELS } from "./chapterEditorUtils";
 
@@ -68,8 +69,8 @@ export default function SelectionAIFloatingToolbar(props: SelectionAIFloatingToo
 
       {isCustomOpen ? (
         <div className="mt-2 space-y-2 rounded-xl border border-border/70 bg-muted/20 p-2">
-          <textarea
-            className="min-h-[96px] w-full resize-none rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none"
+          <Textarea
+            className="min-h-[96px] resize-none"
             placeholder="例如：让这段更压抑一点，保留原信息，但把节奏压得更紧。"
             value={customInstruction}
             onChange={(event) => setCustomInstruction(event.target.value)}

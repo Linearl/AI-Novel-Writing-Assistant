@@ -11,6 +11,7 @@ import { queryKeys } from "@/api/queryKeys";
 import { flattenStoryModeTreeOptions, getStoryModeTree } from "@/api/storyMode";
 import { getWorldList } from "@/api/world";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
 import NovelAutoDirectorDialog from "./components/NovelAutoDirectorDialog";
 import NovelBasicInfoForm from "./components/NovelBasicInfoForm";
 import NovelCreateResourceRecommendationCard from "./components/NovelCreateResourceRecommendationCard";
@@ -210,8 +211,8 @@ export default function NovelCreate() {
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            <textarea
-              className="border-input bg-background placeholder:text-muted-foreground focus-visible:ring-ring min-h-[80px] w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+            <Textarea
+              className="min-h-[80px]"
               placeholder="例如：一个社恐程序员意外穿越到修仙世界，发现自己写的代码变成了法术..."
               value={inspiration}
               onChange={(e) => setInspiration(e.target.value)}

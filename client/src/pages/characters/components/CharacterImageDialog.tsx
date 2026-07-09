@@ -16,6 +16,7 @@ import { getAPIKeySettings } from "@/api/settings";
 import { queryKeys } from "@/api/queryKeys";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
 
 const IMAGE_STATUS_TEXT: Record<string, string> = {
   queued: "排队中",
@@ -255,8 +256,8 @@ export function CharacterImageDialog({
                 这里填写角色描述。点击“AI优化Prompt”后，会把这段描述整理成图片生成专用 prompt。
               </div>
             </div>
-            <textarea
-              className="min-h-[190px] max-h-[38vh] w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm leading-7 text-slate-900 shadow-sm outline-none transition focus:border-slate-400 focus:ring-2 focus:ring-slate-200"
+            <Textarea
+              className="min-h-[190px] max-h-[38vh] rounded-2xl border-slate-200 bg-white p-3 px-4 text-slate-900 shadow-sm outline-none transition focus:border-slate-400 focus:ring-2 focus:ring-slate-200"
               placeholder="输入角色描述，越具体越好。"
               value={sourcePrompt}
               onChange={(event) => updateSourcePrompt(event.target.value)}
@@ -326,8 +327,8 @@ export function CharacterImageDialog({
                 这里展示最终会发送给图像模型的 prompt。你可以直接手动编辑；AI 优化后，也可以继续在这里修改。
               </div>
             </div>
-            <textarea
-              className="min-h-[240px] max-h-[42vh] w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm leading-7 text-slate-900 shadow-sm outline-none transition focus:border-slate-400 focus:ring-2 focus:ring-slate-200"
+            <Textarea
+              className="min-h-[240px] max-h-[42vh] rounded-2xl border-slate-200 bg-white p-3 px-4 text-slate-900 shadow-sm outline-none transition focus:border-slate-400 focus:ring-2 focus:ring-slate-200"
               value={finalPromptPreview}
               onChange={(event) => {
                 activateDirectPrompt(event.target.value, "manual");

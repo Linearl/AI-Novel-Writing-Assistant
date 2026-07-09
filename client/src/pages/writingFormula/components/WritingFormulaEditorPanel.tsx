@@ -8,7 +8,9 @@ import {
 } from "@ai-novel/shared/types/styleEngine";
 import type { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
+import { StatusBadge } from "@/components/ui/status-badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
 import { buildReadableRuleEntries, type RuleSection } from "../writingFormulaRulePresentation";
 import { parseJsonInput } from "../writingFormula.utils";
 import { isStarterStyleProfile } from "../writingFormulaV2.shared";
@@ -170,8 +172,8 @@ function RuleFieldCard(props: {
               当前 JSON 结构无法正常识别。保存时系统会尽量回退为空对象，建议先修正格式再保存。
             </div>
           ) : null}
-          <textarea
-            className="min-h-[190px] w-full rounded-xl border bg-slate-50 p-3 font-mono text-xs"
+          <Textarea
+            className="min-h-[190px] rounded-xl bg-slate-50 font-mono text-xs"
             value={props.value}
             onChange={(event) => props.onChange(event.target.value)}
           />
@@ -260,8 +262,8 @@ export default function WritingFormulaEditorPanel(props: WritingFormulaEditorPan
                 label="一句话简介"
                 hint="用一句完整的话说明这套写法要产生什么读感、推进感或人物表达气质。"
               >
-                <textarea
-                  className="min-h-[96px] w-full rounded-md border p-2 text-sm"
+                <Textarea
+                  className="min-h-[96px]"
                   placeholder="例如：冲突密集、推进快、对白直接、情绪外显，适合都市升级文。"
                   value={editor.description}
                   onChange={(event) => onEditorChange({ description: event.target.value })}
@@ -304,8 +306,8 @@ export default function WritingFormulaEditorPanel(props: WritingFormulaEditorPan
                   label="原文样本"
                   hint="这里保存提取这套写法时参考过的文本。样本越完整，系统越容易提取到稳定特征。"
                 >
-                  <textarea
-                    className="min-h-[160px] w-full rounded-md border p-2 text-sm"
+                  <Textarea
+                    className="min-h-[160px]"
                     placeholder="这套写法资产提取时使用的原文样本"
                     value={editor.sourceContent}
                     onChange={(event) => onEditorChange({ sourceContent: event.target.value })}
@@ -409,12 +411,12 @@ export default function WritingFormulaEditorPanel(props: WritingFormulaEditorPan
                                   </div>
                                   <div className="mt-1 text-xs leading-6 text-slate-500">{preset.summary}</div>
                                   <div className="mt-3 flex flex-wrap gap-2">
-                                    <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] text-emerald-700">
+                                    <StatusBadge variant="success" className="border border-emerald-200">
                                       保留 {counts.keep}
-                                    </span>
-                                    <span className="rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[11px] text-amber-700">
+                                    </StatusBadge>
+                                    <StatusBadge variant="warning" className="border border-amber-200">
                                       弱化 {counts.weaken}
-                                    </span>
+                                    </StatusBadge>
                                     <span className="rounded-full border border-rose-200 bg-rose-50 px-2 py-0.5 text-[11px] text-rose-700">
                                       剥离 {counts.remove}
                                     </span>
@@ -472,8 +474,8 @@ export default function WritingFormulaEditorPanel(props: WritingFormulaEditorPan
                   这里不是给读者看的文案，而是给你自己和系统回看时用的补充说明。可以写为什么保留这套写法、它最重要的气质是什么。
                 </div>
               </div>
-              <textarea
-                className="min-h-[110px] w-full rounded-md border p-2 text-sm"
+              <Textarea
+                className="min-h-[110px]"
                 placeholder="例如：这套写法重点保留强推进和直给对白，不追求细腻抒情。"
                 value={editor.analysisMarkdown}
                 onChange={(event) => onEditorChange({ analysisMarkdown: event.target.value })}

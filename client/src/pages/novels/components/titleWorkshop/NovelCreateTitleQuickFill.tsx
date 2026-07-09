@@ -20,6 +20,7 @@ import AiButton from "@/components/common/AiButton";
 import LLMSelector from "@/components/common/LLMSelector";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog,
   DialogContent,
@@ -223,9 +224,9 @@ export default function NovelCreateTitleQuickFill({
                     >
                       补充标题简报
                     </label>
-                    <textarea
+                    <Textarea
                       id="novel-create-title-quick-brief"
-                      className="min-h-[132px] w-full rounded-md border bg-background px-3 py-2 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                      className="min-h-[132px]"
                       value={manualBrief}
                       onChange={(event) => setManualBrief(event.target.value)}
                       placeholder="例如：末世废土里，一个被流放的维修师意外掌握古代机甲核心，想要标题更有硬核设定感和命运感。"

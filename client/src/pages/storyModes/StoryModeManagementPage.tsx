@@ -26,6 +26,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/toast";
 import { useLLMStore } from "@/store/llmStore";
 import StoryModeProfileFields from "./components/StoryModeProfileFields";
@@ -419,10 +420,9 @@ export default function StoryModeManagementPage() {
                   </select>
                 </label>
               ) : null}
-              <textarea
+              <Textarea
                 rows={4}
-                className="w-full rounded-md border bg-background px-3 py-2 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
-                value={generationPrompt}
+                               value={generationPrompt}
                 onChange={(event) => setGenerationPrompt(event.target.value)}
                 placeholder={isCreatingChild
                   ? "可选：补充你想偏向的子类方向。不填则 AI 会直接基于父类和现有兄弟节点衍生。"
@@ -506,19 +506,17 @@ export default function StoryModeManagementPage() {
             </label>
             <label className="space-y-2 text-sm">
               <span className="font-medium text-foreground">描述</span>
-              <textarea
+              <Textarea
                 rows={3}
-                className="w-full rounded-md border bg-background px-3 py-2 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
-                value={createDraft.description ?? ""}
+                               value={createDraft.description ?? ""}
                 onChange={(event) => updateCreateDraft((prev) => ({ ...prev, description: event.target.value }))}
               />
             </label>
             <label className="space-y-2 text-sm">
               <span className="font-medium text-foreground">人工模板补充</span>
-              <textarea
+              <Textarea
                 rows={3}
-                className="w-full rounded-md border bg-background px-3 py-2 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
-                value={createDraft.template ?? ""}
+                               value={createDraft.template ?? ""}
                 onChange={(event) => updateCreateDraft((prev) => ({ ...prev, template: event.target.value }))}
               />
             </label>
@@ -576,19 +574,17 @@ export default function StoryModeManagementPage() {
               </label>
               <label className="space-y-2 text-sm">
                 <span className="font-medium text-foreground">描述</span>
-                <textarea
+                <Textarea
                   rows={3}
-                  className="w-full rounded-md border bg-background px-3 py-2 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
-                  value={editState.description}
+                                   value={editState.description}
                   onChange={(event) => setEditState((prev) => ({ ...prev, description: event.target.value }))}
                 />
               </label>
               <label className="space-y-2 text-sm">
                 <span className="font-medium text-foreground">人工模板补充</span>
-                <textarea
+                <Textarea
                   rows={3}
-                  className="w-full rounded-md border bg-background px-3 py-2 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
-                  value={editState.template}
+                                   value={editState.template}
                   onChange={(event) => setEditState((prev) => ({ ...prev, template: event.target.value }))}
                 />
               </label>

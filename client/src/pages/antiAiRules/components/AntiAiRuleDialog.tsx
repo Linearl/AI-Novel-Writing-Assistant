@@ -4,6 +4,7 @@ import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AppDialogContent, Dialog } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { RuleFormState } from "../antiAiRulesPage.shared";
 import AntiAiToggleLine from "./AntiAiToggleLine";
@@ -62,8 +63,8 @@ export default function AntiAiRuleDialog(props: AntiAiRuleDialogProps) {
                 {props.isAiDrafting ? "生成中..." : props.editingRule ? "AI 优化草稿" : "AI 生成草稿"}
               </Button>
             </div>
-            <textarea
-              className="mt-3 min-h-[84px] w-full rounded-md border bg-background p-3 text-sm"
+            <Textarea
+              className="mt-3 min-h-[84px] p-3"
               value={props.aiInstruction}
               placeholder={props.editingRule
                 ? "例如：把这条规则改得更适合压制总结腔，但不要误伤正常心理描写。"
@@ -115,8 +116,8 @@ export default function AntiAiRuleDialog(props: AntiAiRuleDialogProps) {
 
           <label className="space-y-1.5 text-sm">
             <span className="font-medium">说明</span>
-            <textarea
-              className="min-h-[76px] w-full rounded-md border bg-background p-3 text-sm"
+            <Textarea
+              className="min-h-[76px] p-3"
               value={props.form.description}
               placeholder="说明这条规则要压制或鼓励哪类表达。"
               onChange={(event) => props.onFormChange({ description: event.target.value })}
@@ -125,8 +126,8 @@ export default function AntiAiRuleDialog(props: AntiAiRuleDialogProps) {
 
           <label className="space-y-1.5 text-sm">
             <span className="font-medium">检测关键词</span>
-            <textarea
-              className="min-h-[80px] w-full rounded-md border bg-background p-3 text-sm"
+            <Textarea
+              className="min-h-[80px] p-3"
               value={props.form.detectPatternsText}
               placeholder="每行一个关键词，也可以用逗号分隔。"
               onChange={(event) => props.onFormChange({ detectPatternsText: event.target.value })}
@@ -136,8 +137,8 @@ export default function AntiAiRuleDialog(props: AntiAiRuleDialogProps) {
           <div className="grid gap-3 md:grid-cols-2">
             <label className="space-y-1.5 text-sm">
               <span className="font-medium">生成指令</span>
-              <textarea
-                className="min-h-[120px] w-full rounded-md border bg-background p-3 text-sm"
+              <Textarea
+                className="min-h-[120px] p-3"
                 value={props.form.promptInstruction}
                 placeholder="写进正文生成约束的具体表达要求。"
                 onChange={(event) => props.onFormChange({ promptInstruction: event.target.value })}
@@ -145,8 +146,8 @@ export default function AntiAiRuleDialog(props: AntiAiRuleDialogProps) {
             </label>
             <label className="space-y-1.5 text-sm">
               <span className="font-medium">修正建议</span>
-              <textarea
-                className="min-h-[120px] w-full rounded-md border bg-background p-3 text-sm"
+              <Textarea
+                className="min-h-[120px] p-3"
                 value={props.form.rewriteSuggestion}
                 placeholder="检测命中后给用户或改写链路的调整建议。"
                 onChange={(event) => props.onFormChange({ rewriteSuggestion: event.target.value })}

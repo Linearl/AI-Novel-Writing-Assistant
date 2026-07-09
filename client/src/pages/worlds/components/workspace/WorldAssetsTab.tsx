@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import KnowledgeBindingPanel from "@/components/knowledge/KnowledgeBindingPanel";
 
 interface WorldLibraryItem {
@@ -299,8 +300,8 @@ export default function WorldAssetsTab(props: WorldAssetsTabProps) {
                   {publishPending ? "保存中..." : "保存素材"}
                 </Button>
               </div>
-              <textarea
-                className="min-h-[80px] w-full rounded-md border bg-background p-2 text-sm"
+              <Textarea
+                className="min-h-[80px] p-2"
                 value={publishDescription}
                 onChange={(event) => setPublishDescription(event.target.value)}
                 placeholder="可选描述（留空时默认使用当前分层内容）"
@@ -418,8 +419,8 @@ export default function WorldAssetsTab(props: WorldAssetsTabProps) {
             <option value="markdown">Markdown</option>
             <option value="json">JSON</option>
           </select>
-          <textarea
-            className="min-h-[160px] w-full rounded-md border bg-background p-2 text-sm"
+          <Textarea
+            className="min-h-[160px] p-2"
             value={importContent}
             onChange={(event) => setImportContent(event.target.value)}
             placeholder="请粘贴要导入的内容"

@@ -9,6 +9,7 @@ import { generateTitleIdeas } from "@/api/title";
 import LLMSelector from "@/components/common/LLMSelector";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "@/components/ui/toast";
 import { useLLMStore } from "@/store/llmStore";
@@ -162,9 +163,9 @@ export default function TitleFactoryPanel({ genreTree, novels }: TitleFactoryPan
             <label htmlFor="title-factory-brief" className="text-sm font-medium text-foreground">
               创作简报
             </label>
-            <textarea
+            <Textarea
               id="title-factory-brief"
-              className="min-h-[140px] w-full rounded-md border bg-background px-3 py-2 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+              className="min-h-[140px]"
               value={brief}
               onChange={(event) => setBrief(event.target.value)}
               placeholder="描述题材、主角卖点、冲突、文风和读者期待。越具体，标题越有区分度。"
@@ -206,9 +207,9 @@ export default function TitleFactoryPanel({ genreTree, novels }: TitleFactoryPan
             <label htmlFor="title-factory-adapt-brief" className="text-sm font-medium text-foreground">
               当前作品简报
             </label>
-            <textarea
+            <Textarea
               id="title-factory-adapt-brief"
-              className="min-h-[120px] w-full rounded-md border bg-background px-3 py-2 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+              className="min-h-[120px]"
               value={brief}
               onChange={(event) => setBrief(event.target.value)}
               placeholder="说明你的作品题材、人物与卖点。系统会参考标题节奏，但不会直接照抄。"

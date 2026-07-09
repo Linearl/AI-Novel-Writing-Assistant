@@ -1,6 +1,7 @@
 import AiButton from "@/components/common/AiButton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { VolumeImpactResult, VolumePlanDiff, VolumePlanVersionSummary } from "@ai-novel/shared/types/novel";
 import CollapsibleSummary from "./CollapsibleSummary";
@@ -81,7 +82,7 @@ export default function OutlineVersionControl(props: OutlineVersionControlProps)
             <CardTitle className="text-base">派生文本预览</CardTitle>
           </CardHeader>
           <CardContent>
-            <textarea className="min-h-[220px] w-full rounded-md border bg-muted/20 p-3 text-sm" readOnly value={draftText} />
+            <Textarea className="min-h-[220px] bg-muted/20 p-3" readOnly value={draftText} />
           </CardContent>
         </Card>
 

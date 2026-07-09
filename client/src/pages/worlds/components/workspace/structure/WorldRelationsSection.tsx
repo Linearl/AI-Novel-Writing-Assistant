@@ -7,6 +7,7 @@ import type {
 } from "@ai-novel/shared/types/world";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 function updateArrayItem<T>(items: T[], index: number, nextItem: T): T[] {
   return items.map((item, itemIndex) => (itemIndex === index ? nextItem : item));
@@ -176,8 +177,8 @@ export default function WorldRelationsSection(props: {
                 placeholder="张力 / 压力"
               />
             </div>
-            <textarea
-              className="min-h-[70px] w-full rounded-md border bg-background p-2 text-sm"
+            <Textarea
+              className="min-h-[70px] p-2"
               value={relation.detail}
               onChange={(event) =>
                 setDraftStructure((prev) =>
@@ -270,8 +271,8 @@ export default function WorldRelationsSection(props: {
               }
               placeholder="控制关系"
             />
-            <textarea
-              className="min-h-[70px] w-full rounded-md border bg-background p-2 text-sm"
+            <Textarea
+              className="min-h-[70px] p-2"
               value={relation.detail}
               onChange={(event) =>
                 setDraftStructure((prev) =>

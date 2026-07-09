@@ -3,6 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import type { NovelBasicFormState } from "../novelBasicInfo.shared";
 import { parseMaterial, type MaterialParseResult } from "@/api/novel/materialParse";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import {
   AppDialogContent,
   Dialog,
@@ -198,11 +199,11 @@ export default function MaterialParseDialog({ onApplyParsed }: MaterialParseDial
       >
         {previewRows.length === 0 ? (
           <div className="space-y-3">
-            <textarea
+            <Textarea
               value={material}
               onChange={(e) => setMaterial(e.target.value)}
               placeholder={"在此粘贴你的创作素材，例如：\n\n- 世界观设定\n- 角色小传\n- 故事大纲\n- 灵感笔记\n- 任意格式的创作文档\n\nAI 会自动识别内容类型并拆分到对应的表单字段。\n\n也可以点击下方按钮从 .txt / .md 文件导入。"}
-              className="h-[400px] w-full resize-none rounded-md border bg-background px-3 py-2 text-sm outline-none transition placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+              className="h-[400px] resize-none"
               disabled={parseMutation.isPending}
             />
             <div className="flex items-center justify-between text-xs text-muted-foreground">
@@ -242,11 +243,11 @@ export default function MaterialParseDialog({ onApplyParsed }: MaterialParseDial
                     {row.label}
                   </label>
                   {row.key === "worldSetting" || row.key === "characters" || row.key === "outline" ? (
-                    <textarea
+                    <Textarea
                       value={editValues[row.key] ?? row.value}
                       onChange={(e) => setEditValues((prev) => ({ ...prev, [row.key]: e.target.value }))}
                       rows={4}
-                      className="w-full resize-y rounded-md border bg-background px-3 py-2 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                      className="resize-y"
                     />
                   ) : (
                     <input

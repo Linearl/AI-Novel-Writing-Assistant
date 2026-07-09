@@ -2,6 +2,7 @@ import type { Dispatch, SetStateAction } from "react";
 import type { World } from "@ai-novel/shared/types/world";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
 import StreamOutput from "@/components/common/StreamOutput";
 import {
   LAYERS,
@@ -145,8 +146,8 @@ export default function WorldLayersTab(props: WorldLayersTabProps) {
               </div>
               {hasSelectedDraft ? <div className="text-xs text-primary">有未保存草稿</div> : null}
             </div>
-            <textarea
-              className="min-h-[260px] w-full rounded-md border bg-background p-2 text-sm"
+            <Textarea
+              className="min-h-[260px] p-2"
               value={selectedLayerValue}
               onChange={(event) =>
                 setLayerDrafts((prev) => ({

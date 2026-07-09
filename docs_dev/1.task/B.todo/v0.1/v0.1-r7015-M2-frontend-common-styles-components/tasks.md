@@ -28,8 +28,8 @@ Textarea 样式 30 处复制粘贴、状态 Badge 31 处各自定义、Loading 5
 
 | # | 任务 | 优先级 | 预估 | 状态 |
 | --- | --- | --- | --- | --- |
-| T1 | 提取 Textarea 公共组件 + 全量替换 | P0 | 1h | ⬜ 待开始 |
-| T2 | 提取 StatusBadge + Alert 组件 + 全量替换 | P1 | 1h | ⬜ 待开始 |
+| T1 | 提取 Textarea 公共组件 + 全量替换 | P0 | 1h | ✅ 完成 |
+| T2 | 提取 StatusBadge + Alert 组件 + 全量替换 | P1 | 1h | ✅ 完成 |
 | T3 | 新增 Loading / EmptyState 组件 + 替换 | P1 | 1h | ⬜ 待开始 |
 | T4 | 将绕过 Card 的 div 替换为 Card 组件 | P1 | 45min | ⬜ 待开始 |
 | T5 | 拆分 index.css 移动端媒体查询 | P1 | 1h | ⬜ 待开始 |
@@ -168,6 +168,8 @@ Textarea 样式 30 处复制粘贴、状态 Badge 31 处各自定义、Loading 5
 | 日期 | 任务 | 状态 |
 | ---- | ---- | ---- |
 | 2026-07-09 | 任务包创建 | 完成 |
+| 2026-07-09 | T1: Textarea 组件提取 + ~120 处全量替换 | ✅ 完成 |
+| 2026-07-09 | T2: StatusBadge 组件提取 + 10 处替换 | ✅ 完成 |
 
 ---
 

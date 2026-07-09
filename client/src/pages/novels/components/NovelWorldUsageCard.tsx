@@ -3,6 +3,7 @@ import { Castle, MapPinned, ShieldAlert } from "lucide-react";
 import type { StoryWorldSliceOverrides, StoryWorldSliceView } from "@ai-novel/shared/types/storyWorldSlice";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Select,
@@ -274,12 +275,11 @@ export default function NovelWorldUsageCard(props: NovelWorldUsageCardProps) {
                   <div className="mt-1 text-sm leading-6 text-muted-foreground">
                     如果你想补一句边界说明，比如“保留现实都市基底，不要转成玄幻升级文”，写在这里。
                   </div>
-                  <textarea
+                  <Textarea
                     id="story-world-scope-note"
                     value={scopeNote}
                     onChange={(event) => setScopeNote(event.target.value)}
                     rows={4}
-                    className="mt-2 w-full rounded-md border border-input bg-background px-3 py-2 text-sm outline-none ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
                     placeholder="例如：保留原作的现实商业环境和人物压迫感，不要引入超自然体系。"
                   />
                 </div>

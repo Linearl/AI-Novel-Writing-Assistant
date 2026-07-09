@@ -12,6 +12,7 @@ import { refineSupplementalCharacter } from "@/api/novel/characters";
 import AiButton from "@/components/common/AiButton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog,
   DialogContent,
@@ -239,8 +240,8 @@ export default function CharacterSupplementalDialog(props: CharacterSupplemental
 
             <div className="space-y-2">
               <div className="font-medium">额外说明</div>
-              <textarea
-                className="min-h-[140px] w-full rounded-xl border bg-background p-3 text-sm"
+              <Textarea
+                className="min-h-[140px]"
                 placeholder="例如：我想补一个能持续给主角施压、但又不是纯反派的人；或补一个和母亲线相关的旧识。"
                 value={supplementalPrompt}
                 onChange={(event) => onSupplementalPromptChange(event.target.value)}

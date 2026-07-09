@@ -5,6 +5,7 @@ import type { LLMProvider } from "@ai-novel/shared/types/llm";
 import AiButton from "@/components/common/AiButton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   applyCharacterCastOption,
@@ -339,8 +340,8 @@ export default function CharacterCastOptionsSection(props: CharacterCastOptionsS
                       可补充主角欲望、对手压力、关系张力，或你想重点强化的人物方向。
                     </div>
                   </div>
-                  <textarea
-                    className="min-h-[140px] w-full rounded-xl border bg-background p-3 text-sm"
+                  <Textarea
+                    className="min-h-[140px]"
                     placeholder="例如：主角必须在家族责任与个人自由之间二选一；反派不要是纯恶，而是带有保护欲和控制欲。"
                     value={storyInput}
                     onChange={(event) => setStoryInput(event.target.value)}

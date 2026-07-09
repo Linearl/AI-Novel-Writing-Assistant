@@ -7,6 +7,7 @@ import { listKnowledgeDocuments } from "@/api/knowledge";
 import { queryKeys } from "@/api/queryKeys";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 function createDefaultConstraints(): CharacterGenerateConstraints {
@@ -153,8 +154,8 @@ export function CharacterCreateDialog({ onCreated }: CharacterCreateDialogProps)
               <CardTitle>AI 生成角色</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              <textarea
-                className="min-h-[120px] w-full rounded-md border p-2 text-sm"
+              <Textarea
+                className="min-h-[120px]"
                 placeholder="输入角色描述，例如：冷静理智但背负家仇的年轻剑士"
                 value={aiDescription}
                 onChange={(event) => setAIDescription(event.target.value)}

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { WorldOptionRefinementLevel, WorldReferenceAnchor, WorldReferenceMode } from "@ai-novel/shared/types/worldWizard";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import KnowledgeDocumentPicker from "@/components/knowledge/KnowledgeDocumentPicker";
 import type {
   GeneratorGenreOption,
@@ -226,8 +227,8 @@ export default function WorldGeneratorStepOne(props: WorldGeneratorStepOneProps)
           <div className="grid gap-3 md:grid-cols-3">
             <div className="rounded-md border p-3 text-sm space-y-2">
               <div className="font-medium">必须保留</div>
-              <textarea
-                className="min-h-[120px] w-full rounded-md border p-2 text-sm"
+              <Textarea
+                className="min-h-[120px]"
                 placeholder="例如：现实都市基底、租房生活质感、成年人的情感拉扯"
                 value={preserveText}
                 onChange={(event) => onPreserveTextChange(event.target.value)}
@@ -236,8 +237,8 @@ export default function WorldGeneratorStepOne(props: WorldGeneratorStepOneProps)
 
             <div className="rounded-md border p-3 text-sm space-y-2">
               <div className="font-medium">允许改造</div>
-              <textarea
-                className="min-h-[120px] w-full rounded-md border p-2 text-sm"
+              <Textarea
+                className="min-h-[120px]"
                 placeholder="例如：城市层级、社会规则、势力网络、地点系统"
                 value={allowedChangesText}
                 onChange={(event) => onAllowedChangesTextChange(event.target.value)}
@@ -246,8 +247,8 @@ export default function WorldGeneratorStepOne(props: WorldGeneratorStepOneProps)
 
             <div className="rounded-md border p-3 text-sm space-y-2">
               <div className="font-medium">禁止偏离</div>
-              <textarea
-                className="min-h-[120px] w-full rounded-md border p-2 text-sm"
+              <Textarea
+                className="min-h-[120px]"
                 placeholder="例如：不要超凡化、不要热血升级流、不要脱离现实社会逻辑"
                 value={forbiddenText}
                 onChange={(event) => onForbiddenTextChange(event.target.value)}
@@ -257,8 +258,8 @@ export default function WorldGeneratorStepOne(props: WorldGeneratorStepOneProps)
         </div>
       ) : null}
 
-      <textarea
-        className="min-h-[180px] w-full rounded-md border p-2 text-sm"
+      <Textarea
+        className="min-h-[180px]"
         placeholder={
           isReferenceMode
             ? "粘贴原作片段、世界总结或你对这部作品的理解；也可以只使用上方知识库文档"

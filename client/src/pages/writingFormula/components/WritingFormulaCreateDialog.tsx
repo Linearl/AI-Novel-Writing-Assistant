@@ -13,6 +13,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
 import type {
   WritingFormulaCreateFormState,
   WritingFormulaMaterialSource,
@@ -305,8 +306,8 @@ export default function WritingFormulaCreateDialog(props: WritingFormulaCreateDi
                     value={form.briefCategory}
                     onChange={(event) => onFormChange({ briefCategory: event.target.value })}
                   />
-                  <textarea
-                    className="min-h-[180px] w-full rounded-md border p-2 text-sm"
+                  <Textarea
+                    className="min-h-[180px]"
                     placeholder="例如：整体推进快，冲突密集，对话直接，情绪不拖泥带水，适合都市和热血升级文。"
                     value={form.briefPrompt}
                     onChange={(event) => onFormChange({ briefPrompt: event.target.value })}
@@ -370,8 +371,8 @@ export default function WritingFormulaCreateDialog(props: WritingFormulaCreateDi
                 </div>
 
                 {form.materialSource === "direct_text" ? (
-                  <textarea
-                    className="min-h-[260px] w-full rounded-md border p-2 text-sm"
+                  <Textarea
+                    className="min-h-[260px]"
                     placeholder="粘贴你想提取手感的参考文本。建议至少给一段完整场景。"
                     value={form.extractSourceText}
                     onChange={(event) => onFormChange({ extractSourceText: event.target.value })}

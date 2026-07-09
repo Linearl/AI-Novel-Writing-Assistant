@@ -3,6 +3,7 @@ import { Lock, LockOpen } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { StatusBadge } from "@/components/ui/status-badge";
 import {
   chapterStatusDescription,
   chapterStatusLabel,
@@ -142,9 +143,9 @@ export default function ChapterExecutionQueueCard(props: ChapterExecutionQueueCa
 
                   <div className="mt-3 flex flex-wrap gap-1.5">
                     {isLocked ? (
-                      <Badge variant="secondary" className="rounded-full bg-amber-50 px-2 py-1 text-[11px] text-amber-700">
+                      <StatusBadge variant="warning" className="py-1">
                         已锁定
-                      </Badge>
+                      </StatusBadge>
                     ) : null}
                     {isStreamingTarget ? (
                       <Badge className="rounded-full px-2 py-1 text-[11px]">

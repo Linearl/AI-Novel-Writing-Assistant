@@ -3,6 +3,7 @@ import type { AntiAiRule, StyleProfile, StyleTemplate } from "@ai-novel/shared/t
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog,
   DialogContent,
@@ -278,8 +279,8 @@ export default function WritingFormulaSidebar(props: WritingFormulaSidebarProps)
                       value={createForm.briefCategory}
                       onChange={(event) => onCreateFormChange({ briefCategory: event.target.value })}
                     />
-                    <textarea
-                      className="min-h-[180px] w-full rounded-md border p-2 text-sm"
+                    <Textarea
+                      className="min-h-[180px]"
                       placeholder="例如：类似于《遥远的救世主》的写法，整体克制、思辨感强，对话带锋芒，少鸡汤，多现实摩擦。"
                       value={createForm.briefPrompt}
                       onChange={(event) => onCreateFormChange({ briefPrompt: event.target.value })}
@@ -314,8 +315,8 @@ export default function WritingFormulaSidebar(props: WritingFormulaSidebarProps)
                     value={createForm.extractCategory}
                     onChange={(event) => onCreateFormChange({ extractCategory: event.target.value })}
                   />
-                  <textarea
-                    className="min-h-[220px] w-full rounded-md border p-2 text-sm"
+                  <Textarea
+                    className="min-h-[220px]"
                     placeholder="粘贴参考文本"
                     value={createForm.extractSourceText}
                     onChange={(event) => onCreateFormChange({ extractSourceText: event.target.value })}

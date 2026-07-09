@@ -3,6 +3,7 @@ import AiButton from "@/components/common/AiButton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import CollapsibleSummary from "./CollapsibleSummary";
 import type { StoryMacroTabProps } from "./NovelEditView.types";
 import {
@@ -10,7 +11,6 @@ import {
   FieldActions,
   listToText,
   SUMMARY_FIELDS,
-  textareaClassName,
 } from "./StoryMacroPlanTab.shared";
 import DirectorTakeoverEntryPanel from "./DirectorTakeoverEntryPanel";
 
@@ -49,11 +49,11 @@ export default function StoryMacroPlanTab(props: StoryMacroTabProps) {
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <div className="text-sm font-medium text-foreground">故事想法输入</div>
-            <textarea
+            <Textarea
               value={props.storyInput}
               onChange={(event) => props.onStoryInputChange(event.target.value)}
               placeholder="用自然语言描述故事想法、想要的压迫感、想避免的风格和结局倾向。"
-              className={textareaClassName("min-h-36")}
+              className={"min-h-36"}
             />
           </div>
           <div className="flex flex-wrap gap-2">
@@ -103,11 +103,11 @@ export default function StoryMacroPlanTab(props: StoryMacroTabProps) {
                   />
                 </div>
                 {item.multiline ? (
-                  <textarea
+                  <Textarea
                     value={typeof value === "string" ? value : ""}
                     onChange={(event) => props.onFieldChange(item.field, event.target.value)}
                     placeholder={item.placeholder}
-                    className={textareaClassName()}
+                    className={"min-h-28"}
                   />
                 ) : (
                   <Input
@@ -132,14 +132,14 @@ export default function StoryMacroPlanTab(props: StoryMacroTabProps) {
                 onRegenerateField={props.onRegenerateField}
               />
             </div>
-            <textarea
+            <Textarea
               value={listToText(props.decomposition.major_payoffs)}
               onChange={(event) => props.onFieldChange(
                 "major_payoffs",
                 event.target.value.split(/\r?\n/).map((line) => line.trim()).filter(Boolean),
               )}
               placeholder="每行一个关键兑现点。"
-              className={textareaClassName("min-h-32")}
+              className={"min-h-32"}
             />
           </div>
         </CardContent>
@@ -180,11 +180,11 @@ export default function StoryMacroPlanTab(props: StoryMacroTabProps) {
                           />
                         </div>
                         {item.multiline ? (
-                          <textarea
+                          <Textarea
                             value={typeof value === "string" ? value : ""}
                             onChange={(event) => props.onFieldChange(item.field, event.target.value)}
                             placeholder={item.placeholder}
-                            className={textareaClassName()}
+                            className={"min-h-28"}
                           />
                         ) : (
                           <Input
@@ -213,38 +213,38 @@ export default function StoryMacroPlanTab(props: StoryMacroTabProps) {
                   <div className="grid gap-4 xl:grid-cols-3">
                     <div className="space-y-2">
                       <div className="text-sm text-muted-foreground">外部压迫</div>
-                      <textarea
+                      <Textarea
                         value={expansion.conflict_layers.external}
                         onChange={(event) => props.onFieldChange("conflict_layers", {
                           ...expansion.conflict_layers,
                           external: event.target.value,
                         })}
                         placeholder="外部系统、威胁或环境如何持续压迫主角。"
-                        className={textareaClassName("min-h-24")}
+                        className={"min-h-24"}
                       />
                     </div>
                     <div className="space-y-2">
                       <div className="text-sm text-muted-foreground">内部崩塌</div>
-                      <textarea
+                      <Textarea
                         value={expansion.conflict_layers.internal}
                         onChange={(event) => props.onFieldChange("conflict_layers", {
                           ...expansion.conflict_layers,
                           internal: event.target.value,
                         })}
                         placeholder="主角内在恐惧、欲望或误判怎样反噬自己。"
-                        className={textareaClassName("min-h-24")}
+                        className={"min-h-24"}
                       />
                     </div>
                     <div className="space-y-2">
                       <div className="text-sm text-muted-foreground">关系压力</div>
-                      <textarea
+                      <Textarea
                         value={expansion.conflict_layers.relational}
                         onChange={(event) => props.onFieldChange("conflict_layers", {
                           ...expansion.conflict_layers,
                           relational: event.target.value,
                         })}
                         placeholder="关键关系如何制造选择代价和情感张力。"
-                        className={textareaClassName("min-h-24")}
+                        className={"min-h-24"}
                       />
                     </div>
                   </div>
@@ -262,14 +262,14 @@ export default function StoryMacroPlanTab(props: StoryMacroTabProps) {
                       onRegenerateField={props.onRegenerateField}
                     />
                   </div>
-                  <textarea
+                  <Textarea
                     value={listToText(expansion.setpiece_seeds)}
                     onChange={(event) => props.onFieldChange(
                       "setpiece_seeds",
                       event.target.value.split(/\r?\n/).map((line) => line.trim()).filter(Boolean),
                     )}
                     placeholder="每行一个高张力场面。"
-                    className={textareaClassName("min-h-32")}
+                    className={"min-h-32"}
                   />
                 </div>
               </CardContent>
@@ -311,14 +311,14 @@ export default function StoryMacroPlanTab(props: StoryMacroTabProps) {
                   onRegenerateField={props.onRegenerateField}
                 />
               </div>
-              <textarea
+              <Textarea
                 value={listToText(props.constraints)}
                 onChange={(event) => props.onFieldChange(
                   "constraints",
                   event.target.value.split(/\r?\n/).map((line) => line.trim()).filter(Boolean),
                 )}
                 placeholder="每行一条必须遵守的叙事规则。"
-                className={textareaClassName("min-h-36")}
+                className={"min-h-36"}
               />
             </CardContent>
           </Card>

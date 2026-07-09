@@ -2,6 +2,7 @@ import type { Chapter, ChapterEditorDiagnosticCard, ChapterEditorWorkspaceRespon
 import { Download } from "lucide-react";
 import { exportChapterTxt } from "@/api/novel/txtIo";
 import { Button } from "@/components/ui/button";
+import { StatusBadge } from "@/components/ui/status-badge";
 import { toast } from "@/components/ui/toast";
 import { createDownload } from "@/pages/novels/novelEditHelpers";
 import WordCountIndicator from "../WordCountIndicator";
@@ -247,9 +248,9 @@ export default function ChapterEditorSidebar(props: ChapterEditorSidebarProps) {
                       </div>
                     </div>
                     {isRecommended ? (
-                      <span className="rounded-full bg-emerald-100 px-2 py-1 text-[11px] text-emerald-800">
+                      <StatusBadge variant="success" className="bg-emerald-100 py-1">
                         推荐先修
-                      </span>
+                      </StatusBadge>
                     ) : null}
                   </div>
 

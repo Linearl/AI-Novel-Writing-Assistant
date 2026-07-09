@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
+import { Textarea } from "@/components/ui/textarea";
 import type { TensionLevel } from "@ai-novel/shared/types/novel";
 import { TENSION_LEVEL_LABELS } from "@ai-novel/shared/types/novel";
 import {
@@ -13,8 +13,6 @@ import {
 } from "../chapterDetailPlanning.shared";
 import type { StructuredTabViewProps } from "./NovelEditView.types";
 
-const textareaClassName =
-  "w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
 
 type StructuredVolume = StructuredTabViewProps["volumes"][number];
 type StructuredChapter = StructuredVolume["chapters"][number];
@@ -298,8 +296,8 @@ export default function StructuredChapterDetailCard(props: StructuredChapterDeta
 
             <label className="space-y-2 text-sm">
               <span className="text-xs text-muted-foreground">章节摘要</span>
-              <textarea
-                className={cn(textareaClassName, "min-h-[130px]")}
+              <Textarea
+                className="min-h-[130px]"
                 value={selectedChapter.summary}
                 onChange={(event) => onChapterFieldChange(selectedVolume.id, selectedChapter.id, "summary", event.target.value)}
               />
@@ -317,8 +315,8 @@ export default function StructuredChapterDetailCard(props: StructuredChapterDeta
                   {isGeneratingChapterDetail && generatingChapterDetailMode === "purpose" && generatingChapterDetailChapterId === selectedChapter.id ? "修正中..." : "AI修正"}
                 </AiButton>
               </div>
-              <textarea
-                className={cn(textareaClassName, "min-h-[110px]")}
+              <Textarea
+                className="min-h-[110px]"
                 value={selectedChapter.purpose ?? ""}
                 onChange={(event) => onChapterFieldChange(selectedVolume.id, selectedChapter.id, "purpose", event.target.value)}
               />
@@ -336,8 +334,8 @@ export default function StructuredChapterDetailCard(props: StructuredChapterDeta
                   {isGeneratingChapterDetail && generatingChapterDetailMode === "task_sheet" && generatingChapterDetailChapterId === selectedChapter.id ? "修正中..." : "AI修正"}
                 </AiButton>
               </div>
-              <textarea
-                className={cn(textareaClassName, "min-h-[130px]")}
+              <Textarea
+                className="min-h-[130px]"
                 value={selectedChapter.taskSheet ?? ""}
                 onChange={(event) => onChapterFieldChange(selectedVolume.id, selectedChapter.id, "taskSheet", event.target.value)}
               />
@@ -381,8 +379,8 @@ export default function StructuredChapterDetailCard(props: StructuredChapterDeta
 
                 <label className="space-y-2 text-sm">
                   <span className="text-xs text-muted-foreground">禁止事项</span>
-                  <textarea
-                    className={cn(textareaClassName, "min-h-[100px]")}
+                  <Textarea
+                    className="min-h-[100px]"
                     value={selectedChapter.mustAvoid ?? ""}
                     onChange={(event) => onChapterFieldChange(selectedVolume.id, selectedChapter.id, "mustAvoid", event.target.value)}
                   />
@@ -390,8 +388,8 @@ export default function StructuredChapterDetailCard(props: StructuredChapterDeta
 
                 <label className="space-y-2 text-sm">
                   <span className="text-xs text-muted-foreground">兑现关联</span>
-                  <textarea
-                    className={cn(textareaClassName, "min-h-[100px]")}
+                  <Textarea
+                    className="min-h-[100px]"
                     value={selectedChapter.payoffRefs.join("\n")}
                     onChange={(event) => onChapterPayoffRefsChange(selectedVolume.id, selectedChapter.id, event.target.value)}
                   />

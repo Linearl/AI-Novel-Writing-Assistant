@@ -12,6 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/toast";
 import { useLLMStore } from "@/store/llmStore";
 import GenreTreeEditor from "./GenreTreeEditor";
@@ -110,9 +111,9 @@ export default function GenreCreateDialog({
               </div>
             </div>
             <LLMSelector />
-            <textarea
+            <Textarea
               rows={4}
-              className="min-h-[120px] w-full rounded-md border bg-background px-3 py-2 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+              className="min-h-[120px]"
               value={generationPrompt}
               placeholder="例如：我想做偏女性向的都市超凡成长线，核心卖点是身份反转、势力经营和高情绪关系拉扯。"
               onChange={(event) => setGenerationPrompt(event.target.value)}

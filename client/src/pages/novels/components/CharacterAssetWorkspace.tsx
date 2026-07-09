@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { CharacterExitBadge } from "@/components/character/CharacterExitBadge";
 import CharacterAssetSidebar from "./CharacterAssetSidebar";
 import CharacterFocusSummary from "./CharacterFocusSummary";
@@ -334,8 +335,7 @@ export default function CharacterAssetWorkspace(props: CharacterAssetWorkspacePr
                 </div>
               </div>
               <div className="mt-3">
-                <textarea
-                  className="min-h-[72px] w-full rounded-md border bg-background p-2 text-sm"
+                <Textarea className="min-h-[72px] p-2"
                   placeholder="补全倾向（可选）：例如更有压迫感、带一点病弱感、声音更温和、不要写成传统美人"
                   value={visibleProfileGuidance}
                   onChange={(event) => setVisibleProfileGuidance(event.target.value)}
@@ -542,29 +542,25 @@ export default function CharacterAssetWorkspace(props: CharacterAssetWorkspacePr
                     onChange={(event) => onCharacterFormChange("currentGoal", event.target.value)}
                   />
                 </div>
-                <textarea
-                  className="min-h-[80px] w-full rounded-md border bg-background p-2 text-sm"
+                <Textarea className="min-h-[80px] p-2"
                   placeholder="性格补充"
                   value={characterForm.personality}
                   onChange={(event) => onCharacterFormChange("personality", event.target.value)}
                 />
-                <textarea
-                  className="min-h-[80px] w-full rounded-md border bg-background p-2 text-sm"
+                <Textarea className="min-h-[80px] p-2"
                   placeholder="背景补充"
                   value={characterForm.background}
                   onChange={(event) => onCharacterFormChange("background", event.target.value)}
                 />
-                <textarea
-                  className="min-h-[80px] w-full rounded-md border bg-background p-2 text-sm"
+                <Textarea className="min-h-[80px] p-2"
                   placeholder="成长弧补充"
                   value={characterForm.development}
                   onChange={(event) => onCharacterFormChange("development", event.target.value)}
                 />
                 <div className="grid gap-2 md:grid-cols-2">
                   {VISIBLE_PROFILE_FIELDS.map((field) => (
-                    <textarea
+                    <Textarea className="min-h-[72px] p-2"
                       key={field.key}
-                      className="min-h-[72px] w-full rounded-md border bg-background p-2 text-sm"
                       placeholder={`${field.label}：${field.placeholder}`}
                       value={characterForm[field.key]}
                       onChange={(event) => onCharacterFormChange(field.key, event.target.value)}

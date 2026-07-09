@@ -12,6 +12,7 @@ import LLMSelector from "@/components/common/LLMSelector";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog,
   DialogContent,
@@ -189,8 +190,7 @@ function RejectIntentDialog(props: {
             你拒绝了「{resourceName}」的高风险变更。请描述你希望 AI 如何修正，以便后续修复参考你的意图。
           </DialogDescription>
         </DialogHeader>
-        <textarea
-          className="mt-2 w-full rounded-md border bg-background px-3 py-2 text-sm leading-6 focus:outline-none focus:ring-2 focus:ring-ring"
+        <Textarea
           rows={4}
           placeholder="例如：保留原角色性格不变，不要引入新的身份设定"
           value={intent}

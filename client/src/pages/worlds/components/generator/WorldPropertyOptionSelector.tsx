@@ -1,4 +1,5 @@
 import type { WorldPropertyOption } from "@ai-novel/shared/types/worldWizard";
+import { Textarea } from "@/components/ui/textarea";
 
 interface WorldPropertyOptionSelectorProps {
   options: WorldPropertyOption[];
@@ -96,8 +97,8 @@ export default function WorldPropertyOptionSelector({
                   </div>
                 ) : null}
 
-                <textarea
-                  className="min-h-[88px] w-full rounded-md border p-2 text-sm"
+                <Textarea
+                  className="min-h-[88px]"
                   placeholder="可选：补充你的偏好，比如希望保留什么、放大什么、限制什么。"
                   value={details[option.id] ?? ""}
                   onChange={(event) => onDetailChange(option.id, event.target.value)}

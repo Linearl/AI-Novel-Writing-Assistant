@@ -3,6 +3,7 @@ import type { BookAnalysisSectionKey } from "@ai-novel/shared/types/bookAnalysis
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
 import {
   AI_FREEDOM_OPTIONS,
   BASIC_INFO_FIELD_HINTS,
@@ -147,10 +148,10 @@ export default function NovelBasicInfoForm(props: NovelBasicInfoFormProps) {
 
         <div className="space-y-2">
           <FieldLabel htmlFor="basic-description">一句话概述</FieldLabel>
-          <textarea
+          <Textarea
             id="basic-description"
             rows={4}
-            className="min-h-[112px] w-full rounded-md border bg-background px-3 py-2 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+            className="min-h-[112px]"
             value={basicForm.description}
             placeholder="用 2-4 句话说明主角、核心冲突和故事看点。"
             onChange={(event) => onFormChange({ description: event.target.value })}

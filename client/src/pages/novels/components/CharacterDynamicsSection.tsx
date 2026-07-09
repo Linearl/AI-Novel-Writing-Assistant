@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   confirmCharacterCandidate,
   getCharacterCandidates,
@@ -248,8 +249,8 @@ export default function CharacterDynamicsSection(props: CharacterDynamicsSection
                     onChange={(event) => setManualState((prev) => ({ ...prev, stanceLabel: event.target.value }))}
                   />
                 </div>
-                <textarea
-                  className="mt-3 min-h-[88px] w-full rounded-xl border bg-background p-3 text-sm"
+                <Textarea
+                  className="min-h-[88px]"
                   placeholder="补充这次变化的原因、后续作用或提醒 planner 的重点。"
                   value={manualState.summary}
                   onChange={(event) => setManualState((prev) => ({ ...prev, summary: event.target.value }))}

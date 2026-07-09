@@ -3,6 +3,7 @@ import type { BaseCharacter } from "@ai-novel/shared/types/novel";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 type EditableBaseCharacter = Omit<BaseCharacter, "id" | "createdAt" | "updatedAt">;
 
@@ -123,44 +124,44 @@ export function CharacterEditDialog({
         </div>
 
         <div className="space-y-2">
-          <textarea
-            className="min-h-[90px] w-full rounded-md border bg-background p-2 text-sm"
+          <Textarea
+            className="min-h-[90px] p-2"
             placeholder="性格"
             value={form.personality}
             onChange={(event) => setForm((prev) => ({ ...prev, personality: event.target.value }))}
           />
-          <textarea
-            className="min-h-[90px] w-full rounded-md border bg-background p-2 text-sm"
+          <Textarea
+            className="min-h-[90px] p-2"
             placeholder="背景故事"
             value={form.background}
             onChange={(event) => setForm((prev) => ({ ...prev, background: event.target.value }))}
           />
-          <textarea
-            className="min-h-[90px] w-full rounded-md border bg-background p-2 text-sm"
+          <Textarea
+            className="min-h-[90px] p-2"
             placeholder="成长轨迹"
             value={form.development}
             onChange={(event) => setForm((prev) => ({ ...prev, development: event.target.value }))}
           />
-          <textarea
-            className="min-h-[80px] w-full rounded-md border bg-background p-2 text-sm"
+          <Textarea
+            className="min-h-[80px] p-2"
             placeholder="外貌/体态"
             value={form.appearance ?? ""}
             onChange={(event) => setForm((prev) => ({ ...prev, appearance: event.target.value }))}
           />
-          <textarea
-            className="min-h-[80px] w-full rounded-md border bg-background p-2 text-sm"
+          <Textarea
+            className="min-h-[80px] p-2"
             placeholder="弱点与代价"
             value={form.weaknesses ?? ""}
             onChange={(event) => setForm((prev) => ({ ...prev, weaknesses: event.target.value }))}
           />
-          <textarea
-            className="min-h-[80px] w-full rounded-md border bg-background p-2 text-sm"
+          <Textarea
+            className="min-h-[80px] p-2"
             placeholder="习惯与特长"
             value={form.interests ?? ""}
             onChange={(event) => setForm((prev) => ({ ...prev, interests: event.target.value }))}
           />
-          <textarea
-            className="min-h-[80px] w-full rounded-md border bg-background p-2 text-sm"
+          <Textarea
+            className="min-h-[80px] p-2"
             placeholder="关键事件"
             value={form.keyEvents ?? ""}
             onChange={(event) => setForm((prev) => ({ ...prev, keyEvents: event.target.value }))}

@@ -5,6 +5,7 @@ import type {
   ChapterEditorWorkspaceResponse,
 } from "@ai-novel/shared/types/novel";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import type { ChapterEditorSessionState } from "./chapterEditorTypes";
 
 interface ChapterEditorDirectorPanelProps {
@@ -198,8 +199,8 @@ export default function ChapterEditorDirectorPanel(props: ChapterEditorDirectorP
                   <div className="mt-2 text-xs text-muted-foreground">
                     当前目标：{currentTargetDescription}
                   </div>
-                  <textarea
-                    className="mt-3 min-h-[140px] w-full resize-none rounded-2xl border border-border bg-background px-3 py-3 text-sm outline-none"
+                  <Textarea
+                    className="min-h-[140px] resize-none"
                     placeholder={revisionScope === "selection"
                       ? "例如：让这段更压抑一点，但不要改剧情事实，并把节奏压得更紧。"
                       : "例如：把这一章整体改得更压抑一点，但不要改剧情事实，并且更贴近卷中承压阶段。"}

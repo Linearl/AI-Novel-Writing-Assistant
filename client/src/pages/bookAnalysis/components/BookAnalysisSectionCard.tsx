@@ -3,6 +3,7 @@ import MarkdownViewer from "@/components/common/MarkdownViewer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
 import type { SectionDraft } from "../bookAnalysis.types";
 import { formatStatus } from "../bookAnalysis.utils";
 import BookAnalysisStructuredSummary from "./BookAnalysisStructuredSummary";
@@ -111,8 +112,8 @@ export default function BookAnalysisSectionCard(props: BookAnalysisSectionCardPr
 
             <div className="space-y-2">
               <div className="text-sm font-medium">编辑正文</div>
-              <textarea
-                className="min-h-[220px] w-full rounded-md border bg-background p-3 text-sm"
+              <Textarea
+                className="min-h-[220px] p-3"
                 value={draft.editedContent}
                 onChange={(event) => onDraftChange(section, { editedContent: event.target.value })}
                 placeholder="在此直接编辑当前小节草稿。"
@@ -121,8 +122,8 @@ export default function BookAnalysisSectionCard(props: BookAnalysisSectionCardPr
 
             <div className="space-y-2">
               <div className="text-sm font-medium">AI 优化 / 修正</div>
-              <textarea
-                className="min-h-[90px] w-full rounded-md border bg-background p-2 text-sm"
+              <Textarea
+                className="min-h-[90px] p-2"
                 value={draft.optimizeInstruction}
                 onChange={(event) => onDraftChange(section, { optimizeInstruction: event.target.value })}
                 placeholder="输入优化或修正提示词，例如：压缩冗余、突出冲突、保持同样事实。"
@@ -158,8 +159,8 @@ export default function BookAnalysisSectionCard(props: BookAnalysisSectionCardPr
 
             <div className="space-y-2">
               <div className="text-sm font-medium">备注</div>
-              <textarea
-                className="min-h-[120px] w-full rounded-md border bg-background p-3 text-sm"
+              <Textarea
+                className="min-h-[120px] p-3"
                 value={draft.notes}
                 onChange={(event) => onDraftChange(section, { notes: event.target.value })}
                 placeholder="添加备注、假设或后续行动。"

@@ -1,6 +1,7 @@
 import type { StyleDetectionReport, StyleProfile } from "@ai-novel/shared/types/styleEngine";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
 
 interface WritingFormulaCleanPanelProps {
   selectedProfile: StyleProfile | null;
@@ -75,10 +76,10 @@ export default function WritingFormulaCleanPanel(props: WritingFormulaCleanPanel
             </div>
           </div>
 
-          <textarea
+          <Textarea
             data-writing-formula-detect-input
             autoFocus
-            className="min-h-[220px] w-full rounded-md border p-3 text-sm"
+            className="min-h-[220px] p-3"
             placeholder="粘贴待检测正文"
             value={detectInput}
             onChange={(event) => onDetectInputChange(event.target.value)}

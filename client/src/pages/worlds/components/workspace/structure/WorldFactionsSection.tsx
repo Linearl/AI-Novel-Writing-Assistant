@@ -2,6 +2,7 @@ import type { Dispatch, SetStateAction } from "react";
 import type { WorldFaction, WorldForce, WorldStructuredData } from "@ai-novel/shared/types/world";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 function updateArrayItem<T>(items: T[], index: number, nextItem: T): T[] {
   return items.map((item, itemIndex) => (itemIndex === index ? nextItem : item));
@@ -144,8 +145,8 @@ export default function WorldFactionsSection(props: {
               }
               placeholder="立场 / 世界站队"
             />
-            <textarea
-              className="min-h-[80px] w-full rounded-md border bg-background p-2 text-sm"
+            <Textarea
+              className="p-2"
               value={faction.doctrine}
               onChange={(event) =>
                 setDraftStructure((prev) =>
@@ -285,8 +286,8 @@ export default function WorldFactionsSection(props: {
                 所属阵营：{factionNameById.get(force.factionId) || force.factionId}
               </div>
             ) : null}
-            <textarea
-              className="min-h-[80px] w-full rounded-md border bg-background p-2 text-sm"
+            <Textarea
+              className="p-2"
               value={force.summary}
               onChange={(event) =>
                 setDraftStructure((prev) =>

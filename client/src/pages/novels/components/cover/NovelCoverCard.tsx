@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { listImageAssets, resolveImageAssetUrl } from "@/api/images";
 import { queryKeys } from "@/api/queryKeys";
 import { Button } from "@/components/ui/button";
+import { StatusBadge } from "@/components/ui/status-badge";
 import type { NovelBasicFormState } from "../../novelBasicInfo.shared";
 import type { StoryWorldSliceView } from "@ai-novel/shared/types/storyWorldSlice";
 import { NovelCoverDialog } from "./NovelCoverDialog";
@@ -94,9 +95,9 @@ export function NovelCoverCard(props: NovelCoverCardProps) {
 
             <div className="space-y-3">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700">
+                <StatusBadge variant="success" className="px-3 py-1 text-xs">
                   当前主封面
-                </span>
+                </StatusBadge>
                 <span className="text-xs text-muted-foreground">共 {assets.length} 张候选图</span>
               </div>
 

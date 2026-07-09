@@ -3,6 +3,7 @@ import type { Descendant, Value } from "platejs";
 import { ParagraphPlugin, Plate, PlateContent, usePlateEditor } from "platejs/react";
 import { Group, Panel, Separator } from "react-resizable-panels";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 
 function toPlateValue(text: string): Value {
   const normalized = text.replace(/\r\n/g, "\n");
@@ -157,8 +158,8 @@ export default function AiRevisionWorkspace(props: AiRevisionWorkspaceProps) {
       <Panel defaultSize={28} minSize={20}>
         <div className={`space-y-3 border-l p-3 ${minHeightClassName}`}>
           <div className="text-sm font-medium">{rightLabel}</div>
-          <textarea
-            className="min-h-[120px] w-full rounded-md border bg-background p-2 text-sm"
+          <Textarea
+            className="min-h-[120px] p-2"
             value={instruction}
             onChange={(event) => onInstructionChange(event.target.value)}
             placeholder="输入修正要求，例如：压缩冗余、加强冲突、保持既有设定不变。"

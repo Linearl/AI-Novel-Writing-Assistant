@@ -8,7 +8,9 @@ import LLMSelector from "@/components/common/LLMSelector";
 import AutoDirectorApprovalStrategyPanel from "@/components/autoDirector/AutoDirectorApprovalStrategyPanel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { StatusBadge } from "@/components/ui/status-badge";
 import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
 import type { NovelBasicFormState } from "../novelBasicInfo.shared";
 import {
   BASIC_INFO_FIELD_HINTS,
@@ -148,8 +150,8 @@ export default function NovelAutoDirectorSetupPanel(props: NovelAutoDirectorSetu
           {isGeneratingIdeaInspirations ? "生成中..." : "没有想法？"}
         </Button>
       </div>
-      <textarea
-        className="mt-2 min-h-[128px] w-full rounded-md border bg-background px-3 py-2 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+      <Textarea
+        className="mt-2 min-h-[128px]"
         value={idea}
         onChange={(event) => onIdeaChange(event.target.value)}
         placeholder="例如：普通女大学生误入异能组织，一边上学打工，一边调查父亲失踪真相。"
@@ -421,9 +423,9 @@ export default function NovelAutoDirectorSetupPanel(props: NovelAutoDirectorSetu
                     <div className="flex items-start justify-between gap-2">
                       <div className="text-sm font-medium text-foreground">{option.label}</div>
                       {recommended ? (
-                        <span className="shrink-0 rounded-full bg-emerald-600 px-2 py-0.5 text-[11px] font-medium text-white">
+                        <StatusBadge variant="success" solid className="shrink-0">
                           推荐
-                        </span>
+                        </StatusBadge>
                       ) : null}
                     </div>
                     <div className="mt-1 text-xs leading-5 text-muted-foreground">{option.description}</div>

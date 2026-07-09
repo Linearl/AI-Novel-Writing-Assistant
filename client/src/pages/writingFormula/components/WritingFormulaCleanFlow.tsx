@@ -2,6 +2,7 @@ import type { StyleDetectionReport, StyleProfile } from "@ai-novel/shared/types/
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
 import type { WritingFormulaDiffRow } from "../writingFormulaV2.shared";
 
 interface WritingFormulaCleanFlowProps {
@@ -62,8 +63,8 @@ export default function WritingFormulaCleanFlow(props: WritingFormulaCleanFlowPr
                 ))}
               </select>
             </div>
-            <textarea
-              className="min-h-[280px] w-full rounded-xl border bg-white p-3 text-sm leading-7"
+            <Textarea
+              className="min-h-[280px] rounded-xl bg-white p-3"
               placeholder="粘贴你想先去 AI 味的一段正文。"
               value={detectInput}
               onChange={(event) => onInputChange(event.target.value)}

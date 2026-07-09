@@ -1,6 +1,7 @@
 import type { StyleBinding } from "@ai-novel/shared/types/styleEngine";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
 
 interface BindingFormState {
   targetType: StyleBinding["targetType"];
@@ -206,8 +207,8 @@ export default function WritingFormulaWorkbenchPanel(props: WritingFormulaWorkbe
           ) : (
             <label className="space-y-2">
               <div className="text-sm font-medium text-slate-900">待改写文本</div>
-              <textarea
-                className="min-h-[140px] w-full rounded-md border p-2 text-sm"
+              <Textarea
+                className="min-h-[140px]"
                 placeholder="粘贴你想用这套写法改写的正文"
                 value={testWriteForm.sourceText}
                 onChange={(event) => onTestWriteFormChange({ sourceText: event.target.value })}

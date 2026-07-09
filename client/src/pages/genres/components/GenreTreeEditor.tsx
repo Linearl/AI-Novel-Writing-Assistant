@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import type { GenreTreeDraft } from "@/api/genre";
 import { createEmptyGenreDraft } from "../genreManagement.shared";
 
@@ -77,9 +78,9 @@ export default function GenreTreeEditor({
 
         <label className="space-y-2 text-sm md:col-span-2">
           <span className="font-medium text-foreground">描述</span>
-          <textarea
+          <Textarea
             rows={3}
-            className="min-h-[96px] w-full rounded-md border bg-background px-3 py-2 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+            className="min-h-[96px]"
             value={value.description ?? ""}
             placeholder="描述这个类型的题材核心、爽点、常见主线或读者期待。"
             onChange={(event) => onChange({ ...value, description: event.target.value })}

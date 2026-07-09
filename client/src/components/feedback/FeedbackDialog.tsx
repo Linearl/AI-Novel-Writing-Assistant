@@ -6,6 +6,7 @@ import { queryKeys } from "@/api/queryKeys";
 import { toast } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog,
   DialogTrigger,
@@ -138,8 +139,8 @@ export default function FeedbackDialog() {
 
           <div className="space-y-2">
             <label className="text-sm font-medium">详细描述</label>
-            <textarea
-              className="flex min-h-[120px] w-full rounded-xl border border-border/70 bg-background px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring/60 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            <Textarea
+              className="min-h-[120px] rounded-xl"
               placeholder="请详细描述您遇到的问题或建议..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}

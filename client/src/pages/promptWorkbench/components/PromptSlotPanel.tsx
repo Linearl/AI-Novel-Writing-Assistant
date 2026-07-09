@@ -40,6 +40,7 @@ import {
 import { queryKeys } from "@/api/queryKeys";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -84,13 +85,13 @@ function SlotControlReplace({
   const remaining = (def.maxLength ?? 2000) - value.length;
   return (
     <div className="space-y-1.5">
-      <textarea
+      <Textarea
         value={value}
         onChange={(e) => onChange(e.target.value)}
         disabled={disabled}
         maxLength={def.maxLength ?? 2000}
         rows={3}
-        className="w-full resize-y rounded-md border bg-background px-3 py-2 text-sm leading-relaxed outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+        className="resize-y leading-relaxed"
       />
       <div className="flex items-center justify-between text-xs text-muted-foreground">
         <span>{remaining < 0 ? <span className="text-destructive">{remaining}</span> : remaining} 字剩余</span>
@@ -116,14 +117,14 @@ function SlotControlAppend({
   const remaining = (def.maxLength ?? 4000) - value.length;
   return (
     <div className="space-y-1.5">
-      <textarea
+      <Textarea
         value={value}
         onChange={(e) => onChange(e.target.value)}
         disabled={disabled}
         maxLength={def.maxLength ?? 4000}
         rows={4}
         placeholder={def.placeholderHint ?? "追加到提示词末尾的自定义约束，留空则不追加任何内容。"}
-        className="w-full resize-y rounded-md border bg-background px-3 py-2 text-sm leading-relaxed outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+        className="resize-y leading-relaxed"
       />
       <div className="text-right text-xs text-muted-foreground">
         {remaining < 0 ? <span className="text-destructive">{remaining}</span> : remaining} 字剩余

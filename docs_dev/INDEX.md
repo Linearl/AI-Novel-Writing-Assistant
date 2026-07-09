@@ -27,26 +27,26 @@ description: "docs 目录索引（自动生成）"
 | --- | --- | --- |
 | [1.task\B.todo\任务包六件套构成-编号分类规则-自动归档机制.md](./1.task\B.todo\任务包六件套构成-编号分类规则-自动归档机制.md) | --- | - |
 
-## 1.task\B.todo\v0.1-r7014-C2-legacy-world-fields-cleanup
+## 1.task\B.todo\v0.1\v0.1-r7014-C2-legacy-world-fields-cleanup
 
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
-| [1.task\B.todo\v0.1-r7014-C2-legacy-world-fields-cleanup\decision_log.md](./1.task\B.todo\v0.1-r7014-C2-legacy-world-fields-cleanup\decision_log.md) | REQ-7014 清理 Novel 旧版世界字段——决策日志 | REQ-7014 清理 Novel 旧版世界字段——决策日志 |
-| [1.task\B.todo\v0.1-r7014-C2-legacy-world-fields-cleanup\design.md](./1.task\B.todo\v0.1-r7014-C2-legacy-world-fields-cleanup\design.md) | REQ-7014 清理 Novel 旧版世界字段——技术设计 | REQ-7014 清理 Novel 旧版世界字段——技术设计 |
-| [1.task\B.todo\v0.1-r7014-C2-legacy-world-fields-cleanup\README.md](./1.task\B.todo\v0.1-r7014-C2-legacy-world-fields-cleanup\README.md) | REQ-7014 清理 Novel 旧版世界字段——README | REQ-7014 清理 Novel 旧版世界字段——README |
-| [1.task\B.todo\v0.1-r7014-C2-legacy-world-fields-cleanup\REQ-7014-legacy-world-fields-cleanup.md](./1.task\B.todo\v0.1-r7014-C2-legacy-world-fields-cleanup\REQ-7014-legacy-world-fields-cleanup.md) | REQ-7014 清理 Novel 旧版世界字段——需求文档 | REQ-7014 清理 Novel 旧版世界字段——需求文档 |
-| [1.task\B.todo\v0.1-r7014-C2-legacy-world-fields-cleanup\tasks.md](./1.task\B.todo\v0.1-r7014-C2-legacy-world-fields-cleanup\tasks.md) | REQ-7014 清理 Novel 旧版世界字段——任务清单 | REQ-7014 清理 Novel 旧版世界字段——任务清单 |
+| [1.task\B.todo\v0.1\v0.1-r7014-C2-legacy-world-fields-cleanup\decision_log.md](./1.task\B.todo\v0.1\v0.1-r7014-C2-legacy-world-fields-cleanup\decision_log.md) | REQ-7014 清理 Novel 旧版世界字段——决策日志 | REQ-7014 清理 Novel 旧版世界字段——决策日志 |
+| [1.task\B.todo\v0.1\v0.1-r7014-C2-legacy-world-fields-cleanup\design.md](./1.task\B.todo\v0.1\v0.1-r7014-C2-legacy-world-fields-cleanup\design.md) | REQ-7014 清理 Novel 旧版世界字段——技术设计 | REQ-7014 清理 Novel 旧版世界字段——技术设计 |
+| [1.task\B.todo\v0.1\v0.1-r7014-C2-legacy-world-fields-cleanup\README.md](./1.task\B.todo\v0.1\v0.1-r7014-C2-legacy-world-fields-cleanup\README.md) | REQ-7014 清理 Novel 旧版世界字段——README | REQ-7014 清理 Novel 旧版世界字段——README |
+| [1.task\B.todo\v0.1\v0.1-r7014-C2-legacy-world-fields-cleanup\REQ-7014-legacy-world-fields-cleanup.md](./1.task\B.todo\v0.1\v0.1-r7014-C2-legacy-world-fields-cleanup\REQ-7014-legacy-world-fields-cleanup.md) | REQ-7014 清理 Novel 旧版世界字段——需求文档 | REQ-7014 清理 Novel 旧版世界字段——需求文档 |
+| [1.task\B.todo\v0.1\v0.1-r7014-C2-legacy-world-fields-cleanup\tasks.md](./1.task\B.todo\v0.1\v0.1-r7014-C2-legacy-world-fields-cleanup\tasks.md) | REQ-7014 清理 Novel 旧版世界字段——任务清单 | REQ-7014 清理 Novel 旧版世界字段——任务清单 |
 
-## 1.task\B.todo\v0.1-r7015-M2-frontend-common-styles-components
+## 1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components
 
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
-| [1.task\B.todo\v0.1-r7015-M2-frontend-common-styles-components\decision_log.md](./1.task\B.todo\v0.1-r7015-M2-frontend-common-styles-components\decision_log.md) | REQ-7015 前端公共样式与组件提取 — 决策留痕 | REQ-7015 前端公共样式与组件提取 — 决策留痕 |
-| [1.task\B.todo\v0.1-r7015-M2-frontend-common-styles-components\design.md](./1.task\B.todo\v0.1-r7015-M2-frontend-common-styles-components\design.md) | REQ-7015 前端公共样式与组件提取 — 方案设计 | REQ-7015 前端公共样式与组件提取 — 方案设计 |
-| [1.task\B.todo\v0.1-r7015-M2-frontend-common-styles-components\README.md](./1.task\B.todo\v0.1-r7015-M2-frontend-common-styles-components\README.md) | REQ-7015 前端公共样式与组件提取任务总线 | REQ-7015 前端公共样式与组件提取任务总线 |
-| [1.task\B.todo\v0.1-r7015-M2-frontend-common-styles-components\REQ-7015-frontend-common-styles-components-original.md](./1.task\B.todo\v0.1-r7015-M2-frontend-common-styles-components\REQ-7015-frontend-common-styles-components-original.md) | REQ-7015 前端公共样式与组件提取 — 原始冻结副本 | REQ-7015 前端公共样式与组件提取 — 原始冻结副本 |
-| [1.task\B.todo\v0.1-r7015-M2-frontend-common-styles-components\REQ-7015-frontend-common-styles-components.md](./1.task\B.todo\v0.1-r7015-M2-frontend-common-styles-components\REQ-7015-frontend-common-styles-components.md) | REQ-7015 前端公共样式与组件提取 | REQ-7015 前端公共样式与组件提取 |
-| [1.task\B.todo\v0.1-r7015-M2-frontend-common-styles-components\tasks.md](./1.task\B.todo\v0.1-r7015-M2-frontend-common-styles-components\tasks.md) | REQ-7015 前端公共样式与组件提取 — 任务拆解 | REQ-7015 前端公共样式与组件提取 — 任务拆解 |
+| [1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components\decision_log.md](./1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components\decision_log.md) | REQ-7015 前端公共样式与组件提取 — 决策留痕 | REQ-7015 前端公共样式与组件提取 — 决策留痕 |
+| [1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components\design.md](./1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components\design.md) | REQ-7015 前端公共样式与组件提取 — 方案设计 | REQ-7015 前端公共样式与组件提取 — 方案设计 |
+| [1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components\README.md](./1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components\README.md) | REQ-7015 前端公共样式与组件提取任务总线 | REQ-7015 前端公共样式与组件提取任务总线 |
+| [1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components\REQ-7015-frontend-common-styles-components-original.md](./1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components\REQ-7015-frontend-common-styles-components-original.md) | REQ-7015 前端公共样式与组件提取 — 原始冻结副本 | REQ-7015 前端公共样式与组件提取 — 原始冻结副本 |
+| [1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components\REQ-7015-frontend-common-styles-components.md](./1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components\REQ-7015-frontend-common-styles-components.md) | REQ-7015 前端公共样式与组件提取 | REQ-7015 前端公共样式与组件提取 |
+| [1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components\tasks.md](./1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components\tasks.md) | REQ-7015 前端公共样式与组件提取 — 任务拆解 | REQ-7015 前端公共样式与组件提取 — 任务拆解 |
 
 ## 1.task\template
 

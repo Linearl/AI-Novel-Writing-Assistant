@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { ToolCallMessagePartProps } from "@assistant-ui/react";
+import { Textarea } from "@/components/ui/textarea";
 import CreativeHubToolResultCard from "./CreativeHubToolResultCard";
 import CreativeHubDebugTraceCard, { type CreativeHubDebugTraceEntry } from "./CreativeHubDebugTraceCard";
 import CreativeHubTurnSummaryCard from "./CreativeHubTurnSummaryCard";
@@ -73,8 +74,8 @@ export default function CreativeHubInlineToolCall(props: ToolCallMessagePartProp
           {targetType}:{targetId}
         </div>
         <div className="mt-3 text-sm leading-6 text-slate-700">{summary}</div>
-        <textarea
-          className="mt-3 min-h-[88px] w-full rounded-xl border border-amber-200 bg-white p-3 text-sm text-slate-700 outline-none focus:border-amber-400"
+        <Textarea
+          className="mt-3 min-h-[88px] rounded-xl border-amber-200 bg-white p-3 text-slate-700 focus:border-amber-400"
           value={inlineControls.approvalNote}
           onChange={(event) => inlineControls.onApprovalNoteChange?.(event.target.value)}
           placeholder="审批备注（可选）"

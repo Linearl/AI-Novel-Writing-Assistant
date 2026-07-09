@@ -3,6 +3,7 @@ import { FlaskConical, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
 import { severityLabels, typeLabels } from "../antiAiRulesPage.shared";
 
 interface AntiAiRuleEffectTestCardProps {
@@ -75,8 +76,8 @@ export default function AntiAiRuleEffectTestCard(props: AntiAiRuleEffectTestCard
           </div>
         )}
 
-        <textarea
-          className="min-h-[180px] w-full rounded-md border bg-background p-3 text-sm leading-7"
+        <Textarea
+          className="min-h-[180px] p-3 leading-7"
           value={props.content}
           placeholder="粘贴待检测正文。建议输入一段完整场景，便于判断总结腔、解释腔和模板感。"
           onChange={(event) => props.onContentChange(event.target.value)}

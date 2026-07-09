@@ -2,6 +2,7 @@ import { useMemo, useState, type Dispatch, type SetStateAction } from "react";
 import type { WorldDeepeningQuestion } from "@ai-novel/shared/types/world";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
 
 interface WorldDeepeningTabProps {
   questions: WorldDeepeningQuestion[];
@@ -124,8 +125,8 @@ export default function WorldDeepeningTab(props: WorldDeepeningTabProps) {
                     可以直接写你的设定答案，也可以先用一句话描述方向。
                   </div>
                 )}
-                <textarea
-                  className="min-h-[100px] w-full rounded-md border bg-background p-2 text-sm"
+                <Textarea
+                  className="min-h-[100px] p-2"
                   value={answerDrafts[activeQuestion.id] ?? ""}
                   onChange={(event) =>
                     setAnswerDrafts((prev) => ({ ...prev, [activeQuestion.id]: event.target.value }))

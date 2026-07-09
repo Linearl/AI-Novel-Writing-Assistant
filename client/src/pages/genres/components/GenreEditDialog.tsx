@@ -4,6 +4,7 @@ import { updateGenre, type GenreOption, type GenreTreeNode } from "@/api/genre";
 import { queryKeys } from "@/api/queryKeys";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   AppDialogContent,
   Dialog,
@@ -88,9 +89,9 @@ export default function GenreEditDialog({
 
           <label className="space-y-2 text-sm">
             <span className="font-medium text-foreground">描述</span>
-            <textarea
+            <Textarea
               rows={4}
-              className="min-h-[120px] w-full rounded-md border bg-background px-3 py-2 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+              className="min-h-[120px]"
               value={description}
               onChange={(event) => setDescription(event.target.value)}
             />

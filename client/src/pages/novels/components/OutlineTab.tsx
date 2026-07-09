@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import BookPayoffLedgerCard from "./BookPayoffLedgerCard";
@@ -294,51 +295,51 @@ export default function OutlineTab(props: OutlineTabViewProps) {
                   </label>
                   <label className="space-y-1 text-sm">
                     <span className="text-xs text-muted-foreground">卷摘要</span>
-                    <textarea className="min-h-[84px] w-full rounded-md border bg-background p-2" value={selectedVolume.summary ?? ""} onChange={(event) => onVolumeFieldChange(selectedVolume.id, "summary", event.target.value)} />
+                    <Textarea className="min-h-[84px] p-2" value={selectedVolume.summary ?? ""} onChange={(event) => onVolumeFieldChange(selectedVolume.id, "summary", event.target.value)} />
                   </label>
                   <label className="space-y-1 text-sm">
                     <span className="text-xs text-muted-foreground">开卷抓手</span>
-                    <textarea className="min-h-[84px] w-full rounded-md border bg-background p-2" value={selectedVolume.openingHook ?? ""} onChange={(event) => onVolumeFieldChange(selectedVolume.id, "openingHook", event.target.value)} />
+                    <Textarea className="min-h-[84px] p-2" value={selectedVolume.openingHook ?? ""} onChange={(event) => onVolumeFieldChange(selectedVolume.id, "openingHook", event.target.value)} />
                   </label>
                   <label className="space-y-1 text-sm">
                     <span className="text-xs text-muted-foreground">主承诺</span>
-                    <textarea className="min-h-[84px] w-full rounded-md border bg-background p-2" value={selectedVolume.mainPromise ?? ""} onChange={(event) => onVolumeFieldChange(selectedVolume.id, "mainPromise", event.target.value)} />
+                    <Textarea className="min-h-[84px] p-2" value={selectedVolume.mainPromise ?? ""} onChange={(event) => onVolumeFieldChange(selectedVolume.id, "mainPromise", event.target.value)} />
                   </label>
                   <label className="space-y-1 text-sm">
                     <span className="text-xs text-muted-foreground">主压迫源</span>
-                    <textarea className="min-h-[84px] w-full rounded-md border bg-background p-2" value={selectedVolume.primaryPressureSource ?? ""} onChange={(event) => onVolumeFieldChange(selectedVolume.id, "primaryPressureSource", event.target.value)} />
+                    <Textarea className="min-h-[84px] p-2" value={selectedVolume.primaryPressureSource ?? ""} onChange={(event) => onVolumeFieldChange(selectedVolume.id, "primaryPressureSource", event.target.value)} />
                   </label>
                   <label className="space-y-1 text-sm">
                     <span className="text-xs text-muted-foreground">核心卖点</span>
-                    <textarea className="min-h-[84px] w-full rounded-md border bg-background p-2" value={selectedVolume.coreSellingPoint ?? ""} onChange={(event) => onVolumeFieldChange(selectedVolume.id, "coreSellingPoint", event.target.value)} />
+                    <Textarea className="min-h-[84px] p-2" value={selectedVolume.coreSellingPoint ?? ""} onChange={(event) => onVolumeFieldChange(selectedVolume.id, "coreSellingPoint", event.target.value)} />
                   </label>
                   <label className="space-y-1 text-sm">
                     <span className="text-xs text-muted-foreground">升级方式</span>
-                    <textarea className="min-h-[84px] w-full rounded-md border bg-background p-2" value={selectedVolume.escalationMode ?? ""} onChange={(event) => onVolumeFieldChange(selectedVolume.id, "escalationMode", event.target.value)} />
+                    <Textarea className="min-h-[84px] p-2" value={selectedVolume.escalationMode ?? ""} onChange={(event) => onVolumeFieldChange(selectedVolume.id, "escalationMode", event.target.value)} />
                   </label>
                   <label className="space-y-1 text-sm">
                     <span className="text-xs text-muted-foreground">主角变化</span>
-                    <textarea className="min-h-[84px] w-full rounded-md border bg-background p-2" value={selectedVolume.protagonistChange ?? ""} onChange={(event) => onVolumeFieldChange(selectedVolume.id, "protagonistChange", event.target.value)} />
+                    <Textarea className="min-h-[84px] p-2" value={selectedVolume.protagonistChange ?? ""} onChange={(event) => onVolumeFieldChange(selectedVolume.id, "protagonistChange", event.target.value)} />
                   </label>
                   <label className="space-y-1 text-sm">
                     <span className="text-xs text-muted-foreground">中段风险</span>
-                    <textarea className="min-h-[84px] w-full rounded-md border bg-background p-2" value={selectedVolume.midVolumeRisk ?? ""} onChange={(event) => onVolumeFieldChange(selectedVolume.id, "midVolumeRisk", event.target.value)} />
+                    <Textarea className="min-h-[84px] p-2" value={selectedVolume.midVolumeRisk ?? ""} onChange={(event) => onVolumeFieldChange(selectedVolume.id, "midVolumeRisk", event.target.value)} />
                   </label>
                   <label className="space-y-1 text-sm">
                     <span className="text-xs text-muted-foreground">卷末高潮</span>
-                    <textarea className="min-h-[84px] w-full rounded-md border bg-background p-2" value={selectedVolume.climax ?? ""} onChange={(event) => onVolumeFieldChange(selectedVolume.id, "climax", event.target.value)} />
+                    <Textarea className="min-h-[84px] p-2" value={selectedVolume.climax ?? ""} onChange={(event) => onVolumeFieldChange(selectedVolume.id, "climax", event.target.value)} />
                   </label>
                   <label className="space-y-1 text-sm">
                     <span className="text-xs text-muted-foreground">兑现类型</span>
-                    <textarea className="min-h-[84px] w-full rounded-md border bg-background p-2" value={selectedVolume.payoffType ?? ""} onChange={(event) => onVolumeFieldChange(selectedVolume.id, "payoffType", event.target.value)} />
+                    <Textarea className="min-h-[84px] p-2" value={selectedVolume.payoffType ?? ""} onChange={(event) => onVolumeFieldChange(selectedVolume.id, "payoffType", event.target.value)} />
                   </label>
                   <label className="space-y-1 text-sm">
                     <span className="text-xs text-muted-foreground">下卷钩子</span>
-                    <textarea className="min-h-[84px] w-full rounded-md border bg-background p-2" value={selectedVolume.nextVolumeHook ?? ""} onChange={(event) => onVolumeFieldChange(selectedVolume.id, "nextVolumeHook", event.target.value)} />
+                    <Textarea className="min-h-[84px] p-2" value={selectedVolume.nextVolumeHook ?? ""} onChange={(event) => onVolumeFieldChange(selectedVolume.id, "nextVolumeHook", event.target.value)} />
                   </label>
                   <label className="space-y-1 text-sm">
                     <span className="text-xs text-muted-foreground">卷间重置点</span>
-                    <textarea className="min-h-[84px] w-full rounded-md border bg-background p-2" value={selectedVolume.resetPoint ?? ""} onChange={(event) => onVolumeFieldChange(selectedVolume.id, "resetPoint", event.target.value)} />
+                    <Textarea className="min-h-[84px] p-2" value={selectedVolume.resetPoint ?? ""} onChange={(event) => onVolumeFieldChange(selectedVolume.id, "resetPoint", event.target.value)} />
                   </label>
                   <label className="space-y-1 text-sm md:col-span-1">
                     <span className="text-xs text-muted-foreground">目标章节数（留空=自动分配）</span>
@@ -360,7 +361,7 @@ export default function OutlineTab(props: OutlineTabViewProps) {
                   </label>
                   <label className="space-y-1 text-sm md:col-span-2">
                     <span className="text-xs text-muted-foreground">本卷未兑现事项</span>
-                    <textarea className="min-h-[84px] w-full rounded-md border bg-background p-2" placeholder="每行一个，或用中文逗号分隔。" value={selectedVolume.openPayoffs.join("\n")} onChange={(event) => onOpenPayoffsChange(selectedVolume.id, event.target.value)} />
+                    <Textarea className="min-h-[84px] p-2" placeholder="每行一个，或用中文逗号分隔。" value={selectedVolume.openPayoffs.join("\n")} onChange={(event) => onOpenPayoffsChange(selectedVolume.id, event.target.value)} />
                   </label>
                 </CardContent>
               </Card>

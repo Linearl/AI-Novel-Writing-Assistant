@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import AiButton from "@/components/common/AiButton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import RepairProgressDialog from "./RepairProgressDialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ChapterExecutionStatusFlow from "./ChapterExecutionStatusFlow";
@@ -201,8 +202,8 @@ function GuidedRepairButton({
   return (
     <div className="space-y-2 rounded-lg border bg-background p-3">
       <div className="text-xs font-medium text-muted-foreground">输入修改方向或具体要求</div>
-      <textarea
-        className="w-full rounded-md border bg-background px-3 py-2 text-sm resize-none"
+      <Textarea
+        className="rounded-md resize-none"
         rows={3}
         placeholder="例：把第3段的打斗场面写得更紧张一些，增加感官描写"
         value={instruction}

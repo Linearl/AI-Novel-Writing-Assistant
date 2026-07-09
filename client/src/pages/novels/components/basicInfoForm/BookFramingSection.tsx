@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { BASIC_INFO_FIELD_HINTS, type NovelBasicFormState } from "../../novelBasicInfo.shared";
 import { FieldLabel } from "./BasicInfoFormPrimitives";
 
@@ -65,10 +66,10 @@ export function BookFramingSection(props: BookFramingSectionProps) {
           <FieldLabel htmlFor="basic-book-selling-point" hint={BASIC_INFO_FIELD_HINTS.bookSellingPoint}>
             本书核心卖点
           </FieldLabel>
-          <textarea
+          <Textarea
             id="basic-book-selling-point"
             rows={3}
-            className="min-h-[96px] w-full rounded-md border bg-background px-3 py-2 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+            className="min-h-[96px]"
             value={basicForm.bookSellingPoint}
             placeholder="例如：主角每次解决现实困局都会撬动更大的关系链和利益链，读者会一直期待下一次反压。"
             onChange={(event) => onFormChange({ bookSellingPoint: event.target.value })}
@@ -80,10 +81,10 @@ export function BookFramingSection(props: BookFramingSectionProps) {
         <FieldLabel htmlFor="basic-first30-promise" hint={BASIC_INFO_FIELD_HINTS.first30ChapterPromise}>
           前 30 章承诺
         </FieldLabel>
-        <textarea
+        <Textarea
           id="basic-first30-promise"
           rows={5}
-          className="min-h-[128px] w-full rounded-md border bg-background px-3 py-2 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+          className="min-h-[128px]"
           value={basicForm.first30ChapterPromise}
           placeholder="例如：前 30 章必须让读者看到主角站稳第一阶段立场、核心对手浮出水面、关系线第一次强反转，并明确这本书后面会越写越狠。"
           onChange={(event) => onFormChange({ first30ChapterPromise: event.target.value })}
