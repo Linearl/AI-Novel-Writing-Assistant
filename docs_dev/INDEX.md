@@ -87,6 +87,16 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1\v0.1-r7013-S2-remove-comic-drama\REQ-7013-remove-comic-drama.md](./1.task\B.todo\v0.1\v0.1-r7013-S2-remove-comic-drama\REQ-7013-remove-comic-drama.md) | 移除漫画和短剧模块的需求定义 | 移除漫画和短剧模块的需求定义 |
 | [1.task\B.todo\v0.1\v0.1-r7013-S2-remove-comic-drama\tasks.md](./1.task\B.todo\v0.1\v0.1-r7013-S2-remove-comic-drama\tasks.md) | 移除漫画和短剧模块任务清单 | 移除漫画和短剧模块任务清单 |
 
+## 1.task\B.todo\v11-r7014-C2-legacy-world-fields-cleanup
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v11-r7014-C2-legacy-world-fields-cleanup\decision_log.md](./1.task\B.todo\v11-r7014-C2-legacy-world-fields-cleanup\decision_log.md) | REQ-7014 清理 Novel 旧版世界字段——决策日志 | REQ-7014 清理 Novel 旧版世界字段——决策日志 |
+| [1.task\B.todo\v11-r7014-C2-legacy-world-fields-cleanup\design.md](./1.task\B.todo\v11-r7014-C2-legacy-world-fields-cleanup\design.md) | REQ-7014 清理 Novel 旧版世界字段——技术设计 | REQ-7014 清理 Novel 旧版世界字段——技术设计 |
+| [1.task\B.todo\v11-r7014-C2-legacy-world-fields-cleanup\README.md](./1.task\B.todo\v11-r7014-C2-legacy-world-fields-cleanup\README.md) | REQ-7014 清理 Novel 旧版世界字段——README | REQ-7014 清理 Novel 旧版世界字段——README |
+| [1.task\B.todo\v11-r7014-C2-legacy-world-fields-cleanup\REQ-7014-legacy-world-fields-cleanup.md](./1.task\B.todo\v11-r7014-C2-legacy-world-fields-cleanup\REQ-7014-legacy-world-fields-cleanup.md) | REQ-7014 清理 Novel 旧版世界字段——需求文档 | REQ-7014 清理 Novel 旧版世界字段——需求文档 |
+| [1.task\B.todo\v11-r7014-C2-legacy-world-fields-cleanup\tasks.md](./1.task\B.todo\v11-r7014-C2-legacy-world-fields-cleanup\tasks.md) | REQ-7014 清理 Novel 旧版世界字段——任务清单 | REQ-7014 清理 Novel 旧版世界字段——任务清单 |
+
 ## 1.task\template
 
 | 文件 | 标题 | 描述 |

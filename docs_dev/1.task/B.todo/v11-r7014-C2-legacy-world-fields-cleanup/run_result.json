@@ -1,0 +1,16 @@
+{
+  "reqId": "7014",
+  "title": "清理 Novel 旧版世界字段",
+  "status": "requirements_ready",
+  "complexity": "C2",
+  "priority": "P1",
+  "phase": "requirements",
+  "createdAt": "2026-07-08",
+  "updatedAt": "2026-07-08",
+  "estimatedFiles": "15-20",
+  "verification": {
+    "typecheck": "pending",
+    "tests": "pending",
+    "manual": "pending"
+  }
+}

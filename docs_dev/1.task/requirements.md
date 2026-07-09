@@ -97,6 +97,7 @@ description: "需求任务总清单（SSOT）"
 | 7011 | Quality Fix | p8 | ✅ 已完成 | 2026-07-01-全量代码审计-full | 0.1 | 2026-07-01T20:40:00.000Z | 2026-07-02T23:00:00+08:00 | `B.2.done/v0.1-r7011-medium-p3-quality-fix/README.md` |  |
 | 7012 | Low Priority Fix | p8 | ✅ 已完成 | 2026-07-01-全量代码审计-full | 0.1 | 2026-07-01T20:41:00.000Z | 2026-07-02T23:00:00+08:00 | `B.2.done/v0.1-r7012-simple-p4-low-priority-fix/README.md` |  |
 | 7013 | Remove Comic Drama | p8 | ✅ 已完成 | - | 0.1 | 2026-07-08T00:00:00.000Z | 2026-07-08T08:00:00.000Z | `B.todo/v0.1-r7013-simple-remove-comic-drama/README.md` |  |
+| 7014 | 清理 Novel 旧版世界字段 | p1 | 📋 待办 | - | 11 | 2026-07-08 | 2026-07-08 | `B.todo/v11-r7014-C2-legacy-world-fields-cleanup/README.md` |  |
 
 ---
 
@@ -108,6 +109,7 @@ description: "需求任务总清单（SSOT）"
 
 | 编号 | 任务标题 | 文档 |
 | --- | --- | --- |
+| 7014 | 清理 Novel 旧版世界字段 | `B.todo/v11-r7014-C2-legacy-world-fields-cleanup/README.md` |
 | 2013 | Director Failed Retry Entry | `B.todo/v0.1-r2013-medium-director-failed-retry-entry/README.md` |
 | 2014 | Chapter Token Budget Dynamic | `B.todo/v0.1-r2014-medium-chapter-token-budget-dynamic/README.md` |
 | 3004 | Novel Conversation Archive | `B.todo/v0.1-r3004-medium-novel-conversation-archive/README.md` |
