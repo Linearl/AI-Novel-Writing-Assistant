@@ -560,6 +560,7 @@ export const supplementalCharacterPrompt: PromptAsset<
       "2. 每个候选都必须输出 gender；拿不准时填 unknown，不得省略。",
       "3. 所有展示文本值必须使用自然、流畅的简体中文。",
       "4. 禁止复用 forbidden names 里的现有角色名。",
+      "4a. relations 中的 sourceName 和 targetName 必须逐字抄录已有角色的姓名，不得改写、缩写、近似或臆造。从【已有角色】列表中精确复制角色名。",
       "5. castRole 只能使用：protagonist, antagonist, ally, foil, mentor, love_interest, pressure_source, catalyst。",
       "6. 每个候选都必须输出 personality、background、development 和角色硬事实字段：identityLabel、factionLabel、stanceLabel、powerLevel、realm、currentLocation、availability、prohibitions。",
       "",

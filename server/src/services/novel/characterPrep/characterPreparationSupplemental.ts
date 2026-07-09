@@ -58,6 +58,50 @@ function toOptionalText(value: string | null | undefined): string | null {
   return normalized || null;
 }
 
+/**
+ * 用编辑距离做模糊匹配，修正 LLM 生成的幻觉人名。
+ * 如 "沈念" → 匹配到 "沈玫"（编辑距离 1），"江也" → 匹配到 "江夜"（编辑距离 1）。
+ * 阈值：名称长度 <=2 时距离必须为 1，>2 时距离 <=1 且前缀相同。
+ */
+function fuzzyResolveName(
+  hallucinatedName: string,
+  candidates: Map<string, string>,
+): string | null {
+  const exact = candidates.get(hallucinatedName);
+  if (exact) return hallucinatedName;
+
+  let bestName: string | null = null;
+  let bestDist = Infinity;
+  for (const [candidateName] of candidates) {
+    const dist = editDistance(hallucinatedName, candidateName);
+    if (dist < bestDist) {
+      bestDist = dist;
+      bestName = candidateName;
+    }
+  }
+
+  if (bestDist === 0) return bestName;
+  if (hallucinatedName.length <= 2 && bestDist <= 1) return bestName;
+  if (hallucinatedName.length > 2 && bestDist <= 1 && bestName && bestName[0] === hallucinatedName[0]) return bestName;
+  return null;
+}
+
+function editDistance(a: string, b: string): number {
+  const m = a.length;
+  const n = b.length;
+  const dp: number[][] = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
+  for (let i = 0; i <= m; i++) dp[i][0] = i;
+  for (let j = 0; j <= n; j++) dp[0][j] = j;
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      dp[i][j] = a[i - 1] === b[j - 1]
+        ? dp[i - 1][j - 1]
+        : 1 + Math.min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]);
+    }
+  }
+  return dp[m][n];
+}
+
 function serializeCharacter(row: CharacterRowForOutput): Character {
   return {
     id: row.id,
@@ -416,10 +460,22 @@ export class CharacterPreparationSupplementalService {
 
     const seenRelationKeys = new Set<string>();
     let relationCount = 0;
+    let droppedCount = 0;
     for (const relation of parsedCandidate.relations) {
-      const sourceCharacterId = characterIdByName.get(relation.sourceName);
-      const targetCharacterId = characterIdByName.get(relation.targetName);
+      // 模糊匹配修正 LLM 幻觉人名
+      const resolvedSource = fuzzyResolveName(relation.sourceName, characterIdByName);
+      const resolvedTarget = fuzzyResolveName(relation.targetName, characterIdByName);
+      if (resolvedSource && resolvedSource !== relation.sourceName) {
+        console.log(`[supplemental] 关系人名修正: "${relation.sourceName}" → "${resolvedSource}"`);
+      }
+      if (resolvedTarget && resolvedTarget !== relation.targetName) {
+        console.log(`[supplemental] 关系人名修正: "${relation.targetName}" → "${resolvedTarget}"`);
+      }
+      const sourceCharacterId = resolvedSource ? characterIdByName.get(resolvedSource) : undefined;
+      const targetCharacterId = resolvedTarget ? characterIdByName.get(resolvedTarget) : undefined;
       if (!sourceCharacterId || !targetCharacterId || sourceCharacterId === targetCharacterId) {
+        console.warn(`[supplemental] 关系被丢弃: "${relation.sourceName}" → "${relation.targetName}" (无法匹配到已有角色)`);
+        droppedCount += 1;
         continue;
       }
       const relationKey = `${sourceCharacterId}:${targetCharacterId}`;
