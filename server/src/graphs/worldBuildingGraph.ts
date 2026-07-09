@@ -58,7 +58,12 @@ seed=${state.seed}`,
 async function axiomNode(state: WorldBuildingGraphState, llm: BaseChatModel) {
   try {
     const result = await llm.invoke([
-      new SystemMessage("Generate 5 core axioms as bullet lines."),
+      new SystemMessage([
+        "Generate 5 core axioms as bullet lines.",
+        "If worldType indicates realistic/modern/urban/文艺 genre, axioms MUST be real-world social rules, NOT supernatural laws.",
+        "Realistic examples: 'Emotional trauma causes personality closure; the longer closed, the higher cost to reopen', 'Large companies can legally strip independent creators of copyright via contract loopholes', 'Progressive illness is irreversible; patients must make life choices within limited time'.",
+        "Forbidden for realistic genres: supernatural powers, magic systems, fantasy cost mechanics, 'X power has Y cost' patterns.",
+      ].join("\n")),
       new HumanMessage(
         `worldType=${state.worldType}
 description=${state.description}`,
@@ -94,7 +99,10 @@ worldType=${state.worldType}`,
 async function powerNode(state: WorldBuildingGraphState, llm: BaseChatModel) {
   try {
     const result = await llm.invoke([
-      new SystemMessage("Output JSON with fields magicSystem, technology."),
+      new SystemMessage([
+        "Output JSON with fields magicSystem, technology.",
+        "If worldType indicates realistic/modern/urban genre, magicSystem MUST be empty string. Technology should reflect real-world tech level.",
+      ].join("\n")),
       new HumanMessage(
         `description=${state.description}
 background=${state.background}
