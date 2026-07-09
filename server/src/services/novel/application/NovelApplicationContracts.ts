@@ -97,6 +97,7 @@ export interface NovelApplicationServices {
   generateNovelWorldFromTheme: NovelApplicationMethod;
   saveNovelWorldToLibrary: NovelApplicationMethod;
   syncNovelWorldWithLibrary: NovelApplicationMethod;
+  deleteNovelWorld: NovelApplicationMethod;
   listCharacterRelations: NovelApplicationMethod;
   listCharacterCastOptions: NovelApplicationMethod;
   generateCharacterCastOptions: NovelApplicationMethod;
@@ -209,6 +210,7 @@ export const novelApplicationServiceMethodNames = [
   "generateNovelWorldFromTheme",
   "saveNovelWorldToLibrary",
   "syncNovelWorldWithLibrary",
+  "deleteNovelWorld",
   "listCharacterRelations",
   "listCharacterCastOptions",
   "generateCharacterCastOptions",

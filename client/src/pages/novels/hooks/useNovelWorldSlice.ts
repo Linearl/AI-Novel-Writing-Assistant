@@ -21,6 +21,7 @@ import {
   saveNovelWorldToLibrary,
   syncNovelWorldWithLibrary,
   updateNovelWorldSliceOverrides,
+  deleteNovelWorld,
 } from "@/api/novelWorldSlice";
 
 interface UseNovelWorldSliceOptions {
@@ -164,6 +165,18 @@ export function useNovelWorldSlice({
     },
   });
 
+  const deleteNovelWorldMutation = useMutation({
+    mutationFn: () => deleteNovelWorld(novelId),
+    onSuccess: async () => {
+      setWorldSliceMessage("本书世界已清空，可重新生成或导入。");
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: queryKeys.novels.novelWorld(novelId) }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.novels.worldSlice(novelId) }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.novels.detail(novelId) }),
+      ]);
+    },
+  });
+
   return {
     worldSliceMessage,
     setWorldSliceMessage,
@@ -177,6 +190,7 @@ export function useNovelWorldSlice({
     isSavingNovelWorldToLibrary: saveNovelWorldToLibraryMutation.isPending,
     isLoadingNovelWorldSyncDiff: syncDiffQuery.isFetching,
     isSyncingNovelWorld: syncNovelWorldMutation.isPending,
+    isDeletingNovelWorld: deleteNovelWorldMutation.isPending,
     isRefreshingWorldSlice: refreshWorldSliceMutation.isPending || worldSliceQuery.isFetching,
     isSavingWorldSliceOverrides: saveWorldSliceOverridesMutation.isPending,
     importNovelWorld: (payload: NovelWorldImportInput) => importNovelWorldMutation.mutate(payload),
@@ -186,5 +200,6 @@ export function useNovelWorldSlice({
     syncNovelWorld: (payload: NovelWorldSyncInput) => syncNovelWorldMutation.mutate(payload),
     refreshWorldSlice: () => refreshWorldSliceMutation.mutate(),
     saveWorldSliceOverrides: (patch: StoryWorldSliceOverrides) => saveWorldSliceOverridesMutation.mutate(patch),
+    deleteNovelWorld: () => deleteNovelWorldMutation.mutate(),
   };
 }

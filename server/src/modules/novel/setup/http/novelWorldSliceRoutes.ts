@@ -38,6 +38,7 @@ interface RegisterNovelWorldSliceRoutesInput {
     | "generateNovelWorldFromTheme"
     | "saveNovelWorldToLibrary"
     | "syncNovelWorldWithLibrary"
+    | "deleteNovelWorld"
     | "getWorldSlice"
     | "refreshWorldSlice"
     | "updateWorldSliceOverrides"
@@ -238,6 +239,24 @@ export function registerNovelWorldSliceRoutes(input: RegisterNovelWorldSliceRout
           data,
           message: "Novel world slice preferences updated.",
         } satisfies ApiResponse<typeof data>);
+      } catch (error) {
+        next(error);
+      }
+    },
+  );
+
+  router.delete(
+    "/:id/novel-world",
+    validate({ params: idParamsSchema }),
+    async (req, res, next) => {
+      try {
+        const { id } = req.params as z.infer<typeof idParamsSchema>;
+        await novelService.deleteNovelWorld(id);
+        res.status(200).json({
+          success: true,
+          data: null,
+          message: "本书世界已清空，可重新生成或导入。",
+        } satisfies ApiResponse<null>);
       } catch (error) {
         next(error);
       }

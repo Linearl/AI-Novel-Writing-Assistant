@@ -197,6 +197,20 @@ export class NovelWorldInstanceService {
     return this.serializeView(row, await this.getAssetSummaries(row), await listNovelWorldSyncRecords(row?.id));
   }
 
+  async deleteNovelWorld(novelId: string): Promise<void> {
+    // 1. 删除 NovelWorld 记录（级联删除关联的 sync records 等）
+    await prisma.novelWorld.deleteMany({ where: { novelId } });
+    // 2. 清除 Novel 上的遗留世界字段
+    await prisma.novel.update({
+      where: { id: novelId },
+      data: {
+        worldId: null,
+        storyWorldSliceJson: null,
+        storyWorldSliceOverridesJson: null,
+      },
+    });
+  }
+
   async ensureFromLegacyNovel(novelId: string): Promise<NovelWorldInstanceRow | null> {
     const existing = await this.getByNovelId(novelId);
     if (existing) {

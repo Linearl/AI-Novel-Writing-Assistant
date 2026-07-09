@@ -51,6 +51,11 @@ export async function syncNovelWorldWithLibrary(id: string, payload: NovelWorldS
   return data;
 }
 
+export async function deleteNovelWorld(id: string) {
+  const { data } = await apiClient.delete<ApiResponse<null>>(`/novels/${id}/novel-world`);
+  return data;
+}
+
 export async function getNovelWorldSlice(id: string) {
   const { data } = await apiClient.get<ApiResponse<StoryWorldSliceView>>(`/novels/${id}/world-slice`);
   return data;

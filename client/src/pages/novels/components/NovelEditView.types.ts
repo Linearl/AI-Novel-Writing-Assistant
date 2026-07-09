@@ -124,6 +124,8 @@ export interface BasicTabProps {
   isSavingNovelWorldToLibrary: boolean;
   isLoadingNovelWorldSyncDiff: boolean;
   isSyncingNovelWorld: boolean;
+  isDeletingNovelWorld?: boolean;
+  onDeleteNovelWorld?: () => void;
   isRefreshingWorldSlice: boolean;
   isSavingWorldSliceOverrides: boolean;
   onFormChange: (patch: Partial<BasicTabProps["basicForm"]>) => void;

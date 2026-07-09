@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { BookOpen, GitCompareArrows, GitFork, Library, Map, Network, Route, Workflow } from "lucide-react";
+import { BookOpen, GitCompareArrows, GitFork, Library, Map, Network, Route, Trash2, Workflow } from "lucide-react";
 import type {
   NovelWorldAssetSummary,
   NovelWorldSyncDiff,
@@ -28,6 +28,8 @@ interface NovelWorldManagerCardProps {
   isSavingToLibrary: boolean;
   isLoadingSyncDiff: boolean;
   isSyncing: boolean;
+  isDeleting?: boolean;
+  onDelete?: () => void;
   onImport: Parameters<typeof NovelWorldSourcePanel>[0]["onImport"];
   onCreateManual: Parameters<typeof NovelWorldSourcePanel>[0]["onCreateManual"];
   onGenerate: Parameters<typeof NovelWorldSourcePanel>[0]["onGenerate"];
@@ -628,6 +630,32 @@ export default function NovelWorldManagerCard(props: NovelWorldManagerCardProps)
                 onExport={() => exportWorldTxt(props.novelId, props.novelTitle ?? "未命名小说")}
                 onImport={(content, mode) => importWorldTxt(props.novelId, content, mode as "overwrite" | "merge")}
               />
+            </div>
+          </div>
+        ) : null}
+
+        {novelWorld && props.onDelete ? (
+          <div className="rounded-lg border border-destructive/30 bg-destructive/5 p-4">
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+              <div>
+                <div className="text-sm font-medium text-destructive">清空本书世界</div>
+                <div className="mt-1 text-sm leading-6 text-muted-foreground">
+                  删除当前项目的世界设定，之后可以重新生成或从世界库导入。世界库中的样本不受影响。
+                </div>
+              </div>
+              <Button
+                size="sm"
+                variant="destructive"
+                disabled={props.isDeleting}
+                onClick={() => {
+                  if (window.confirm("确认清空本书世界？此操作不可恢复。")) {
+                    props.onDelete?.();
+                  }
+                }}
+              >
+                <Trash2 className="size-4" />
+                {props.isDeleting ? "清空中..." : "清空世界"}
+              </Button>
             </div>
           </div>
         ) : null}

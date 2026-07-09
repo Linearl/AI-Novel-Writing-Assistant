@@ -38,6 +38,8 @@ export default function BasicInfoTab(props: BasicTabProps) {
         onGenerate={props.onGenerateNovelWorld}
         onSaveToLibrary={props.onSaveNovelWorldToLibrary}
         onSync={props.onSyncNovelWorld}
+        isDeleting={props.isDeletingNovelWorld}
+        onDelete={props.onDeleteNovelWorld}
       />
       <div id="novel-world-usage">
         <NovelWorldUsageCard

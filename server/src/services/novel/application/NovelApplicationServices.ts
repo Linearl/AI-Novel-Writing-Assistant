@@ -594,6 +594,10 @@ export class DefaultNovelApplicationServices {
     return this.novelWorldInstanceService.syncWithLibrary(...args);
   }
 
+  deleteNovelWorld(...args: Parameters<NovelWorldInstanceService["deleteNovelWorld"]>) {
+    return this.novelWorldInstanceService.deleteNovelWorld(...args);
+  }
+
   listCharacterRelations(...args: Parameters<CharacterPreparationService["listCharacterRelations"]>) {
     return this.characterPreparationService.listCharacterRelations(...args);
   }

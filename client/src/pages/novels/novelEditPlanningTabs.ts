@@ -54,6 +54,8 @@ interface BuildNovelEditPlanningTabsInput {
   isSavingNovelWorldToLibrary: boolean;
   isLoadingNovelWorldSyncDiff: boolean;
   isSyncingNovelWorld: boolean;
+  isDeletingNovelWorld?: boolean;
+  onDeleteNovelWorld?: () => void;
   isRefreshingWorldSlice: boolean;
   isSavingWorldSliceOverrides: boolean;
   onBasicFormChange: (patch: Partial<NovelBasicFormState>) => void;
@@ -184,6 +186,8 @@ export function buildNovelEditPlanningTabs(input: BuildNovelEditPlanningTabsInpu
     isSavingNovelWorldToLibrary: input.isSavingNovelWorldToLibrary,
     isLoadingNovelWorldSyncDiff: input.isLoadingNovelWorldSyncDiff,
     isSyncingNovelWorld: input.isSyncingNovelWorld,
+    isDeletingNovelWorld: input.isDeletingNovelWorld,
+    onDeleteNovelWorld: input.onDeleteNovelWorld,
     isRefreshingWorldSlice: input.isRefreshingWorldSlice,
     isSavingWorldSliceOverrides: input.isSavingWorldSliceOverrides,
     onFormChange: input.onBasicFormChange,
