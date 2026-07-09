@@ -7,6 +7,7 @@ import { deleteImageAsset, listImageAssets, setPrimaryImageAsset } from "@/api/i
 import { queryKeys } from "@/api/queryKeys";
 import OpenInCreativeHubButton from "@/components/creativeHub/OpenInCreativeHubButton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { EmptyState } from "@/components/ui/empty-state";
 import { CharacterCard } from "./components/CharacterCard";
 import { CharacterCreateDialog } from "./components/CharacterCreateDialog";
 import { CharacterEditDialog } from "./components/CharacterEditDialog";
@@ -204,7 +205,7 @@ export default function CharacterLibrary() {
               )}
             />
           ))}
-          {characters.length === 0 ? <div className="text-sm text-muted-foreground">暂无角色。</div> : null}
+          {characters.length === 0 ? <EmptyState>暂无角色。</EmptyState> : null}
         </CardContent>
       </Card>
     </div>

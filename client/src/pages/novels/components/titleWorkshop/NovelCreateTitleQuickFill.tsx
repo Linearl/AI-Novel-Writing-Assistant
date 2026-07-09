@@ -31,6 +31,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "@/components/ui/toast";
+import { LoadingIndicator } from "@/components/ui/loading-indicator";
 import { useLLMStore } from "@/store/llmStore";
 import TitleSuggestionList from "@/pages/titles/components/TitleSuggestionList";
 import { getClickRateBadgeClass, truncateText } from "@/pages/titles/titleStudio.shared";
@@ -326,9 +327,7 @@ export default function NovelCreateTitleQuickFill({
               </div>
 
               {libraryQuery.isLoading ? (
-                <div className="rounded-xl border border-dashed p-6 text-center text-sm text-muted-foreground">
-                  标题库加载中...
-                </div>
+                <LoadingIndicator text="标题库加载中..." className="rounded-xl border border-dashed p-6" />
               ) : (libraryQuery.data?.data?.items ?? []).length === 0 ? (
                 <div className="rounded-xl border border-dashed p-6 text-center text-sm text-muted-foreground">
                   当前条件下还没有可用标题。可以切到“快速生成”先产出一批候选。

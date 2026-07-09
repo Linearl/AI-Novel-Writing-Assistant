@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Loader2, RotateCcw } from "lucide-react";
+import { RotateCcw } from "lucide-react";
 import { useIsMobileViewport } from "@/components/layout/mobile/useIsMobileViewport";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -13,6 +13,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { LoadingIndicator } from "@/components/ui/loading-indicator";
 import KnowledgeBindingPanel from "@/components/knowledge/KnowledgeBindingPanel";
 import AITakeoverContainer from "@/components/workflow/AITakeoverContainer";
 import ChapterManagementTab from "./ChapterManagementTab";
@@ -201,8 +202,7 @@ function DesktopNovelEditView(props: NovelEditViewProps) {
             {!hideTakeoverEntry ? (
               isTakeoverLoading ? (
                 <Button type="button" size="sm" disabled>
-                  <Loader2 className="animate-spin" />
-                  AI 自动导演接管
+                  <LoadingIndicator variant="spinner" text="AI 自动导演接管" />
                 </Button>
               ) : activeStepTakeoverEntry
             ) : null}
@@ -337,7 +337,7 @@ function DesktopNovelEditView(props: NovelEditViewProps) {
                         }}
                       >
                         {resetChaptersMutation.isPending
-                          ? <><Loader2 className="animate-spin" />重置中…</>
+                          ? <LoadingIndicator variant="spinner" text="重置中…" />
                           : <><RotateCcw />重置所有章节正文</>}
                       </Button>
                     </CardContent>

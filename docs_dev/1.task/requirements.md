@@ -62,6 +62,7 @@ description: "需求任务总清单（SSOT）"
 | 2044 | Inspiration Quick Preview | p3 | ✅ 已完成 | - | 0.1 | 2026-07-08T00:00:00.000Z | 2026-07-09T00:00:00.000Z | `B.2.done/v0.1-r2044-C2-inspiration-quick-preview/README.md` |  |
 | 2045 | Chapter Rhythm Tension | p3 | ✅ 已完成 | - | 0.1 | 2026-07-08T00:00:00.000Z | 2026-07-09T00:00:00.000Z | `B.2.done/v0.1-r2045-C2-chapter-rhythm-tension/README.md` |  |
 | 2046 | Style Profile Export Import | p3 | ✅ 已完成 | - | 0.1 | 2026-07-08T00:00:00.000Z | 2026-07-08T10:00:00.000Z | `B.2.done/v0.1-r2046-M3-style-profile-export-import/README.md` |  |
+| 2047 | 文笔资料库 | p3 | 📋 待办 | - | 0.1 | 2026-07-09T00:00:00.000Z | 2026-07-09T00:00:00.000Z | `B.todo/v0.1-r2047-C2-writing-technique-library/README.md` |  |
 | 2013 | Director Failed Retry Entry | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2013-medium-director-failed-retry-entry/README.md` |  |
 | 2014 | Chapter Token Budget Dynamic | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2014-medium-chapter-token-budget-dynamic/README.md` |  |
 
@@ -98,7 +99,7 @@ description: "需求任务总清单（SSOT）"
 | 7012 | Low Priority Fix | p8 | ✅ 已完成 | 2026-07-01-全量代码审计-full | 0.1 | 2026-07-01T20:41:00.000Z | 2026-07-02T23:00:00+08:00 | `B.2.done/v0.1-r7012-simple-p4-low-priority-fix/README.md` |  |
 | 7013 | Remove Comic Drama | p8 | ✅ 已完成 | - | 0.1 | 2026-07-08T00:00:00.000Z | 2026-07-09T00:00:00.000Z | `B.2.done/v0.1-r7013-S2-remove-comic-drama/README.md` |  |
 | 7014 | 清理 Novel 旧版世界字段 | p1 | 📋 待办 | - | 0.1 | 2026-07-08 | 2026-07-08 | `B.todo/v11-r7014-C2-legacy-world-fields-cleanup/README.md` |  |
-| 7015 | 前端公共样式与组件提取 | p2 | ✅ 已完成 | 2026-07-09 前端公共样式与组件诊断报告 | 0.1 | 2026-07-09 | 2026-07-09 | `B.todo/v0.1-r7015-M2-frontend-common-styles-components/README.md` | T1+T2 完成：Textarea 组件（~120 处替换）+ StatusBadge 组件（10 处替换）。T3-T6 评估后跳过（差异过大/风险过高）。T7 验证通过。 |
+| 7015 | 前端公共样式与组件提取 | p2 | ✅ 已完成 | 2026-07-09 前端公共样式与组件诊断报告 | 0.1 | 2026-07-09 | 2026-07-09 | `B.todo/v0.1-r7015-M2-frontend-common-styles-components/README.md` | T1+T2+T3 完成：Textarea（~120 处）+ StatusBadge（10 处）+ LoadingIndicator（31 处）+ EmptyState（40 处）。T5 诊断完成待执行。T6 诊断完成待执行。 |
 
 ---
 
@@ -110,6 +111,7 @@ description: "需求任务总清单（SSOT）"
 
 | 编号 | 任务标题 | 文档 |
 | --- | --- | --- |
+| 2047 | 文笔资料库 | `B.todo/v0.1-r2047-C2-writing-technique-library/README.md` |
 | 7014 | 清理 Novel 旧版世界字段 | `B.todo/v11-r7014-C2-legacy-world-fields-cleanup/README.md` |
 | 2013 | Director Failed Retry Entry | `B.todo/v0.1-r2013-medium-director-failed-retry-entry/README.md` |
 | 2014 | Chapter Token Budget Dynamic | `B.todo/v0.1-r2014-medium-chapter-token-budget-dynamic/README.md` |

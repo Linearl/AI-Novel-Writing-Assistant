@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { LoadingIndicator } from "@/components/ui/loading-indicator";
 import WorldFactionsSection from "./structure/WorldFactionsSection";
 import WorldRelationsSection from "./structure/WorldRelationsSection";
 
@@ -85,7 +86,7 @@ export default function WorldStructureTab(props: {
         <CardHeader>
           <CardTitle>高级字段维护</CardTitle>
         </CardHeader>
-        <CardContent className="text-sm text-muted-foreground">正在加载高级结构数据...</CardContent>
+        <CardContent><LoadingIndicator text="正在加载高级结构数据..." /></CardContent>
       </Card>
     );
   }

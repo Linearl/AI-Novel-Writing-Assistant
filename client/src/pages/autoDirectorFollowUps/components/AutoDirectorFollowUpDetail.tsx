@@ -6,6 +6,7 @@ import type {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { LoadingIndicator } from "@/components/ui/loading-indicator";
 import { AlertTriangle, RefreshCw } from "lucide-react";
 import { AUTO_DIRECTOR_MOBILE_CLASSES } from "@/mobile/autoDirector";
 
@@ -51,7 +52,7 @@ export function AutoDirectorFollowUpDetailPanel({
       </CardHeader>
       <CardContent className="space-y-4">
         {loading ? (
-          <div className={`rounded-md border border-dashed p-6 text-sm text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>正在加载详情...</div>
+          <LoadingIndicator text="正在加载详情..." className={`rounded-md border border-dashed p-6 ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`} />
         ) : null}
 
         {!loading && !selectedItem ? (

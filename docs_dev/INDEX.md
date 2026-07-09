@@ -27,6 +27,17 @@ description: "docs 目录索引（自动生成）"
 | --- | --- | --- |
 | [1.task\B.todo\任务包六件套构成-编号分类规则-自动归档机制.md](./1.task\B.todo\任务包六件套构成-编号分类规则-自动归档机制.md) | --- | - |
 
+## 1.task\B.todo\v0.1\v0.1-r2047-C2-writing-technique-library
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.1\v0.1-r2047-C2-writing-technique-library\decision_log.md](./1.task\B.todo\v0.1\v0.1-r2047-C2-writing-technique-library\decision_log.md) | REQ-2047 文笔资料库——决策日志 | REQ-2047 文笔资料库——决策日志 |
+| [1.task\B.todo\v0.1\v0.1-r2047-C2-writing-technique-library\design.md](./1.task\B.todo\v0.1\v0.1-r2047-C2-writing-technique-library\design.md) | REQ-2047 文笔资料库——方案设计 | REQ-2047 文笔资料库——方案设计 |
+| [1.task\B.todo\v0.1\v0.1-r2047-C2-writing-technique-library\README.md](./1.task\B.todo\v0.1\v0.1-r2047-C2-writing-technique-library\README.md) | REQ-2047 文笔资料库——任务总线 | REQ-2047 文笔资料库——任务总线 |
+| [1.task\B.todo\v0.1\v0.1-r2047-C2-writing-technique-library\REQ-2047-writing-technique-library-original.md](./1.task\B.todo\v0.1\v0.1-r2047-C2-writing-technique-library\REQ-2047-writing-technique-library-original.md) | REQ-2047 文笔资料库——需求文档（冻结副本） | REQ-2047 文笔资料库——需求文档（冻结副本） |
+| [1.task\B.todo\v0.1\v0.1-r2047-C2-writing-technique-library\REQ-2047-writing-technique-library.md](./1.task\B.todo\v0.1\v0.1-r2047-C2-writing-technique-library\REQ-2047-writing-technique-library.md) | REQ-2047 文笔资料库——需求文档 | REQ-2047 文笔资料库——需求文档 |
+| [1.task\B.todo\v0.1\v0.1-r2047-C2-writing-technique-library\tasks.md](./1.task\B.todo\v0.1\v0.1-r2047-C2-writing-technique-library\tasks.md) | REQ-2047 文笔资料库——任务拆解 | REQ-2047 文笔资料库——任务拆解 |
+
 ## 1.task\B.todo\v0.1\v0.1-r7014-C2-legacy-world-fields-cleanup
 
 | 文件 | 标题 | 描述 |
@@ -43,6 +54,9 @@ description: "docs 目录索引（自动生成）"
 | --- | --- | --- |
 | [1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components\decision_log.md](./1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components\decision_log.md) | REQ-7015 前端公共样式与组件提取 — 决策留痕 | REQ-7015 前端公共样式与组件提取 — 决策留痕 |
 | [1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components\design.md](./1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components\design.md) | REQ-7015 前端公共样式与组件提取 — 方案设计 | REQ-7015 前端公共样式与组件提取 — 方案设计 |
+| [1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components\diagnosis-t3-loading-empty-state.md](./1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components\diagnosis-t3-loading-empty-state.md) | Loading 与 EmptyState 模式的深度诊断报告，覆盖 client/src 全量扫描 | Loading 与 EmptyState 模式的深度诊断报告，覆盖 client/src 全量扫描 |
+| [1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components\diagnosis-t5-css-split.md](./1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components\diagnosis-t5-css-split.md) | index.css 移动端媒体查询拆分深度诊断 — 结构分析、重复检测、拆分方案与风险评估 | index.css 移动端媒体查询拆分深度诊断 — 结构分析、重复检测、拆分方案与风险评估 |
+| [1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components\diagnosis-t6-semantic-tokens.md](./1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components\diagnosis-t6-semantic-tokens.md) | client/src 原始 Tailwind 色板使用深度诊断 — 语义化 token 迁移分析 | client/src 原始 Tailwind 色板使用深度诊断 — 语义化 token 迁移分析 |
 | [1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components\README.md](./1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components\README.md) | REQ-7015 前端公共样式与组件提取任务总线 | REQ-7015 前端公共样式与组件提取任务总线 |
 | [1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components\REQ-7015-frontend-common-styles-components-original.md](./1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components\REQ-7015-frontend-common-styles-components-original.md) | REQ-7015 前端公共样式与组件提取 — 原始冻结副本 | REQ-7015 前端公共样式与组件提取 — 原始冻结副本 |
 | [1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components\REQ-7015-frontend-common-styles-components.md](./1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components\REQ-7015-frontend-common-styles-components.md) | REQ-7015 前端公共样式与组件提取 | REQ-7015 前端公共样式与组件提取 |

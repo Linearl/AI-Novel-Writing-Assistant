@@ -3,8 +3,10 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { deleteGenre, flattenGenreTreeOptions, getGenreTree, type GenreTreeNode } from "@/api/genre";
 import { queryKeys } from "@/api/queryKeys";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/components/ui/toast";
+import { LoadingIndicator } from "@/components/ui/loading-indicator";
 import GenreCreateDialog from "./components/GenreCreateDialog";
 import GenreEditDialog from "./components/GenreEditDialog";
 import GenreTreeItem from "./components/GenreTreeItem";
@@ -101,21 +103,17 @@ export default function GenreManagementPage() {
         </CardHeader>
         <CardContent className="space-y-4">
           {genreTreeQuery.isLoading ? (
-            <div className="text-sm text-muted-foreground">正在加载题材基底树...</div>
+            <LoadingIndicator text="正在加载题材基底树..." />
           ) : null}
 
           {!genreTreeQuery.isLoading && genreTree.length === 0 ? (
-            <div className="rounded-xl border border-dashed p-6 text-center">
-              <div className="text-sm font-medium text-foreground">还没有任何题材基底</div>
-              <div className="mt-1 text-sm text-muted-foreground">
-                可以先手动建一个根题材基底，也可以直接用 AI 生成一个完整层级。
-              </div>
-              <div className="mt-4">
-                <Button type="button" onClick={handleCreateRoot}>
-                  开始创建
-                </Button>
-              </div>
-            </div>
+            <EmptyState
+              variant="dashed"
+              className="rounded-xl"
+              title="还没有任何题材基底"
+              description="可以先手动建一个根题材基底，也可以直接用 AI 生成一个完整层级。"
+              action={<Button type="button" onClick={handleCreateRoot}>开始创建</Button>}
+            />
           ) : null}
 
           {genreTree.map((node) => (

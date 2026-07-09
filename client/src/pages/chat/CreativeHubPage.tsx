@@ -6,6 +6,7 @@ import { queryKeys } from "@/api/queryKeys";
 import ChatPage from "./ChatPage";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { LoadingIndicator } from "@/components/ui/loading-indicator";
 
 function toCategoryLabel(category: string): string {
   if (category === "read") return "读取";
@@ -57,7 +58,7 @@ export default function CreativeHubPage() {
               {toCategoryLabel(category)} {count}
             </Badge>
           ))}
-          {catalogQuery.isLoading ? <span>正在加载能力目录...</span> : null}
+          {catalogQuery.isLoading ? <LoadingIndicator text="正在加载能力目录..." className="text-xs" /> : null}
         </CardContent>
       </Card>
 

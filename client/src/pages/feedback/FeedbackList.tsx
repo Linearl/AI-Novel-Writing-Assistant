@@ -13,6 +13,7 @@ import { listFeedbackAdmin, archiveFeedback, deleteFeedback } from "@/api/feedba
 import { queryKeys } from "@/api/queryKeys";
 import { toast } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -22,6 +23,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { LoadingIndicator } from "@/components/ui/loading-indicator";
 
 const SEVERITY_COLORS: Record<string, string> = {
   low: "bg-blue-100 text-blue-800",
@@ -135,12 +137,11 @@ export default function FeedbackList() {
       </div>
 
       {feedbackQuery.isLoading ? (
-        <div className="py-12 text-center text-muted-foreground">加载中...</div>
+        <LoadingIndicator className="py-12" />
       ) : !data?.items.length ? (
         <Card>
-          <CardContent className="flex flex-col items-center gap-3 py-12">
-            <Inbox className="h-12 w-12 text-muted-foreground" />
-            <p className="text-muted-foreground">暂无反馈</p>
+          <CardContent className="py-12">
+            <EmptyState icon={<Inbox className="h-12 w-12" />}>暂无反馈</EmptyState>
           </CardContent>
         </Card>
       ) : (

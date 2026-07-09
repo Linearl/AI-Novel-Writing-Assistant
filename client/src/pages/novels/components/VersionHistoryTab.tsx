@@ -3,6 +3,7 @@ import { createNovelSnapshot, listNovelSnapshots, restoreNovelSnapshot } from "@
 import { queryKeys } from "@/api/queryKeys";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 
 interface VersionHistoryTabProps {
   novelId: string;
@@ -108,9 +109,9 @@ export default function VersionHistoryTab({ novelId }: VersionHistoryTabProps) {
           );
         })}
         {snapshots.length === 0 ? (
-          <div className="rounded-2xl border border-dashed p-6 text-sm text-muted-foreground">
+          <EmptyState variant="dashed" className="rounded-2xl p-6">
             当前还没有版本记录。建议在大改方向、批量生成或大段重写前，先手动保存一个版本。
-          </div>
+          </EmptyState>
         ) : null}
       </div>
     </div>

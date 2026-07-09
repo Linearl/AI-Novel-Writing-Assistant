@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link2, Link2Off, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import {
   Dialog,
   DialogContent,
@@ -14,6 +15,7 @@ import {
 import { getLinkedNovels, unlinkNovelFromWorld, type LinkedNovel } from "@/api/world";
 import { queryKeys } from "@/api/queryKeys";
 import { toast } from "@/components/ui/toast";
+import { LoadingIndicator } from "@/components/ui/loading-indicator";
 
 interface WorldUnlinkDialogProps {
   worldId: string;
@@ -77,9 +79,9 @@ export default function WorldUnlinkDialog({ worldId, worldName }: WorldUnlinkDia
 
         <div className="space-y-3">
           {linkedQuery.isLoading ? (
-            <div className="py-6 text-center text-sm text-muted-foreground">加载中...</div>
+            <LoadingIndicator className="py-6" />
           ) : novels.length === 0 ? (
-            <div className="py-6 text-center text-sm text-muted-foreground">当前没有项目使用这个世界。</div>
+            <EmptyState className="py-6">当前没有项目使用这个世界。</EmptyState>
           ) : (
             <>
               <div className="max-h-60 space-y-2 overflow-auto">

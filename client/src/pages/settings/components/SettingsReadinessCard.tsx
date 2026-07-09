@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, CheckCircle2, CircleAlert, CircleDashed, Loader2 } from "lucide-react";
+import { ArrowRight, CheckCircle2, CircleAlert, CircleDashed } from "lucide-react";
 import type {
   APIKeyStatus,
   ModelRouteConnectivityResponse,
@@ -10,6 +10,7 @@ import type {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { LoadingIndicator } from "@/components/ui/loading-indicator";
 import { AUTO_DIRECTOR_MOBILE_CLASSES } from "@/mobile/autoDirector";
 
 export type SettingsReadinessItem = {
@@ -24,7 +25,7 @@ function getReadinessIcon(state: SettingsReadinessItem["state"]) {
     return <CheckCircle2 className="h-4 w-4 text-emerald-600" />;
   }
   if (state === "checking") {
-    return <Loader2 className="h-4 w-4 animate-spin text-amber-600" />;
+    return <LoadingIndicator variant="spinner" text="" className="text-amber-600" />;
   }
   if (state === "optional") {
     return <CircleDashed className="h-4 w-4 text-sky-600" />;

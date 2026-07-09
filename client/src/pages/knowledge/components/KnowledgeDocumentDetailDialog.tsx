@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AppDialogContent, Dialog } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { LoadingIndicator } from "@/components/ui/loading-indicator";
 import { formatStatus } from "./knowledgeRagUi";
 
 interface KnowledgeDocumentDetailDialogProps {
@@ -189,9 +190,7 @@ export default function KnowledgeDocumentDetailDialog({
               </div>
             </>
           ) : (
-            <div className="rounded-md border border-dashed p-4 text-sm text-muted-foreground">
-              正在加载文档详情...
-            </div>
+            <LoadingIndicator text="正在加载文档详情..." className="rounded-md border border-dashed p-4" />
           )}
       </AppDialogContent>
     </Dialog>

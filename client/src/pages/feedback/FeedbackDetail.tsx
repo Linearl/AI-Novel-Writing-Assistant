@@ -11,9 +11,11 @@ import {
 import { queryKeys } from "@/api/queryKeys";
 import { toast } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { LoadingIndicator } from "@/components/ui/loading-indicator";
 
 const SEVERITY_COLORS: Record<string, string> = {
   low: "bg-blue-100 text-blue-800",
@@ -77,9 +79,7 @@ export default function FeedbackDetailPage() {
 
   if (detailQuery.isLoading) {
     return (
-      <div className="flex items-center justify-center py-12 text-muted-foreground">
-        加载中...
-      </div>
+      <LoadingIndicator className="py-12" />
     );
   }
 
@@ -154,7 +154,7 @@ export default function FeedbackDetailPage() {
         </CardHeader>
         <CardContent className="space-y-4">
           {comments.length === 0 ? (
-            <p className="text-sm text-muted-foreground">暂无评论</p>
+            <EmptyState>暂无评论</EmptyState>
           ) : (
             comments.map((comment) => (
               <div key={comment.id} className="rounded-lg border p-3">

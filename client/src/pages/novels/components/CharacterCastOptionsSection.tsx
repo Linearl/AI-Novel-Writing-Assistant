@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { LoadingIndicator } from "@/components/ui/loading-indicator";
 import {
   applyCharacterCastOption,
   clearCharacterCastOptions,
@@ -426,9 +427,7 @@ export default function CharacterCastOptionsSection(props: CharacterCastOptionsS
                 </div>
 
                 {castOptionsQuery.isLoading ? (
-                  <div className="flex min-h-[260px] items-center justify-center rounded-2xl border border-dashed text-sm text-muted-foreground">
-                    正在加载阵容方案...
-                  </div>
+                  <LoadingIndicator text="正在加载阵容方案..." className="min-h-[260px] rounded-2xl border border-dashed" />
                 ) : castOptions.length > 0 ? (
                   <div className="grid gap-3 2xl:grid-cols-2">
                     {castOptions.map((option) => {
@@ -548,7 +547,7 @@ export default function CharacterCastOptionsSection(props: CharacterCastOptionsS
             <div className="text-xs text-muted-foreground">未选中角色时，默认展示最近的关系条目。</div>
           )}
           {relationsQuery.isLoading ? (
-            <div className="text-muted-foreground">正在加载关系网络...</div>
+            <LoadingIndicator text="正在加载关系网络..." />
           ) : filteredRelations.length > 0 ? (
             <div className="grid gap-2 lg:grid-cols-2">
               {filteredRelations.map((relation) => {

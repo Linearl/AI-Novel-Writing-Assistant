@@ -1,6 +1,7 @@
 import { Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { RagHealthStatus, RagJobSummary } from "@/api/knowledge";
 import {
@@ -118,7 +119,7 @@ export default function KnowledgeOpsTab({
               </div>
             ) : null}
             {jobs.length === 0 ? (
-              <div className="text-sm text-muted-foreground">当前还没有 RAG 任务。</div>
+              <EmptyState>当前还没有 RAG 任务。</EmptyState>
             ) : null}
             {jobs.map((job) => (
               <div key={job.id} className="rounded-md border p-2 text-sm">
@@ -177,7 +178,7 @@ export default function KnowledgeOpsTab({
           </CardHeader>
           <CardContent className="space-y-2">
             {failedJobs.length === 0 ? (
-              <div className="text-sm text-muted-foreground">没有失败任务。</div>
+              <EmptyState>没有失败任务。</EmptyState>
             ) : null}
             {failedJobs.map((job) => (
               <div key={job.id} className="rounded-md border p-2 text-sm">

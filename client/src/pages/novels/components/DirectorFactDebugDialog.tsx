@@ -1,11 +1,12 @@
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { AlertTriangle, Bug, CheckCircle2, Loader2, RefreshCw } from "lucide-react";
+import { AlertTriangle, Bug, CheckCircle2, RefreshCw } from "lucide-react";
 import type { DirectorTaskFactInspectionStep } from "@ai-novel/shared/types/directorRuntime";
 import { getDirectorNovelFactInspection } from "@/api/novelDirector";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { LoadingIndicator } from "@/components/ui/loading-indicator";
 import {
   Dialog,
   DialogContent,
@@ -247,17 +248,14 @@ export default function DirectorFactDebugDialog(input: {
               onClick={() => void query.refetch()}
               disabled={query.isFetching || !novelId}
             >
-              {query.isFetching ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
+              {query.isFetching ? <LoadingIndicator variant="spinner" text="" /> : <RefreshCw className="h-4 w-4" />}
               重新检查
             </Button>
           </div>
 
           <div className="flex-1 overflow-y-auto px-6 py-5">
             {query.isLoading || query.isFetching ? (
-              <div className="flex min-h-[240px] items-center justify-center text-sm text-muted-foreground">
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                正在读取当前导演链的完整度检查结果...
-              </div>
+              <LoadingIndicator variant="spinner" text="正在读取当前导演链的完整度检查结果..." />
             ) : query.isError ? (
               <div className="flex min-h-[240px] items-center justify-center">
                 <div className="max-w-md rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-4 text-sm text-destructive">

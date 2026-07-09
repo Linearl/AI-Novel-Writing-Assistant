@@ -9,6 +9,7 @@ import { queryKeys } from "@/api/queryKeys";
 import { getTaskOverview } from "@/api/tasks";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   canContinueDirector,
@@ -514,9 +515,9 @@ export default function Home() {
               <Button variant="outline" onClick={() => void novelQuery.refetch()}>重新加载</Button>
             </div>
           ) : recentNovels.length === 0 ? (
-            <div className="rounded-md border border-dashed p-4 text-sm text-muted-foreground">
-              暂无小说项目，先从“新建小说”开始。
-            </div>
+            <EmptyState variant="dashed" className="rounded-md p-4">
+              暂无小说项目，先从"新建小说"开始。
+            </EmptyState>
           ) : (
             <div className="grid gap-3 md:grid-cols-2">
               {recentNovels.map((novel) => {

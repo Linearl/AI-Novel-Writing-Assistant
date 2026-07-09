@@ -3,6 +3,7 @@ import type { Chapter, NovelBible, PipelineJob, PlotBeat, QualityScore, ReviewIs
 import AiButton from "@/components/common/AiButton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import LLMSelector from "@/components/common/LLMSelector";
@@ -459,7 +460,7 @@ export default function PipelineTab(props: PipelineTabProps) {
                       {pipelineJob.error ? <div className="text-red-600">错误：{pipelineJob.error}</div> : null}
                     </div>
                   ) : (
-                    <div className="text-muted-foreground">暂无运行中的流水线任务。</div>
+                    <EmptyState>暂无运行中的流水线任务。</EmptyState>
                   )}
                 </div>
                 <div className="grid gap-3 md:grid-cols-2">
@@ -496,7 +497,7 @@ export default function PipelineTab(props: PipelineTabProps) {
                   <Badge variant="default">综合：{qualitySummary.overall}</Badge>
                 </div>
               ) : (
-                <div className="text-sm text-muted-foreground">暂无质量报告。</div>
+                <EmptyState>暂无质量报告。</EmptyState>
               )}
               <div className="space-y-2 text-sm">
                 {chapterReports.slice(0, 10).map((item, index) => (

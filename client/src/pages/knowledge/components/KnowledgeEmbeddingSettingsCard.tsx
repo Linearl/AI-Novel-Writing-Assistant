@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { LoadingIndicator } from "@/components/ui/loading-indicator";
 
 export interface KnowledgeEmbeddingSettingsFormState {
   embeddingProvider: EmbeddingProvider;
@@ -149,9 +150,7 @@ export default function KnowledgeEmbeddingSettingsCard({
             <div className="space-y-2">
               <div className="text-sm font-medium">Embedding 模型</div>
               {modelQuery.isLoading ? (
-                <div className="rounded-md border border-dashed p-3 text-sm text-muted-foreground">
-                  正在加载可用的 Embedding 模型...
-                </div>
+                <LoadingIndicator text="正在加载可用的 Embedding 模型..." className="rounded-md border border-dashed p-3" />
               ) : modelOptions.length > 0 ? (
                 <SearchableSelect
                   value={form.embeddingModel}

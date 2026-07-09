@@ -2,10 +2,12 @@ import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { buildTitleLibraryListKey, deleteTitleLibraryEntry, listTitleLibrary, markTitleLibraryUsed } from "@/api/title";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { queryKeys } from "@/api/queryKeys";
 import { toast } from "@/components/ui/toast";
+import { LoadingIndicator } from "@/components/ui/loading-indicator";
 import { getClickRateBadgeClass, truncateText } from "../titleStudio.shared";
 
 interface TitleLibraryPanelProps {
@@ -105,18 +107,16 @@ export default function TitleLibraryPanel({ genreOptions }: TitleLibraryPanelPro
       </div>
 
       {libraryQuery.isLoading ? (
-        <div className="rounded-xl border border-dashed p-6 text-center text-sm text-muted-foreground">
-          正在加载标题库...
-        </div>
+        <LoadingIndicator text="正在加载标题库..." className="rounded-xl border border-dashed p-6" />
       ) : null}
 
       {!libraryQuery.isLoading && rows.length === 0 ? (
-        <div className="rounded-xl border border-dashed p-6 text-center">
-          <div className="text-sm font-medium text-foreground">标题库还是空的</div>
-          <div className="mt-1 text-sm text-muted-foreground">
-            先去标题工坊生成一批候选，再把值得复用的标题沉淀进来。
-          </div>
-        </div>
+        <EmptyState
+          variant="dashed"
+          className="rounded-xl"
+          title="标题库还是空的"
+          description="先去标题工坊生成一批候选，再把值得复用的标题沉淀进来。"
+        />
       ) : null}
 
       <div className="grid gap-3">

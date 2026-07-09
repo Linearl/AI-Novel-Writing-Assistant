@@ -4,8 +4,10 @@ import type { Character } from "@ai-novel/shared/types/novel";
 import AiButton from "@/components/common/AiButton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { LoadingIndicator } from "@/components/ui/loading-indicator";
 import { Textarea } from "@/components/ui/textarea";
 import {
   confirmCharacterCandidate,
@@ -187,9 +189,7 @@ export default function CharacterDynamicsSection(props: CharacterDynamicsSection
       </CardHeader>
       <CardContent className="space-y-4">
         {overviewQuery.isLoading ? (
-          <div className="rounded-2xl border border-dashed p-6 text-sm text-muted-foreground">
-            正在加载动态角色系统...
-          </div>
+          <LoadingIndicator text="正在加载动态角色系统..." className="rounded-2xl border border-dashed p-6" />
         ) : null}
 
         {activeView === "overview" && overview ? (

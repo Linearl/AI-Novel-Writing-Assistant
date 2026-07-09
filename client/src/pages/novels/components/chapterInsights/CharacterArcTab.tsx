@@ -12,7 +12,9 @@ import {
 import { getNovelCharacters, getCharacterArc, getCharacterRelationEvolution } from "@/api/novel/characters";
 import { queryKeys } from "@/api/queryKeys";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Badge } from "@/components/ui/badge";
+import { LoadingIndicator } from "@/components/ui/loading-indicator";
 import type { Character } from "@ai-novel/shared/types/novel";
 
 interface CharacterArcTabProps {
@@ -60,7 +62,7 @@ function CharacterSelector(props: {
 function ArcChart(props: { data: ChartPoint[] }) {
   if (props.data.length === 0) {
     return (
-      <div className="py-6 text-center text-xs text-muted-foreground">暂无时间线数据</div>
+      <EmptyState className="py-6">暂无时间线数据</EmptyState>
     );
   }
   return (
@@ -91,7 +93,7 @@ function TimelineEventList(props: {
   events: Array<{ chapterOrder: number | null; title: string; event: string }>;
 }) {
   if (props.events.length === 0) {
-    return <div className="py-4 text-center text-xs text-muted-foreground">暂无事件</div>;
+    return <EmptyState className="py-4">暂无事件</EmptyState>;
   }
   return (
     <div className="space-y-2">
@@ -130,7 +132,7 @@ function RelationTimeline(props: {
   }>;
 }) {
   if (props.relations.length === 0) {
-    return <div className="py-4 text-center text-xs text-muted-foreground">暂无关系数据</div>;
+    return <EmptyState className="py-4">暂无关系数据</EmptyState>;
   }
   return (
     <div className="space-y-3">
@@ -176,7 +178,7 @@ function ArcCard(props: { arcData: { arcStart: string | null; arcMidpoint: strin
         {arcData.arcMidpoint && <div><span className="text-muted-foreground">中点：</span>{arcData.arcMidpoint}</div>}
         {arcData.arcClimax && <div><span className="text-muted-foreground">高潮：</span>{arcData.arcClimax}</div>}
         {arcData.arcEnd && <div><span className="text-muted-foreground">终局：</span>{arcData.arcEnd}</div>}
-        {!hasArc && <div className="text-muted-foreground">暂无弧光规划</div>}
+        {!hasArc && <EmptyState>暂无弧光规划</EmptyState>}
         {currentState && <div className="mt-1"><Badge variant="secondary" className="text-[11px]">当前状态</Badge>{" "}{currentState}</div>}
         {currentGoal && <div><Badge variant="outline" className="text-[11px]">当前目标</Badge>{" "}{currentGoal}</div>}
       </CardContent>
@@ -215,13 +217,13 @@ export default function CharacterArcTab(props: CharacterArcTabProps) {
   );
 
   if (charactersQuery.isLoading) {
-    return <div className="py-6 text-center text-xs text-muted-foreground">加载角色列表...</div>;
+    return <LoadingIndicator text="加载角色列表..." size="sm" className="py-6" />;
   }
   if (characters.length === 0) {
     return (
-      <div className="rounded-xl border border-dashed border-border/70 bg-muted/10 p-3 text-xs leading-6 text-muted-foreground">
+      <EmptyState variant="dashed" className="rounded-xl p-3 text-xs leading-6">
         当前小说暂无角色数据。
-      </div>
+      </EmptyState>
     );
   }
 
@@ -234,7 +236,7 @@ export default function CharacterArcTab(props: CharacterArcTabProps) {
 
       <CharacterSelector characters={characters} selectedId={effectiveCharId ?? ""} onSelect={setSelectedCharId} />
 
-      {arcQuery.isLoading && <div className="py-6 text-center text-xs text-muted-foreground">加载弧线数据...</div>}
+      {arcQuery.isLoading && <LoadingIndicator text="加载弧线数据..." size="sm" className="py-6" />}
 
       {arcQuery.data && (
         <>

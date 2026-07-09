@@ -5,6 +5,7 @@ import { listCreativeHubThreads } from "@/api/creativeHub";
 import { queryKeys } from "@/api/queryKeys";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 
 interface NovelConversationsPageProps {
   novelId: string;
@@ -53,9 +54,9 @@ export default function NovelConversationsPage({ novelId }: NovelConversationsPa
           </Button>
         </div>
         {novelThreads.length === 0 ? (
-          <div className="py-8 text-center text-xs text-muted-foreground">
+          <EmptyState className="py-8">
             暂无对话记录
-          </div>
+          </EmptyState>
         ) : (
           novelThreads.map((thread) => (
             <button

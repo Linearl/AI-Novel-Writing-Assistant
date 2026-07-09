@@ -9,6 +9,7 @@ import type { KnowledgeDocumentDetail, KnowledgeDocumentSummary } from "@ai-nove
 import LLMSelector from "@/components/common/LLMSelector";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import type { LLMConfigState } from "../bookAnalysis.types";
@@ -261,9 +262,9 @@ export default function BookAnalysisSidebar(props: BookAnalysisSidebarProps) {
             ))}
 
             {analyses.length === 0 ? (
-              <div className="rounded-md border border-dashed p-4 text-sm text-muted-foreground">
+              <EmptyState variant="dashed" className="rounded-md p-4">
                 暂无拆书分析，请先选择知识文档并创建。
-              </div>
+              </EmptyState>
             ) : null}
           </div>
         </CardContent>

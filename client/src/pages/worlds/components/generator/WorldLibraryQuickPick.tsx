@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { listWorldLibrary } from "@/api/world";
 import { queryKeys } from "@/api/queryKeys";
 import { Button } from "@/components/ui/button";
+import { LoadingIndicator } from "@/components/ui/loading-indicator";
 
 interface WorldLibraryQuickItem {
   id: string;
@@ -62,7 +63,7 @@ export default function WorldLibraryQuickPick({
 
       <div className="space-y-2">
         {libraryQuery.isLoading ? (
-          <div className="text-xs text-muted-foreground">正在加载素材库…</div>
+          <LoadingIndicator text="正在加载素材库…" size="sm" />
         ) : null}
         {!libraryQuery.isLoading && libraryItems.length === 0 ? (
           <div className="text-xs text-muted-foreground">

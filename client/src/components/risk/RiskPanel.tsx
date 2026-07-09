@@ -6,6 +6,7 @@ import { queryKeys } from "@/api/queryKeys";
 import type { ApiResponse } from "@ai-novel/shared/types/api";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Select,
@@ -20,6 +21,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { LoadingIndicator } from "@/components/ui/loading-indicator";
 import { ChevronDown, ChevronRight, Download, AlertTriangle } from "lucide-react";
 
 interface RiskPanelProps {
@@ -208,9 +210,9 @@ export default function RiskPanel({ novelId }: RiskPanelProps) {
 
         {/* Risk list */}
         {risksQuery.isLoading ? (
-          <div className="py-4 text-center text-sm text-muted-foreground">加载中...</div>
+          <LoadingIndicator className="py-4" />
         ) : risks.length === 0 ? (
-          <div className="py-4 text-center text-sm text-muted-foreground">暂无风险记录</div>
+          <EmptyState className="py-4">暂无风险记录</EmptyState>
         ) : (
           <div className="space-y-2">
             {risks.map((risk) => {

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Loader2, MoreHorizontal } from "lucide-react";
+import { MoreHorizontal } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,6 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { LoadingIndicator } from "@/components/ui/loading-indicator";
 import BasicInfoTab from "../components/BasicInfoTab";
 import ChapterManagementTab from "../components/ChapterManagementTab";
 import NovelCharacterPanel from "../components/NovelCharacterPanel";
@@ -225,8 +226,7 @@ export default function MobileNovelEditView(props: NovelEditViewProps) {
           <div className="rounded-xl border border-border/70 bg-muted/20 p-3">
             {isTakeoverLoading ? (
               <Button type="button" size="sm" disabled className="w-full">
-                <Loader2 className="h-4 w-4 animate-spin" />
-                AI 自动导演接管
+                <LoadingIndicator variant="spinner" text="AI 自动导演接管" />
               </Button>
             ) : activeStepTakeoverEntry}
           </div>

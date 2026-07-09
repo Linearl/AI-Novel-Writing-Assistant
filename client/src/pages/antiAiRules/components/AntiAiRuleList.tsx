@@ -3,6 +3,7 @@ import { CheckCircle2, Edit3, FileText, FlaskConical } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { LoadingIndicator } from "@/components/ui/loading-indicator";
 import { cn } from "@/lib/utils";
 import { RuleFilter, severityLabels, typeLabels } from "../antiAiRulesPage.shared";
 import AntiAiToggleLine from "./AntiAiToggleLine";
@@ -52,7 +53,7 @@ export default function AntiAiRuleList(props: AntiAiRuleListProps) {
       </CardHeader>
       <CardContent className="space-y-3">
         {props.loading ? (
-          <div className="text-sm text-muted-foreground">正在加载反 AI 规则...</div>
+          <LoadingIndicator text="正在加载反 AI 规则..." />
         ) : null}
         {!props.loading && props.rules.length === 0 ? (
           <div className="rounded-lg border border-dashed p-6 text-center text-sm text-muted-foreground">

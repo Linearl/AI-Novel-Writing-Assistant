@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import type { AntiAiRule, StyleProfile, StyleTemplate } from "@ai-novel/shared/types/styleEngine";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -165,9 +166,9 @@ export default function WritingFormulaSidebar(props: WritingFormulaSidebarProps)
           ) : null}
 
           {profiles.length === 0 ? (
-            <div className="rounded-md border border-dashed p-4 text-sm text-muted-foreground">
-              当前还没有写法资产。点上方“新建或导入写法”，先从模板快速起一套最省心。
-            </div>
+            <EmptyState variant="dashed" className="rounded-md p-4">
+              当前还没有写法资产。点上方"新建或导入写法"，先从模板快速起一套最省心。
+            </EmptyState>
           ) : null}
         </CardContent>
       </Card>
@@ -179,7 +180,7 @@ export default function WritingFormulaSidebar(props: WritingFormulaSidebarProps)
           <DialogHeader>
             <DialogTitle>新建或导入写法</DialogTitle>
             <DialogDescription>
-              推荐先走“快速开始”或“空白 / AI”里的句子生成。手里有稳定样本文本时，再使用“从文本提取”。
+              推荐先走"快速开始"或"空白 / AI"里的句子生成。手里有稳定样本文本时，再使用"从文本提取"。
             </DialogDescription>
           </DialogHeader>
 
@@ -232,7 +233,7 @@ export default function WritingFormulaSidebar(props: WritingFormulaSidebarProps)
 
             <TabsContent value="blank" className="space-y-4">
               <div className="rounded-lg border bg-muted/20 p-4 text-sm leading-6 text-muted-foreground">
-                这里有两种轻量起步方式：如果你清楚自己要维护一套规则，就手动建空白；如果你只知道“想写成什么感觉”，直接写一句话交给 AI 搭骨架。
+                这里有两种轻量起步方式：如果你清楚自己要维护一套规则，就手动建空白；如果你只知道"想写成什么感觉"，直接写一句话交给 AI 搭骨架。
               </div>
               <div className="grid gap-4 lg:grid-cols-2">
                 <div className="rounded-lg border p-4">

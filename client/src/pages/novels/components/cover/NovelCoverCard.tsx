@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { listImageAssets, resolveImageAssetUrl } from "@/api/images";
 import { queryKeys } from "@/api/queryKeys";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import { StatusBadge } from "@/components/ui/status-badge";
 import type { NovelBasicFormState } from "../../novelBasicInfo.shared";
 import type { StoryWorldSliceView } from "@ai-novel/shared/types/storyWorldSlice";
@@ -69,15 +70,15 @@ export function NovelCoverCard(props: NovelCoverCardProps) {
         </div>
 
         {assetsQuery.isLoading ? (
-          <div className="rounded-xl border border-dashed border-border/70 bg-muted/20 px-4 py-8 text-sm text-muted-foreground">
+          <EmptyState variant="dashed" className="rounded-xl border-border/70 bg-muted/20 px-4 py-8">
             正在读取当前封面图库...
-          </div>
+          </EmptyState>
         ) : null}
 
         {!assetsQuery.isLoading && !primaryAsset ? (
-          <div className="rounded-xl border border-dashed border-border/70 bg-muted/20 px-4 py-8 text-sm text-muted-foreground">
+          <EmptyState variant="dashed" className="rounded-xl border-border/70 bg-muted/20 px-4 py-8">
             还没有封面主画面。点击上方按钮，系统会先根据当前小说信息整理一版封面输入草稿。
-          </div>
+          </EmptyState>
         ) : null}
 
         {primaryAsset ? (

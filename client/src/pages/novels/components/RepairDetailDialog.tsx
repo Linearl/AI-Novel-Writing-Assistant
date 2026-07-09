@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import {
   Dialog,
   DialogContent,
@@ -114,9 +115,9 @@ export default function RepairDetailDialog({
 
         <div className="flex-1 overflow-hidden">
           {versions.length === 0 ? (
-            <div className="flex h-full items-center justify-center p-5 text-sm text-muted-foreground">
+            <EmptyState className="h-full p-5">
               {isRepairing ? "修复进行中，版本将在此处显示..." : "暂无修复版本记录"}
-            </div>
+            </EmptyState>
           ) : (
             <Tabs value={activeVersion} onValueChange={setActiveVersion} className="flex h-full flex-col">
               <TabsList className="mx-5 mt-4 flex-wrap justify-start gap-1">

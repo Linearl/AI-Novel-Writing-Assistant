@@ -1,6 +1,7 @@
 import type { TitleFactorySuggestion } from "@ai-novel/shared/types/title";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import { getClickRateBadgeClass, getTitleStyleLabel } from "../titleStudio.shared";
 
 interface TitleSuggestionListProps {
@@ -26,9 +27,9 @@ export default function TitleSuggestionList({
 }: TitleSuggestionListProps) {
   if (suggestions.length === 0) {
     return (
-      <div className="rounded-xl border border-dashed p-6 text-center text-sm text-muted-foreground">
+      <EmptyState variant="dashed" className="rounded-xl">
         {emptyMessage}
-      </div>
+      </EmptyState>
     );
   }
 

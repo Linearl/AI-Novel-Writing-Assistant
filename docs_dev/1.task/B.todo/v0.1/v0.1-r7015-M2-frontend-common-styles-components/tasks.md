@@ -30,8 +30,8 @@ Textarea 样式 30 处复制粘贴、状态 Badge 31 处各自定义、Loading 5
 | --- | --- | --- | --- | --- |
 | T1 | 提取 Textarea 公共组件 + 全量替换 | P0 | 1h | ✅ 完成 |
 | T2 | 提取 StatusBadge + Alert 组件 + 全量替换 | P1 | 1h | ✅ 完成（StatusBadge 已提取，Alert 变体过多暂跳过） |
-| T3 | 新增 Loading / EmptyState 组件 + 替换 | P1 | 1h | ⏭ 跳过（各处 loading UI 差异大，强制统一会引入视觉问题） |
-| T4 | 将绕过 Card 的 div 替换为 Card 组件 | P1 | 45min | ⏭ 跳过（扫描发现实际绕过 Card 的情况极少） |
+| T3 | 新增 Loading / EmptyState 组件 + 替换 | P1 | 1h | ✅ 完成 |
+| T4 | 将绕过 Card 的 div 替换为 Card 组件 | P1 | 45min | ❌ 误诊（实际绕过极少，TSX 中的 bg-muted/bg-background 是刻意区分） |
 | T5 | 拆分 index.css 移动端媒体查询 | P1 | 1h | ⏭ 跳过（需单独做视觉回归验证，风险较高） |
 | T6 | 统一语义化 token（消除原始色板硬编码） | P2 | 1h | ⏭ 跳过（211 处替换涉及 dark mode 回归风险，需单独处理） |
 | T7 | 全量类型检查 + 构建验证 + 暗色模式回归 | P0 | 30min | ✅ 完成 |
@@ -170,7 +170,7 @@ Textarea 样式 30 处复制粘贴、状态 Badge 31 处各自定义、Loading 5
 | 2026-07-09 | 任务包创建 | 完成 |
 | 2026-07-09 | T1: Textarea 组件提取 + ~120 处全量替换 | ✅ 完成 |
 | 2026-07-09 | T2: StatusBadge 组件提取 + 10 处替换 | ✅ 完成 |
-| 2026-07-09 | T3-T6: 评估后跳过（见各任务说明） | ⏭ 跳过 |
+| 2026-07-09 | T3: LoadingIndicator + EmptyState 组件提取 + ~71 处替换 | ✅ 完成 |
 | 2026-07-09 | T7: typecheck + build 验证通过 | ✅ 完成 |
 
 ---

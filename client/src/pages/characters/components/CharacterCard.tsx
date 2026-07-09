@@ -4,6 +4,7 @@ import { resolveImageAssetUrl } from "@/api/images";
 import type { BaseCharacter } from "@ai-novel/shared/types/novel";
 import { Button } from "@/components/ui/button";
 import { AppDialogContent, Dialog } from "@/components/ui/dialog";
+import { LoadingIndicator } from "@/components/ui/loading-indicator";
 
 interface CharacterCardProps {
   character: BaseCharacter;
@@ -80,7 +81,7 @@ export function CharacterCard({
 
       <div className="space-y-2">
         <div className="text-sm font-medium">形象图库</div>
-        {assetsLoading ? <div className="text-xs text-muted-foreground">加载中...</div> : null}
+        {assetsLoading ? <LoadingIndicator size="sm" /> : null}
         {!assetsLoading && assets.length === 0 ? (
           <div className="text-xs text-muted-foreground">暂无图片，点击“生成形象图”创建。</div>
         ) : null}

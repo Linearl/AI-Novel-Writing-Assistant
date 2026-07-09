@@ -1,5 +1,6 @@
 import type { UnifiedTaskSummary } from "@ai-novel/shared/types/task";
 import { Badge } from "@/components/ui/badge";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   formatCheckpoint,
@@ -71,9 +72,9 @@ export default function TaskCenterListPanel({
           );
         })}
         {tasks.length === 0 ? (
-          <div className="rounded-md border border-dashed p-6 text-sm text-muted-foreground">
+          <EmptyState variant="dashed" className="rounded-md p-6">
             当前没有符合条件的任务。
-          </div>
+          </EmptyState>
         ) : null}
       </CardContent>
     </Card>

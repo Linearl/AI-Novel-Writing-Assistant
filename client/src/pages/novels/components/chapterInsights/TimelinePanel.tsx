@@ -1,4 +1,4 @@
-import { AlertTriangle, ArrowRight, Clock3, Loader2, ShieldAlert, Sparkles, UsersRound } from "lucide-react";
+import { AlertTriangle, ArrowRight, Clock3, ShieldAlert, Sparkles, UsersRound } from "lucide-react";
 import type { ReactNode } from "react";
 import type { ChapterRuntimePackage } from "@ai-novel/shared/types/chapterRuntime";
 import type { Chapter } from "@ai-novel/shared/types/novel";
@@ -6,6 +6,7 @@ import type { TimelineContextForChapter, TimelineIssue } from "@ai-novel/shared/
 import type { ChapterTimelineViewData } from "../NovelEditView.types";
 import type { TimelineCheckSummary } from "./chapterInsights.types";
 import { Badge, type BadgeProps } from "@/components/ui/badge";
+import { LoadingIndicator } from "@/components/ui/loading-indicator";
 import { cn } from "@/lib/utils";
 
 export function getTimelineCheckLabel(status: TimelineCheckSummary["status"]): string {
@@ -108,10 +109,7 @@ function TimelineCheckPanel(props: {
   if (isLoading && !timelineCheck) {
     return (
       <div className="rounded-xl border border-border/70 bg-muted/20 p-3 text-xs leading-6 text-muted-foreground">
-        <div className="flex items-center gap-2 font-medium text-foreground">
-          <Loader2 className="h-4 w-4 animate-spin" />
-          时间线检测读取中
-        </div>
+        <LoadingIndicator variant="spinner" text="时间线检测读取中" className="font-medium text-foreground" />
         <div className="mt-1">章节切换后会在这里显示最新检测结果。</div>
       </div>
     );

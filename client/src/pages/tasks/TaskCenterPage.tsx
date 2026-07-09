@@ -11,6 +11,7 @@ import { queryKeys } from "@/api/queryKeys";
 import DirectorRuntimeProjectionCard from "@/components/autoDirector/DirectorRuntimeProjectionCard";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/components/ui/toast";
 import { resolveWorkflowContinuationFeedback } from "@/lib/novelWorkflowContinuation";
@@ -588,7 +589,7 @@ export default function TaskCenterPage() {
                 <div className="space-y-2">
                   <div className="font-medium">步骤状态</div>
                   {selectedTaskSteps.length === 0 ? (
-                    <div className="rounded-md border border-dashed p-2 text-muted-foreground">暂无步骤状态。</div>
+                    <EmptyState variant="dashed" className="rounded-md p-2">暂无步骤状态。</EmptyState>
                   ) : selectedTaskSteps.map((step) => (
                     <div key={step.key} className="flex items-center justify-between rounded-md border p-2">
                       <div>{step.label}</div>

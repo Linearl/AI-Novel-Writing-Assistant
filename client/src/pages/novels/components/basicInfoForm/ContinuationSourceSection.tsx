@@ -1,5 +1,6 @@
 import type { BookAnalysisSectionKey } from "@ai-novel/shared/types/bookAnalysis";
 import { Button } from "@/components/ui/button";
+import { LoadingIndicator } from "@/components/ui/loading-indicator";
 import {
   BASIC_INFO_FIELD_HINTS,
   type NovelBasicFormState,
@@ -140,7 +141,7 @@ export function ContinuationSourceSection(props: ContinuationSourceSectionProps)
           </div>
 
           {isLoadingSourceNovelBookAnalyses ? (
-            <div className="text-xs text-muted-foreground">正在加载当前来源可用的拆书结果...</div>
+            <LoadingIndicator text="正在加载当前来源可用的拆书结果..." size="sm" />
           ) : null}
           {!isLoadingSourceNovelBookAnalyses && sourceNovelBookAnalysisOptions.length === 0 ? (
             <div className="text-xs text-muted-foreground">

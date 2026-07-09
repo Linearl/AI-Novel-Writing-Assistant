@@ -16,6 +16,7 @@ import {
 import { queryKeys } from "@/api/queryKeys";
 import LLMSelector from "@/components/common/LLMSelector";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
@@ -28,6 +29,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/toast";
+import { LoadingIndicator } from "@/components/ui/loading-indicator";
 import { useLLMStore } from "@/store/llmStore";
 import StoryModeProfileFields from "./components/StoryModeProfileFields";
 import StoryModeTreeCard from "./components/StoryModeTreeCard";
@@ -623,21 +625,17 @@ export default function StoryModeManagementPage() {
         </CardHeader>
         <CardContent className="space-y-4">
           {storyModeTreeQuery.isLoading ? (
-            <div className="text-sm text-muted-foreground">正在加载推进模式树...</div>
+            <LoadingIndicator text="正在加载推进模式树..." />
           ) : null}
 
           {!storyModeTreeQuery.isLoading && storyModeTree.length === 0 ? (
-            <div className="rounded-xl border border-dashed p-6 text-center">
-              <div className="text-sm font-medium text-foreground">还没有任何推进模式</div>
-              <div className="mt-1 text-sm text-muted-foreground">
-                可以先手动建一个根推进模式，也可以直接让 AI 生成一份结构化草稿。
-              </div>
-              <div className="mt-4">
-                <Button type="button" onClick={handleCreateRoot}>
-                  开始创建
-                </Button>
-              </div>
-            </div>
+            <EmptyState
+              variant="dashed"
+              className="rounded-xl"
+              title="还没有任何推进模式"
+              description="可以先手动建一个根推进模式，也可以直接让 AI 生成一份结构化草稿。"
+              action={<Button type="button" onClick={handleCreateRoot}>开始创建</Button>}
+            />
           ) : null}
 
           {storyModeTree.map((node) => (

@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { WorldOptionRefinementLevel, WorldReferenceAnchor, WorldReferenceMode } from "@ai-novel/shared/types/worldWizard";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { LoadingIndicator } from "@/components/ui/loading-indicator";
 import KnowledgeDocumentPicker from "@/components/knowledge/KnowledgeDocumentPicker";
 import type {
   GeneratorGenreOption,
@@ -162,7 +163,7 @@ export default function WorldGeneratorStepOne(props: WorldGeneratorStepOneProps)
             ) : null}
           </div>
         ) : null}
-        {genreLoading ? <div className="text-xs text-muted-foreground">正在加载题材基底树...</div> : null}
+        {genreLoading ? <LoadingIndicator text="正在加载题材基底树..." size="sm" /> : null}
           {!genreLoading && genreOptions.length === 0 ? (
             <div className="rounded-md border border-dashed p-3 text-xs text-muted-foreground space-y-2">
             <div>题材基底库为空。创建世界样本需要先准备可选题材基底。</div>

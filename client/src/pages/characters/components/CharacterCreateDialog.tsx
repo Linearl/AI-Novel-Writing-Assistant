@@ -6,9 +6,11 @@ import { createBaseCharacter, generateBaseCharacter } from "@/api/character";
 import { listKnowledgeDocuments } from "@/api/knowledge";
 import { queryKeys } from "@/api/queryKeys";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { LoadingIndicator } from "@/components/ui/loading-indicator";
 
 function createDefaultConstraints(): CharacterGenerateConstraints {
   return {
@@ -265,10 +267,10 @@ export function CharacterCreateDialog({ onCreated }: CharacterCreateDialogProps)
                   <div className="text-sm font-medium">参考知识库（可多选）</div>
                   <div className="max-h-48 space-y-2 overflow-auto rounded-md border p-2">
                     {knowledgeDocumentsQuery.isLoading ? (
-                      <div className="text-sm text-muted-foreground">加载中...</div>
+                      <LoadingIndicator />
                     ) : null}
                     {!knowledgeDocumentsQuery.isLoading && knowledgeDocuments.length === 0 ? (
-                      <div className="text-sm text-muted-foreground">暂无可选知识文档。</div>
+                      <EmptyState>暂无可选知识文档。</EmptyState>
                     ) : null}
                     {knowledgeDocuments.map((document) => (
                       <label key={document.id} className="flex items-start gap-2 rounded-md border p-2 text-sm">
@@ -295,10 +297,10 @@ export function CharacterCreateDialog({ onCreated }: CharacterCreateDialogProps)
                   <div className="text-sm font-medium">参考拆书分析（可多选）</div>
                   <div className="max-h-48 space-y-2 overflow-auto rounded-md border p-2">
                     {bookAnalysesQuery.isLoading ? (
-                      <div className="text-sm text-muted-foreground">加载中...</div>
+                      <LoadingIndicator />
                     ) : null}
                     {!bookAnalysesQuery.isLoading && bookAnalyses.length === 0 ? (
-                      <div className="text-sm text-muted-foreground">暂无可选拆书分析。</div>
+                      <EmptyState>暂无可选拆书分析。</EmptyState>
                     ) : null}
                     {bookAnalyses.map((analysis) => (
                       <label key={analysis.id} className="flex items-start gap-2 rounded-md border p-2 text-sm">

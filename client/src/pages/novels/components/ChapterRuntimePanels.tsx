@@ -2,6 +2,7 @@ import type { ChapterRuntimePackage } from "@ai-novel/shared/types/chapterRuntim
 import type { AuditReport, ReplanRecommendation, ReplanResult, StoryPlan, StoryStateSnapshot } from "@ai-novel/shared/types/novel";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { buildReplanRecommendationFromAuditReports } from "../chapterPlanning.shared";
 
@@ -285,7 +286,7 @@ export function ChapterRuntimeContextCard(props: {
               ) : null}
             </>
           ) : (
-            <div className="text-muted-foreground">暂无章节规划。</div>
+            <EmptyState>暂无章节规划。</EmptyState>
           )}
         </div>
 
@@ -310,7 +311,7 @@ export function ChapterRuntimeContextCard(props: {
               ) : null}
             </>
           ) : (
-            <div className="text-muted-foreground">暂无状态快照。</div>
+            <EmptyState>暂无状态快照。</EmptyState>
           )}
         </div>
 
@@ -335,7 +336,7 @@ export function ChapterRuntimeContextCard(props: {
               ))}
             </div>
           ) : (
-            <div className="text-muted-foreground">暂无活跃冲突。</div>
+            <EmptyState>暂无活跃冲突。</EmptyState>
           )}
         </div>
       </CardContent>

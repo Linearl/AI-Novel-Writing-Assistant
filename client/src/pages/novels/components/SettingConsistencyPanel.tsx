@@ -9,7 +9,6 @@ import {
   AlertTriangle,
   CheckCircle2,
   Info,
-  Loader2,
   RefreshCw,
   ShieldCheck,
   Wrench,
@@ -29,7 +28,9 @@ import {
 import { queryKeys } from "@/api/queryKeys";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { LoadingIndicator } from "@/components/ui/loading-indicator";
 import { toast } from "@/components/ui/toast";
 
 /* ── Severity mapping ──────────────────────────────────────────────── */
@@ -164,10 +165,7 @@ export default function SettingConsistencyPanel({
   const renderContent = () => {
     if (isLoading) {
       return (
-        <div className="flex items-center justify-center py-8 text-muted-foreground">
-          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          加载中...
-        </div>
+        <LoadingIndicator variant="spinner" className="py-8" />
       );
     }
 
@@ -219,12 +217,12 @@ export default function SettingConsistencyPanel({
             ))}
           </ul>
         ) : visibleContradictions && visibleContradictions.length === 0 ? (
-          <div className="flex flex-col items-center gap-2 py-6 text-center">
-            <CheckCircle2 className="h-8 w-8 text-emerald-500" />
-            <p className="text-sm text-muted-foreground">
-              未发现矛盾项，设定一致性良好。
-            </p>
-          </div>
+          <EmptyState
+            icon={<CheckCircle2 className="h-8 w-8 text-emerald-500" />}
+            className="py-6"
+          >
+            未发现矛盾项，设定一致性良好。
+          </EmptyState>
         ) : null}
       </div>
     );
@@ -246,7 +244,7 @@ export default function SettingConsistencyPanel({
             onClick={() => checkMutation.mutate()}
           >
             {isChecking ? (
-              <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
+              <LoadingIndicator variant="spinner" text="" size="sm" />
             ) : (
               <RefreshCw className="mr-1.5 h-3.5 w-3.5" />
             )}
@@ -342,7 +340,7 @@ function ContradictionItem({
           onClick={onIgnore}
         >
           {isIgnoring ? (
-            <Loader2 className="h-3 w-3 animate-spin" />
+            <LoadingIndicator variant="spinner" text="" size="sm" />
           ) : (
             <EyeOff className="h-3 w-3" />
           )}

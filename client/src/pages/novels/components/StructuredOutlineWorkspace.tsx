@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import AiButton from "@/components/common/AiButton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -223,7 +224,7 @@ export default function StructuredOutlineWorkspace(props: StructuredTabViewProps
               <Button size="sm" variant="outline" onClick={onGoToCharacterTab}>去角色管理</Button>
             </div>
           ) : null}
-          <div className="rounded-md border border-dashed p-6 text-sm text-muted-foreground">先在上一页生成卷战略和卷骨架。</div>
+          <EmptyState variant="dashed" className="rounded-md">先在上一页生成卷战略和卷骨架。</EmptyState>
         </CardContent>
       </Card>
     );

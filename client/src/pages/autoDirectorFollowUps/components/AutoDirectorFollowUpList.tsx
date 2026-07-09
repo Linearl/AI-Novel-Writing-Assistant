@@ -15,6 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { LoadingIndicator } from "@/components/ui/loading-indicator";
 import { cn } from "@/lib/utils";
 import { AUTO_DIRECTOR_MOBILE_CLASSES } from "@/mobile/autoDirector";
 
@@ -125,7 +126,7 @@ export function AutoDirectorFollowUpListPanel(props: AutoDirectorFollowUpListPan
 
         <div className="space-y-3">
           {props.loading ? (
-            <div className={`rounded-md border border-dashed p-6 text-sm text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>正在加载跟进项...</div>
+            <LoadingIndicator text="正在加载跟进项..." className={`rounded-md border border-dashed p-6 ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`} />
           ) : null}
 
           {!props.loading && props.items.length === 0 ? (

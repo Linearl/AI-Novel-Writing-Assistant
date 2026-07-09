@@ -4,6 +4,7 @@ import type {
   WorldVisualizationPayload,
 } from "@ai-novel/shared/types/world";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Input } from "@/components/ui/input";
 
 interface WorldVisualizationBoardProps {
@@ -809,7 +810,7 @@ export default function WorldVisualizationBoard({ payload }: WorldVisualizationB
               </div>
             ))}
             {filteredPower.length === 0 ? (
-              <div className="text-xs text-muted-foreground">暂无匹配内容</div>
+              <EmptyState>暂无匹配内容</EmptyState>
             ) : null}
           </div>
         </div>
@@ -826,7 +827,7 @@ export default function WorldVisualizationBoard({ payload }: WorldVisualizationB
               </div>
             ))}
             {filteredTimeline.length === 0 ? (
-              <div className="text-xs text-muted-foreground">暂无匹配内容</div>
+              <EmptyState>暂无匹配内容</EmptyState>
             ) : null}
           </div>
         </div>

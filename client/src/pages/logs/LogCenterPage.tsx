@@ -5,6 +5,7 @@ import { queryLogs, type LogEntry, type LogLevel } from "@/api/logs";
 import { queryKeys } from "@/api/queryKeys";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Select,
@@ -14,6 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { LoadingIndicator } from "@/components/ui/loading-indicator";
 import { cn } from "@/lib/utils";
 
 const LOG_LEVELS: LogLevel[] = ["error", "warn", "info", "http", "debug"];
@@ -225,9 +227,9 @@ export default function LogCenterPage() {
           </div>
 
           {logQuery.isLoading ? (
-            <div className="py-8 text-center text-sm text-muted-foreground">加载中...</div>
+            <LoadingIndicator className="py-8" />
           ) : entries.length === 0 ? (
-            <div className="py-8 text-center text-sm text-muted-foreground">暂无日志数据</div>
+            <EmptyState className="py-8">暂无日志数据</EmptyState>
           ) : (
             <div className="space-y-2">
               {entries.map((entry, idx) => {

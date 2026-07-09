@@ -4,6 +4,7 @@ import type { KnowledgeDocumentStatus } from "@ai-novel/shared/types/knowledge";
 import { listKnowledgeDocuments } from "@/api/knowledge";
 import { queryKeys } from "@/api/queryKeys";
 import { Input } from "@/components/ui/input";
+import { LoadingIndicator } from "@/components/ui/loading-indicator";
 
 interface KnowledgeDocumentPickerProps {
   selectedIds: string[] | null;
@@ -72,7 +73,7 @@ export default function KnowledgeDocumentPicker(props: KnowledgeDocumentPickerPr
           />
           <div className="max-h-64 space-y-2 overflow-auto rounded-md border p-2">
             {documentsQuery.isLoading ? (
-              <div className="text-sm text-muted-foreground">加载中...</div>
+              <LoadingIndicator />
             ) : null}
             {visibleDocuments.length === 0 && !documentsQuery.isLoading ? (
               <div className="text-sm text-muted-foreground">没有可选文档。</div>

@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import type { KnowledgeDocumentStatus, KnowledgeDocumentSummary } from "@ai-novel/shared/types/knowledge";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import OpenInCreativeHubButton from "@/components/creativeHub/OpenInCreativeHubButton";
 import SelectField from "@/components/common/SelectField";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -216,9 +217,9 @@ export default function KnowledgeDocumentsTab({
           <div className="space-y-3">
             {documents.map(renderDocumentRow)}
             {documents.length === 0 ? (
-              <div className="rounded-md border border-dashed p-6 text-sm text-muted-foreground">
+              <EmptyState variant="dashed" className="rounded-md">
                 当前没有符合条件的知识文档。
-              </div>
+              </EmptyState>
             ) : null}
           </div>
         </CardContent>
