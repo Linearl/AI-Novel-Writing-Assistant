@@ -40,21 +40,7 @@ export function startStrategyGenerationAction(params: {
   if (!params.ensureCharacterGuard()) {
     return;
   }
-  const confirmed = window.confirm([
-    "将生成卷战略建议，帮助决定推荐卷数、硬规划卷数和各卷角色定位。",
-    "这一步不会直接生成卷骨架，也不会拆章节。",
-    params.userPreferredVolumeCount != null
-      ? `本次将固定为 ${params.userPreferredVolumeCount} 卷生成分卷策略。`
-      : params.forceSystemRecommendedVolumeCount
-        ? `本次将按系统建议卷数生成（当前建议 ${params.volumeCountGuidance.systemRecommendedVolumeCount} 卷），不沿用现有草稿卷数。`
-        : params.volumeCountGuidance.respectedExistingVolumeCount != null
-          ? `本次会优先沿用当前草稿的 ${params.volumeCountGuidance.respectedExistingVolumeCount} 卷结构，同时保持在允许区间 ${params.volumeCountGuidance.allowedVolumeCountRange.min}-${params.volumeCountGuidance.allowedVolumeCountRange.max} 内。`
-          : `当前系统建议 ${params.volumeCountGuidance.systemRecommendedVolumeCount} 卷，允许区间 ${params.volumeCountGuidance.allowedVolumeCountRange.min}-${params.volumeCountGuidance.allowedVolumeCountRange.max} 卷。`,
-    params.hasUnsavedVolumeDraft ? "本次会直接使用当前页面未保存草稿作为参考。" : "本次会基于当前工作区状态生成建议。",
-  ].join("\n\n"));
-  if (!confirmed) {
-    return;
-  }
+  // 直接生成，不弹 confirm 阻塞 — 按钮已有 loading 状态反馈
   params.generate({ scope: "strategy" });
 }
 
