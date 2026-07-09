@@ -6,7 +6,9 @@ import type {
   SupplementalCharacterGenerationMode,
   SupplementalCharacterGenerationResult,
 } from "@ai-novel/shared/types/novel";
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { refineSupplementalCharacter } from "@/api/novel/characters";
 import AiButton from "@/components/common/AiButton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -17,6 +19,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { toast } from "@/components/ui/toast";
 
 const CAST_ROLE_LABELS: Record<CharacterCastRole, string> = {
   protagonist: "主角",
@@ -72,6 +75,7 @@ function getSupplementalRelationLabel(
 interface CharacterSupplementalDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
+  novelId: string;
   characters: Character[];
   supplementalMode: SupplementalCharacterGenerationMode;
   onSupplementalModeChange: (mode: SupplementalCharacterGenerationMode) => void;
@@ -98,6 +102,7 @@ export default function CharacterSupplementalDialog(props: CharacterSupplemental
   const {
     isOpen,
     onOpenChange,
+    novelId,
     characters,
     supplementalMode,
     onSupplementalModeChange,
@@ -121,6 +126,31 @@ export default function CharacterSupplementalDialog(props: CharacterSupplemental
   } = props;
   const [preCheckDismissed, setPreCheckDismissed] = useState(false);
   const hasWarnings = Boolean(supplementalPreCheck && supplementalPreCheck.warnings.length > 0 && !preCheckDismissed);
+
+  // 微调候选角色
+  const [refineTarget, setRefineTarget] = useState<string | null>(null);
+  const [refineInput, setRefineInput] = useState("");
+  const [refinedCandidates, setRefinedCandidates] = useState<Record<string, SupplementalCharacterCandidate>>({});
+
+  const refineMutation = useMutation({
+    mutationFn: ({ candidate, adjustment }: { candidate: SupplementalCharacterCandidate; adjustment: string }) =>
+      refineSupplementalCharacter(novelId, candidate, adjustment),
+    onSuccess: (response, variables) => {
+      if (response.data) {
+        setRefinedCandidates((prev) => ({ ...prev, [variables.candidate.name]: response.data! }));
+        toast.success(`已调整「${variables.candidate.name}」。`);
+        setRefineTarget(null);
+        setRefineInput("");
+      }
+    },
+    onError: () => toast.error("角色调整失败，请重试。"),
+  });
+
+  const getCandidate = useCallback(
+    (candidate: SupplementalCharacterCandidate): SupplementalCharacterCandidate =>
+      refinedCandidates[candidate.name] ?? candidate,
+    [refinedCandidates],
+  );
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -278,8 +308,12 @@ export default function CharacterSupplementalDialog(props: CharacterSupplemental
               </div>
             ) : supplementalResult?.candidates.length ? (
               <div className="space-y-3">
-                {supplementalResult.candidates.map((candidate) => (
-                  <div key={candidate.name} className="rounded-2xl border p-4">
+                {supplementalResult.candidates.map((rawCandidate) => {
+                  const candidate = getCandidate(rawCandidate);
+                  const isRefining = refineMutation.isPending && refineTarget === candidate.name;
+                  const isAdjusting = refineTarget === candidate.name;
+                  return (
+                  <div key={rawCandidate.name} className="rounded-2xl border p-4">
                     <div className="flex flex-wrap items-start justify-between gap-3">
                       <div className="space-y-1">
                         <div className="flex flex-wrap items-center gap-2">
@@ -287,17 +321,54 @@ export default function CharacterSupplementalDialog(props: CharacterSupplemental
                           <Badge variant="outline">{candidate.role}</Badge>
                           <Badge variant="secondary">{getCastRoleLabel(candidate.castRole)}</Badge>
                           <Badge variant="outline">性别：{getCharacterGenderLabel(candidate.gender)}</Badge>
+                          {refinedCandidates[rawCandidate.name] ? <Badge variant="secondary">已调整</Badge> : null}
                         </div>
                         <div className="text-sm text-muted-foreground">{candidate.summary}</div>
                       </div>
-                      <Button
-                        size="sm"
-                        onClick={() => onApplyCandidate(candidate)}
-                        disabled={isApplying}
-                      >
-                        {isApplying ? "创建中..." : "创建这个角色"}
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          onClick={() => onApplyCandidate(candidate)}
+                          disabled={isApplying || isRefining}
+                        >
+                          {isApplying ? "创建中..." : "创建这个角色"}
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setRefineTarget(isAdjusting ? null : candidate.name)}
+                          disabled={isRefining}
+                        >
+                          {isAdjusting ? "取消调整" : "调整"}
+                        </Button>
+                      </div>
                     </div>
+
+                    {isAdjusting ? (
+                      <div className="mt-3 rounded-xl border border-primary/30 bg-primary/5 p-3">
+                        <div className="text-xs font-medium text-muted-foreground mb-2">输入调整指令，例如"性格改为更外向"、"背景改为农村出身"</div>
+                        <div className="flex gap-2">
+                          <input
+                            className="flex-1 rounded-md border bg-background p-2 text-sm"
+                            placeholder="描述你想调整的内容..."
+                            value={refineInput}
+                            onChange={(e) => setRefineInput(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter" && refineInput.trim()) {
+                                refineMutation.mutate({ candidate: rawCandidate, adjustment: refineInput.trim() });
+                              }
+                            }}
+                          />
+                          <Button
+                            size="sm"
+                            disabled={isRefining || !refineInput.trim()}
+                            onClick={() => refineMutation.mutate({ candidate: rawCandidate, adjustment: refineInput.trim() })}
+                          >
+                            {isRefining ? "调整中..." : "确认调整"}
+                          </Button>
+                        </div>
+                      </div>
+                    ) : null}
 
                     <div className="mt-3 grid gap-2 sm:grid-cols-2">
                       <div className="rounded-xl border border-dashed p-3 text-xs text-muted-foreground">
@@ -335,7 +406,8 @@ export default function CharacterSupplementalDialog(props: CharacterSupplemental
                       </div>
                     )}
                   </div>
-                ))}
+                  );
+                })}
               </div>
             ) : (
               <div className="flex min-h-[320px] items-center justify-center rounded-xl border border-dashed px-6 text-center text-sm text-muted-foreground">

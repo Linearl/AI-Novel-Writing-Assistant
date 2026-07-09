@@ -42,6 +42,7 @@ interface RegisterNovelCharacterPreparationRoutesInput {
     | "applyCharacterCastOption"
     | "generateSupplementalCharacters"
     | "applySupplementalCharacter"
+    | "refineSupplementalCharacter"
     | "deleteCharacterCastOption"
     | "clearCharacterCastOptions"
   >;
@@ -156,6 +157,35 @@ export function registerNovelCharacterPreparationRoutes(
           success: true,
           data,
           message: "补充角色已创建。",
+        } satisfies ApiResponse<typeof data>);
+      } catch (error) {
+        next(error);
+      }
+    },
+  );
+
+  const supplementalRefineSchema = z.object({
+    candidate: supplementalCharacterCandidateSchema,
+    adjustment: z.string().trim().min(1).max(2000),
+    provider: llmProviderSchema.optional(),
+    model: z.string().trim().optional(),
+  });
+
+  router.post(
+    "/:id/character-prep/supplemental-characters/refine",
+    validate({ params: idParamsSchema, body: supplementalRefineSchema }),
+    async (req, res, next) => {
+      try {
+        const { id } = req.params as z.infer<typeof idParamsSchema>;
+        const body = req.body as z.infer<typeof supplementalRefineSchema>;
+        const data = await novelService.refineSupplementalCharacter(id, body.candidate, body.adjustment, {
+          provider: body.provider,
+          model: body.model,
+        });
+        res.status(200).json({
+          success: true,
+          data,
+          message: "角色候选已调整。",
         } satisfies ApiResponse<typeof data>);
       } catch (error) {
         next(error);

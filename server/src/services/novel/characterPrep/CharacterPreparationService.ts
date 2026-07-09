@@ -438,4 +438,13 @@ export class CharacterPreparationService {
   ): Promise<SupplementalCharacterApplyResult> {
     return this.supplementalService.applySupplementalCharacter(novelId, candidate);
   }
+
+  async refineSupplementalCharacter(
+    novelId: string,
+    candidate: SupplementalCharacterCandidate,
+    adjustment: string,
+    options?: { provider?: LLMProvider; model?: string },
+  ): Promise<SupplementalCharacterCandidate> {
+    return this.supplementalService.refineSupplementalCharacter(novelId, candidate, adjustment, options);
+  }
 }

@@ -192,6 +192,18 @@ export async function applySupplementalCharacter(id: string, candidate: Suppleme
   return data;
 }
 
+export async function refineSupplementalCharacter(
+  id: string,
+  candidate: SupplementalCharacterCandidate,
+  adjustment: string,
+) {
+  const { data } = await apiClient.post<ApiResponse<SupplementalCharacterCandidate>>(
+    `/novels/${id}/character-prep/supplemental-characters/refine`,
+    { candidate, adjustment },
+  );
+  return data;
+}
+
 export async function createNovelCharacter(
   id: string,
   payload: {

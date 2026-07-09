@@ -22,6 +22,8 @@ import {
 import { buildStoryModePromptBlock, normalizeStoryModeOutput } from "../../storyMode/storyModeProfile";
 import { parseCharacterProhibitionsJson } from "../characters/characterHardFacts";
 import { WorldContextGateway } from "../worldContext/WorldContextGateway";
+import { invokeStructuredLlm } from "../../../llm/structuredInvoke";
+import type { LLMProvider } from "@ai-novel/shared/types/llm";
 
 type CharacterRowForOutput = Awaited<ReturnType<typeof prisma.character.create>>;
 
@@ -520,5 +522,47 @@ export class CharacterPreparationSupplementalService {
       character: serializeCharacter(created),
       relationCount,
     };
+  }
+
+  async refineSupplementalCharacter(
+    novelId: string,
+    candidate: SupplementalCharacterCandidate,
+    adjustment: string,
+    options?: { provider?: LLMProvider; model?: string },
+  ): Promise<SupplementalCharacterCandidate> {
+    const systemPrompt = [
+      "你是角色微调编辑。用户对一个已生成的角色候选提出了调整要求，你需要在保持角色整体定位不变的前提下，按要求修改对应字段。",
+      "",
+      "硬规则：",
+      "1. 只修改用户明确要求调整的字段，其余字段保持原样。",
+      "2. 修改后的角色必须仍然能直接进入正文使用。",
+      "3. 不得改变角色姓名（name 字段必须保持不变）。",
+      "4. 输出严格 JSON，不要输出 Markdown 或额外文本。",
+      "5. 所有文本使用简体中文。",
+    ].join("\n");
+
+    const userPrompt = [
+      "当前角色候选：",
+      JSON.stringify(candidate, null, 2),
+      "",
+      "用户调整要求：",
+      adjustment,
+      "",
+      "请输出调整后的完整角色 JSON（保持与输入相同的结构）。",
+    ].join("\n");
+
+    const result = await invokeStructuredLlm<SupplementalCharacterCandidate>({
+      systemPrompt,
+      userPrompt,
+      schema: supplementalCharacterCandidateSchema,
+      label: "novel.character.supplemental.refine",
+      taskType: "planner",
+      temperature: 0.3,
+      provider: options?.provider as LLMProvider | undefined,
+      model: options?.model,
+    });
+
+    // 确保姓名不被修改
+    return { ...result, name: candidate.name };
   }
 }

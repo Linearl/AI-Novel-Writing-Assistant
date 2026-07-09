@@ -622,6 +622,10 @@ export class DefaultNovelApplicationServices {
     return this.characterPreparationService.applySupplementalCharacter(...args);
   }
 
+  refineSupplementalCharacter(...args: Parameters<CharacterPreparationService["refineSupplementalCharacter"]>) {
+    return this.characterPreparationService.refineSupplementalCharacter(...args);
+  }
+
   deleteCharacterCastOption(...args: Parameters<CharacterPreparationService["deleteCharacterCastOption"]>) {
     return this.characterPreparationService.deleteCharacterCastOption(...args);
   }

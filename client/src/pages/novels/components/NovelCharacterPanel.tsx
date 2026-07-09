@@ -399,6 +399,7 @@ export default function NovelCharacterPanel(props: NovelCharacterPanelProps) {
       <CharacterSupplementalDialog
         isOpen={isSupplementalCharacterOpen}
         onOpenChange={setIsSupplementalCharacterOpen}
+        novelId={novelId}
         characters={characters}
         supplementalMode={supplementalMode}
         onSupplementalModeChange={setSupplementalMode}
