@@ -58,10 +58,10 @@ description: "需求任务总清单（SSOT）"
 | 2040 | 资产 TXT 导入导出 | p2 | ✅ 已完成 | 竞品分析-游蜂写作 | 0.1 | 2026-07-03 | 2026-07-05T01:28:56.883Z | `B.2.done/v0.1-r2040-M2-asset-txt-import-export/README.md` | 设定/大纲/关系网/正文独立 TXT 导入导出 |
 | 2041 | 伏笔埋收可视化追踪 | p2 | ✅ 已完成 | 竞品分析-游蜂写作 | 0.1 | 2026-07-03 | 2026-07-05T01:28:57.419Z | `B.2.done/v0.1-r2041-M2-payoff-ledger-visualization/README.md` | payoff ledger 增强 + auto-director 集成 + UI 可视化 |
 | 2042 | 自适应字数控制与水文检测 | p2 | ✅ 已完成 | 竞品分析讨论 | 0.1 | 2026-07-03 | 2026-07-05T01:28:57.909Z | `B.2.done/v0.1-r2042-M2-adaptive-word-count-control/README.md` | 章节角色系数 + 水文检测 + 自动 compress/expand |
-| 2043 | Style Engine Auto Close Loop | p3 | ✅ 已完成 | - | 0.1 | 2026-07-08T00:00:00.000Z | 2026-07-08T08:30:00.000Z | `B.todo/v0.1-r2043-complex-style-engine-auto-close-loop/README.md` |  |
+| 2043 | Style Engine Auto Close Loop | p3 | ✅ 已完成 | - | 0.1 | 2026-07-08T00:00:00.000Z | 2026-07-08T08:30:00.000Z | `B.2.done/v0.1-r2043-C2-style-engine-auto-close-loop/README.md` |  |
 | 2044 | Inspiration Quick Preview | p3 | ✅ 已完成 | - | 0.1 | 2026-07-08T00:00:00.000Z | 2026-07-09T00:00:00.000Z | `B.todo/v0.1-r2044-complex-inspiration-quick-preview/README.md` |  |
 | 2045 | Chapter Rhythm Tension | p3 | ✅ 已完成 | - | 0.1 | 2026-07-08T00:00:00.000Z | 2026-07-09T00:00:00.000Z | `B.todo/v0.1-r2045-complex-chapter-rhythm-tension/README.md` |  |
-| 2046 | Style Profile Export Import | p3 | ✅ 已完成 | - | 0.1 | 2026-07-08T00:00:00.000Z | 2026-07-08T10:00:00.000Z | `B.todo/v0.1-r2046-medium-style-profile-export-import/README.md` |  |
+| 2046 | Style Profile Export Import | p3 | ✅ 已完成 | - | 0.1 | 2026-07-08T00:00:00.000Z | 2026-07-08T10:00:00.000Z | `B.2.done/v0.1-r2046-M3-style-profile-export-import/README.md` |  |
 | 2013 | Director Failed Retry Entry | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2013-medium-director-failed-retry-entry/README.md` |  |
 | 2014 | Chapter Token Budget Dynamic | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2014-medium-chapter-token-budget-dynamic/README.md` |  |
 
@@ -160,10 +160,10 @@ description: "需求任务总清单（SSOT）"
 | 2040 | 资产 TXT 导入导出 | `B.2.done/v0.1-r2040-M2-asset-txt-import-export/README.md` |
 | 2041 | 伏笔埋收可视化追踪 | `B.2.done/v0.1-r2041-M2-payoff-ledger-visualization/README.md` |
 | 2042 | 自适应字数控制与水文检测 | `B.2.done/v0.1-r2042-M2-adaptive-word-count-control/README.md` |
-| 2043 | Style Engine Auto Close Loop | `B.todo/v0.1-r2043-complex-style-engine-auto-close-loop/README.md` |
+| 2043 | Style Engine Auto Close Loop | `B.2.done/v0.1-r2043-C2-style-engine-auto-close-loop/README.md` |
 | 2044 | Inspiration Quick Preview | `B.todo/v0.1-r2044-complex-inspiration-quick-preview/README.md` |
 | 2045 | Chapter Rhythm Tension | `B.todo/v0.1-r2045-complex-chapter-rhythm-tension/README.md` |
-| 2046 | Style Profile Export Import | `B.todo/v0.1-r2046-medium-style-profile-export-import/README.md` |
+| 2046 | Style Profile Export Import | `B.2.done/v0.1-r2046-M3-style-profile-export-import/README.md` |
 | 3001 | Task Batch Archive | `B.2.done/v0.1-r3001-medium-task-batch-archive/README.md` |
 | 3002 | 导演进度规划资源缺失 Checklist 可视化 | `B.2.done/v0.1-r3002-medium-director-planning-checklist/README.md` |
 | 3003 | 小说项目对话存档 | `B.2.done/v0.1-r3003-medium-repair-progress-dialog/README.md` |

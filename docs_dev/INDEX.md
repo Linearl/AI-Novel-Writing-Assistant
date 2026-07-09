@@ -48,16 +48,6 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1-r7015-M2-frontend-common-styles-components\REQ-7015-frontend-common-styles-components.md](./1.task\B.todo\v0.1-r7015-M2-frontend-common-styles-components\REQ-7015-frontend-common-styles-components.md) | REQ-7015 前端公共样式与组件提取 | REQ-7015 前端公共样式与组件提取 |
 | [1.task\B.todo\v0.1-r7015-M2-frontend-common-styles-components\tasks.md](./1.task\B.todo\v0.1-r7015-M2-frontend-common-styles-components\tasks.md) | REQ-7015 前端公共样式与组件提取 — 任务拆解 | REQ-7015 前端公共样式与组件提取 — 任务拆解 |
 
-## 1.task\B.todo\v0.1\v0.1-r2043-C2-style-engine-auto-close-loop
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r2043-C2-style-engine-auto-close-loop\decision_log.md](./1.task\B.todo\v0.1\v0.1-r2043-C2-style-engine-auto-close-loop\decision_log.md) | 文笔体系自动闭环决策日志 | 文笔体系自动闭环决策日志 |
-| [1.task\B.todo\v0.1\v0.1-r2043-C2-style-engine-auto-close-loop\design.md](./1.task\B.todo\v0.1\v0.1-r2043-C2-style-engine-auto-close-loop\design.md) | 文笔体系自动闭环设计方案 | 文笔体系自动闭环设计方案 |
-| [1.task\B.todo\v0.1\v0.1-r2043-C2-style-engine-auto-close-loop\README.md](./1.task\B.todo\v0.1\v0.1-r2043-C2-style-engine-auto-close-loop\README.md) | 文笔体系自动闭环 — 编辑后自动提取风格 + 拆书自动转化 StyleProfile | 文笔体系自动闭环 — 编辑后自动提取风格 + 拆书自动转化 StyleProfile |
-| [1.task\B.todo\v0.1\v0.1-r2043-C2-style-engine-auto-close-loop\REQ-2043-style-engine-auto-close-loop.md](./1.task\B.todo\v0.1\v0.1-r2043-C2-style-engine-auto-close-loop\REQ-2043-style-engine-auto-close-loop.md) | 文笔体系自动闭环需求定义 | 文笔体系自动闭环需求定义 |
-| [1.task\B.todo\v0.1\v0.1-r2043-C2-style-engine-auto-close-loop\tasks.md](./1.task\B.todo\v0.1\v0.1-r2043-C2-style-engine-auto-close-loop\tasks.md) | 文笔体系自动闭环任务清单 | 文笔体系自动闭环任务清单 |
-
 ## 1.task\B.todo\v0.1\v0.1-r2044-C2-inspiration-quick-preview
 
 | 文件 | 标题 | 描述 |
@@ -77,16 +67,6 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1\v0.1-r2045-C2-chapter-rhythm-tension\README.md](./1.task\B.todo\v0.1\v0.1-r2045-C2-chapter-rhythm-tension\README.md) | 章节节奏张力 — 质量标准按章节张力分级，AI 自动标记，用户可调整 | 章节节奏张力 — 质量标准按章节张力分级，AI 自动标记，用户可调整 |
 | [1.task\B.todo\v0.1\v0.1-r2045-C2-chapter-rhythm-tension\REQ-2045-chapter-rhythm-tension.md](./1.task\B.todo\v0.1\v0.1-r2045-C2-chapter-rhythm-tension\REQ-2045-chapter-rhythm-tension.md) | 章节节奏张力需求定义 | 章节节奏张力需求定义 |
 | [1.task\B.todo\v0.1\v0.1-r2045-C2-chapter-rhythm-tension\tasks.md](./1.task\B.todo\v0.1\v0.1-r2045-C2-chapter-rhythm-tension\tasks.md) | 章节节奏张力任务清单 | 章节节奏张力任务清单 |
-
-## 1.task\B.todo\v0.1\v0.1-r2046-M3-style-profile-export-import
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r2046-M3-style-profile-export-import\decision_log.md](./1.task\B.todo\v0.1\v0.1-r2046-M3-style-profile-export-import\decision_log.md) | 写法模板导出/导入决策日志 | 写法模板导出/导入决策日志 |
-| [1.task\B.todo\v0.1\v0.1-r2046-M3-style-profile-export-import\design.md](./1.task\B.todo\v0.1\v0.1-r2046-M3-style-profile-export-import\design.md) | 写法模板导出/导入设计方案 | 写法模板导出/导入设计方案 |
-| [1.task\B.todo\v0.1\v0.1-r2046-M3-style-profile-export-import\README.md](./1.task\B.todo\v0.1\v0.1-r2046-M3-style-profile-export-import\README.md) | 写法模板导出/导入 — StyleProfile 支持 JSON 导出/导入，为 Marketplace 铺路 | 写法模板导出/导入 — StyleProfile 支持 JSON 导出/导入，为 Marketplace 铺路 |
-| [1.task\B.todo\v0.1\v0.1-r2046-M3-style-profile-export-import\REQ-2046-style-profile-export-import.md](./1.task\B.todo\v0.1\v0.1-r2046-M3-style-profile-export-import\REQ-2046-style-profile-export-import.md) | 写法模板导出/导入需求定义 | 写法模板导出/导入需求定义 |
-| [1.task\B.todo\v0.1\v0.1-r2046-M3-style-profile-export-import\tasks.md](./1.task\B.todo\v0.1\v0.1-r2046-M3-style-profile-export-import\tasks.md) | 写法模板导出/导入任务清单 | 写法模板导出/导入任务清单 |
 
 ## 1.task\B.todo\v0.1\v0.1-r3010-M2-create-page-material-import
 
