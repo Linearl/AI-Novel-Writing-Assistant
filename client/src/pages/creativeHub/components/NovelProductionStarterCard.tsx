@@ -229,20 +229,20 @@ export default function NovelProductionStarterCard({
   const isContinueMode = Boolean(currentNovelId);
 
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-3">
+    <div className="rounded-xl border border-border bg-white p-3">
       <div className="mb-2 text-xs font-medium text-slate-500">整本生产</div>
       <div className="space-y-3">
-        <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-600">
+        <div className="rounded-lg border border-border bg-muted px-3 py-2 text-xs text-slate-600">
           {isContinueMode
             ? `当前将继续生产《${resolvedTitle || "当前小说"}》。`
             : "当前处于全局模式，可直接创建新书并启动整本生产。"}
         </div>
-        <div className="rounded-lg border border-dashed border-slate-200 bg-white px-3 py-2 text-xs leading-5 text-slate-600">
+        <div className="rounded-lg border border-dashed border-border bg-white px-3 py-2 text-xs leading-5 text-slate-600">
           建议先确认：题材、风格、视角、节奏、章长、AI 自由度。条件越完整，整本生产偏差越小。
         </div>
         {!isContinueMode ? (
           <input
-            className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-slate-400"
+            className="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-slate-400"
             placeholder="小说标题"
             value={title}
             onChange={(event) => setTitle(event.target.value)}
@@ -256,13 +256,13 @@ export default function NovelProductionStarterCard({
         />
         <div className="grid gap-2 sm:grid-cols-2">
           <input
-            className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-slate-400"
+            className="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-slate-400"
             placeholder="题材类型，例如：东方玄幻 / 都市悬疑"
             value={genre}
             onChange={(event) => setGenre(event.target.value)}
           />
           <input
-            className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-slate-400"
+            className="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-slate-400"
             placeholder="风格基调，例如：冷峻压抑 / 轻快热血"
             value={styleTone}
             onChange={(event) => setStyleTone(event.target.value)}
@@ -270,7 +270,7 @@ export default function NovelProductionStarterCard({
         </div>
         <div className="grid gap-2 sm:grid-cols-2">
           <select
-            className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-slate-400"
+            className="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-slate-400"
             value={narrativePov}
             onChange={(event) => setNarrativePov(event.target.value)}
           >
@@ -280,7 +280,7 @@ export default function NovelProductionStarterCard({
             <option value="混合视角">混合视角</option>
           </select>
           <select
-            className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-slate-400"
+            className="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-slate-400"
             value={pacePreference}
             onChange={(event) => setPacePreference(event.target.value)}
           >
@@ -292,7 +292,7 @@ export default function NovelProductionStarterCard({
         </div>
         <div className="grid gap-2 sm:grid-cols-3">
           <select
-            className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-slate-400"
+            className="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-slate-400"
             value={projectMode}
             onChange={(event) => setProjectMode(event.target.value)}
           >
@@ -303,7 +303,7 @@ export default function NovelProductionStarterCard({
             <option value="自动流水线">自动流水线</option>
           </select>
           <select
-            className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-slate-400"
+            className="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-slate-400"
             value={emotionIntensity}
             onChange={(event) => setEmotionIntensity(event.target.value)}
           >
@@ -313,7 +313,7 @@ export default function NovelProductionStarterCard({
             <option value="高">高</option>
           </select>
           <select
-            className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-slate-400"
+            className="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-slate-400"
             value={aiFreedom}
             onChange={(event) => setAiFreedom(event.target.value)}
           >
@@ -325,7 +325,7 @@ export default function NovelProductionStarterCard({
         </div>
         <div className="grid gap-2 sm:grid-cols-3">
           <input
-            className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-slate-400"
+            className="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-slate-400"
             placeholder="目标章节数"
             type="number"
             min={1}
@@ -334,7 +334,7 @@ export default function NovelProductionStarterCard({
             onChange={(event) => setTargetChapterCount(Number(event.target.value || 20))}
           />
           <input
-            className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-slate-400"
+            className="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-slate-400"
             placeholder="默认章长（字）"
             type="number"
             min={500}
@@ -343,7 +343,7 @@ export default function NovelProductionStarterCard({
             onChange={(event) => setDefaultChapterLength(Number(event.target.value || 2500))}
           />
           <input
-            className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-slate-400"
+            className="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-slate-400"
             placeholder="可选世界观类型"
             value={worldType}
             onChange={(event) => setWorldType(event.target.value)}

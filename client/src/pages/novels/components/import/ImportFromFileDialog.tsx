@@ -175,7 +175,7 @@ export default function ImportFromFileDialog({ open, onOpenChange, onImported }:
             </div>
           ) : stage === "error" ? (
             <div className="py-8 text-center">
-              <p className="text-sm text-red-600">{errorMessage}</p>
+              <p className="text-sm text-destructive">{errorMessage}</p>
             </div>
           ) : null}
         </div>

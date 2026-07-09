@@ -66,12 +66,12 @@ const SCORE_CONFIG: Record<
   pass: {
     label: "一致",
     icon: CheckCircle2,
-    color: "text-emerald-600 dark:text-emerald-400",
+    color: "text-success dark:text-emerald-400",
   },
   warning: {
     label: "有隐患",
     icon: AlertTriangle,
-    color: "text-amber-600 dark:text-amber-400",
+    color: "text-warning dark:text-amber-400",
   },
   fail: {
     label: "不一致",

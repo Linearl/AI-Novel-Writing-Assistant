@@ -12,6 +12,7 @@ import type {
 } from "@ai-novel/shared/types/novel";
 import type { LLMProvider } from "@ai-novel/shared/types/llm";
 import { queryKeys } from "@/api/queryKeys";
+import { useConfirm } from "@/components/useConfirm";
 import {
   buildVolumePlanningReadiness,
   findBeatSheet,
@@ -189,11 +190,16 @@ export function useNovelVolumePlanning({
     setStructuredMessage,
   });
 
-  const ensureCharacterGuard = () => {
+  const { confirm, ConfirmDialog } = useConfirm();
+
+  const ensureCharacterGuard = async (): Promise<boolean> => {
     if (hasCharacters) {
       return true;
     }
-    return window.confirm("当前小说还没有角色。继续生成会降低后续一致性，是否继续？");
+    return confirm(
+      "当前小说还没有角色。继续生成会降低后续一致性，是否继续？",
+      { title: "角色缺失提醒", confirmLabel: "继续生成" },
+    );
   };
 
   const startStrategyGeneration = () => {
@@ -222,6 +228,7 @@ export function useNovelVolumePlanning({
     startSkeletonGenerationAction({
       ensureCharacterGuard,
       hasUnsavedVolumeDraft,
+      confirm,
       generate: (payload) => generateMutation.mutate(payload),
     });
   };
@@ -235,6 +242,7 @@ export function useNovelVolumePlanning({
       ensureCharacterGuard,
       setStructuredMessage,
       referenceExisting: options?.referenceExisting,
+      confirm,
       generate: (payload) => generateMutation.mutate(payload),
     });
   };
@@ -251,7 +259,7 @@ export function useNovelVolumePlanning({
     });
   };
 
-  const startChapterDetailGeneration = (
+  const startChapterDetailGeneration = async (
     volumeId: string,
     chapterId: string,
     detailMode: ChapterDetailMode,
@@ -266,16 +274,16 @@ export function useNovelVolumePlanning({
       setStructuredMessage("请先生成当前卷节奏板，再细化章节。");
       return;
     }
-    if (!ensureCharacterGuard()) {
+    if (!(await ensureCharacterGuard())) {
       return;
     }
-    const confirmed = window.confirm([
+    const confirmed = await confirm([
       `将基于当前内容为第${targetChapter.chapterOrder}章《${targetChapter.title}》AI 修正${detailModeLabel(detailMode)}。`,
       hasChapterDetailDraft(targetChapter, detailMode)
         ? "会优先沿用当前已填写结果，只修正空缺、模糊和不够可执行的部分。"
         : "当前这块还是空白，AI 会先补出首版，再按现有标题和摘要收束。",
       "不会改动本章标题和摘要，也不会影响其他章节。",
-    ].join("\n\n"));
+    ].join("\n\n"), { title: "章节细化确认", confirmLabel: "开始修正" });
     if (!confirmed) {
       return;
     }
@@ -287,7 +295,7 @@ export function useNovelVolumePlanning({
     });
   };
 
-  const startChapterDetailBundleGeneration = (
+  const startChapterDetailBundleGeneration = async (
     volumeId: string,
     request: ChapterDetailBundleRequest,
   ) => {
@@ -305,10 +313,13 @@ export function useNovelVolumePlanning({
       setStructuredMessage(batch.targets.length > 1 ? "请先生成当前卷节奏板，再做批量章节细化。" : "请先生成当前卷节奏板，再做单章整套细化。");
       return;
     }
-    if (!ensureCharacterGuard()) {
+    if (!(await ensureCharacterGuard())) {
       return;
     }
-    const confirmed = window.confirm(buildChapterDetailBatchConfirmationMessage(batch));
+    const confirmed = await confirm(buildChapterDetailBatchConfirmationMessage(batch), {
+      title: "批量章节细化",
+      confirmLabel: "开始生成",
+    });
     if (!confirmed) {
       return;
     }
@@ -459,6 +470,7 @@ export function useNovelVolumePlanning({
   }, [generateMutation.isPending, generateMutation.variables?.scope, novelId, queryClient]);
 
   return {
+    ConfirmDialog,
     normalizedVolumeDraft,
     hasUnsavedVolumeDraft,
     generationNotice,

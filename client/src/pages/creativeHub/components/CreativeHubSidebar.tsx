@@ -94,13 +94,13 @@ function statusVariant(
 function metricTone(status: "pending" | "completed" | "running" | "blocked"): string {
   switch (status) {
     case "completed":
-      return "border-emerald-200 bg-emerald-50 text-emerald-700";
+      return "border-emerald-200 bg-emerald-50 text-success";
     case "running":
       return "border-sky-200 bg-sky-50 text-sky-700";
     case "blocked":
-      return "border-amber-200 bg-amber-50 text-amber-700";
+      return "border-amber-200 bg-amber-50 text-warning";
     default:
-      return "border-slate-200 bg-slate-50 text-slate-600";
+      return "border-border bg-muted text-muted-foreground";
   }
 }
 
@@ -190,7 +190,7 @@ function buildBlockerCardData(input: {
     details: input.latestTurnSummary?.nextSuggestion
       ? [`建议下一步: ${input.latestTurnSummary.nextSuggestion}`]
       : [],
-    tone: "border-slate-200 bg-slate-50 text-slate-800",
+    tone: "border-border bg-muted text-foreground",
     actionLabel: input.latestTurnSummary?.nextSuggestion ? "按建议继续" : undefined,
     actionPrompt: input.latestTurnSummary?.nextSuggestion,
   };
@@ -198,9 +198,9 @@ function buildBlockerCardData(input: {
 
 function DebugRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-start justify-between gap-3 text-xs text-slate-600">
-      <span className="text-slate-500">{label}</span>
-      <span className="max-w-[60%] break-all text-right text-slate-800">{value}</span>
+    <div className="flex items-start justify-between gap-3 text-xs text-muted-foreground">
+      <span className="text-muted-foreground">{label}</span>
+      <span className="max-w-[60%] break-all text-right text-foreground">{value}</span>
     </div>
   );
 }
@@ -255,14 +255,14 @@ export default function CreativeHubSidebar({
         <CardTitle className="text-base">创作工作区</CardTitle>
       </CardHeader>
       <CardContent className="min-h-0 flex-1 space-y-3 overflow-y-auto pr-1 text-sm">
-        <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-white via-slate-50 to-slate-100 p-4">
+        <div className="rounded-2xl border border-border bg-gradient-to-br from-white via-slate-50 to-slate-100 p-4">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div>
-              <div className="text-xs font-medium uppercase tracking-[0.18em] text-slate-500">当前焦点</div>
-              <div className="mt-2 text-base font-semibold text-slate-900">
+              <div className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">当前焦点</div>
+              <div className="mt-2 text-base font-semibold text-foreground">
                 {thread?.title?.trim() || "未命名线程"}
               </div>
-              <div className="mt-2 text-sm leading-6 text-slate-700">
+              <div className="mt-2 text-sm leading-6 text-foreground">
                 {summarizeFocus(latestTurnSummary, productionStatus, novelSetup)}
               </div>
             </div>
@@ -279,18 +279,18 @@ export default function CreativeHubSidebar({
         </div>
 
         {trackerFrames && trackerFrames.length > 0 ? (
-          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
+          <div className="rounded-2xl border border-border bg-muted p-3">
             <CreativeHubRunTracker frames={trackerFrames} isRunning={!!isRunning} />
           </div>
         ) : null}
 
-        <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
-          <div className="mb-2 text-xs font-medium text-slate-500">资源绑定</div>
-          <div className="space-y-3 text-xs text-slate-700">
+        <div className="rounded-2xl border border-border bg-muted p-3">
+          <div className="mb-2 text-xs font-medium text-muted-foreground">资源绑定</div>
+          <div className="space-y-3 text-xs text-foreground">
             <div className="space-y-1">
-              <div className="text-[11px] font-medium text-slate-500">当前小说</div>
+              <div className="text-[11px] font-medium text-muted-foreground">当前小说</div>
               <select
-                className="w-full rounded-lg border border-slate-300 bg-white p-2 text-xs text-slate-700"
+                className="w-full rounded-lg border border-border bg-white p-2 text-xs text-foreground"
                 value={bindings.novelId ?? ""}
                 onChange={(event) => onNovelChange(event.target.value)}
               >
@@ -302,9 +302,9 @@ export default function CreativeHubSidebar({
                 ))}
               </select>
               {!bindings.novelId ? (
-                <div className="mt-2 space-y-2 rounded-lg border border-dashed border-slate-200 bg-white p-2">
+                <div className="mt-2 space-y-2 rounded-lg border border-dashed border-border bg-white p-2">
                   <input
-                    className="w-full rounded-md border border-slate-300 bg-slate-50 px-2 py-2 text-xs text-slate-700 outline-none focus:border-slate-400 focus:bg-white"
+                    className="w-full rounded-md border border-border bg-muted px-2 py-2 text-xs text-foreground outline-none focus:border-slate-400 focus:bg-white"
                     value={novelTitleDraft}
                     onChange={(event) => setNovelTitleDraft(event.target.value)}
                     placeholder="输入新小说标题"
@@ -362,24 +362,24 @@ export default function CreativeHubSidebar({
           />
         )}
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-3">
+        <div className="rounded-2xl border border-border bg-white p-3">
           <div className="mb-3 flex items-center justify-between gap-2">
-            <div className="text-xs font-medium text-slate-500">当前推进</div>
+            <div className="text-xs font-medium text-muted-foreground">当前推进</div>
             <Badge variant="outline">{activeStage}</Badge>
           </div>
           {latestTurnSummary ? (
-            <div className="space-y-3 text-sm text-slate-700">
-              <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
-                <div className="text-[11px] font-medium uppercase tracking-[0.16em] text-slate-500">已执行动作</div>
-                <div className="mt-2 leading-6 text-slate-800">{latestTurnSummary.actionSummary}</div>
+            <div className="space-y-3 text-sm text-foreground">
+              <div className="rounded-xl border border-border bg-muted p-3">
+                <div className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">已执行动作</div>
+                <div className="mt-2 leading-6 text-foreground">{latestTurnSummary.actionSummary}</div>
               </div>
-              <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
-                <div className="text-[11px] font-medium uppercase tracking-[0.16em] text-slate-500">影响与变化</div>
-                <div className="mt-2 leading-6 text-slate-800">{latestTurnSummary.impactSummary}</div>
+              <div className="rounded-xl border border-border bg-muted p-3">
+                <div className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">影响与变化</div>
+                <div className="mt-2 leading-6 text-foreground">{latestTurnSummary.impactSummary}</div>
               </div>
-              <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
-                <div className="text-[11px] font-medium uppercase tracking-[0.16em] text-slate-500">建议下一步</div>
-                <div className="mt-2 leading-6 text-slate-800">{latestTurnSummary.nextSuggestion}</div>
+              <div className="rounded-xl border border-border bg-muted p-3">
+                <div className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">建议下一步</div>
+                <div className="mt-2 leading-6 text-foreground">{latestTurnSummary.nextSuggestion}</div>
                 {latestTurnSummary.nextSuggestion.trim() ? (
                   <div className="mt-3">
                     <Button
@@ -395,7 +395,7 @@ export default function CreativeHubSidebar({
               </div>
             </div>
           ) : (
-            <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50 p-3 text-xs text-slate-500">
+            <div className="rounded-xl border border-dashed border-border bg-muted p-3 text-xs text-muted-foreground">
               当前线程还没有完成的回合摘要。发起一次创作请求后，这里会显示本轮推进和下一步建议。
             </div>
           )}
@@ -429,30 +429,30 @@ export default function CreativeHubSidebar({
           ) : null}
         </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-3">
-          <div className="mb-3 text-xs font-medium text-slate-500">创作阶段</div>
+        <div className="rounded-2xl border border-border bg-white p-3">
+          <div className="mb-3 text-xs font-medium text-muted-foreground">创作阶段</div>
           {productionStatus ? (
             <div className="space-y-3">
               <div className="grid gap-2 sm:grid-cols-2">
-                <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
-                  <div className="text-[11px] uppercase tracking-[0.16em] text-slate-500">当前阶段</div>
-                  <div className="mt-2 text-sm font-medium text-slate-900">{productionStatus.currentStage}</div>
+                <div className="rounded-xl border border-border bg-muted p-3">
+                  <div className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">当前阶段</div>
+                  <div className="mt-2 text-sm font-medium text-foreground">{productionStatus.currentStage}</div>
                 </div>
-                <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
-                  <div className="text-[11px] uppercase tracking-[0.16em] text-slate-500">章节进度</div>
-                  <div className="mt-2 text-sm font-medium text-slate-900">
+                <div className="rounded-xl border border-border bg-muted p-3">
+                  <div className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">章节进度</div>
+                  <div className="mt-2 text-sm font-medium text-foreground">
                     {productionStatus.chapterCount}/{productionStatus.targetChapterCount}
                   </div>
                 </div>
-                <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
-                  <div className="text-[11px] uppercase tracking-[0.16em] text-slate-500">资产完成</div>
-                  <div className="mt-2 text-sm font-medium text-slate-900">
+                <div className="rounded-xl border border-border bg-muted p-3">
+                  <div className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">资产完成</div>
+                  <div className="mt-2 text-sm font-medium text-foreground">
                     {completedAssets}/{productionStatus.assetStages.length}
                   </div>
                 </div>
-                <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
-                  <div className="text-[11px] uppercase tracking-[0.16em] text-slate-500">生产流水线</div>
-                  <div className="mt-2 text-sm font-medium text-slate-900">
+                <div className="rounded-xl border border-border bg-muted p-3">
+                  <div className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">生产流水线</div>
+                  <div className="mt-2 text-sm font-medium text-foreground">
                     {productionStatus.pipelineStatus ?? "未启动"}
                   </div>
                 </div>
@@ -469,22 +469,22 @@ export default function CreativeHubSidebar({
               </div>
             </div>
           ) : (
-            <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50 p-3 text-xs text-slate-500">
+            <div className="rounded-xl border border-dashed border-border bg-muted p-3 text-xs text-muted-foreground">
               当前线程还没有整本生产状态。选择一本小说并发起整本创作后，这里会显示阶段与进度。
             </div>
           )}
         </div>
 
-        <details className="rounded-2xl border border-slate-200 bg-white p-3">
-          <summary className="cursor-pointer list-none text-xs font-medium text-slate-500">
+        <details className="rounded-2xl border border-border bg-white p-3">
+          <summary className="cursor-pointer list-none text-xs font-medium text-muted-foreground">
             调试信息
           </summary>
           <div className="mt-3 space-y-3">
-            <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
-              <div className="mb-2 text-[11px] font-medium uppercase tracking-[0.16em] text-slate-500">
+            <div className="rounded-xl border border-border bg-muted p-3">
+              <div className="mb-2 text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
                 运行细节显示
               </div>
-              <div className="flex items-center justify-between gap-3 text-xs text-slate-700">
+              <div className="flex items-center justify-between gap-3 text-xs text-foreground">
                 <span>
                   当前默认
                   {defaultRuntimeDetailsCollapsed ? "折叠" : "展开"}
@@ -496,16 +496,16 @@ export default function CreativeHubSidebar({
               </div>
             </div>
 
-            <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 space-y-2">
-              <div className="text-[11px] font-medium uppercase tracking-[0.16em] text-slate-500">线程状态</div>
+            <div className="rounded-xl border border-border bg-muted p-3 space-y-2">
+              <div className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">线程状态</div>
               <DebugRow label="线程 ID" value={thread?.id ?? "-"} />
               <DebugRow label="线程状态" value={threadStatusLabel(thread?.status)} />
               <DebugRow label="最新 Run" value={latestRunId ?? "-"} />
               <DebugRow label="当前 Checkpoint" value={currentCheckpointId ?? "-"} />
             </div>
 
-            <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 space-y-2">
-              <div className="text-[11px] font-medium uppercase tracking-[0.16em] text-slate-500">模型路由</div>
+            <div className="rounded-xl border border-border bg-muted p-3 space-y-2">
+              <div className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">模型路由</div>
               <DebugRow label="Provider" value={modelSummary.provider} />
               <DebugRow label="Model" value={modelSummary.model} />
               <DebugRow label="Temperature" value={String(modelSummary.temperature)} />
@@ -513,8 +513,8 @@ export default function CreativeHubSidebar({
             </div>
 
             {latestTurnSummary ? (
-              <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 space-y-2">
-                <div className="text-[11px] font-medium uppercase tracking-[0.16em] text-slate-500">最近回合</div>
+              <div className="rounded-xl border border-border bg-muted p-3 space-y-2">
+                <div className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">最近回合</div>
                 <DebugRow label="回合状态" value={turnStatusLabel(latestTurnSummary.status)} />
                 <DebugRow label="回合阶段" value={latestTurnSummary.currentStage} />
                 <DebugRow label="摘要 Checkpoint" value={latestTurnSummary.checkpointId ?? "-"} />

@@ -37,7 +37,7 @@ export default function CreativeHubPage() {
 
   return (
     <div className="space-y-4">
-      <Card className="border-slate-200 bg-gradient-to-r from-slate-50 to-white">
+      <Card className="border-border bg-gradient-to-r from-slate-50 to-white">
         <CardHeader className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
           <div className="space-y-1">
             <CardTitle>创作中枢</CardTitle>

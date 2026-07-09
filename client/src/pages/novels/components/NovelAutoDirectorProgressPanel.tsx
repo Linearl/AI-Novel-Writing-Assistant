@@ -257,7 +257,7 @@ function stepClasses(status: DirectorStepVisualStatus): string {
 
 function stepBadgeClasses(status: DirectorStepVisualStatus): string {
   if (status === "completed") {
-    return "bg-emerald-600 text-white";
+    return "bg-success text-white";
   }
   if (status === "running") {
     return "bg-sky-600 text-white";

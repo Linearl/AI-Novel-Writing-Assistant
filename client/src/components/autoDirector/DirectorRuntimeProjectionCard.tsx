@@ -158,10 +158,10 @@ function statusIcon(status: DirectorRuntimeProjectionStatus) {
 
 function riskBadgeClassName(level: NonNullable<DirectorRuntimeProjection["visibleRiskBadges"]>[number]["level"]) {
   if (level === "danger") {
-    return "border-red-200 bg-red-50 text-red-700";
+    return "border-red-200 bg-red-50 text-destructive";
   }
   if (level === "warning") {
-    return "border-amber-200 bg-amber-50 text-amber-700";
+    return "border-amber-200 bg-amber-50 text-warning";
   }
   return "border-sky-200 bg-sky-50 text-sky-700";
 }
@@ -299,7 +299,7 @@ export default function DirectorRuntimeProjectionCard({
 
       {projection.missingArtifactTypes && projection.missingArtifactTypes.length > 0 && !compact ? (
         <details className="mt-2">
-          <summary className="cursor-pointer text-xs text-amber-600">
+          <summary className="cursor-pointer text-xs text-warning">
             缺少 {projection.missingArtifactTypes.length} 项规划资源 ▸
           </summary>
           <div className="mt-1 space-y-1 pl-2">

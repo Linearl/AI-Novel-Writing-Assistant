@@ -37,11 +37,11 @@ export default function WritingFormulaCleanPanel(props: WritingFormulaCleanPanel
       </CardHeader>
       <CardContent className="space-y-5">
         {selectedProfile ? (
-          <div className="rounded-2xl border bg-slate-50/70 px-4 py-3 text-sm leading-7 text-slate-700">
+          <div className="rounded-2xl border bg-muted/70 px-4 py-3 text-sm leading-7 text-slate-700">
             当前按「{selectedProfile.name}」这套写法来做检测和修正。这里只处理正文的 AI 味，不会改写法字段本身。
           </div>
         ) : (
-          <div className="rounded-2xl border bg-slate-50/70 px-4 py-3 text-sm leading-7 text-slate-700">
+          <div className="rounded-2xl border bg-muted/70 px-4 py-3 text-sm leading-7 text-slate-700">
             先从列表里选中一套写法，再来检测正文。
           </div>
         )}
@@ -56,7 +56,7 @@ export default function WritingFormulaCleanPanel(props: WritingFormulaCleanPanel
           {antiAiRuleNames.length > 0 ? (
             <div className="flex flex-wrap gap-2">
               {antiAiRuleNames.map((ruleName) => (
-                <div key={`${selectedProfile?.id}-${ruleName}`} className="rounded-full border bg-slate-50 px-3 py-1 text-sm text-slate-700">
+                <div key={`${selectedProfile?.id}-${ruleName}`} className="rounded-full border bg-muted px-3 py-1 text-sm text-slate-700">
                   {ruleName}
                 </div>
               ))}
@@ -105,7 +105,7 @@ export default function WritingFormulaCleanPanel(props: WritingFormulaCleanPanel
                   <div key={`${item.ruleId}-${index}`} className="rounded-xl border p-3">
                     <div className="font-medium text-slate-900">{item.ruleName}</div>
                     <div className="mt-1 text-xs leading-6 text-slate-500">{item.reason}</div>
-                    <div className="mt-2 whitespace-pre-wrap rounded-lg bg-slate-50 px-3 py-2 text-xs text-slate-700">
+                    <div className="mt-2 whitespace-pre-wrap rounded-lg bg-muted px-3 py-2 text-xs text-slate-700">
                       {item.excerpt}
                     </div>
                   </div>

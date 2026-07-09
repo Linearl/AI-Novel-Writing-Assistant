@@ -33,7 +33,7 @@ Textarea 样式 30 处复制粘贴、状态 Badge 31 处各自定义、Loading 5
 | T3 | 新增 Loading / EmptyState 组件 + 替换 | P1 | 1h | ✅ 完成 |
 | T4 | 将绕过 Card 的 div 替换为 Card 组件 | P1 | 45min | ❌ 误诊（实际绕过极少，TSX 中的 bg-muted/bg-background 是刻意区分） |
 | T5 | 拆分 index.css 移动端媒体查询 | P1 | 1h | ⏭ 跳过（需单独做视觉回归验证，风险较高） |
-| T6 | 统一语义化 token（消除原始色板硬编码） | P2 | 1h | ⏭ 跳过（211 处替换涉及 dark mode 回归风险，需单独处理） |
+| T6 | 统一语义化 token（消除原始色板硬编码） | P2 | 1h | ✅ 完成 |
 | T7 | 全量类型检查 + 构建验证 + 暗色模式回归 | P0 | 30min | ✅ 完成 |
 
 ---

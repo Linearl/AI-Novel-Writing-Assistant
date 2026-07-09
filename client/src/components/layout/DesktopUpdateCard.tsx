@@ -48,7 +48,7 @@ export default function DesktopUpdateCard() {
   const showCheckButton = updater.status !== "downloading" && !showInstallButton;
 
   return (
-    <Card className="border-slate-300/80 bg-slate-50/80">
+    <Card className="border-border/80 bg-muted/80">
       <CardHeader>
         <div className="flex flex-wrap items-center gap-2">
           <CardTitle>Desktop Beta Channel</CardTitle>

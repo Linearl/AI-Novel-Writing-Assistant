@@ -54,8 +54,8 @@ function FieldBlock(props: {
   return (
     <label className="space-y-2">
       <div className="space-y-1">
-        <div className="text-sm font-medium text-slate-900">{props.label}</div>
-        <div className="text-xs leading-6 text-slate-500">{props.hint}</div>
+        <div className="text-sm font-medium text-foreground">{props.label}</div>
+        <div className="text-xs leading-6 text-muted-foreground">{props.hint}</div>
       </div>
       {props.children}
     </label>
@@ -65,11 +65,11 @@ function FieldBlock(props: {
 const FEATURE_DECISION_META: Record<NonNullable<StyleProfileFeature["selectedDecision"]>, { label: string; className: string }> = {
   keep: {
     label: "保留",
-    className: "border-emerald-200 bg-emerald-50 text-emerald-700",
+    className: "border-emerald-200 bg-emerald-50 text-success",
   },
   weaken: {
     label: "弱化",
-    className: "border-amber-200 bg-amber-50 text-amber-700",
+    className: "border-amber-200 bg-amber-50 text-warning",
   },
   remove: {
     label: "剥离",
@@ -138,33 +138,33 @@ function RuleFieldCard(props: {
   const entries = buildReadableRuleEntries(props.section, parsedRules);
 
   return (
-    <div className="space-y-2 rounded-2xl border bg-slate-50/70 p-4">
+    <div className="space-y-2 rounded-2xl border bg-muted/70 p-4">
       <div className="space-y-1">
-        <div className="text-sm font-medium text-slate-900">{props.title}</div>
-        <div className="text-xs leading-6 text-slate-500">{props.hint}</div>
+        <div className="text-sm font-medium text-foreground">{props.title}</div>
+        <div className="text-xs leading-6 text-muted-foreground">{props.hint}</div>
       </div>
 
       {entries.length > 0 ? (
         <div className="grid gap-2">
           {entries.map((entry) => (
             <div key={`${props.section}-${entry.key}`} className="rounded-xl border bg-white px-3 py-3">
-              <div className="text-xs font-medium uppercase tracking-[0.16em] text-slate-500">{entry.label}</div>
-              <div className="mt-1 text-sm leading-6 text-slate-700">{entry.value}</div>
+              <div className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">{entry.label}</div>
+              <div className="mt-1 text-sm leading-6 text-foreground">{entry.value}</div>
             </div>
           ))}
         </div>
       ) : (
-        <div className="rounded-xl border border-dashed bg-white px-3 py-3 text-sm leading-6 text-slate-500">
+        <div className="rounded-xl border border-dashed bg-white px-3 py-3 text-sm leading-6 text-muted-foreground">
           这块规则当前还没有可读字段。你可以先依赖上面的简介和反 AI 规则，确实需要精细兼容时再展开高级 JSON。
         </div>
       )}
 
       <details className="rounded-xl border bg-white">
-        <summary className="cursor-pointer list-none px-3 py-3 text-sm font-medium text-slate-700">
+        <summary className="cursor-pointer list-none px-3 py-3 text-sm font-medium text-foreground">
           查看或编辑高级 JSON
         </summary>
         <div className="space-y-3 border-t px-3 py-3">
-          <div className="text-xs leading-6 text-slate-500">
+          <div className="text-xs leading-6 text-muted-foreground">
             这里保留原始 JSON 入口，主要用于兼容旧资产或做精细调参。常规情况下先看上面的可读字段即可。
           </div>
           {parseError ? (
@@ -173,7 +173,7 @@ function RuleFieldCard(props: {
             </div>
           ) : null}
           <Textarea
-            className="min-h-[190px] rounded-xl bg-slate-50 font-mono text-xs"
+            className="min-h-[190px] rounded-xl bg-muted font-mono text-xs"
             value={props.value}
             onChange={(event) => props.onChange(event.target.value)}
           />
@@ -226,15 +226,15 @@ export default function WritingFormulaEditorPanel(props: WritingFormulaEditorPan
               </div>
             ) : null}
 
-            <div className="rounded-2xl border bg-slate-50/70 px-4 py-4 text-sm leading-7 text-slate-700">
+            <div className="rounded-2xl border bg-muted/70 px-4 py-4 text-sm leading-7 text-foreground">
               如果你不想一上来就面对一堆技术字段，先维护这四块最重要：写法名称、简介、适用题材、反 AI 规则。
               下面四组高级规则是给系统更精细的控制层，不熟悉时可以先少动。
             </div>
 
             <div className="space-y-4 rounded-2xl border p-4">
               <div className="space-y-1">
-                <div className="text-base font-semibold text-slate-950">基础定位</div>
-                <div className="text-sm leading-6 text-slate-500">
+                <div className="text-base font-semibold text-foreground">基础定位</div>
+                <div className="text-sm leading-6 text-muted-foreground">
                   先把这套写法到底想写成什么感觉讲清楚，列表页展开时也会优先展示这里的内容。
                 </div>
               </div>
@@ -295,8 +295,8 @@ export default function WritingFormulaEditorPanel(props: WritingFormulaEditorPan
             || editor.sourceContent.trim() ? (
               <div className="space-y-4 rounded-2xl border p-4">
                 <div className="space-y-1">
-                  <div className="text-base font-semibold text-slate-950">原文依据与提取特征</div>
-                  <div className="text-sm leading-6 text-slate-500">
+                  <div className="text-base font-semibold text-foreground">原文依据与提取特征</div>
+                  <div className="text-sm leading-6 text-muted-foreground">
                     这部分是这套写法的“证据层”。从文本或知识库原文提取出来的写法，后续回看和重提取都会依赖这里。
                     这里会把特征说明、证据、分数、预设建议和推荐规则一起展示出来。
                   </div>
@@ -317,8 +317,8 @@ export default function WritingFormulaEditorPanel(props: WritingFormulaEditorPan
                 <div className="rounded-2xl border p-3">
                   <div className="mb-2 flex items-center justify-between gap-3">
                     <div>
-                      <div className="text-sm font-medium text-slate-900">提取特征启用</div>
-                      <div className="text-xs leading-6 text-slate-500">
+                      <div className="text-sm font-medium text-foreground">提取特征启用</div>
+                      <div className="text-xs leading-6 text-muted-foreground">
                         这里会列出原文里抽出来的风格特征。勾选表示继续保留到这套写法里。
                         {editor.extractedFeatures.length > 0 ? ` 当前共 ${editor.extractedFeatures.length} 项。` : ""}
                       </div>
@@ -353,28 +353,28 @@ export default function WritingFormulaEditorPanel(props: WritingFormulaEditorPan
                             <span className="mt-1 block text-xs leading-6 text-muted-foreground">{feature.description}</span>
                             <span className="mt-1 block text-xs leading-6 text-muted-foreground">证据：{feature.evidence}</span>
                             <span className="mt-2 grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
-                              <span className="rounded-lg bg-slate-100 px-2 py-1 text-[11px] font-medium text-slate-600">
+                              <span className="rounded-lg bg-secondary px-2 py-1 text-[11px] font-medium text-muted-foreground">
                                 重要度 {formatScorePercent(feature.importance)}
                               </span>
-                              <span className="rounded-lg bg-slate-100 px-2 py-1 text-[11px] font-medium text-slate-600">
+                              <span className="rounded-lg bg-secondary px-2 py-1 text-[11px] font-medium text-muted-foreground">
                                 仿写价值 {formatScorePercent(feature.imitationValue)}
                               </span>
-                              <span className="rounded-lg bg-slate-100 px-2 py-1 text-[11px] font-medium text-slate-600">
+                              <span className="rounded-lg bg-secondary px-2 py-1 text-[11px] font-medium text-muted-foreground">
                                 迁移性 {formatScorePercent(feature.transferability)}
                               </span>
-                              <span className="rounded-lg bg-slate-100 px-2 py-1 text-[11px] font-medium text-slate-600">
+                              <span className="rounded-lg bg-secondary px-2 py-1 text-[11px] font-medium text-muted-foreground">
                                 指纹风险 {formatScorePercent(feature.fingerprintRisk)}
                               </span>
                             </span>
                             <span className="mt-2 flex flex-wrap gap-2">
                               {listRulePatchSections(feature.keepRulePatch).length > 0 ? (
                                 listRulePatchSections(feature.keepRulePatch).map((label) => (
-                                  <span key={`${feature.id}-${label}`} className="rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5 text-[11px] text-slate-600">
+                                  <span key={`${feature.id}-${label}`} className="rounded-full border border-border bg-muted px-2 py-0.5 text-[11px] text-muted-foreground">
                                     {label}规则
                                   </span>
                                 ))
                               ) : (
-                                <span className="rounded-full border border-dashed border-slate-200 px-2 py-0.5 text-[11px] text-slate-500">
+                                <span className="rounded-full border border-dashed border-border px-2 py-0.5 text-[11px] text-muted-foreground">
                                   当前只有摘要级规则
                                 </span>
                               )}
@@ -385,10 +385,10 @@ export default function WritingFormulaEditorPanel(props: WritingFormulaEditorPan
                       </div>
 
                       {extractionPresets.length > 0 ? (
-                        <div className="rounded-2xl border bg-slate-50/70 p-3">
+                        <div className="rounded-2xl border bg-muted/70 p-3">
                           <div className="space-y-1">
-                            <div className="text-sm font-medium text-slate-900">提取预设建议</div>
-                            <div className="text-xs leading-6 text-slate-500">
+                            <div className="text-sm font-medium text-foreground">提取预设建议</div>
+                            <div className="text-xs leading-6 text-muted-foreground">
                               这里展示模型给出的三套保留方案。当前保存到写法里的选择会单独标出来，方便你判断是不是要换一种保留力度。
                             </div>
                           </div>
@@ -402,14 +402,14 @@ export default function WritingFormulaEditorPanel(props: WritingFormulaEditorPan
                                   className={`rounded-xl border bg-white p-3 ${isSelected ? "border-primary ring-1 ring-primary/20" : ""}`}
                                 >
                                   <div className="flex items-center justify-between gap-2">
-                                    <div className="text-sm font-medium text-slate-900">{preset.label}</div>
+                                    <div className="text-sm font-medium text-foreground">{preset.label}</div>
                                     {isSelected ? (
                                       <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-medium text-primary">
                                         当前套用
                                       </span>
                                     ) : null}
                                   </div>
-                                  <div className="mt-1 text-xs leading-6 text-slate-500">{preset.summary}</div>
+                                  <div className="mt-1 text-xs leading-6 text-muted-foreground">{preset.summary}</div>
                                   <div className="mt-3 flex flex-wrap gap-2">
                                     <StatusBadge variant="success" className="border border-emerald-200">
                                       保留 {counts.keep}
@@ -429,10 +429,10 @@ export default function WritingFormulaEditorPanel(props: WritingFormulaEditorPan
                       ) : null}
 
                       {selectedProfile.extractionAntiAiRuleKeys.length > 0 ? (
-                        <div className="rounded-2xl border bg-slate-50/70 p-3">
+                        <div className="rounded-2xl border bg-muted/70 p-3">
                           <div className="space-y-1">
-                            <div className="text-sm font-medium text-slate-900">模型建议的反 AI 规则</div>
-                            <div className="text-xs leading-6 text-slate-500">
+                            <div className="text-sm font-medium text-foreground">模型建议的反 AI 规则</div>
+                            <div className="text-xs leading-6 text-muted-foreground">
                               这些是提取阶段推荐一起绑定的规则。已绑定会直接标出来，未绑定的也会继续保留原始建议名。
                             </div>
                           </div>
@@ -445,8 +445,8 @@ export default function WritingFormulaEditorPanel(props: WritingFormulaEditorPan
                                   key={ruleKey}
                                   className={`rounded-full border px-2 py-1 text-xs ${
                                     isBound
-                                      ? "border-emerald-200 bg-emerald-50 text-emerald-700"
-                                      : "border-slate-200 bg-white text-slate-600"
+                                      ? "border-emerald-200 bg-emerald-50 text-success"
+                                      : "border-border bg-white text-muted-foreground"
                                   }`}
                                 >
                                   {matchedRule?.name ?? ruleKey}
@@ -469,8 +469,8 @@ export default function WritingFormulaEditorPanel(props: WritingFormulaEditorPan
 
             <div className="space-y-4 rounded-2xl border p-4">
               <div className="space-y-1">
-                <div className="text-base font-semibold text-slate-950">给系统看的分析草稿</div>
-                <div className="text-sm leading-6 text-slate-500">
+                <div className="text-base font-semibold text-foreground">给系统看的分析草稿</div>
+                <div className="text-sm leading-6 text-muted-foreground">
                   这里不是给读者看的文案，而是给你自己和系统回看时用的补充说明。可以写为什么保留这套写法、它最重要的气质是什么。
                 </div>
               </div>
@@ -484,8 +484,8 @@ export default function WritingFormulaEditorPanel(props: WritingFormulaEditorPan
 
             <div className="space-y-4 rounded-2xl border p-4">
               <div className="space-y-1">
-                <div className="text-base font-semibold text-slate-950">高级规则块</div>
-                <div className="text-sm leading-6 text-slate-500">
+                <div className="text-base font-semibold text-foreground">高级规则块</div>
+                <div className="text-sm leading-6 text-muted-foreground">
                   这四块是系统真正执行时会读取的机器规则层。不了解字段含义时，可以先看标题和说明，再决定是否要改。
                   如果当前主要显示“总述”字段，说明这次提取更多给出了摘要级规则，细颗粒兼容字段还不算多。
                 </div>
@@ -529,8 +529,8 @@ export default function WritingFormulaEditorPanel(props: WritingFormulaEditorPan
 
             <div className="space-y-4 rounded-2xl border p-4">
               <div className="space-y-1">
-                <div className="text-base font-semibold text-slate-950">绑定反 AI 规则</div>
-                <div className="text-sm leading-6 text-slate-500">
+                <div className="text-base font-semibold text-foreground">绑定反 AI 规则</div>
+                <div className="text-sm leading-6 text-muted-foreground">
                   这里决定系统在检测和修正文稿时优先防什么问题。规则绑得越清楚，“去 AI 味”越有方向感。
                 </div>
               </div>
@@ -551,8 +551,8 @@ export default function WritingFormulaEditorPanel(props: WritingFormulaEditorPan
               </div>
             </div>
 
-            <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border bg-slate-50/70 px-4 py-3">
-              <div className="text-sm leading-6 text-slate-600">
+            <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border bg-muted/70 px-4 py-3">
+              <div className="text-sm leading-6 text-muted-foreground">
                 保存后，这套写法的展开详情、去 AI 味检测和应用测试都会同步读取新设定。
               </div>
               <Button onClick={onSave} disabled={savePending || !editor.name.trim()}>

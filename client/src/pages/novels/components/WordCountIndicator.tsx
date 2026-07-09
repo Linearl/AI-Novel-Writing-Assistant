@@ -41,13 +41,13 @@ function getStatus(actual: number, target: WordCountTarget): WordCountStatus {
 function statusColor(status: WordCountStatus): string {
   switch (status) {
     case "under":
-      return "text-amber-600";
+      return "text-warning";
     case "in_range":
-      return "text-emerald-600";
+      return "text-success";
     case "close_over":
-      return "text-amber-600";
+      return "text-warning";
     case "over":
-      return "text-red-600";
+      return "text-destructive";
   }
 }
 

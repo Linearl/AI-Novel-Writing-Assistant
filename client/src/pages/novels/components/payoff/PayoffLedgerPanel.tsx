@@ -134,7 +134,7 @@ function PayoffItemRow({ item, expiryThreshold }: PayoffItemRowProps) {
           {STATUS_LABEL[ns]}
         </Badge>
         {isExpired && (
-          <span className="text-[10px] font-semibold uppercase tracking-wide text-red-600">
+          <span className="text-[10px] font-semibold uppercase tracking-wide text-destructive">
             已过期
           </span>
         )}
@@ -158,7 +158,7 @@ function PayoffItemRow({ item, expiryThreshold }: PayoffItemRowProps) {
         <span>
           跨越 <strong className="text-foreground">{elapsed}</strong> 章
           {isExpired && elapsed > expiryThreshold && (
-            <span className="ml-1 text-red-600">
+            <span className="ml-1 text-destructive">
               (阈值 {expiryThreshold})
             </span>
           )}
@@ -174,7 +174,7 @@ function PayoffItemRow({ item, expiryThreshold }: PayoffItemRowProps) {
               className={cn(
                 "inline-block rounded px-1.5 py-0.5 text-[10px]",
                 signal.severity === "critical" || signal.severity === "high"
-                  ? "bg-red-100 text-red-700"
+                  ? "bg-red-100 text-destructive"
                   : "bg-muted text-muted-foreground",
               )}
             >

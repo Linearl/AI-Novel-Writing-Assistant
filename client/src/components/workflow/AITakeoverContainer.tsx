@@ -47,7 +47,7 @@ function modeLabel(mode: AITakeoverMode): string {
 function shellClass(mode: AITakeoverMode): string {
   switch (mode) {
     case "loading":
-      return "border-slate-300/60 bg-slate-50/80";
+      return "border-border/60 bg-muted/80";
     case "failed":
       return "border-destructive/35 bg-destructive/5";
     case "action_required":
@@ -63,7 +63,7 @@ function shellClass(mode: AITakeoverMode): string {
 function progressShellClass(mode: AITakeoverMode): string {
   switch (mode) {
     case "loading":
-      return "border-slate-300/60 bg-background/75";
+      return "border-border/60 bg-background/75";
     case "failed":
       return "border-destructive/20 bg-destructive/[0.03]";
     case "action_required":

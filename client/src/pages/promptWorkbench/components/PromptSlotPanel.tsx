@@ -275,12 +275,12 @@ function DriftedDetail({
       <div className="flex items-start justify-between gap-3">
         <div className="text-xs font-medium text-amber-900">
           提示词出厂文案已更新，你的覆盖值基于旧版本。
-          {item.changelog && <span className="ml-1 text-amber-700">更新说明：{item.changelog}</span>}
+          {item.changelog && <span className="ml-1 text-warning">更新说明：{item.changelog}</span>}
         </div>
         <button
           type="button"
           onClick={() => setExpanded((v) => !v)}
-          className="shrink-0 text-xs text-amber-700 hover:underline"
+          className="shrink-0 text-xs text-warning hover:underline"
         >
           {expanded ? "收起" : "查看对比"}
         </button>
@@ -816,7 +816,7 @@ export function PromptSlotPanel({ prompt }: { prompt: PromptCatalogItem }) {
               </div>
             )}
             {saveMutation.isSuccess && (
-              <div className="flex items-center gap-2 text-sm text-emerald-700">
+              <div className="flex items-center gap-2 text-sm text-success">
                 <Sparkles className="h-4 w-4" />
                 保存成功，下次生成时生效。
               </div>

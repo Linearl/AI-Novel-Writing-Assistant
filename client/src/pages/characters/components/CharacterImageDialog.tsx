@@ -125,9 +125,9 @@ export function CharacterImageDialog({
     : "原链路 Prompt";
   const currentSendModeClass = promptMode === "direct"
     ? (directPromptSource === "optimized"
-      ? "rounded-full bg-emerald-50 px-3 py-1 text-emerald-700"
-      : "rounded-full bg-amber-50 px-3 py-1 text-amber-700")
-    : "rounded-full bg-slate-100 px-3 py-1 text-slate-700";
+      ? "rounded-full bg-emerald-50 px-3 py-1 text-success"
+      : "rounded-full bg-amber-50 px-3 py-1 text-warning")
+    : "rounded-full bg-secondary px-3 py-1 text-foreground";
 
   const activateDirectPrompt = (value: string, source: DirectPromptSource) => {
     setDirectPrompt(value);
@@ -240,35 +240,35 @@ export function CharacterImageDialog({
         onOpenChange(nextOpen);
       }}
     >
-      <DialogContent className="flex max-h-[92vh] w-[96vw] max-w-[980px] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white p-0">
-        <DialogHeader className="shrink-0 border-b border-slate-200 px-6 pb-4 pt-5">
-          <DialogTitle className="text-[22px] font-semibold tracking-tight text-slate-900">
+      <DialogContent className="flex max-h-[92vh] w-[96vw] max-w-[980px] flex-col overflow-hidden rounded-2xl border border-border bg-white p-0">
+        <DialogHeader className="shrink-0 border-b border-border px-6 pb-4 pt-5">
+          <DialogTitle className="text-[22px] font-semibold tracking-tight text-foreground">
             生成角色形象图
             {character ? `：${character.name}` : ""}
           </DialogTitle>
         </DialogHeader>
 
         <div className="flex-1 space-y-4 overflow-y-auto px-6 py-5">
-          <section className="space-y-2 rounded-2xl border border-slate-200 bg-slate-50/65 p-4">
+          <section className="space-y-2 rounded-2xl border border-border bg-muted/65 p-4">
             <div className="space-y-1">
-              <div className="text-sm font-semibold text-slate-900">角色描述 / AI优化输入</div>
-              <div className="text-xs leading-5 text-slate-500">
+              <div className="text-sm font-semibold text-foreground">角色描述 / AI优化输入</div>
+              <div className="text-xs leading-5 text-muted-foreground">
                 这里填写角色描述。点击“AI优化Prompt”后，会把这段描述整理成图片生成专用 prompt。
               </div>
             </div>
             <Textarea
-              className="min-h-[190px] max-h-[38vh] rounded-2xl border-slate-200 bg-white p-3 px-4 text-slate-900 shadow-sm outline-none transition focus:border-slate-400 focus:ring-2 focus:ring-slate-200"
+              className="min-h-[190px] max-h-[38vh] rounded-2xl border-border bg-white p-3 px-4 text-foreground shadow-sm outline-none transition focus:border-slate-400 focus:ring-2 focus:ring-border"
               placeholder="输入角色描述，越具体越好。"
               value={sourcePrompt}
               onChange={(event) => updateSourcePrompt(event.target.value)}
             />
           </section>
 
-          <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+          <section className="rounded-2xl border border-border bg-white p-4 shadow-sm">
             <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
               <div className="space-y-2">
-                <div className="text-xs font-medium uppercase tracking-[0.14em] text-slate-400">优化输出语言</div>
-                <div className="inline-flex w-full rounded-xl border border-slate-200 bg-slate-50 p-1 sm:w-auto">
+                <div className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">优化输出语言</div>
+                <div className="inline-flex w-full rounded-xl border border-border bg-muted p-1 sm:w-auto">
                   <Button
                     type="button"
                     variant={optimizedPromptLanguage === "zh" ? "default" : "ghost"}
@@ -295,7 +295,7 @@ export function CharacterImageDialog({
                   <Button
                     type="button"
                     variant="outline"
-                    className="whitespace-nowrap rounded-xl border-slate-300 bg-white px-4"
+                    className="whitespace-nowrap rounded-xl border-border bg-white px-4"
                     onClick={() => optimizeMutation.mutate()}
                     disabled={optimizeMutation.isPending || !sourcePrompt.trim()}
                   >
@@ -304,7 +304,7 @@ export function CharacterImageDialog({
                   <Button
                     type="button"
                     variant="ghost"
-                    className="whitespace-nowrap rounded-xl px-4 text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                    className="whitespace-nowrap rounded-xl px-4 text-muted-foreground hover:bg-secondary hover:text-foreground"
                     onClick={restoreOriginalChainPrompt}
                     disabled={promptMode !== "direct" && !hasDirectPrompt}
                   >
@@ -313,22 +313,22 @@ export function CharacterImageDialog({
                 </div>
 
                 <div className="flex flex-wrap items-center gap-2 text-sm xl:justify-end">
-                  <span className="text-slate-500">当前发送模式</span>
+                  <span className="text-muted-foreground">当前发送模式</span>
                   <span className={currentSendModeClass}>{currentSendModeLabel}</span>
                 </div>
               </div>
             </div>
           </section>
 
-          <section className="space-y-2 rounded-2xl border border-slate-200 bg-slate-50/55 p-4">
+          <section className="space-y-2 rounded-2xl border border-border bg-muted/55 p-4">
             <div className="space-y-1">
-              <div className="text-sm font-semibold text-slate-900">最终发送 Prompt 预览</div>
-              <div className="text-xs leading-5 text-slate-500">
+              <div className="text-sm font-semibold text-foreground">最终发送 Prompt 预览</div>
+              <div className="text-xs leading-5 text-muted-foreground">
                 这里展示最终会发送给图像模型的 prompt。你可以直接手动编辑；AI 优化后，也可以继续在这里修改。
               </div>
             </div>
             <Textarea
-              className="min-h-[240px] max-h-[42vh] rounded-2xl border-slate-200 bg-white p-3 px-4 text-slate-900 shadow-sm outline-none transition focus:border-slate-400 focus:ring-2 focus:ring-slate-200"
+              className="min-h-[240px] max-h-[42vh] rounded-2xl border-border bg-white p-3 px-4 text-foreground shadow-sm outline-none transition focus:border-slate-400 focus:ring-2 focus:ring-border"
               value={finalPromptPreview}
               onChange={(event) => {
                 activateDirectPrompt(event.target.value, "manual");
@@ -338,22 +338,22 @@ export function CharacterImageDialog({
 
           <div className="grid gap-2 md:grid-cols-2">
             <input
-              className="rounded-xl border border-slate-200 bg-white p-3 text-sm shadow-sm outline-none transition focus:border-slate-400 focus:ring-2 focus:ring-slate-200"
+              className="rounded-xl border border-border bg-white p-3 text-sm shadow-sm outline-none transition focus:border-slate-400 focus:ring-2 focus:ring-border"
               placeholder="风格预设，例如：电影感写实"
               value={imageForm.stylePreset}
               onChange={(event) => updateStylePreset(event.target.value)}
             />
             <input
-              className="rounded-xl border border-slate-200 bg-white p-3 text-sm shadow-sm outline-none transition focus:border-slate-400 focus:ring-2 focus:ring-slate-200"
+              className="rounded-xl border border-border bg-white p-3 text-sm shadow-sm outline-none transition focus:border-slate-400 focus:ring-2 focus:ring-border"
               placeholder="负向提示词，例如：低清晰度、畸形、多余肢体、文字水印"
               value={imageForm.negativePrompt}
               onChange={(event) => setImageForm((prev) => ({ ...prev, negativePrompt: event.target.value }))}
             />
 
             <label className="space-y-1 text-sm">
-              <div className="text-xs font-medium uppercase tracking-[0.14em] text-slate-400">模型厂商</div>
+              <div className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">模型厂商</div>
               <select
-                className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm shadow-sm outline-none transition focus:border-slate-400 focus:ring-2 focus:ring-slate-200"
+                className="h-11 w-full rounded-xl border border-border bg-white px-3 text-sm shadow-sm outline-none transition focus:border-slate-400 focus:ring-2 focus:ring-border"
                 value={imageForm.provider}
                 disabled={imageProviderOptions.length === 0}
                 onChange={(event) =>
@@ -374,9 +374,9 @@ export function CharacterImageDialog({
             </label>
 
             <label className="space-y-1 text-sm">
-              <div className="text-xs font-medium uppercase tracking-[0.14em] text-slate-400">尺寸</div>
+              <div className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">尺寸</div>
               <select
-                className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm shadow-sm outline-none transition focus:border-slate-400 focus:ring-2 focus:ring-slate-200"
+                className="h-11 w-full rounded-xl border border-border bg-white px-3 text-sm shadow-sm outline-none transition focus:border-slate-400 focus:ring-2 focus:ring-border"
                 value={imageForm.size}
                 onChange={(event) =>
                   setImageForm((prev) => ({
@@ -393,9 +393,9 @@ export function CharacterImageDialog({
             </label>
 
             <label className="space-y-1 text-sm md:col-span-2">
-              <div className="text-xs font-medium uppercase tracking-[0.14em] text-slate-400">生成张数</div>
+              <div className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">生成张数</div>
               <select
-                className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm shadow-sm outline-none transition focus:border-slate-400 focus:ring-2 focus:ring-slate-200"
+                className="h-11 w-full rounded-xl border border-border bg-white px-3 text-sm shadow-sm outline-none transition focus:border-slate-400 focus:ring-2 focus:ring-border"
                 value={String(imageForm.count)}
                 onChange={(event) =>
                   setImageForm((prev) => ({
@@ -412,7 +412,7 @@ export function CharacterImageDialog({
           </div>
 
           {activeTask ? (
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm">
+            <div className="rounded-2xl border border-border bg-muted px-4 py-3 text-sm">
               <div>当前任务状态：{IMAGE_STATUS_TEXT[activeTask.status] ?? activeTask.status}</div>
               {activeTask.error ? (
                 <div className="mt-1 text-xs text-destructive">{activeTask.error}</div>

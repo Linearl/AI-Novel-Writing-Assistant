@@ -25,8 +25,8 @@ export interface VolumeGenerationPayload {
   referenceExisting?: boolean;
 }
 
-export function startStrategyGenerationAction(params: {
-  ensureCharacterGuard: () => boolean;
+export async function startStrategyGenerationAction(params: {
+  ensureCharacterGuard: () => Promise<boolean>;
   userPreferredVolumeCount: number | null;
   forceSystemRecommendedVolumeCount: boolean;
   volumeCountGuidance: {
@@ -36,33 +36,34 @@ export function startStrategyGenerationAction(params: {
   };
   hasUnsavedVolumeDraft: boolean;
   generate: (payload: VolumeGenerationPayload) => void;
-}): void {
-  if (!params.ensureCharacterGuard()) {
+}): Promise<void> {
+  if (!(await params.ensureCharacterGuard())) {
     return;
   }
-  // 直接生成，不弹 confirm 阻塞 — 按钮已有 loading 状态反馈
+  // 直接生成，按钮已有 loading 状态反馈
   params.generate({ scope: "strategy" });
 }
 
-export function startStrategyCritiqueAction(params: {
-  ensureCharacterGuard: () => boolean;
+export async function startStrategyCritiqueAction(params: {
+  ensureCharacterGuard: () => Promise<boolean>;
   generate: (payload: VolumeGenerationPayload) => void;
-}): void {
-  if (!params.ensureCharacterGuard()) {
+}): Promise<void> {
+  if (!(await params.ensureCharacterGuard())) {
     return;
   }
   params.generate({ scope: "strategy_critique" });
 }
 
-export function startSkeletonGenerationAction(params: {
-  ensureCharacterGuard: () => boolean;
+export async function startSkeletonGenerationAction(params: {
+  ensureCharacterGuard: () => Promise<boolean>;
   hasUnsavedVolumeDraft: boolean;
+  confirm: (message: string) => Promise<boolean>;
   generate: (payload: VolumeGenerationPayload) => void;
-}): void {
-  if (!params.ensureCharacterGuard()) {
+}): Promise<void> {
+  if (!(await params.ensureCharacterGuard())) {
     return;
   }
-  const confirmed = window.confirm([
+  const confirmed = await params.confirm([
     "将根据当前卷战略建议生成或重生成全书卷骨架。",
     "这一步会清空已有节奏板和相邻卷再平衡建议，但不会直接删除章节正文。",
     params.hasUnsavedVolumeDraft ? "本次会直接使用当前页面草稿作为卷骨架上下文。" : "本次会基于当前卷工作区继续推进。",
@@ -73,16 +74,17 @@ export function startSkeletonGenerationAction(params: {
   params.generate({ scope: "skeleton" });
 }
 
-export function startBeatSheetGenerationAction(params: {
+export async function startBeatSheetGenerationAction(params: {
   volumeId: string;
   normalizedVolumeDraft: VolumePlan[];
   strategyPlan: object | null;
   beatSheets: VolumeBeatSheet[];
-  ensureCharacterGuard: () => boolean;
+  ensureCharacterGuard: () => Promise<boolean>;
   setStructuredMessage: (value: string) => void;
   referenceExisting?: boolean;
+  confirm: (message: string) => Promise<boolean>;
   generate: (payload: VolumeGenerationPayload) => void;
-}): void {
+}): Promise<void> {
   const targetVolume = params.normalizedVolumeDraft.find((volume) => volume.id === params.volumeId);
   if (!targetVolume) {
     params.setStructuredMessage("当前卷不存在，无法生成节奏板。");
@@ -92,12 +94,12 @@ export function startBeatSheetGenerationAction(params: {
     params.setStructuredMessage("请先生成卷战略建议，再生成当前卷节奏板。");
     return;
   }
-  if (!params.ensureCharacterGuard()) {
+  if (!(await params.ensureCharacterGuard())) {
     return;
   }
   const existingBeatSheet = findBeatSheet(params.beatSheets, params.volumeId);
   if (existingBeatSheet) {
-    const confirmed = window.confirm([
+    const confirmed = await params.confirm([
       `将重新生成「${targetVolume.title?.trim() || `第${targetVolume.sortOrder}卷`}」的节奏板。`,
       "这一步会覆盖当前卷现有节奏段与交付项。",
       "已有章节列表和章节细化资产不会被直接删除，但如果新节奏区间发生变化，建议随后检查章节列表是否仍然匹配。",
@@ -113,15 +115,15 @@ export function startBeatSheetGenerationAction(params: {
   });
 }
 
-export function startChapterListGenerationAction(params: {
+export async function startChapterListGenerationAction(params: {
   volumeId: string;
   request?: ChapterListGenerationRequest;
   normalizedVolumeDraft: VolumePlan[];
   beatSheets: VolumeBeatSheet[];
-  ensureCharacterGuard: () => boolean;
+  ensureCharacterGuard: () => Promise<boolean>;
   setStructuredMessage: (value: string) => void;
   generate: (payload: VolumeGenerationPayload) => void;
-}): void {
+}): Promise<void> {
   const targetVolume = params.normalizedVolumeDraft.find((volume) => volume.id === params.volumeId);
   if (!targetVolume) {
     params.setStructuredMessage("当前卷不存在，无法生成章节列表。");
@@ -131,7 +133,7 @@ export function startChapterListGenerationAction(params: {
     params.setStructuredMessage("当前卷还没有节奏板，默认不能直接拆章节列表。");
     return;
   }
-  if (!params.ensureCharacterGuard()) {
+  if (!(await params.ensureCharacterGuard())) {
     return;
   }
   const generationMode = params.request?.generationMode ?? "full_volume";

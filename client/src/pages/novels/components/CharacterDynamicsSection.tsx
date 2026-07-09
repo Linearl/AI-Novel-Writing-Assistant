@@ -33,7 +33,7 @@ function riskTone(risk: "none" | "info" | "warn" | "high"): string {
     case "high":
       return "border-rose-300/70 bg-rose-50 text-rose-700";
     case "warn":
-      return "border-amber-300/70 bg-amber-50 text-amber-700";
+      return "border-amber-300/70 bg-amber-50 text-warning";
     case "info":
       return "border-sky-300/70 bg-sky-50 text-sky-700";
     default:

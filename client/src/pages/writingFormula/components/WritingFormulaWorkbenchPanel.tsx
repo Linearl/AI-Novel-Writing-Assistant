@@ -60,7 +60,7 @@ export default function WritingFormulaWorkbenchPanel(props: WritingFormulaWorkbe
         <CardTitle>当前写法的应用与测试</CardTitle>
       </CardHeader>
       <CardContent className="space-y-5">
-        <div className="rounded-2xl border bg-slate-50/70 px-4 py-3 text-sm leading-7 text-slate-700">
+        <div className="rounded-2xl border bg-muted/70 px-4 py-3 text-sm leading-7 text-slate-700">
           这里只处理两件事：把这套写法绑定到小说/章节/任务，以及先试写一段看看效果。
           “去 AI 味”已经拆成独立入口，不再和这里混在一起。
         </div>

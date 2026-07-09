@@ -508,7 +508,7 @@ export default function ChatPage() {
             ) : null}
           </div>
           {headerRunState ? (
-            <div className="shrink-0 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-700">
+            <div className="shrink-0 rounded-full border border-border bg-muted px-3 py-1 text-xs font-medium text-slate-700">
               {headerRunLabel}
             </div>
           ) : null}
@@ -545,7 +545,7 @@ export default function ChatPage() {
             onPersistConversation={onPersistConversation}
           />
           {displayError ? (
-            <div className="rounded-md border border-red-300 bg-red-50 px-2 py-1 text-xs text-red-700">
+            <div className="rounded-md border border-red-300 bg-red-50 px-2 py-1 text-xs text-destructive">
               {displayError}
             </div>
           ) : null}

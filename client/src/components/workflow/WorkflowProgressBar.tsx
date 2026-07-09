@@ -19,7 +19,7 @@ export function normalizeProgressPercent(progress: number): number {
 
 function barToneClass(tone: WorkflowProgressTone): string {
   if (tone === "loading") {
-    return "bg-slate-500";
+    return "bg-muted0";
   }
   if (tone === "failed") {
     return "bg-destructive";

@@ -457,7 +457,7 @@ export default function PipelineTab(props: PipelineTabProps) {
                       <div>完成：{pipelineJob.completedCount}/{pipelineJob.totalCount}</div>
                       <div>重试：{pipelineJob.retryCount}/{pipelineJob.maxRetries}</div>
                       {pipelineJob.lastErrorType ? <div>失败分类：{pipelineJob.lastErrorType}</div> : null}
-                      {pipelineJob.error ? <div className="text-red-600">错误：{pipelineJob.error}</div> : null}
+                      {pipelineJob.error ? <div className="text-destructive">错误：{pipelineJob.error}</div> : null}
                     </div>
                   ) : (
                     <EmptyState>暂无运行中的流水线任务。</EmptyState>

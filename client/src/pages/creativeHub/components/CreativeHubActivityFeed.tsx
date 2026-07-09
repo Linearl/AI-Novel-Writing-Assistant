@@ -166,7 +166,7 @@ export default function CreativeHubActivityFeed({
         return (
           <div
             key={`${activity.event}-${index}`}
-            className="mr-auto max-w-[92%] rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm"
+            className="mr-auto max-w-[92%] rounded-2xl border border-border bg-white px-4 py-3 shadow-sm"
           >
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div className="text-sm font-medium text-slate-900">{body.title}</div>
@@ -176,7 +176,7 @@ export default function CreativeHubActivityFeed({
             {body.meta.length > 0 ? (
               <div className="mt-3 flex flex-wrap gap-2">
                 {body.meta.map((item) => (
-                  <span key={item} className="rounded-full bg-slate-100 px-2 py-1 text-[11px] text-slate-600">
+                  <span key={item} className="rounded-full bg-secondary px-2 py-1 text-[11px] text-slate-600">
                     {item}
                   </span>
                 ))}
@@ -188,7 +188,7 @@ export default function CreativeHubActivityFeed({
             && "planner" in activity.data
             && activity.data.planner
             && typeof activity.data.planner === "object" ? (
-              <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs text-slate-700">
+              <div className="mt-3 rounded-xl border border-border bg-muted p-3 text-xs text-slate-700">
                 <div className="mb-1 text-[11px] font-medium text-slate-500">意图识别</div>
                 <div>来源: {String((activity.data.planner as Record<string, unknown>).source ?? "unknown")}</div>
                 <div>意图: {String((activity.data.planner as Record<string, unknown>).intent ?? "unknown")}</div>

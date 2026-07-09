@@ -39,7 +39,7 @@ export default function CreativeHubTurnSummaryCard({
   onQuickAction,
 }: CreativeHubTurnSummaryCardProps) {
   return (
-    <div className="mt-3 rounded-2xl border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-4 shadow-sm">
+    <div className="mt-3 rounded-2xl border border-border bg-gradient-to-br from-white to-slate-50 p-4 shadow-sm">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div>
           <div className="text-sm font-medium text-slate-900">创作推进摘要</div>
@@ -51,19 +51,19 @@ export default function CreativeHubTurnSummaryCard({
       </div>
 
       <div className="mt-4 grid gap-3">
-        <div className="rounded-xl border border-slate-200 bg-white px-3 py-3">
+        <div className="rounded-xl border border-border bg-white px-3 py-3">
           <div className="text-[11px] font-medium uppercase tracking-[0.16em] text-slate-500">本轮判断</div>
           <div className="mt-2 text-sm leading-6 text-slate-800">{summary.intentSummary}</div>
         </div>
-        <div className="rounded-xl border border-slate-200 bg-white px-3 py-3">
+        <div className="rounded-xl border border-border bg-white px-3 py-3">
           <div className="text-[11px] font-medium uppercase tracking-[0.16em] text-slate-500">本轮推进</div>
           <div className="mt-2 text-sm leading-6 text-slate-800">{summary.actionSummary}</div>
         </div>
-        <div className="rounded-xl border border-slate-200 bg-white px-3 py-3">
+        <div className="rounded-xl border border-border bg-white px-3 py-3">
           <div className="text-[11px] font-medium uppercase tracking-[0.16em] text-slate-500">已确认变化</div>
           <div className="mt-2 text-sm leading-6 text-slate-800">{summary.impactSummary}</div>
         </div>
-        <div className="rounded-xl border border-slate-200 bg-white px-3 py-3">
+        <div className="rounded-xl border border-border bg-white px-3 py-3">
           <div className="text-[11px] font-medium uppercase tracking-[0.16em] text-slate-500">建议下一轮</div>
           <div className="mt-2 text-sm leading-6 text-slate-800">{summary.nextSuggestion}</div>
           {onQuickAction && summary.nextSuggestion.trim() ? (

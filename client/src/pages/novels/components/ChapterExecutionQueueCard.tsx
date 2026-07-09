@@ -121,7 +121,7 @@ export default function ChapterExecutionQueueCard(props: ChapterExecutionQueueCa
                           }}
                           className={`inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg transition ${
                             isLocked
-                              ? "bg-amber-100 text-amber-700 hover:bg-amber-200"
+                              ? "bg-amber-100 text-warning hover:bg-amber-200"
                               : "text-muted-foreground hover:bg-muted hover:text-foreground"
                           } disabled:opacity-50`}
                           title={isLocked ? "点击解锁此章节" : "点击锁定此章节（防止 AI 自动修改）"}

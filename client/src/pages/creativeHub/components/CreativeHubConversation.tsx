@@ -52,7 +52,7 @@ export default function CreativeHubConversation({
           </CardHeader>
           <CardContent className="flex min-h-0 flex-1 flex-col">
             <ThreadPrimitive.Root className="flex min-h-0 flex-1 flex-col space-y-4">
-              <ThreadPrimitive.Viewport className="min-h-0 flex-1 space-y-4 overflow-y-auto rounded-2xl bg-gradient-to-b from-slate-50 to-slate-100/70 p-4 ring-1 ring-slate-200">
+              <ThreadPrimitive.Viewport className="min-h-0 flex-1 space-y-4 overflow-y-auto rounded-2xl bg-gradient-to-b from-slate-50 to-slate-100/70 p-4 ring-1 ring-border">
                 <ThreadPrimitive.Empty>
                   <div className="mx-auto mt-8 max-w-[680px] px-2 text-center">
                     <h3 className="text-4xl font-semibold tracking-tight text-slate-900">创作中枢</h3>
@@ -83,9 +83,9 @@ export default function CreativeHubConversation({
                   }}
                 />
               </ThreadPrimitive.Viewport>
-              <ComposerPrimitive.Root className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
+              <ComposerPrimitive.Root className="rounded-2xl border border-border bg-white p-3 shadow-sm">
                 <ComposerPrimitive.Input
-                  className="min-h-[110px] w-full resize-none rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm outline-none transition focus:border-slate-400 focus:bg-white"
+                  className="min-h-[110px] w-full resize-none rounded-xl border border-border bg-muted p-3 text-sm outline-none transition focus:border-slate-400 focus:bg-white"
                   placeholder="描述你现在的作品问题、犹豫点或想推进的一轮创作；Enter 发送，Shift+Enter 换行。"
                   submitMode="enter"
                 />
@@ -101,7 +101,7 @@ export default function CreativeHubConversation({
                   <ComposerPrimitive.Cancel asChild>
                     <button
                       type="button"
-                      className="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+                      className="rounded-xl border border-border bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-muted"
                     >
                       停止
                     </button>

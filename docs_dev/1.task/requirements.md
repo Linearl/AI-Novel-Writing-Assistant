@@ -99,7 +99,7 @@ description: "需求任务总清单（SSOT）"
 | 7012 | Low Priority Fix | p8 | ✅ 已完成 | 2026-07-01-全量代码审计-full | 0.1 | 2026-07-01T20:41:00.000Z | 2026-07-02T23:00:00+08:00 | `B.2.done/v0.1-r7012-simple-p4-low-priority-fix/README.md` |  |
 | 7013 | Remove Comic Drama | p8 | ✅ 已完成 | - | 0.1 | 2026-07-08T00:00:00.000Z | 2026-07-09T00:00:00.000Z | `B.2.done/v0.1-r7013-S2-remove-comic-drama/README.md` |  |
 | 7014 | 清理 Novel 旧版世界字段 | p1 | 📋 待办 | - | 0.1 | 2026-07-08 | 2026-07-08 | `B.todo/v11-r7014-C2-legacy-world-fields-cleanup/README.md` |  |
-| 7015 | 前端公共样式与组件提取 | p2 | ✅ 已完成 | 2026-07-09 前端公共样式与组件诊断报告 | 0.1 | 2026-07-09 | 2026-07-09 | `B.todo/v0.1-r7015-M2-frontend-common-styles-components/README.md` | T1+T2+T3 完成：Textarea（~120 处）+ StatusBadge（10 处）+ LoadingIndicator（31 处）+ EmptyState（40 处）。T5 诊断完成待执行。T6 诊断完成待执行。 |
+| 7015 | 前端公共样式与组件提取 | p2 | ✅ 已完成 | 2026-07-09 前端公共样式与组件诊断报告 | 0.1 | 2026-07-09 | 2026-07-09 | `B.todo/v0.1-r7015-M2-frontend-common-styles-components/README.md` | T1+T2+T3+T6 完成：Textarea（~120 处）+ StatusBadge（10 处）+ LoadingIndicator（31 处）+ EmptyState（40 处）+ 语义化 token 替换（~500 处 slate/amber/emerald/red → muted-foreground/foreground/border/success/warning/destructive）。T5 诊断完成待执行。 |
 
 ---
 

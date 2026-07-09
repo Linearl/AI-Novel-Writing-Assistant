@@ -34,7 +34,7 @@ export default function WritingFormulaImitateFlow(props: WritingFormulaImitateFl
   } = props;
 
   return (
-    <Card className="border-slate-200/80 bg-white/90 shadow-[0_20px_60px_rgba(15,23,42,0.06)]">
+    <Card className="border-border/80 bg-white/90 shadow-[0_20px_60px_rgba(15,23,42,0.06)]">
       <CardHeader>
         <CardTitle>模仿一种写法</CardTitle>
         <div className="text-sm leading-7 text-muted-foreground">
@@ -43,7 +43,7 @@ export default function WritingFormulaImitateFlow(props: WritingFormulaImitateFl
       </CardHeader>
       <CardContent className="space-y-5">
         <div className="grid gap-5 xl:grid-cols-[minmax(0,1.1fr)_minmax(300px,0.9fr)]">
-          <section className="space-y-3 rounded-2xl border bg-slate-50/70 p-4">
+          <section className="space-y-3 rounded-2xl border bg-muted/70 p-4">
             <div className="text-sm font-medium text-slate-900">1. 输入参考文本</div>
             <div className="grid gap-3 md:grid-cols-2">
               <input
@@ -76,7 +76,7 @@ export default function WritingFormulaImitateFlow(props: WritingFormulaImitateFl
             <div className="text-sm font-medium text-slate-900">2. 选择保留程度</div>
             {draft ? (
               <>
-                <div className="rounded-xl border bg-slate-50/70 p-3 text-sm leading-7 text-slate-600">
+                <div className="rounded-xl border bg-muted/70 p-3 text-sm leading-7 text-slate-600">
                   {draft.summary}
                 </div>
                 <div className="grid gap-3">
@@ -86,7 +86,7 @@ export default function WritingFormulaImitateFlow(props: WritingFormulaImitateFl
                       <button
                         key={preset.key}
                         type="button"
-                        className={`rounded-2xl border px-4 py-4 text-left transition ${active ? "border-slate-950 bg-slate-950 text-white shadow-lg" : "border-slate-200 bg-white hover:border-slate-400"}`}
+                        className={`rounded-2xl border px-4 py-4 text-left transition ${active ? "border-slate-950 bg-slate-950 text-white shadow-lg" : "border-border bg-white hover:border-slate-400"}`}
                         onClick={() => onPresetChange(preset.key)}
                       >
                         <div className="flex items-center justify-between gap-3">
@@ -127,7 +127,7 @@ export default function WritingFormulaImitateFlow(props: WritingFormulaImitateFl
           {draft ? (
             <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
               {draft.features.slice(0, 6).map((feature) => (
-                <div key={feature.id} className="rounded-xl border bg-slate-50/60 p-3">
+                <div key={feature.id} className="rounded-xl border bg-muted/60 p-3">
                   <div className="flex items-center justify-between gap-2">
                     <div className="font-medium text-slate-900">{feature.label}</div>
                     <Badge variant="outline">{feature.group}</Badge>

@@ -66,7 +66,7 @@ export default function CreativeHubInlineToolCall(props: ToolCallMessagePartProp
       <div className="mt-3 rounded-2xl border border-amber-200 bg-amber-50 p-4 shadow-sm">
         <div className="flex items-center justify-between gap-2">
           <div className="text-sm font-medium text-slate-900">{title}</div>
-          <span className="rounded-full border border-amber-200 bg-white px-2 py-1 text-[11px] text-amber-700">
+          <span className="rounded-full border border-amber-200 bg-white px-2 py-1 text-[11px] text-warning">
             interrupt
           </span>
         </div>
@@ -90,7 +90,7 @@ export default function CreativeHubInlineToolCall(props: ToolCallMessagePartProp
           </button>
           <button
             type="button"
-            className="rounded-lg border border-red-200 bg-white px-3 py-2 text-xs font-medium text-red-600 transition hover:bg-red-50"
+            className="rounded-lg border border-red-200 bg-white px-3 py-2 text-xs font-medium text-destructive transition hover:bg-red-50"
             onClick={() => inlineControls.onResolveInterrupt?.("reject")}
           >
             拒绝
@@ -123,7 +123,7 @@ export default function CreativeHubInlineToolCall(props: ToolCallMessagePartProp
   }
 
   return (
-    <div className="mt-3 rounded-2xl border border-slate-200 bg-slate-50 p-3 shadow-sm">
+    <div className="mt-3 rounded-2xl border border-border bg-muted p-3 shadow-sm">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="space-y-1">
           <div className="text-sm font-medium text-slate-900">工具调用 · {props.toolName}</div>
@@ -133,13 +133,13 @@ export default function CreativeHubInlineToolCall(props: ToolCallMessagePartProp
           {argsText ? (
             <button
               type="button"
-              className="rounded-full border border-slate-300 bg-white px-3 py-1 text-[11px] text-slate-600 transition hover:bg-slate-100"
+              className="rounded-full border border-border bg-white px-3 py-1 text-[11px] text-slate-600 transition hover:bg-secondary"
               onClick={() => setShowArgs((value) => !value)}
             >
               {showArgs ? "收起参数" : "查看参数"}
             </button>
           ) : null}
-          <span className="rounded-full border border-slate-200 bg-white px-2 py-1 text-[11px] text-slate-500">
+          <span className="rounded-full border border-border bg-white px-2 py-1 text-[11px] text-slate-500">
             tool-call
           </span>
         </div>

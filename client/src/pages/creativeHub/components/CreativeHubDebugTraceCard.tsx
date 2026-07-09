@@ -38,7 +38,7 @@ export default function CreativeHubDebugTraceCard({
   }, [defaultCollapsed]);
 
   return (
-    <div className="mt-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 shadow-sm">
+    <div className="mt-3 rounded-2xl border border-border bg-muted px-4 py-3 shadow-sm">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div>
           <div className="text-sm font-medium text-slate-900">运行细节</div>
@@ -48,7 +48,7 @@ export default function CreativeHubDebugTraceCard({
         </div>
         <button
           type="button"
-          className="rounded-full border border-slate-300 bg-white px-3 py-1 text-[11px] text-slate-600 transition hover:bg-slate-100"
+          className="rounded-full border border-border bg-white px-3 py-1 text-[11px] text-slate-600 transition hover:bg-secondary"
           onClick={() => setExpanded((value) => !value)}
         >
           {expanded ? "收起细节" : "展开细节"}
@@ -57,12 +57,12 @@ export default function CreativeHubDebugTraceCard({
       {expanded ? (
         <div className="mt-3 space-y-3">
           {entries.length === 0 ? (
-            <div className="rounded-xl border border-dashed border-slate-200 bg-white px-3 py-3 text-xs text-slate-500">
+            <div className="rounded-xl border border-dashed border-border bg-white px-3 py-3 text-xs text-slate-500">
               当前回合还没有可展示的调试信息。
             </div>
           ) : (
             entries.map((entry) => (
-              <div key={entry.id} className="rounded-xl border border-slate-200 bg-white px-3 py-3">
+              <div key={entry.id} className="rounded-xl border border-border bg-white px-3 py-3">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className="text-sm font-medium text-slate-900">{entry.title}</div>
                   <Badge variant={toVariant(entry.tone)}>{entry.kind}</Badge>
@@ -71,7 +71,7 @@ export default function CreativeHubDebugTraceCard({
                 {entry.meta.length > 0 ? (
                   <div className="mt-3 flex flex-wrap gap-2">
                     {entry.meta.map((item) => (
-                      <span key={item} className="rounded-full bg-slate-100 px-2 py-1 text-[11px] text-slate-600">
+                      <span key={item} className="rounded-full bg-secondary px-2 py-1 text-[11px] text-slate-600">
                         {item}
                       </span>
                     ))}

@@ -17,7 +17,7 @@ function BranchControls() {
   return (
     <BranchPickerPrimitive.Root
       hideWhenSingleBranch
-      className="mt-3 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-2 py-1 text-[11px] text-slate-600"
+      className="mt-3 inline-flex items-center gap-2 rounded-full border border-border bg-muted px-2 py-1 text-[11px] text-muted-foreground"
     >
       <BranchPickerPrimitive.Previous asChild>
         <button type="button" className="rounded-full px-1 transition hover:bg-slate-200">
@@ -50,7 +50,7 @@ function UserMessageActions() {
       <ActionBarPrimitive.Edit asChild>
         <button
           type="button"
-          className="rounded-full border border-slate-300 bg-white px-2 py-1 text-[11px] text-slate-600 transition hover:bg-slate-50"
+          className="rounded-full border border-border bg-white px-2 py-1 text-[11px] text-muted-foreground transition hover:bg-muted"
         >
           编辑
         </button>
@@ -74,7 +74,7 @@ function AssistantMessageActions() {
       <ActionBarPrimitive.Reload asChild>
         <button
           type="button"
-          className="rounded-full border border-slate-300 bg-white px-2 py-1 text-[11px] text-slate-600 transition hover:bg-slate-50"
+          className="rounded-full border border-border bg-white px-2 py-1 text-[11px] text-muted-foreground transition hover:bg-muted"
         >
           重新生成
         </button>
@@ -109,7 +109,7 @@ export function CreativeHubAssistantMessage() {
   return (
     <MessagePrimitive.If hasContent>
       <MessagePrimitive.Root className="mr-auto max-w-[88%]">
-        <div className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 shadow-sm">
+        <div className="rounded-2xl border border-border bg-white px-4 py-3 text-foreground shadow-sm">
           <MessagePrimitive.Parts
             components={{
               Text: ({ text }: { text: string }) => (
@@ -119,7 +119,7 @@ export function CreativeHubAssistantMessage() {
               ),
               Reasoning: ({ text }: { text: string }) => (
                 <div className="mb-3 rounded-xl border border-amber-300 bg-amber-50 p-3 text-xs">
-                  <div className="mb-1 text-[11px] text-amber-700">推理过程</div>
+                  <div className="mb-1 text-[11px] text-warning">推理过程</div>
                   <MarkdownViewer content={text} />
                 </div>
               ),
@@ -148,7 +148,7 @@ export function CreativeHubEditComposer() {
         <ComposerPrimitive.Cancel asChild>
           <button
             type="button"
-            className="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+            className="rounded-xl border border-border bg-white px-4 py-2 text-sm font-medium text-muted-foreground transition hover:bg-muted"
           >
             取消
           </button>

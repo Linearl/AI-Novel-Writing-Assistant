@@ -560,7 +560,7 @@ export default function NovelWorkspaceRail(props: NovelWorkspaceRailProps) {
                     : step.isSelected
                     ? "bg-white/15 text-white"
                     : step.isDone
-                      ? "bg-emerald-600 text-white"
+                      ? "bg-success text-white"
                       : "bg-muted text-muted-foreground",
                 )}
               >
@@ -577,7 +577,7 @@ export default function NovelWorkspaceRail(props: NovelWorkspaceRailProps) {
                         : step.isSelected
                         ? "bg-white/15 text-white"
                         : step.isDone
-                          ? "bg-emerald-100 text-emerald-700"
+                          ? "bg-emerald-100 text-success"
                           : "bg-muted text-muted-foreground",
                     )}
                   >

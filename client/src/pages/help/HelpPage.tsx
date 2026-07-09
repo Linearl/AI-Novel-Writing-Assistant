@@ -172,7 +172,7 @@ export default function HelpPage() {
       <Card className="border-amber-300 bg-amber-50/80">
         <CardHeader className="pb-3">
           <div className="flex flex-wrap items-center gap-2">
-            <KeyRound className="h-5 w-5 text-amber-700" />
+            <KeyRound className="h-5 w-5 text-warning" />
             <CardTitle className="text-lg text-amber-950">开始写作前先配置模型</CardTitle>
           </div>
           <CardDescription className="text-amber-900/80">

@@ -784,7 +784,7 @@ export default function WritingFormulaPage() {
               <select
                 value={importConflictStrategy}
                 onChange={(e) => setImportConflictStrategy(e.target.value as "overwrite" | "create_new" | "skip")}
-                className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm"
+                className="w-full rounded-xl border border-border px-3 py-2 text-sm"
               >
                 <option value="create_new">新建（同名时自动加后缀）</option>
                 <option value="overwrite">覆盖（替换同名资产）</option>

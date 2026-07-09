@@ -51,7 +51,7 @@ function payoffStatusTone(status: string): string {
     return "border-emerald-300 bg-emerald-50 text-emerald-900";
   }
   if (status === "failed") {
-    return "border-slate-300 bg-slate-100 text-slate-700";
+    return "border-border bg-secondary text-slate-700";
   }
   return "";
 }
