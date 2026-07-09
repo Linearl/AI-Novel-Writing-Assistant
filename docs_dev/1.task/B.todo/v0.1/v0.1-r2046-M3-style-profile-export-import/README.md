@@ -1,6 +1,6 @@
 ---
 description: "写法模板导出/导入 — StyleProfile 支持 JSON 导出/导入，为 Marketplace 铺路"
-status: requirements_ready
+status: done
 reqId: 2046
 version: v0.1
 priority: p3

@@ -1,6 +1,6 @@
 ---
 description: "文笔体系自动闭环 — 编辑后自动提取风格 + 拆书自动转化 StyleProfile"
-status: requirements_ready
+status: done
 reqId: 2043
 version: v0.1
 priority: p2

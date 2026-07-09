@@ -1,0 +1,21 @@
+{
+  "reqId": "REQ-7015",
+  "title": "前端公共样式与组件提取",
+  "priority": "P2",
+  "version": "0.1",
+  "status": "requirements_ready",
+  "createdAt": "2026-07-09",
+  "completedAt": null,
+  "source": "2026-07-09 前端公共样式与组件诊断报告",
+  "note": "技术债务清理：Textarea/StatusBadge/Alert/Loading/EmptyState 组件提取 + index.css 拆分 + 语义化 token 统一",
+  "reqType": "refactoring",
+  "categoryCode": 7,
+  "complexity": "medium",
+  "skipClarification": true,
+  "skipDesign": false,
+  "tasks": {
+    "total": 7,
+    "completed": 0,
+    "pending": 7
+  }
+}

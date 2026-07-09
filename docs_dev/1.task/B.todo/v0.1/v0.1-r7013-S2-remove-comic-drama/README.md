@@ -1,6 +1,6 @@
 ---
 description: "移除漫画和短剧模块 — 清理代码库中与核心小说写作无关的跨媒体模块"
-status: requirements_ready
+status: pass
 reqId: 7013
 version: v0.1
 priority: p2
