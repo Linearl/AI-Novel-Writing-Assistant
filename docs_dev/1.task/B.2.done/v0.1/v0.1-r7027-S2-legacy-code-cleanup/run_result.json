@@ -20,18 +20,20 @@
       "client/src/pages/chat/ChatPage.tsx",
       "client/src/pages/chat/CreativeHubPage.tsx",
       "client/src/pages/chat/components/AssistantChatPanel.tsx",
-      "client/src/pages/chat/components/RuntimeSidebar.tsx"
+      "client/src/pages/chat/components/RuntimeSidebar.tsx",
+      "client/src/api/chat.ts"
     ],
     "edited": [
       "client/src/router/index.tsx",
       "client/src/components/layout/mobile/mobileSiteNavigation.ts",
       "client/src/styles/mobile/_shared.css",
-      "client/src/styles/mobile/creative-hub.css"
+      "client/src/styles/mobile/creative-hub.css",
+      "client/package.json",
+      "client/src/vite-env.d.ts",
+      "pnpm-lock.yaml"
     ],
     "skipped": [
-      "client/src/api/chat.ts (already removed)",
-      "server/src/routes/chat.ts (migrated to modules/chat/, still active)",
-      "vite-plugin-pages (already removed from package.json)"
+      "server/src/routes/chat.ts (already migrated to modules/chat/)"
     ],
     "linesRemoved": 1761
   }

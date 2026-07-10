@@ -38,17 +38,6 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1\v0.1-r7022-C2-services-directory-consolidation\REQ-7022-services-directory-consolidation.md](./1.task\B.todo\v0.1\v0.1-r7022-C2-services-directory-consolidation\REQ-7022-services-directory-consolidation.md) | REQ-7022 Services 目录收敛与大文件拆分 —— 需求文档 | REQ-7022 Services 目录收敛与大文件拆分 —— 需求文档 |
 | [1.task\B.todo\v0.1\v0.1-r7022-C2-services-directory-consolidation\tasks.md](./1.task\B.todo\v0.1\v0.1-r7022-C2-services-directory-consolidation\tasks.md) | REQ-7022 Services 目录收敛与大文件拆分 —— 任务清单 | REQ-7022 Services 目录收敛与大文件拆分 —— 任务清单 |
 
-## 1.task\B.todo\v0.1\v0.1-r7027-S2-legacy-code-cleanup
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r7027-S2-legacy-code-cleanup\decision_log.md](./1.task\B.todo\v0.1\v0.1-r7027-S2-legacy-code-cleanup\decision_log.md) | REQ-7027 遗留代码清理 — 决策留痕 | REQ-7027 遗留代码清理 — 决策留痕 |
-| [1.task\B.todo\v0.1\v0.1-r7027-S2-legacy-code-cleanup\design.md](./1.task\B.todo\v0.1\v0.1-r7027-S2-legacy-code-cleanup\design.md) | REQ-7027 遗留代码清理 — 方案设计 | REQ-7027 遗留代码清理 — 方案设计 |
-| [1.task\B.todo\v0.1\v0.1-r7027-S2-legacy-code-cleanup\README.md](./1.task\B.todo\v0.1\v0.1-r7027-S2-legacy-code-cleanup\README.md) | REQ-7027 遗留代码清理——READM E | REQ-7027 遗留代码清理——READM E |
-| [1.task\B.todo\v0.1\v0.1-r7027-S2-legacy-code-cleanup\REQ-7027-legacy-code-cleanup-original.md](./1.task\B.todo\v0.1\v0.1-r7027-S2-legacy-code-cleanup\REQ-7027-legacy-code-cleanup-original.md) | REQ-7027 遗留代码清理 — 原始冻结副本 | REQ-7027 遗留代码清理 — 原始冻结副本 |
-| [1.task\B.todo\v0.1\v0.1-r7027-S2-legacy-code-cleanup\REQ-7027-legacy-code-cleanup.md](./1.task\B.todo\v0.1\v0.1-r7027-S2-legacy-code-cleanup\REQ-7027-legacy-code-cleanup.md) | REQ-7027 遗留代码清理 | REQ-7027 遗留代码清理 |
-| [1.task\B.todo\v0.1\v0.1-r7027-S2-legacy-code-cleanup\tasks.md](./1.task\B.todo\v0.1\v0.1-r7027-S2-legacy-code-cleanup\tasks.md) | REQ-7027 遗留代码清理 — 任务拆解 | REQ-7027 遗留代码清理 — 任务拆解 |
-
 ## 1.task\B.todo\v0.1\v0.1-r7032-S3-extract-hardcoded-constants
 
 | 文件 | 标题 | 描述 |

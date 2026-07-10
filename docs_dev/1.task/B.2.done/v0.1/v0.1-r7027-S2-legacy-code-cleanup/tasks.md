@@ -26,9 +26,9 @@ description: "REQ-7027 遗留代码清理 — 任务拆解"
 | --- | --- | --- | --- | --- |
 | T1 | 审计全仓 import 引用 | P0 | 30min | ✅ 完成 |
 | T2 | 移除 client/src/store/chatStore.ts | P0 | 15min | ✅ 完成 |
-| T3 | 移除 client/src/api/chat.ts | P0 | 10min | ✅ 跳过（文件已不存在） |
+| T3 | 移除 client/src/api/chat.ts | P0 | 10min | ✅ 完成（无引用，安全删除） |
 | T4 | 移除 server/src/routes/chat.ts | P0 | 10min | ✅ 跳过（已迁移到 modules/chat/，仍在使用） |
-| T5 | 移除 vite-plugin-pages 依赖 | P1 | 10min | ✅ 跳过（已从 package.json 移除） |
+| T5 | 移除 vite-plugin-pages 依赖 | P1 | 10min | ✅ 完成（连同 type 引用和 lockfile 更新） |
 | T6 | 清理 chat-legacy 路由及 mobile 导航 | P0 | 15min | ✅ 完成 |
 | T7 | 全量验证 | P0 | 15min | ✅ 完成 |
 
