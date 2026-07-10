@@ -140,6 +140,37 @@ function SeverityBadge({ severity }: { severity: string }) {
   return <Badge variant={variant}>{severity}</Badge>;
 }
 
+const AUDIT_TYPE_LABEL: Record<string, string> = {
+  continuity: "连续性",
+  character: "角色",
+  plot: "情节",
+  mode_fit: "模式匹配",
+  vocabulary: "词汇扫描",
+};
+
+function VocabAuditReportCard(props: { report: AuditReport }) {
+  const issue = props.report.issues[0];
+  if (!issue) return null;
+
+  return (
+    <div className="rounded-xl border border-blue-200 bg-blue-50/80 p-3 text-xs">
+      <div className="flex items-center gap-2 mb-2">
+        <Badge variant="outline" className="border-blue-300 text-blue-700">词汇扫描</Badge>
+        <span className="font-medium text-blue-900">{props.report.summary}</span>
+      </div>
+      {issue.description && (
+        <div className="text-blue-800 leading-5 mb-1">{issue.description}</div>
+      )}
+      {issue.evidence && (
+        <div className="text-blue-700/80 leading-5">命中：{issue.evidence}</div>
+      )}
+      {issue.fixSuggestion && (
+        <div className="mt-1 text-blue-700/70 leading-5">建议：{issue.fixSuggestion}</div>
+      )}
+    </div>
+  );
+}
+
 export function ChapterRuntimeLengthCard(props: {
   runtimePackage: ChapterRuntimePackage | null;
 }) {
@@ -417,7 +448,10 @@ export function ChapterRuntimeAuditCard(props: {
         ) : null}
         {audit.openIssues.length > 0 ? (
           <div className="space-y-2">
-            {audit.openIssues.slice(0, 6).map((issue) => (
+            {audit.reports.filter((r) => r.auditType === "vocabulary").map((report) => (
+              <VocabAuditReportCard key={report.id} report={report} />
+            ))}
+            {audit.openIssues.filter((issue) => !audit.reports.some((r) => r.auditType === "vocabulary" && r.issues.some((vi) => vi.id === issue.id))).slice(0, 6).map((issue) => (
               <div key={issue.id} className="rounded-md border p-2 text-xs">
                 <div className="mb-1 flex items-center gap-2">
                   <SeverityBadge severity={issue.severity} />
