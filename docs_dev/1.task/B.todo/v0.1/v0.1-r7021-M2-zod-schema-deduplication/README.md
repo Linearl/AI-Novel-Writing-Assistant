@@ -1,7 +1,7 @@
 ---
 description: "REQ-7021 Zod Schema 去重与共享化 —— README"
 update_time: 2026-07-10
-status: requirements_ready
+status: pass
 ---
 
 # REQ-7021 Zod Schema 去重与共享化
