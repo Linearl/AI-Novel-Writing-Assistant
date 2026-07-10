@@ -1,0 +1,26 @@
+{
+  "reqId": "REQ-7017",
+  "title": "词汇库审校扫描器",
+  "priority": "P2",
+  "version": "0.1",
+  "status": "in_progress",
+  "createdAt": "2026-07-10",
+  "completedAt": null,
+  "source": "木棉写作小红书 OCR 素材 + 审校体系优化",
+  "note": "T1-T5 已完成（词库表+扫描引擎+同步集成+审校双挂载），T6-T8 待完成",
+  "tasks": {
+    "total": 8,
+    "completed": 5,
+    "pending": 3,
+    "list": {
+      "T1": { "title": "词库表设计、数据模型与 YAML 数据文件", "status": "done" },
+      "T2": { "title": "词汇扫描引擎核心（VocabAuditScanner 服务）", "status": "done" },
+      "T3": { "title": "FileToDbSyncService 集成", "status": "done" },
+      "T4": { "title": "完整审校集成（AuditService）", "status": "done" },
+      "T5": { "title": "执行审校集成（NovelCoreReviewService）", "status": "done" },
+      "T6": { "title": "修复 Prompt 注入", "status": "pending" },
+      "T7": { "title": "前端展示", "status": "pending" },
+      "T8": { "title": "词库数据提取", "status": "pending" }
+    }
+  }
+}

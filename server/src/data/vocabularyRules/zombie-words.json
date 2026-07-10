@@ -1,0 +1,176 @@
+[
+  {
+    "key": "zombie-soon",
+    "name": "没过多久",
+    "pattern": "没过多久",
+    "matchType": "contains",
+    "category": "zombie_word",
+    "weight": 0.9,
+    "suggestions": [
+      "用具体的季节、时辰、动作细节替代时间概括"
+    ]
+  },
+  {
+    "key": "zombie-suddenly",
+    "name": "突然",
+    "pattern": "突然",
+    "matchType": "word",
+    "category": "zombie_word",
+    "weight": 0.9,
+    "suggestions": [
+      "删掉\"突然\"，直接用事件的发生本身制造突然感",
+      "用具体动作描写替代：她话音未落，玻璃窗便炸裂开来"
+    ]
+  },
+  {
+    "key": "zombie-many-years-later",
+    "name": "多年后",
+    "pattern": "多年后",
+    "matchType": "contains",
+    "category": "zombie_word",
+    "weight": 0.9,
+    "suggestions": [
+      "用具体数字或标志性事件锚定时间",
+      "如\"第七个冬天\"而非\"多年后\""
+    ]
+  },
+  {
+    "key": "zombie-somewhere",
+    "name": "某处",
+    "pattern": "某处",
+    "matchType": "word",
+    "category": "zombie_word",
+    "weight": 0.8,
+    "suggestions": [
+      "替换为具体地名或景物描写",
+      "如\"槐树下的石阶\"而非\"某个地方\""
+    ]
+  },
+  {
+    "key": "zombie-roadside",
+    "name": "路边",
+    "pattern": "路边",
+    "matchType": "word",
+    "category": "zombie_word",
+    "weight": 0.8,
+    "suggestions": [
+      "具体化路边的细节：梧桐落叶铺满的人行道、青砖裂缝中长出青苔"
+    ]
+  },
+  {
+    "key": "zombie-room",
+    "name": "屋子里",
+    "pattern": "屋子里",
+    "matchType": "contains",
+    "category": "zombie_word",
+    "weight": 0.7,
+    "suggestions": [
+      "写特定家具、光影、气味：藤椅磨出毛边、窗台积着薄尘"
+    ]
+  },
+  {
+    "key": "zombie-happy",
+    "name": "幸福/开心",
+    "pattern": "(幸福|开心|快乐)",
+    "matchType": "regex",
+    "category": "zombie_word",
+    "weight": 0.9,
+    "suggestions": [
+      "用具体行为和身体反应替代情绪词",
+      "如\"嘴角压不住地上扬\"而非\"他很开心\""
+    ]
+  },
+  {
+    "key": "zombie-sad",
+    "name": "委屈/难过",
+    "pattern": "(委屈|难过|伤心)",
+    "matchType": "regex",
+    "category": "zombie_word",
+    "weight": 0.9,
+    "suggestions": [
+      "写身体反应：抿紧的嘴唇、泛红的眼眶、攥紧的指尖",
+      "写沉默动作：转过身去、肩膀轻轻抖着"
+    ]
+  },
+  {
+    "key": "zombie-angry",
+    "name": "生气/愤怒",
+    "pattern": "(生气|愤怒|恼怒)",
+    "matchType": "regex",
+    "category": "zombie_word",
+    "weight": 0.8,
+    "suggestions": [
+      "用动作替代：把杯子往桌上一磕、茶水溅了半张桌",
+      "用生理细节：指节因用力泛起青白"
+    ]
+  },
+  {
+    "key": "zombie-anxious",
+    "name": "烦躁/焦虑",
+    "pattern": "(烦躁|焦虑|焦躁|不安)",
+    "matchType": "regex",
+    "category": "zombie_word",
+    "weight": 0.8,
+    "suggestions": [
+      "写重复性小动作：反复解锁手机、一根根揪着毛衣线头"
+    ]
+  },
+  {
+    "key": "zombie-busy",
+    "name": "忙活",
+    "pattern": "忙活",
+    "matchType": "word",
+    "category": "zombie_word",
+    "weight": 0.7,
+    "suggestions": [
+      "拆解为具体动作序列：洗净碗筷、晾晒好床单、给阳台花草浇遍水"
+    ]
+  },
+  {
+    "key": "zombie-tidy-up",
+    "name": "收拾",
+    "pattern": "收拾",
+    "matchType": "word",
+    "category": "zombie_word",
+    "weight": 0.7,
+    "suggestions": [
+      "具象化：一点点擦净桌面积尘、把散落的书按高低排好"
+    ]
+  },
+  {
+    "key": "zombie-prepare",
+    "name": "安排/准备",
+    "pattern": "(安排|准备)",
+    "matchType": "regex",
+    "category": "zombie_word",
+    "weight": 0.7,
+    "suggestions": [
+      "细化为具体动作：切姜丝、慢熬一锅热汤、摆好两副碗筷"
+    ]
+  },
+  {
+    "key": "zombie-wonderful",
+    "name": "精彩/感人/难忘",
+    "pattern": "(精彩|感人|难忘|震撼)",
+    "matchType": "regex",
+    "category": "zombie_word",
+    "weight": 0.8,
+    "suggestions": [
+      "用具体画面替代形容词评价",
+      "如\"这段回忆如同旧胶片，一翻开，往日的烟火气就扑面而来\""
+    ]
+  },
+  {
+    "key": "zombie-very",
+    "name": "很/非常/特别",
+    "pattern": "(很|非常|特别|极其|相当)",
+    "matchType": "regex",
+    "category": "zombie_word",
+    "weight": 1,
+    "suggestions": [
+      "删掉程度词，用具体细节暗示程度",
+      "\"很冷\"→\"他呵出的白气在睫毛上凝成了霜\"",
+      "\"非常累\"→\"她靠在门框上，连抬手的力气都没有了\""
+    ]
+  }
+]

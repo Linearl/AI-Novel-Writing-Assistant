@@ -38,6 +38,17 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1\v0.1-r2047-C2-writing-technique-library\REQ-2047-writing-technique-library.md](./1.task\B.todo\v0.1\v0.1-r2047-C2-writing-technique-library\REQ-2047-writing-technique-library.md) | REQ-2047 文笔资料库——需求文档 | REQ-2047 文笔资料库——需求文档 |
 | [1.task\B.todo\v0.1\v0.1-r2047-C2-writing-technique-library\tasks.md](./1.task\B.todo\v0.1\v0.1-r2047-C2-writing-technique-library\tasks.md) | REQ-2047 文笔资料库——任务拆解 | REQ-2047 文笔资料库——任务拆解 |
 
+## 1.task\B.todo\v0.1\v0.1-r2048-M2-atmosphere-writing-cards
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.1\v0.1-r2048-M2-atmosphere-writing-cards\decision_log.md](./1.task\B.todo\v0.1\v0.1-r2048-M2-atmosphere-writing-cards\decision_log.md) | > 关联需求：REQ-2048 氛围写作参考卡 | - |
+| [1.task\B.todo\v0.1\v0.1-r2048-M2-atmosphere-writing-cards\design.md](./1.task\B.todo\v0.1\v0.1-r2048-M2-atmosphere-writing-cards\design.md) | REQ-2048 氛围写作卡片 — 方案设计 | REQ-2048 氛围写作卡片 — 方案设计 |
+| [1.task\B.todo\v0.1\v0.1-r2048-M2-atmosphere-writing-cards\README.md](./1.task\B.todo\v0.1\v0.1-r2048-M2-atmosphere-writing-cards\README.md) | REQ-2048 氛围写作卡片 — 任务总线 | REQ-2048 氛围写作卡片 — 任务总线 |
+| [1.task\B.todo\v0.1\v0.1-r2048-M2-atmosphere-writing-cards\REQ-2048-atmosphere-writing-cards-original.md](./1.task\B.todo\v0.1\v0.1-r2048-M2-atmosphere-writing-cards\REQ-2048-atmosphere-writing-cards-original.md) | REQ-2048 氛围写作卡片 — 原始冻结副本 | REQ-2048 氛围写作卡片 — 原始冻结副本 |
+| [1.task\B.todo\v0.1\v0.1-r2048-M2-atmosphere-writing-cards\REQ-2048-atmosphere-writing-cards.md](./1.task\B.todo\v0.1\v0.1-r2048-M2-atmosphere-writing-cards\REQ-2048-atmosphere-writing-cards.md) | REQ-2048 氛围写作卡片 | REQ-2048 氛围写作卡片 |
+| [1.task\B.todo\v0.1\v0.1-r2048-M2-atmosphere-writing-cards\tasks.md](./1.task\B.todo\v0.1\v0.1-r2048-M2-atmosphere-writing-cards\tasks.md) | > status: requirements_ready | - |
+
 ## 1.task\B.todo\v0.1\v0.1-r7014-C2-legacy-world-fields-cleanup
 
 | 文件 | 标题 | 描述 |
@@ -48,19 +59,27 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1\v0.1-r7014-C2-legacy-world-fields-cleanup\REQ-7014-legacy-world-fields-cleanup.md](./1.task\B.todo\v0.1\v0.1-r7014-C2-legacy-world-fields-cleanup\REQ-7014-legacy-world-fields-cleanup.md) | REQ-7014 清理 Novel 旧版世界字段——需求文档 | REQ-7014 清理 Novel 旧版世界字段——需求文档 |
 | [1.task\B.todo\v0.1\v0.1-r7014-C2-legacy-world-fields-cleanup\tasks.md](./1.task\B.todo\v0.1\v0.1-r7014-C2-legacy-world-fields-cleanup\tasks.md) | REQ-7014 清理 Novel 旧版世界字段——任务清单 | REQ-7014 清理 Novel 旧版世界字段——任务清单 |
 
-## 1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components
+## 1.task\B.todo\v0.1\v0.1-r7016-M2-inline-prompt-extraction
 
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components\decision_log.md](./1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components\decision_log.md) | REQ-7015 前端公共样式与组件提取 — 决策留痕 | REQ-7015 前端公共样式与组件提取 — 决策留痕 |
-| [1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components\design.md](./1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components\design.md) | REQ-7015 前端公共样式与组件提取 — 方案设计 | REQ-7015 前端公共样式与组件提取 — 方案设计 |
-| [1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components\diagnosis-t3-loading-empty-state.md](./1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components\diagnosis-t3-loading-empty-state.md) | Loading 与 EmptyState 模式的深度诊断报告，覆盖 client/src 全量扫描 | Loading 与 EmptyState 模式的深度诊断报告，覆盖 client/src 全量扫描 |
-| [1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components\diagnosis-t5-css-split.md](./1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components\diagnosis-t5-css-split.md) | index.css 移动端媒体查询拆分深度诊断 — 结构分析、重复检测、拆分方案与风险评估 | index.css 移动端媒体查询拆分深度诊断 — 结构分析、重复检测、拆分方案与风险评估 |
-| [1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components\diagnosis-t6-semantic-tokens.md](./1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components\diagnosis-t6-semantic-tokens.md) | client/src 原始 Tailwind 色板使用深度诊断 — 语义化 token 迁移分析 | client/src 原始 Tailwind 色板使用深度诊断 — 语义化 token 迁移分析 |
-| [1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components\README.md](./1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components\README.md) | REQ-7015 前端公共样式与组件提取任务总线 | REQ-7015 前端公共样式与组件提取任务总线 |
-| [1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components\REQ-7015-frontend-common-styles-components-original.md](./1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components\REQ-7015-frontend-common-styles-components-original.md) | REQ-7015 前端公共样式与组件提取 — 原始冻结副本 | REQ-7015 前端公共样式与组件提取 — 原始冻结副本 |
-| [1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components\REQ-7015-frontend-common-styles-components.md](./1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components\REQ-7015-frontend-common-styles-components.md) | REQ-7015 前端公共样式与组件提取 | REQ-7015 前端公共样式与组件提取 |
-| [1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components\tasks.md](./1.task\B.todo\v0.1\v0.1-r7015-M2-frontend-common-styles-components\tasks.md) | REQ-7015 前端公共样式与组件提取 — 任务拆解 | REQ-7015 前端公共样式与组件提取 — 任务拆解 |
+| [1.task\B.todo\v0.1\v0.1-r7016-M2-inline-prompt-extraction\decision_log.md](./1.task\B.todo\v0.1\v0.1-r7016-M2-inline-prompt-extraction\decision_log.md) | REQ-7016 内联 Prompt 提取与模板引擎 — 决策留痕 | REQ-7016 内联 Prompt 提取与模板引擎 — 决策留痕 |
+| [1.task\B.todo\v0.1\v0.1-r7016-M2-inline-prompt-extraction\design.md](./1.task\B.todo\v0.1\v0.1-r7016-M2-inline-prompt-extraction\design.md) | REQ-7016 内联 Prompt 提取与模板引擎 — 方案设计 | REQ-7016 内联 Prompt 提取与模板引擎 — 方案设计 |
+| [1.task\B.todo\v0.1\v0.1-r7016-M2-inline-prompt-extraction\README.md](./1.task\B.todo\v0.1\v0.1-r7016-M2-inline-prompt-extraction\README.md) | REQ-7016 内联 Prompt 提取与模板引擎任务总线 | REQ-7016 内联 Prompt 提取与模板引擎任务总线 |
+| [1.task\B.todo\v0.1\v0.1-r7016-M2-inline-prompt-extraction\REQ-7016-inline-prompt-extraction-original.md](./1.task\B.todo\v0.1\v0.1-r7016-M2-inline-prompt-extraction\REQ-7016-inline-prompt-extraction-original.md) | REQ-7016 内联 Prompt 提取与模板引擎 — 原始冻结副本 | REQ-7016 内联 Prompt 提取与模板引擎 — 原始冻结副本 |
+| [1.task\B.todo\v0.1\v0.1-r7016-M2-inline-prompt-extraction\REQ-7016-inline-prompt-extraction.md](./1.task\B.todo\v0.1\v0.1-r7016-M2-inline-prompt-extraction\REQ-7016-inline-prompt-extraction.md) | REQ-7016 内联 Prompt 提取与模板引擎 | REQ-7016 内联 Prompt 提取与模板引擎 |
+| [1.task\B.todo\v0.1\v0.1-r7016-M2-inline-prompt-extraction\tasks.md](./1.task\B.todo\v0.1\v0.1-r7016-M2-inline-prompt-extraction\tasks.md) | REQ-7016 内联 Prompt 提取与模板引擎 — 任务拆解 | REQ-7016 内联 Prompt 提取与模板引擎 — 任务拆解 |
+
+## 1.task\B.todo\v0.1\v0.1-r7017-M2-vocabulary-audit-scanner
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.1\v0.1-r7017-M2-vocabulary-audit-scanner\decision_log.md](./1.task\B.todo\v0.1\v0.1-r7017-M2-vocabulary-audit-scanner\decision_log.md) | REQ-7017 词汇库审校扫描器 — 决策留痕 | REQ-7017 词汇库审校扫描器 — 决策留痕 |
+| [1.task\B.todo\v0.1\v0.1-r7017-M2-vocabulary-audit-scanner\design.md](./1.task\B.todo\v0.1\v0.1-r7017-M2-vocabulary-audit-scanner\design.md) | REQ-7017 词汇库审校扫描器 — 方案设计 | REQ-7017 词汇库审校扫描器 — 方案设计 |
+| [1.task\B.todo\v0.1\v0.1-r7017-M2-vocabulary-audit-scanner\README.md](./1.task\B.todo\v0.1\v0.1-r7017-M2-vocabulary-audit-scanner\README.md) | REQ-7017 词汇库审校扫描器 — 任务总线 | REQ-7017 词汇库审校扫描器 — 任务总线 |
+| [1.task\B.todo\v0.1\v0.1-r7017-M2-vocabulary-audit-scanner\REQ-7017-vocabulary-audit-scanner-original.md](./1.task\B.todo\v0.1\v0.1-r7017-M2-vocabulary-audit-scanner\REQ-7017-vocabulary-audit-scanner-original.md) | REQ-7017 词汇库审校扫描器 — 原始冻结副本 | REQ-7017 词汇库审校扫描器 — 原始冻结副本 |
+| [1.task\B.todo\v0.1\v0.1-r7017-M2-vocabulary-audit-scanner\REQ-7017-vocabulary-audit-scanner.md](./1.task\B.todo\v0.1\v0.1-r7017-M2-vocabulary-audit-scanner\REQ-7017-vocabulary-audit-scanner.md) | REQ-7017 词汇库审校扫描器 | REQ-7017 词汇库审校扫描器 |
+| [1.task\B.todo\v0.1\v0.1-r7017-M2-vocabulary-audit-scanner\tasks.md](./1.task\B.todo\v0.1\v0.1-r7017-M2-vocabulary-audit-scanner\tasks.md) | REQ-7017 词汇库审校扫描器 — 任务拆解 | REQ-7017 词汇库审校扫描器 — 任务拆解 |
 
 ## 1.task\template
 
@@ -136,6 +155,7 @@ description: "docs 目录索引（自动生成）"
 | [1.task\todolist\2026-07-02-p2p3p4-audit-fix-todolist.md](./1.task\todolist\2026-07-02-p2p3p4-audit-fix-todolist.md) | P2/P3/P4 审计修复 — 分阶段执行追踪清单 | P2/P3/P4 审计修复 — 分阶段执行追踪清单 |
 | [1.task\todolist\2026-07-03-v01-remaining-todolist.md](./1.task\todolist\2026-07-03-v01-remaining-todolist.md) | v0.1 剩余任务包 — 分阶段执行追踪清单 | v0.1 剩余任务包 — 分阶段执行追踪清单 |
 | [1.task\todolist\2026-07-08-v0.1-product-task-packages.md](./1.task\todolist\2026-07-08-v0.1-product-task-packages.md) | v0.1 产品需求驱动任务包 — 分阶段开发追踪清单 | v0.1 产品需求驱动任务包 — 分阶段开发追踪清单 |
+| [1.task\todolist\2026-07-10-v0.1-vocab-atmosphere.md](./1.task\todolist\2026-07-10-v0.1-vocab-atmosphere.md) | REQ-7017 词库审校扫描器 + REQ-2048 氛围写作卡片 — Block 执行计划 | REQ-7017 词库审校扫描器 + REQ-2048 氛围写作卡片 — Block 执行计划 |
 | [1.task\todolist\todolist.md](./1.task\todolist\todolist.md) | v0.1 版本 — 全量任务包分阶段开发追踪清单 | v0.1 版本 — 全量任务包分阶段开发追踪清单 |
 
 ## 3.analysis\diagnosis\01-active

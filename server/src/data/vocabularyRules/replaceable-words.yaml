@@ -1,0 +1,165 @@
+# 高频替换词规则 — 网文常用套路词，权重低（0.2~0.4）
+# 来源：木棉写作小红书 OCR 提取
+# 这些词本身没问题，但过度使用会让文笔显得单一
+
+rules:
+  # === 对话动词 ===
+  - key: replaceable-say
+    name: 说（高频）
+    pattern: "说"
+    matchType: word
+    category: replaceable_word
+    weight: 0.3
+    suggestions:
+      - 替换：呢喃、低吟、嘶吼、嗤笑、沉吟、轻叹、反问
+      - 看语境：轻柔→呢喃；压抑→低吟；轻蔑→嗤笑；犹豫→沉吟
+
+  - key: replaceable-said
+    name: 道（高频）
+    pattern: "道"
+    matchType: word
+    category: replaceable_word
+    weight: 0.3
+    suggestions:
+      - 替换：低声道、喊道、喃喃道、冷冷道、朗声道
+
+  # === 动作动词 ===
+  - key: replaceable-walk
+    name: 走（高频）
+    pattern: "走"
+    matchType: word
+    category: replaceable_word
+    weight: 0.3
+    suggestions:
+      - 替换：闲适/焦虑→踱步；醉酒/虚弱→踉跄；犹豫→徘徊；匆忙→疾行
+
+  - key: replaceable-look
+    name: 看（高频）
+    pattern: "看"
+    matchType: word
+    category: replaceable_word
+    weight: 0.3
+    suggestions:
+      - 替换：专注/深情→凝视；不屑→瞥；警惕→窥视；怅惘→远眺
+
+  - key: replaceable-laugh
+    name: 笑/轻笑
+    pattern: "(笑|轻笑|笑着说)"
+    matchType: regex
+    category: replaceable_word
+    weight: 0.3
+    suggestions:
+      - 替换：温暖→莞尔；畅快→捧腹；无奈→苦笑；阴鸷→诡笑
+
+  - key: replaceable-cry
+    name: 哭（高频）
+    pattern: "哭"
+    matchType: word
+    category: replaceable_word
+    weight: 0.3
+    suggestions:
+      - 替换：压抑→啜泣；哽咽→呜咽；隐忍→垂泪；崩溃→嚎啕
+
+  - key: replaceable-sit
+    name: 坐下（高频）
+    pattern: "坐下"
+    matchType: word
+    category: replaceable_word
+    weight: 0.2
+    suggestions:
+      - 替换：正式→落座；疲惫→瘫坐；蜷缩→蜷坐；踉跄→跌坐
+
+  - key: replaceable-take
+    name: 拿（高频）
+    pattern: "拿"
+    matchType: word
+    category: replaceable_word
+    weight: 0.2
+    suggestions:
+      - 替换：用力→攥紧；细致→轻捻；急切→攫取；珍视→捧起
+
+  - key: replaceable-lower-head
+    name: 低头（高频）
+    pattern: "低头"
+    matchType: word
+    category: replaceable_word
+    weight: 0.2
+    suggestions:
+      - 替换：默许→颔首；羞涩→垂眸；专注→埋首；愧疚→愧赧
+
+  # === 情绪词 ===
+  - key: replaceable-fear
+    name: 害怕（高频）
+    pattern: "害怕"
+    matchType: word
+    category: replaceable_word
+    weight: 0.3
+    suggestions:
+      - 替换：生理恐惧→战栗；慌乱→心悸；怯懦→瑟缩；惊悚→毛骨悚然
+
+  - key: replaceable-beautiful
+    name: 漂亮（高频）
+    pattern: "漂亮"
+    matchType: word
+    category: replaceable_word
+    weight: 0.2
+    suggestions:
+      - 替换：清新→秀丽；美艳→妩媚；端庄→姝丽；素净→雅致
+
+  # === 环境词 ===
+  - key: replaceable-sunlight
+    name: 阳光（高频）
+    pattern: "阳光"
+    matchType: word
+    category: replaceable_word
+    weight: 0.2
+    suggestions:
+      - 替换：温暖→暖阳；苍凉→残阳；清晨→曦光；刺目→眩光；傍晚→斜晖
+
+  - key: replaceable-night
+    name: 夜晚（高频）
+    pattern: "夜晚"
+    matchType: word
+    category: replaceable_word
+    weight: 0.2
+    suggestions:
+      - 替换：黄昏→暮色；深夜→子夜；黎明前→拂晓；幽暗→暝色
+
+  - key: replaceable-rain
+    name: 雨（高频）
+    pattern: "雨"
+    matchType: word
+    category: replaceable_word
+    weight: 0.2
+    suggestions:
+      - 替换：绵密→细雨；凄凉→冷雨；朦胧→烟雨；激烈→暴雨；急促→骤雨
+
+  - key: replaceable-wind
+    name: 风（高频）
+    pattern: "风"
+    matchType: word
+    category: replaceable_word
+    weight: 0.2
+    suggestions:
+      - 替换：轻柔→微风；阴冷→阴风；暴戾→狂风；凛冽→朔风
+
+  # === 情感反馈动词（网文高频） ===
+  - key: replaceable-blush
+    name: 耳尖微红/脸红（高频）
+    pattern: "(耳尖微红|耳尖泛红|脸红|面色微红)"
+    matchType: regex
+    category: replaceable_word
+    weight: 0.3
+    suggestions:
+      - 替换：抿嘴别过脸、指尖无意识地绞着衣角、目光闪躲
+      - 控制频率，一篇文章用一两次即可
+
+  - key: replaceable-restrain
+    name: 克制着/强忍着（高频）
+    pattern: "(克制着|强忍着|压抑着)"
+    matchType: regex
+    category: replaceable_word
+    weight: 0.3
+    suggestions:
+      - 用具体动作写克制的状态
+      - 如"他握紧的拳头慢慢松开""她深吸一口气，将话咽了回去"

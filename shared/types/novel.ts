@@ -67,7 +67,7 @@ export type VolumeGenerationScopeInput = VolumeGenerationScope | "book" | "volum
 export type VolumeChapterListGenerationMode = "full_volume" | "single_beat";
 export type StoryPlanLevel = "book" | "arc" | "chapter";
 export type StoryPlanRole = "setup" | "progress" | "pressure" | "turn" | "payoff" | "cooldown";
-export type AuditType = "continuity" | "character" | "plot" | "mode_fit";
+export type AuditType = "continuity" | "character" | "plot" | "mode_fit" | "vocabulary";
 export type AuditIssueStatus = "open" | "resolved" | "ignored";
 export type {
   CharacterResourceContext,

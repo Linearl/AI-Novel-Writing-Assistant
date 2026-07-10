@@ -256,6 +256,7 @@ enum AuditType {
   character
   plot
   mode_fit
+  vocabulary
 }
 
 enum AuditIssueStatus {
@@ -415,6 +416,7 @@ model Novel {
   novelWorld         NovelWorld?
   factEntries        NovelFactEntry[]
   risks              NovelRisk[]
+  writingTechniqueBindings WritingTechniqueNovelBinding[]
   payoffExpiryThreshold Int       @default(20)
   createdAt          DateTime    @default(now())
   updatedAt         DateTime    @updatedAt
@@ -1343,6 +1345,7 @@ model StyleProfile {
   status             String   @default("active")
   antiAiBindings     StyleProfileAntiAiRule[]
   bindings           StyleBinding[]
+  writingTechniqueBindings WritingTechniqueProfileBinding[]
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 
@@ -1418,6 +1421,67 @@ model StyleBinding {
 
   @@index([targetType, targetId, enabled])
   @@index([styleProfileId])
+}
+
+model VocabularyRule {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  name        String
+  pattern     String
+  matchType   String   @default("word")
+  category    String
+  weight      Float    @default(0.5)
+  suggestions String   @default("[]")
+  enabled     Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([category, enabled])
+  @@index([weight])
+}
+
+model WritingTechnique {
+  id              String                           @id @default(cuid())
+  key             String                           @unique
+  name            String
+  description     String
+  category        String?
+  filePath        String
+  enabled         Boolean                          @default(false)
+  profileBindings WritingTechniqueProfileBinding[]
+  novelBindings   WritingTechniqueNovelBinding[]
+  createdAt       DateTime                         @default(now())
+  updatedAt       DateTime                         @updatedAt
+
+  @@index([category, enabled])
+}
+
+model WritingTechniqueProfileBinding {
+  id                 String        @id @default(cuid())
+  styleProfileId     String
+  writingTechniqueId String
+  enabled            Boolean       @default(true)
+  styleProfile       StyleProfile  @relation(fields: [styleProfileId], references: [id], onDelete: Cascade)
+  technique          WritingTechnique @relation(fields: [writingTechniqueId], references: [id], onDelete: Cascade)
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+
+  @@unique([styleProfileId, writingTechniqueId])
+  @@index([writingTechniqueId])
+}
+
+model WritingTechniqueNovelBinding {
+  id                 String        @id @default(cuid())
+  novelId            String
+  writingTechniqueId String
+  enabled            Boolean       @default(true)
+  novel              Novel         @relation(fields: [novelId], references: [id], onDelete: Cascade)
+  technique          WritingTechnique @relation(fields: [writingTechniqueId], references: [id], onDelete: Cascade)
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+
+  @@unique([novelId, writingTechniqueId])
+  @@index([writingTechniqueId])
 }
 
 model TitleLibrary {

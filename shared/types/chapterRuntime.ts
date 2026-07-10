@@ -15,7 +15,7 @@ import { timelineCheckResultSchema, timelineContextForChapterSchema } from "./ti
 import type { LLMProvider } from "./llm";
 
 const llmProviderSchema = z.custom<LLMProvider>((value) => typeof value === "string" && value.trim().length > 0);
-const auditTypeSchema = z.enum(["continuity", "character", "plot", "mode_fit"]);
+const auditTypeSchema = z.enum(["continuity", "character", "plot", "mode_fit", "vocabulary"]);
 const auditSeveritySchema = z.enum(["low", "medium", "high", "critical"]);
 const auditIssueStatusSchema = z.enum(["open", "resolved", "ignored"]);
 const chapterGenerationStateSchema = z.enum(["planned", "drafted", "reviewed", "repaired", "approved", "published"]);

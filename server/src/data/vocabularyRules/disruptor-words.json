@@ -1,0 +1,133 @@
+[
+  {
+    "key": "disruptor-see",
+    "name": "看到/看见",
+    "pattern": "(看到|看见|望见)",
+    "matchType": "regex",
+    "category": "disruptor_word",
+    "weight": 0.6,
+    "suggestions": [
+      "删除\"看到\"，直接写看到的画面",
+      "\"我看到天快黑了\"→\"天边最后一抹橙光正慢慢沉入楼群\""
+    ]
+  },
+  {
+    "key": "disruptor-notice",
+    "name": "注意到/发现",
+    "pattern": "(注意到|发现)",
+    "matchType": "regex",
+    "category": "disruptor_word",
+    "weight": 0.5,
+    "suggestions": [
+      "删除\"发现\"，直接让读者自己发现细节",
+      "\"我发现他在偷偷哭\"→\"他背对着我，肩膀一抽一抽的\""
+    ]
+  },
+  {
+    "key": "disruptor-hear",
+    "name": "听到/听见",
+    "pattern": "(听到|听见|听出)",
+    "matchType": "regex",
+    "category": "disruptor_word",
+    "weight": 0.6,
+    "suggestions": [
+      "删除\"听到\"，直接写声音本身",
+      "\"她听到门外有脚步声\"→\"门外，脚步声由远及近\""
+    ]
+  },
+  {
+    "key": "disruptor-smell",
+    "name": "闻到/嗅到",
+    "pattern": "(闻到|嗅到)",
+    "matchType": "regex",
+    "category": "disruptor_word",
+    "weight": 0.6,
+    "suggestions": [
+      "删除\"闻到\"，直接写气味",
+      "\"我闻到红烧肉的香味\"→\"红烧肉的甜香从厨房飘出来，勾得我咽了三次口水\""
+    ]
+  },
+  {
+    "key": "disruptor-feel",
+    "name": "感觉到/感到",
+    "pattern": "(感觉到|感到|感觉到)",
+    "matchType": "regex",
+    "category": "disruptor_word",
+    "weight": 0.5,
+    "suggestions": [
+      "用身体反应替代内心独白",
+      "\"她感到很冷\"→\"她拢了拢领口，指尖冰凉\""
+    ]
+  },
+  {
+    "key": "disruptor-realize",
+    "name": "意识到/察觉",
+    "pattern": "(意识到|察觉|察觉到)",
+    "matchType": "regex",
+    "category": "disruptor_word",
+    "weight": 0.5,
+    "suggestions": [
+      "写被意识到的那个事实本身，让读者自己意识到",
+      "\"她意识到自己被骗了\"→\"她盯着那条转账记录，手开始抖\""
+    ]
+  },
+  {
+    "key": "disruptor-think",
+    "name": "心想/心里想",
+    "pattern": "(心想|心里想|暗想)",
+    "matchType": "regex",
+    "category": "disruptor_word",
+    "weight": 0.4,
+    "suggestions": [
+      "直接用引语或间接叙述替代\"心想\"",
+      "\"她心想这下完了\"→\"这下完了\""
+    ]
+  },
+  {
+    "key": "disruptor-suddenly",
+    "name": "突然（氛围隔断用法）",
+    "pattern": "突然",
+    "matchType": "word",
+    "category": "disruptor_word",
+    "weight": 0.5,
+    "suggestions": [
+      "删掉\"突然\"，事件本身的突兀就是最好的突然"
+    ]
+  },
+  {
+    "key": "disruptor-seems",
+    "name": "仿佛/似乎/好像",
+    "pattern": "(仿佛|似乎|好像)",
+    "matchType": "regex",
+    "category": "disruptor_word",
+    "weight": 0.5,
+    "suggestions": [
+      "将比喻直接转化为事实陈述",
+      "\"他似乎很生气\"→\"他把杯子往桌上一磕\""
+    ]
+  },
+  {
+    "key": "disruptor-then",
+    "name": "然后",
+    "pattern": "然后",
+    "matchType": "word",
+    "category": "disruptor_word",
+    "weight": 0.4,
+    "suggestions": [
+      "删掉\"然后\"，动作顺序靠句子排列自然呈现",
+      "将前后句直接串成连贯画面"
+    ]
+  },
+  {
+    "key": "disruptor-but",
+    "name": "然而/但是/却",
+    "pattern": "(然而|但是|可是|却)",
+    "matchType": "regex",
+    "category": "disruptor_word",
+    "weight": 0.4,
+    "suggestions": [
+      "在非必需衔接处直接删掉转折词",
+      "合并短句，让转折隐含在事实对比中"
+    ]
+  }
+]

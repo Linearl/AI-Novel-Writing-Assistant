@@ -19,6 +19,7 @@ import type { LightAuditOutput } from "./auditSchemas";
 import { resolveAuditChapterContextBlocks } from "./auditPromptContext";
 import { isDirectorDebugLogEnabled } from "../../config/directorDebug";
 import { directorDebugBuffer } from "../novel/director/debug/directorDebugBuffer";
+import { vocabAuditScanner } from "../styleEngine/VocabAuditScanner";
 
 interface AuditOptions {
   provider?: LLMProvider;
@@ -68,6 +69,7 @@ const LEGACY_CATEGORY_MAP: Record<AuditType, ReviewIssue["category"]> = {
   character: "logic",
   plot: "pacing",
   mode_fit: "coherence",
+  vocabulary: "coherence",
 };
 
 export class AuditService {
@@ -191,6 +193,27 @@ export class AuditService {
     }
     const structured = await this.invokeAuditLLM(novelId, chapter.novel.title, chapter.title, content, requestedTypes, options);
     const score = normalizeScore(structured.score ?? ruleScore(content));
+
+    // REQ-7017: 词库确定性扫描
+    let vocabIssues: Array<{
+      severity: "low" | "medium" | "high" | "critical";
+      code: string;
+      description: string;
+      evidence: string;
+      fixSuggestion: string;
+    }> = [];
+    try {
+      const vocabRules = await vocabAuditScanner.loadRules();
+      const vocabResult = vocabAuditScanner.scan(content, vocabRules);
+      if (vocabResult.affected) {
+        score.overall = Math.max(0, score.overall - vocabResult.scorePenalty);
+        score.coherence = Math.max(0, score.coherence - Math.round(vocabResult.scorePenalty / 2));
+      }
+      vocabIssues = vocabAuditScanner.toAuditIssues(vocabResult);
+    } catch (err) {
+      // 词库扫描失败不阻断审校流程
+    }
+
     const auditReportsInput = requestedTypes.map((type) => {
       const matched = structured.auditReports?.find((item) => normalizeAuditType(item.auditType) === type);
       return {
@@ -206,6 +229,15 @@ export class AuditService {
         })),
       };
     });
+    // REQ-7017: 词库扫描追加 vocabulary AuditReport，但需避免对 vocabAuditScanner 二次调用，此处直接追加已有 vocabIssues
+    if (vocabIssues.length > 0) {
+      auditReportsInput.push({
+        auditType: "vocabulary" as AuditType,
+        overallScore: Math.max(0, score.overall),
+        summary: `词汇扫描: ${vocabIssues.length} 类问题（僵尸词/隔断词/高频替换词）`,
+        issues: vocabIssues,
+      });
+    }
     const persistedReports = await this.persistAuditReports(novelId, chapterId, score, auditReportsInput);
     const chapterOrder = chapter.order;
     const sourceSnapshot = await prisma.storyStateSnapshot.findFirst({

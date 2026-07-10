@@ -139,11 +139,12 @@ interface RunPipelineChapterDeps {
 const EMPTY_CONTENT_GENERATION_RETRY_LIMIT = 1;
 const NON_PATCHABLE_REVIEW_ISSUE_CODES = new Set(["acceptance_gate_unavailable"]);
 
-const AUDIT_CATEGORY_MAP: Record<"continuity" | "character" | "plot" | "mode_fit", ReviewIssue["category"]> = {
+const AUDIT_CATEGORY_MAP: Record<"continuity" | "character" | "plot" | "mode_fit" | "vocabulary", ReviewIssue["category"]> = {
   continuity: "coherence",
   character: "logic",
   plot: "pacing",
   mode_fit: "coherence",
+  vocabulary: "coherence",
 };
 
 export async function runPipelineChapterWithRuntime(
