@@ -351,20 +351,87 @@ export async function syncVocabularyRulesFromFileSystem(
   return result;
 }
 
+// --- 氛围卡同步 ---
+
+const ATMOSPHERE_CARDS_DIR = resolveDataDir("atmosphereCards");
+
+export async function syncAtmosphereCardsFromFileSystem(
+  mode: "missing_only" | "sync_existing" = "missing_only",
+): Promise<{ created: number; updated: number; skipped: number; errors: string[] }> {
+  const result = { created: 0, updated: 0, skipped: 0, errors: [] as string[] };
+
+  let files: string[];
+  try {
+    files = readdirSync(ATMOSPHERE_CARDS_DIR)
+      .filter((f) => extname(f) === ".md");
+  } catch {
+    result.errors.push(`氛围卡目录不存在: ${ATMOSPHERE_CARDS_DIR}`);
+    return result;
+  }
+
+  for (const file of files) {
+    const filePath = join(ATMOSPHERE_CARDS_DIR, file);
+    const key = basename(file, ".md");
+    try {
+      const content = readFileSync(filePath, "utf-8");
+      const { frontmatter } = parseMdFrontmatter(content);
+
+      if (!frontmatter.name || !frontmatter.description) {
+        result.errors.push(`${file}: 缺少 frontmatter (name/description)`);
+        continue;
+      }
+
+      const existing = await prisma.atmosphereCard.findUnique({
+        where: { key },
+        select: { id: true },
+      });
+
+      const writeData = {
+        name: frontmatter.name,
+        description: frontmatter.description,
+        category: frontmatter.category ?? null,
+        filePath: `server/src/data/atmosphereCards/${file}`,
+        applicableEmotions: frontmatter.applicableEmotions ?? "[]",
+        triggerKeywords: frontmatter.triggerKeywords ?? "[]",
+      };
+
+      if (existing) {
+        if (mode === "sync_existing") {
+          await prisma.atmosphereCard.update({ where: { key }, data: writeData });
+          result.updated++;
+        } else {
+          result.skipped++;
+        }
+      } else {
+        await prisma.atmosphereCard.create({
+          data: { key, ...writeData, enabled: false },
+        });
+        result.created++;
+      }
+    } catch (err: any) {
+      result.errors.push(`${file}: ${err.message}`);
+    }
+  }
+
+  return result;
+}
+
 // --- 聚合入口 ---
 
 export async function syncAllFromFileSystem(
   mode: "missing_only" | "sync_existing" = "missing_only",
 ) {
-  const [antiAi, techniques, vocabulary] = await Promise.all([
+  const [antiAi, techniques, vocabulary, atmosphere] = await Promise.all([
     syncAntiAiRulesFromFileSystem(mode),
     syncWritingTechniquesFromFileSystem(mode),
     syncVocabularyRulesFromFileSystem(mode),
+    syncAtmosphereCardsFromFileSystem(mode),
   ]);
 
   return {
     antiAiRules: antiAi,
     writingTechniques: techniques,
     vocabularyRules: vocabulary,
+    atmosphereCards: atmosphere,
   };
 }

@@ -1423,6 +1423,22 @@ model StyleBinding {
   @@index([styleProfileId])
 }
 
+model AtmosphereCard {
+  id                String   @id @default(cuid())
+  key               String   @unique
+  name              String
+  description       String
+  category          String?
+  filePath          String
+  applicableEmotions String  @default("[]")
+  triggerKeywords   String   @default("[]")
+  enabled           Boolean  @default(false)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([category, enabled])
+}
+
 model VocabularyRule {
   id          String   @id @default(cuid())
   key         String   @unique

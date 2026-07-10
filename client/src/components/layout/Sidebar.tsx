@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import {
+  BookOpen,
   BookOpenText,
   Braces,
   ChevronLeft,
@@ -12,6 +13,7 @@ import {
   LayoutDashboard,
   ListTodo,
   MonitorPlay,
+  Palette,
   Route,
   ScrollText,
   SquareStack,
@@ -68,7 +70,9 @@ const navGroups: NavGroup[] = [
       { to: "/knowledge", label: "知识库", icon: Database },
       { to: "/worlds", label: "世界样本库", icon: Globe2 },
       { to: "/style-engine", label: "写法引擎", icon: WandSparkles },
+      { to: "/atmosphere-cards", label: "氛围写作卡", icon: Palette },
       { to: "/anti-ai-rules", label: "反 AI 规则", icon: ShieldCheck },
+      { to: "/writing-techniques", label: "文笔资料库", icon: BookOpen },
       { to: "/base-characters", label: "基础角色库", icon: UsersRound },
     ],
   },

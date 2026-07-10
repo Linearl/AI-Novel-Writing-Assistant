@@ -553,6 +553,10 @@ const promptAssetLoaderEntries: PromptAssetLoaderEntry[] = [
     key: "writing_technique.recommend@v1",
     load: () => require("./prompts/writingTechnique/techniqueRecommend.prompt").techniqueRecommendPrompt as UnknownPromptAsset,
   },
+  {
+    key: "atmosphere.match@v1",
+    load: () => require("./prompts/atmosphereCard/atmosphereMatch.prompts").atmosphereMatchPrompt as UnknownPromptAsset,
+  },
 ];
 
 const promptAssetLoaderByKey = createPromptAssetLoaderRegistry(promptAssetLoaderEntries);

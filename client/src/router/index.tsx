@@ -22,6 +22,8 @@ const StoryModeManagementPage = lazy(() => import("@/pages/storyModes/StoryModeM
 const TitleStudioPage = lazy(() => import("@/pages/titles/TitleStudioPage"));
 const PromptWorkbenchPage = lazy(() => import("@/pages/promptWorkbench/PromptWorkbenchPage"));
 const AntiAiRulesPage = lazy(() => import("@/pages/antiAiRules/AntiAiRulesPage"));
+const WritingTechniquesPage = lazy(() => import("@/pages/writingTechniques/WritingTechniquesPage"));
+const AtmosphereCardsPage = lazy(() => import("@/pages/atmosphereCards/AtmosphereCardsPage"));
 const ModelRoutesPage = lazy(() => import("@/pages/settings/ModelRoutesPage"));
 const SettingsPage = lazy(() => import("@/pages/settings/SettingsPage"));
 const WorldList = lazy(() => import("@/pages/worlds/WorldList"));
@@ -59,6 +61,8 @@ const routes: RouteObject[] = [
       { path: "titles", element: <TitleStudioPage /> },
       { path: "prompt-workbench", element: <PromptWorkbenchPage /> },
       { path: "anti-ai-rules", element: <AntiAiRulesPage /> },
+      { path: "atmosphere-cards", element: <AtmosphereCardsPage /> },
+      { path: "writing-techniques", element: <WritingTechniquesPage /> },
       { path: "settings/model-routes", element: <ModelRoutesPage /> },
       { path: "settings", element: <SettingsPage /> },
       { path: "worlds", element: <WorldList /> },

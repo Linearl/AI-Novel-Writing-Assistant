@@ -40,6 +40,8 @@ import settingsAutoDirectorRouter from "./routes/settingsAutoDirector";
 import settingsRouter from "./routes/settings";
 import styleEngineRouter from "./routes/styleEngine";
 import styleEngineExtractionRouter from "./routes/styleEngineExtraction";
+import writingTechniquesRouter from "./routes/writingTechniques";
+import atmosphereCardsRouter from "./routes/atmosphereCards";
 import storyModeRouter from "./routes/storyMode";
 import tasksRouter from "./routes/tasks";
 import titleLibraryRouter from "./routes/titleLibrary";
@@ -152,6 +154,8 @@ export function createApp() {
   app.use("/api/title-library", titleLibraryRouter);
   app.use("/api", styleEngineRouter);
   app.use("/api", styleEngineExtractionRouter);
+  app.use("/api/writing-techniques", writingTechniquesRouter);
+  app.use("/api/atmosphere-cards", atmosphereCardsRouter);
   app.use("/api/novels", novelRouter);
   app.use("/api/novels/director", novelDirectorRouter);
   app.use("/api/novel-workflows", novelWorkflowsRouter);
