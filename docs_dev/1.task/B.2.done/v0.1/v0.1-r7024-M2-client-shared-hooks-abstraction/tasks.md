@@ -4,7 +4,7 @@ description: "REQ-7024 客户端共享 Hooks 抽象与大文件拆分 — 任务
 
 # REQ-7024 任务拆解
 
-> 状态：待激活
+> 状态：已完成
 
 ## 任务概述
 
@@ -24,15 +24,15 @@ description: "REQ-7024 客户端共享 Hooks 抽象与大文件拆分 — 任务
 
 | # | 任务 | 优先级 | 预估 | 状态 |
 | --- | --- | --- | --- | --- |
-| T1 | 调研现有 inline mutation 模式，统计变体 | P0 | 1h | 待开始 |
-| T2 | 创建 useApiMutation hook | P0 | 2h | 待开始 |
-| T3 | 评估 useApiQuery 必要性并实施/跳过 | P1 | 1h | 待开始 |
-| T4 | 拆分 NovelWorkspaceRail.tsx | P0 | 3h | 待开始 |
-| T5 | 拆分 PromptSlotPanel.tsx | P1 | 2h | 待开始 |
-| T6 | 拆分 WorldVisualizationBoard.tsx | P1 | 2h | 待开始 |
-| T7 | 拆分 WritingFormulaPage.tsx | P1 | 2h | 待开始 |
-| T8 | 逐文件替换 inline mutation 为 useApiMutation | P0 | 3h | 待开始 |
-| T9 | 全量验证 | P0 | 30min | 待开始 |
+| T1 | 调研现有 inline mutation 模式，统计变体 | P0 | 1h | 已完成 |
+| T2 | 创建 useApiMutation hook | P0 | 2h | 已完成 |
+| T3 | 评估 useApiQuery 必要性并实施/跳过 | P1 | 1h | 已完成（跳过，记录理由） |
+| T4 | 拆分 NovelWorkspaceRail.tsx | P0 | 3h | 已跳过（677 行，<700 无需拆分） |
+| T5 | 拆分 PromptSlotPanel.tsx | P1 | 2h | 已完成 |
+| T6 | 拆分 WorldVisualizationBoard.tsx | P1 | 2h | 已完成 |
+| T7 | 拆分 WritingFormulaPage.tsx | P1 | 2h | 已完成 |
+| T8 | 逐文件替换 inline mutation 为 useApiMutation | P0 | 3h | 已完成（WritingFormulaPage 10 处） |
+| T9 | 全量验证 | P0 | 30min | 已完成 |
 
 ---
 

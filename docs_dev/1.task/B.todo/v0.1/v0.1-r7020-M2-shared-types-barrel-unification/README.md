@@ -1,7 +1,7 @@
 ---
 description: "REQ-7020 共享类型 Barrel 统一导出——README"
 update_time: 2026-07-10
-status: requirements_ready
+status: pass
 ---
 
 # REQ-7020 共享类型 Barrel 统一导出

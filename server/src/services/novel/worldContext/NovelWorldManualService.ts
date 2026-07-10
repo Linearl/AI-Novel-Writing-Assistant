@@ -1,4 +1,4 @@
-import type { NovelWorldManualInput } from "@ai-novel/shared/types/novelWorld";
+import type { NovelWorldManualInput } from "@ai-novel/shared";
 import { prisma } from "../../../db/prisma";
 import {
   buildWorldBindingSupport,
@@ -50,10 +50,7 @@ export class NovelWorldManualService {
     await prisma.$transaction(async (tx) => {
       await tx.novel.update({
         where: { id: input.novelId },
-        data: {
-          worldId: null,
-          storyWorldSliceCacheJson: JSON.stringify({ storyWorldSliceJson: null, storyWorldSliceOverridesJson: null, storyWorldSliceSchemaVersion: 1 }),
-        },
+        data: { worldId: null },
       });
       await tx.$executeRaw`
         INSERT INTO "NovelWorld" (

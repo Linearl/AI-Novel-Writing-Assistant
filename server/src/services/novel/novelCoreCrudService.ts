@@ -1,5 +1,5 @@
-import { serializeCommercialTagsJson } from "@ai-novel/shared/types/novelFraming";
-import type { NovelAutoDirectorTaskSummary } from "@ai-novel/shared/types/novel";
+import { serializeCommercialTagsJson } from "@ai-novel/shared";
+import type { NovelAutoDirectorTaskSummary } from "@ai-novel/shared";
 import { prisma } from "../../db/prisma";
 import { AppError } from "../../middleware/errorHandler";
 import { logger } from "../logging/LoggerService";
@@ -8,7 +8,6 @@ import { getArchivedTaskIdSet } from "../task/taskArchive";
 import { NovelWorkflowService } from "./workflow/NovelWorkflowService";
 import { NovelContinuationService } from "./NovelContinuationService";
 import { NovelVolumeService } from "./volume/NovelVolumeService";
-import { STORY_WORLD_SLICE_SCHEMA_VERSION } from "./storyWorldSlice/storyWorldSlicePersistence";
 import { syncChapterArtifacts } from "./novelChapterArtifacts";
 import { listNovelTokenUsageByNovelIds } from "./novelTokenUsageSummary";
 import { ChapterEditDiffService } from "../styleEngine/ChapterEditDiffService";
@@ -457,17 +456,16 @@ export class NovelCoreCrudService {
               ? nextContinuationBookAnalysisSections
               : null,
         }),
-        ...(shouldResetWorldSlice
-          ? {
-            storyWorldSliceCacheJson: JSON.stringify({ storyWorldSliceJson: null, storyWorldSliceOverridesJson: null, storyWorldSliceSchemaVersion: STORY_WORLD_SLICE_SCHEMA_VERSION }),
-          }
-          : {}),
       },
       include: {
         primaryStoryMode: true,
         secondaryStoryMode: true,
       },
     });
+
+    if (shouldResetWorldSlice) {
+      await prisma.novelWorld.deleteMany({ where: { novelId: id } });
+    }
 
     queueRagUpsert("novel", id);
     if (updated.worldId) {

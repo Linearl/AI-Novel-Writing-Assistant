@@ -3,9 +3,9 @@
   "title": "客户端共享 Hooks 抽象与大文件拆分",
   "priority": "P2",
   "version": "0.1",
-  "status": "requirements_ready",
+  "status": "done",
   "createdAt": "2026-07-10",
-  "completedAt": null,
+  "completedAt": "2026-07-10",
   "source": "架构诊断报告 2026-07-10 第7条发现",
   "note": "创建 useApiMutation/useApiQuery 封装重复模式 + 拆分 NovelWorkspaceRail（678行）及 3 个 >800 行文件 + 替换 ~20 处 inline mutation",
   "reqType": "refactor",
@@ -15,7 +15,7 @@
   "skipDesign": false,
   "tasks": {
     "total": 9,
-    "completed": 0,
-    "pending": 9
+    "completed": 9,
+    "pending": 0
   }
 }

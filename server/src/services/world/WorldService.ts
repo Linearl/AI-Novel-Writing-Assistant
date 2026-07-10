@@ -15,14 +15,14 @@
  */
 
 import type { Prisma } from "@prisma/client";
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
+import type { LLMProvider } from "@ai-novel/shared";
 import type {
   WorldConsistencyReport,
   WorldLayerKey,
   WorldStructuredData,
   WorldStructureSectionKey,
   WorldVisualizationPayload,
-} from "@ai-novel/shared/types/world";
+} from "@ai-novel/shared";
 import { prisma } from "../../db/prisma";
 import { runStructuredPrompt } from "../../prompting/core/promptRunner";
 import { worldAxiomSuggestionPrompt } from "../../prompting/prompts/world/world.prompts";
@@ -308,7 +308,7 @@ export class WorldService {
     await prisma.$transaction([
       prisma.novel.updateMany({
         where: { id: novelId, worldId },
-        data: { worldId: null, storyWorldSliceCacheJson: JSON.stringify({ storyWorldSliceJson: null, storyWorldSliceOverridesJson: null, storyWorldSliceSchemaVersion: 1 }) },
+        data: { worldId: null },
       }),
       prisma.novelWorld.deleteMany({
         where: { novelId, sourceWorldId: worldId },

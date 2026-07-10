@@ -1,5 +1,5 @@
-import type { StoryWorldSlice } from "@ai-novel/shared/types/storyWorldSlice";
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
+import type { StoryWorldSlice } from "@ai-novel/shared";
+import type { LLMProvider } from "@ai-novel/shared";
 import type {
   NovelWorldAssetSummary,
   NovelWorldHandbook,
@@ -7,7 +7,7 @@ import type {
   NovelWorldSyncDiff,
   NovelWorldSyncInput,
   NovelWorldSyncSection,
-} from "@ai-novel/shared/types/novelWorld";
+} from "@ai-novel/shared";
 import { prisma } from "../../../db/prisma";
 import { runStructuredPrompt } from "../../../prompting/core/promptRunner";
 import { novelThemeWorldGenerationPrompt } from "../../../prompting/prompts/world/world.prompts";
@@ -77,7 +77,6 @@ export interface NovelWorldInstanceView {
 interface LegacyNovelWorldSourceRow {
   novelId: string;
   worldId: string | null;
-  storyWorldSliceCacheJson: string | null;
   novelCreatedAt: Date | string;
   novelUpdatedAt: Date | string;
   worldName: string | null;
@@ -85,12 +84,6 @@ interface LegacyNovelWorldSourceRow {
   structureJson: string | null;
   bindingSupportJson: string | null;
   worldVersion: number | null;
-  /** Deserialized from storyWorldSliceCacheJson */
-  storyWorldSliceJson: string | null;
-  /** Deserialized from storyWorldSliceCacheJson */
-  storyWorldSliceOverridesJson: string | null;
-  /** Deserialized from storyWorldSliceCacheJson */
-  storyWorldSliceSchemaVersion: number;
 }
 
 export class NovelWorldInstanceService {
@@ -204,13 +197,10 @@ export class NovelWorldInstanceService {
   async deleteNovelWorld(novelId: string): Promise<void> {
     // 1. 删除 NovelWorld 记录（级联删除关联的 sync records 等）
     await prisma.novelWorld.deleteMany({ where: { novelId } });
-    // 2. 清除 Novel 上的遗留世界字段
+    // 2. 清除 Novel 上的世界关联
     await prisma.novel.update({
       where: { id: novelId },
-      data: {
-        worldId: null,
-        storyWorldSliceCacheJson: JSON.stringify({ storyWorldSliceJson: null, storyWorldSliceOverridesJson: null, storyWorldSliceSchemaVersion: 1 }),
-      },
+      data: { worldId: null },
     });
   }
 
@@ -224,7 +214,6 @@ export class NovelWorldInstanceService {
       SELECT
         n."id" AS "novelId",
         n."worldId" AS "worldId",
-        n."storyWorldSliceCacheJson" AS "storyWorldSliceCacheJson",
         n."createdAt" AS "novelCreatedAt",
         n."updatedAt" AS "novelUpdatedAt",
         w."name" AS "worldName",
@@ -237,25 +226,15 @@ export class NovelWorldInstanceService {
       WHERE n."id" = ${novelId}
       LIMIT 1
     `;
-    const raw = rows[0];
-    if (!raw) {
+    const source = rows[0];
+    if (!source) {
       throw new Error("小说不存在。");
     }
-    // Deserialize storyWorldSliceCacheJson into the individual fields
-    const cache = raw.storyWorldSliceCacheJson ? JSON.parse(raw.storyWorldSliceCacheJson) : {};
-    const source: LegacyNovelWorldSourceRow = {
-      ...raw,
-      storyWorldSliceJson: cache.storyWorldSliceJson ?? null,
-      storyWorldSliceOverridesJson: cache.storyWorldSliceOverridesJson ?? null,
-      storyWorldSliceSchemaVersion: cache.storyWorldSliceSchemaVersion ?? 1,
-    };
-    if (!source.worldId && !source.storyWorldSliceJson && !source.storyWorldSliceOverridesJson) {
+    if (!source.worldId) {
       return null;
     }
 
     const novelWorldId = `novel_world_${source.novelId}`;
-    const sourceType = source.worldId ? "imported" : "manual";
-    const storySliceBuiltAt = source.storyWorldSliceJson ? source.novelUpdatedAt : null;
     await prisma.$executeRaw`
       INSERT INTO "NovelWorld" (
         "id",
@@ -280,15 +259,15 @@ export class NovelWorldInstanceService {
         ${novelWorldId},
         ${source.novelId},
         ${source.worldId},
-        ${sourceType},
+        ${"imported"},
         ${source.worldName},
         ${source.worldSummary},
         ${source.structureJson},
         ${source.bindingSupportJson},
-        ${source.storyWorldSliceJson},
-        ${source.storyWorldSliceOverridesJson},
-        ${source.storyWorldSliceSchemaVersion},
-        ${storySliceBuiltAt},
+        ${null},
+        ${null},
+        ${1},
+        ${null},
         ${null},
         ${false},
         ${"none"},
@@ -357,10 +336,7 @@ export class NovelWorldInstanceService {
     await prisma.$transaction(async (tx) => {
       await tx.novel.update({
         where: { id: input.novelId },
-        data: {
-          worldId: world.id,
-          storyWorldSliceCacheJson: JSON.stringify({ storyWorldSliceJson: null, storyWorldSliceOverridesJson: null, storyWorldSliceSchemaVersion: 1 }),
-        },
+        data: { worldId: world.id },
       });
       await tx.$executeRaw`
         INSERT INTO "NovelWorld" (
@@ -580,10 +556,7 @@ export class NovelWorldInstanceService {
 
       await tx.novel.update({
         where: { id: input.novelId },
-        data: {
-          worldId: sourceWorldId,
-          storyWorldSliceCacheJson: JSON.stringify({ storyWorldSliceJson: null, storyWorldSliceOverridesJson: null, storyWorldSliceSchemaVersion: 1 }),
-        },
+        data: { worldId: sourceWorldId },
       });
 
       await tx.$executeRaw`

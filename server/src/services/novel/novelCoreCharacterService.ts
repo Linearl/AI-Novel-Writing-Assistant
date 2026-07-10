@@ -1,6 +1,7 @@
 import { prisma } from "../../db/prisma";
 import { runStructuredPrompt } from "../../prompting/core/promptRunner";
 import { invokeStructuredLlm } from "../../llm/structuredInvoke";
+import { loadPrompt, renderPrompt } from "../../data/prompts";
 import { z } from "zod";
 import {
   characterEvolutionPrompt,
@@ -16,7 +17,7 @@ import {
   LLMGenerateOptions,
 } from "./novelCoreShared";
 import { zodCharacterImportResult, zodImportCharactersWithRelationsSchema } from "./novelCoreCharacterShared";
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
+import type { LLMProvider } from "@ai-novel/shared";
 import { serializeCharacterProhibitions } from "./characters/characterHardFacts";
 
 export class NovelCoreCharacterService {
@@ -382,36 +383,9 @@ export class NovelCoreCharacterService {
     outlineText: string,
     options?: { provider?: LLMProvider; model?: string },
   ): Promise<z.infer<typeof zodCharacterImportResult>[]> {
-    const systemPrompt = [
-      "你是角色信息提取器。严格从素材文本中提取角色和关系，禁止编造任何信息。",
-      "",
-      "【铁律】",
-      "1. 只提取素材中明确出现的角色和关系",
-      "2. 角色名必须逐字抄录，不得改写、翻译或近似",
-      "3. 如果素材没有提到某字段，该字段留空，不得猜测",
-      "4. 素材中没提到的角色一个都不要加",
-      "5. relations 中的 sourceName/targetName 必须与 characters 中的 name 完全一致",
-      "",
-      "【字段说明】",
-      "characters[].name: 角色姓名，逐字从原文摘录",
-      "characters[].role: 角色定位（主角/反派/配角/女主/未指定）",
-      "characters[].gender: male/female/other/unknown",
-      "characters[].personality: 性格描述",
-      "characters[].background: 背景/身世摘要",
-      "characters[].relationToProtagonist: 与主角的关系",
-      "characters[].storyFunction: 故事中的功能/作用",
-      "",
-      "relations 字段: 素材中明确提到的角色间关系，每条包含:",
-      "sourceName: 关系来源角色名（如\"江夜\"）",
-      "targetName: 关系目标角色名（如\"季星灼\"）",
-      "surfaceRelation: 表面关系描述（如\"前恋人/背叛者\"、\"救赎与被救赎\"）",
-      "hiddenTension: 隐藏的情感张力（选填）",
-      "conflictSource: 冲突来源（选填）",
-      "",
-      "输出纯 JSON：{\"characters\": [...], \"relations\": [...]}",
-    ].join("\n");
+    const { system: systemPrompt, user: userTemplate } = loadPrompt("novel.character-extraction");
 
-    const userPrompt = `请从以下素材中提取所有角色和关系信息：\n\n---\n${outlineText.slice(0, 8000)}\n---`;
+    const userPrompt = renderPrompt(userTemplate!, { outlineText: outlineText.slice(0, 8000) });
 
     const result = await invokeStructuredLlm<z.infer<typeof zodImportCharactersWithRelationsSchema>>({
       systemPrompt,

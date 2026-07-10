@@ -3,8 +3,7 @@ import {
   buildNovelCoverImagePrompt,
   type NovelCoverImagePromptNovelContext,
 } from "@ai-novel/shared/imagePrompt";
-import { parseCommercialTagsJson } from "@ai-novel/shared/types/novelFraming";
-import { storyWorldSliceSchema } from "@ai-novel/shared/types/storyWorldSlice";
+import { parseCommercialTagsJson } from "@ai-novel/shared";
 import { prisma } from "../../../db/prisma";
 import { AppError } from "../../../middleware/errorHandler";
 import { runStructuredPrompt, runTextPrompt } from "../../../prompting/core/promptRunner";
@@ -31,7 +30,6 @@ interface NovelCoverNovelRecord {
   narrativePov: string | null;
   pacePreference: string | null;
   emotionIntensity: string | null;
-  storyWorldSliceJson: string | null;
   genre: { name: string | null } | null;
   primaryStoryMode: { name: string | null } | null;
   secondaryStoryMode: { name: string | null } | null;
@@ -63,18 +61,6 @@ function normalizeOptionalText(value: string | null | undefined): string | null 
 
 function parseCommercialTags(value: string | null | undefined): string[] {
   return parseCommercialTagsJson(value);
-}
-
-function parseWorldSummary(value: string | null | undefined): string | null {
-  if (!value?.trim()) {
-    return null;
-  }
-  try {
-    const parsed = storyWorldSliceSchema.parse(JSON.parse(value) as unknown);
-    return normalizeOptionalText(parsed.coreWorldFrame);
-  } catch {
-    return null;
-  }
 }
 
 function buildWorldSummaryFromContext(block: WorldContextBlock | null | undefined): string | null {
@@ -115,7 +101,7 @@ export function toNovelCoverPromptContext(
     primaryStoryModeLabel: normalizeOptionalText(novel.primaryStoryMode?.name),
     secondaryStoryModeLabel: normalizeOptionalText(novel.secondaryStoryMode?.name),
     worldName: normalizeOptionalText(novel.world?.name),
-    worldSummary: worldContextSummary ?? parseWorldSummary(novel.storyWorldSliceJson),
+    worldSummary: worldContextSummary,
     styleTone: normalizeOptionalText(novel.styleTone),
     narrativePovLabel: buildNarrativeLabel(NARRATIVE_POV_LABELS, novel.narrativePov),
     pacePreferenceLabel: buildNarrativeLabel(PACE_PREFERENCE_LABELS, novel.pacePreference),
@@ -165,11 +151,9 @@ export async function loadNovelCoverNovel(novelId: string): Promise<NovelCoverNo
     throw new AppError("Novel not found.", 404);
   }
   const { storyWorldSliceCacheJson, bookFramingJson, ...rest } = novel;
-  const worldSliceCache = storyWorldSliceCacheJson ? JSON.parse(storyWorldSliceCacheJson) as Record<string, unknown> : {};
   const bookFraming = bookFramingJson ? JSON.parse(bookFramingJson) as Record<string, unknown> : {};
   return {
     ...rest,
-    storyWorldSliceJson: (typeof worldSliceCache.storyWorldSliceJson === "string" ? worldSliceCache.storyWorldSliceJson : null) as string | null,
     bookSellingPoint: (typeof bookFraming.bookSellingPoint === "string" ? bookFraming.bookSellingPoint : null) as string | null,
     competingFeel: (typeof bookFraming.competingFeel === "string" ? bookFraming.competingFeel : null) as string | null,
     first30ChapterPromise: (typeof bookFraming.first30ChapterPromise === "string" ? bookFraming.first30ChapterPromise : null) as string | null,

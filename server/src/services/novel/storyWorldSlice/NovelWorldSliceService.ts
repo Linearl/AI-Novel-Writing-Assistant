@@ -1,11 +1,11 @@
 import { createHash } from "node:crypto";
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
+import type { LLMProvider } from "@ai-novel/shared";
 import type {
   StoryWorldSlice,
   StoryWorldSliceBuilderMode,
   StoryWorldSliceOverrides,
   StoryWorldSliceView,
-} from "@ai-novel/shared/types/storyWorldSlice";
+} from "@ai-novel/shared";
 import { prisma } from "../../../db/prisma";
 import { runStructuredPrompt } from "../../../prompting/core/promptRunner";
 import { storyWorldSlicePrompt } from "../../../prompting/prompts/storyWorldSlice/storyWorldSlice.prompts";
@@ -21,6 +21,8 @@ import {
   parseStoryWorldSliceOverrides,
   STORY_WORLD_SLICE_SCHEMA_VERSION,
 } from "./storyWorldSlicePersistence";
+
+import { NovelWorldInstanceService } from "../worldContext/NovelWorldInstanceService";
 
 interface EnsureStoryWorldSliceOptions {
   storyInput?: string;
@@ -85,20 +87,7 @@ export class NovelWorldSliceService {
     if (!novel) {
       throw new Error("小说不存在。");
     }
-    // Deserialize storyWorldSliceCacheJson into individual fields for downstream consumers
-    const cache = (() => {
-      try {
-        return novel.storyWorldSliceCacheJson ? JSON.parse(novel.storyWorldSliceCacheJson) as Record<string, unknown> : {};
-      } catch {
-        return {};
-      }
-    })();
-    return {
-      ...novel,
-      storyWorldSliceJson: (cache.storyWorldSliceJson as string | null) ?? null,
-      storyWorldSliceOverridesJson: (cache.storyWorldSliceOverridesJson as string | null) ?? null,
-      storyWorldSliceSchemaVersion: cache.storyWorldSliceSchemaVersion ?? 1,
-    };
+    return novel;
   }
 
   private async getNovelWorldRow(novelId: string): Promise<NovelWorldSliceRow | null> {
@@ -142,8 +131,8 @@ export class NovelWorldSliceService {
       name: novel.world.name,
       structureJson: novel.world.structureJson,
       bindingSupportJson: novel.world.bindingSupportJson,
-      storySliceJson: novel.storyWorldSliceJson,
-      storySliceOverridesJson: novel.storyWorldSliceOverridesJson,
+      storySliceJson: null,
+      storySliceOverridesJson: null,
       updatedAt: novel.world.updatedAt,
     };
   }
@@ -241,16 +230,6 @@ export class NovelWorldSliceService {
     slice: StoryWorldSlice | null,
     overrides: StoryWorldSliceOverrides,
   ): Promise<void> {
-    await prisma.novel.update({
-      where: { id: novelId },
-      data: {
-        storyWorldSliceCacheJson: JSON.stringify({
-          storyWorldSliceJson: slice ? JSON.stringify(slice) : null,
-          storyWorldSliceOverridesJson: JSON.stringify(overrides),
-          storyWorldSliceSchemaVersion: STORY_WORLD_SLICE_SCHEMA_VERSION,
-        }),
-      },
-    });
     const novelWorldRows = await prisma.$queryRaw<Array<{ id: string }>>`
       SELECT "id" FROM "NovelWorld" WHERE "novelId" = ${novelId} LIMIT 1
     `;
@@ -269,14 +248,15 @@ export class NovelWorldSliceService {
   }
 
   async getWorldSliceView(novelId: string): Promise<StoryWorldSliceView> {
+    await new NovelWorldInstanceService().ensureFromLegacyNovel(novelId);
     const novel = await this.getNovelContext(novelId);
     const activeWorld = await this.getActiveWorldSource(novel);
     const overrides = normalizeOverrides(parseStoryWorldSliceOverrides(
-      activeWorld?.storySliceOverridesJson ?? novel.storyWorldSliceOverridesJson,
+      activeWorld?.storySliceOverridesJson ?? null,
     ));
     const { storyInput, source } = this.resolveStoryInput(novel);
     const digest = buildStoryInputDigest(storyInput);
-    const slice = parseStoryWorldSlice(activeWorld?.storySliceJson ?? novel.storyWorldSliceJson);
+    const slice = parseStoryWorldSlice(activeWorld?.storySliceJson ?? null);
     const parsedPayload = activeWorld
       ? parseWorldStructurePayload(activeWorld.structureJson, activeWorld.bindingSupportJson)
       : null;
@@ -309,17 +289,18 @@ export class NovelWorldSliceService {
     novelId: string,
     options: EnsureStoryWorldSliceOptions = {},
   ): Promise<StoryWorldSlice | null> {
+    await new NovelWorldInstanceService().ensureFromLegacyNovel(novelId);
     const novel = await this.getNovelContext(novelId);
     const activeWorld = await this.getActiveWorldSource(novel);
     if (!activeWorld) {
       return null;
     }
     const overrides = normalizeOverrides(parseStoryWorldSliceOverrides(
-      activeWorld.storySliceOverridesJson ?? novel.storyWorldSliceOverridesJson,
+      activeWorld.storySliceOverridesJson ?? null,
     ));
     const { storyInput } = this.resolveStoryInput(novel, options.storyInput);
     const digest = buildStoryInputDigest(storyInput);
-    const currentSlice = parseStoryWorldSlice(activeWorld.storySliceJson ?? novel.storyWorldSliceJson);
+    const currentSlice = parseStoryWorldSlice(activeWorld.storySliceJson ?? null);
     const stale = this.isSliceStale({
       slice: currentSlice,
       worldId: activeWorld.id,
@@ -344,10 +325,11 @@ export class NovelWorldSliceService {
     novelId: string,
     options: RefreshStoryWorldSliceOptions = {},
   ): Promise<StoryWorldSliceView> {
+    await new NovelWorldInstanceService().ensureFromLegacyNovel(novelId);
     const novel = await this.getNovelContext(novelId);
     const activeWorld = await this.getActiveWorldSource(novel);
     const storedOverrides = parseStoryWorldSliceOverrides(
-      activeWorld?.storySliceOverridesJson ?? novel.storyWorldSliceOverridesJson,
+      activeWorld?.storySliceOverridesJson ?? null,
     );
     const overrides = normalizeOverrides(options.overrides ?? storedOverrides);
     if (!activeWorld) {

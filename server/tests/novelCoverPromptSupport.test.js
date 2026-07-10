@@ -39,7 +39,7 @@ function buildWorldSliceJson(coreWorldFrame) {
   });
 }
 
-test("toNovelCoverPromptContext normalizes missing fields and parses world summary", () => {
+test("toNovelCoverPromptContext normalizes missing fields and uses worldContext for summary", () => {
   const context = toNovelCoverPromptContext({
     id: "novel-cover-1",
     title: "雾港审判局",
@@ -53,11 +53,14 @@ test("toNovelCoverPromptContext normalizes missing fields and parses world summa
     narrativePov: "third_person",
     pacePreference: "fast",
     emotionIntensity: "high",
-    storyWorldSliceJson: buildWorldSliceJson("高压雾港里，审判机构与地下交易同时运作。"),
     genre: { name: "都市异能" },
     primaryStoryMode: { name: "审判升级流" },
     secondaryStoryMode: { name: "悬案追凶流" },
     world: { name: "雾港" },
+  }, {
+    summaryText: "高压雾港里，审判机构与地下交易同时运作。",
+    activeForces: [],
+    activeLocations: [],
   });
 
   assert.equal(context.title, "雾港审判局");
@@ -87,7 +90,6 @@ test("toNovelCoverPromptContext prefers gateway world context for cover visuals"
     narrativePov: null,
     pacePreference: null,
     emotionIntensity: null,
-    storyWorldSliceJson: buildWorldSliceJson("旧切片雾港。"),
     genre: null,
     primaryStoryMode: null,
     secondaryStoryMode: null,

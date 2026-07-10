@@ -1,7 +1,7 @@
 ---
 description: "REQ-7024 客户端共享 Hooks 抽象与大文件拆分——README"
 update_time: 2026-07-10
-status: requirements_ready
+status: done
 ---
 
 # REQ-7024 客户端共享 Hooks 抽象与大文件拆分
@@ -24,6 +24,6 @@ status: requirements_ready
 
 ## 状态
 
-- 当前阶段：需求就绪
+- 当前阶段：已完成
 - 复杂度：M2（中等复杂度重构）
 - 预估影响文件：10-15 个

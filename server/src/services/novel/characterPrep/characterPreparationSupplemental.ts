@@ -6,7 +6,7 @@ import type {
   SupplementalCharacterCandidate,
   SupplementalCharacterGenerateInput,
   SupplementalCharacterGenerationResult,
-} from "@ai-novel/shared/types/novel";
+} from "@ai-novel/shared";
 import { prisma } from "../../../db/prisma";
 import { runStructuredPrompt } from "../../../prompting/core/promptRunner";
 import { buildSupplementalCharacterContextBlocks } from "../../../prompting/prompts/novel/characterPreparation.contextBlocks";
@@ -15,6 +15,7 @@ import {
 } from "../../../prompting/prompts/novel/characterPreparation.prompts";
 import { NovelContextService } from "../NovelContextService";
 import { CharacterDynamicsService } from "../dynamics/CharacterDynamicsService";
+import { loadPrompt } from "../../../data/prompts";
 import {
   supplementalCharacterCandidateSchema,
   supplementalCharacterGenerationResponseSchema,
@@ -24,7 +25,7 @@ import { buildStoryModePromptBlock, normalizeStoryModeOutput } from "../../story
 import { parseCharacterProhibitionsJson } from "../characters/characterHardFacts";
 import { WorldContextGateway } from "../worldContext/WorldContextGateway";
 import { invokeStructuredLlm } from "../../../llm/structuredInvoke";
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
+import type { LLMProvider } from "@ai-novel/shared";
 import { z } from "zod";
 
 const nameExtractionSchema = z.object({
@@ -629,16 +630,7 @@ export class CharacterPreparationSupplementalService {
     adjustment: string,
     options?: { provider?: LLMProvider; model?: string },
   ): Promise<SupplementalCharacterCandidate> {
-    const systemPrompt = [
-      "你是角色微调编辑。用户对一个已生成的角色候选提出了调整要求，你需要在保持角色整体定位不变的前提下，按要求修改对应字段。",
-      "",
-      "硬规则：",
-      "1. 只修改用户明确要求调整的字段，其余字段保持原样。",
-      "2. 修改后的角色必须仍然能直接进入正文使用。",
-      "3. 不得改变角色姓名（name 字段必须保持不变）。",
-      "4. 输出严格 JSON，不要输出 Markdown 或额外文本。",
-      "5. 所有文本使用简体中文。",
-    ].join("\n");
+    const systemPrompt = loadPrompt("character.refine").system;
 
     const userPrompt = [
       "当前角色候选：",
