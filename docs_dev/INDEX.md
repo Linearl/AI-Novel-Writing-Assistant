@@ -158,15 +158,6 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1\v0.1-r7028-C3-director-event-system-consolidation\REQ-7028-director-event-system-consolidation.md](./1.task\B.todo\v0.1\v0.1-r7028-C3-director-event-system-consolidation\REQ-7028-director-event-system-consolidation.md) | REQ-7028 Director 事件系统收敛 | REQ-7028 Director 事件系统收敛 |
 | [1.task\B.todo\v0.1\v0.1-r7028-C3-director-event-system-consolidation\tasks.md](./1.task\B.todo\v0.1\v0.1-r7028-C3-director-event-system-consolidation\tasks.md) | REQ-7028 Director 事件系统收敛 — 任务拆解 | REQ-7028 Director 事件系统收敛 — 任务拆解 |
 
-## 1.task\B.todo\v0.1\v0.1-r7031-M2-silent-catch-logging
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r7031-M2-silent-catch-logging\README.md](./1.task\B.todo\v0.1\v0.1-r7031-M2-silent-catch-logging\README.md) | 静默吞错日志化 — REQ-7031 任务包总线 | 静默吞错日志化 — REQ-7031 任务包总线 |
-| [1.task\B.todo\v0.1\v0.1-r7031-M2-silent-catch-logging\REQ-7031-silent-catch-logging-original.md](./1.task\B.todo\v0.1\v0.1-r7031-M2-silent-catch-logging\REQ-7031-silent-catch-logging-original.md) | 静默吞错日志化 — REQ-7031 需求文档（冻结副本） | 静默吞错日志化 — REQ-7031 需求文档（冻结副本） |
-| [1.task\B.todo\v0.1\v0.1-r7031-M2-silent-catch-logging\REQ-7031-silent-catch-logging.md](./1.task\B.todo\v0.1\v0.1-r7031-M2-silent-catch-logging\REQ-7031-silent-catch-logging.md) | 静默吞错日志化 — REQ-7031 需求文档，修复审计复核确认的 .catch(() => {}) 静默吞错点共 14 处 | 静默吞错日志化 — REQ-7031 需求文档，修复审计复核确认的 .catch(() => {}) 静默吞错点共 14 处 |
-| [1.task\B.todo\v0.1\v0.1-r7031-M2-silent-catch-logging\tasks.md](./1.task\B.todo\v0.1\v0.1-r7031-M2-silent-catch-logging\tasks.md) | 静默吞错日志化 — REQ-7031 任务拆解 | 静默吞错日志化 — REQ-7031 任务拆解 |
-
 ## 1.task\B.todo\v0.1\v0.1-r7032-S3-extract-hardcoded-constants
 
 | 文件 | 标题 | 描述 |
@@ -225,7 +216,7 @@ description: "docs 目录索引（自动生成）"
 | --- | --- | --- |
 | [1.task\B.todo\v0.1\v0.1-r7039-S2-scattered-small-fixes\README.md](./1.task\B.todo\v0.1\v0.1-r7039-S2-scattered-small-fixes\README.md) | REQ-7039 任务包总线 — 散点小修复合集 | REQ-7039 任务包总线 — 散点小修复合集 |
 | [1.task\B.todo\v0.1\v0.1-r7039-S2-scattered-small-fixes\REQ-7039-scattered-small-fixes.md](./1.task\B.todo\v0.1\v0.1-r7039-S2-scattered-small-fixes\REQ-7039-scattered-small-fixes.md) | REQ-7039 散点小修复需求 | REQ-7039 散点小修复需求 |
-| [1.task\B.todo\v0.1\v0.1-r7039-S2-scattered-small-fixes\tasks.md](./1.task\B.todo\v0.1\v0.1-r7039-S2-scattered-small-fixes\tasks.md) | REQ-7039 任务拆解 | REQ-7039 任务拆解 |
+| [1.task\B.todo\v0.1\v0.1-r7039-S2-scattered-small-fixes\tasks.md](./1.task\B.todo\v0.1\v0.1-r7039-S2-scattered-small-fixes\tasks.md) | --- | - |
 
 ## 1.task\template
 

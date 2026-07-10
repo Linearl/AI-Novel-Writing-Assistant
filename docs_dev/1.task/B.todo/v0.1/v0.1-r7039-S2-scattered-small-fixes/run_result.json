@@ -3,7 +3,7 @@
   "title": "散点小修复：ARCH-005/009/023/024 + STA-025 + PERF-003 + PERF-007/C + COMPAT-004",
   "priority": "P3",
   "version": "v0.1",
-  "status": "requirements_ready",
+  "status": "pass",
   "createdAt": "2026-07-10",
   "completedAt": null,
   "tags": ["audit-fix", "scattered-small-fixes"],
