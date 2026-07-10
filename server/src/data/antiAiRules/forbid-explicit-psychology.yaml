@@ -1,0 +1,17 @@
+key: forbid-explicit-psychology
+name: 禁止解释型心理描写
+type: forbidden
+severity: high
+description: 禁止直接使用"他感到""他意识到"等句式解释人物心理。
+detectPatterns:
+  - 他感到
+  - 她感到
+  - 他意识到
+  - 她意识到
+  - 他明白了
+  - 她明白了
+rewriteSuggestion: 把心理解释改成动作、语气、停顿、环境反应或结果。
+promptInstruction: 禁止直接解释人物心理，人物状态必须通过行为、动作、语气或环境反应体现。
+autoRewrite: true
+defaultEnabled: true
+defaultGlobalBaseline: true

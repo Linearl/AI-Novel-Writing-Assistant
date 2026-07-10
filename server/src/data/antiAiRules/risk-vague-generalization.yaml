@@ -1,0 +1,18 @@
+key: risk-vague-generalization
+name: 警惕概括性叙述
+type: risk
+severity: medium
+description: 用一句话概括整个场景或状态（"他很穷""那天很无聊""气氛很紧张"），缺少具体细节支撑。
+detectPatterns:
+  - 他很穷
+  - 那天很无聊
+  - 气氛很紧张
+  - 场面很壮观
+  - 过程很艰难
+  - 一切都
+  - 所有人都
+rewriteSuggestion: 用一个具体细节替代概括。例如"他很穷"→"冰箱里只有半根葱和一瓶过期的酱油"
+promptInstruction: 避免用一句话概括整个场景或状态。不说"他很穷"，写"冰箱里只有半根葱"；不说"气氛很紧张"，写具体的人物行为细节。
+autoRewrite: false
+defaultEnabled: true
+defaultGlobalBaseline: false

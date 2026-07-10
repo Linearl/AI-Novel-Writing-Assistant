@@ -1,0 +1,18 @@
+key: forbid-emotion-label
+name: 禁止情绪标签词
+type: forbidden
+severity: medium
+description: 禁止直接用情绪名词标签化人物状态（"悲伤""开心""愤怒"），必须通过行为和细节让读者自行判断。
+detectPatterns:
+  - 带着悲伤
+  - 充满愤怒
+  - 一脸开心
+  - 满怀希望
+  - 内心充满
+  - 感到一阵
+  - 涌上一股
+rewriteSuggestion: 删除情绪标签，用一个动作或画面替代。例如"带着悲伤离开了"→"她把钥匙放在桌上，没有回头"
+promptInstruction: 禁止直接使用情绪名词标签化人物状态。不要写"带着悲伤"，写具体行为；不要写"充满愤怒"，写动作细节。让读者自己判断人物情绪。
+autoRewrite: true
+defaultEnabled: true
+defaultGlobalBaseline: false

@@ -1,0 +1,13 @@
+key: risk-three-paragraphs-exposition
+name: 连续三段解释性叙事
+type: risk
+severity: high
+description: 连续几段只有解释没有动作，会削弱现场感。
+detectPatterns:
+  - 连续解释
+  - 没有动作
+rewriteSuggestion: 插入动作、对话、环境反馈，减少连段说明。
+promptInstruction: 注意避免连续几段只有解释没有动作或对话。
+autoRewrite: false
+defaultEnabled: true
+defaultGlobalBaseline: true

@@ -1,0 +1,11 @@
+key: encourage-life-noise
+name: 鼓励生活噪音
+type: encourage
+severity: low
+description: 适当加入与主线不完全相关的生活噪音增加现场感。
+detectPatterns: []
+rewriteSuggestion: 补入环境声、杂音、小打断或生活性信息。
+promptInstruction: 适当保留生活噪音和无效信息，增强现场感。
+autoRewrite: false
+defaultEnabled: true
+defaultGlobalBaseline: false

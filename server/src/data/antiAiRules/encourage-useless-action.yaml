@@ -1,0 +1,11 @@
+key: encourage-useless-action
+name: 鼓励无意义小动作
+type: encourage
+severity: low
+description: 鼓励加入真实但不推动主线的小动作增强人味。
+detectPatterns: []
+rewriteSuggestion: 补入挠头、点烟、抠包装、挪椅子等小动作。
+promptInstruction: 优先加入真实但不推动主线的小动作，增加生活感。
+autoRewrite: false
+defaultEnabled: true
+defaultGlobalBaseline: false

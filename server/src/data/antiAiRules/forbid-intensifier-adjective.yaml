@@ -1,0 +1,23 @@
+key: forbid-intensifier-adjective
+name: 禁止程度副词+形容词
+type: forbidden
+severity: high
+description: 禁止使用"很/非常/特别/极其/十分+形容词"的组合，必须用五感具象描写替代。
+detectPatterns:
+  - 很美
+  - 非常好看
+  - 特别好
+  - 极其重要
+  - 十分感动
+  - 很漂亮
+  - 很温暖
+  - 非常冷
+  - 特别热
+  - 很远
+  - 很大
+  - 很小
+rewriteSuggestion: 删除程度副词，用具体的感官描写替代。例如"天很冷"→"呼出的气在睫毛上结了霜"
+promptInstruction: 禁止使用"很/非常/特别/极其/十分+形容词"的组合。用五感具象描写替代：用质感替代"很白"，用物件反应替代"特别冷"，用动作替代"非常孤独"。
+autoRewrite: true
+defaultEnabled: true
+defaultGlobalBaseline: true

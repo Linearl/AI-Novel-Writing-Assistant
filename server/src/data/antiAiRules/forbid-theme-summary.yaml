@@ -1,0 +1,15 @@
+key: forbid-theme-summary
+name: 禁止总结主题
+type: forbidden
+severity: high
+description: 禁止把段落写成总结中心思想或提炼人生道理。
+detectPatterns:
+  - 这说明
+  - 这意味着
+  - 归根结底
+  - 其实就是
+rewriteSuggestion: 删掉主题总结，让信息通过事件和结果自然显现。
+promptInstruction: 不要总结主题，不要替读者提炼中心思想。
+autoRewrite: true
+defaultEnabled: true
+defaultGlobalBaseline: true

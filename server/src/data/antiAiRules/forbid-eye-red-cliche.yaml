@@ -1,0 +1,20 @@
+key: forbid-eye-red-cliche
+name: 禁止情绪模板句
+type: forbidden
+severity: medium
+description: 禁止使用"眼眶发红/泪流满面/哭得梨花带雨"等写悲伤的模板句式，必须用具体行为替代。
+detectPatterns:
+  - 眼眶发红
+  - 眼眶湿润
+  - 泪流满面
+  - 梨花带雨
+  - 泪如泉涌
+  - 潸然泪下
+  - 泣不成声
+  - 热泪盈眶
+  - 眼含热泪
+rewriteSuggestion: 用仪式化动作、无声沉默、身体颤抖或失常行为替代直接写哭。例如"她眼眶发红"→"她把烟头一根根按灭，地上积了小半盆"
+promptInstruction: 禁止使用"眼眶发红/泪流满面/梨花带雨"等写悲伤的模板句。用具体行为替代：仪式化动作、无声沉默、身体颤抖、对物态度变化、失常行为。
+autoRewrite: true
+defaultEnabled: true
+defaultGlobalBaseline: false

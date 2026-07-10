@@ -1,0 +1,19 @@
+key: risk-logic-cement
+name: 警惕逻辑水泥词
+type: risk
+severity: medium
+description: 过度使用"然后/接着/于是/因此/所以"等逻辑连接词会让文字生硬、机械，像在填表格。
+detectPatterns:
+  - 然后
+  - 接着
+  - 于是
+  - 因此
+  - 所以
+  - 随后
+  - 紧接着
+  - 随即
+rewriteSuggestion: 删掉部分逻辑连接词，让事件自然并列或用动作衔接。例如"她哭了。然后他走了"→"她哭了。门关上了"
+promptInstruction: 警惕过度使用逻辑连接词（然后/接着/于是/因此/所以）。删掉部分连接词，让事件自然并列或用动作衔接，减少机械感。
+autoRewrite: false
+defaultEnabled: true
+defaultGlobalBaseline: false

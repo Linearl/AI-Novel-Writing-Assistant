@@ -1,0 +1,21 @@
+key: forbid-empty-adjective
+name: 禁止空心形容词
+type: forbidden
+severity: medium
+description: 禁止使用无画面感的空心形容词（"美丽的""宏伟的""有趣的""温暖的"），必须给出具体细节让读者自己感受。
+detectPatterns:
+  - 美丽的
+  - 宏伟的
+  - 有趣的
+  - 温暖的
+  - 迷人的
+  - 动人的
+  - 感人的
+  - 可怕的
+  - 惊人的
+  - 美妙的
+rewriteSuggestion: 删除空心形容词，替换为具体细节。例如"温暖的房间"→"暖气片上烤着两双袜子，猫趴在最热的那节管子上"
+promptInstruction: 禁止使用无画面感的空心形容词（美丽的/宏伟的/有趣的/温暖的等）。必须用具体细节替代：不说"温暖的房间"，写"暖气片上烤着袜子"。
+autoRewrite: true
+defaultEnabled: true
+defaultGlobalBaseline: false

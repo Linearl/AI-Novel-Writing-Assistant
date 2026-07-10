@@ -1,0 +1,11 @@
+key: encourage-reality-gap
+name: 鼓励现实落差
+type: encourage
+severity: low
+description: 让人物预期和现实结果之间出现落差。
+detectPatterns: []
+rewriteSuggestion: 补出人物预期与实际结果之间的差距。
+promptInstruction: 优先制造现实落差，让人物预期和结果不完全一致。
+autoRewrite: false
+defaultEnabled: true
+defaultGlobalBaseline: false

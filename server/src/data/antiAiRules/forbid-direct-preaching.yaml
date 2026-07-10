@@ -1,0 +1,14 @@
+key: forbid-direct-preaching
+name: 禁止直接说教
+type: forbidden
+severity: medium
+description: 禁止作者替角色或读者做直接价值判断和说教。
+detectPatterns:
+  - 我们都应该
+  - 人总要学会
+  - 真正重要的是
+rewriteSuggestion: 改成角色具体处境或对话，不做抽象说教。
+promptInstruction: 禁止直接说教或价值判断，让意义落在事件本身。
+autoRewrite: true
+defaultEnabled: true
+defaultGlobalBaseline: true

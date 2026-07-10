@@ -1,0 +1,13 @@
+key: risk-even-paragraph-length
+name: 段落长度过于整齐
+type: risk
+severity: medium
+description: 段落长度和节奏过于平均，容易产生 AI 作文感。
+detectPatterns:
+  - 段落整齐
+  - 节奏平均
+rewriteSuggestion: 打破段落长度均衡，让句子和段落有自然起伏。
+promptInstruction: 注意避免每段都过于工整、平均和像标准作文。
+autoRewrite: false
+defaultEnabled: true
+defaultGlobalBaseline: true

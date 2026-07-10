@@ -1,0 +1,19 @@
+key: forbid-cliche-opening
+name: 禁止模板化开头
+type: forbidden
+severity: medium
+description: 禁止使用 AI 常见的模板化开头句式，如以环境描写或感叹句起笔。
+detectPatterns:
+  - 在这个
+  - 在这个世界上
+  - 每当夜深人静
+  - 窗外的雨
+  - 阳光透过窗帘
+  - 人生就像
+  - 有人说
+  - 人们常说
+rewriteSuggestion: 用一个具体的动作、对话或细节开头，不用环境描写或感叹句起笔。
+promptInstruction: 禁止使用模板化开头（"在这个世界上""每当夜深人静""窗外的雨""阳光透过窗帘"等）。用具体的动作、对话或细节开头。
+autoRewrite: true
+defaultEnabled: true
+defaultGlobalBaseline: false

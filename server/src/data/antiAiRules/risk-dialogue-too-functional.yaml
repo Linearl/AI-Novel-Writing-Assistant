@@ -1,0 +1,14 @@
+key: risk-dialogue-too-functional
+name: 对话纯功能推进
+type: risk
+severity: medium
+description: 对话只有信息推进，没有人物语气和生活噪音。
+detectPatterns:
+  - 告诉你
+  - 我们现在要
+  - 接下来就
+rewriteSuggestion: 补入停顿、绕弯、语气差异和无效信息。
+promptInstruction: 对话不要只承担推进剧情功能，要保留人物语气和生活噪音。
+autoRewrite: false
+defaultEnabled: true
+defaultGlobalBaseline: true

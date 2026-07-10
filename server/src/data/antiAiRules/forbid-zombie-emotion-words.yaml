@@ -1,0 +1,23 @@
+key: forbid-zombie-emotion-words
+name: 禁止情绪僵尸词
+type: forbidden
+severity: high
+description: 禁止使用过于笼统的情绪概括词（开心/难过/生气/失落/幸福/痛苦），必须用具体动作、画面或感官细节替代。
+detectPatterns:
+  - 开心
+  - 难过
+  - 生气
+  - 失落
+  - 幸福
+  - 痛苦
+  - 愤怒
+  - 悲伤
+  - 快乐
+  - 绝望
+  - 恐惧
+  - 焦虑
+rewriteSuggestion: 把情绪词替换为具体的身体反应、动作或画面。例如"她很难过"→"她把刚买的奶茶放回冰箱，又拿出来，重复了三次"
+promptInstruction: 禁止使用笼统的情绪概括词（开心/难过/生气/失落/幸福/痛苦等），必须通过具体动作、身体反应、感官细节或画面来传达情绪。
+autoRewrite: true
+defaultEnabled: true
+defaultGlobalBaseline: true

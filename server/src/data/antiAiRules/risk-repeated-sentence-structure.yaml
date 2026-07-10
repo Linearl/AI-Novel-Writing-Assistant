@@ -1,0 +1,15 @@
+key: risk-repeated-sentence-structure
+name: 句式重复率过高
+type: risk
+severity: medium
+description: 连续句式过于整齐，容易显得机械。
+detectPatterns:
+  - 首先
+  - 然后
+  - 接着
+  - 最后
+rewriteSuggestion: 拉开句式长度和起句方式，打散结构。
+promptInstruction: 警惕连续句式重复和排比化表达。
+autoRewrite: false
+defaultEnabled: true
+defaultGlobalBaseline: true

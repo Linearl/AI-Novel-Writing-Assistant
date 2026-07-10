@@ -1,0 +1,19 @@
+key: forbid-sensory-filter
+name: 禁止感官过滤词
+type: forbidden
+severity: medium
+description: 禁止用"我看到/我听到/我感觉到"等感官过滤词过滤读者的感知，直接呈现感官内容。
+detectPatterns:
+  - 我看到
+  - 我听到
+  - 我感觉到
+  - 我闻到
+  - 我注意到
+  - 我看见
+  - 我听见
+  - 我发现
+rewriteSuggestion: 删除感官过滤词，直接写被感知的对象。例如"我看到窗外下起了雨"→"窗外，雨点砸在铁皮棚上，啪嗒啪嗒"
+promptInstruction: 禁止用"我看到/我听到/我感觉到"等感官过滤词。直接呈现感官内容：不写"我看到窗外下起了雨"，写"雨点砸在铁皮棚上"。读者会自动理解这是人物感知到的。
+autoRewrite: true
+defaultEnabled: true
+defaultGlobalBaseline: false

@@ -1,0 +1,16 @@
+key: forbid-ending-elevation
+name: 禁止段尾升华
+type: forbidden
+severity: high
+description: 禁止在段尾或收尾处用总结句升华主题。
+detectPatterns:
+  - 生活就是
+  - 命运总会
+  - 归根结底
+  - 说到底
+  - 这就是
+rewriteSuggestion: 删除升华句，回到具体动作、现场或悬而未决的处境。
+promptInstruction: 禁止段尾升华或总结主题，收尾必须落回具体情境。
+autoRewrite: true
+defaultEnabled: true
+defaultGlobalBaseline: true

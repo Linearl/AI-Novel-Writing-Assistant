@@ -1,0 +1,16 @@
+key: forbidden_not_not_but
+name: 禁止连续否定排比句式
+type: forbidden
+severity: high
+description: 禁止频繁使用“不是…不是…是…”或“不是…不是…”等以连续否定开头的排比句式，避免文风生硬、模板化。
+detectPatterns:
+  - 不是…不是…是
+  - 不是…不是…
+  - 不是……不是……是
+  - 不是……不是……
+  - 不是… 不是…
+rewriteSuggestion: 将连续否定排比重构为一次否定加转折，或直接肯定表达。例如将“不是风，不是雨，是阳光”改为“阳光穿透了风雨”或“迎面而来的并非风雨，而是阳光”。避免用同一种否定堆叠来引出结论。
+promptInstruction: 禁止在正文任何位置使用以“不是…不是…是…”为代表的连续否定排比句。若需进行否定与肯定的对比，应使用一次否定加转折，或直接改为肯定陈述。
+autoRewrite: true
+defaultEnabled: true
+defaultGlobalBaseline: true

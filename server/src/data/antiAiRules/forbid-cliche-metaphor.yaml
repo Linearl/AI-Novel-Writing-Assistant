@@ -1,0 +1,22 @@
+key: forbid-cliche-metaphor
+name: 禁止套路比喻
+type: forbidden
+severity: high
+description: 禁止使用已烂大街的比喻句式，必须用新鲜、具体的个人化比喻替代。
+detectPatterns:
+  - 时间如流水
+  - 小鹿乱撞
+  - 梨花带雨
+  - 瘦成一道闪电
+  - 泪如雨下
+  - 心如刀割
+  - 岁月如歌
+  - 光阴似箭
+  - 日月如梭
+  - 像蜜一样甜
+  - 像花一样美
+rewriteSuggestion: 删除套路比喻，换成新鲜的、具体的、个人化的比喻，或直接用画面替代。
+promptInstruction: 严禁使用已烂大街的比喻（时间如流水/小鹿乱撞/梨花带雨/泪如雨下等），必须使用新鲜、具体的个人化比喻，或直接用画面替代比喻。
+autoRewrite: true
+defaultEnabled: true
+defaultGlobalBaseline: true

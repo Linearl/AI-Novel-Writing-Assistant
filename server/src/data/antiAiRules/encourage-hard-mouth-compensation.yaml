@@ -1,0 +1,11 @@
+key: encourage-hard-mouth-compensation
+name: 鼓励嘴硬补偿
+type: encourage
+severity: low
+description: 人物吃瘪后用嘴硬、转移或找补来维持体面。
+detectPatterns: []
+rewriteSuggestion: 给角色补一句嘴硬找补或自我合理化。
+promptInstruction: 人物吃瘪后可用嘴硬、转移或找补来补偿体面。
+autoRewrite: false
+defaultEnabled: true
+defaultGlobalBaseline: false
