@@ -9,7 +9,7 @@ description: "ARCH-004 任务包总线 — P1 循环依赖解耦"
 | 编号 | REQ-7035 |
 | 优先级 | P1 |
 | 复杂度 | complex |
-| 状态 | requirements_ready |
+| 状态 | pass |
 | 决策 | 方案 A：IDispatcher 接口抽象 |
 
 ## 文件结构

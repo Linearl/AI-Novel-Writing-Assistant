@@ -1,8 +1,21 @@
 import crypto from "node:crypto";
-import type { DirectorRunCommandStatus } from "@ai-novel/shared/types/directorRuntime";
+import type { DirectorRunCommandStatus } from "@ai-novel/shared";
 import { prisma } from "../../../../db/prisma";
-import { taskDispatcher } from "../../../../workers/TaskDispatcher";
+import type { IDirectorTaskDispatcher } from "../../../../platform/IDirectorTaskDispatcher";
 import { parsePayload, resolveNumberEnv } from "./DirectorCommandServiceHelpers";
+
+// ─── Lazy taskDispatcher singleton (mirrors DirectorCommandService pattern) ──
+let _lazyDispatcher: IDirectorTaskDispatcher | null = null;
+function lazyTaskDispatcher(): IDirectorTaskDispatcher {
+  if (!_lazyDispatcher) {
+    _lazyDispatcher = { notify: () => { /* pending dynamic import */ } };
+    void (async () => {
+      const { taskDispatcher } = await import("../../../../workers/TaskDispatcher");
+      _lazyDispatcher = taskDispatcher;
+    })();
+  }
+  return _lazyDispatcher;
+}
 
 const DEFAULT_STALE_AUTO_RECOVERY_MAX_ATTEMPTS = 2;
 const STALE_COMMAND_AUTO_RECOVERY_MESSAGE = "后台执行中断，系统已自动从最近进度继续。";
@@ -86,7 +99,7 @@ export async function recoverStaleLeases(
         finishedAt: null,
       },
     }).catch(() => null);
-    taskDispatcher.notify();
+    lazyTaskDispatcher().notify();
   }
 
   if (manualRecoveryCommands.length === 0) {

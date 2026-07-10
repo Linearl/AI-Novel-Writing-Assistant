@@ -3,7 +3,7 @@ import type {
   DirectorRuntimePolicyUpdateRequest,
   DirectorRunCommandStatus,
   DirectorRunCommandType,
-} from "@ai-novel/shared/types/directorRuntime";
+} from "@ai-novel/shared";
 import type {
   DirectorCandidatePatchRequest,
   DirectorCandidateTitleRefineRequest,
@@ -12,7 +12,7 @@ import type {
   DirectorLLMOptions,
   DirectorRefinementRequest,
   DirectorTakeoverRequest,
-} from "@ai-novel/shared/types/novelDirector";
+} from "@ai-novel/shared";
 import { prisma } from "../../../../db/prisma";
 import { withSqliteRetry } from "../../../../db/sqliteRetry";
 import { AppError } from "../../../../middleware/errorHandler";
@@ -44,7 +44,7 @@ import {
   markCommandCancelled as markCancelled,
   markCommandFailed as markFailed,
 } from "./DirectorCommandServiceLeaseManager";
-import { taskDispatcher } from "../../../../workers/TaskDispatcher";
+import type { IDirectorTaskDispatcher } from "../../../../platform/IDirectorTaskDispatcher";
 
 const EXECUTION_COMMAND_TYPES: DirectorRunCommandType[] = [
   "generate_candidates",
@@ -65,8 +65,31 @@ const EXECUTION_COMMAND_TYPES: DirectorRunCommandType[] = [
 
 export type DirectorRunCommandRow = Awaited<ReturnType<DirectorCommandService["getCommandById"]>>;
 
+/**
+ * Lazy singleton: resolves the concrete taskDispatcher from workers/ at runtime
+ * via dynamic import, breaking the module-load-time circular dependency.
+ */
+let _lazyDispatcher: IDirectorTaskDispatcher | null = null;
+function lazyTaskDispatcher(): IDirectorTaskDispatcher {
+  if (!_lazyDispatcher) {
+    _lazyDispatcher = { notify: () => { /* pending dynamic import */ } };
+    void (async () => {
+      const { taskDispatcher } = await import("../../../../workers/TaskDispatcher");
+      _lazyDispatcher = taskDispatcher;
+    })();
+  }
+  return _lazyDispatcher;
+}
+
 export class DirectorCommandService {
-  constructor(private readonly workflowService = new NovelWorkflowService()) {}
+  private readonly taskDispatcher: IDirectorTaskDispatcher;
+
+  constructor(
+    private readonly workflowService = new NovelWorkflowService(),
+    taskDispatcher?: IDirectorTaskDispatcher,
+  ) {
+    this.taskDispatcher = taskDispatcher ?? lazyTaskDispatcher();
+  }
 
   // ─── Enqueue methods ────────────────────────────────────────────────────
 
@@ -496,7 +519,7 @@ export class DirectorCommandService {
       await this.markCommandAcceptedOnTask(input.taskId, input.commandType, {
         preserveLastError: input.preserveLastError,
       });
-      taskDispatcher.notify({ commandType: input.commandType, taskId: input.taskId });
+      this.taskDispatcher.notify({ commandType: input.commandType, taskId: input.taskId });
       return toAcceptedResponse(command, null);
     } catch (error) {
       if (!isUniqueConstraintError(error) || input.allowTerminalReuse === false) throw error;

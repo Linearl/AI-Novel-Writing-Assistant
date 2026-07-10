@@ -76,7 +76,7 @@ export class DirectorTaskQueue {
 
   constructor(
     options: DirectorTaskQueueOptions = {},
-    commandService = new DirectorCommandService(),
+    commandService = new DirectorCommandService(undefined, taskDispatcher),
   ) {
     this.workerId = options.workerId
       ?? process.env.DIRECTOR_WORKER_ID?.trim()
