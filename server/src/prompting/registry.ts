@@ -545,6 +545,14 @@ const promptAssetLoaderEntries: PromptAssetLoaderEntry[] = [
     key: "novel.material.parse@v1",
     load: () => require("./prompts/novel/materialParse.prompts").materialParsePrompt as UnknownPromptAsset,
   },
+  {
+    key: "writing_technique.import@v1",
+    load: () => require("./prompts/writingTechnique/techniqueImport.prompt").techniqueImportPrompt as UnknownPromptAsset,
+  },
+  {
+    key: "writing_technique.recommend@v1",
+    load: () => require("./prompts/writingTechnique/techniqueRecommend.prompt").techniqueRecommendPrompt as UnknownPromptAsset,
+  },
 ];
 
 const promptAssetLoaderByKey = createPromptAssetLoaderRegistry(promptAssetLoaderEntries);
