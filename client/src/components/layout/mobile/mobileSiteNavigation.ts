@@ -28,7 +28,6 @@ export const MOBILE_ROUTE_PATTERNS: MobileRoutePattern[] = [
   { key: "novel-edit", pattern: /^\/novels\/[^/]+\/edit\/?$/, title: "小说工作区", group: "novels" },
   { key: "chapter-edit", pattern: /^\/novels\/[^/]+\/chapters\/[^/]+\/?$/, title: "章节正文", group: "novels" },
   { key: "creative-hub", pattern: /^\/creative-hub\/?$/, title: "创作中枢", group: "creation" },
-  { key: "chat-legacy", pattern: /^\/chat-legacy\/?$/, title: "旧版聊天", group: "creation" },
   { key: "book-analysis", pattern: /^\/book-analysis\/?$/, title: "拆书", group: "creation" },
   { key: "tasks", pattern: /^\/tasks\/?$/, title: "任务", group: "tasks" },
   { key: "auto-director-follow-ups", pattern: /^\/auto-director\/follow-ups\/?$/, title: "导演跟进", group: "tasks" },
@@ -63,7 +62,6 @@ const moreNavGroups: MobileNavGroup[] = [
       { key: "help", label: "新手上路", to: "/help", group: "more" },
       { key: "book-analysis", label: "拆书", to: "/book-analysis", group: "creation" },
       { key: "auto-director-follow-ups", label: "导演跟进", to: "/auto-director/follow-ups", group: "tasks" },
-      { key: "chat-legacy", label: "旧版聊天", to: "/chat-legacy", group: "creation" },
     ],
   },
   {

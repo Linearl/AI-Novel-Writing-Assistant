@@ -1,7 +1,7 @@
 ---
 description: "REQ-7027 遗留代码清理——READM E"
-update_time: 2026-07-10
-status: requirements_ready
+update_time: 2026-07-11
+status: done
 ---
 
 # REQ-7027 遗留代码清理

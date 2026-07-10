@@ -118,7 +118,7 @@ description: "需求任务总清单（SSOT）"
 | 7024 | 客户端共享 Hooks 抽象与大文件拆分 | p2 | ✅ 已完成 | 架构诊断报告 2026-07-10 第7条发现 | 0.1 | 2026-07-10 | 2026-07-10 | `B.2.done/v0.1-r7024-M2-client-shared-hooks-abstraction/README.md` | 创建 useApiMutation/useApiQuery 封装重复模式 + 拆分 NovelWorkspaceRail（678 行）及 3 个 >800 行文件 + 替换 ~20 处 inline mutation |
 | 7025 | Desktop 包测试基础设施 | p1 | ✅ 已完成 | 架构诊断报告 2026-07-10 第8条发现 | 0.1 | 2026-07-10 | 2026-07-10 | `B.2.done/v0.1-r7025-C2-desktop-test-infrastructure/README.md` | T1 完成：desktop/tests/目录、helpers/electronStubs+updaterMock、tsconfig.test.json、3 个测试文件(state/dataImport/server 共 40 个测试用例)、pnpm test 脚本。T2-T3(main.ts 拆分)、T4-T7(各模块测试)部分完成。T8(stage-desktop 集成测试)、T9(CI 集成)待后续迭代。 |
 | 7026 | 构建链模块系统统一 | p2 | ✅ 已完成 | 架构诊断报告 2026-07-10 第9条发现 | 0.1 | 2026-07-10 | 2026-07-10 | `B.2.done/v0.1-r7026-C3-build-chain-module-system-unification/README.md` | 研究型任务包。调研 tsx 运行时可行性 + CJS 互操作兼容性 + Project References 评估 + prisma:generate prebuild + 迁移 ROI 分析。交付评估报告和迁移路线图 |
-| 7027 | 遗留代码清理 | p0 | 📋 待办 | - | 0.1 | 2026-07-10 | 2026-07-10 | `B.todo/v0.1-r7027-S2-legacy-code-cleanup/README.md` |  |
+| 7027 | 遗留代码清理 | p0 | ✅ 已完成 | - | 0.1 | 2026-07-10 | 2026-07-11 | `B.todo/v0.1-r7027-S2-legacy-code-cleanup/README.md` |  |
 | 7028 | Director 事件系统收敛 | p1 | ✅ 已完成 | - | 0.1 | 2026-07-10 | 2026-07-11 | `B.2.done/v0.1-r7028-C3-director-event-system-consolidation/README.md` |  |
 | 7031 | 静默吞错日志化：审计复核确认的 .catch(() => {}) 静默吞错修复 | p2 | ✅ 已完成 | 代码审计-full 独占发现复核报告 — 稳定性 + 部分质量维度 CONFIRMED 条目 | 0.1 | 2026-07-10 | 2026-07-10 | `B.2.done/v0.1-r7031-M2-silent-catch-logging/README.md` |  |
 | 7032 | 提取硬编码常量：审计复核确认的重复魔数、重复定义、硬编码配置 | p3 | 📋 待办 | 代码审计-full 独占发现复核报告 — 架构/质量维度 CONFIRMED 条目 | 0.1 | 2026-07-10 | - | `B.todo/v0.1-r7032-S3-extract-hardcoded-constants/README.md` |  |
@@ -143,7 +143,6 @@ description: "需求任务总清单（SSOT）"
 | 编号 | 任务标题 | 文档 |
 | --- | --- | --- |
 | 7022 | Services 目录收敛与大文件拆分 | `B.todo/v0.1-r7022-C2-services-directory-consolidation/README.md` |
-| 7027 | 遗留代码清理 | `B.todo/v0.1-r7027-S2-legacy-code-cleanup/README.md` |
 | 7032 | 提取硬编码常量：审计复核确认的重复魔数、重复定义、硬编码配置 | `B.todo/v0.1-r7032-S3-extract-hardcoded-constants/README.md` |
 | 2013 | Director Failed Retry Entry | `B.todo/v0.1-r2013-medium-director-failed-retry-entry/README.md` |
 | 2014 | Chapter Token Budget Dynamic | `B.todo/v0.1-r2014-medium-chapter-token-budget-dynamic/README.md` |
@@ -236,6 +235,7 @@ description: "需求任务总清单（SSOT）"
 | 7024 | 客户端共享 Hooks 抽象与大文件拆分 | `B.2.done/v0.1-r7024-M2-client-shared-hooks-abstraction/README.md` |
 | 7025 | Desktop 包测试基础设施 | `B.2.done/v0.1-r7025-C2-desktop-test-infrastructure/README.md` |
 | 7026 | 构建链模块系统统一 | `B.2.done/v0.1-r7026-C3-build-chain-module-system-unification/README.md` |
+| 7027 | 遗留代码清理 | `B.todo/v0.1-r7027-S2-legacy-code-cleanup/README.md` |
 | 7028 | Director 事件系统收敛 | `B.2.done/v0.1-r7028-C3-director-event-system-consolidation/README.md` |
 | 7031 | 静默吞错日志化：审计复核确认的 .catch(() => {}) 静默吞错修复 | `B.2.done/v0.1-r7031-M2-silent-catch-logging/README.md` |
 | 7033 | Prisma Schema 精简 | `B.2.done/v0.1-r7033-C2-prisma-schema-sizing/README.md` |
