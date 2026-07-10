@@ -76,3 +76,12 @@ export async function getProfileTechniqueBindings(styleProfileId: string) {
 export async function setProfileTechniqueBindings(styleProfileId: string, techniqueKeys: string[]): Promise<void> {
   await apiClient.put(`/writing-techniques/bindings/profile/${styleProfileId}`, { techniqueKeys });
 }
+
+// 导入技法
+export async function importWritingTechnique(
+  content: string,
+  fileName?: string,
+): Promise<WritingTechniqueDetail> {
+  const { data } = await apiClient.post("/writing-techniques/import", { content, fileName });
+  return data.data;
+}

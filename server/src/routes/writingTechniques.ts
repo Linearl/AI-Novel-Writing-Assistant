@@ -1,9 +1,13 @@
+import { writeFileSync, mkdirSync, existsSync } from "node:fs";
+import { join, resolve } from "node:path";
 import { Router } from "express";
 import { z } from "zod";
 import { validate } from "../middleware/validate";
 import { WritingTechniqueService } from "../services/styleEngine/WritingTechniqueService";
 import { runStructuredPrompt } from "../prompting/core/promptRunner";
 import { techniqueScreeningPrompt } from "../prompting/prompts/writingTechnique/techniqueScreening.prompt";
+import { techniqueImportPrompt } from "../prompting/prompts/writingTechnique/techniqueImport.prompt";
+import { prisma } from "../db/prisma";
 
 const router = Router();
 const service = new WritingTechniqueService();
@@ -101,6 +105,111 @@ router.put("/bindings/novel/:novelId", validate({
     await service.setNovelBindings(req.params.novelId as string, techniqueKeys);
     res.json({ success: true });
   } catch (err) { next(err); }
+});
+
+// 导入技法
+router.post("/import", validate({
+  body: z.object({
+    content: z.string().min(1, "内容不能为空"),
+    fileName: z.string().optional(),
+  }),
+}), async (req, res, next) => {
+  try {
+    const { content, fileName } = req.body as { content: string; fileName?: string };
+
+    // 获取已有技法名称，用于 prompt 中避免重复
+    const existing = await prisma.writingTechnique.findMany({
+      select: { name: true, key: true },
+    });
+    const existingNames = existing.map((t) => t.name);
+
+    // AI 解析
+    const result = await runStructuredPrompt({
+      asset: techniqueImportPrompt,
+      promptInput: {
+        content,
+        existingNames,
+      },
+      options: {
+        provider: "deepseek",
+        temperature: 0.3,
+      },
+    });
+
+    const parsed = result.output as {
+      name: string;
+      description: string;
+      category: string;
+      key: string;
+      body: string;
+    };
+
+    // 检查 key 是否重复
+    const duplicateKey = existing.find((t) => t.key === parsed.key);
+    if (duplicateKey) {
+      res.status(409).json({
+        success: false,
+        error: `已存在相同标识的技法「${duplicateKey.name}」（key: ${parsed.key}），请修改名称后重试`,
+      });
+      return;
+    }
+
+    // 检查名称是否重复（精确匹配）
+    const duplicateName = existing.find((t) => t.name === parsed.name);
+    if (duplicateName) {
+      res.status(409).json({
+        success: false,
+        error: `已存在同名技法「${parsed.name}」（key: ${duplicateName.key}），请确认是否为同一技法`,
+      });
+      return;
+    }
+
+    // 写入 md 文件
+    const dataDir = resolve(__dirname, "../../data/writingTechniques");
+    if (!existsSync(dataDir)) {
+      mkdirSync(dataDir, { recursive: true });
+    }
+
+    const mdContent = [
+      "---",
+      `name: ${parsed.name}`,
+      `description: ${parsed.description}`,
+      `category: ${parsed.category}`,
+      "---",
+      "",
+      parsed.body,
+    ].join("\n");
+
+    const safeFileName = fileName
+      ? fileName.replace(/[^a-zA-Z0-9_-]/g, "_").replace(/\.md$/, "")
+      : parsed.key;
+    const filePath = join(dataDir, `${safeFileName}.md`);
+    const relativePath = `server/src/data/writingTechniques/${safeFileName}.md`;
+
+    writeFileSync(filePath, mdContent, "utf-8");
+
+    // 写入 DB
+    const technique = await prisma.writingTechnique.create({
+      data: {
+        key: parsed.key,
+        name: parsed.name,
+        description: parsed.description,
+        category: parsed.category,
+        filePath: relativePath,
+        enabled: false,
+      },
+    });
+
+    res.json({
+      success: true,
+      data: {
+        ...technique,
+        body: parsed.body,
+      },
+    });
+  } catch (err) {
+    next(err);
+  }
 });
 
 // AI 筛选
