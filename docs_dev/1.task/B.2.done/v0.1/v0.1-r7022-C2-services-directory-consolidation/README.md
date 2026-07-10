@@ -1,7 +1,7 @@
 ---
 description: "REQ-7022 Services 目录收敛与大文件拆分 —— README"
 update_time: 2026-07-10
-status: requirements_ready
+status: done
 ---
 
 # REQ-7022 Services 目录收敛与大文件拆分

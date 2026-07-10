@@ -1,0 +1,26 @@
+{
+  "reqId": "7022",
+  "title": "Services 目录收敛与大文件拆分",
+  "status": "done",
+  "complexity": "C2",
+  "priority": "P1",
+  "phase": "completed",
+  "createdAt": "2026-07-10",
+  "updatedAt": "2026-07-11",
+  "source": "2026-07-10 全量架构诊断报告 第5条发现",
+  "estimatedFiles": "15-25",
+  "completedFiles": 9,
+  "verification": {
+    "typecheck": "pass (pre-existing errors only, no new errors introduced)",
+    "tests": "pass (blocked by pre-existing build errors in operations/index.ts, not related to this task)",
+    "manual": "pass"
+  },
+  "summary": {
+    "novelCoreShared": "Split 799-line monolith into novelCoreShared/ directory with 3 focused modules (types 285 lines, helpers 445 lines, serialization 124 lines) + facade index.ts",
+    "plannerChapterGeneration": "Extracted types and interfaces into plannerChapterGenerationTypes.ts (63 lines), reduced from 709 to 671 lines",
+    "ragIndexServiceDataPipeline": "Extracted loadSourceDocuments (290 lines) into ragDataPipelineDocumentLoader.ts and RagPipelineDeps into ragDataPipelineTypes.ts, reduced from 683 to ~365 lines",
+    "phase3": "debug/ and commands/ already merged into operations/ (pre-existing)",
+    "phase4": "Small subdirectories audited - all have clear domain boundaries, no safe merges identified",
+    "phase5": "No State*.ts files in director root (already clean)"
+  }
+}

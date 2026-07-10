@@ -11,7 +11,7 @@ import {
   normalizePlanMetadata,
 } from "./plannerPlanMetadata";
 import { persistStoryPlan } from "./plannerPersistence";
-import { invokePlannerLLM, type PlannerLlmOptions } from "./plannerLlm";
+import { invokePlannerLLM } from "./plannerLlm";
 import { buildChapterPlanContextBlocks } from "./plannerContextBlocks";
 import { replanWindowDecisionService } from "./ReplanWindowDecisionService";
 import {
@@ -23,46 +23,16 @@ import {
   type PlannerMappedVolume,
 } from "./plannerContextHelpers";
 import { resolveChapterPlanParticipants } from "./plannerParticipantResolution";
+import type {
+  PlannerOptions,
+  GenerateChapterPlanOptions,
+  ReplanInput,
+  PlannerChapterGenerationDeps,
+} from "./plannerChapterGenerationTypes";
+import { plannerStoryModeSelect } from "./plannerChapterGenerationTypes";
 
-export interface PlannerOptions extends PlannerLlmOptions {
-  taskStyleProfileId?: string;
-}
-
-export interface GenerateChapterPlanOptions extends PlannerOptions {
-  replanContext?: {
-    reason: string;
-    triggerType: string;
-    triggerReason?: string;
-    windowReason?: string;
-    whyTheseChapters?: string;
-    sourceIssueIds: string[];
-    windowIndex: number;
-    windowSize: number;
-    affectedChapterOrders: number[];
-    anchorChapterOrder?: number | null;
-    blockingLedgerKeys?: string[];
-    replannedFromPlanId: string | null;
-  };
-}
-
-export interface ReplanInput extends PlannerOptions {
-  chapterId?: string;
-  triggerType?: string;
-  sourceIssueIds?: string[];
-  windowSize?: number;
-  reason: string;
-}
-
-export const plannerStoryModeSelect = {
-  id: true,
-  name: true,
-  description: true,
-  template: true,
-  parentId: true,
-  profileJson: true,
-  createdAt: true,
-  updatedAt: true,
-} as const;
+export type { PlannerOptions, GenerateChapterPlanOptions, ReplanInput, PlannerChapterGenerationDeps } from "./plannerChapterGenerationTypes";
+export { plannerStoryModeSelect } from "./plannerChapterGenerationTypes";
 
 
 /**
@@ -133,14 +103,6 @@ function buildPlannerStateGoalText(input: {
     `禁止提前泄露：${takeUnique(input.protectedSecrets, 4).join("；") || "无"}`,
     `最近关键事件：${takeUnique(input.recentTimeline, 3).join("；") || "无"}`,
   ].join("\n");
-}
-
-/** Dependencies injected from PlannerService to avoid circular reference. */
-export interface PlannerChapterGenerationDeps {
-  getBookPlan: (novelId: string) => Promise<StoryPlan | null>;
-  listArcPlans: (novelId: string) => Promise<StoryPlan[]>;
-  resolvePlannerStyleEngineSummary: (novelId: string, chapterId?: string, taskStyleProfileId?: string) => Promise<string>;
-  getChapterPlan: (novelId: string, chapterId: string) => Promise<StoryPlan | null>;
 }
 
 export async function generateChapterPlan(

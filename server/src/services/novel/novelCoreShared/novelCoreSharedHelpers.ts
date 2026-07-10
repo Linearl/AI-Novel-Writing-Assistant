@@ -1,287 +1,21 @@
+/**
+ * Helper and utility functions for novel core operations.
+ *
+ * Includes normalization, scoring, logging, text extraction, and content analysis.
+ */
 import type { BookAnalysisSectionKey } from "@ai-novel/shared";
-import type { LLMProvider } from "@ai-novel/shared";
-import type { QualityScore, ReviewIssue } from "@ai-novel/shared";
+import type { QualityScore } from "@ai-novel/shared";
 import { parseCommercialTagsJson } from "@ai-novel/shared";
-import { normalizeStoryModeOutput } from "../storyMode/storyModeProfile";
+import { normalizeStoryModeOutput } from "../../storyMode/storyModeProfile";
+import { logger } from "../../logging/LoggerService";
+import type { BeatStatus, LLMGenerateOptions } from "./novelCoreSharedTypes";
+import { QUALITY_THRESHOLD } from "./novelCoreSharedTypes";
+import {
+  parseBookFramingJson,
+  parseContinuationBookAnalysisSections,
+} from "./novelCoreSharedSerialization";
 
-export interface PaginationInput {
-  page: number;
-  limit: number;
-}
-
-export interface CreateNovelInput {
-  title: string;
-  description?: string;
-  targetAudience?: string;
-  bookSellingPoint?: string;
-  competingFeel?: string;
-  first30ChapterPromise?: string;
-  commercialTags?: string[];
-  genreId?: string;
-  primaryStoryModeId?: string;
-  secondaryStoryModeId?: string;
-  worldId?: string;
-  writingMode?: "original" | "continuation";
-  projectMode?: "ai_led" | "co_pilot" | "draft_mode" | "auto_pipeline";
-  narrativePov?: "first_person" | "third_person" | "mixed";
-  pacePreference?: "slow" | "balanced" | "fast";
-  styleTone?: string;
-  emotionIntensity?: "low" | "medium" | "high";
-  aiFreedom?: "low" | "medium" | "high";
-  postGenerationStyleReviewEnabled?: boolean;
-  defaultChapterLength?: number;
-  estimatedChapterCount?: number;
-  projectStatus?: "not_started" | "in_progress" | "completed" | "rework" | "blocked";
-  storylineStatus?: "not_started" | "in_progress" | "completed" | "rework" | "blocked";
-  outlineStatus?: "not_started" | "in_progress" | "completed" | "rework" | "blocked";
-  resourceReadyScore?: number;
-  sourceNovelId?: string | null;
-  sourceKnowledgeDocumentId?: string | null;
-  continuationBookAnalysisId?: string | null;
-  continuationBookAnalysisSections?: BookAnalysisSectionKey[] | null;
-  outline?: string;
-}
-
-export interface UpdateNovelInput {
-  title?: string;
-  description?: string;
-  targetAudience?: string | null;
-  bookSellingPoint?: string | null;
-  competingFeel?: string | null;
-  first30ChapterPromise?: string | null;
-  commercialTags?: string[] | null;
-  status?: "draft" | "published";
-  writingMode?: "original" | "continuation";
-  projectMode?: "ai_led" | "co_pilot" | "draft_mode" | "auto_pipeline" | null;
-  narrativePov?: "first_person" | "third_person" | "mixed" | null;
-  pacePreference?: "slow" | "balanced" | "fast" | null;
-  styleTone?: string | null;
-  emotionIntensity?: "low" | "medium" | "high" | null;
-  aiFreedom?: "low" | "medium" | "high" | null;
-  postGenerationStyleReviewEnabled?: boolean;
-  defaultChapterLength?: number | null;
-  estimatedChapterCount?: number | null;
-  projectStatus?: "not_started" | "in_progress" | "completed" | "rework" | "blocked" | null;
-  storylineStatus?: "not_started" | "in_progress" | "completed" | "rework" | "blocked" | null;
-  outlineStatus?: "not_started" | "in_progress" | "completed" | "rework" | "blocked" | null;
-  resourceReadyScore?: number | null;
-  sourceNovelId?: string | null;
-  sourceKnowledgeDocumentId?: string | null;
-  continuationBookAnalysisId?: string | null;
-  continuationBookAnalysisSections?: BookAnalysisSectionKey[] | null;
-  genreId?: string | null;
-  primaryStoryModeId?: string | null;
-  secondaryStoryModeId?: string | null;
-  worldId?: string | null;
-  outline?: string | null;
-  structuredOutline?: string | null;
-  payoffExpiryThreshold?: number | null;
-}
-
-export interface ChapterInput {
-  title: string;
-  order: number;
-  content?: string;
-  expectation?: string;
-  chapterStatus?: "unplanned" | "pending_generation" | "generating" | "pending_review" | "needs_repair" | "completed";
-  tensionLevel?: "low" | "medium" | "high" | "climax" | null;
-  targetWordCount?: number | null;
-  conflictLevel?: number | null;
-  revealLevel?: number | null;
-  mustAvoid?: string | null;
-  taskSheet?: string | null;
-  sceneCards?: string | null;
-  repairHistory?: string | null;
-  qualityScore?: number | null;
-  continuityScore?: number | null;
-  characterScore?: number | null;
-  pacingScore?: number | null;
-  riskFlags?: string | null;
-}
-
-export interface CharacterInput {
-  name: string;
-  role: string;
-  gender?: "male" | "female" | "other" | "unknown";
-  castRole?: string;
-  storyFunction?: string;
-  relationToProtagonist?: string;
-  personality?: string;
-  background?: string;
-  development?: string;
-  identityLabel?: string;
-  factionLabel?: string;
-  stanceLabel?: string;
-  powerLevel?: string;
-  realm?: string;
-  currentLocation?: string;
-  availability?: string;
-  prohibitions?: string[];
-  outerGoal?: string;
-  innerNeed?: string;
-  fear?: string;
-  wound?: string;
-  misbelief?: string;
-  secret?: string;
-  moralLine?: string;
-  firstImpression?: string;
-  appearance?: string;
-  physique?: string;
-  attireStyle?: string;
-  signatureDetail?: string;
-  voiceTexture?: string;
-  presenceImpression?: string;
-  arcStart?: string;
-  arcMidpoint?: string;
-  arcClimax?: string;
-  arcEnd?: string;
-  currentState?: string;
-  currentGoal?: string;
-  baseCharacterId?: string;
-}
-
-import type { NovelControlPolicy } from "@ai-novel/shared";
-import { logger } from "../logging/LoggerService";
-
-export interface LLMGenerateOptions {
-  provider?: LLMProvider;
-  model?: string;
-  temperature?: number;
-  maxTokens?: number;
-}
-
-export interface OutlineGenerateOptions extends LLMGenerateOptions {
-  initialPrompt?: string;
-}
-
-export interface StructuredOutlineGenerateOptions extends LLMGenerateOptions {
-  totalChapters?: number;
-}
-
-export interface ChapterGenerateOptions extends LLMGenerateOptions {
-  previousChaptersSummary?: string[];
-}
-
-export interface GenerateBeatOptions extends LLMGenerateOptions {
-  targetChapters?: number;
-}
-
-export interface TitleGenerateOptions extends LLMGenerateOptions {
-  count?: number;
-}
-
-export interface PipelineRunOptions extends LLMGenerateOptions {
-  startOrder: number;
-  endOrder: number;
-  controlPolicy?: NovelControlPolicy;
-  workflowTaskId?: string;
-  taskStyleProfileId?: string;
-  maxRetries?: number;
-  runMode?: "fast" | "polish";
-  autoReview?: boolean;
-  autoRepair?: boolean;
-  skipCompleted?: boolean;
-  qualityThreshold?: number;
-  repairMode?: "detect_only" | "light_repair" | "heavy_repair" | "continuity_only" | "character_only" | "ending_only";
-  artifactSyncMode?: ArtifactSyncMode;
-  pipelineMode?: "batch" | "pipeline";
-}
-
-export type PipelineBackgroundSyncKind = "artifact_delta" | "character_dynamics" | "state_snapshot" | "payoff_ledger" | "character_resources" | "canonical_state";
-export type ArtifactSyncMode = "adaptive" | "deferred" | "strict";
-
-export type PipelineBackgroundSyncStatus = "running" | "failed";
-
-export interface PipelineBackgroundSyncActivity {
-  kind: PipelineBackgroundSyncKind;
-  status: PipelineBackgroundSyncStatus;
-  chapterId: string;
-  chapterOrder?: number;
-  chapterTitle?: string;
-  updatedAt: string;
-  error?: string | null;
-}
-
-export interface PipelineBackgroundSyncState {
-  activities?: PipelineBackgroundSyncActivity[];
-}
-
-export interface PipelinePayload extends LLMGenerateOptions {
-  controlPolicy?: NovelControlPolicy;
-  workflowTaskId?: string;
-  taskStyleProfileId?: string;
-  maxRetries?: number;
-  runMode?: "fast" | "polish";
-  autoReview?: boolean;
-  autoRepair?: boolean;
-  skipCompleted?: boolean;
-  qualityThreshold?: number;
-  repairMode?: "detect_only" | "light_repair" | "heavy_repair" | "continuity_only" | "character_only" | "ending_only";
-  artifactSyncMode?: ArtifactSyncMode;
-  qualityAlertDetails?: string[];
-  replanAlertDetails?: string[];
-  recoverableRepairDetails?: string[];
-  backgroundSync?: PipelineBackgroundSyncState;
-  pipelineMode?: "batch" | "pipeline";
-  pipelineState?: {
-    refinementProgress: { total: number; completed: number; currentChapterId?: string | null };
-    writingProgress: { total: number; completed: number; currentChapterId?: string | null };
-    blockedChapterId?: string | null;
-    blockingReason?: "quality_review" | "manual_approval" | null;
-  } | null;
-}
-
-export interface StorylineDraftInput {
-  content: string;
-  diffSummary?: string;
-  baseVersion?: number;
-}
-
-export interface StorylineImpactInput {
-  versionId?: string;
-  content?: string;
-}
-
-export interface ReviewOptions extends LLMGenerateOptions {
-  content?: string;
-  /** REQ-2022: 关联自动执行 taskId，用于 debug buffer 采集 */
-  directorDebugTaskId?: string;
-}
-
-export interface RepairOptions extends LLMGenerateOptions {
-  reviewIssues?: ReviewIssue[];
-  auditIssueIds?: string[];
-  userInstruction?: string;
-  repairMode?: "detect_only" | "light_repair" | "heavy_repair" | "continuity_only" | "character_only" | "ending_only";
-  /** REQ-2022: 关联自动执行 taskId，用于 debug buffer 采集 */
-  directorDebugTaskId?: string;
-}
-
-export interface HookGenerateOptions extends LLMGenerateOptions {
-  chapterId?: string;
-}
-
-export interface CharacterTimelineSyncOptions {
-  startOrder?: number;
-  endOrder?: number;
-}
-
-export const QUALITY_THRESHOLD = { coherence: 80, repetition: 75, engagement: 75 } as const;
-type BeatStatus = "planned" | "completed" | "skipped";
-
-const CONTINUATION_ANALYSIS_SECTION_KEYS: BookAnalysisSectionKey[] = [
-  "overview",
-  "plot_structure",
-  "timeline",
-  "character_system",
-  "worldbuilding",
-  "themes",
-  "style_technique",
-  "market_highlights",
-];
-
-const CONTINUATION_ANALYSIS_SECTION_KEY_SET = new Set<BookAnalysisSectionKey>(CONTINUATION_ANALYSIS_SECTION_KEYS);
-export const DEFAULT_ESTIMATED_CHAPTER_COUNT = 80;
+// ─── normalizeNovelOutput ────────────────────────────────────────────────────
 
 export function normalizeNovelOutput<T extends {
   continuationBookAnalysisSections?: string | null;
@@ -407,6 +141,8 @@ export function normalizeNovelOutput<T extends {
   };
 }
 
+// ─── Pipeline Logging ────────────────────────────────────────────────────────
+
 export function logPipelineInfo(message: string, meta?: Record<string, unknown>) {
   if (meta) {
     logger.info(`[pipeline] ${message}`, meta);
@@ -430,6 +166,8 @@ export function logPipelineError(message: string, meta?: Record<string, unknown>
   }
   logger.error(`[pipeline] ${message}`);
 }
+
+// ─── Text Utilities ──────────────────────────────────────────────────────────
 
 export function toText(content: unknown): string {
   if (typeof content === "string") {
@@ -473,6 +211,8 @@ export function extractJSONArray(source: string): string {
   return text.slice(first, last + 1);
 }
 
+// ─── Quality Scoring ─────────────────────────────────────────────────────────
+
 function clamp(score: number): number {
   if (!Number.isFinite(score)) {
     return 0;
@@ -480,10 +220,7 @@ function clamp(score: number): number {
   return Math.max(0, Math.min(100, Math.round(score)));
 }
 
-
-// ---------------------------------------------------------------------------
-// ruleScore 常量
-// ---------------------------------------------------------------------------
+// ruleScore constants
 const RULE_SCORE_COHERENCE_LONG_THRESHOLD = 1800;
 const RULE_SCORE_COHERENCE_MID_THRESHOLD = 1200;
 const RULE_SCORE_COHERENCE_LONG = 85;
@@ -532,6 +269,8 @@ export function isPass(score: QualityScore): boolean {
     && score.repetition >= QUALITY_THRESHOLD.repetition
     && score.engagement >= QUALITY_THRESHOLD.engagement;
 }
+
+// ─── Content Analysis ────────────────────────────────────────────────────────
 
 export function briefSummary(
   content: string,
@@ -617,6 +356,8 @@ export function extractCharacterEventLines(content: string, characterName: strin
     .slice(0, limit);
 }
 
+// ─── Beat & Value Normalization ──────────────────────────────────────────────
+
 export function normalizeBeatStatus(value: unknown): BeatStatus {
   if (value === "completed" || value === "已完" || value === "finish" || value === "done") {
     return "completed";
@@ -633,103 +374,6 @@ export function normalizeBeatOrder(value: unknown, fallback: number): number {
     return fallback;
   }
   return Math.max(1, Math.floor(raw));
-}
-
-export function parseContinuationBookAnalysisSections(raw: string | null | undefined): BookAnalysisSectionKey[] | null {
-  if (!raw?.trim()) {
-    return null;
-  }
-  try {
-    const parsed = JSON.parse(raw) as unknown;
-    if (!Array.isArray(parsed)) {
-      return null;
-    }
-    const keys = parsed
-      .map((item) => (typeof item === "string" ? item : ""))
-      .filter((item): item is BookAnalysisSectionKey => CONTINUATION_ANALYSIS_SECTION_KEY_SET.has(item as BookAnalysisSectionKey));
-    if (keys.length === 0) {
-      return null;
-    }
-    return Array.from(new Set(keys));
-  } catch {
-    return null;
-  }
-}
-
-export function serializeContinuationBookAnalysisSections(
-  value: BookAnalysisSectionKey[] | null | undefined,
-): string | null {
-  if (!Array.isArray(value) || value.length === 0) {
-    return null;
-  }
-  const normalized = value.filter((item) => CONTINUATION_ANALYSIS_SECTION_KEY_SET.has(item));
-  if (normalized.length === 0) {
-    return null;
-  }
-  return JSON.stringify(Array.from(new Set(normalized)));
-}
-
-// ─── JSON Column Serialization Functions ────────────────────────────────────
-
-/**
- * Parses `bookFramingJson` into individual book-framing properties.
- * Prisma `select` or `include` returns `bookFramingJson` as a raw JSON string;
- * downstream code still expects the legacy flat properties.
- */
-export function parseBookFramingJson(
-  bookFramingJson: string | null | undefined,
-): { bookSellingPoint: string | null; competingFeel: string | null; first30ChapterPromise: string | null } {
-  if (!bookFramingJson) {
-    return { bookSellingPoint: null, competingFeel: null, first30ChapterPromise: null };
-  }
-  try {
-    const parsed = JSON.parse(bookFramingJson) as Record<string, unknown>;
-    return {
-      bookSellingPoint: typeof parsed.bookSellingPoint === "string" ? parsed.bookSellingPoint : null,
-      competingFeel: typeof parsed.competingFeel === "string" ? parsed.competingFeel : null,
-      first30ChapterPromise: typeof parsed.first30ChapterPromise === "string" ? parsed.first30ChapterPromise : null,
-    };
-  } catch {
-    return { bookSellingPoint: null, competingFeel: null, first30ChapterPromise: null };
-  }
-}
-
-export function serializeBookFramingJson(input: {
-  bookSellingPoint?: string | null;
-  competingFeel?: string | null;
-  first30ChapterPromise?: string | null;
-}): string | null {
-  return JSON.stringify({
-    bookSellingPoint: input.bookSellingPoint ?? null,
-    competingFeel: input.competingFeel ?? null,
-    first30ChapterPromise: input.first30ChapterPromise ?? null,
-  });
-}
-
-export function serializeSetupProgressJson(input: {
-  projectStatus?: string | null;
-  storylineStatus?: string | null;
-  outlineStatus?: string | null;
-  resourceReadyScore?: number | null;
-}): string | null {
-  return JSON.stringify({
-    projectStatus: input.projectStatus ?? null,
-    storylineStatus: input.storylineStatus ?? null,
-    outlineStatus: input.outlineStatus ?? null,
-    resourceReadyScore: input.resourceReadyScore ?? null,
-  });
-}
-
-export function serializeContinuationSetupJson(input: {
-  sourceKnowledgeDocumentId?: string | null;
-  continuationBookAnalysisId?: string | null;
-  continuationBookAnalysisSections?: BookAnalysisSectionKey[] | null;
-}): string | null {
-  return JSON.stringify({
-    sourceKnowledgeDocumentId: input.sourceKnowledgeDocumentId ?? null,
-    continuationBookAnalysisId: input.continuationBookAnalysisId ?? null,
-    continuationBookAnalysisSections: input.continuationBookAnalysisSections ?? null,
-  });
 }
 
 export function normalizeOptionalTextForCreate(value: string | null | undefined): string | null {
@@ -750,6 +394,8 @@ export function normalizeOptionalTextForUpdate(value: string | null | undefined)
   const normalized = value.trim();
   return normalized || null;
 }
+
+// ─── Storyline Diff Utilities ────────────────────────────────────────────────
 
 function normalizeStorylineLines(content: string): string[] {
   return content
