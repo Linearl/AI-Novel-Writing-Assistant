@@ -72,7 +72,7 @@ export class NovelCoreStorylineService {
         where: { id: novelId },
         data: {
           outline: target.content,
-          storylineStatus: "in_progress",
+          setupProgressJson: JSON.stringify({ projectStatus: null, storylineStatus: "in_progress", outlineStatus: null, resourceReadyScore: null }),
         },
       }),
     ]);

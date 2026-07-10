@@ -77,9 +77,7 @@ export interface NovelWorldInstanceView {
 interface LegacyNovelWorldSourceRow {
   novelId: string;
   worldId: string | null;
-  storyWorldSliceJson: string | null;
-  storyWorldSliceOverridesJson: string | null;
-  storyWorldSliceSchemaVersion: number;
+  storyWorldSliceCacheJson: string | null;
   novelCreatedAt: Date | string;
   novelUpdatedAt: Date | string;
   worldName: string | null;
@@ -87,6 +85,12 @@ interface LegacyNovelWorldSourceRow {
   structureJson: string | null;
   bindingSupportJson: string | null;
   worldVersion: number | null;
+  /** Deserialized from storyWorldSliceCacheJson */
+  storyWorldSliceJson: string | null;
+  /** Deserialized from storyWorldSliceCacheJson */
+  storyWorldSliceOverridesJson: string | null;
+  /** Deserialized from storyWorldSliceCacheJson */
+  storyWorldSliceSchemaVersion: number;
 }
 
 export class NovelWorldInstanceService {
@@ -205,8 +209,7 @@ export class NovelWorldInstanceService {
       where: { id: novelId },
       data: {
         worldId: null,
-        storyWorldSliceJson: null,
-        storyWorldSliceOverridesJson: null,
+        storyWorldSliceCacheJson: JSON.stringify({ storyWorldSliceJson: null, storyWorldSliceOverridesJson: null, storyWorldSliceSchemaVersion: 1 }),
       },
     });
   }
@@ -221,9 +224,7 @@ export class NovelWorldInstanceService {
       SELECT
         n."id" AS "novelId",
         n."worldId" AS "worldId",
-        n."storyWorldSliceJson" AS "storyWorldSliceJson",
-        n."storyWorldSliceOverridesJson" AS "storyWorldSliceOverridesJson",
-        n."storyWorldSliceSchemaVersion" AS "storyWorldSliceSchemaVersion",
+        n."storyWorldSliceCacheJson" AS "storyWorldSliceCacheJson",
         n."createdAt" AS "novelCreatedAt",
         n."updatedAt" AS "novelUpdatedAt",
         w."name" AS "worldName",
@@ -236,10 +237,18 @@ export class NovelWorldInstanceService {
       WHERE n."id" = ${novelId}
       LIMIT 1
     `;
-    const source = rows[0];
-    if (!source) {
+    const raw = rows[0];
+    if (!raw) {
       throw new Error("小说不存在。");
     }
+    // Deserialize storyWorldSliceCacheJson into the individual fields
+    const cache = raw.storyWorldSliceCacheJson ? JSON.parse(raw.storyWorldSliceCacheJson) : {};
+    const source: LegacyNovelWorldSourceRow = {
+      ...raw,
+      storyWorldSliceJson: cache.storyWorldSliceJson ?? null,
+      storyWorldSliceOverridesJson: cache.storyWorldSliceOverridesJson ?? null,
+      storyWorldSliceSchemaVersion: cache.storyWorldSliceSchemaVersion ?? 1,
+    };
     if (!source.worldId && !source.storyWorldSliceJson && !source.storyWorldSliceOverridesJson) {
       return null;
     }
@@ -350,8 +359,7 @@ export class NovelWorldInstanceService {
         where: { id: input.novelId },
         data: {
           worldId: world.id,
-          storyWorldSliceJson: null,
-          storyWorldSliceOverridesJson: null,
+          storyWorldSliceCacheJson: JSON.stringify({ storyWorldSliceJson: null, storyWorldSliceOverridesJson: null, storyWorldSliceSchemaVersion: 1 }),
         },
       });
       await tx.$executeRaw`
@@ -431,8 +439,7 @@ export class NovelWorldInstanceService {
         title: true,
         description: true,
         targetAudience: true,
-        bookSellingPoint: true,
-        first30ChapterPromise: true,
+        bookFramingJson: true,
         commercialTagsJson: true,
         genre: { select: { name: true } },
         primaryStoryMode: { select: { name: true } },
@@ -443,14 +450,24 @@ export class NovelWorldInstanceService {
       throw new Error("小说不存在。");
     }
 
+    const bookFraming = ((): { bookSellingPoint?: string | null; first30ChapterPromise?: string | null } => {
+      try {
+        return novel.bookFramingJson ? JSON.parse(novel.bookFramingJson) as Record<string, unknown> : {};
+      } catch {
+        return {};
+      }
+    })();
+    const bookSellingPoint = bookFraming.bookSellingPoint ?? "";
+    const first30ChapterPromise = bookFraming.first30ChapterPromise ?? "";
+
     const result = await runStructuredPrompt({
       asset: novelThemeWorldGenerationPrompt,
       promptInput: {
         novelTitle: novel.title,
         description: novel.description ?? "",
         targetAudience: novel.targetAudience ?? "",
-        bookSellingPoint: novel.bookSellingPoint ?? "",
-        first30ChapterPromise: novel.first30ChapterPromise ?? "",
+        bookSellingPoint,
+        first30ChapterPromise,
         commercialTags: parseCommercialTags(novel.commercialTagsJson),
         genreName: novel.genre?.name ?? "",
         primaryStoryModeName: novel.primaryStoryMode?.name ?? "",
@@ -517,8 +534,8 @@ export class NovelWorldInstanceService {
       novelTitle: novel.title,
       description: novel.description ?? null,
       targetAudience: novel.targetAudience ?? null,
-      bookSellingPoint: novel.bookSellingPoint ?? null,
-      first30ChapterPromise: novel.first30ChapterPromise ?? null,
+      bookSellingPoint: bookSellingPoint || null,
+      first30ChapterPromise: first30ChapterPromise || null,
       commercialTags: parseCommercialTags(novel.commercialTagsJson),
       genreName: novel.genre?.name ?? null,
       primaryStoryModeName: novel.primaryStoryMode?.name ?? null,
@@ -565,8 +582,7 @@ export class NovelWorldInstanceService {
         where: { id: input.novelId },
         data: {
           worldId: sourceWorldId,
-          storyWorldSliceJson: null,
-          storyWorldSliceOverridesJson: null,
+          storyWorldSliceCacheJson: JSON.stringify({ storyWorldSliceJson: null, storyWorldSliceOverridesJson: null, storyWorldSliceSchemaVersion: 1 }),
         },
       });
 

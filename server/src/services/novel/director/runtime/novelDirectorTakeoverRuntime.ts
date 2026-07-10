@@ -363,12 +363,11 @@ async function fetchTakeoverData(novelId: string, input: any) {
     prisma.novel.findUnique({
       where: { id: novelId },
       select: {
-        id: true, title: true, description: true, targetAudience: true, bookSellingPoint: true, competingFeel: true,
-        first30ChapterPromise: true, commercialTagsJson: true, genreId: true, primaryStoryModeId: true, secondaryStoryModeId: true,
+        id: true, title: true, description: true, targetAudience: true, bookFramingJson: true, commercialTagsJson: true, genreId: true, primaryStoryModeId: true, secondaryStoryModeId: true,
         worldId: true, writingMode: true, projectMode: true, narrativePov: true, pacePreference: true, styleTone: true,
         emotionIntensity: true, aiFreedom: true, defaultChapterLength: true, estimatedChapterCount: true,
-        projectStatus: true, storylineStatus: true, outlineStatus: true, resourceReadyScore: true,
-        sourceNovelId: true, sourceKnowledgeDocumentId: true, continuationBookAnalysisId: true, continuationBookAnalysisSections: true, bookContract: true,
+        setupProgressJson: true,
+        sourceNovelId: true, continuationSetupJson: true, bookContract: true,
       },
     }),
     input.getStoryMacroPlan(novelId).catch(() => null),

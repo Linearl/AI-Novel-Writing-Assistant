@@ -65,11 +65,6 @@ export const novelWorkspaceToolDefinitions: Partial<
             },
           }
           : {}),
-        ...(input.projectStatus
-          ? {
-            projectStatus: input.projectStatus,
-          }
-          : {}),
       };
       const [total, rows] = await Promise.all([
         prisma.novel.count({ where }),
@@ -86,9 +81,19 @@ export const novelWorkspaceToolDefinitions: Partial<
           },
         }),
       ]);
+      const filteredRows = input.projectStatus
+        ? rows.filter((row) => {
+            try {
+              const progress = row.setupProgressJson ? JSON.parse(row.setupProgressJson) as Record<string, unknown> : {};
+              return progress.projectStatus === input.projectStatus;
+            } catch {
+              return false;
+            }
+          })
+        : rows;
       return listNovelsOutput.parse({
-        total,
-        items: rows.map(toNovelListItem),
+        total: input.projectStatus ? filteredRows.length : total,
+        items: filteredRows.map(toNovelListItem),
       });
     },
   },
@@ -124,9 +129,7 @@ export const novelWorkspaceToolDefinitions: Partial<
           emotionIntensity: input.emotionIntensity,
           aiFreedom: input.aiFreedom,
           defaultChapterLength: input.defaultChapterLength,
-          projectStatus: input.projectStatus ?? "in_progress",
-          outlineStatus: "not_started",
-          storylineStatus: "not_started",
+          setupProgressJson: JSON.stringify({ projectStatus: input.projectStatus ?? "in_progress", outlineStatus: "not_started", storylineStatus: "not_started", resourceReadyScore: null }),
           projectMode: input.projectMode ?? "auto_pipeline",
         },
       });

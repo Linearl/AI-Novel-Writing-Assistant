@@ -423,8 +423,7 @@ export async function persistActiveVolumeWorkspace(
     data: {
       outline: document.derivedOutline,
       structuredOutline: document.derivedStructuredOutline,
-      storylineStatus: document.volumes.length > 0 ? "in_progress" : undefined,
-      outlineStatus: document.volumes.length > 0 ? "in_progress" : undefined,
+      setupProgressJson: document.volumes.length > 0 ? JSON.stringify({ projectStatus: null, storylineStatus: "in_progress", outlineStatus: "in_progress", resourceReadyScore: null }) : undefined,
     },
   });
   await syncArcCompatibility(tx, novelId, document.volumes);

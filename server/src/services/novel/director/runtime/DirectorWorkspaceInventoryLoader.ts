@@ -10,7 +10,14 @@ import {
 } from "./DirectorWorkspaceArtifactInventory";
 
 // Sub-function: Load plan-related data
-async function loadPlanData(novelId: string, novel: { worldId: string | null; sourceKnowledgeDocumentId: string | null; continuationBookAnalysisId: string | null }) {
+async function loadPlanData(novelId: string, novel: { worldId: string | null; continuationSetupJson: string | null }) {
+  const continuationSetup = (() => {
+    try {
+      return novel.continuationSetupJson ? JSON.parse(novel.continuationSetupJson) as Record<string, unknown> : {};
+    } catch {
+      return {};
+    }
+  })() as { sourceKnowledgeDocumentId?: string | null; continuationBookAnalysisId?: string | null };
   const [
     bookContract,
     storyMacro,
@@ -56,11 +63,11 @@ async function loadPlanData(novelId: string, novel: { worldId: string | null; so
     novel.worldId
       ? prisma.world.findUnique({ where: { id: novel.worldId }, select: { id: true, status: true, version: true, updatedAt: true } })
       : Promise.resolve(null),
-    novel.sourceKnowledgeDocumentId
-      ? prisma.knowledgeDocument.findUnique({ where: { id: novel.sourceKnowledgeDocumentId }, select: { id: true, activeVersionId: true, activeVersionNumber: true, updatedAt: true } })
+    continuationSetup.sourceKnowledgeDocumentId
+      ? prisma.knowledgeDocument.findUnique({ where: { id: continuationSetup.sourceKnowledgeDocumentId }, select: { id: true, activeVersionId: true, activeVersionNumber: true, updatedAt: true } })
       : Promise.resolve(null),
-    novel.continuationBookAnalysisId
-      ? prisma.bookAnalysis.findUnique({ where: { id: novel.continuationBookAnalysisId }, select: { id: true, documentVersionId: true, status: true, updatedAt: true } })
+    continuationSetup.continuationBookAnalysisId
+      ? prisma.bookAnalysis.findUnique({ where: { id: continuationSetup.continuationBookAnalysisId }, select: { id: true, documentVersionId: true, status: true, updatedAt: true } })
       : Promise.resolve(null),
   ]);
   return { bookContract, storyMacro, characterCount, latestCharacter, volumePlans, chapterPlanCount, volumeChapterPlans, world, sourceKnowledgeDocument, continuationBookAnalysis };
@@ -126,11 +133,19 @@ async function loadChapterAndStateData(novelId: string) {
 export async function loadDirectorWorkspaceInventory(novelId: string): Promise<DirectorWorkspaceInventory> {
   const novel = await prisma.novel.findUnique({
     where: { id: novelId },
-    select: { id: true, title: true, worldId: true, sourceKnowledgeDocumentId: true, continuationBookAnalysisId: true, updatedAt: true },
+    select: { id: true, title: true, worldId: true, continuationSetupJson: true, updatedAt: true },
   });
   if (!novel) {
     throw new Error("小说不存在，无法分析自动导演工作区。");
   }
+
+  const continuationSetup = (() => {
+    try {
+      return novel.continuationSetupJson ? JSON.parse(novel.continuationSetupJson) as Record<string, unknown> : {};
+    } catch {
+      return {};
+    }
+  })() as { sourceKnowledgeDocumentId?: string | null; continuationBookAnalysisId?: string | null };
 
   const planData = await loadPlanData(novelId, novel);
   const stateData = await loadChapterAndStateData(novelId);
@@ -148,8 +163,8 @@ export async function loadDirectorWorkspaceInventory(novelId: string): Promise<D
   const artifactInventory = buildDirectorWorkspaceArtifactInventory({
     novelId,
     hasWorldBinding: Boolean(novel.worldId),
-    hasSourceKnowledge: Boolean(novel.sourceKnowledgeDocumentId),
-    hasContinuationAnalysis: Boolean(novel.continuationBookAnalysisId),
+    hasSourceKnowledge: Boolean((continuationSetup as { sourceKnowledgeDocumentId?: string | null }).sourceKnowledgeDocumentId),
+    hasContinuationAnalysis: Boolean((continuationSetup as { continuationBookAnalysisId?: string | null }).continuationBookAnalysisId),
     ...planData,
     chapters,
     qualityReports,
@@ -177,8 +192,8 @@ export async function loadDirectorWorkspaceInventory(novelId: string): Promise<D
     hasActivePipelineJob: Boolean(activePipelineJob),
     hasActiveDirectorRun: Boolean(activeDirectorRun),
     hasWorldBinding: Boolean(novel.worldId),
-    hasSourceKnowledge: Boolean(novel.sourceKnowledgeDocumentId),
-    hasContinuationAnalysis: Boolean(novel.continuationBookAnalysisId),
+    hasSourceKnowledge: Boolean((continuationSetup as { sourceKnowledgeDocumentId?: string | null }).sourceKnowledgeDocumentId),
+    hasContinuationAnalysis: Boolean((continuationSetup as { continuationBookAnalysisId?: string | null }).continuationBookAnalysisId),
     activePipelineJobId: activePipelineJob?.id ?? null,
     activeDirectorTaskId: activeDirectorRun?.id ?? null,
     latestDirectorTaskId: latestDirectorRun?.id ?? null,

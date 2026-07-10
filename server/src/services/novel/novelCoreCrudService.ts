@@ -20,7 +20,10 @@ import {
   normalizeOptionalTextForUpdate,
   PaginationInput,
   parseContinuationBookAnalysisSections,
+  serializeBookFramingJson,
   serializeContinuationBookAnalysisSections,
+  serializeContinuationSetupJson,
+  serializeSetupProgressJson,
   UpdateNovelInput,
 } from "./novelCoreShared";
 import { queueRagDelete, queueRagUpsert } from "./novelCoreSupport";
@@ -48,9 +51,7 @@ export class NovelCoreCrudService {
           title: true,
           description: true,
           targetAudience: true,
-          bookSellingPoint: true,
-          competingFeel: true,
-          first30ChapterPromise: true,
+          bookFramingJson: true,
           commercialTagsJson: true,
           status: true,
           writingMode: true,
@@ -63,14 +64,10 @@ export class NovelCoreCrudService {
           postGenerationStyleReviewEnabled: true,
           defaultChapterLength: true,
           estimatedChapterCount: true,
-          projectStatus: true,
-          storylineStatus: true,
-          outlineStatus: true,
-          resourceReadyScore: true,
+          setupProgressJson: true,
           sourceNovelId: true,
-          sourceKnowledgeDocumentId: true,
-          continuationBookAnalysisId: true,
-          continuationBookAnalysisSections: true,
+          continuationSetupJson: true,
+          storyWorldSliceCacheJson: true,
           genreId: true,
           primaryStoryModeId: true,
           secondaryStoryModeId: true,
@@ -233,9 +230,11 @@ export class NovelCoreCrudService {
         title: input.title,
         description: input.description,
         targetAudience: normalizeOptionalTextForCreate(input.targetAudience),
-        bookSellingPoint: normalizeOptionalTextForCreate(input.bookSellingPoint),
-        competingFeel: normalizeOptionalTextForCreate(input.competingFeel),
-        first30ChapterPromise: normalizeOptionalTextForCreate(input.first30ChapterPromise),
+        bookFramingJson: serializeBookFramingJson({
+          bookSellingPoint: normalizeOptionalTextForCreate(input.bookSellingPoint),
+          competingFeel: normalizeOptionalTextForCreate(input.competingFeel),
+          first30ChapterPromise: normalizeOptionalTextForCreate(input.first30ChapterPromise),
+        }),
         commercialTagsJson,
         genreId: input.genreId,
         primaryStoryModeId: input.primaryStoryModeId ?? null,
@@ -251,20 +250,24 @@ export class NovelCoreCrudService {
         postGenerationStyleReviewEnabled: input.postGenerationStyleReviewEnabled,
         defaultChapterLength: input.defaultChapterLength,
         estimatedChapterCount: input.estimatedChapterCount,
-        projectStatus: input.projectStatus,
-        storylineStatus: input.storylineStatus,
-        outlineStatus: input.outlineStatus,
-        resourceReadyScore: input.resourceReadyScore,
+        setupProgressJson: serializeSetupProgressJson({
+          projectStatus: input.projectStatus,
+          storylineStatus: input.storylineStatus,
+          outlineStatus: input.outlineStatus,
+          resourceReadyScore: input.resourceReadyScore,
+        }),
         outline: input.outline ?? null,
         sourceNovelId: writingMode === "continuation" ? sourceNovelId : null,
-        sourceKnowledgeDocumentId: writingMode === "continuation" ? sourceKnowledgeDocumentId : null,
-        continuationBookAnalysisId: normalizedContinuationBookAnalysisId,
-        continuationBookAnalysisSections:
-          writingMode === "continuation"
-          && (sourceNovelId || sourceKnowledgeDocumentId)
-          && normalizedContinuationBookAnalysisId
-            ? continuationBookAnalysisSections
-            : null,
+        continuationSetupJson: serializeContinuationSetupJson({
+          sourceKnowledgeDocumentId: writingMode === "continuation" ? sourceKnowledgeDocumentId : null,
+          continuationBookAnalysisId: normalizedContinuationBookAnalysisId ?? (writingMode === "continuation" ? continuationBookAnalysisId : null),
+          continuationBookAnalysisSections:
+            writingMode === "continuation"
+            && (sourceNovelId || sourceKnowledgeDocumentId)
+            && normalizedContinuationBookAnalysisId
+              ? input.continuationBookAnalysisSections
+              : null,
+        }),
       },
     });
 
@@ -354,9 +357,7 @@ export class NovelCoreCrudService {
         worldId: true,
         writingMode: true,
         sourceNovelId: true,
-        sourceKnowledgeDocumentId: true,
-        continuationBookAnalysisId: true,
-        continuationBookAnalysisSections: true,
+        continuationSetupJson: true,
         primaryStoryModeId: true,
         secondaryStoryModeId: true,
       },
@@ -365,17 +366,25 @@ export class NovelCoreCrudService {
       throw new Error("小说不存在");
     }
 
+    const existingContinuation = (() => {
+      try {
+        return existing.continuationSetupJson ? JSON.parse(existing.continuationSetupJson) as Record<string, unknown> : {};
+      } catch {
+        return {};
+      }
+    })() as { sourceKnowledgeDocumentId?: string | null; continuationBookAnalysisId?: string | null; continuationBookAnalysisSections?: unknown };
+
     const nextWritingMode = input.writingMode ?? (existing.writingMode === "continuation" ? "continuation" : "original");
     const nextSourceNovelId = input.sourceNovelId !== undefined ? input.sourceNovelId : existing.sourceNovelId;
     const nextSourceKnowledgeDocumentId = input.sourceKnowledgeDocumentId !== undefined
       ? input.sourceKnowledgeDocumentId
-      : existing.sourceKnowledgeDocumentId;
+      : (existingContinuation.sourceKnowledgeDocumentId ?? null);
     const nextContinuationBookAnalysisId = input.continuationBookAnalysisId !== undefined
       ? input.continuationBookAnalysisId
-      : existing.continuationBookAnalysisId;
+      : (existingContinuation.continuationBookAnalysisId ?? null);
     const nextContinuationBookAnalysisSections = input.continuationBookAnalysisSections !== undefined
       ? input.continuationBookAnalysisSections
-      : parseContinuationBookAnalysisSections(existing.continuationBookAnalysisSections);
+      : parseContinuationBookAnalysisSections(existingContinuation.continuationBookAnalysisSections as string | null | undefined);
     const nextPrimaryStoryModeId = input.primaryStoryModeId !== undefined
       ? input.primaryStoryModeId
       : existing.primaryStoryModeId;
@@ -407,7 +416,6 @@ export class NovelCoreCrudService {
       ...restInput
     } = input;
 
-    const serializedContinuationSections = serializeContinuationBookAnalysisSections(nextContinuationBookAnalysisSections);
     const commercialTagsJson = input.commercialTags !== undefined
       ? serializeCommercialTagsJson(input.commercialTags)
       : undefined;
@@ -420,26 +428,38 @@ export class NovelCoreCrudService {
         ...restInput,
         payoffExpiryThreshold: input.payoffExpiryThreshold ?? undefined,
         sourceNovelId: nextWritingMode === "continuation" ? nextSourceNovelId : null,
-        sourceKnowledgeDocumentId: nextWritingMode === "continuation" ? nextSourceKnowledgeDocumentId : null,
-        continuationBookAnalysisId: normalizedNextContinuationBookAnalysisId,
         primaryStoryModeId: nextPrimaryStoryModeId ?? null,
         secondaryStoryModeId: nextSecondaryStoryModeId ?? null,
         targetAudience: normalizeOptionalTextForUpdate(input.targetAudience),
-        bookSellingPoint: normalizeOptionalTextForUpdate(input.bookSellingPoint),
-        competingFeel: normalizeOptionalTextForUpdate(input.competingFeel),
-        first30ChapterPromise: normalizeOptionalTextForUpdate(input.first30ChapterPromise),
+        bookFramingJson: (input.bookSellingPoint !== undefined || input.competingFeel !== undefined || input.first30ChapterPromise !== undefined)
+          ? serializeBookFramingJson({
+              bookSellingPoint: normalizeOptionalTextForUpdate(input.bookSellingPoint),
+              competingFeel: normalizeOptionalTextForUpdate(input.competingFeel),
+              first30ChapterPromise: normalizeOptionalTextForUpdate(input.first30ChapterPromise),
+            })
+          : undefined,
         commercialTagsJson,
-        continuationBookAnalysisSections:
-          nextWritingMode === "continuation"
-          && (nextSourceNovelId || nextSourceKnowledgeDocumentId)
-          && normalizedNextContinuationBookAnalysisId
-            ? serializedContinuationSections
-            : null,
+        setupProgressJson: (input.projectStatus !== undefined || input.storylineStatus !== undefined || input.outlineStatus !== undefined || input.resourceReadyScore !== undefined)
+          ? serializeSetupProgressJson({
+              projectStatus: input.projectStatus,
+              storylineStatus: input.storylineStatus,
+              outlineStatus: input.outlineStatus,
+              resourceReadyScore: input.resourceReadyScore,
+            })
+          : undefined,
+        continuationSetupJson: serializeContinuationSetupJson({
+          sourceKnowledgeDocumentId: nextWritingMode === "continuation" ? nextSourceKnowledgeDocumentId : null,
+          continuationBookAnalysisId: normalizedNextContinuationBookAnalysisId,
+          continuationBookAnalysisSections:
+            nextWritingMode === "continuation"
+            && (nextSourceNovelId || nextSourceKnowledgeDocumentId)
+            && normalizedNextContinuationBookAnalysisId
+              ? nextContinuationBookAnalysisSections
+              : null,
+        }),
         ...(shouldResetWorldSlice
           ? {
-            storyWorldSliceJson: null,
-            storyWorldSliceOverridesJson: null,
-            storyWorldSliceSchemaVersion: STORY_WORLD_SLICE_SCHEMA_VERSION,
+            storyWorldSliceCacheJson: JSON.stringify({ storyWorldSliceJson: null, storyWorldSliceOverridesJson: null, storyWorldSliceSchemaVersion: STORY_WORLD_SLICE_SCHEMA_VERSION }),
           }
           : {}),
       },

@@ -378,7 +378,16 @@ export async function generateVolumePlanDocument(params: {
 }): Promise<VolumePlanDocument> {
   const { novelId, workspace, options = {}, storyMacroPlanService } = params;
   const [rawNovel, storyMacroPlan]: [
-    (Omit<VolumeGenerationNovel, "storyModePromptBlock"> & {
+    {
+      title: string;
+      description: string | null;
+      targetAudience: string | null;
+      bookFramingJson: string | null;
+      commercialTagsJson: string | null;
+      estimatedChapterCount: number | null;
+      narrativePov: string | null;
+      pacePreference: string | null;
+      emotionIntensity: string | null;
       primaryStoryMode: {
         id: string;
         name: string;
@@ -399,7 +408,16 @@ export async function generateVolumePlanDocument(params: {
         createdAt: Date;
         updatedAt: Date;
       } | null;
-    }) | null,
+      genre: {
+        name: string;
+      } | null;
+      characters: Array<{
+        name: string;
+        role: string;
+        currentGoal: string | null;
+        currentState: string | null;
+      }>;
+    } | null,
     Awaited<ReturnType<StoryMacroPlanService["getPlan"]>> | null,
   ] = await Promise.all([
     prisma.novel.findUnique({
@@ -408,9 +426,7 @@ export async function generateVolumePlanDocument(params: {
         title: true,
         description: true,
         targetAudience: true,
-        bookSellingPoint: true,
-        competingFeel: true,
-        first30ChapterPromise: true,
+        bookFramingJson: true,
         commercialTagsJson: true,
         estimatedChapterCount: true,
         narrativePov: true,
@@ -461,11 +477,24 @@ export async function generateVolumePlanDocument(params: {
     throw new Error("小说不存在。");
   }
 
+  const { bookFramingJson: _bookFramingRaw, primaryStoryMode, secondaryStoryMode, ...restRawNovel } = rawNovel;
+
+  const bookFraming = ((): { bookSellingPoint?: string | null; competingFeel?: string | null; first30ChapterPromise?: string | null } => {
+    try {
+      return _bookFramingRaw ? JSON.parse(_bookFramingRaw) as Record<string, unknown> : {};
+    } catch {
+      return {};
+    }
+  })();
+
   const novel: VolumeGenerationNovel = {
-    ...rawNovel,
+    ...restRawNovel,
+    bookSellingPoint: bookFraming.bookSellingPoint ?? null,
+    competingFeel: bookFraming.competingFeel ?? null,
+    first30ChapterPromise: bookFraming.first30ChapterPromise ?? null,
     storyModePromptBlock: buildStoryModePromptBlock({
-      primary: rawNovel.primaryStoryMode ? normalizeStoryModeOutput(rawNovel.primaryStoryMode) : null,
-      secondary: rawNovel.secondaryStoryMode ? normalizeStoryModeOutput(rawNovel.secondaryStoryMode) : null,
+      primary: primaryStoryMode ? normalizeStoryModeOutput(primaryStoryMode) : null,
+      secondary: secondaryStoryMode ? normalizeStoryModeOutput(secondaryStoryMode) : null,
     }),
   };
 

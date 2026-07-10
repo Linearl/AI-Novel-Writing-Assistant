@@ -499,18 +499,29 @@ export function toNovelListItem(novel: {
   title: string;
   description: string | null;
   status: string;
-  projectStatus: "not_started" | "in_progress" | "completed" | "rework" | "blocked" | null;
+  setupProgressJson?: string | null;
   updatedAt: Date;
   _count?: {
     chapters?: number;
   };
 }) {
+  let projectStatus: "not_started" | "in_progress" | "completed" | "rework" | "blocked" | null = null;
+  try {
+    if (novel.setupProgressJson) {
+      const progress = JSON.parse(novel.setupProgressJson) as Record<string, unknown>;
+      if (typeof progress.projectStatus === "string") {
+        projectStatus = progress.projectStatus as "not_started" | "in_progress" | "completed" | "rework" | "blocked";
+      }
+    }
+  } catch {
+    // ignore parse errors
+  }
   return {
     id: novel.id,
     title: novel.title,
     description: novel.description ?? null,
     status: novel.status,
-    projectStatus: novel.projectStatus ?? null,
+    projectStatus,
     chapterCount: novel._count?.chapters ?? 0,
     updatedAt: novel.updatedAt.toISOString(),
   };

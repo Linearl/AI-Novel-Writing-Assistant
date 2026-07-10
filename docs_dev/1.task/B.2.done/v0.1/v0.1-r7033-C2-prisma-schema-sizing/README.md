@@ -1,7 +1,7 @@
 ---
 description: "REQ-7033 Prisma Schema 精简——README"
 update_time: 2026-07-10
-status: requirements_ready
+status: done
 ---
 
 # REQ-7033 Prisma Schema 精简

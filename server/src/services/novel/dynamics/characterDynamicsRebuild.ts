@@ -23,8 +23,7 @@ export async function rebuildDynamics(
       title: true,
       description: true,
       targetAudience: true,
-      bookSellingPoint: true,
-      first30ChapterPromise: true,
+      bookFramingJson: true,
       outline: true,
       structuredOutline: true,
       characters: {
@@ -77,14 +76,23 @@ export async function rebuildDynamics(
     return queryService.getOverview(novelId);
   }
 
+  const bookFraming = ((): { bookSellingPoint?: string | null; first30ChapterPromise?: string | null } => {
+    try {
+      return context.bookFramingJson ? JSON.parse(context.bookFramingJson) as Record<string, unknown> : {};
+    } catch {
+      return {};
+    }
+  })();
+
   const lockedChapterIds = new Set(
     (await prisma.chapter.findMany({
       where: { novelId, locked: true },
       select: { id: true },
     })).map((c) => c.id),
   );
+  const { bookFramingJson: _bfj, ...contextBase } = context;
   const contextWithLockedFilter = {
-    ...context,
+    ...contextBase,
     volumePlans: context.volumePlans.map((volume) => ({
       ...volume,
       chapters: volume.chapters.filter((chapter) => chapter.chapterId !== null && !lockedChapterIds.has(chapter.chapterId)),
@@ -98,6 +106,8 @@ export async function rebuildDynamics(
 
   const projection = await generateVolumeProjection({
     ...contextWithLockedFilter,
+    bookSellingPoint: bookFraming.bookSellingPoint ?? null,
+    first30ChapterPromise: bookFraming.first30ChapterPromise ?? null,
     volumePlans: projectionVolumePlans,
   });
   const sourceType = options.sourceType ?? "rebuild_projection";
@@ -265,8 +275,7 @@ export async function syncChapterDraftDynamics(novelId: string, chapterId: strin
       select: {
         title: true,
         targetAudience: true,
-        bookSellingPoint: true,
-        first30ChapterPromise: true,
+        bookFramingJson: true,
         characters: {
           orderBy: { createdAt: "asc" },
           select: {
@@ -304,6 +313,15 @@ export async function syncChapterDraftDynamics(novelId: string, chapterId: strin
   if (!chapter?.content?.trim() || !novel) {
     return;
   }
+
+  const bookFraming = ((): { bookSellingPoint?: string | null; first30ChapterPromise?: string | null } => {
+    try {
+      return novel.bookFramingJson ? JSON.parse(novel.bookFramingJson) as Record<string, unknown> : {};
+    } catch {
+      return {};
+    }
+  })();
+
   const artifactDeltaCheckpoint = await prisma.chapterArtifactSyncCheckpoint.findFirst({
     where: {
       novelId,
@@ -324,8 +342,8 @@ export async function syncChapterDraftDynamics(novelId: string, chapterId: strin
     chapterId,
     novelTitle: novel.title,
     targetAudience: novel.targetAudience,
-    bookSellingPoint: novel.bookSellingPoint,
-    first30ChapterPromise: novel.first30ChapterPromise,
+    bookSellingPoint: bookFraming.bookSellingPoint ?? null,
+    first30ChapterPromise: bookFraming.first30ChapterPromise ?? null,
     currentVolumeTitle: currentVolume?.title ?? null,
     rosterLines: novel.characters.map((item) => `${item.name} | ${item.role} | goal=${item.currentGoal ?? ""} | state=${item.currentState ?? ""}`),
     relationLines: novel.characterRelations.map((item) => `${item.sourceCharacter.name} -> ${item.targetCharacter.name} | ${item.surfaceRelation} | dynamic=${item.dynamicLabel ?? ""} | next=${item.nextTurnPoint ?? ""}`),

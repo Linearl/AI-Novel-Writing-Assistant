@@ -131,15 +131,13 @@ export async function loadNovelCoverNovel(novelId: string): Promise<NovelCoverNo
       title: true,
       description: true,
       targetAudience: true,
-      bookSellingPoint: true,
-      competingFeel: true,
-      first30ChapterPromise: true,
+      bookFramingJson: true,
       commercialTagsJson: true,
       styleTone: true,
       narrativePov: true,
       pacePreference: true,
       emotionIntensity: true,
-      storyWorldSliceJson: true,
+      storyWorldSliceCacheJson: true,
       genre: {
         select: {
           name: true,
@@ -166,7 +164,16 @@ export async function loadNovelCoverNovel(novelId: string): Promise<NovelCoverNo
   if (!novel) {
     throw new AppError("Novel not found.", 404);
   }
-  return novel;
+  const { storyWorldSliceCacheJson, bookFramingJson, ...rest } = novel;
+  const worldSliceCache = storyWorldSliceCacheJson ? JSON.parse(storyWorldSliceCacheJson) as Record<string, unknown> : {};
+  const bookFraming = bookFramingJson ? JSON.parse(bookFramingJson) as Record<string, unknown> : {};
+  return {
+    ...rest,
+    storyWorldSliceJson: (typeof worldSliceCache.storyWorldSliceJson === "string" ? worldSliceCache.storyWorldSliceJson : null) as string | null,
+    bookSellingPoint: (typeof bookFraming.bookSellingPoint === "string" ? bookFraming.bookSellingPoint : null) as string | null,
+    competingFeel: (typeof bookFraming.competingFeel === "string" ? bookFraming.competingFeel : null) as string | null,
+    first30ChapterPromise: (typeof bookFraming.first30ChapterPromise === "string" ? bookFraming.first30ChapterPromise : null) as string | null,
+  };
 }
 
 async function loadNovelCoverWorldContext(novelId: string): Promise<WorldContextBlock | null> {

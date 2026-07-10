@@ -137,6 +137,13 @@ infra/           Docker Compose（Qdrant 等）
 
 执行任何破坏性数据操作（删除数据库、`prisma migrate reset`、truncation 等）前，必须：获取用户明确批准 → 完成备份并确认路径 → 验证备份可恢复。
 
+### Prisma Schema 治理
+
+- 新模块的数据模型**必须自包含**，禁止向核心 Novel 模型追加与主叙事管线无关的列
+- 向 Novel 模型新增列的 PR **必须附带架构评审**，说明该字段的查询频率、归属模块、收敛路径
+- Novel 模型标量字段数上限 **40 列**，超出时必须收敛为 JSON 列或迁移到关联表
+- 低频读取、结构化松散的扩展字段优先收敛为 JSON 列（SQLite `TEXT` / PostgreSQL `jsonb`），不做独立列
+
 ### 开发分支工作流
 
 - 影响端到端产品流的功能开发不要在 `main` 直接进行

@@ -17,6 +17,7 @@ import {
   buildRuntimeStateSnapshotFromCanonical,
 } from "../state/CanonicalStateService";
 import { contextAssemblyService } from "../production/ContextAssemblyService";
+import { parseBookFramingJson } from "../novelCoreShared";
 import type { ChapterRuntimeRequestInput } from "./chapterRuntimeSchema";
 import {
   buildPreviousChaptersSummary,
@@ -122,6 +123,7 @@ export class GenerationContextAssembler {
     if (!novel || !chapter) {
       throw new Error("Novel or chapter not found.");
     }
+    const bookFraming = parseBookFramingJson(novel.bookFramingJson);
 
     // 懒规划 JIT：全书 autopilot 路径在 ensureChapterPlan 之前确保 task sheet 就绪。
     // JIT 生成时会注入已发生事实（factLedger），解决 task sheet 与实际前文脱节问题。
@@ -261,8 +263,8 @@ export class GenerationContextAssembler {
       title: canonicalState.bookContract.title,
       genre: canonicalState.bookContract.genre ?? null,
       targetAudience: canonicalState.bookContract.targetAudience ?? novel.targetAudience,
-      sellingPoint: canonicalState.bookContract.sellingPoint ?? novel.bookSellingPoint,
-      first30ChapterPromise: canonicalState.bookContract.first30ChapterPromise ?? novel.first30ChapterPromise,
+      sellingPoint: canonicalState.bookContract.sellingPoint ?? bookFraming.bookSellingPoint,
+      first30ChapterPromise: canonicalState.bookContract.first30ChapterPromise ?? bookFraming.first30ChapterPromise,
       narrativePov: novel.narrativePov,
       pacePreference: novel.pacePreference,
       emotionIntensity: novel.emotionIntensity,

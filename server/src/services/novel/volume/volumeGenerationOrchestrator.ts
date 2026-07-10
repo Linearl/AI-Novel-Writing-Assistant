@@ -97,9 +97,7 @@ async function loadGenerationContext(params: {
         title: true,
         description: true,
         targetAudience: true,
-        bookSellingPoint: true,
-        competingFeel: true,
-        first30ChapterPromise: true,
+        bookFramingJson: true,
         commercialTagsJson: true,
         estimatedChapterCount: true,
         narrativePov: true,
@@ -150,11 +148,23 @@ async function loadGenerationContext(params: {
     throw new Error("小说不存在。");
   }
 
+  const { bookFramingJson, primaryStoryMode, secondaryStoryMode, ...restRawNovel } = rawNovel;
+  const bookFraming = ((): { bookSellingPoint?: string | null; competingFeel?: string | null; first30ChapterPromise?: string | null } => {
+    try {
+      return bookFramingJson ? JSON.parse(bookFramingJson) as Record<string, unknown> : {};
+    } catch {
+      return {};
+    }
+  })();
+
   const novel: VolumeGenerationNovel = {
-    ...rawNovel,
+    ...restRawNovel,
+    bookSellingPoint: bookFraming.bookSellingPoint ?? null,
+    competingFeel: bookFraming.competingFeel ?? null,
+    first30ChapterPromise: bookFraming.first30ChapterPromise ?? null,
     storyModePromptBlock: buildStoryModePromptBlock({
-      primary: rawNovel.primaryStoryMode ? normalizeStoryModeOutput(rawNovel.primaryStoryMode) : null,
-      secondary: rawNovel.secondaryStoryMode ? normalizeStoryModeOutput(rawNovel.secondaryStoryMode) : null,
+      primary: primaryStoryMode ? normalizeStoryModeOutput(primaryStoryMode) : null,
+      secondary: secondaryStoryMode ? normalizeStoryModeOutput(secondaryStoryMode) : null,
     }),
   };
 

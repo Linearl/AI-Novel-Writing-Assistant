@@ -1,6 +1,7 @@
 import { prisma } from "../../db/prisma";
 import { estimateContextTokens } from "../context/ContextBroker";
 import { listNovelMaterialGroupDefinitions, resolveNovelMaterialGroup } from "./materialGroups";
+import { parseBookFramingJson } from "../../services/novel/novelCoreShared";
 import type {
   NovelMaterialBlock,
   NovelMaterialExportInput,
@@ -199,6 +200,7 @@ export class NovelPromptMaterialExporter {
     if (!novel) {
       return null;
     }
+    const bookFraming = parseBookFramingJson(novel.bookFramingJson);
     return block({
       group,
       title: definition.title,
@@ -212,8 +214,8 @@ export class NovelPromptMaterialExporter {
         novel.description ? `简介：${novel.description}` : null,
         novel.genre?.name ? `题材：${novel.genre.name}` : null,
         novel.targetAudience ? `目标读者：${novel.targetAudience}` : null,
-        novel.bookSellingPoint ? `核心卖点：${novel.bookSellingPoint}` : null,
-        novel.first30ChapterPromise ? `前 30 章承诺：${novel.first30ChapterPromise}` : null,
+        bookFraming.bookSellingPoint ? `核心卖点：${bookFraming.bookSellingPoint}` : null,
+        bookFraming.first30ChapterPromise ? `前 30 章承诺：${bookFraming.first30ChapterPromise}` : null,
         novel.estimatedChapterCount ? `预计章节数：${novel.estimatedChapterCount}` : null,
         novel.defaultChapterLength ? `默认章节长度：${novel.defaultChapterLength}` : null,
         novel.primaryStoryMode?.name ? `主推进模式：${novel.primaryStoryMode.name}` : null,

@@ -549,9 +549,18 @@ export class BookAnalysisGenerationService {
         return;
       }
 
-      const linkedNovels = await prisma.novel.findMany({
-        where: { continuationBookAnalysisId: analysisId },
-        select: { id: true, title: true },
+      // Find novels linked to this analysis via continuationSetupJson
+      const allContinuationNovels = await prisma.novel.findMany({
+        where: { writingMode: "continuation", continuationSetupJson: { not: null } },
+        select: { id: true, title: true, continuationSetupJson: true },
+      });
+      const linkedNovels = allContinuationNovels.filter((novel) => {
+        try {
+          const setup = novel.continuationSetupJson ? JSON.parse(novel.continuationSetupJson) as Record<string, unknown> : {};
+          return setup.continuationBookAnalysisId === analysisId;
+        } catch {
+          return false;
+        }
       });
       if (linkedNovels.length === 0) {
         return;

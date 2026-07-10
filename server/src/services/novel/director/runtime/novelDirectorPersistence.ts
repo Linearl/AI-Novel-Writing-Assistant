@@ -1,5 +1,6 @@
 import type { DirectorPlanBlueprint } from "@ai-novel/shared/types/novelDirector";
 import { prisma } from "../../../../db/prisma";
+import { serializeSetupProgressJson } from "../../novelCoreShared";
 
 export const DIRECTOR_BLUEPRINT_TRANSACTION_TIMEOUT_MS = 60_000;
 
@@ -153,9 +154,11 @@ export async function persistDirectorBlueprint(novelId: string, blueprint: Direc
       where: { id: novelId },
       data: {
         outline,
-        storylineStatus: "in_progress",
-        outlineStatus: "in_progress",
-        projectStatus: "in_progress",
+        setupProgressJson: serializeSetupProgressJson({
+          storylineStatus: "in_progress",
+          outlineStatus: "in_progress",
+          projectStatus: "in_progress",
+        }),
       },
     });
 

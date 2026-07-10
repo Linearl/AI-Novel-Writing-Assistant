@@ -349,7 +349,7 @@ ${summaryBlock || "暂无"}`;
         id: true,
         writingMode: true,
         sourceNovelId: true,
-        sourceKnowledgeDocumentId: true,
+        continuationSetupJson: true,
       },
     });
     if (!novel || toWritingMode(novel.writingMode) !== "continuation") {
@@ -359,8 +359,15 @@ ${summaryBlock || "暂无"}`;
     if (novel.sourceNovelId) {
       return this.buildNovelSourcePack(novel.sourceNovelId);
     }
-    if (novel.sourceKnowledgeDocumentId) {
-      return this.buildKnowledgeSourcePack(novel.sourceKnowledgeDocumentId);
+    const continuationSetup = (() => {
+      try {
+        return novel.continuationSetupJson ? JSON.parse(novel.continuationSetupJson) as Record<string, unknown> : {};
+      } catch {
+        return {};
+      }
+    })() as { sourceKnowledgeDocumentId?: string | null };
+    if (continuationSetup.sourceKnowledgeDocumentId) {
+      return this.buildKnowledgeSourcePack(continuationSetup.sourceKnowledgeDocumentId);
     }
     return disabledPack();
   }

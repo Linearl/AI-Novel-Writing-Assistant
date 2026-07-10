@@ -308,7 +308,7 @@ export class WorldService {
     await prisma.$transaction([
       prisma.novel.updateMany({
         where: { id: novelId, worldId },
-        data: { worldId: null, storyWorldSliceJson: null, storyWorldSliceOverridesJson: null },
+        data: { worldId: null, storyWorldSliceCacheJson: JSON.stringify({ storyWorldSliceJson: null, storyWorldSliceOverridesJson: null, storyWorldSliceSchemaVersion: 1 }) },
       }),
       prisma.novelWorld.deleteMany({
         where: { novelId, sourceWorldId: worldId },

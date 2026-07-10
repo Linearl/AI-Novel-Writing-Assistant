@@ -8,6 +8,7 @@ import { prisma } from "../../db/prisma";
 import { runStructuredPrompt } from "../../prompting/core/promptRunner";
 import { styleRecommendationPrompt } from "../../prompting/prompts/style/style.prompts";
 import { buildBookFramingSummary } from "../novel/bookFraming";
+import { parseBookFramingJson } from "../novel/novelCoreShared";
 import { ensureStyleEngineSeedData } from "./StyleEngineSeedService";
 import { clamp, mapStyleProfileRow } from "./helpers";
 
@@ -185,6 +186,19 @@ export class StyleRecommendationService {
     if (!novel) {
       throw new Error("小说不存在。");
     }
+    // Deserialize bookFramingJson into legacy flat properties expected by buildNovelSummary.
+    Object.assign(novel as unknown as Record<string, unknown>, (() => {
+      try {
+        const parsed = novel.bookFramingJson ? JSON.parse(novel.bookFramingJson) as Record<string, unknown> : {};
+        return {
+          bookSellingPoint: typeof parsed.bookSellingPoint === "string" ? parsed.bookSellingPoint : null,
+          competingFeel: typeof parsed.competingFeel === "string" ? parsed.competingFeel : null,
+          first30ChapterPromise: typeof parsed.first30ChapterPromise === "string" ? parsed.first30ChapterPromise : null,
+        };
+      } catch {
+        return { bookSellingPoint: null, competingFeel: null, first30ChapterPromise: null };
+      }
+    })());
 
     const profiles = profileRows.map((row) => mapStyleProfileRow(row));
     if (profiles.length === 0) {
@@ -203,7 +217,8 @@ export class StyleRecommendationService {
         `${index + 1}. ID=${profile.id}\n名称：${profile.name}\n摘要：${buildProfileSummary(profile)}`
       ))
       .join("\n\n");
-    const novelSummary = buildNovelSummary(novel, chapterCount);
+    const bookFraming = parseBookFramingJson(novel.bookFramingJson);
+    const novelSummary = buildNovelSummary({ ...novel, ...bookFraming }, chapterCount);
 
     const result = await runStructuredPrompt({
       asset: styleRecommendationPrompt,

@@ -172,11 +172,24 @@ export class NovelReferenceService {
       where: { id: novelId },
       select: {
         writingMode: true,
-        continuationBookAnalysisId: true,
-        continuationBookAnalysisSections: true,
+        continuationSetupJson: true,
       },
     });
-    if (!novel || novel.writingMode !== "continuation" || !novel.continuationBookAnalysisId) {
+    if (!novel || novel.writingMode !== "continuation") {
+      return {
+        enabled: false,
+        analysisId: null,
+        sectionKeys: null,
+      };
+    }
+    const continuationSetup = (() => {
+      try {
+        return novel.continuationSetupJson ? JSON.parse(novel.continuationSetupJson) as Record<string, unknown> : {};
+      } catch {
+        return {};
+      }
+    })() as { sourceKnowledgeDocumentId?: string | null; continuationBookAnalysisId?: string | null; continuationBookAnalysisSections?: unknown };
+    if (!continuationSetup.continuationBookAnalysisId) {
       return {
         enabled: false,
         analysisId: null,
@@ -185,8 +198,8 @@ export class NovelReferenceService {
     }
     return {
       enabled: true,
-      analysisId: novel.continuationBookAnalysisId,
-      sectionKeys: parseContinuationSectionKeys(novel.continuationBookAnalysisSections),
+      analysisId: continuationSetup.continuationBookAnalysisId,
+      sectionKeys: parseContinuationSectionKeys(continuationSetup.continuationBookAnalysisSections as string | null | undefined),
     };
   }
 

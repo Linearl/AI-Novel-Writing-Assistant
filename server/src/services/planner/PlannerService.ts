@@ -36,6 +36,29 @@ import {
   type PlannerChapterGenerationDeps,
 } from "./plannerChapterGeneration";
 
+/**
+ * Parses `bookFramingJson` into individual book-framing properties.
+ * Prisma `select` returns `bookFramingJson` as a raw JSON string;
+ * downstream code still expects the legacy flat properties.
+ */
+function parseBookFramingJson(
+  bookFramingJson: string | null | undefined,
+): { bookSellingPoint: string | null; competingFeel: string | null; first30ChapterPromise: string | null } {
+  if (!bookFramingJson) {
+    return { bookSellingPoint: null, competingFeel: null, first30ChapterPromise: null };
+  }
+  try {
+    const parsed = JSON.parse(bookFramingJson) as Record<string, unknown>;
+    return {
+      bookSellingPoint: typeof parsed.bookSellingPoint === "string" ? parsed.bookSellingPoint : null,
+      competingFeel: typeof parsed.competingFeel === "string" ? parsed.competingFeel : null,
+      first30ChapterPromise: typeof parsed.first30ChapterPromise === "string" ? parsed.first30ChapterPromise : null,
+    };
+  } catch {
+    return { bookSellingPoint: null, competingFeel: null, first30ChapterPromise: null };
+  }
+}
+
 export type { PlannerOptions, GenerateChapterPlanOptions, ReplanInput } from "./plannerChapterGeneration";
 export { normalizePlannerOutput } from "./plannerOutputNormalization";
 
@@ -167,9 +190,7 @@ export class PlannerService {
         title: true,
         description: true,
         targetAudience: true,
-        bookSellingPoint: true,
-        competingFeel: true,
-        first30ChapterPromise: true,
+        bookFramingJson: true,
         narrativePov: true,
         pacePreference: true,
         emotionIntensity: true,
@@ -185,6 +206,8 @@ export class PlannerService {
     if (!novel) {
       throw new Error("小说不存在。");
     }
+    // Deserialize bookFramingJson into the legacy flat properties expected by downstream code.
+    const bookFraming = parseBookFramingJson((novel as { bookFramingJson?: string | null }).bookFramingJson);
     const storyModeBlock = buildPlannerStoryModeBlock(novel);
     const styleEngine = await this.resolvePlannerStyleEngineSummary(novelId, undefined, options.taskStyleProfileId);
     const contextBlocks = buildBookPlanContextBlocks({
@@ -192,9 +215,9 @@ export class PlannerService {
       description: novel.description,
       genreName: novel.genre?.name ?? null,
       targetAudience: novel.targetAudience,
-      bookSellingPoint: novel.bookSellingPoint,
-      competingFeel: novel.competingFeel,
-      first30ChapterPromise: novel.first30ChapterPromise,
+      bookSellingPoint: bookFraming.bookSellingPoint ?? null,
+      competingFeel: bookFraming.competingFeel ?? null,
+      first30ChapterPromise: bookFraming.first30ChapterPromise ?? null,
       narrativePov: novel.narrativePov,
       pacePreference: novel.pacePreference,
       emotionIntensity: novel.emotionIntensity,
@@ -238,9 +261,7 @@ export class PlannerService {
         title: true,
         description: true,
         targetAudience: true,
-        bookSellingPoint: true,
-        competingFeel: true,
-        first30ChapterPromise: true,
+        bookFramingJson: true,
         narrativePov: true,
         pacePreference: true,
         emotionIntensity: true,
@@ -255,6 +276,8 @@ export class PlannerService {
     if (!novel) {
       throw new Error("小说不存在。");
     }
+    // Deserialize bookFramingJson into the legacy flat properties expected by downstream code.
+    const bookFraming = parseBookFramingJson((novel as { bookFramingJson?: string | null }).bookFramingJson);
     const storyModeBlock = buildPlannerStoryModeBlock(novel);
     const styleEngine = await this.resolvePlannerStyleEngineSummary(novelId, undefined, options.taskStyleProfileId);
     const contextBlocks = buildArcPlanContextBlocks({
@@ -262,9 +285,9 @@ export class PlannerService {
       description: novel.description,
       genreName: novel.genre?.name ?? null,
       targetAudience: novel.targetAudience,
-      bookSellingPoint: novel.bookSellingPoint,
-      competingFeel: novel.competingFeel,
-      first30ChapterPromise: novel.first30ChapterPromise,
+      bookSellingPoint: bookFraming.bookSellingPoint ?? null,
+      competingFeel: bookFraming.competingFeel ?? null,
+      first30ChapterPromise: bookFraming.first30ChapterPromise ?? null,
       narrativePov: novel.narrativePov,
       pacePreference: novel.pacePreference,
       emotionIntensity: novel.emotionIntensity,

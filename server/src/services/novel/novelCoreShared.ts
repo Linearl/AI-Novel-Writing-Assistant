@@ -286,6 +286,10 @@ export const DEFAULT_ESTIMATED_CHAPTER_COUNT = 80;
 export function normalizeNovelOutput<T extends {
   continuationBookAnalysisSections?: string | null;
   commercialTagsJson?: string | null;
+  bookFramingJson?: string | null;
+  setupProgressJson?: string | null;
+  continuationSetupJson?: string | null;
+  storyWorldSliceCacheJson?: string | null;
   bookContract?: {
     id: string;
     novelId: string;
@@ -323,19 +327,53 @@ export function normalizeNovelOutput<T extends {
   } | null;
 }>(
   novel: T,
-): Omit<T, "continuationBookAnalysisSections" | "commercialTagsJson"> & {
+): Omit<T, "continuationBookAnalysisSections" | "commercialTagsJson" | "bookFramingJson" | "setupProgressJson" | "continuationSetupJson" | "storyWorldSliceCacheJson"> & {
   continuationBookAnalysisSections: BookAnalysisSectionKey[] | null;
   commercialTags: string[];
+  bookSellingPoint: string | null;
+  competingFeel: string | null;
+  first30ChapterPromise: string | null;
+  projectStatus: string | null;
+  storylineStatus: string | null;
+  outlineStatus: string | null;
+  resourceReadyScore: number | null;
+  sourceKnowledgeDocumentId: string | null;
+  continuationBookAnalysisId: string | null;
+  storyWorldSliceJson: string | null;
+  storyWorldSliceOverridesJson: string | null;
+  storyWorldSliceSchemaVersion: number;
 } {
   const {
     continuationBookAnalysisSections,
     commercialTagsJson,
+    bookFramingJson,
+    setupProgressJson,
+    continuationSetupJson,
+    storyWorldSliceCacheJson,
     ...rest
   } = novel;
+
+  const bookFraming = parseBookFramingJson(bookFramingJson);
+  const setupProgress = (() => { try { return setupProgressJson ? JSON.parse(setupProgressJson) as Record<string, unknown> : {}; } catch { return {}; } })() as { projectStatus?: string | null; storylineStatus?: string | null; outlineStatus?: string | null; resourceReadyScore?: number | null };
+  const continuationSetup = (() => { try { return continuationSetupJson ? JSON.parse(continuationSetupJson) as Record<string, unknown> : {}; } catch { return {}; } })() as { sourceKnowledgeDocumentId?: string | null; continuationBookAnalysisId?: string | null; continuationBookAnalysisSections?: unknown };
+  const worldSliceCache = (() => { try { return storyWorldSliceCacheJson ? JSON.parse(storyWorldSliceCacheJson) as Record<string, unknown> : {}; } catch { return {}; } })() as { storyWorldSliceJson?: string | null; storyWorldSliceOverridesJson?: string | null; storyWorldSliceSchemaVersion?: number | null };
+
   return {
     ...rest,
-    continuationBookAnalysisSections: parseContinuationBookAnalysisSections(continuationBookAnalysisSections),
+    continuationBookAnalysisSections: parseContinuationBookAnalysisSections(continuationBookAnalysisSections ?? continuationSetup.continuationBookAnalysisSections as string | null | undefined),
     commercialTags: parseCommercialTagsJson(commercialTagsJson),
+    bookSellingPoint: bookFraming.bookSellingPoint ?? null,
+    competingFeel: bookFraming.competingFeel ?? null,
+    first30ChapterPromise: bookFraming.first30ChapterPromise ?? null,
+    projectStatus: setupProgress.projectStatus ?? null,
+    storylineStatus: setupProgress.storylineStatus ?? null,
+    outlineStatus: setupProgress.outlineStatus ?? null,
+    resourceReadyScore: setupProgress.resourceReadyScore ?? null,
+    sourceKnowledgeDocumentId: continuationSetup.sourceKnowledgeDocumentId ?? null,
+    continuationBookAnalysisId: continuationSetup.continuationBookAnalysisId ?? null,
+    storyWorldSliceJson: worldSliceCache.storyWorldSliceJson ?? null,
+    storyWorldSliceOverridesJson: worldSliceCache.storyWorldSliceOverridesJson ?? null,
+    storyWorldSliceSchemaVersion: worldSliceCache.storyWorldSliceSchemaVersion ?? 1,
     ...(rest.bookContract !== undefined
       ? {
         bookContract: rest.bookContract
@@ -615,6 +653,69 @@ export function serializeContinuationBookAnalysisSections(
     return null;
   }
   return JSON.stringify(Array.from(new Set(normalized)));
+}
+
+// ─── JSON Column Serialization Functions ────────────────────────────────────
+
+/**
+ * Parses `bookFramingJson` into individual book-framing properties.
+ * Prisma `select` or `include` returns `bookFramingJson` as a raw JSON string;
+ * downstream code still expects the legacy flat properties.
+ */
+export function parseBookFramingJson(
+  bookFramingJson: string | null | undefined,
+): { bookSellingPoint: string | null; competingFeel: string | null; first30ChapterPromise: string | null } {
+  if (!bookFramingJson) {
+    return { bookSellingPoint: null, competingFeel: null, first30ChapterPromise: null };
+  }
+  try {
+    const parsed = JSON.parse(bookFramingJson) as Record<string, unknown>;
+    return {
+      bookSellingPoint: typeof parsed.bookSellingPoint === "string" ? parsed.bookSellingPoint : null,
+      competingFeel: typeof parsed.competingFeel === "string" ? parsed.competingFeel : null,
+      first30ChapterPromise: typeof parsed.first30ChapterPromise === "string" ? parsed.first30ChapterPromise : null,
+    };
+  } catch {
+    return { bookSellingPoint: null, competingFeel: null, first30ChapterPromise: null };
+  }
+}
+
+export function serializeBookFramingJson(input: {
+  bookSellingPoint?: string | null;
+  competingFeel?: string | null;
+  first30ChapterPromise?: string | null;
+}): string | null {
+  return JSON.stringify({
+    bookSellingPoint: input.bookSellingPoint ?? null,
+    competingFeel: input.competingFeel ?? null,
+    first30ChapterPromise: input.first30ChapterPromise ?? null,
+  });
+}
+
+export function serializeSetupProgressJson(input: {
+  projectStatus?: string | null;
+  storylineStatus?: string | null;
+  outlineStatus?: string | null;
+  resourceReadyScore?: number | null;
+}): string | null {
+  return JSON.stringify({
+    projectStatus: input.projectStatus ?? null,
+    storylineStatus: input.storylineStatus ?? null,
+    outlineStatus: input.outlineStatus ?? null,
+    resourceReadyScore: input.resourceReadyScore ?? null,
+  });
+}
+
+export function serializeContinuationSetupJson(input: {
+  sourceKnowledgeDocumentId?: string | null;
+  continuationBookAnalysisId?: string | null;
+  continuationBookAnalysisSections?: BookAnalysisSectionKey[] | null;
+}): string | null {
+  return JSON.stringify({
+    sourceKnowledgeDocumentId: input.sourceKnowledgeDocumentId ?? null,
+    continuationBookAnalysisId: input.continuationBookAnalysisId ?? null,
+    continuationBookAnalysisSections: input.continuationBookAnalysisSections ?? null,
+  });
 }
 
 export function normalizeOptionalTextForCreate(value: string | null | undefined): string | null {

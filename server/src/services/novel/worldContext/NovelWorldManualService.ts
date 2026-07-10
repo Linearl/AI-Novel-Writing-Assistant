@@ -52,8 +52,7 @@ export class NovelWorldManualService {
         where: { id: input.novelId },
         data: {
           worldId: null,
-          storyWorldSliceJson: null,
-          storyWorldSliceOverridesJson: null,
+          storyWorldSliceCacheJson: JSON.stringify({ storyWorldSliceJson: null, storyWorldSliceOverridesJson: null, storyWorldSliceSchemaVersion: 1 }),
         },
       });
       await tx.$executeRaw`

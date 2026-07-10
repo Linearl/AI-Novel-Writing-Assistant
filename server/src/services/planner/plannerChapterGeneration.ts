@@ -67,6 +67,29 @@ function compactText(value: string | null | undefined, fallback = ""): string {
   return String(value ?? "").replace(/\s+/g, " ").trim() || fallback;
 }
 
+/**
+ * Parses `bookFramingJson` into individual book-framing properties.
+ * Prisma `select` returns `bookFramingJson` as a raw JSON string;
+ * downstream code still expects the legacy flat properties.
+ */
+function parseBookFramingJson(
+  bookFramingJson: string | null | undefined,
+): { bookSellingPoint: string | null; competingFeel: string | null; first30ChapterPromise: string | null } {
+  if (!bookFramingJson) {
+    return { bookSellingPoint: null, competingFeel: null, first30ChapterPromise: null };
+  }
+  try {
+    const parsed = JSON.parse(bookFramingJson) as Record<string, unknown>;
+    return {
+      bookSellingPoint: typeof parsed.bookSellingPoint === "string" ? parsed.bookSellingPoint : null,
+      competingFeel: typeof parsed.competingFeel === "string" ? parsed.competingFeel : null,
+      first30ChapterPromise: typeof parsed.first30ChapterPromise === "string" ? parsed.first30ChapterPromise : null,
+    };
+  } catch {
+    return { bookSellingPoint: null, competingFeel: null, first30ChapterPromise: null };
+  }
+}
+
 function takeUnique(items: Array<string | null | undefined>, limit = items.length): string[] {
   const seen = new Set<string>();
   const result: string[] = [];
@@ -140,9 +163,7 @@ export async function generateChapterPlan(
         estimatedChapterCount: true,
         genre: { select: { name: true } },
         targetAudience: true,
-        bookSellingPoint: true,
-        competingFeel: true,
-        first30ChapterPromise: true,
+        bookFramingJson: true,
         narrativePov: true,
         pacePreference: true,
         emotionIntensity: true,
@@ -231,6 +252,8 @@ export async function generateChapterPlan(
   if (!novel || !chapter) {
     throw new Error("小说或章节不存在。");
   }
+  // Deserialize bookFramingJson into the legacy flat properties expected by downstream code.
+  const bookFraming = parseBookFramingJson((novel as { bookFramingJson?: string | null }).bookFramingJson);
   const storyModeBlock = buildPlannerStoryModeBlock(novel);
   const storyMacroPlan = storyMacroPlanRow ? mapRowToPlan(storyMacroPlanRow) : null;
   const payoffLedger = await payoffLedgerSyncService.getPayoffLedger(novelId, {
@@ -362,9 +385,9 @@ export async function generateChapterPlan(
     description: novel.description,
     genreName: novel.genre?.name ?? null,
     targetAudience: novel.targetAudience,
-    bookSellingPoint: novel.bookSellingPoint,
-    competingFeel: novel.competingFeel,
-    first30ChapterPromise: novel.first30ChapterPromise,
+    bookSellingPoint: bookFraming.bookSellingPoint ?? null,
+    competingFeel: bookFraming.competingFeel ?? null,
+    first30ChapterPromise: bookFraming.first30ChapterPromise ?? null,
     narrativePov: novel.narrativePov,
     pacePreference: novel.pacePreference,
     emotionIntensity: novel.emotionIntensity,

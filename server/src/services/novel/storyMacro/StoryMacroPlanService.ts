@@ -48,6 +48,7 @@ import {
   toEditablePlan,
 } from "./storyMacroPlanService.shared";
 import { WorldContextGateway } from "../worldContext/WorldContextGateway";
+import { parseBookFramingJson } from "../novelCoreShared";
 
 interface LLMOptions {
   provider?: LLMProvider;
@@ -65,9 +66,7 @@ export class StoryMacroPlanService {
         id: true,
         title: true,
         targetAudience: true,
-        bookSellingPoint: true,
-        competingFeel: true,
-        first30ChapterPromise: true,
+        bookFramingJson: true,
         commercialTagsJson: true,
         styleTone: true,
         narrativePov: true,
@@ -108,8 +107,10 @@ export class StoryMacroPlanService {
     if (!novel) {
       throw new Error("小说不存在。");
     }
+    const bookFraming = parseBookFramingJson(novel.bookFramingJson);
     return {
       ...novel,
+      ...bookFraming,
       primaryStoryMode: novel.primaryStoryMode ? normalizeStoryModeOutput(novel.primaryStoryMode) : null,
       secondaryStoryMode: novel.secondaryStoryMode ? normalizeStoryModeOutput(novel.secondaryStoryMode) : null,
     };

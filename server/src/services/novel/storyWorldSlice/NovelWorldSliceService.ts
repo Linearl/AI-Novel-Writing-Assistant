@@ -85,7 +85,20 @@ export class NovelWorldSliceService {
     if (!novel) {
       throw new Error("小说不存在。");
     }
-    return novel;
+    // Deserialize storyWorldSliceCacheJson into individual fields for downstream consumers
+    const cache = (() => {
+      try {
+        return novel.storyWorldSliceCacheJson ? JSON.parse(novel.storyWorldSliceCacheJson) as Record<string, unknown> : {};
+      } catch {
+        return {};
+      }
+    })();
+    return {
+      ...novel,
+      storyWorldSliceJson: (cache.storyWorldSliceJson as string | null) ?? null,
+      storyWorldSliceOverridesJson: (cache.storyWorldSliceOverridesJson as string | null) ?? null,
+      storyWorldSliceSchemaVersion: cache.storyWorldSliceSchemaVersion ?? 1,
+    };
   }
 
   private async getNovelWorldRow(novelId: string): Promise<NovelWorldSliceRow | null> {
@@ -231,9 +244,11 @@ export class NovelWorldSliceService {
     await prisma.novel.update({
       where: { id: novelId },
       data: {
-        storyWorldSliceJson: slice ? JSON.stringify(slice) : null,
-        storyWorldSliceOverridesJson: JSON.stringify(overrides),
-        storyWorldSliceSchemaVersion: STORY_WORLD_SLICE_SCHEMA_VERSION,
+        storyWorldSliceCacheJson: JSON.stringify({
+          storyWorldSliceJson: slice ? JSON.stringify(slice) : null,
+          storyWorldSliceOverridesJson: JSON.stringify(overrides),
+          storyWorldSliceSchemaVersion: STORY_WORLD_SLICE_SCHEMA_VERSION,
+        }),
       },
     });
     const novelWorldRows = await prisma.$queryRaw<Array<{ id: string }>>`

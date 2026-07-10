@@ -5,6 +5,7 @@ import type {
 import type { GenerationContextPackage } from "@ai-novel/shared/types/chapterRuntime";
 import { prisma } from "../../../db/prisma";
 import { characterResourceLedgerService } from "../characterResource/CharacterResourceLedgerService";
+import { parseBookFramingJson } from "../novelCoreShared";
 
 function compactText(value: string | null | undefined, fallback = ""): string {
   return String(value ?? "").replace(/\s+/g, " ").trim() || fallback;
@@ -208,6 +209,7 @@ export class CanonicalStateService {
     if (!novel) {
       throw new Error("小说不存在。");
     }
+    const bookFraming = parseBookFramingJson(novel.bookFramingJson);
 
     const activeVolume = typeof chapterOrder === "number"
       ? novel.volumePlans.find((volume) => volume.chapters.some((chapter) => chapter.chapterOrder === chapterOrder))
@@ -346,8 +348,8 @@ export class CanonicalStateService {
         title: novel.title,
         genre: novel.genre?.name ?? null,
         targetAudience: novel.targetAudience ?? null,
-        sellingPoint: novel.bookSellingPoint ?? null,
-        first30ChapterPromise: novel.first30ChapterPromise ?? null,
+        sellingPoint: bookFraming.bookSellingPoint,
+        first30ChapterPromise: bookFraming.first30ChapterPromise,
         readingPromise: novel.bookContract?.readingPromise ?? null,
         protagonistFantasy: novel.bookContract?.protagonistFantasy ?? null,
         coreSellingPoint: novel.bookContract?.coreSellingPoint ?? null,

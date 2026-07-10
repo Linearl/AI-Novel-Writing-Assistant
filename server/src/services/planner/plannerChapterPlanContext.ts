@@ -32,6 +32,29 @@ import {
   buildPlannerStateGoalText,
 } from "./plannerHelpers";
 
+/**
+ * Parses `bookFramingJson` into individual book-framing properties.
+ * Prisma `select` returns `bookFramingJson` as a raw JSON string;
+ * downstream code still expects the legacy flat properties.
+ */
+function parseBookFramingJson(
+  bookFramingJson: string | null | undefined,
+): { bookSellingPoint: string | null; competingFeel: string | null; first30ChapterPromise: string | null } {
+  if (!bookFramingJson) {
+    return { bookSellingPoint: null, competingFeel: null, first30ChapterPromise: null };
+  }
+  try {
+    const parsed = JSON.parse(bookFramingJson) as Record<string, unknown>;
+    return {
+      bookSellingPoint: typeof parsed.bookSellingPoint === "string" ? parsed.bookSellingPoint : null,
+      competingFeel: typeof parsed.competingFeel === "string" ? parsed.competingFeel : null,
+      first30ChapterPromise: typeof parsed.first30ChapterPromise === "string" ? parsed.first30ChapterPromise : null,
+    };
+  } catch {
+    return { bookSellingPoint: null, competingFeel: null, first30ChapterPromise: null };
+  }
+}
+
 interface GenerateChapterPlanContextInput {
   novelId: string;
   chapterId: string;
@@ -148,8 +171,8 @@ function mapVolumePlansToPlannerVolumes(
 type NovelSelectResult = Prisma.NovelGetPayload<{
   select: {
     id: true; title: true; description: true; outline: true; structuredOutline: true; estimatedChapterCount: true;
-    genre: { select: { name: true } }; targetAudience: true; bookSellingPoint: true; competingFeel: true;
-    first30ChapterPromise: true; narrativePov: true; pacePreference: true; emotionIntensity: true; styleTone: true;
+    genre: { select: { name: true } }; targetAudience: true; bookFramingJson: true;
+    narrativePov: true; pacePreference: true; emotionIntensity: true; styleTone: true;
     primaryStoryMode: { select: { id: true; name: true; description: true; template: true; parentId: true; profileJson: true; createdAt: true; updatedAt: true } };
     secondaryStoryMode: { select: { id: true; name: true; description: true; template: true; parentId: true; profileJson: true; createdAt: true; updatedAt: true } };
   };
@@ -200,8 +223,7 @@ async function fetchChapterPlanData(
       where: { id: novelId },
       select: {
         id: true, title: true, description: true, outline: true, structuredOutline: true, estimatedChapterCount: true,
-        genre: { select: { name: true } }, targetAudience: true, bookSellingPoint: true, competingFeel: true,
-        first30ChapterPromise: true, narrativePov: true, pacePreference: true, emotionIntensity: true, styleTone: true,
+        genre: { select: { name: true } }, targetAudience: true, bookFramingJson: true, narrativePov: true, pacePreference: true, emotionIntensity: true, styleTone: true,
         primaryStoryMode: { select: plannerStoryModeSelect }, secondaryStoryMode: { select: plannerStoryModeSelect },
       },
     }),
@@ -233,6 +255,8 @@ async function fetchChapterPlanContext(input: GenerateChapterPlanContextInput): 
   if (!novel || !chapter) {
     throw new Error("小说或章节不存在。");
   }
+  // Deserialize bookFramingJson into the legacy flat properties expected by downstream code.
+  const bookFraming = parseBookFramingJson((novel as { bookFramingJson?: string | null }).bookFramingJson);
   const storyModeBlock = buildPlannerStoryModeBlock(novel);
   const storyMacroPlan = storyMacroPlanRow ? mapRowToPlan(storyMacroPlanRow) : null;
   const payoffLedger = await payoffLedgerSyncService.getPayoffLedger(novelId, { chapterOrder: chapter.order }).catch(() => ({
@@ -260,8 +284,8 @@ async function fetchChapterPlanContext(input: GenerateChapterPlanContextInput): 
   const replanContextBlock = options.replanContext ? buildReplanContextBlock(options.replanContext) : "无";
   const contextBlocks = buildChapterPlanContextBlocks({
     novelTitle: novel.title, description: novel.description, genreName: novel.genre?.name ?? null,
-    targetAudience: novel.targetAudience, bookSellingPoint: novel.bookSellingPoint, competingFeel: novel.competingFeel,
-    first30ChapterPromise: novel.first30ChapterPromise, narrativePov: novel.narrativePov, pacePreference: novel.pacePreference,
+    targetAudience: novel.targetAudience, bookSellingPoint: bookFraming.bookSellingPoint ?? null, competingFeel: bookFraming.competingFeel ?? null,
+    first30ChapterPromise: bookFraming.first30ChapterPromise ?? null, narrativePov: novel.narrativePov, pacePreference: novel.pacePreference,
     emotionIntensity: novel.emotionIntensity, styleTone: novel.styleTone, chapterExpectation: chapter.expectation,
     chapterTaskSheet: chapter.taskSheet, chapterTargetWordCount: chapter.targetWordCount, bible: bible?.rawContent ?? "无",
     styleEngine, outline: novel.outline, structuredOutline: novel.structuredOutline,

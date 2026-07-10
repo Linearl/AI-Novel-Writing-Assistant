@@ -324,9 +324,7 @@ model Novel {
   title             String
   description       String?
   targetAudience    String?
-  bookSellingPoint  String?
-  competingFeel     String?
-  first30ChapterPromise String?
+  bookFramingJson   String?
   commercialTagsJson String?
   status            String      @default("draft")
   writingMode       String      @default("original")
@@ -339,19 +337,12 @@ model Novel {
   postGenerationStyleReviewEnabled Boolean @default(true)
   defaultChapterLength Int?
   estimatedChapterCount Int?
-  projectStatus     ProjectProgressStatus? @default(not_started)
-  storylineStatus   ProjectProgressStatus? @default(not_started)
-  outlineStatus     ProjectProgressStatus? @default(not_started)
-  resourceReadyScore Int?
+  setupProgressJson String?
   sourceNovelId     String?
-  sourceKnowledgeDocumentId String?
-  continuationBookAnalysisId String?
-  continuationBookAnalysisSections String?
+  continuationSetupJson String?
   outline           String?
   structuredOutline String?
-  storyWorldSliceJson String?
-  storyWorldSliceOverridesJson String?
-  storyWorldSliceSchemaVersion Int @default(1)
+  storyWorldSliceCacheJson String?
   genreId           String?
   primaryStoryModeId String?
   secondaryStoryModeId String?
@@ -362,8 +353,6 @@ model Novel {
   world             World?      @relation(fields: [worldId], references: [id], onDelete: SetNull)
   sourceNovel       Novel?      @relation("NovelContinuation", fields: [sourceNovelId], references: [id], onDelete: SetNull)
   continuationNovels Novel[]    @relation("NovelContinuation")
-  sourceKnowledgeDocument KnowledgeDocument? @relation("NovelKnowledgeContinuation", fields: [sourceKnowledgeDocumentId], references: [id], onDelete: SetNull)
-  continuationBookAnalysis BookAnalysis? @relation("NovelContinuationBookAnalysis", fields: [continuationBookAnalysisId], references: [id], onDelete: SetNull)
   chapters          Chapter[]
   characters        Character[]
   characterLibraryLinks CharacterLibraryLink[]
@@ -427,8 +416,6 @@ model Novel {
   @@index([worldId])
   @@index([writingMode])
   @@index([sourceNovelId])
-  @@index([sourceKnowledgeDocumentId])
-  @@index([continuationBookAnalysisId])
 }
 
 model PromptAddendum {
@@ -2813,7 +2800,6 @@ model KnowledgeDocument {
   bindings               KnowledgeBinding[]
   bookAnalyses           BookAnalysis[]
   publishedFromAnalyses  BookAnalysis[]           @relation("BookAnalysisPublishedDocument")
-  continuationNovels     Novel[]                  @relation("NovelKnowledgeContinuation")
   createdAt              DateTime                 @default(now())
   updatedAt              DateTime                 @updatedAt
 
@@ -2878,7 +2864,6 @@ model BookAnalysis {
   document                    KnowledgeDocument  @relation(fields: [documentId], references: [id], onDelete: Cascade)
   documentVersion             KnowledgeDocumentVersion @relation(fields: [documentVersionId], references: [id], onDelete: NoAction)
   publishedDocument           KnowledgeDocument?  @relation("BookAnalysisPublishedDocument", fields: [publishedDocumentId], references: [id], onDelete: SetNull)
-  continuationNovels          Novel[]             @relation("NovelContinuationBookAnalysis")
   sections                    BookAnalysisSection[]
   createdAt                   DateTime           @default(now())
   updatedAt                   DateTime           @updatedAt
