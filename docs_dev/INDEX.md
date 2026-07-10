@@ -114,17 +114,6 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1\v0.1-r7023-M3-test-directory-restructuring\REQ-7023-test-directory-restructuring.md](./1.task\B.todo\v0.1\v0.1-r7023-M3-test-directory-restructuring\REQ-7023-test-directory-restructuring.md) | REQ-7023 测试目录重构与覆盖率接入 —— 需求文档 | REQ-7023 测试目录重构与覆盖率接入 —— 需求文档 |
 | [1.task\B.todo\v0.1\v0.1-r7023-M3-test-directory-restructuring\tasks.md](./1.task\B.todo\v0.1\v0.1-r7023-M3-test-directory-restructuring\tasks.md) | REQ-7023 测试目录重构与覆盖率接入 —— 任务清单 | REQ-7023 测试目录重构与覆盖率接入 —— 任务清单 |
 
-## 1.task\B.todo\v0.1\v0.1-r7026-C3-build-chain-module-system-unification
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r7026-C3-build-chain-module-system-unification\decision_log.md](./1.task\B.todo\v0.1\v0.1-r7026-C3-build-chain-module-system-unification\decision_log.md) | REQ-7026 构建链模块系统统一 — 决策留痕 | REQ-7026 构建链模块系统统一 — 决策留痕 |
-| [1.task\B.todo\v0.1\v0.1-r7026-C3-build-chain-module-system-unification\design.md](./1.task\B.todo\v0.1\v0.1-r7026-C3-build-chain-module-system-unification\design.md) | REQ-7026 构建链模块系统统一 — 方案设计 | REQ-7026 构建链模块系统统一 — 方案设计 |
-| [1.task\B.todo\v0.1\v0.1-r7026-C3-build-chain-module-system-unification\README.md](./1.task\B.todo\v0.1\v0.1-r7026-C3-build-chain-module-system-unification\README.md) | REQ-7026 构建链模块系统统一——README | REQ-7026 构建链模块系统统一——README |
-| [1.task\B.todo\v0.1\v0.1-r7026-C3-build-chain-module-system-unification\REQ-7026-build-chain-module-system-unification-original.md](./1.task\B.todo\v0.1\v0.1-r7026-C3-build-chain-module-system-unification\REQ-7026-build-chain-module-system-unification-original.md) | REQ-7026 构建链模块系统统一 — 原始冻结副本 | REQ-7026 构建链模块系统统一 — 原始冻结副本 |
-| [1.task\B.todo\v0.1\v0.1-r7026-C3-build-chain-module-system-unification\REQ-7026-build-chain-module-system-unification.md](./1.task\B.todo\v0.1\v0.1-r7026-C3-build-chain-module-system-unification\REQ-7026-build-chain-module-system-unification.md) | REQ-7026 构建链模块系统统一 | REQ-7026 构建链模块系统统一 |
-| [1.task\B.todo\v0.1\v0.1-r7026-C3-build-chain-module-system-unification\tasks.md](./1.task\B.todo\v0.1\v0.1-r7026-C3-build-chain-module-system-unification\tasks.md) | REQ-7026 构建链模块系统统一 — 任务拆解 | REQ-7026 构建链模块系统统一 — 任务拆解 |
-
 ## 1.task\B.todo\v0.1\v0.1-r7027-S2-legacy-code-cleanup
 
 | 文件 | 标题 | 描述 |

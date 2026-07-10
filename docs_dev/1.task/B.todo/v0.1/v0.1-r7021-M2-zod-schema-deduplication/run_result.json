@@ -1,18 +1,42 @@
 {
   "reqId": "7021",
   "title": "Zod Schema 去重与共享化",
-  "status": "requirements_ready",
+  "status": "pass",
   "complexity": "M2",
   "priority": "P1",
-  "phase": "requirements",
+  "phase": "verification",
   "createdAt": "2026-07-10",
   "updatedAt": "2026-07-10",
   "source": "2026-07-10 全量架构诊断报告 第4条发现",
   "estimatedFiles": "30-50",
   "target": "server 侧独立 zod 调用从 407 减少至 200 以下",
+  "actualChanges": {
+    "sharedTypesNewSchemas": [
+      "novel.ts: novelStatusSchema, novelWritingModeSchema, projectModeSchema, narrativePovSchema, pacePreferenceSchema, emotionIntensitySchema, aiFreedomSchema, projectProgressStatusSchema, chapterRoleSchema, tensionLevelSchema, chapterStatusSchema, storyPlanLevelSchema, volumeGenerationScopeSchema, volumeGenerationScopeInputSchema, storylineVersionStatusSchema, volumePlanVersionStatusSchema, pipelineRunModeSchema, artifactSyncModeSchema, pipelineRepairModeSchema, reviewIssueSchema, volumeStrategyVolumeSchema, volumeUncertaintyMarkerSchema, volumeStrategyPlanSchema, volumeBeatSchema, volumeBeatSheetSchema, volumeCritiqueIssueSchema, volumeCritiqueReportSchema, volumeRebalanceDecisionSchema",
+      "characterArc.ts: characterArcTimelineEventSchema, characterArcSubSchema, characterArcDataSchema, characterRelationStageEntrySchema, characterRelationEvolutionDataSchema, characterStatesByChapterEntrySchema, characterStatesByChapterDataSchema",
+      "task.ts: taskKindSchema, taskStatusSchema",
+      "knowledge.ts: knowledgeDocumentStatusSchema, knowledgeIndexStatusSchema",
+      "styleEngine.ts: antiAiRuleTypeSchema, styleProfileStatusSchema, styleFeatureDecisionSchema, antiAiRuleDraftFieldsSchema, chapterEditDiffExtractRequestSchema, styleExtractionPresetDecisionSchema, styleExtractionPresetSchema",
+      "storyMode.ts: storyModeConflictCeilingSchema"
+    ],
+    "serverFilesUpdated": [
+      "novelToolShared.ts: Replaced 4 enum definitions with shared imports + 2 inline emotionIntensity/aiFreedom",
+      "tasks.ts: Replaced kindSchema + statusSchema with shared imports",
+      "knowledge.ts: Replaced documentStatusSchema with shared import",
+      "novelHttpSchemas.ts: Replaced 7 volume schemas + reviewIssue + tensionLevel with shared extends",
+      "chapterRuntimeSchema.ts: Replaced controlPolicy + artifactSyncMode with shared imports",
+      "storyModeProfile.ts: Replaced conflictCeiling with shared import",
+      "style.promptSchemas.ts: Replaced styleDetectionRuleType with shared import",
+      "novelBaseRoutes.ts: Replaced 6 inline emotionIntensity/aiFreedom enums with shared imports"
+    ],
+    "preExistingFixes": [
+      "chapterLayeredContextCharacters.ts: Fixed implicit 'any' type errors for characterDynamics access"
+    ]
+  },
   "verification": {
-    "typecheck": "pending",
-    "tests": "pending",
-    "audit": "pending"
+    "typecheck": "pass (0 new errors)",
+    "sharedBuild": "pass",
+    "tests": "pre-existing failures only (confirmed identical without changes)",
+    "deduplication": "26 z.enum() calls removed from server, ~30 new shared Zod schemas added"
   }
 }

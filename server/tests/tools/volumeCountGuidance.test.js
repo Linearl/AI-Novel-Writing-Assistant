@@ -5,7 +5,7 @@ const {
   buildHardPlannedVolumeRange,
   buildVolumeCountGuidance,
   MAX_VOLUME_COUNT,
-} = require("../../shared/dist/types/volumePlanning.js");
+} = require("../../../shared/dist/types/volumePlanning.js");
 
 test("volume count guidance derives sane ranges for short, medium, and long projects", () => {
   const shortProject = buildVolumeCountGuidance({ chapterBudget: 20 });

@@ -1,6 +1,6 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const { normalizePlannerOutput } = require("../dist/services/planner/PlannerService.js");
+const { normalizePlannerOutput } = require("../../dist/services/planner/PlannerService.js");
 
 test("normalizePlannerOutput coerces object-like planner fields into safe strings", () => {
   const normalized = normalizePlannerOutput({

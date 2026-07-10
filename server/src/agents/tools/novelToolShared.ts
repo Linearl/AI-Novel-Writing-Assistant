@@ -1,16 +1,15 @@
 import { z } from "zod";
+import {
+  projectProgressStatusSchema,
+  narrativePovSchema,
+  pacePreferenceSchema,
+  projectModeSchema,
+  emotionIntensitySchema,
+  aiFreedomSchema,
+} from "@ai-novel/shared";
 
-export const novelProjectStatusSchema = z.enum([
-  "not_started",
-  "in_progress",
-  "completed",
-  "rework",
-  "blocked",
-]);
-
-export const narrativePovSchema = z.enum(["first_person", "third_person", "mixed"]);
-export const pacePreferenceSchema = z.enum(["slow", "balanced", "fast"]);
-export const projectModeSchema = z.enum(["ai_led", "co_pilot", "draft_mode", "auto_pipeline"]);
+export const novelProjectStatusSchema = projectProgressStatusSchema;
+export { narrativePovSchema, pacePreferenceSchema, projectModeSchema };
 export const novelSetupStageSchema = z.enum([
   "setup_in_progress",
   "ready_for_planning",
@@ -46,8 +45,8 @@ export const createNovelInput = z.object({
   narrativePov: narrativePovSchema.optional(),
   pacePreference: pacePreferenceSchema.optional(),
   styleTone: z.string().trim().optional(),
-  emotionIntensity: z.enum(["low", "medium", "high"]).optional(),
-  aiFreedom: z.enum(["low", "medium", "high"]).optional(),
+  emotionIntensity: emotionIntensitySchema.optional(),
+  aiFreedom: aiFreedomSchema.optional(),
   defaultChapterLength: z.number().int().min(500).max(10000).optional(),
   projectStatus: novelProjectStatusSchema.optional(),
   projectMode: projectModeSchema.optional(),
@@ -134,8 +133,8 @@ export const getNovelContextOutput = z.object({
   narrativePov: narrativePovSchema.nullable(),
   pacePreference: pacePreferenceSchema.nullable(),
   projectMode: projectModeSchema.nullable(),
-  emotionIntensity: z.enum(["low", "medium", "high"]).nullable(),
-  aiFreedom: z.enum(["low", "medium", "high"]).nullable(),
+  emotionIntensity: emotionIntensitySchema.nullable(),
+  aiFreedom: aiFreedomSchema.nullable(),
   defaultChapterLength: z.number().int().nullable(),
   worldId: z.string().nullable(),
   worldName: z.string().nullable(),

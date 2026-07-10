@@ -1,3 +1,4 @@
+import { z } from "zod";
 import type { BookAnalysisSectionKey } from "./bookAnalysis";
 import type { BookContract } from "./novelWorkflow";
 import type { NovelWorkflowCheckpoint } from "./novelWorkflow";
@@ -52,6 +53,27 @@ export type PacePreference = "slow" | "balanced" | "fast";
 export type EmotionIntensity = "low" | "medium" | "high";
 export type AIFreedom = "low" | "medium" | "high";
 export type ProjectProgressStatus = "not_started" | "in_progress" | "completed" | "rework" | "blocked";
+
+// ── Zod enum schemas (shared across server & client) ──────────────────
+export const novelStatusSchema = z.enum(["draft", "published"]);
+export const novelWritingModeSchema = z.enum(["original", "continuation"]);
+export const projectModeSchema = z.enum(["ai_led", "co_pilot", "draft_mode", "auto_pipeline"]);
+export const narrativePovSchema = z.enum(["first_person", "third_person", "mixed"]);
+export const pacePreferenceSchema = z.enum(["slow", "balanced", "fast"]);
+export const emotionIntensitySchema = z.enum(["low", "medium", "high"]);
+export const aiFreedomSchema = z.enum(["low", "medium", "high"]);
+export const projectProgressStatusSchema = z.enum(["not_started", "in_progress", "completed", "rework", "blocked"]);
+export const chapterRoleSchema = z.enum(["normal", "transition", "climax", "turning_point"]);
+export const tensionLevelSchema = z.enum(["low", "medium", "high", "climax"]);
+export const chapterStatusSchema = z.enum(["unplanned", "pending_generation", "generating", "pending_review", "needs_repair", "completed"]);
+export const storyPlanLevelSchema = z.enum(["book", "arc", "chapter"]);
+export const volumeGenerationScopeSchema = z.enum(["strategy", "strategy_critique", "skeleton", "beat_sheet", "chapter_list", "chapter_detail", "rebalance"]);
+export const volumeGenerationScopeInputSchema = z.enum(["strategy", "strategy_critique", "skeleton", "beat_sheet", "chapter_list", "chapter_detail", "rebalance", "book", "volume"]);
+export const storylineVersionStatusSchema = z.enum(["draft", "active", "frozen"]);
+export const volumePlanVersionStatusSchema = z.enum(["draft", "active", "frozen"]);
+export const pipelineRunModeSchema = z.enum(["fast", "polish"]);
+export const artifactSyncModeSchema = z.enum(["adaptive", "deferred", "strict"]);
+export const pipelineRepairModeSchema = z.enum(["detect_only", "light_repair", "heavy_repair", "continuity_only", "character_only", "ending_only"]);
 
 export type StorylineVersionStatus = "draft" | "active" | "frozen";
 export type VolumePlanVersionStatus = "draft" | "active" | "frozen";
@@ -479,6 +501,13 @@ export interface ReviewIssue {
   fixSuggestion: string;
 }
 
+export const reviewIssueSchema = z.object({
+  severity: z.enum(["low", "medium", "high", "critical"]),
+  category: z.enum(["coherence", "repetition", "pacing", "voice", "engagement", "logic"]),
+  evidence: z.string(),
+  fixSuggestion: z.string(),
+});
+
 export interface CharacterState {
   id: string;
   snapshotId: string;
@@ -827,12 +856,28 @@ export interface VolumeStrategyVolume {
   uncertaintyLevel: VolumeUncertaintyLevel;
 }
 
+export const volumeStrategyVolumeSchema = z.object({
+  sortOrder: z.number().int(),
+  planningMode: z.enum(["hard", "soft"]),
+  roleLabel: z.string(),
+  coreReward: z.string(),
+  escalationFocus: z.string(),
+  uncertaintyLevel: z.enum(["low", "medium", "high"]),
+});
+
 export interface VolumeUncertaintyMarker {
   targetType: VolumeUncertaintyTargetType;
   targetRef: string;
   level: VolumeUncertaintyLevel;
   reason: string;
 }
+
+export const volumeUncertaintyMarkerSchema = z.object({
+  targetType: z.enum(["book", "volume", "beat_sheet", "chapter_list"]),
+  targetRef: z.string(),
+  level: z.enum(["low", "medium", "high"]),
+  reason: z.string(),
+});
 
 export interface VolumeStrategyPlan {
   recommendedVolumeCount: number;
@@ -845,6 +890,17 @@ export interface VolumeStrategyPlan {
   uncertainties: VolumeUncertaintyMarker[];
 }
 
+export const volumeStrategyPlanSchema = z.object({
+  recommendedVolumeCount: z.number().int(),
+  hardPlannedVolumeCount: z.number().int(),
+  readerRewardLadder: z.string(),
+  escalationLadder: z.string(),
+  midpointShift: z.string(),
+  notes: z.string(),
+  volumes: z.array(volumeStrategyVolumeSchema),
+  uncertainties: z.array(volumeUncertaintyMarkerSchema),
+});
+
 export interface VolumeBeat {
   key: string;
   label: string;
@@ -854,12 +910,28 @@ export interface VolumeBeat {
   tensionLevel?: TensionLevel;
 }
 
+export const volumeBeatSchema = z.object({
+  key: z.string(),
+  label: z.string(),
+  summary: z.string(),
+  chapterSpanHint: z.string(),
+  mustDeliver: z.array(z.string()),
+  tensionLevel: tensionLevelSchema.optional(),
+});
+
 export interface VolumeBeatSheet {
   volumeId: string;
   volumeSortOrder: number;
   status: VolumeBeatSheetStatus;
   beats: VolumeBeat[];
 }
+
+export const volumeBeatSheetSchema = z.object({
+  volumeId: z.string(),
+  volumeSortOrder: z.number().int(),
+  status: z.enum(["not_started", "generated", "revised"]),
+  beats: z.array(volumeBeatSchema),
+});
 
 export interface VolumeCritiqueIssue {
   targetRef: string;
@@ -868,12 +940,26 @@ export interface VolumeCritiqueIssue {
   detail: string;
 }
 
+export const volumeCritiqueIssueSchema = z.object({
+  targetRef: z.string(),
+  severity: z.enum(["low", "medium", "high"]),
+  title: z.string(),
+  detail: z.string(),
+});
+
 export interface VolumeCritiqueReport {
   overallRisk: VolumeCritiqueRiskLevel;
   summary: string;
   issues: VolumeCritiqueIssue[];
   recommendedActions: string[];
 }
+
+export const volumeCritiqueReportSchema = z.object({
+  overallRisk: z.enum(["low", "medium", "high"]),
+  summary: z.string(),
+  issues: z.array(volumeCritiqueIssueSchema),
+  recommendedActions: z.array(z.string()),
+});
 
 export interface VolumePlanningReadiness {
   canGenerateStrategy: boolean;
@@ -891,6 +977,15 @@ export interface VolumeRebalanceDecision {
   summary: string;
   actions: string[];
 }
+
+export const volumeRebalanceDecisionSchema = z.object({
+  anchorVolumeId: z.string(),
+  affectedVolumeId: z.string(),
+  direction: z.enum(["pull_forward", "push_back", "tighten_current", "expand_adjacent", "hold"]),
+  severity: z.enum(["low", "medium", "high"]),
+  summary: z.string(),
+  actions: z.array(z.string()),
+});
 
 export interface VolumePlan {
   id: string;

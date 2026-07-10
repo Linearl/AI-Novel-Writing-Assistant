@@ -1,4 +1,7 @@
+import { z } from "zod";
+
 export type StoryModeConflictCeiling = "low" | "medium" | "high";
+export const storyModeConflictCeilingSchema = z.enum(["low", "medium", "high"]);
 
 export interface StoryModeProfile {
   coreDrive: string;

@@ -9,7 +9,7 @@ const {
   RECOVERY_REMIND,
   RECOVERY_REPLAN,
   RECOVERY_STOP,
-} = require("../dist/llm/repetition/recovery.js");
+} = require("../../dist/llm/repetition/recovery.js");
 
 // ---- Escalation logic ----
 

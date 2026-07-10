@@ -2,7 +2,7 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
-const { listAgentToolDefinitions } = require("../dist/agents/toolRegistry.js");
+const { listAgentToolDefinitions } = require("../../dist/agents/toolRegistry.js");
 
 test("tool registry exposes chapter range and cross-domain tools", () => {
   const tools = listAgentToolDefinitions().map((item) => item.name);

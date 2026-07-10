@@ -3,7 +3,7 @@ const assert = require("node:assert/strict");
 
 const {
   validateBeatStructurePreservation,
-} = require("../dist/services/novel/volume/volumeBeatSheetGeneration.js");
+} = require("../../dist/services/novel/volume/volumeBeatSheetGeneration.js");
 
 // --- T6: validateBeatStructurePreservation tests ---
 

@@ -1,6 +1,7 @@
 import { Router } from "express";
 import type { ApiResponse } from "@ai-novel/shared";
 import type { TaskKind, TaskStatus } from "@ai-novel/shared";
+import { taskKindSchema, taskStatusSchema } from "@ai-novel/shared";
 import { z } from "zod";
 import { llmProviderSchema } from "../llm/providerSchema";
 import { authMiddleware } from "../middleware/auth";
@@ -14,8 +15,8 @@ const router = Router();
 const autoDirectorFollowUpService = new AutoDirectorFollowUpService();
 const autoDirectorFollowUpActionExecutor = new AutoDirectorFollowUpActionExecutor();
 
-const kindSchema = z.enum(["book_analysis", "novel_pipeline", "knowledge_document", "image_generation", "agent_run", "novel_workflow", "style_extraction"]);
-const statusSchema = z.enum(["queued", "running", "waiting_approval", "succeeded", "failed", "cancelled"]);
+const kindSchema = taskKindSchema;
+const statusSchema = taskStatusSchema;
 
 const listQuerySchema = z.object({
   kind: kindSchema.optional(),

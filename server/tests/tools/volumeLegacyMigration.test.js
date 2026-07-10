@@ -3,7 +3,7 @@ const assert = require("node:assert/strict");
 const {
   buildFallbackVolumesFromLegacy,
   parseLegacyStructuredOutline,
-} = require("../dist/services/novel/volume/volumePlanUtils.js");
+} = require("../../dist/services/novel/volume/volumePlanUtils.js");
 
 test("legacy structured outline migration upgrades old volume payloads into normalized v2 volumes and merges arc signals", () => {
   const structuredOutline = JSON.stringify({

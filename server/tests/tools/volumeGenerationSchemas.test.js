@@ -7,19 +7,19 @@ const {
   createVolumeChapterBeatBlockSchema,
   createVolumeRebalanceSchema,
   createVolumeStrategySchema,
-} = require("../dist/services/novel/volume/volumeGenerationSchemas.js");
+} = require("../../dist/services/novel/volume/volumeGenerationSchemas.js");
 const {
   buildVolumeWorkspaceDocument,
-} = require("../dist/services/novel/volume/volumeWorkspaceDocument.js");
+} = require("../../dist/services/novel/volume/volumeWorkspaceDocument.js");
 const {
   volumeBeatSheetPrompt,
-} = require("../dist/prompting/prompts/novel/volume/beatSheet.prompts.js");
+} = require("../../dist/prompting/prompts/novel/volume/beatSheet.prompts.js");
 const {
   buildVolumeBeatSheetContextBlocks,
-} = require("../dist/prompting/prompts/novel/volume/contextBlocks.js");
+} = require("../../dist/prompting/prompts/novel/volume/contextBlocks.js");
 const {
   volumeRebalancePrompt,
-} = require("../dist/prompting/prompts/novel/volume/rebalance.prompts.js");
+} = require("../../dist/prompting/prompts/novel/volume/rebalance.prompts.js");
 
 function createValidStrategyPayload() {
   return {

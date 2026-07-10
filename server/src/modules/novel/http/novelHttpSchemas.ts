@@ -1,5 +1,16 @@
 import { z } from "zod";
 import { MAX_VOLUME_COUNT } from "@ai-novel/shared";
+import {
+  volumeStrategyVolumeSchema,
+  volumeUncertaintyMarkerSchema,
+  volumeStrategyPlanSchema,
+  volumeCritiqueIssueSchema,
+  volumeCritiqueReportSchema,
+  volumeBeatSheetSchema,
+  volumeRebalanceDecisionSchema,
+  reviewIssueSchema,
+  tensionLevelSchema,
+} from "@ai-novel/shared";
 import { llmProviderSchema } from "../../../llm/providerSchema";
 import { chapterRuntimeRequestSchema } from "../../../services/novel/runtime/chapterRuntimeSchema";
 
@@ -104,44 +115,35 @@ const volumeSchema = z.object({
   chapters: z.array(volumeChapterSchema).default([]),
 }).passthrough();
 
-const volumeStrategyVolumeSchema = z.object({
-  sortOrder: z.number().int().min(1),
-  planningMode: z.enum(["hard", "soft"]),
+const volumeStrategyVolumeSchemaStrict = volumeStrategyVolumeSchema.extend({
   roleLabel: z.string().trim().min(1),
   coreReward: z.string().trim().min(1),
   escalationFocus: z.string().trim().min(1),
-  uncertaintyLevel: z.enum(["low", "medium", "high"]),
 });
 
-const volumeUncertaintySchema = z.object({
-  targetType: z.enum(["book", "volume", "beat_sheet", "chapter_list"]),
+const volumeUncertaintySchemaStrict = volumeUncertaintyMarkerSchema.extend({
   targetRef: z.string().trim().min(1),
-  level: z.enum(["low", "medium", "high"]),
   reason: z.string().trim().min(1),
 });
 
-const volumeStrategyPlanSchema = z.object({
-  recommendedVolumeCount: z.number().int().min(1).max(MAX_VOLUME_COUNT),
-  hardPlannedVolumeCount: z.number().int().min(1).max(MAX_VOLUME_COUNT),
+const volumeStrategyPlanSchemaStrict = volumeStrategyPlanSchema.extend({
   readerRewardLadder: z.string().trim().min(1),
   escalationLadder: z.string().trim().min(1),
   midpointShift: z.string().trim().min(1),
   notes: z.string().trim().min(1),
-  volumes: z.array(volumeStrategyVolumeSchema).min(1).max(MAX_VOLUME_COUNT),
-  uncertainties: z.array(volumeUncertaintySchema).max(MAX_VOLUME_COUNT).default([]),
+  volumes: z.array(volumeStrategyVolumeSchemaStrict).min(1).max(MAX_VOLUME_COUNT),
+  uncertainties: z.array(volumeUncertaintySchemaStrict).max(MAX_VOLUME_COUNT).default([]),
 });
 
-const volumeCritiqueIssueSchema = z.object({
+const volumeCritiqueIssueSchemaStrict = volumeCritiqueIssueSchema.extend({
   targetRef: z.string().trim().min(1),
-  severity: z.enum(["low", "medium", "high"]),
   title: z.string().trim().min(1),
   detail: z.string().trim().min(1),
 });
 
-const volumeCritiqueReportSchema = z.object({
-  overallRisk: z.enum(["low", "medium", "high"]),
+const volumeCritiqueReportSchemaStrict = volumeCritiqueReportSchema.extend({
   summary: z.string().trim().min(1),
-  issues: z.array(volumeCritiqueIssueSchema).max(MAX_VOLUME_COUNT).default([]),
+  issues: z.array(volumeCritiqueIssueSchemaStrict).max(MAX_VOLUME_COUNT).default([]),
   recommendedActions: z.array(z.string().trim().min(1)).max(8).default([]),
 });
 
@@ -153,37 +155,36 @@ const volumeBeatSchema = z.object({
   mustDeliver: z.array(z.string().trim().min(1)).min(1).max(6),
 });
 
-const volumeBeatSheetSchema = z.object({
-  volumeId: z.string().trim().min(1),
-  volumeSortOrder: z.number().int().min(1),
-  status: z.enum(["not_started", "generated", "revised"]),
-  beats: z.array(volumeBeatSchema).max(8),
+const volumeBeatSheetSchemaStrict = volumeBeatSheetSchema.extend({
+  beats: z.array(z.object({
+    key: z.string().trim().min(1),
+    label: z.string().trim().min(1),
+    summary: z.string().trim().min(1),
+    chapterSpanHint: z.string().trim().min(1),
+    mustDeliver: z.array(z.string().trim().min(1)).min(1).max(6),
+  })).max(8),
 });
 
-const volumeRebalanceDecisionSchema = z.object({
-  anchorVolumeId: z.string().trim().min(1),
-  affectedVolumeId: z.string().trim().min(1),
-  direction: z.enum(["pull_forward", "push_back", "tighten_current", "expand_adjacent", "hold"]),
-  severity: z.enum(["low", "medium", "high"]),
+const volumeRebalanceDecisionSchemaStrict = volumeRebalanceDecisionSchema.extend({
   summary: z.string().trim().min(1),
   actions: z.array(z.string().trim().min(1)).min(1).max(5),
 });
 
 export const volumeDocumentSchema = z.object({
   volumes: z.array(volumeSchema).default([]),
-  strategyPlan: volumeStrategyPlanSchema.nullish(),
-  critiqueReport: volumeCritiqueReportSchema.nullish(),
-  beatSheets: z.array(volumeBeatSheetSchema).optional(),
-  rebalanceDecisions: z.array(volumeRebalanceDecisionSchema).optional(),
+  strategyPlan: volumeStrategyPlanSchemaStrict.nullish(),
+  critiqueReport: volumeCritiqueReportSchemaStrict.nullish(),
+  beatSheets: z.array(volumeBeatSheetSchemaStrict).optional(),
+  rebalanceDecisions: z.array(volumeRebalanceDecisionSchemaStrict).optional(),
   syncToChapterExecution: z.boolean().optional(),
 });
 
 export const volumeDraftSchema = z.object({
   volumes: z.array(volumeSchema).optional(),
-  strategyPlan: volumeStrategyPlanSchema.nullish(),
-  critiqueReport: volumeCritiqueReportSchema.nullish(),
-  beatSheets: z.array(volumeBeatSheetSchema).optional(),
-  rebalanceDecisions: z.array(volumeRebalanceDecisionSchema).optional(),
+  strategyPlan: volumeStrategyPlanSchemaStrict.nullish(),
+  critiqueReport: volumeCritiqueReportSchemaStrict.nullish(),
+  beatSheets: z.array(volumeBeatSheetSchemaStrict).optional(),
+  rebalanceDecisions: z.array(volumeRebalanceDecisionSchemaStrict).optional(),
   diffSummary: z.string().trim().optional(),
   baseVersion: z.number().int().min(1).optional(),
 });
@@ -237,7 +238,7 @@ export const updateChapterSchema = z.object({
   characterScore: z.number().int().min(0).max(100).nullable().optional(),
   pacingScore: z.number().int().min(0).max(100).nullable().optional(),
   riskFlags: z.string().nullable().optional(),
-  tensionLevel: z.enum(["low", "medium", "high", "climax"]).nullable().optional(),
+  tensionLevel: tensionLevelSchema.nullable().optional(),
 });
 
 export const characterSchema = z.object({
@@ -419,9 +420,7 @@ export const pipelineRunSchema = llmGenerateSchema.extend({
   message: "起始章节必须小于或等于结束章节。",
 });
 
-const reviewIssueSchema = z.object({
-  severity: z.enum(["low", "medium", "high", "critical"]),
-  category: z.enum(["coherence", "repetition", "pacing", "voice", "engagement", "logic"]),
+const reviewIssueSchemaStrict = reviewIssueSchema.extend({
   evidence: z.string().trim().min(1),
   fixSuggestion: z.string().trim().min(1),
 });
@@ -431,7 +430,7 @@ export const reviewSchema = llmGenerateSchema.extend({
 });
 
 export const repairSchema = llmGenerateSchema.extend({
-  reviewIssues: z.array(reviewIssueSchema).optional(),
+  reviewIssues: z.array(reviewIssueSchemaStrict).optional(),
   auditIssueIds: z.array(z.string().trim().min(1)).optional(),
   userInstruction: z.string().trim().max(4000).optional(),
 });

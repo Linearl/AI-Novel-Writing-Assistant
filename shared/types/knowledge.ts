@@ -1,5 +1,11 @@
+import { z } from "zod";
+
 export type KnowledgeDocumentStatus = "enabled" | "disabled" | "archived";
+export const knowledgeDocumentStatusSchema = z.enum(["enabled", "disabled", "archived"]);
+
 export type KnowledgeIndexStatus = "idle" | "queued" | "running" | "succeeded" | "failed";
+export const knowledgeIndexStatusSchema = z.enum(["idle", "queued", "running", "succeeded", "failed"]);
+
 export type KnowledgeBindingTargetType = "novel" | "world";
 
 export interface KnowledgeDocument {

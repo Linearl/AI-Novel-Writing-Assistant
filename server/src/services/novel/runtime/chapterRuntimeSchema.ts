@@ -1,17 +1,6 @@
 import { z } from "zod";
+import { novelControlPolicySchema, artifactSyncModeSchema } from "@ai-novel/shared";
 import { llmProviderSchema } from "../../../llm/providerSchema";
-
-const chapterRuntimeControlPolicySchema = z.object({
-  kickoffMode: z.enum(["manual_start", "director_start", "takeover_start"]),
-  advanceMode: z.enum(["manual", "stage_review", "auto_to_ready", "auto_to_execution", "full_book_autopilot"]),
-  reviewCheckpoints: z.array(z.string()).default([]),
-  autoExecutionRange: z.object({
-    mode: z.enum(["book", "volume", "chapter_range"]),
-    start: z.number().int().nullable().optional(),
-    end: z.number().int().nullable().optional(),
-    volumeOrder: z.number().int().nullable().optional(),
-  }).nullable().optional(),
-});
 
 export const chapterRuntimeRequestSchema = z.object({
   provider: llmProviderSchema.optional(),
@@ -19,8 +8,8 @@ export const chapterRuntimeRequestSchema = z.object({
   temperature: z.number().min(0).max(2).optional(),
   previousChaptersSummary: z.array(z.string()).optional(),
   taskStyleProfileId: z.string().trim().optional(),
-  artifactSyncMode: z.enum(["adaptive", "deferred", "strict"]).optional(),
-  controlPolicy: chapterRuntimeControlPolicySchema.optional(),
+  artifactSyncMode: artifactSyncModeSchema.optional(),
+  controlPolicy: novelControlPolicySchema.optional(),
 });
 
 export type ChapterRuntimeRequestInput = z.infer<typeof chapterRuntimeRequestSchema>;

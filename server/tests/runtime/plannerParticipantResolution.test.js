@@ -1,7 +1,7 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 
-const { resolveChapterPlanParticipants } = require("../dist/services/planner/plannerParticipantResolution.js");
+const { resolveChapterPlanParticipants } = require("../../dist/services/planner/plannerParticipantResolution.js");
 
 function createCharacters() {
   return [

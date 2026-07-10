@@ -1,12 +1,12 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const { buildReplanDecision } = require("../dist/services/planner/replanDecision.js");
+const { buildReplanDecision } = require("../../dist/services/planner/replanDecision.js");
 const {
   sanitizeAiReplanWindowDecision,
-} = require("../../shared/dist/types/replanWindowDecision.js");
+} = require("../../../shared/dist/types/replanWindowDecision.js");
 const {
   hasRegisteredPromptAsset,
-} = require("../dist/prompting/registry.js");
+} = require("../../dist/prompting/registry.js");
 
 function createSnapshot(overrides = {}) {
   return {

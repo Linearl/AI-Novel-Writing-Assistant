@@ -4,16 +4,16 @@ const assert = require("node:assert/strict");
 const {
   NovelSideEffectJobService,
   computeNovelSideEffectRetryDelayMs,
-} = require("../dist/events/sideEffects/NovelSideEffectJobService.js");
+} = require("../../dist/events/sideEffects/NovelSideEffectJobService.js");
 const {
   NovelSideEffectWorker,
-} = require("../dist/events/sideEffects/NovelSideEffectWorker.js");
+} = require("../../dist/events/sideEffects/NovelSideEffectWorker.js");
 const {
   UnsupportedNovelSideEffectPayloadError,
-} = require("../dist/events/sideEffects/NovelSideEffectJobHandlers.js");
+} = require("../../dist/events/sideEffects/NovelSideEffectJobHandlers.js");
 const {
   NOVEL_SIDE_EFFECT_JOB_TYPES,
-} = require("../dist/events/sideEffects/NovelSideEffectJobTypes.js");
+} = require("../../dist/events/sideEffects/NovelSideEffectJobTypes.js");
 
 function cloneJob(job) {
   return job ? { ...job } : null;

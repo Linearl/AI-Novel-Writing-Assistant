@@ -8,7 +8,7 @@ const SOURCE_ROOT = path.join(SERVER_ROOT, "src");
 const PROMPT_ROOT = path.join(SOURCE_ROOT, "prompting", "prompts");
 const {
   listRegisteredPromptAssets,
-} = require("../dist/prompting/registry.js");
+} = require("../../dist/prompting/registry.js");
 
 const GOVERNED_DIRECTORIES = [
   path.join(SOURCE_ROOT, "services"),

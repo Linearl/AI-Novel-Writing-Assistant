@@ -5,10 +5,10 @@ const {
   createNovelChapterReferenceLookup,
   resolveNovelChapterId,
   normalizePayoffLedgerPromptChapterRefs,
-} = require("../dist/services/payoff/payoffLedgerChapterRefs.js");
+} = require("../../dist/services/payoff/payoffLedgerChapterRefs.js");
 const {
   payoffLedgerSyncPrompt,
-} = require("../dist/prompting/prompts/payoff/payoffLedgerSync.prompts.js");
+} = require("../../dist/prompting/prompts/payoff/payoffLedgerSync.prompts.js");
 
 function createLookup() {
   return createNovelChapterReferenceLookup([

@@ -1,10 +1,10 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 
-const { prisma } = require("../dist/db/prisma.js");
-const { KnowledgeService } = require("../dist/services/knowledge/KnowledgeService.js");
-const { RagIndexService } = require("../dist/services/rag/RagIndexService.js");
-const { ragServices } = require("../dist/services/rag/index.js");
+const { prisma } = require("../../dist/db/prisma.js");
+const { KnowledgeService } = require("../../dist/services/knowledge/KnowledgeService.js");
+const { RagIndexService } = require("../../dist/services/rag/RagIndexService.js");
+const { ragServices } = require("../../dist/services/rag/index.js");
 
 test("restoring archived knowledge document queues a rebuild and marks indexing queued", async () => {
   const service = new KnowledgeService();

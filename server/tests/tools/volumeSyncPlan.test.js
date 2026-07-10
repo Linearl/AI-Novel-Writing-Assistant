@@ -3,7 +3,7 @@ const assert = require("node:assert/strict");
 const {
   buildTaskSheetFromVolumeChapter,
   buildVolumeSyncPlan,
-} = require("../dist/services/novel/volume/volumePlanUtils.js");
+} = require("../../dist/services/novel/volume/volumePlanUtils.js");
 
 function createVolume(chapters) {
   return [{

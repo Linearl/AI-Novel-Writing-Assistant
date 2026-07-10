@@ -1,7 +1,7 @@
 import { z } from "zod";
 import type { NovelStoryMode, StoryModeConflictCeiling, StoryModeProfile } from "@ai-novel/shared";
-
-export const storyModeConflictCeilingSchema = z.enum(["low", "medium", "high"]);
+import { storyModeConflictCeilingSchema } from "@ai-novel/shared";
+export { storyModeConflictCeilingSchema };
 
 export const storyModeProfileSchema = z.object({
   coreDrive: z.string().trim().min(1).max(300),

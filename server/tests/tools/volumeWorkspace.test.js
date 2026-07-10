@@ -5,7 +5,7 @@ const {
   mergeVolumeWorkspaceInput,
   normalizeVolumeWorkspaceDocument,
   serializeVolumeWorkspaceDocument,
-} = require("../dist/services/novel/volume/volumeWorkspaceDocument.js");
+} = require("../../dist/services/novel/volume/volumeWorkspaceDocument.js");
 
 function createBaseVolume() {
   return {

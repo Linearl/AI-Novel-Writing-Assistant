@@ -3,7 +3,7 @@ const assert = require("node:assert/strict");
 
 const {
   StateCommitService,
-} = require("../dist/services/novel/state/StateCommitService.js");
+} = require("../../dist/services/novel/state/StateCommitService.js");
 
 function makeResourceProposal(overrides = {}) {
   const { payload: payloadOverrides = {}, ...proposalOverrides } = overrides;

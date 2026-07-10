@@ -8,7 +8,7 @@ const Database = require("better-sqlite3");
 
 const {
   ensureRuntimeDatabaseReady,
-} = require("../dist/db/runtimeMigrations.js");
+} = require("../../dist/db/runtimeMigrations.js");
 
 const migrationsDir = path.join(__dirname, "..", "src", "prisma", "migrations.sqlite");
 const allMigrationNames = fs.readdirSync(migrationsDir, { withFileTypes: true })

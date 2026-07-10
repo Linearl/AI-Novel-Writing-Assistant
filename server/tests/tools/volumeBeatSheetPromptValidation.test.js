@@ -3,7 +3,7 @@ const assert = require("node:assert/strict");
 
 const {
   volumeBeatSheetPrompt,
-} = require("../dist/prompting/prompts/novel/volume/beatSheet.prompts.js");
+} = require("../../dist/prompting/prompts/novel/volume/beatSheet.prompts.js");
 
 function createPromptInput(targetChapterCount) {
   return {

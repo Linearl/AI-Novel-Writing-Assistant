@@ -1,12 +1,6 @@
 import { z } from "zod";
-
-export const styleDetectionRuleTypeSchema = z.enum([
-  "style",
-  "character",
-  "forbidden",
-  "risk",
-  "encourage",
-]);
+import { styleDetectionRuleTypeSchema } from "@ai-novel/shared";
+export { styleDetectionRuleTypeSchema };
 
 export const styleDetectionViolationSchema = z.object({
   ruleId: z.string().trim().optional(),

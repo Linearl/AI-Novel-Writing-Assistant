@@ -1,7 +1,7 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 
-const { providerBalanceService } = require("../dist/services/settings/ProviderBalanceService.js");
+const { providerBalanceService } = require("../../dist/services/settings/ProviderBalanceService.js");
 
 test("provider balance service parses DeepSeek balance payload", async () => {
   const originalFetch = global.fetch;

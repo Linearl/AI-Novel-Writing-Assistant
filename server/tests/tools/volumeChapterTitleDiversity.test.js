@@ -6,14 +6,14 @@ const {
   detectChapterTitleSurfaceFrame,
   getChapterTitleDiversityIssue,
   isBlockingChapterTitleQualityIssue,
-} = require("../dist/services/novel/volume/chapterTitleDiversity.js");
+} = require("../../dist/services/novel/volume/chapterTitleDiversity.js");
 const {
   createVolumeChapterListPrompt,
-} = require("../dist/prompting/prompts/novel/volume/chapterList.prompts.js");
+} = require("../../dist/prompting/prompts/novel/volume/chapterList.prompts.js");
 const {
   runStructuredPrompt,
   setPromptRunnerStructuredInvokerForTests,
-} = require("../dist/prompting/core/promptRunner.js");
+} = require("../../dist/prompting/core/promptRunner.js");
 
 const EMPTY_CONTEXT = {
   blocks: [],

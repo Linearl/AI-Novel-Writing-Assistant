@@ -8,7 +8,7 @@ const {
   normalizePayoffLedgerIdentity,
   resolvePayoffLedgerSyncLedgerKey,
   sanitizePayoffLedgerSyncItem,
-} = require("../dist/services/payoff/payoffLedgerShared.js");
+} = require("../../dist/services/payoff/payoffLedgerShared.js");
 
 function createLedgerItem(overrides = {}) {
   return {

@@ -3,7 +3,7 @@ const assert = require("node:assert/strict");
 
 const {
   snapshotExtractionOutputSchema,
-} = require("../dist/services/state/stateSchemas.js");
+} = require("../../dist/services/state/stateSchemas.js");
 
 test("snapshot extraction schema accepts omitted ids while preserving nullable reader refs", () => {
   const parsed = snapshotExtractionOutputSchema.parse({

@@ -1,3 +1,4 @@
+import { z } from "zod";
 import type { ResourceRef } from "./agent";
 import type {
   NovelWorkflowCheckpoint,
@@ -13,7 +14,19 @@ export type TaskKind =
   | "novel_workflow"
   | "style_extraction";
 
+export const taskKindSchema = z.enum([
+  "book_analysis",
+  "novel_pipeline",
+  "knowledge_document",
+  "image_generation",
+  "agent_run",
+  "novel_workflow",
+  "style_extraction",
+]);
+
 export type TaskStatus = "queued" | "running" | "waiting_approval" | "succeeded" | "failed" | "cancelled";
+
+export const taskStatusSchema = z.enum(["queued", "running", "waiting_approval", "succeeded", "failed", "cancelled"]);
 
 export interface TaskTokenUsageSummary {
   promptTokens: number;

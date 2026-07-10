@@ -1,6 +1,7 @@
 import type { Router } from "express";
 import type { ApiResponse } from "@ai-novel/shared";
 import { NOVEL_LIST_PAGE_LIMIT_DEFAULT, NOVEL_LIST_PAGE_LIMIT_MAX } from "@ai-novel/shared";
+import { emotionIntensitySchema, aiFreedomSchema } from "@ai-novel/shared";
 import { z } from "zod";
 import { llmProviderSchema } from "../../../../llm/providerSchema";
 import { validate } from "../../../../middleware/validate";
@@ -49,8 +50,8 @@ const createNovelSchema = z.object({
   narrativePov: z.enum(["first_person", "third_person", "mixed"]).optional(),
   pacePreference: z.enum(["slow", "balanced", "fast"]).optional(),
   styleTone: z.string().trim().optional(),
-  emotionIntensity: z.enum(["low", "medium", "high"]).optional(),
-  aiFreedom: z.enum(["low", "medium", "high"]).optional(),
+  emotionIntensity: emotionIntensitySchema.optional(),
+  aiFreedom: aiFreedomSchema.optional(),
   postGenerationStyleReviewEnabled: z.boolean().optional(),
   defaultChapterLength: z.number().int().min(500).max(10000).optional(),
   estimatedChapterCount: z.number().int().min(1).max(2000).optional(),
@@ -86,8 +87,8 @@ const updateNovelSchema = z.object({
   narrativePov: z.enum(["first_person", "third_person", "mixed"]).nullable().optional(),
   pacePreference: z.enum(["slow", "balanced", "fast"]).nullable().optional(),
   styleTone: z.string().trim().nullable().optional(),
-  emotionIntensity: z.enum(["low", "medium", "high"]).nullable().optional(),
-  aiFreedom: z.enum(["low", "medium", "high"]).nullable().optional(),
+  emotionIntensity: emotionIntensitySchema.nullable().optional(),
+  aiFreedom: aiFreedomSchema.nullable().optional(),
   postGenerationStyleReviewEnabled: z.boolean().optional(),
   defaultChapterLength: z.number().int().min(500).max(10000).nullable().optional(),
   estimatedChapterCount: z.number().int().min(1).max(2000).nullable().optional(),
@@ -118,8 +119,8 @@ const createResourceRecommendationSchema = z.object({
   narrativePov: z.enum(["first_person", "third_person", "mixed"]).optional(),
   pacePreference: z.enum(["slow", "balanced", "fast"]).optional(),
   styleTone: z.string().trim().optional(),
-  emotionIntensity: z.enum(["low", "medium", "high"]).optional(),
-  aiFreedom: z.enum(["low", "medium", "high"]).optional(),
+  emotionIntensity: emotionIntensitySchema.optional(),
+  aiFreedom: aiFreedomSchema.optional(),
   provider: llmProviderSchema.optional(),
   model: z.string().trim().optional(),
   temperature: z.number().min(0).max(2).optional(),

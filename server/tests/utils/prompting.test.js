@@ -4,13 +4,13 @@ const assert = require("node:assert/strict");
 const {
   buildCompressionLog,
   createContextBlock,
-} = require("../dist/prompting/core/contextBudget.js");
+} = require("../../dist/prompting/core/contextBudget.js");
 const {
   promptAddendumService,
-} = require("../dist/prompting/addendums/PromptAddendumService.js");
+} = require("../../dist/prompting/addendums/PromptAddendumService.js");
 const {
   NOVEL_PROMPT_BUDGETS,
-} = require("../dist/prompting/prompts/novel/promptBudgetProfiles.js");
+} = require("../../dist/prompting/prompts/novel/promptBudgetProfiles.js");
 const {
   runTextPrompt,
   runStructuredPrompt,
@@ -18,64 +18,64 @@ const {
   setPromptRunnerStructuredInvokerForTests,
   streamStructuredPrompt,
   streamTextPrompt,
-} = require("../dist/prompting/core/promptRunner.js");
+} = require("../../dist/prompting/core/promptRunner.js");
 const {
   getPromptQualitySnapshot,
   resetPromptQualityTelemetryForTests,
-} = require("../dist/prompting/core/promptQualityTelemetry.js");
+} = require("../../dist/prompting/core/promptQualityTelemetry.js");
 const {
   selectContextBlocks,
-} = require("../dist/prompting/core/contextSelection.js");
+} = require("../../dist/prompting/core/contextSelection.js");
 const {
   getRegisteredPromptAsset,
-} = require("../dist/prompting/registry.js");
+} = require("../../dist/prompting/registry.js");
 const {
   resolveWorkflow,
   listWorkflowDefinitions,
-} = require("../dist/prompting/workflows/workflowRegistry.js");
+} = require("../../dist/prompting/workflows/workflowRegistry.js");
 const {
   plannerChapterPlanPrompt,
-} = require("../dist/prompting/prompts/planner/plannerPlan.prompts.js");
+} = require("../../dist/prompting/prompts/planner/plannerPlan.prompts.js");
 const {
   genreTreePrompt,
-} = require("../dist/prompting/prompts/genre/genre.prompts.js");
+} = require("../../dist/prompting/prompts/genre/genre.prompts.js");
 const {
   titleGenerationPrompt,
-} = require("../dist/prompting/prompts/helper/titleGeneration.prompt.js");
+} = require("../../dist/prompting/prompts/helper/titleGeneration.prompt.js");
 const {
   styleDetectionPrompt,
   styleRewritePrompt,
   styleProfileExtractionPrompt,
   styleProfileFromBookAnalysisPrompt,
-} = require("../dist/prompting/prompts/style/style.prompts.js");
+} = require("../../dist/prompting/prompts/style/style.prompts.js");
 const {
   chapterWriterPrompt,
-} = require("../dist/prompting/prompts/novel/chapterWriter.prompts.js");
+} = require("../../dist/prompting/prompts/novel/chapterWriter.prompts.js");
 const {
   chapterArtifactDeltaPrompt,
   chapterArtifactDeltaOutputSchema,
-} = require("../dist/prompting/prompts/novel/chapterArtifactDelta.prompts.js");
+} = require("../../dist/prompting/prompts/novel/chapterArtifactDelta.prompts.js");
 const {
   worldDraftGenerationPrompt,
   worldDraftRefineAlternativesPrompt,
-} = require("../dist/prompting/prompts/world/worldDraft.prompts.js");
+} = require("../../dist/prompting/prompts/world/worldDraft.prompts.js");
 const {
   createVolumeStrategyPrompt,
-} = require("../dist/prompting/prompts/novel/volume/strategy.prompts.js");
+} = require("../../dist/prompting/prompts/novel/volume/strategy.prompts.js");
 const {
   storyModeChildPrompt,
   storyModeTreePrompt,
-} = require("../dist/prompting/prompts/storyMode/storyMode.prompts.js");
+} = require("../../dist/prompting/prompts/storyMode/storyMode.prompts.js");
 const {
   bookAnalysisSourceNotePrompt,
   bookAnalysisSectionPrompt,
-} = require("../dist/prompting/prompts/bookAnalysis/bookAnalysis.prompts.js");
+} = require("../../dist/prompting/prompts/bookAnalysis/bookAnalysis.prompts.js");
 const {
   sanitizeWriterContextBlocks,
-} = require("../dist/prompting/prompts/novel/chapterLayeredContext.js");
+} = require("../../dist/prompting/prompts/novel/chapterLayeredContext.js");
 const {
   directorPlanBlueprintSchema,
-} = require("../dist/services/novel/director/runtime/novelDirectorSchemas.js");
+} = require("../../dist/services/novel/director/runtime/novelDirectorSchemas.js");
 
 const promptKey = (asset) => `${asset.id}@${asset.version}`;
 

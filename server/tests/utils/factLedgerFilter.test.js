@@ -3,7 +3,7 @@ const assert = require("node:assert/strict");
 
 const {
   filterAcceptedFactItems,
-} = require("../dist/services/novel/fact/factLedgerFilter.js");
+} = require("../../dist/services/novel/fact/factLedgerFilter.js");
 
 function coverage(overrides = {}) {
   return {

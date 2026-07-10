@@ -1,5 +1,6 @@
 import { Router } from "express";
 import type { ApiResponse } from "@ai-novel/shared";
+import { knowledgeDocumentStatusSchema } from "@ai-novel/shared";
 import { z } from "zod";
 import { authMiddleware } from "../middleware/auth";
 import { validate } from "../middleware/validate";
@@ -8,7 +9,7 @@ import { KnowledgeService } from "../services/knowledge/KnowledgeService";
 const router = Router();
 const knowledgeService = new KnowledgeService();
 
-const documentStatusSchema = z.enum(["enabled", "disabled", "archived"]);
+const documentStatusSchema = knowledgeDocumentStatusSchema;
 
 const listDocumentsQuerySchema = z.object({
   keyword: z.string().trim().optional(),

@@ -13,20 +13,20 @@ const assert = require("node:assert/strict");
 
 const {
   payoffDetectionOutputSchema,
-} = require("../dist/prompting/prompts/payoff/payoffDetection.promptSchemas.js");
+} = require("../../dist/prompting/prompts/payoff/payoffDetection.promptSchemas.js");
 
 const {
   payoffDetectionPrompt,
-} = require("../dist/prompting/prompts/payoff/payoffDetection.prompts.js");
+} = require("../../dist/prompting/prompts/payoff/payoffDetection.prompts.js");
 
 const {
   getRegisteredPromptAsset,
   hasRegisteredPromptAsset,
-} = require("../dist/prompting/registry.js");
+} = require("../../dist/prompting/registry.js");
 
 const {
   normalizePayoffLedgerIdentity,
-} = require("../dist/services/payoff/payoffLedgerShared.js");
+} = require("../../dist/services/payoff/payoffLedgerShared.js");
 
 // ---------------------------------------------------------------------------
 // Prompt schema tests

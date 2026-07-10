@@ -1,3 +1,5 @@
+import { z } from "zod";
+import { antiAiSeveritySchema } from "./chapterCore";
 import type { LLMProvider } from "./llm";
 
 export type StyleSourceType =
@@ -12,6 +14,10 @@ export type StyleBindingTargetType = "novel" | "chapter" | "task";
 export type AntiAiRuleType = "forbidden" | "risk" | "encourage";
 export type StyleDetectionRuleType = "style" | "character" | AntiAiRuleType;
 export type AntiAiSeverity = "low" | "medium" | "high";
+
+// ── Zod enum schemas (unique to this file; shared enums are in chapterCore.ts) ──
+export const antiAiRuleTypeSchema = z.enum(["forbidden", "risk", "encourage"]);
+export const styleProfileStatusSchema = z.enum(["active", "archived"]);
 
 export interface NarrativeRules {
   progressionMode?: string | null;
@@ -141,6 +147,7 @@ export function isStyleCompatibilityField(
 
 export type StyleExtractionFeatureGroup = "narrative" | "language" | "dialogue" | "rhythm" | "fingerprint";
 export type StyleFeatureDecision = "keep" | "weaken" | "remove";
+export const styleFeatureDecisionSchema = z.enum(["keep", "weaken", "remove"]);
 
 export interface StyleExtractionFeature {
   id: string;
@@ -166,12 +173,24 @@ export interface StyleExtractionPresetDecision {
   decision: StyleFeatureDecision;
 }
 
+export const styleExtractionPresetDecisionSchema = z.object({
+  featureId: z.string(),
+  decision: styleFeatureDecisionSchema,
+});
+
 export interface StyleExtractionPreset {
   key: "imitate" | "balanced" | "transfer";
   label: string;
   summary: string;
   decisions: StyleExtractionPresetDecision[];
 }
+
+export const styleExtractionPresetSchema = z.object({
+  key: z.enum(["imitate", "balanced", "transfer"]),
+  label: z.string(),
+  summary: z.string(),
+  decisions: z.array(styleExtractionPresetDecisionSchema),
+});
 
 export interface StyleExtractionDraft {
   name: string;
@@ -238,6 +257,20 @@ export interface AntiAiRuleDraftFields {
   autoRewrite: boolean;
 }
 
+export const antiAiRuleDraftFieldsSchema = z.object({
+  key: z.string(),
+  name: z.string(),
+  type: antiAiRuleTypeSchema,
+  severity: antiAiSeveritySchema,
+  description: z.string(),
+  detectPatterns: z.array(z.string()),
+  promptInstruction: z.string().nullable().optional(),
+  rewriteSuggestion: z.string().nullable().optional(),
+  enabled: z.boolean(),
+  globalBaselineEnabled: z.boolean(),
+  autoRewrite: z.boolean(),
+});
+
 /** Chapter editor diff extract request - used for both anti-AI extraction and style fork */
 export interface ChapterEditDiffExtractRequest {
   beforeText: string;
@@ -247,6 +280,15 @@ export interface ChapterEditDiffExtractRequest {
   model?: string;
   temperature?: number;
 }
+
+export const chapterEditDiffExtractRequestSchema = z.object({
+  beforeText: z.string(),
+  afterText: z.string(),
+  novelId: z.string(),
+  provider: z.string().optional(),
+  model: z.string().optional(),
+  temperature: z.number().optional(),
+});
 
 /** Anti-AI rules extracted from chapter edit diff */
 export interface ChapterEditAntiAiExtractResult {

@@ -1,10 +1,10 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const { prisma } = require("../dist/db/prisma.js");
+const { prisma } = require("../../dist/db/prisma.js");
 const {
   VOLUME_WORKSPACE_TRANSACTION_TIMEOUT_MS,
   runVolumeWorkspaceTransaction,
-} = require("../dist/services/novel/volume/volumeWorkspacePersistence.js");
+} = require("../../dist/services/novel/volume/volumeWorkspacePersistence.js");
 
 test("runVolumeWorkspaceTransaction uses an explicit timeout for large volume writes", async () => {
   const originalTransaction = prisma.$transaction;
@@ -51,7 +51,7 @@ test("runVolumeWorkspaceTransaction retries transient sqlite locks", async () =>
 test("persistActiveVolumeWorkspace updates existing planning rows instead of recreating the whole workspace", async () => {
   const {
     persistActiveVolumeWorkspace,
-  } = require("../dist/services/novel/volume/volumeWorkspacePersistence.js");
+  } = require("../../dist/services/novel/volume/volumeWorkspacePersistence.js");
   const calls = [];
   const tx = {
     volumePlan: {

@@ -4,7 +4,7 @@ const assert = require("node:assert/strict");
 const {
   hasPayoffLedgerRelevantPlanChanges,
   hasPayoffLedgerSourceSignals,
-} = require("../dist/services/novel/volume/volumePlanUtils.js");
+} = require("../../dist/services/novel/volume/volumePlanUtils.js");
 
 function createVolume(overrides = {}) {
   return {

@@ -1,19 +1,19 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 
-const promptRunner = require("../dist/prompting/core/promptRunner.js");
+const promptRunner = require("../../dist/prompting/core/promptRunner.js");
 const {
   generateBeatChunkedChapterList,
-} = require("../dist/services/novel/volume/volumeChapterListGeneration.js");
+} = require("../../dist/services/novel/volume/volumeChapterListGeneration.js");
 const {
   mergeChapterList,
-} = require("../dist/services/novel/volume/volumeGenerationHelpers.js");
+} = require("../../dist/services/novel/volume/volumeGenerationHelpers.js");
 const {
   buildVolumeWorkspaceDocument,
-} = require("../dist/services/novel/volume/volumeWorkspaceDocument.js");
+} = require("../../dist/services/novel/volume/volumeWorkspaceDocument.js");
 const {
   resolveStructuredOutlineRecoveryCursor,
-} = require("../dist/services/novel/director/recovery/novelDirectorStructuredOutlineRecovery.js");
+} = require("../../dist/services/novel/director/recovery/novelDirectorStructuredOutlineRecovery.js");
 
 function createChapter(input) {
   return {

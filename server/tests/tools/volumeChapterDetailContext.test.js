@@ -5,14 +5,14 @@ const {
   buildChapterDetailDraft,
   buildChapterNeighborContext,
   buildRecentChapterExecutionContext,
-} = require("../dist/prompting/prompts/novel/volume/shared.js");
+} = require("../../dist/prompting/prompts/novel/volume/shared.js");
 const {
   buildVolumeChapterDetailContextBlocks,
-} = require("../dist/prompting/prompts/novel/volume/contextBlocks.js");
+} = require("../../dist/prompting/prompts/novel/volume/contextBlocks.js");
 const {
   volumeChapterBoundaryPrompt,
   volumeChapterTaskSheetPrompt,
-} = require("../dist/prompting/prompts/novel/volume/chapterDetail.prompts.js");
+} = require("../../dist/prompting/prompts/novel/volume/chapterDetail.prompts.js");
 
 function createScenePlan(sceneTitles) {
   return JSON.stringify({

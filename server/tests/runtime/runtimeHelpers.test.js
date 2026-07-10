@@ -11,7 +11,7 @@ const {
   canRetry,
   buildFinalMessage,
   normalizeAgent,
-} = require("../dist/agents/runtime/runtimeHelpers.js");
+} = require("../../dist/agents/runtime/runtimeHelpers.js");
 
 // ---------------------------------------------------------------------------
 // safeJson

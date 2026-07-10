@@ -2,7 +2,25 @@ import type {
   ChapterWriteContext,
   GenerationContextPackage,
 } from "@ai-novel/shared";
+import type {
+  DynamicCharacterOverviewItem,
+  CharacterRelationStage,
+  RuntimeCharacterCandidate,
+} from "@ai-novel/shared";
 import { compactText, takeUnique } from "./chapterLayeredContextShared";
+
+// Type for the characterDynamics object (typed as z.any() in GenerationContextPackage)
+interface CharacterDynamicsOverview {
+  novelId: string;
+  currentVolume: { id: string; title: string; startChapterOrder: number | null; endChapterOrder: number | null; currentChapterOrder: number | null } | null;
+  summary: string;
+  pendingCandidateCount: number;
+  characters: DynamicCharacterOverviewItem[];
+  relations: CharacterRelationStage[];
+  candidates: RuntimeCharacterCandidate[];
+  factionTracks: unknown[];
+  assignments: unknown[];
+}
 
 function buildVisibleProfileSummary(
   character: GenerationContextPackage["characterRoster"][number] | undefined,
@@ -27,7 +45,7 @@ function absenceRiskRank(risk: "none" | "info" | "warn" | "high"): number {
 export function buildDynamicCharacterGuidance(
   contextPackage: GenerationContextPackage,
 ): Pick<ChapterWriteContext, "characterBehaviorGuides" | "activeRelationStages" | "pendingCandidateGuards"> {
-  const overview = contextPackage.characterDynamics;
+  const overview = contextPackage.characterDynamics as CharacterDynamicsOverview | null | undefined;
   if (!overview) {
     return {
       characterBehaviorGuides: [],

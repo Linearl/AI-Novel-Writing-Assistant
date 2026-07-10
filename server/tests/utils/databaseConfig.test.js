@@ -2,7 +2,7 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const path = require("node:path");
 
-const databaseConfigPath = path.join(__dirname, "../dist/config/database.js");
+const databaseConfigPath = path.join(__dirname, "../../dist/config/database.js");
 
 function loadDatabaseConfig() {
   delete require.cache[databaseConfigPath];

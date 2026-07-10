@@ -3,7 +3,7 @@ const assert = require("node:assert/strict");
 
 const {
   resolveSnapshotChapterReference,
-} = require("../dist/services/state/StateService.js");
+} = require("../../dist/services/state/StateService.js");
 
 test("resolveSnapshotChapterReference maps chapter order text to a real chapter id", () => {
   const chapters = [

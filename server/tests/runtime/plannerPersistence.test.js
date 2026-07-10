@@ -1,13 +1,13 @@
 const assert = require("node:assert/strict");
 const test = require("node:test");
-const { prisma } = require("../dist/db/prisma.js");
+const { prisma } = require("../../dist/db/prisma.js");
 const {
   buildChapterExecutionContractHash,
   persistStoryPlan,
   readPlanExecutionContractHash,
   STORY_PLAN_PERSISTENCE_TRANSACTION_TIMEOUT_MS,
-} = require("../dist/services/planner/plannerPersistence.js");
-const { parseChapterScenePlan } = require("../../shared/dist/types/chapterLengthControl.js");
+} = require("../../dist/services/planner/plannerPersistence.js");
+const { parseChapterScenePlan } = require("../../../shared/dist/types/chapterLengthControl.js");
 
 test("persistStoryPlan uses an explicit timeout for planning writes", async () => {
   const original = {
