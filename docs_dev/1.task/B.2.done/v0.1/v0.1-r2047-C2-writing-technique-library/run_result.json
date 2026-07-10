@@ -1,13 +1,13 @@
 {
   "reqId": "REQ-2047",
   "title": "文笔资料库",
-  "status": "requirements_ready",
+  "status": "done",
   "complexity": "complex",
   "reqType": "core_feature",
   "categoryCode": 2,
   "version": "v0.1",
   "createdAt": "2026-07-09T00:00:00.000Z",
-  "updatedAt": "2026-07-09T00:00:00.000Z",
+  "updatedAt": "2026-07-10T00:00:00.000Z",
   "artifacts": {
     "requirementsPath": "docs_dev/1.task/B.todo/v0.1/v0.1-r2047-C2-writing-technique-library/REQ-2047-writing-technique-library.md",
     "designPath": "docs_dev/1.task/B.todo/v0.1/v0.1-r2047-C2-writing-technique-library/design.md",

@@ -70,17 +70,6 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1\v0.1-r7016-M2-inline-prompt-extraction\REQ-7016-inline-prompt-extraction.md](./1.task\B.todo\v0.1\v0.1-r7016-M2-inline-prompt-extraction\REQ-7016-inline-prompt-extraction.md) | REQ-7016 内联 Prompt 提取与模板引擎 | REQ-7016 内联 Prompt 提取与模板引擎 |
 | [1.task\B.todo\v0.1\v0.1-r7016-M2-inline-prompt-extraction\tasks.md](./1.task\B.todo\v0.1\v0.1-r7016-M2-inline-prompt-extraction\tasks.md) | REQ-7016 内联 Prompt 提取与模板引擎 — 任务拆解 | REQ-7016 内联 Prompt 提取与模板引擎 — 任务拆解 |
 
-## 1.task\B.todo\v0.1\v0.1-r7017-M2-vocabulary-audit-scanner
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r7017-M2-vocabulary-audit-scanner\decision_log.md](./1.task\B.todo\v0.1\v0.1-r7017-M2-vocabulary-audit-scanner\decision_log.md) | REQ-7017 词汇库审校扫描器 — 决策留痕 | REQ-7017 词汇库审校扫描器 — 决策留痕 |
-| [1.task\B.todo\v0.1\v0.1-r7017-M2-vocabulary-audit-scanner\design.md](./1.task\B.todo\v0.1\v0.1-r7017-M2-vocabulary-audit-scanner\design.md) | REQ-7017 词汇库审校扫描器 — 方案设计 | REQ-7017 词汇库审校扫描器 — 方案设计 |
-| [1.task\B.todo\v0.1\v0.1-r7017-M2-vocabulary-audit-scanner\README.md](./1.task\B.todo\v0.1\v0.1-r7017-M2-vocabulary-audit-scanner\README.md) | REQ-7017 词汇库审校扫描器 — 任务总线 | REQ-7017 词汇库审校扫描器 — 任务总线 |
-| [1.task\B.todo\v0.1\v0.1-r7017-M2-vocabulary-audit-scanner\REQ-7017-vocabulary-audit-scanner-original.md](./1.task\B.todo\v0.1\v0.1-r7017-M2-vocabulary-audit-scanner\REQ-7017-vocabulary-audit-scanner-original.md) | REQ-7017 词汇库审校扫描器 — 原始冻结副本 | REQ-7017 词汇库审校扫描器 — 原始冻结副本 |
-| [1.task\B.todo\v0.1\v0.1-r7017-M2-vocabulary-audit-scanner\REQ-7017-vocabulary-audit-scanner.md](./1.task\B.todo\v0.1\v0.1-r7017-M2-vocabulary-audit-scanner\REQ-7017-vocabulary-audit-scanner.md) | REQ-7017 词汇库审校扫描器 | REQ-7017 词汇库审校扫描器 |
-| [1.task\B.todo\v0.1\v0.1-r7017-M2-vocabulary-audit-scanner\tasks.md](./1.task\B.todo\v0.1\v0.1-r7017-M2-vocabulary-audit-scanner\tasks.md) | REQ-7017 词汇库审校扫描器 — 任务拆解 | REQ-7017 词汇库审校扫描器 — 任务拆解 |
-
 ## 1.task\template
 
 | 文件 | 标题 | 描述 |

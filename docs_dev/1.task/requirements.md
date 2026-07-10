@@ -62,7 +62,7 @@ description: "需求任务总清单（SSOT）"
 | 2044 | Inspiration Quick Preview | p3 | ✅ 已完成 | - | 0.1 | 2026-07-08T00:00:00.000Z | 2026-07-09T00:00:00.000Z | `B.2.done/v0.1-r2044-C2-inspiration-quick-preview/README.md` |  |
 | 2045 | Chapter Rhythm Tension | p3 | ✅ 已完成 | - | 0.1 | 2026-07-08T00:00:00.000Z | 2026-07-09T00:00:00.000Z | `B.2.done/v0.1-r2045-C2-chapter-rhythm-tension/README.md` |  |
 | 2046 | Style Profile Export Import | p3 | ✅ 已完成 | - | 0.1 | 2026-07-08T00:00:00.000Z | 2026-07-08T10:00:00.000Z | `B.2.done/v0.1-r2046-M3-style-profile-export-import/README.md` |  |
-| 2047 | 文笔资料库 | p3 | 📋 待办 | - | 0.1 | 2026-07-09T00:00:00.000Z | 2026-07-09T00:00:00.000Z | `B.todo/v0.1-r2047-C2-writing-technique-library/README.md` |  |
+| 2047 | 文笔资料库 | p3 | ✅ 已完成 | - | 0.1 | 2026-07-09T00:00:00.000Z | 2026-07-10T00:00:00.000Z | `B.todo/v0.1-r2047-C2-writing-technique-library/README.md` |  |
 | 2048 | REQ-2048 氛围写作参考卡 | p3 | 📋 待办 | - | 0.1 | 2026-07-10 | - | `B.todo/v0.1-r2048-M2-atmosphere-writing-cards/README.md` |  |
 | 2013 | Director Failed Retry Entry | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2013-medium-director-failed-retry-entry/README.md` |  |
 | 2014 | Chapter Token Budget Dynamic | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2014-medium-chapter-token-budget-dynamic/README.md` |  |
@@ -102,7 +102,7 @@ description: "需求任务总清单（SSOT）"
 | 7014 | 清理 Novel 旧版世界字段 | p1 | 📋 待办 | - | 0.1 | 2026-07-08 | 2026-07-08 | `B.todo/v11-r7014-C2-legacy-world-fields-cleanup/README.md` |  |
 | 7015 | 前端公共样式与组件提取 | p2 | ✅ 已完成 | 2026-07-09 前端公共样式与组件诊断报告 | 0.1 | 2026-07-09 | 2026-07-09 | `B.2.done/v0.1-r7015-M2-frontend-common-styles-components/README.md` | 全部完成：Textarea（~120 处）+ StatusBadge（10 处）+ LoadingIndicator（31 处）+ EmptyState（40 处）+ 语义化 token（~500 处）+ CSS 拆分（739→137 行，13 个模块文件）。T4 误诊跳过。 |
 | 7016 | 内联 Prompt 提取与模板引擎 | p2 | 📋 待办 | 2026-07-09 内联 Prompt 诊断报告 | 0.1 | 2026-07-09 | - | `B.todo/v0.1-r7016-M2-inline-prompt-extraction/README.md` | 开发 Prompt 模板引擎 + 提取 3 处纯静态内联 prompt 为 YAML + 改造调用方 |
-| 7017 | 词汇库审校扫描器 | p2 | ✅ 已完成 | 木棉写作小红书 OCR 素材 + 审校体系优化 | 0.1 | 2026-07-10 | 2026-07-10 | `B.todo/v0.1-r7017-M2-vocabulary-audit-scanner/README.md` | 全 8 个任务完成。词库表+扫描引擎+同步集成+审校双挂载+修复注入+前端展示+词库提取 |
+| 7017 | 词汇库审校扫描器 | p2 | ✅ 已完成 | 木棉写作小红书 OCR 素材 + 审校体系优化 | 0.1 | 2026-07-10 | 2026-07-10 | `B.2.done/v0.1-r7017-M2-vocabulary-audit-scanner/README.md` | 全 8 个任务完成。词库表+扫描引擎+同步集成+审校双挂载+修复注入+前端展示+词库提取 |
 
 ---
 
@@ -114,7 +114,6 @@ description: "需求任务总清单（SSOT）"
 
 | 编号 | 任务标题 | 文档 |
 | --- | --- | --- |
-| 2047 | 文笔资料库 | `B.todo/v0.1-r2047-C2-writing-technique-library/README.md` |
 | 2048 | REQ-2048 氛围写作参考卡 | `B.todo/v0.1-r2048-M2-atmosphere-writing-cards/README.md` |
 | 7014 | 清理 Novel 旧版世界字段 | `B.todo/v11-r7014-C2-legacy-world-fields-cleanup/README.md` |
 | 7016 | 内联 Prompt 提取与模板引擎 | `B.todo/v0.1-r7016-M2-inline-prompt-extraction/README.md` |
@@ -170,6 +169,7 @@ description: "需求任务总清单（SSOT）"
 | 2044 | Inspiration Quick Preview | `B.2.done/v0.1-r2044-C2-inspiration-quick-preview/README.md` |
 | 2045 | Chapter Rhythm Tension | `B.2.done/v0.1-r2045-C2-chapter-rhythm-tension/README.md` |
 | 2046 | Style Profile Export Import | `B.2.done/v0.1-r2046-M3-style-profile-export-import/README.md` |
+| 2047 | 文笔资料库 | `B.todo/v0.1-r2047-C2-writing-technique-library/README.md` |
 | 3001 | Task Batch Archive | `B.2.done/v0.1-r3001-medium-task-batch-archive/README.md` |
 | 3002 | 导演进度规划资源缺失 Checklist 可视化 | `B.2.done/v0.1-r3002-medium-director-planning-checklist/README.md` |
 | 3003 | 小说项目对话存档 | `B.2.done/v0.1-r3003-medium-repair-progress-dialog/README.md` |
@@ -193,6 +193,6 @@ description: "需求任务总清单（SSOT）"
 | 7012 | Low Priority Fix | `B.2.done/v0.1-r7012-simple-p4-low-priority-fix/README.md` |
 | 7013 | Remove Comic Drama | `B.2.done/v0.1-r7013-S2-remove-comic-drama/README.md` |
 | 7015 | 前端公共样式与组件提取 | `B.2.done/v0.1-r7015-M2-frontend-common-styles-components/README.md` |
-| 7017 | 词汇库审校扫描器 | `B.todo/v0.1-r7017-M2-vocabulary-audit-scanner/README.md` |
+| 7017 | 词汇库审校扫描器 | `B.2.done/v0.1-r7017-M2-vocabulary-audit-scanner/README.md` |
 
 ---
