@@ -1,0 +1,14 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "outDir": "dist-test",
+    "rootDir": "..",
+    "typeRoots": ["../server/node_modules/@types", "../src/@types"],
+    "types": ["node"],
+    "noEmit": false
+  },
+  "include": ["src/**/*.ts", "tests/**/*.ts"],
+  "exclude": ["dist", "dist-test", "node_modules"]
+}

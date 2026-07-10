@@ -1,0 +1,16 @@
+{
+  "reqId": "7033",
+  "title": "Prisma Schema 精简",
+  "status": "requirements_ready",
+  "complexity": "C2",
+  "priority": "P1",
+  "phase": "requirements",
+  "createdAt": "2026-07-10",
+  "updatedAt": "2026-07-10",
+  "estimatedFiles": "5-10",
+  "verification": {
+    "typecheck": "pending",
+    "tests": "pending",
+    "migrate": "pending"
+  }
+}

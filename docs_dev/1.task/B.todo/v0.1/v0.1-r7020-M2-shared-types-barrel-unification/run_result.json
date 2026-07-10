@@ -1,0 +1,16 @@
+{
+  "reqId": "7020",
+  "title": "共享类型 Barrel 统一导出",
+  "status": "requirements_ready",
+  "complexity": "M2",
+  "priority": "P0",
+  "phase": "requirements",
+  "createdAt": "2026-07-10",
+  "updatedAt": "2026-07-10",
+  "estimatedFiles": "500+（import 语句）+ shared 包内文件",
+  "verification": {
+    "typecheck": "pending",
+    "build": "pending",
+    "tests": "pending"
+  }
+}

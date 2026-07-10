@@ -82,6 +82,12 @@ description: "需求任务总清单（SSOT）"
 | 3010 | Create Page Material Import | p4 | ✅ 已完成 | - | 0.1 | 2026-07-08T00:00:00.000Z | 2026-07-09T00:00:00.000Z | `B.2.done/v0.1-r3010-M2-create-page-material-import/README.md` |  |
 | 3004 | Novel Conversation Archive | p4 | 📋 待办 | - | 0.1 | 2026-06-26T00:00:00.000Z | 2026-06-26T00:00:00.000Z | `B.todo/v0.1-r3004-medium-novel-conversation-archive/README.md` |  |
 
+### 3.4 文档和规范任务（5xxx）
+
+| 编号 | 任务标题 | 优先级 | 当前状态 | 来源层 | 目标版本 | 开始日期 | 完成日期 | 详情文档 | 备注 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 5001 | 补齐工程化基础配置：.env.example / .editorconfig / 子包 README / semver CHANGELOG / Prisma 回滚方案 | p3 | ✅ 已完成 | 代码审计-full 独占发现复核报告 — 可维护性维度 CONFIRMED 条目 | 0.1 | 2026-07-10 | 2026-07-10 | `B.todo/v0.1-r5001-S2-engineering-basics/README.md` |  |
+
 ### 3.6 技术债务和重构任务（7xxx）
 
 | 编号 | 任务标题 | 优先级 | 当前状态 | 来源层 | 目标版本 | 开始日期 | 完成日期 | 详情文档 | 备注 |
@@ -103,6 +109,28 @@ description: "需求任务总清单（SSOT）"
 | 7015 | 前端公共样式与组件提取 | p2 | ✅ 已完成 | 2026-07-09 前端公共样式与组件诊断报告 | 0.1 | 2026-07-09 | 2026-07-09 | `B.2.done/v0.1-r7015-M2-frontend-common-styles-components/README.md` | 全部完成：Textarea（~120 处）+ StatusBadge（10 处）+ LoadingIndicator（31 处）+ EmptyState（40 处）+ 语义化 token（~500 处）+ CSS 拆分（739→137 行，13 个模块文件）。T4 误诊跳过。 |
 | 7016 | 内联 Prompt 提取与模板引擎 | p2 | 📋 待办 | 2026-07-09 内联 Prompt 诊断报告 | 0.1 | 2026-07-09 | - | `B.todo/v0.1-r7016-M2-inline-prompt-extraction/README.md` | 开发 Prompt 模板引擎 + 提取 3 处纯静态内联 prompt 为 YAML + 改造调用方 |
 | 7017 | 词汇库审校扫描器 | p2 | ✅ 已完成 | 木棉写作小红书 OCR 素材 + 审校体系优化 | 0.1 | 2026-07-10 | 2026-07-10 | `B.2.done/v0.1-r7017-M2-vocabulary-audit-scanner/README.md` | 全 8 个任务完成。词库表+扫描引擎+同步集成+审校双挂载+修复注入+前端展示+词库提取 |
+| 7018 | 路由迁移至模块目录 | p1 | 📋 待办 | - | 0.1 | 2026-07-10 | 2026-07-10 | `B.todo/v0.1-r7018-C2-routes-migration-to-modules/README.md` |  |
+| 7019 | 依赖注入提升可测试性 | p1 | 📋 待办 | - | 0.1 | 2026-07-10 | 2026-07-10 | `B.todo/v0.1-r7019-C3-dependency-injection-for-testability/README.md` |  |
+| 7020 | 共享类型 Barrel 统一导出 | p0 | 📋 待办 | - | 0.1 | 2026-07-10 | 2026-07-10 | `B.todo/v0.1-r7020-M2-shared-types-barrel-unification/README.md` |  |
+| 7021 | Zod Schema 去重与共享化 | p1 | 📋 待办 | 2026-07-10 全量架构诊断报告 第4条发现 | 0.1 | 2026-07-10 | 2026-07-10 | `B.todo/v0.1-r7021-M2-zod-schema-deduplication/README.md` |  |
+| 7022 | Services 目录收敛与大文件拆分 | p1 | 📋 待办 | 2026-07-10 全量架构诊断报告 第5条发现 | 0.1 | 2026-07-10 | 2026-07-10 | `B.todo/v0.1-r7022-C2-services-directory-consolidation/README.md` |  |
+| 7023 | 测试目录重构与覆盖率接入 | p2 | 📋 待办 | 2026-07-10 全量架构诊断报告 第6条发现 | 0.1 | 2026-07-10 | 2026-07-10 | `B.todo/v0.1-r7023-M3-test-directory-restructuring/README.md` |  |
+| 7024 | 客户端共享 Hooks 抽象与大文件拆分 | p2 | 📋 待办 | 架构诊断报告 2026-07-10 第7条发现 | 0.1 | 2026-07-10 | - | `B.todo/v0.1-r7024-M2-client-shared-hooks-abstraction/README.md` | 创建 useApiMutation/useApiQuery 封装重复模式 + 拆分 NovelWorkspaceRail（678 行）及 3 个 >800 行文件 + 替换 ~20 处 inline mutation |
+| 7025 | Desktop 包测试基础设施 | p1 | ✅ 已完成 | 架构诊断报告 2026-07-10 第8条发现 | 0.1 | 2026-07-10 | 2026-07-10 | `B.todo/v0.1-r7025-C2-desktop-test-infrastructure/README.md` | T1 完成：desktop/tests/目录、helpers/electronStubs+updaterMock、tsconfig.test.json、3 个测试文件(state/dataImport/server 共 40 个测试用例)、pnpm test 脚本。T2-T3(main.ts 拆分)、T4-T7(各模块测试)部分完成。T8(stage-desktop 集成测试)、T9(CI 集成)待后续迭代。 |
+| 7026 | 构建链模块系统统一 | p2 | 📋 待办 | 架构诊断报告 2026-07-10 第9条发现 | 0.1 | 2026-07-10 | - | `B.todo/v0.1-r7026-C3-build-chain-module-system-unification/README.md` | 研究型任务包。调研 tsx 运行时可行性 + CJS 互操作兼容性 + Project References 评估 + prisma:generate prebuild + 迁移 ROI 分析。交付评估报告和迁移路线图 |
+| 7027 | 遗留代码清理 | p0 | 📋 待办 | - | 0.1 | 2026-07-10 | 2026-07-10 | `B.todo/v0.1-r7027-S2-legacy-code-cleanup/README.md` |  |
+| 7028 | Director 事件系统收敛 | p1 | 📋 待办 | - | 0.1 | 2026-07-10 | 2026-07-10 | `B.todo/v0.1-r7028-C3-director-event-system-consolidation/README.md` |  |
+| 7029 | Prisma Schema 精简 | p8 | 📋 待办 | - | 0.1 | 2026-07-10 | 2026-07-10 | `B.todo/v0.1-r7029-C2-prisma-schema-sizing/README.md` |  |
+| 7031 | 静默吞错日志化：审计复核确认的 .catch(() => {}) 静默吞错修复 | p2 | 📋 待办 | 代码审计-full 独占发现复核报告 — 稳定性 + 部分质量维度 CONFIRMED 条目 | 0.1 | 2026-07-10 | - | `B.todo/v0.1-r7031-M2-silent-catch-logging/README.md` |  |
+| 7032 | 提取硬编码常量：审计复核确认的重复魔数、重复定义、硬编码配置 | p3 | 📋 待办 | 代码审计-full 独占发现复核报告 — 架构/质量维度 CONFIRMED 条目 | 0.1 | 2026-07-10 | - | `B.todo/v0.1-r7032-S3-extract-hardcoded-constants/README.md` |  |
+| 7033 | Prisma Schema 精简 | p1 | 📋 待办 | - | 0.1 | 2026-07-10 | 2026-07-10 | `B.todo/v0.1-r7033-C2-prisma-schema-sizing/README.md` |  |
+| 7034 | Novel Application Services 门面收缩 | p1 | 📋 待办 | - | 0.1 | 2026-07-10 | 2026-07-10 | `B.todo/v0.1-r7034-M2-novel-application-services-facade-contraction/README.md` |  |
+| 7035 | ARCH-004: DirectorCommandService ↔ workers/ 循环依赖解耦 — IDispatcher 接口抽象 | p1 | 📋 待办 | 代码审计-full 独占发现复核报告 ARCH-004 | 0.1 | 2026-07-10 | - | `B.todo/v0.1-r7035-C1-director-command-interface-abstract/README.md` |  |
+| 7036 | SEC-014: API Key AES-256-GCM 加密存储 — secretStore 加 crypto 包装层 | p2 | 📋 待办 | 代码审计-full 独占发现复核报告 SEC-014 | 0.1 | 2026-07-10 | - | `B.todo/v0.1-r7036-M2-api-key-aes-encrypt/README.md` |  |
+| 7037 | QUA-022: directorRuntime.ts 渐进拆分（projection/worker/automation 3 域 + barrel index.ts） | p2 | 📋 待办 | 代码审计-full 独占发现复核报告 QUA-022 | 0.1 | 2026-07-10 | - | `B.todo/v0.1-r7037-M2-director-runtime-split/README.md` |  |
+| 7038 | QUA-039: CharacterPreparationService persistCharacterCastOptions 提取辅助函数降嵌套 | p2 | 📋 待办 | 代码审计-full 独占发现复核报告 QUA-039 | 0.1 | 2026-07-10 | - | `B.todo/v0.1-r7038-S2-character-prep-extract-helper/README.md` |  |
+| 7039 | 散点小修复：ARCH-005/009/023/024 + STA-025 + PERF-003 + PERF-007/C + COMPAT-004 | p3 | 📋 待办 | 代码审计-full 独占发现复核报告 — 多维度已决策的散点修复 | 0.1 | 2026-07-10 | - | `B.todo/v0.1-r7039-S2-scattered-small-fixes/README.md` |  |
+| 7030 | Novel Application Services 门面收缩 | p1 | 📋 待办 | - | 0.1 | 2026-07-10 | 2026-07-10 | `B.todo/v0.1-r7030-M2-novel-application-services-facade-contraction/README.md` |  |
 
 ---
 
@@ -116,9 +144,30 @@ description: "需求任务总清单（SSOT）"
 | --- | --- | --- |
 | 7014 | 清理 Novel 旧版世界字段 | `B.todo/v11-r7014-C2-legacy-world-fields-cleanup/README.md` |
 | 7016 | 内联 Prompt 提取与模板引擎 | `B.todo/v0.1-r7016-M2-inline-prompt-extraction/README.md` |
+| 7018 | 路由迁移至模块目录 | `B.todo/v0.1-r7018-C2-routes-migration-to-modules/README.md` |
+| 7019 | 依赖注入提升可测试性 | `B.todo/v0.1-r7019-C3-dependency-injection-for-testability/README.md` |
+| 7020 | 共享类型 Barrel 统一导出 | `B.todo/v0.1-r7020-M2-shared-types-barrel-unification/README.md` |
+| 7021 | Zod Schema 去重与共享化 | `B.todo/v0.1-r7021-M2-zod-schema-deduplication/README.md` |
+| 7022 | Services 目录收敛与大文件拆分 | `B.todo/v0.1-r7022-C2-services-directory-consolidation/README.md` |
+| 7023 | 测试目录重构与覆盖率接入 | `B.todo/v0.1-r7023-M3-test-directory-restructuring/README.md` |
+| 7024 | 客户端共享 Hooks 抽象与大文件拆分 | `B.todo/v0.1-r7024-M2-client-shared-hooks-abstraction/README.md` |
+| 7026 | 构建链模块系统统一 | `B.todo/v0.1-r7026-C3-build-chain-module-system-unification/README.md` |
+| 7027 | 遗留代码清理 | `B.todo/v0.1-r7027-S2-legacy-code-cleanup/README.md` |
+| 7028 | Director 事件系统收敛 | `B.todo/v0.1-r7028-C3-director-event-system-consolidation/README.md` |
+| 7029 | Prisma Schema 精简 | `B.todo/v0.1-r7029-C2-prisma-schema-sizing/README.md` |
+| 7031 | 静默吞错日志化：审计复核确认的 .catch(() => {}) 静默吞错修复 | `B.todo/v0.1-r7031-M2-silent-catch-logging/README.md` |
+| 7032 | 提取硬编码常量：审计复核确认的重复魔数、重复定义、硬编码配置 | `B.todo/v0.1-r7032-S3-extract-hardcoded-constants/README.md` |
+| 7033 | Prisma Schema 精简 | `B.todo/v0.1-r7033-C2-prisma-schema-sizing/README.md` |
+| 7034 | Novel Application Services 门面收缩 | `B.todo/v0.1-r7034-M2-novel-application-services-facade-contraction/README.md` |
+| 7035 | ARCH-004: DirectorCommandService ↔ workers/ 循环依赖解耦 — IDispatcher 接口抽象 | `B.todo/v0.1-r7035-C1-director-command-interface-abstract/README.md` |
+| 7036 | SEC-014: API Key AES-256-GCM 加密存储 — secretStore 加 crypto 包装层 | `B.todo/v0.1-r7036-M2-api-key-aes-encrypt/README.md` |
+| 7037 | QUA-022: directorRuntime.ts 渐进拆分（projection/worker/automation 3 域 + barrel index.ts） | `B.todo/v0.1-r7037-M2-director-runtime-split/README.md` |
+| 7038 | QUA-039: CharacterPreparationService persistCharacterCastOptions 提取辅助函数降嵌套 | `B.todo/v0.1-r7038-S2-character-prep-extract-helper/README.md` |
+| 7039 | 散点小修复：ARCH-005/009/023/024 + STA-025 + PERF-003 + PERF-007/C + COMPAT-004 | `B.todo/v0.1-r7039-S2-scattered-small-fixes/README.md` |
 | 2013 | Director Failed Retry Entry | `B.todo/v0.1-r2013-medium-director-failed-retry-entry/README.md` |
 | 2014 | Chapter Token Budget Dynamic | `B.todo/v0.1-r2014-medium-chapter-token-budget-dynamic/README.md` |
 | 3004 | Novel Conversation Archive | `B.todo/v0.1-r3004-medium-novel-conversation-archive/README.md` |
+| 7030 | Novel Application Services 门面收缩 | `B.todo/v0.1-r7030-M2-novel-application-services-facade-contraction/README.md` |
 
 ### 4.4 ✅ 已完成
 
@@ -179,6 +228,7 @@ description: "需求任务总清单（SSOT）"
 | 3008 | 日志中心 | `B.2.done/v0.1-r3008-medium-log-center/README.md` |
 | 3009 | Tab 切换性能优化 | `B.2.done/v0.1-r3009-C2-tab-switch-performance/README.md` |
 | 3010 | Create Page Material Import | `B.2.done/v0.1-r3010-M2-create-page-material-import/README.md` |
+| 5001 | 补齐工程化基础配置：.env.example / .editorconfig / 子包 README / semver CHANGELOG / Prisma 回滚方案 | `B.todo/v0.1-r5001-S2-engineering-basics/README.md` |
 | 7001 | Auto-Director 测试隔离修复 | `B.2.done/v0.1-r7001-simple-auto-director-test-fix/README.md` |
 | 7002 | NovelEdit.tsx 大文件拆分 | `B.2.done/v0.1-r7002-complex-novel-edit-refactor/README.md` |
 | 7003 | Server 超大文件分批拆分 | `B.2.done/v0.1-r7003-complex-server-large-file-refactor/README.md` |
@@ -194,5 +244,6 @@ description: "需求任务总清单（SSOT）"
 | 7013 | Remove Comic Drama | `B.2.done/v0.1-r7013-S2-remove-comic-drama/README.md` |
 | 7015 | 前端公共样式与组件提取 | `B.2.done/v0.1-r7015-M2-frontend-common-styles-components/README.md` |
 | 7017 | 词汇库审校扫描器 | `B.2.done/v0.1-r7017-M2-vocabulary-audit-scanner/README.md` |
+| 7025 | Desktop 包测试基础设施 | `B.todo/v0.1-r7025-C2-desktop-test-infrastructure/README.md` |
 
 ---

@@ -15,6 +15,8 @@
     "verify:runtime": "node scripts/ensure-electron-runtime.cjs",
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
+    "typecheck:test": "tsc -p tsconfig.test.json --noEmit",
+    "test": "pnpm run build && node --test tests/runtime/*.test.js",
     "dev": "pnpm run prepare:runtime && pnpm run build && electron dist/main.js",
     "start": "pnpm run prepare:runtime && electron dist/main.js"
   },

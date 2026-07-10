@@ -1,0 +1,16 @@
+{
+  "reqId": "7027",
+  "title": "遗留代码清理",
+  "status": "requirements_ready",
+  "complexity": "S2",
+  "priority": "P0",
+  "phase": "requirements",
+  "createdAt": "2026-07-10",
+  "updatedAt": "2026-07-10",
+  "estimatedFiles": "4-6",
+  "verification": {
+    "typecheck": "pending",
+    "tests": "pending",
+    "build": "pending"
+  }
+}

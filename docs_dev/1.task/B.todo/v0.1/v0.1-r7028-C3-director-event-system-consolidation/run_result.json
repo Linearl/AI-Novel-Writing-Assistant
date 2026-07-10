@@ -1,0 +1,16 @@
+{
+  "reqId": "7028",
+  "title": "Director 事件系统收敛",
+  "status": "requirements_ready",
+  "complexity": "C3",
+  "priority": "P1",
+  "phase": "requirements",
+  "createdAt": "2026-07-10",
+  "updatedAt": "2026-07-10",
+  "estimatedFiles": "20-30",
+  "verification": {
+    "typecheck": "pending",
+    "tests": "pending",
+    "directorTest": "pending"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "reqId": "7021",
+  "title": "Zod Schema 去重与共享化",
+  "status": "requirements_ready",
+  "complexity": "M2",
+  "priority": "P1",
+  "phase": "requirements",
+  "createdAt": "2026-07-10",
+  "updatedAt": "2026-07-10",
+  "source": "2026-07-10 全量架构诊断报告 第4条发现",
+  "estimatedFiles": "30-50",
+  "target": "server 侧独立 zod 调用从 407 减少至 200 以下",
+  "verification": {
+    "typecheck": "pending",
+    "tests": "pending",
+    "audit": "pending"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "reqId": "7022",
+  "title": "Services 目录收敛与大文件拆分",
+  "status": "requirements_ready",
+  "complexity": "C2",
+  "priority": "P1",
+  "phase": "requirements",
+  "createdAt": "2026-07-10",
+  "updatedAt": "2026-07-10",
+  "source": "2026-07-10 全量架构诊断报告 第5条发现",
+  "estimatedFiles": "15-25",
+  "verification": {
+    "typecheck": "pending",
+    "tests": "pending",
+    "manual": "pending"
+  }
+}

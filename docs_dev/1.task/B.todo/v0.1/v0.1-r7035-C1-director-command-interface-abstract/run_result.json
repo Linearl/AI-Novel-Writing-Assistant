@@ -1,0 +1,14 @@
+{
+  "reqId": "REQ-7035",
+  "title": "ARCH-004: DirectorCommandService ↔ workers/ 循环依赖解耦 — IDispatcher 接口抽象",
+  "priority": "P1",
+  "version": "v0.1",
+  "status": "requirements_ready",
+  "createdAt": "2026-07-10",
+  "completedAt": null,
+  "tags": ["architecture", "circular-dependency"],
+  "source": "代码审计-full 独占发现复核报告 ARCH-004",
+  "decision": "方案 A：IDispatcher 接口放入 platform/，DirectorCommandService 依赖接口而非 workers/ 具体导入，启动时注入实现",
+  "estimatedEffort": "3-5h",
+  "complexity": "complex"
+}

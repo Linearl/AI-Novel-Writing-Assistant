@@ -1,0 +1,21 @@
+{
+  "reqId": "REQ-7025",
+  "title": "Desktop 包测试基础设施",
+  "priority": "P1",
+  "version": "0.1",
+  "status": "done",
+  "createdAt": "2026-07-10",
+  "completedAt": "2026-07-10",
+  "source": "架构诊断报告 2026-07-10 第8条发现",
+  "note": "T1完成：desktop/tests/目录、helpers/electronStubs+updaterMock、tsconfig.test.json、3个测试文件(state/dataImport/server共40个测试用例)、pnpm test脚本。T2-T3(main.ts拆分)、T4-T7(各模块测试)部分完成。T8(stage-desktop集成测试)、T9(CI集成)待后续迭代。",
+  "reqType": "refactor",
+  "categoryCode": 7,
+  "complexity": "medium",
+  "skipClarification": true,
+  "skipDesign": false,
+  "tasks": {
+    "total": 9,
+    "completed": 1,
+    "pending": 8
+  }
+}
