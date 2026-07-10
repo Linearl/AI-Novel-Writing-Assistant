@@ -10,7 +10,7 @@ import {
   type WorkflowStepExecutionContext,
 } from "../workflowStepRuntime/WorkflowStepModule";
 import { getDirectorInputFromSeedPayload } from "../runtime/novelDirectorHelpers";
-import { DirectorStateReader, type DirectorCanonicalState } from "../DirectorStateReader";
+import { DirectorStateReader, type DirectorCanonicalState } from "../state/DirectorStateReader";
 import { DirectorCoreStepModuleRuntime } from "../workflowStepRuntime/DirectorCoreStepModuleRuntime";
 
 const DIRECTOR_STATE_HINT_KEY = "directorCanonicalState";

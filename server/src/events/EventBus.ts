@@ -28,6 +28,12 @@ function summarizePayload(event: NovelEvent): string {
   }
 }
 
+/**
+ * 跨模块事件广播总线。
+ *
+ * 职责：在 Director 子系统之外的模块间传递事件（如章节更新、角色变更、流水线完成等）。
+ * 不用于 Director 内部状态持久化或状态投影——Director 内部使用 {@link DirectorEventProjectionService}。
+ */
 export class EventBus {
   private handlers = new Map<NovelEventType, HandlerEntry[]>();
 

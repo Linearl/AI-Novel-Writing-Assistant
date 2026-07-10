@@ -3,10 +3,13 @@
   "title": "散点小修复：ARCH-005/009/023/024 + STA-025 + PERF-003 + PERF-007/C + COMPAT-004",
   "priority": "P3",
   "version": "v0.1",
-  "status": "pass",
+  "status": "done",
   "createdAt": "2026-07-10",
-  "completedAt": null,
-  "tags": ["audit-fix", "scattered-small-fixes"],
+  "completedAt": "2026-07-10T15:38:52.495Z",
+  "tags": [
+    "audit-fix",
+    "scattered-small-fixes"
+  ],
   "source": "代码审计-full 独占发现复核报告 — 多维度已决策的散点修复",
   "estimatedEffort": "4-6h",
   "complexity": "medium"

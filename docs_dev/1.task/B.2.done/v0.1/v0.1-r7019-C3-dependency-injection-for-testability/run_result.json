@@ -1,7 +1,7 @@
 {
   "reqId": "7019",
   "title": "依赖注入提升可测试性",
-  "status": "in_progress",
+  "status": "done",
   "complexity": "C3",
   "priority": "P1",
   "phase": "implementation",
@@ -17,5 +17,6 @@
     "typecheck": "pass (new files no errors; pre-existing shared/ errors unrelated)",
     "tests": "blocked by pre-existing shared/ build error",
     "parallel": "pending"
-  }
+  },
+  "completedAt": "2026-07-10T15:50:23.869Z"
 }

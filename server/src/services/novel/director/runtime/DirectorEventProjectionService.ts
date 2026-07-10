@@ -126,6 +126,13 @@ function buildVisibleRiskBadges(input: {
   return badges.slice(0, 6);
 }
 
+/**
+ * Director 内部状态投影服务。
+ *
+ * 职责：将 DirectorRuntimeSnapshot 转换为前端可消费的 DirectorRuntimeProjection，
+ * 包含状态判定、进度计算、质量风险标签、恢复决策等。
+ * 不用于跨模块广播——跨模块事件使用 {@link EventBus}。
+ */
 export class DirectorEventProjectionService {
   buildSnapshotProjection(
     snapshot: DirectorRuntimeSnapshot | null,

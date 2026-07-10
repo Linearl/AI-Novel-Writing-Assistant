@@ -10,8 +10,8 @@ import {
   resolveDirectorAutoExecutionPlanChapterRange,
   resolveDirectorAutoExecutionRangeFromState,
 } from "../automation/novelDirectorAutoExecution";
-import { DirectorStateReader, type DirectorCanonicalState } from "../DirectorStateReader";
-import { DirectorStateCommitter } from "../DirectorStateCommitter";
+import { DirectorStateReader, type DirectorCanonicalState } from "../state/DirectorStateReader";
+import { DirectorStateCommitter } from "../state/DirectorStateCommitter";
 import { DirectorFactSummaryService } from "../projections/DirectorFactSummaryService";
 import { CHAPTER_EXECUTION_PROGRESS_STAGES } from "../runtime/ChapterExecutionProgressInspector";
 import { DirectorCoreStepModuleRuntime } from "./DirectorCoreStepModuleRuntime";

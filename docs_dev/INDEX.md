@@ -27,27 +27,6 @@ description: "docs 目录索引（自动生成）"
 | --- | --- | --- |
 | [1.task\B.todo\任务包六件套构成-编号分类规则-自动归档机制.md](./1.task\B.todo\任务包六件套构成-编号分类规则-自动归档机制.md) | --- | - |
 
-## 1.task\B.todo\v0.1\v0.1-r7014-C2-legacy-world-fields-cleanup
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r7014-C2-legacy-world-fields-cleanup\decision_log.md](./1.task\B.todo\v0.1\v0.1-r7014-C2-legacy-world-fields-cleanup\decision_log.md) | REQ-7014 清理 Novel 旧版世界字段——决策日志 | REQ-7014 清理 Novel 旧版世界字段——决策日志 |
-| [1.task\B.todo\v0.1\v0.1-r7014-C2-legacy-world-fields-cleanup\design.md](./1.task\B.todo\v0.1\v0.1-r7014-C2-legacy-world-fields-cleanup\design.md) | REQ-7014 清理 Novel 旧版世界字段——技术设计 | REQ-7014 清理 Novel 旧版世界字段——技术设计 |
-| [1.task\B.todo\v0.1\v0.1-r7014-C2-legacy-world-fields-cleanup\README.md](./1.task\B.todo\v0.1\v0.1-r7014-C2-legacy-world-fields-cleanup\README.md) | REQ-7014 清理 Novel 旧版世界字段——README | REQ-7014 清理 Novel 旧版世界字段——README |
-| [1.task\B.todo\v0.1\v0.1-r7014-C2-legacy-world-fields-cleanup\REQ-7014-legacy-world-fields-cleanup.md](./1.task\B.todo\v0.1\v0.1-r7014-C2-legacy-world-fields-cleanup\REQ-7014-legacy-world-fields-cleanup.md) | REQ-7014 清理 Novel 旧版世界字段——需求文档 | REQ-7014 清理 Novel 旧版世界字段——需求文档 |
-| [1.task\B.todo\v0.1\v0.1-r7014-C2-legacy-world-fields-cleanup\tasks.md](./1.task\B.todo\v0.1\v0.1-r7014-C2-legacy-world-fields-cleanup\tasks.md) | REQ-7014 清理 Novel 旧版世界字段——任务清单 | REQ-7014 清理 Novel 旧版世界字段——任务清单 |
-
-## 1.task\B.todo\v0.1\v0.1-r7016-M2-inline-prompt-extraction
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r7016-M2-inline-prompt-extraction\decision_log.md](./1.task\B.todo\v0.1\v0.1-r7016-M2-inline-prompt-extraction\decision_log.md) | REQ-7016 内联 Prompt 提取与模板引擎 — 决策留痕 | REQ-7016 内联 Prompt 提取与模板引擎 — 决策留痕 |
-| [1.task\B.todo\v0.1\v0.1-r7016-M2-inline-prompt-extraction\design.md](./1.task\B.todo\v0.1\v0.1-r7016-M2-inline-prompt-extraction\design.md) | REQ-7016 内联 Prompt 提取与模板引擎 — 方案设计 | REQ-7016 内联 Prompt 提取与模板引擎 — 方案设计 |
-| [1.task\B.todo\v0.1\v0.1-r7016-M2-inline-prompt-extraction\README.md](./1.task\B.todo\v0.1\v0.1-r7016-M2-inline-prompt-extraction\README.md) | REQ-7016 内联 Prompt 提取与模板引擎任务总线 | REQ-7016 内联 Prompt 提取与模板引擎任务总线 |
-| [1.task\B.todo\v0.1\v0.1-r7016-M2-inline-prompt-extraction\REQ-7016-inline-prompt-extraction-original.md](./1.task\B.todo\v0.1\v0.1-r7016-M2-inline-prompt-extraction\REQ-7016-inline-prompt-extraction-original.md) | REQ-7016 内联 Prompt 提取与模板引擎 — 原始冻结副本 | REQ-7016 内联 Prompt 提取与模板引擎 — 原始冻结副本 |
-| [1.task\B.todo\v0.1\v0.1-r7016-M2-inline-prompt-extraction\REQ-7016-inline-prompt-extraction.md](./1.task\B.todo\v0.1\v0.1-r7016-M2-inline-prompt-extraction\REQ-7016-inline-prompt-extraction.md) | REQ-7016 内联 Prompt 提取与模板引擎 | REQ-7016 内联 Prompt 提取与模板引擎 |
-| [1.task\B.todo\v0.1\v0.1-r7016-M2-inline-prompt-extraction\tasks.md](./1.task\B.todo\v0.1\v0.1-r7016-M2-inline-prompt-extraction\tasks.md) | REQ-7016 内联 Prompt 提取与模板引擎 — 任务拆解 | REQ-7016 内联 Prompt 提取与模板引擎 — 任务拆解 |
-
 ## 1.task\B.todo\v0.1\v0.1-r7018-C2-routes-migration-to-modules
 
 | 文件 | 标题 | 描述 |
@@ -59,39 +38,6 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1\v0.1-r7018-C2-routes-migration-to-modules\REQ-7018-routes-migration-to-modules.md](./1.task\B.todo\v0.1\v0.1-r7018-C2-routes-migration-to-modules\REQ-7018-routes-migration-to-modules.md) | REQ-7018 路由迁移至模块目录——需求文档 | REQ-7018 路由迁移至模块目录——需求文档 |
 | [1.task\B.todo\v0.1\v0.1-r7018-C2-routes-migration-to-modules\tasks.md](./1.task\B.todo\v0.1\v0.1-r7018-C2-routes-migration-to-modules\tasks.md) | REQ-7018 路由迁移至模块目录——任务清单 | REQ-7018 路由迁移至模块目录——任务清单 |
 
-## 1.task\B.todo\v0.1\v0.1-r7019-C3-dependency-injection-for-testability
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r7019-C3-dependency-injection-for-testability\decision_log.md](./1.task\B.todo\v0.1\v0.1-r7019-C3-dependency-injection-for-testability\decision_log.md) | REQ-7019 依赖注入提升可测试性——决策日志 | REQ-7019 依赖注入提升可测试性——决策日志 |
-| [1.task\B.todo\v0.1\v0.1-r7019-C3-dependency-injection-for-testability\design.md](./1.task\B.todo\v0.1\v0.1-r7019-C3-dependency-injection-for-testability\design.md) | REQ-7019 依赖注入提升可测试性——技术设计 | REQ-7019 依赖注入提升可测试性——技术设计 |
-| [1.task\B.todo\v0.1\v0.1-r7019-C3-dependency-injection-for-testability\README.md](./1.task\B.todo\v0.1\v0.1-r7019-C3-dependency-injection-for-testability\README.md) | REQ-7019 依赖注入提升可测试性——README | REQ-7019 依赖注入提升可测试性——README |
-| [1.task\B.todo\v0.1\v0.1-r7019-C3-dependency-injection-for-testability\REQ-7019-dependency-injection-for-testability-original.md](./1.task\B.todo\v0.1\v0.1-r7019-C3-dependency-injection-for-testability\REQ-7019-dependency-injection-for-testability-original.md) | REQ-7019 依赖注入提升可测试性——需求文档（冻结副本） | REQ-7019 依赖注入提升可测试性——需求文档（冻结副本） |
-| [1.task\B.todo\v0.1\v0.1-r7019-C3-dependency-injection-for-testability\REQ-7019-dependency-injection-for-testability.md](./1.task\B.todo\v0.1\v0.1-r7019-C3-dependency-injection-for-testability\REQ-7019-dependency-injection-for-testability.md) | REQ-7019 依赖注入提升可测试性——需求文档 | REQ-7019 依赖注入提升可测试性——需求文档 |
-| [1.task\B.todo\v0.1\v0.1-r7019-C3-dependency-injection-for-testability\tasks.md](./1.task\B.todo\v0.1\v0.1-r7019-C3-dependency-injection-for-testability\tasks.md) | REQ-7019 依赖注入提升可测试性——任务清单 | REQ-7019 依赖注入提升可测试性——任务清单 |
-
-## 1.task\B.todo\v0.1\v0.1-r7020-M2-shared-types-barrel-unification
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r7020-M2-shared-types-barrel-unification\decision_log.md](./1.task\B.todo\v0.1\v0.1-r7020-M2-shared-types-barrel-unification\decision_log.md) | REQ-7020 共享类型 Barrel 统一导出——决策日志 | REQ-7020 共享类型 Barrel 统一导出——决策日志 |
-| [1.task\B.todo\v0.1\v0.1-r7020-M2-shared-types-barrel-unification\design.md](./1.task\B.todo\v0.1\v0.1-r7020-M2-shared-types-barrel-unification\design.md) | REQ-7020 共享类型 Barrel 统一导出——技术设计 | REQ-7020 共享类型 Barrel 统一导出——技术设计 |
-| [1.task\B.todo\v0.1\v0.1-r7020-M2-shared-types-barrel-unification\README.md](./1.task\B.todo\v0.1\v0.1-r7020-M2-shared-types-barrel-unification\README.md) | REQ-7020 共享类型 Barrel 统一导出——README | REQ-7020 共享类型 Barrel 统一导出——README |
-| [1.task\B.todo\v0.1\v0.1-r7020-M2-shared-types-barrel-unification\REQ-7020-shared-types-barrel-unification-original.md](./1.task\B.todo\v0.1\v0.1-r7020-M2-shared-types-barrel-unification\REQ-7020-shared-types-barrel-unification-original.md) | REQ-7020 共享类型 Barrel 统一导出——需求文档（冻结副本） | REQ-7020 共享类型 Barrel 统一导出——需求文档（冻结副本） |
-| [1.task\B.todo\v0.1\v0.1-r7020-M2-shared-types-barrel-unification\REQ-7020-shared-types-barrel-unification.md](./1.task\B.todo\v0.1\v0.1-r7020-M2-shared-types-barrel-unification\REQ-7020-shared-types-barrel-unification.md) | REQ-7020 共享类型 Barrel 统一导出——需求文档 | REQ-7020 共享类型 Barrel 统一导出——需求文档 |
-| [1.task\B.todo\v0.1\v0.1-r7020-M2-shared-types-barrel-unification\tasks.md](./1.task\B.todo\v0.1\v0.1-r7020-M2-shared-types-barrel-unification\tasks.md) | REQ-7020 共享类型 Barrel 统一导出——任务清单 | REQ-7020 共享类型 Barrel 统一导出——任务清单 |
-
-## 1.task\B.todo\v0.1\v0.1-r7021-M2-zod-schema-deduplication
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r7021-M2-zod-schema-deduplication\decision_log.md](./1.task\B.todo\v0.1\v0.1-r7021-M2-zod-schema-deduplication\decision_log.md) | REQ-7021 Zod Schema 去重与共享化 —— 决策日志 | REQ-7021 Zod Schema 去重与共享化 —— 决策日志 |
-| [1.task\B.todo\v0.1\v0.1-r7021-M2-zod-schema-deduplication\design.md](./1.task\B.todo\v0.1\v0.1-r7021-M2-zod-schema-deduplication\design.md) | REQ-7021 Zod Schema 去重与共享化 —— 技术设计 | REQ-7021 Zod Schema 去重与共享化 —— 技术设计 |
-| [1.task\B.todo\v0.1\v0.1-r7021-M2-zod-schema-deduplication\README.md](./1.task\B.todo\v0.1\v0.1-r7021-M2-zod-schema-deduplication\README.md) | REQ-7021 Zod Schema 去重与共享化 —— README | REQ-7021 Zod Schema 去重与共享化 —— README |
-| [1.task\B.todo\v0.1\v0.1-r7021-M2-zod-schema-deduplication\REQ-7021-zod-schema-deduplication-original.md](./1.task\B.todo\v0.1\v0.1-r7021-M2-zod-schema-deduplication\REQ-7021-zod-schema-deduplication-original.md) | REQ-7021 Zod Schema 去重与共享化 —— 需求文档（冻结副本） | REQ-7021 Zod Schema 去重与共享化 —— 需求文档（冻结副本） |
-| [1.task\B.todo\v0.1\v0.1-r7021-M2-zod-schema-deduplication\REQ-7021-zod-schema-deduplication.md](./1.task\B.todo\v0.1\v0.1-r7021-M2-zod-schema-deduplication\REQ-7021-zod-schema-deduplication.md) | REQ-7021 Zod Schema 去重与共享化 —— 需求文档 | REQ-7021 Zod Schema 去重与共享化 —— 需求文档 |
-| [1.task\B.todo\v0.1\v0.1-r7021-M2-zod-schema-deduplication\tasks.md](./1.task\B.todo\v0.1\v0.1-r7021-M2-zod-schema-deduplication\tasks.md) | REQ-7021 Zod Schema 去重与共享化 —— 任务清单 | REQ-7021 Zod Schema 去重与共享化 —— 任务清单 |
-
 ## 1.task\B.todo\v0.1\v0.1-r7022-C2-services-directory-consolidation
 
 | 文件 | 标题 | 描述 |
@@ -102,17 +48,6 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1\v0.1-r7022-C2-services-directory-consolidation\REQ-7022-services-directory-consolidation-original.md](./1.task\B.todo\v0.1\v0.1-r7022-C2-services-directory-consolidation\REQ-7022-services-directory-consolidation-original.md) | REQ-7022 Services 目录收敛与大文件拆分 —— 需求文档（冻结副本） | REQ-7022 Services 目录收敛与大文件拆分 —— 需求文档（冻结副本） |
 | [1.task\B.todo\v0.1\v0.1-r7022-C2-services-directory-consolidation\REQ-7022-services-directory-consolidation.md](./1.task\B.todo\v0.1\v0.1-r7022-C2-services-directory-consolidation\REQ-7022-services-directory-consolidation.md) | REQ-7022 Services 目录收敛与大文件拆分 —— 需求文档 | REQ-7022 Services 目录收敛与大文件拆分 —— 需求文档 |
 | [1.task\B.todo\v0.1\v0.1-r7022-C2-services-directory-consolidation\tasks.md](./1.task\B.todo\v0.1\v0.1-r7022-C2-services-directory-consolidation\tasks.md) | REQ-7022 Services 目录收敛与大文件拆分 —— 任务清单 | REQ-7022 Services 目录收敛与大文件拆分 —— 任务清单 |
-
-## 1.task\B.todo\v0.1\v0.1-r7023-M3-test-directory-restructuring
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r7023-M3-test-directory-restructuring\decision_log.md](./1.task\B.todo\v0.1\v0.1-r7023-M3-test-directory-restructuring\decision_log.md) | REQ-7023 测试目录重构与覆盖率接入 —— 决策日志 | REQ-7023 测试目录重构与覆盖率接入 —— 决策日志 |
-| [1.task\B.todo\v0.1\v0.1-r7023-M3-test-directory-restructuring\design.md](./1.task\B.todo\v0.1\v0.1-r7023-M3-test-directory-restructuring\design.md) | REQ-7023 测试目录重构与覆盖率接入 —— 技术设计 | REQ-7023 测试目录重构与覆盖率接入 —— 技术设计 |
-| [1.task\B.todo\v0.1\v0.1-r7023-M3-test-directory-restructuring\README.md](./1.task\B.todo\v0.1\v0.1-r7023-M3-test-directory-restructuring\README.md) | REQ-7023 测试目录重构与覆盖率接入 —— README | REQ-7023 测试目录重构与覆盖率接入 —— README |
-| [1.task\B.todo\v0.1\v0.1-r7023-M3-test-directory-restructuring\REQ-7023-test-directory-restructuring-original.md](./1.task\B.todo\v0.1\v0.1-r7023-M3-test-directory-restructuring\REQ-7023-test-directory-restructuring-original.md) | REQ-7023 测试目录重构与覆盖率接入 —— 需求文档（冻结副本） | REQ-7023 测试目录重构与覆盖率接入 —— 需求文档（冻结副本） |
-| [1.task\B.todo\v0.1\v0.1-r7023-M3-test-directory-restructuring\REQ-7023-test-directory-restructuring.md](./1.task\B.todo\v0.1\v0.1-r7023-M3-test-directory-restructuring\REQ-7023-test-directory-restructuring.md) | REQ-7023 测试目录重构与覆盖率接入 —— 需求文档 | REQ-7023 测试目录重构与覆盖率接入 —— 需求文档 |
-| [1.task\B.todo\v0.1\v0.1-r7023-M3-test-directory-restructuring\tasks.md](./1.task\B.todo\v0.1\v0.1-r7023-M3-test-directory-restructuring\tasks.md) | REQ-7023 测试目录重构与覆盖率接入 —— 任务清单 | REQ-7023 测试目录重构与覆盖率接入 —— 任务清单 |
 
 ## 1.task\B.todo\v0.1\v0.1-r7027-S2-legacy-code-cleanup
 
@@ -155,46 +90,6 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1\v0.1-r7034-M2-novel-application-services-facade-contraction\REQ-7034-novel-application-services-facade-contraction-original.md](./1.task\B.todo\v0.1\v0.1-r7034-M2-novel-application-services-facade-contraction\REQ-7034-novel-application-services-facade-contraction-original.md) | REQ-7034 Novel Application Services 门面收缩 — 原始冻结副本 | REQ-7034 Novel Application Services 门面收缩 — 原始冻结副本 |
 | [1.task\B.todo\v0.1\v0.1-r7034-M2-novel-application-services-facade-contraction\REQ-7034-novel-application-services-facade-contraction.md](./1.task\B.todo\v0.1\v0.1-r7034-M2-novel-application-services-facade-contraction\REQ-7034-novel-application-services-facade-contraction.md) | REQ-7034 Novel Application Services 门面收缩 | REQ-7034 Novel Application Services 门面收缩 |
 | [1.task\B.todo\v0.1\v0.1-r7034-M2-novel-application-services-facade-contraction\tasks.md](./1.task\B.todo\v0.1\v0.1-r7034-M2-novel-application-services-facade-contraction\tasks.md) | REQ-7034 Novel Application Services 门面收缩 — 任务拆解 | REQ-7034 Novel Application Services 门面收缩 — 任务拆解 |
-
-## 1.task\B.todo\v0.1\v0.1-r7035-C1-director-command-interface-abstract
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r7035-C1-director-command-interface-abstract\README.md](./1.task\B.todo\v0.1\v0.1-r7035-C1-director-command-interface-abstract\README.md) | ARCH-004 任务包总线 — P1 循环依赖解耦 | ARCH-004 任务包总线 — P1 循环依赖解耦 |
-| [1.task\B.todo\v0.1\v0.1-r7035-C1-director-command-interface-abstract\REQ-7035-director-command-interface-abstract.md](./1.task\B.todo\v0.1\v0.1-r7035-C1-director-command-interface-abstract\REQ-7035-director-command-interface-abstract.md) | ARCH-004: DirectorCommandService ↔ workers/ 循环依赖解耦（P1）— IDispatcher 接口抽象 | ARCH-004: DirectorCommandService ↔ workers/ 循环依赖解耦（P1）— IDispatcher 接口抽象 |
-| [1.task\B.todo\v0.1\v0.1-r7035-C1-director-command-interface-abstract\tasks.md](./1.task\B.todo\v0.1\v0.1-r7035-C1-director-command-interface-abstract\tasks.md) | ARCH-004 任务拆解 | ARCH-004 任务拆解 |
-
-## 1.task\B.todo\v0.1\v0.1-r7036-M2-api-key-aes-encrypt
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r7036-M2-api-key-aes-encrypt\README.md](./1.task\B.todo\v0.1\v0.1-r7036-M2-api-key-aes-encrypt\README.md) | SEC-014 任务包总线 — P2 API Key 加密存储 | SEC-014 任务包总线 — P2 API Key 加密存储 |
-| [1.task\B.todo\v0.1\v0.1-r7036-M2-api-key-aes-encrypt\REQ-7036-api-key-aes-encrypt.md](./1.task\B.todo\v0.1\v0.1-r7036-M2-api-key-aes-encrypt\REQ-7036-api-key-aes-encrypt.md) | SEC-014: API Key AES-256-GCM 加密存储（P2）— secretStore 加 crypto 包装层 | SEC-014: API Key AES-256-GCM 加密存储（P2）— secretStore 加 crypto 包装层 |
-| [1.task\B.todo\v0.1\v0.1-r7036-M2-api-key-aes-encrypt\tasks.md](./1.task\B.todo\v0.1\v0.1-r7036-M2-api-key-aes-encrypt\tasks.md) | SEC-014 任务拆解 | SEC-014 任务拆解 |
-
-## 1.task\B.todo\v0.1\v0.1-r7037-M2-director-runtime-split
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r7037-M2-director-runtime-split\README.md](./1.task\B.todo\v0.1\v0.1-r7037-M2-director-runtime-split\README.md) | QUA-022 任务包总线 — P2 directorRuntime.ts 渐进拆分 | QUA-022 任务包总线 — P2 directorRuntime.ts 渐进拆分 |
-| [1.task\B.todo\v0.1\v0.1-r7037-M2-director-runtime-split\REQ-7037-director-runtime-split.md](./1.task\B.todo\v0.1\v0.1-r7037-M2-director-runtime-split\REQ-7037-director-runtime-split.md) | QUA-022: directorRuntime.ts 渐进拆分（1275行→主文件≤475行+3个子文件+barrel） | QUA-022: directorRuntime.ts 渐进拆分（1275行→主文件≤475行+3个子文件+barrel） |
-| [1.task\B.todo\v0.1\v0.1-r7037-M2-director-runtime-split\tasks.md](./1.task\B.todo\v0.1\v0.1-r7037-M2-director-runtime-split\tasks.md) | QUA-022 任务拆解 | QUA-022 任务拆解 |
-
-## 1.task\B.todo\v0.1\v0.1-r7038-S2-character-prep-extract-helper
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r7038-S2-character-prep-extract-helper\README.md](./1.task\B.todo\v0.1\v0.1-r7038-S2-character-prep-extract-helper\README.md) | QUA-039 任务包总线 — P2 CharacterPreparation 降嵌套 | QUA-039 任务包总线 — P2 CharacterPreparation 降嵌套 |
-| [1.task\B.todo\v0.1\v0.1-r7038-S2-character-prep-extract-helper\REQ-7038-character-prep-extract-helper.md](./1.task\B.todo\v0.1\v0.1-r7038-S2-character-prep-extract-helper\REQ-7038-character-prep-extract-helper.md) | QUA-039: CharacterPreparationService persistCharacterCastOptions() 嵌套 8 层 → ≤4 层（提取辅助函数） | QUA-039: CharacterPreparationService persistCharacterCastOptions() 嵌套 8 层 → ≤4 层（提取辅助函数） |
-| [1.task\B.todo\v0.1\v0.1-r7038-S2-character-prep-extract-helper\tasks.md](./1.task\B.todo\v0.1\v0.1-r7038-S2-character-prep-extract-helper\tasks.md) | QUA-039 任务拆解 | QUA-039 任务拆解 |
-
-## 1.task\B.todo\v0.1\v0.1-r7039-S2-scattered-small-fixes
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r7039-S2-scattered-small-fixes\README.md](./1.task\B.todo\v0.1\v0.1-r7039-S2-scattered-small-fixes\README.md) | REQ-7039 任务包总线 — 散点小修复合集 | REQ-7039 任务包总线 — 散点小修复合集 |
-| [1.task\B.todo\v0.1\v0.1-r7039-S2-scattered-small-fixes\REQ-7039-scattered-small-fixes.md](./1.task\B.todo\v0.1\v0.1-r7039-S2-scattered-small-fixes\REQ-7039-scattered-small-fixes.md) | REQ-7039 散点小修复需求 | REQ-7039 散点小修复需求 |
-| [1.task\B.todo\v0.1\v0.1-r7039-S2-scattered-small-fixes\tasks.md](./1.task\B.todo\v0.1\v0.1-r7039-S2-scattered-small-fixes\tasks.md) | --- | - |
 
 ## 1.task\template
 

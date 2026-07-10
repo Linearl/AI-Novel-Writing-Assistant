@@ -1,8 +1,6 @@
 import type {
   BookSpec,
-  DirectorCandidate,
   DirectorConfirmRequest,
-  DirectorProjectContextInput,
   DirectorRunMode,
   DirectorTakeoverEntryStep,
   DirectorTakeoverExecutableRangeSnapshot,
@@ -11,18 +9,46 @@ import type {
   DirectorTakeoverStrategy,
   DirectorTakeoverCheckpointSnapshot,
 } from "@ai-novel/shared";
-import type { DirectorTakeoverAssetSnapshot } from "./novelDirectorTakeoverHelpers";
+import type {
+  DirectorTakeoverAssetSnapshot,
+  DirectorTakeoverNovelContext,
+} from "./novelDirectorTakeoverHelpers";
+import {
+  hasMeaningfulSeedMaterial,
+  splitToneKeywords,
+  buildTakeoverIdea,
+  buildTakeoverCandidate,
+  isStoryMacroReady,
+  isCharacterReady,
+  isOutlineReady,
+  isStructuredReady,
+  isStructuredSyncPending,
+  hasAnyStructuredAsset,
+  hasExecutableRange,
+  hasPendingRepairContext,
+} from "./novelDirectorTakeoverHelpers";
 import type { NovelWorkflowStage, BookContract } from "@ai-novel/shared";
 import type { StoryMacroPlan } from "@ai-novel/shared";
 import { DIRECTOR_TAKEOVER_ENTRY_STEPS } from "@ai-novel/shared";
-import { normalizeDirectorTargetChapterCount } from "./novelDirectorHelpers";
 
-export interface DirectorTakeoverNovelContext extends Omit<DirectorProjectContextInput, "description"> {
-  id: string;
-  title: string;
-  description?: string | null;
-  commercialTags: string[];
-}
+/** Re-export helpers for backward compatibility. Canonical source: novelDirectorTakeoverHelpers.ts. */
+export {
+  hasMeaningfulSeedMaterial,
+  splitToneKeywords,
+  buildTakeoverIdea,
+  buildTakeoverCandidate,
+  isStoryMacroReady,
+  isCharacterReady,
+  isOutlineReady,
+  isStructuredReady,
+  isStructuredSyncPending,
+  hasAnyStructuredAsset,
+  hasExecutableRange,
+  hasPendingRepairContext,
+};
+
+/** @deprecated Import from `./novelDirectorTakeoverHelpers` instead. */
+export type { DirectorTakeoverNovelContext } from "./novelDirectorTakeoverHelpers";
 
 export interface DirectorTakeoverDecisionInput {
   entryStep: DirectorTakeoverEntryStep;
@@ -52,99 +78,9 @@ export interface DirectorTakeoverResolvedPlan {
   resumeCheckpointType?: "chapter_batch_ready" | "replan_required" | null;
 }
 
-// ─── Seed material helpers ──────────────────────────────────────────────────
-
-export function hasMeaningfulSeedMaterial(novel: DirectorTakeoverNovelContext): boolean {
-  return Boolean(
-    novel.description?.trim()
-    || novel.targetAudience?.trim()
-    || novel.bookSellingPoint?.trim()
-    || novel.competingFeel?.trim()
-    || novel.first30ChapterPromise?.trim()
-    || novel.commercialTags.length > 0
-    || novel.genreId?.trim()
-    || novel.worldId?.trim(),
-  );
-}
-
-function splitToneKeywords(novel: DirectorTakeoverNovelContext): string[] {
-  const raw = [
-    novel.styleTone?.trim() ?? "",
-    novel.competingFeel?.trim() ?? "",
-    ...novel.commercialTags,
-  ]
-    .filter(Boolean)
-    .join("，");
-  return Array.from(
-    new Set(
-      raw
-        .split(/[，、|/]/)
-        .map((item) => item.trim())
-        .filter(Boolean),
-    ),
-  ).slice(0, 4);
-}
-
-function buildTakeoverIdea(novel: DirectorTakeoverNovelContext): string {
-  const lines = [
-    novel.description?.trim() ? `故事概述：${novel.description.trim()}` : "",
-    novel.title.trim() ? `项目标题：《${novel.title.trim()}》` : "",
-    novel.targetAudience?.trim() ? `目标读者：${novel.targetAudience.trim()}` : "",
-    novel.bookSellingPoint?.trim() ? `书级卖点：${novel.bookSellingPoint.trim()}` : "",
-    novel.competingFeel?.trim() ? `对标气质：${novel.competingFeel.trim()}` : "",
-    novel.first30ChapterPromise?.trim() ? `前30章承诺：${novel.first30ChapterPromise.trim()}` : "",
-    novel.commercialTags.length > 0 ? `商业标签：${novel.commercialTags.join("、")}` : "",
-  ].filter(Boolean);
-  return lines.join("\n") || `项目标题：《${novel.title.trim() || "当前项目"}》`;
-}
-
-function buildTakeoverCandidate(input: {
-  novel: DirectorTakeoverNovelContext;
-  storyMacroPlan: StoryMacroPlan | null;
-  bookContract: BookContract | null;
-}): DirectorCandidate {
-  const { novel, storyMacroPlan, bookContract } = input;
-  const decomposition = storyMacroPlan?.decomposition ?? null;
-  const expansion = storyMacroPlan?.expansion ?? null;
-  const workingTitle = novel.title.trim() || "当前项目";
-  const sellingPoint = bookContract?.coreSellingPoint?.trim()
-    || novel.bookSellingPoint?.trim()
-    || decomposition?.selling_point?.trim()
-    || "围绕当前项目的核心卖点持续兑现读者回报。";
-  const coreConflict = decomposition?.core_conflict?.trim()
-    || novel.description?.trim()
-    || bookContract?.readingPromise?.trim()
-    || "围绕当前项目主线冲突持续推进。";
-  const protagonistPath = decomposition?.growth_path?.trim()
-    || expansion?.protagonist_core?.trim()
-    || bookContract?.protagonistFantasy?.trim()
-    || "主角在主线压力中持续成长并完成阶段转变。";
-  const hookStrategy = decomposition?.main_hook?.trim()
-    || bookContract?.chapter3Payoff?.trim()
-    || novel.first30ChapterPromise?.trim()
-    || "围绕当前卖点建立前期钩子和阶段回报。";
-  const progressionLoop = decomposition?.progression_loop?.trim()
-    || bookContract?.escalationLadder?.trim()
-    || "目标推进 -> 阻力升级 -> 阶段回报 -> 新问题。";
-  const endingDirection = decomposition?.ending_flavor?.trim()
-    || bookContract?.relationshipMainline?.trim()
-    || "沿当前项目既定气质和主线方向收束。";
-
-  return {
-    id: `takeover-${novel.id}`,
-    workingTitle,
-    logline: novel.description?.trim() || coreConflict,
-    positioning: novel.targetAudience?.trim() || sellingPoint,
-    sellingPoint,
-    coreConflict,
-    protagonistPath,
-    endingDirection,
-    hookStrategy,
-    progressionLoop,
-    whyItFits: "沿用当前项目已保存的书级信息与既有资产，继续自动导演。",
-    toneKeywords: splitToneKeywords(novel),
-    targetChapterCount: normalizeDirectorTargetChapterCount(novel.estimatedChapterCount),
-  };
+export function isTakeoverStructuredOutlineReadyForValidation(snapshot: Pick<DirectorTakeoverAssetSnapshot, "structuredOutlineRecoveryStep">): boolean {
+  return snapshot.structuredOutlineRecoveryStep === "chapter_sync"
+    || snapshot.structuredOutlineRecoveryStep === "completed";
 }
 
 export function buildDirectorTakeoverInput(input: {
@@ -191,71 +127,6 @@ export function buildDirectorTakeoverInput(input: {
     }),
     runMode: input.runMode,
   };
-}
-
-// ─── Snapshot readiness predicates ──────────────────────────────────────────
-
-export function isStoryMacroReady(snapshot: DirectorTakeoverAssetSnapshot): boolean {
-  return snapshot.hasStoryMacroPlan && snapshot.hasBookContract;
-}
-
-export function isCharacterReady(snapshot: DirectorTakeoverAssetSnapshot): boolean {
-  return snapshot.characterCount > 0;
-}
-
-export function isOutlineReady(snapshot: DirectorTakeoverAssetSnapshot): boolean {
-  return snapshot.volumeCount > 0 && Boolean(snapshot.hasVolumeStrategyPlan);
-}
-
-export function isTakeoverStructuredOutlineReadyForValidation(snapshot: Pick<DirectorTakeoverAssetSnapshot, "structuredOutlineRecoveryStep">): boolean {
-  return snapshot.structuredOutlineRecoveryStep === "chapter_sync"
-    || snapshot.structuredOutlineRecoveryStep === "completed";
-}
-
-export function isStructuredReady(snapshot: DirectorTakeoverAssetSnapshot): boolean {
-  return isTakeoverStructuredOutlineReadyForValidation(snapshot);
-}
-
-export function isStructuredSyncPending(snapshot: DirectorTakeoverAssetSnapshot): boolean {
-  return snapshot.structuredOutlineRecoveryStep === "chapter_sync";
-}
-
-export function hasAnyStructuredAsset(snapshot: DirectorTakeoverAssetSnapshot): boolean {
-  return Boolean(snapshot.firstVolumeBeatSheetReady)
-    || snapshot.firstVolumeChapterCount > 0
-    || (snapshot.firstVolumePreparedChapterCount ?? 0) > 0;
-}
-
-export function hasExecutableRange(input: {
-  snapshot: DirectorTakeoverAssetSnapshot;
-  executableRange?: DirectorTakeoverExecutableRangeSnapshot | null;
-  latestCheckpoint?: DirectorTakeoverCheckpointSnapshot | null;
-  activePipelineJob?: DirectorTakeoverPipelineJobSnapshot | null;
-}): boolean {
-  return Boolean(
-    input.executableRange
-    || input.activePipelineJob,
-  );
-}
-
-function isRepairingPipelineJob(job: DirectorTakeoverPipelineJobSnapshot | null | undefined): boolean {
-  if (!job?.currentStage) {
-    return false;
-  }
-  return job.currentStage === "reviewing" || job.currentStage === "repairing";
-}
-
-export function hasPendingRepairContext(input: {
-  snapshot: DirectorTakeoverAssetSnapshot;
-  activePipelineJob?: DirectorTakeoverPipelineJobSnapshot | null;
-  latestCheckpoint?: DirectorTakeoverCheckpointSnapshot | null;
-}): boolean {
-  return Boolean(
-    isRepairingPipelineJob(input.activePipelineJob)
-    || input.latestCheckpoint?.checkpointType === "chapter_batch_ready"
-    || input.latestCheckpoint?.checkpointType === "replan_required"
-    || (input.snapshot.pendingRepairChapterCount ?? 0) > 0,
-  );
 }
 
 // ─── Step mapping utilities ────────────────────────────────────────────────

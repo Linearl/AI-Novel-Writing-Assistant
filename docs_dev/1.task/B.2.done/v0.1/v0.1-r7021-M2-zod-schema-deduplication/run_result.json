@@ -1,7 +1,7 @@
 {
   "reqId": "7021",
   "title": "Zod Schema 去重与共享化",
-  "status": "pass",
+  "status": "done",
   "complexity": "M2",
   "priority": "P1",
   "phase": "verification",
@@ -38,5 +38,6 @@
     "sharedBuild": "pass",
     "tests": "pre-existing failures only (confirmed identical without changes)",
     "deduplication": "26 z.enum() calls removed from server, ~30 new shared Zod schemas added"
-  }
+  },
+  "completedAt": "2026-07-10T15:38:49.675Z"
 }

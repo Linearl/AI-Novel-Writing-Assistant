@@ -17,34 +17,16 @@ import type {
 } from "@ai-novel/shared";
 import { classifyChapterQualityLoopRisk } from "@ai-novel/shared";
 import { resolveDirectorQualityLoopBudgetNextAction } from "./DirectorQualityLoopBudgetLedgerService";
+import {
+  timestampOf,
+  latestStep,
+  latestEvent,
+  isRecord,
+  readFiniteNumber,
+  readNullableString,
+} from "./directorProjectionUtils";
 
-export function timestampOf(value?: string | null): number {
-  if (!value) {
-    return 0;
-  }
-  const timestamp = Date.parse(value);
-  return Number.isFinite(timestamp) ? timestamp : 0;
-}
-
-export function latestStep(steps: DirectorStepRun[]): DirectorStepRun | null {
-  return steps.reduce<DirectorStepRun | null>((latest, step) => {
-    if (!latest) {
-      return step;
-    }
-    const stepTime = Math.max(timestampOf(step.finishedAt), timestampOf(step.startedAt));
-    const latestTime = Math.max(timestampOf(latest.finishedAt), timestampOf(latest.startedAt));
-    return stepTime >= latestTime ? step : latest;
-  }, null);
-}
-
-export function latestEvent(events: DirectorEvent[]): DirectorEvent | null {
-  return events.reduce<DirectorEvent | null>((latest, event) => {
-    if (!latest) {
-      return event;
-    }
-    return timestampOf(event.occurredAt) >= timestampOf(latest.occurredAt) ? event : latest;
-  }, null);
-}
+export { timestampOf, latestStep, latestEvent, isRecord, readFiniteNumber, readNullableString };
 
 export function statusFromStep(
   step: DirectorStepRun | null,
@@ -413,23 +395,11 @@ export function buildProgressBreakdown(
   };
 }
 
-export function isRecord(value: unknown): value is Record<string, unknown> {
-  return Boolean(value && typeof value === "object" && !Array.isArray(value));
-}
-
 export function isQualityBudgetNextAction(value: unknown): value is DirectorQualityLoopBudgetNextAction {
   return value === "auto_patch_repair"
     || value === "auto_rewrite_chapter"
     || value === "auto_replan_window"
     || value === "defer_and_continue";
-}
-
-export function readFiniteNumber(value: unknown): number | null {
-  return typeof value === "number" && Number.isFinite(value) ? value : null;
-}
-
-export function readNullableString(value: unknown): string | null {
-  return typeof value === "string" && value.trim().length > 0 ? value.trim() : null;
 }
 
 export function readQualityBudgetEntry(value: unknown): DirectorQualityLoopBudgetEntry | null {

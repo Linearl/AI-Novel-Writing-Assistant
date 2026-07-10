@@ -1,14 +1,14 @@
 {
   "reqId": "7020",
   "title": "共享类型 Barrel 统一导出",
-  "status": "pass",
+  "status": "done",
   "complexity": "M2",
   "priority": "P0",
   "phase": "implementation",
   "createdAt": "2026-07-10",
   "updatedAt": "2026-07-10",
   "estimatedFiles": "805+（import 语句）+ shared 包内文件",
-  "completedAt": "2026-07-10",
+  "completedAt": "2026-07-10T15:38:48.817Z",
   "verification": {
     "typecheck": "pass (9 pre-existing errors in chapterLayeredContextCharacters.ts)",
     "build": "pass",

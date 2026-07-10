@@ -5,9 +5,9 @@
 export { DirectorCommandService } from "../commands/DirectorCommandService";
 export { DirectorCommandExecutor } from "../commands/DirectorCommandExecutor";
 export { DirectorCommandInterpreter } from "../commands/DirectorCommandInterpreter";
-export { DirectorStateReader } from "../DirectorStateReader";
-export { DirectorStateCommitter } from "../DirectorStateCommitter";
-export { DirectorStateStore } from "../DirectorStateStore";
+export { DirectorStateReader } from "../state/DirectorStateReader";
+export { DirectorStateCommitter } from "../state/DirectorStateCommitter";
+export { DirectorStateStore } from "../state/DirectorStateStore";
 export { DirectorTaskSnapshotService } from "../projections/DirectorTaskSnapshotService";
 export { NovelDirectorService } from "../NovelDirectorService";
 

@@ -24,7 +24,7 @@ import { buildChapterPipelineWorkflowTemplate } from "../workflowStepRuntime/dir
 import { directorWorkflowStepModuleRegistry } from "../workflowStepRuntime/directorWorkflowStepModules";
 import { DIRECTOR_EXECUTION_STEP_IDS } from "../workflowStepRuntime/directorWorkflowStepIds";
 import { isInitializationPlaceholderVolumeStrategyArtifact } from "./DirectorWorkspaceArtifactInventory";
-import { DirectorStateCommitter } from "../DirectorStateCommitter";
+import { DirectorStateCommitter } from "../state/DirectorStateCommitter";
 
 const BACKGROUND_ARTIFACT_PROJECTION_STEP_IDS = new Set([
   DIRECTOR_EXECUTION_STEP_IDS.chapter_state_commit,

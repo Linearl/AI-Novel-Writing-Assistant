@@ -5,7 +5,7 @@ import { mergeSeedPayload, parseSeedPayload } from "../../workflow/novelWorkflow
 import { DirectorCommandInterpreter } from "./DirectorCommandInterpreter";
 import { DirectorCommandService } from "./DirectorCommandService";
 import type { DirectorCommandPayload } from "./DirectorCommandServiceHelpers";
-import { DirectorStateStore } from "../DirectorStateStore";
+import { DirectorStateStore } from "../state/DirectorStateStore";
 import { NovelDirectorService } from "../NovelDirectorService";
 import {
   getDirectorInputFromSeedPayload,

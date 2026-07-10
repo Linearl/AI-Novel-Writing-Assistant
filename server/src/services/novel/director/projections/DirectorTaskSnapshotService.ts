@@ -6,7 +6,7 @@ import type {
 } from "@ai-novel/shared";
 import { DirectorEventProjectionService } from "../runtime/DirectorEventProjectionService";
 import { DirectorRuntimeStore } from "../runtime/DirectorRuntimeStore";
-import { DirectorStateReader } from "../DirectorStateReader";
+import { DirectorStateReader } from "../state/DirectorStateReader";
 import { DirectorFactSummaryService } from "./DirectorFactSummaryService";
 import {
   inspectWorkflowStepFacts,

@@ -10,9 +10,6 @@ import type {
   DirectorTakeoverStageReadiness,
 } from "@ai-novel/shared";
 import type { DirectorTakeoverAssetSnapshot } from "./novelDirectorTakeoverHelpers";
-import { DIRECTOR_TAKEOVER_ENTRY_STEPS } from "@ai-novel/shared";
-import type { DirectorTakeoverNovelContext } from "./novelDirectorTakeover";
-import type { DirectorTakeoverResolvedPlan } from "./novelDirectorTakeover";
 import {
   hasMeaningfulSeedMaterial,
   hasExecutableRange,
@@ -23,8 +20,15 @@ import {
   isStructuredReady,
   isStructuredSyncPending,
   hasAnyStructuredAsset,
-  resolveDirectorTakeoverPlan,
-} from "./novelDirectorTakeover";
+  phaseToEntryStep,
+} from "./novelDirectorTakeoverHelpers";
+import { DIRECTOR_TAKEOVER_ENTRY_STEPS } from "@ai-novel/shared";
+import type { DirectorTakeoverNovelContext } from "./novelDirectorTakeover";
+import type { DirectorTakeoverResolvedPlan } from "./novelDirectorTakeover";
+import { resolveDirectorTakeoverPlan } from "./novelDirectorTakeover";
+
+/** Re-export for backward compatibility. Canonical source: novelDirectorTakeoverHelpers.ts. */
+export { phaseToEntryStep };
 
 export const DIRECTOR_TAKEOVER_STAGE_META: Record<
   DirectorTakeoverStartPhase,
@@ -84,13 +88,6 @@ export const TAKEOVER_ENTRY_META: Record<
     description: "优先恢复当前修复批次，或承接待修章节继续推进。",
   },
 };
-
-export function phaseToEntryStep(phase: DirectorTakeoverStartPhase): DirectorTakeoverEntryStep {
-  if (phase === "story_macro") return "story_macro";
-  if (phase === "character_setup") return "character";
-  if (phase === "volume_strategy") return "outline";
-  return "structured";
-}
 
 function buildStoryMacroReadiness(
   novel: DirectorTakeoverNovelContext,

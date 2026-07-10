@@ -4,7 +4,7 @@ description: "REQ-7028 Director 事件系统收敛 — 任务拆解"
 
 # REQ-7028 任务拆解
 
-> 状态：⏳ 进行中
+> 状态：✅ 已完成
 
 ## 任务概述
 
@@ -24,14 +24,14 @@ description: "REQ-7028 Director 事件系统收敛 — 任务拆解"
 
 | # | 任务 | 优先级 | 预估 | 状态 |
 | --- | --- | --- | --- | --- |
-| T1 | 事件系统职责映射与文档化 | P0 | 1h | ⬜ 待开始 |
-| T2 | 审计 State 文件引用关系 | P0 | 30min | ⬜ 待开始 |
-| T3 | State 文件去重（根目录旧版→state/） | P0 | 1h | ⬜ 待开始 |
-| T4 | 审计 takeover 文件依赖关系 | P0 | 30min | ⬜ 待开始 |
-| T5 | Takeover 9→4 文件收敛 | P1 | 2h | ⬜ 待开始 |
-| T6 | 建立 DirectorEventBridge | P1 | 1h | ⬜ 待开始 |
-| T7 | DirectorEventProjectionHelpers.ts 收敛 | P1 | 1h | ⬜ 待开始 |
-| T8 | 全量验证 | P0 | 30min | ⬜ 待开始 |
+| T1 | 事件系统职责映射与文档化 | P0 | 1h | ✅ 已完成 |
+| T2 | 审计 State 文件引用关系 | P0 | 30min | ✅ 已完成 |
+| T3 | State 文件去重（根目录旧版→state/） | P0 | 1h | ✅ 已完成 |
+| T4 | 审计 takeover 文件依赖关系 | P0 | 30min | ✅ 已完成 |
+| T5 | Takeover 去重（helpers 为唯一来源） | P1 | 2h | ✅ 已完成 |
+| T6 | 建立 DirectorEventBridge | P1 | 1h | ✅ 已完成 |
+| T7 | DirectorEventProjectionHelpers.ts 收敛 | P1 | 1h | ✅ 已完成 |
+| T8 | 全量验证 | P0 | 30min | ✅ 已完成 |
 
 ---
 
