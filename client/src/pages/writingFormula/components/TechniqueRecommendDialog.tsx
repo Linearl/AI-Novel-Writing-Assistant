@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, AppDialogContent } from "@/components/ui/dialog";
@@ -24,13 +24,15 @@ export default function TechniqueRecommendDialog({
 }: TechniqueRecommendDialogProps) {
   const [selected, setSelected] = useState<Set<string>>(new Set());
 
-  // 弹窗打开时重置选中状态（默认全选）
-  const handleOpenChange = (newOpen: boolean) => {
-    if (newOpen && recommendations.length > 0) {
+  // 每次推荐结果变化时默认全选
+  useEffect(() => {
+    if (recommendations.length > 0) {
       setSelected(new Set(recommendations.map((r) => r.key)));
     }
-    onOpenChange(newOpen);
-  };
+  }, [recommendations]);
+
+  const selectAll = () => setSelected(new Set(recommendations.map((r) => r.key)));
+  const deselectAll = () => setSelected(new Set());
 
   const handleToggle = (key: string, checked: boolean) => {
     setSelected((prev) => {
@@ -46,10 +48,22 @@ export default function TechniqueRecommendDialog({
   };
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <AppDialogContent
         title="AI 为你推荐的写作技法"
-        description="根据你的写法画像，AI 挑选了以下技法。你可以逐个切换选择，确认后绑定到当前画像。"
+        description={
+          <div className="flex items-center justify-between gap-2">
+            <span>根据你的写法画像，AI 挑选了以下技法。已默认全选，可逐个调整。</span>
+            <div className="flex shrink-0 gap-1">
+              <Button size="sm" variant="outline" onClick={selectAll}>
+                全选
+              </Button>
+              <Button size="sm" variant="outline" onClick={deselectAll}>
+                全关
+              </Button>
+            </div>
+          </div>
+        }
         bodyClassName="space-y-2"
         footer={
           <div className="flex w-full justify-end gap-2">
@@ -57,7 +71,7 @@ export default function TechniqueRecommendDialog({
               跳过
             </Button>
             <Button onClick={handleConfirm} disabled={selected.size === 0 || isConfirming}>
-              {isConfirming ? "正在应用..." : "应用推荐"}
+              {isConfirming ? "正在应用..." : `通过（${selected.size} 条）`}
             </Button>
           </div>
         }
