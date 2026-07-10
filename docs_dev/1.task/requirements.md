@@ -63,7 +63,7 @@ description: "需求任务总清单（SSOT）"
 | 2045 | Chapter Rhythm Tension | p3 | ✅ 已完成 | - | 0.1 | 2026-07-08T00:00:00.000Z | 2026-07-09T00:00:00.000Z | `B.2.done/v0.1-r2045-C2-chapter-rhythm-tension/README.md` |  |
 | 2046 | Style Profile Export Import | p3 | ✅ 已完成 | - | 0.1 | 2026-07-08T00:00:00.000Z | 2026-07-08T10:00:00.000Z | `B.2.done/v0.1-r2046-M3-style-profile-export-import/README.md` |  |
 | 2047 | 文笔资料库 | p3 | ✅ 已完成 | - | 0.1 | 2026-07-09T00:00:00.000Z | 2026-07-10T00:00:00.000Z | `B.2.done/v0.1-r2047-C2-writing-technique-library/README.md` |  |
-| 2048 | REQ-2048 氛围写作参考卡 | p3 | ✅ 已完成 | - | 0.1 | 2026-07-10 | 2026-07-10 | `B.todo/v0.1-r2048-M2-atmosphere-writing-cards/README.md` | T1-T8 全部完成。17 张氛围卡已入库。修复流挂载通过 atmosphereMatch.prompt 实现。 |
+| 2048 | REQ-2048 氛围写作参考卡 | p3 | ✅ 已完成 | - | 0.1 | 2026-07-10 | 2026-07-10 | `B.2.done/v0.1-r2048-M2-atmosphere-writing-cards/README.md` | T1-T8 全部完成。17 张氛围卡已入库。修复流挂载通过 atmosphereMatch.prompt 实现。 |
 | 2013 | Director Failed Retry Entry | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2013-medium-director-failed-retry-entry/README.md` |  |
 | 2014 | Chapter Token Budget Dynamic | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2014-medium-chapter-token-budget-dynamic/README.md` |  |
 
@@ -169,7 +169,7 @@ description: "需求任务总清单（SSOT）"
 | 2045 | Chapter Rhythm Tension | `B.2.done/v0.1-r2045-C2-chapter-rhythm-tension/README.md` |
 | 2046 | Style Profile Export Import | `B.2.done/v0.1-r2046-M3-style-profile-export-import/README.md` |
 | 2047 | 文笔资料库 | `B.2.done/v0.1-r2047-C2-writing-technique-library/README.md` |
-| 2048 | REQ-2048 氛围写作参考卡 | `B.todo/v0.1-r2048-M2-atmosphere-writing-cards/README.md` |
+| 2048 | REQ-2048 氛围写作参考卡 | `B.2.done/v0.1-r2048-M2-atmosphere-writing-cards/README.md` |
 | 3001 | Task Batch Archive | `B.2.done/v0.1-r3001-medium-task-batch-archive/README.md` |
 | 3002 | 导演进度规划资源缺失 Checklist 可视化 | `B.2.done/v0.1-r3002-medium-director-planning-checklist/README.md` |
 | 3003 | 小说项目对话存档 | `B.2.done/v0.1-r3003-medium-repair-progress-dialog/README.md` |

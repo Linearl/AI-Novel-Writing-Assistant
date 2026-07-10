@@ -27,17 +27,6 @@ description: "docs 目录索引（自动生成）"
 | --- | --- | --- |
 | [1.task\B.todo\任务包六件套构成-编号分类规则-自动归档机制.md](./1.task\B.todo\任务包六件套构成-编号分类规则-自动归档机制.md) | --- | - |
 
-## 1.task\B.todo\v0.1\v0.1-r2048-M2-atmosphere-writing-cards
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r2048-M2-atmosphere-writing-cards\decision_log.md](./1.task\B.todo\v0.1\v0.1-r2048-M2-atmosphere-writing-cards\decision_log.md) | > 关联需求：REQ-2048 氛围写作参考卡 | - |
-| [1.task\B.todo\v0.1\v0.1-r2048-M2-atmosphere-writing-cards\design.md](./1.task\B.todo\v0.1\v0.1-r2048-M2-atmosphere-writing-cards\design.md) | REQ-2048 氛围写作卡片 — 方案设计 | REQ-2048 氛围写作卡片 — 方案设计 |
-| [1.task\B.todo\v0.1\v0.1-r2048-M2-atmosphere-writing-cards\README.md](./1.task\B.todo\v0.1\v0.1-r2048-M2-atmosphere-writing-cards\README.md) | REQ-2048 氛围写作卡片 — 任务总线 | REQ-2048 氛围写作卡片 — 任务总线 |
-| [1.task\B.todo\v0.1\v0.1-r2048-M2-atmosphere-writing-cards\REQ-2048-atmosphere-writing-cards-original.md](./1.task\B.todo\v0.1\v0.1-r2048-M2-atmosphere-writing-cards\REQ-2048-atmosphere-writing-cards-original.md) | REQ-2048 氛围写作卡片 — 原始冻结副本 | REQ-2048 氛围写作卡片 — 原始冻结副本 |
-| [1.task\B.todo\v0.1\v0.1-r2048-M2-atmosphere-writing-cards\REQ-2048-atmosphere-writing-cards.md](./1.task\B.todo\v0.1\v0.1-r2048-M2-atmosphere-writing-cards\REQ-2048-atmosphere-writing-cards.md) | REQ-2048 氛围写作卡片 | REQ-2048 氛围写作卡片 |
-| [1.task\B.todo\v0.1\v0.1-r2048-M2-atmosphere-writing-cards\tasks.md](./1.task\B.todo\v0.1\v0.1-r2048-M2-atmosphere-writing-cards\tasks.md) | > status: done | - |
-
 ## 1.task\B.todo\v0.1\v0.1-r7014-C2-legacy-world-fields-cleanup
 
 | 文件 | 标题 | 描述 |
@@ -154,25 +143,32 @@ description: "docs 目录索引（自动生成）"
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
 | [3.analysis\diagnosis\01-active\2026-07-01-代码审计-full\README.md](./3.analysis\diagnosis\01-active\2026-07-01-代码审计-full\README.md) | AI-Novel 全量代码审计报告，覆盖安全、稳定性、架构、质量、性能、可测试性、可观测性、可维护性、兼容性共 9 个维度 | AI-Novel 全量代码审计报告，覆盖安全、稳定性、架构、质量、性能、可测试性、可观测性、可维护性、兼容性共 9 个维度 |
+| [3.analysis\diagnosis\01-active\2026-07-01-代码审计-full\独占发现-对比全量审计.md](./3.analysis\diagnosis\01-active\2026-07-01-代码审计-full\独占发现-对比全量审计.md) | 对比 代码审计-full 与 全量代码审计-full 的独占发现 — 约79项未被全量审计覆盖的问题，覆盖安全/稳定性/架构/质量/性能/可测试性/可观测性/可维护性/兼容性9个维度 | 对比 代码审计-full 与 全量代码审计-full 的独占发现 — 约79项未被全量审计覆盖的问题，覆盖安全/稳定性/架构/质量/性能/可测试性/可观测性/可维护性/兼容性9个维度 |
 
-## 3.analysis\diagnosis\01-active\2026-07-01-全量代码审计-full
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [3.analysis\diagnosis\01-active\2026-07-01-全量代码审计-full\fix-design.md](./3.analysis\diagnosis\01-active\2026-07-01-全量代码审计-full\fix-design.md) | > 创建时间：2026-07-01 | 基于审计报告：2026-07-01-全量代码审计-full | - |
-| [3.analysis\diagnosis\01-active\2026-07-01-全量代码审计-full\README.md](./3.analysis\diagnosis\01-active\2026-07-01-全量代码审计-full\README.md) | 2026-07-01 全量代码审计报告 - 9 维度扫描结果 | 2026-07-01 全量代码审计报告 - 9 维度扫描结果 |
-
-## 3.analysis\diagnosis\01-active\2026-07-01-全量代码审计-full\05-report
+## 3.analysis\diagnosis\01-active\improve-codebase-architecture
 
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
-| [3.analysis\diagnosis\01-active\2026-07-01-全量代码审计-full\05-report\report-draft.md](./3.analysis\diagnosis\01-active\2026-07-01-全量代码审计-full\05-report\report-draft.md) | > 生成时间：2026-07-01 | 审计范围：full | 工作流：ll-workflow-core/aud (YAML) | - |
+| [3.analysis\diagnosis\01-active\improve-codebase-architecture\2026-07-10-architecture-diagnosis.md](./3.analysis\diagnosis\01-active\improve-codebase-architecture\2026-07-10-architecture-diagnosis.md) | 项目架构全面诊断报告 — 识别 10 个架构摩擦点，按影响度排序，含根因分析与改进建议 | 项目架构全面诊断报告 — 识别 10 个架构摩擦点，按影响度排序，含根因分析与改进建议 |
 
-## 3.analysis\diagnosis\01-active\2026-07-01-全量代码审计-full\skipped
+## 3.analysis\diagnosis\02-outdated\2026-07-01-全量代码审计-full
 
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
-| [3.analysis\diagnosis\01-active\2026-07-01-全量代码审计-full\skipped\debt_backlog.md](./3.analysis\diagnosis\01-active\2026-07-01-全量代码审计-full\skipped\debt_backlog.md) | 技术债台账 — 基于 2026-07-01 全量代码审计 | 技术债台账 — 基于 2026-07-01 全量代码审计 |
+| [3.analysis\diagnosis\02-outdated\2026-07-01-全量代码审计-full\fix-design.md](./3.analysis\diagnosis\02-outdated\2026-07-01-全量代码审计-full\fix-design.md) | > 创建时间：2026-07-01 | 基于审计报告：2026-07-01-全量代码审计-full | - |
+| [3.analysis\diagnosis\02-outdated\2026-07-01-全量代码审计-full\README.md](./3.analysis\diagnosis\02-outdated\2026-07-01-全量代码审计-full\README.md) | 2026-07-01 全量代码审计报告 - 9 维度扫描结果 | 2026-07-01 全量代码审计报告 - 9 维度扫描结果 |
+
+## 3.analysis\diagnosis\02-outdated\2026-07-01-全量代码审计-full\05-report
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [3.analysis\diagnosis\02-outdated\2026-07-01-全量代码审计-full\05-report\report-draft.md](./3.analysis\diagnosis\02-outdated\2026-07-01-全量代码审计-full\05-report\report-draft.md) | > 生成时间：2026-07-01 | 审计范围：full | 工作流：ll-workflow-core/aud (YAML) | - |
+
+## 3.analysis\diagnosis\02-outdated\2026-07-01-全量代码审计-full\skipped
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [3.analysis\diagnosis\02-outdated\2026-07-01-全量代码审计-full\skipped\debt_backlog.md](./3.analysis\diagnosis\02-outdated\2026-07-01-全量代码审计-full\skipped\debt_backlog.md) | 技术债台账 — 基于 2026-07-01 全量代码审计 | 技术债台账 — 基于 2026-07-01 全量代码审计 |
 
 ## 3.analysis\evidence\v0.1
 
