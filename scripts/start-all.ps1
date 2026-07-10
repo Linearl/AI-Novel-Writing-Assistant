@@ -68,9 +68,16 @@ Options:
   -Mode <dev|desktop>  Start mode (default: dev)
                        dev     = shared + server + client
                        desktop = dev suite + Electron
-  -Stop                Stop all dev processes (never touches 3000 release)
+  -Stop                Stop all dev processes (PID-file-guarded, safe)
   -Restart             -Stop then start
   -Status              Show running processes / ports / health
+
+Safety:
+  Processes are killed ONLY if they match:
+  1. PID file in .logs/.pids/ (white-list anchor)
+  2. Command line contains this project's root path
+  3. Process has been alive for > 5 seconds
+  Other projects' processes on the same port are NEVER touched.
 
 Port contract:
   13000    Dev/Release server (auto-avoids occupied ports, scans upward)
@@ -291,82 +298,84 @@ function Show-Status {
 function Stop-DevAll {
     Write-Stage "Stopping dev processes"
 
-    $devPids = Get-DevPids
-    if (-not $devPids) {
-        Write-Info "no dev processes running"
-        return
-    }
-
-    # Sort by PID descending so children are killed before parents.
-    # Use taskkill /T to recursively kill the entire process tree on Windows.
-    $sorted = $devPids | Sort-Object -Property Pid -Descending
-    foreach ($p in $sorted) {
-        Write-Info "killing tree PID=$($p.Pid) ($($p.Name))"
-        try {
-            # /T = kill tree, /F = force
-            $result = & taskkill /T /F /PID $p.Pid 2>&1
-            if ($LASTEXITCODE -ne 0) {
-                # "not found" is fine (already dead from parent kill); warn on others
-                $msg = $result -join ' '
-                if ($msg -notmatch 'not found') {
-                    Write-Warn "taskkill PID=$($p.Pid): $msg"
-                }
-            }
-        } catch {
-            Write-Warn "taskkill PID=$($p.Pid) failed: $_"
+    # 优先使用 cleanup-zombie-dev.cjs（三重校验 + PID 文件锚点，防误杀）
+    $cleanupScript = Join-Path $ProjectRoot "scripts\cleanup-zombie-dev.cjs"
+    if (Test-Path $cleanupScript) {
+        Write-Info "running cleanup-zombie-dev.cjs (PID-file-guarded cleanup)"
+        $cleanupResult = & node $cleanupScript --force 2>&1
+        if ($cleanupResult) {
+            $cleanupResult | ForEach-Object { Write-Info $_ }
         }
     }
 
+    # 额外安全检查：基于命令行匹配清理本项目的残余进程（只杀命令行包含项目路径的）
+    $devPids = Get-DevPids
+    if ($devPids) {
+        Write-Info "second pass: command-line verified cleanup"
+        $sorted = $devPids | Sort-Object -Property Pid -Descending
+        foreach ($p in $sorted) {
+            Write-Info "killing tree PID=$($p.Pid) ($($p.Name)) — Cmd=$($p.Cmd)"
+            try {
+                $result = & taskkill /T /F /PID $p.Pid 2>&1
+                if ($LASTEXITCODE -ne 0) {
+                    $msg = $result -join ' '
+                    if ($msg -notmatch 'not found|没有找到') {
+                        Write-Warn "taskkill PID=$($p.Pid): $msg"
+                    }
+                }
+            } catch {
+                Write-Warn "taskkill PID=$($p.Pid) failed: $_"
+            }
+        }
+    }
+
+    # 等待端口释放
     Write-Info "waiting for $DevServerPort / $DevClientPort to release..."
+    $released = $false
     for ($i = 0; $i -lt 10; $i++) {
         Start-Sleep -Seconds 1
         $srvStill = Test-PortListening -Port $DevServerPort
         $cliStill = Test-PortListening -Port $DevClientPort
         if (-not $srvStill -and -not $cliStill) {
             Write-Ok "ports released"
-            return
+            $released = $true
+            break
         }
     }
 
-    # Second sweep: kill any orphans that survived the first round
-    Write-Warn "ports still held — running second sweep"
-    $orphans = Get-DevPids
-    if ($orphans) {
-        foreach ($p in ($orphans | Sort-Object -Property Pid -Descending)) {
-            Write-Warn "sweep: killing tree PID=$($p.Pid) ($($p.Name))"
-            try {
-                & taskkill /T /F /PID $p.Pid 2>&1 | Out-Null
-            } catch { }
-        }
-        Start-Sleep -Seconds 2
-    }
-
-    # Also kill any process actually listening on 13000 / 5173 as a last resort
-    foreach ($port in @($DevServerPort, $DevClientPort)) {
-        if (Test-PortListening -Port $port) {
-            $owner = Get-PortOwner -Port $port
-            if ($owner) {
-                Write-Warn "force-killing port $port occupant: PID=$($owner.Pid) ($($owner.Name))"
-                try {
-                    & taskkill /T /F /PID $owner.Pid 2>&1 | Out-Null
-                } catch { }
+    if (-not $released) {
+        Write-Warn "ports not released after 10s — checking port occupants..."
+        foreach ($port in @($DevServerPort, $DevClientPort)) {
+            if (Test-PortListening -Port $port) {
+                $owner = Get-PortOwner -Port $port
+                if ($owner) {
+                    Write-Warn "port $port still held by PID=$($owner.Pid) ($($owner.Name))"
+                    Write-Warn "  If this is NOT your dev process, it may be another project. Leave it alone."
+                    Write-Warn "  To force-kill: taskkill /F /PID $($owner.Pid)"
+                }
             }
         }
     }
-
-    Start-Sleep -Seconds 2
-    $srvFinal = Test-PortListening -Port $DevServerPort
-    $cliFinal = Test-PortListening -Port $DevClientPort
-    if (-not $srvFinal -and -not $cliFinal) {
-        Write-Ok "ports released after sweep"
-    } else {
-        Write-Warn "ports may not be fully released ($DevServerPort=$srvFinal, $DevClientPort=$cliFinal)"
-    }
+    Write-Ok "stop completed"
+}
 }
 
 # ─── Start dev suite ────────────────────────────────────────
 function Start-DevSuite {
     Write-Stage "Starting dev suite (server + client)"
+
+    # 启动前自动清理僵死进程（仅清理有 PID 文件锚点的，不误杀其他项目）
+    $cleanupScript = Join-Path $ProjectRoot "scripts\cleanup-zombie-dev.cjs"
+    if (Test-Path $cleanupScript) {
+        Write-Info "pre-start cleanup: checking for zombie dev processes..."
+        $cleanupLines = & node $cleanupScript --force 2>&1
+        if ($cleanupLines) {
+            $cleanupLines | ForEach-Object {
+                if ($_ -match "killed|SKIP|ORPHAN|done") { Write-Info $_ }
+                elseif ($_ -match "zombie|WARNING") { Write-Warn $_ }
+            }
+        }
+    }
 
     if (Test-PortListening -Port $ReleasePort) {
         $relOwner = Get-PortOwner -Port $ReleasePort

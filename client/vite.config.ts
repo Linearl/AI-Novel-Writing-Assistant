@@ -82,9 +82,39 @@ clearStaleOptimizeCache(__dirname);
 const isDesktopRelativeBaseBuild = process.env.AI_NOVEL_CLIENT_BASE === "relative";
 const appVersion = resolveDesktopAppVersion();
 
+/** Vite 插件：client 启动时写入 PID 文件 */
+function vitePidPlugin() {
+  const repoRoot = path.resolve(__dirname, "..");
+  const pidDir = path.join(repoRoot, ".logs", ".pids");
+  const pidFile = path.join(pidDir, "client.pid");
+
+  return {
+    name: "vite-pid-plugin",
+    configureServer(server: unknown) {
+      const viteServer = server as { config?: { server?: { port?: number } } };
+      const pid = process.pid;
+      const port = viteServer.config?.server?.port;
+      try {
+        fs.mkdirSync(pidDir, { recursive: true });
+        fs.writeFileSync(pidFile, JSON.stringify({
+          name: "client",
+          pid,
+          port,
+          repoRoot,
+          startedAt: new Date().toISOString(),
+        }, null, 2) + "\n", "utf8");
+        console.info(`[pid] client (PID=${pid}, PORT=${port}) → ${pidFile}`);
+        process.on("exit", () => { try { fs.unlinkSync(pidFile); } catch {} });
+      } catch (err) {
+        console.warn("[pid] failed to write client.pid", err);
+      }
+    },
+  };
+}
+
 export default defineConfig({
   base: isDesktopRelativeBaseBuild ? "./" : "/",
-  plugins: [react()],
+  plugins: [react(), vitePidPlugin()],
   define: {
     "import.meta.env.VITE_APP_VERSION": JSON.stringify(appVersion),
   },

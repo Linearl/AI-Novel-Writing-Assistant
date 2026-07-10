@@ -1,4 +1,6 @@
 import "dotenv/config";
+import { writeFileSync, mkdirSync, unlinkSync } from "node:fs";
+import { resolve, join } from "node:path";
 import type { Server } from "node:http";
 import os from "node:os";
 import cors from "cors";
@@ -350,6 +352,25 @@ export async function startServer(options?: ServerStartOptions): Promise<Started
 
   logServerReady(host, port);
 
+  // 写入 PID 文件，供僵尸进程清理脚本使用
+  const repoRoot = resolve(process.cwd(), "..");
+  const pidDir = join(repoRoot, ".logs", ".pids");
+  const pidFile = join(pidDir, "server.pid");
+  try {
+    mkdirSync(pidDir, { recursive: true });
+    writeFileSync(pidFile, JSON.stringify({
+      name: "server",
+      pid: process.pid,
+      port,
+      repoRoot,
+      host,
+      startedAt: new Date().toISOString(),
+    }, null, 2) + "\n", "utf8");
+    logger.info(`[pid] server (PID=${process.pid}, PORT=${port}) → ${pidFile}`);
+  } catch (err) {
+    logger.warn("[pid] failed to write server.pid", err);
+  }
+
   return {
     app,
     server,
@@ -365,6 +386,7 @@ export async function startServer(options?: ServerStartOptions): Promise<Started
             reject(error);
             return;
           }
+          try { unlinkSync(pidFile); } catch {}
           resolve();
         });
       });
