@@ -8,6 +8,7 @@ import {
 } from "@ai-novel/shared/types/styleEngine";
 import type { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
+import WritingTechniquePanel from "./WritingTechniquePanel";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
@@ -550,6 +551,22 @@ export default function WritingFormulaEditorPanel(props: WritingFormulaEditorPan
                 ))}
               </div>
             </div>
+
+            {selectedProfile && (
+              <div className="space-y-4 rounded-2xl border p-4">
+                <div className="space-y-1">
+                  <div className="text-base font-semibold text-foreground">绑定文笔技法</div>
+                  <div className="text-sm leading-6 text-muted-foreground">
+                    为这套写法选择推荐的文笔技法。润色增强时，AI 会从这些技法中自动筛选适用的。
+                  </div>
+                </div>
+                <WritingTechniquePanel
+                  styleProfileId={selectedProfile.id}
+                  profileName={selectedProfile.name}
+                  profileDescription={selectedProfile.description}
+                />
+              </div>
+            )}
 
             <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border bg-muted/70 px-4 py-3">
               <div className="text-sm leading-6 text-muted-foreground">

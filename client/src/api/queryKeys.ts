@@ -74,6 +74,11 @@ export const queryKeys = {
     antiAiRules: ["style-engine", "anti-ai-rules"] as const,
     effectiveAntiAiRules: (params: string) => ["style-engine", "anti-ai-rules", "effective", params] as const,
     bindings: (params: string) => ["style-engine", "bindings", params] as const,
+    writingTechniques: ["style-engine", "writing-techniques"] as const,
+    writingTechniqueDetail: (key: string) => ["style-engine", "writing-technique", key] as const,
+    techniquePool: (params: string) => ["style-engine", "technique-pool", params] as const,
+    profileTechniqueBindings: (id: string) => ["style-engine", "profile-technique-bindings", id] as const,
+    novelTechniqueBindings: (id: string) => ["style-engine", "novel-technique-bindings", id] as const,
   },
   genres: {
     all: ["genres"] as const,

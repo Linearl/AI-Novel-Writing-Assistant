@@ -85,3 +85,36 @@ export async function importWritingTechnique(
   const { data } = await apiClient.post("/writing-techniques/import", { content, fileName });
   return data.data;
 }
+
+// 小说绑定 - 列表
+export async function getNovelTechniqueBindings(novelId: string) {
+  const { data } = await apiClient.get(`/writing-techniques/bindings/novel/${novelId}`);
+  return data.data;
+}
+
+// 小说绑定 - 设置
+export async function setNovelTechniqueBindings(novelId: string, techniqueKeys: string[]): Promise<void> {
+  await apiClient.put(`/writing-techniques/bindings/novel/${novelId}`, { techniqueKeys });
+}
+
+// AI 推荐技法 for 画像
+export interface WritingTechniqueRecommendation {
+  key: string;
+  name: string;
+  description: string;
+  category: string;
+  reason: string;
+}
+
+export async function recommendTechniquesForProfile(
+  styleProfileId: string,
+  profileName: string,
+  profileDescription?: string,
+): Promise<WritingTechniqueRecommendation[]> {
+  const { data } = await apiClient.post("/writing-techniques/recommend-for-profile", {
+    styleProfileId,
+    profileName,
+    profileDescription,
+  });
+  return data.data;
+}

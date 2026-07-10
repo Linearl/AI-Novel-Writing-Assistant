@@ -7,6 +7,7 @@ import { WritingTechniqueService } from "../services/styleEngine/WritingTechniqu
 import { runStructuredPrompt } from "../prompting/core/promptRunner";
 import { techniqueScreeningPrompt } from "../prompting/prompts/writingTechnique/techniqueScreening.prompt";
 import { techniqueImportPrompt } from "../prompting/prompts/writingTechnique/techniqueImport.prompt";
+import { techniqueRecommendPrompt } from "../prompting/prompts/writingTechnique/techniqueRecommend.prompt";
 import { prisma } from "../db/prisma";
 
 const router = Router();
@@ -246,6 +247,52 @@ router.post("/screen", validate({
     });
 
     res.json({ success: true, data: result.output });
+  } catch (err) { next(err); }
+});
+
+// AI 推荐技法 for 画像
+router.post("/recommend-for-profile", validate({
+  body: z.object({
+    styleProfileId: z.string().min(1),
+    profileName: z.string().min(1),
+    profileDescription: z.string().optional(),
+  }),
+}), async (req, res, next) => {
+  try {
+    const { profileName, profileDescription } = req.body as {
+      styleProfileId: string;
+      profileName: string;
+      profileDescription?: string;
+    };
+
+    // 获取所有技法列表
+    const techniques = await service.listTechniques({ enabled: true });
+    const techniqueList = techniques.map((t) => ({
+      key: t.key,
+      name: t.name,
+      description: t.description,
+      category: t.category ?? "",
+    }));
+
+    if (techniqueList.length === 0) {
+      res.json({ success: true, data: [] });
+      return;
+    }
+
+    const result = await runStructuredPrompt({
+      asset: techniqueRecommendPrompt,
+      promptInput: {
+        profileName,
+        profileDescription,
+        techniques: techniqueList,
+      },
+      options: {
+        provider: "deepseek",
+        temperature: 0.5,
+      },
+    });
+
+    res.json({ success: true, data: result.output.recommendations });
   } catch (err) { next(err); }
 });
 

@@ -5,6 +5,7 @@ import NovelStyleRecommendationCard from "./NovelStyleRecommendationCard";
 import NovelWorldUsageCard from "./NovelWorldUsageCard";
 import NovelWorldManagerCard from "./NovelWorldManagerCard";
 import SettingConsistencyPanel from "./SettingConsistencyPanel";
+import NovelWritingTechniquePanel from "./NovelWritingTechniquePanel";
 import { BookFramingQuickFillButton } from "./basicInfoForm/BookFramingQuickFillButton";
 import CollapsibleSummary from "./CollapsibleSummary";
 import NovelCreateTitleQuickFill from "./titleWorkshop/NovelCreateTitleQuickFill";
@@ -113,6 +114,20 @@ export default function BasicInfoTab(props: BasicTabProps) {
 
         <div className="mt-4 space-y-4">
           <NovelStyleRecommendationCard novelId={props.novelId} />
+        </div>
+      </details>
+
+      <details className="group rounded-2xl border border-border/70 bg-background/95 p-4">
+        <summary className="cursor-pointer list-none">
+          <CollapsibleSummary
+            title="文笔技法"
+            description="为本书绑定写作技法，AI 将在创作时应用这些技法提升文笔质量。"
+            meta="技法配置"
+          />
+        </summary>
+
+        <div className="mt-4">
+          <NovelWritingTechniquePanel novelId={props.novelId} />
         </div>
       </details>
     </div>
