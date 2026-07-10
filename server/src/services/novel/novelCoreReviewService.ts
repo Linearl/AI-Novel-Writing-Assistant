@@ -1,6 +1,7 @@
 import type { AuditReport, QualityScore, ReviewIssue } from "@ai-novel/shared/types/novel";
 import type { GenerationContextPackage } from "@ai-novel/shared/types/chapterRuntime";
 import { prisma } from "../../db/prisma";
+import { logger } from "../../services/logging/LoggerService";
 import { runStructuredPrompt } from "../../prompting/core/promptRunner";
 import {
   chapterReviewPrompt,
@@ -137,7 +138,13 @@ export class NovelCoreReviewService {
         provider: options.provider,
         model: options.model,
         temperature: options.temperature,
-      }).catch(() => null);
+      }).catch((err) => {
+        logger.error("[NovelCoreReviewService] replan 发起失败（非阻断）", {
+          novelId,
+          chapterId,
+          error: err instanceof Error ? err.message : String(err),
+        });
+      });
     }
 
     return review;

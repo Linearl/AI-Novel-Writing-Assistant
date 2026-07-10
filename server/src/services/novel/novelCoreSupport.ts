@@ -1,16 +1,25 @@
 import { prisma } from "../../db/prisma";
+import { logger } from "../../services/logging/LoggerService";
 import { ragServices } from "../rag";
 import type { RagOwnerType } from "../rag/types";
 
 export function queueRagUpsert(ownerType: RagOwnerType, ownerId: string): void {
-  void ragServices.ragIndexService.enqueueUpsert(ownerType, ownerId).catch(() => {
-    // keep primary workflow resilient even when rag queueing fails
+  void ragServices.ragIndexService.enqueueUpsert(ownerType, ownerId).catch((err) => {
+    logger.warn("[NovelCoreSupport] RAG enqueueUpsert 失败（非阻断）", {
+      ownerType,
+      ownerId,
+      error: err instanceof Error ? err.message : String(err),
+    });
   });
 }
 
 export function queueRagDelete(ownerType: RagOwnerType, ownerId: string): void {
-  void ragServices.ragIndexService.enqueueDelete(ownerType, ownerId).catch(() => {
-    // keep primary workflow resilient even when rag queueing fails
+  void ragServices.ragIndexService.enqueueDelete(ownerType, ownerId).catch((err) => {
+    logger.warn("[NovelCoreSupport] RAG enqueueDelete 失败（非阻断）", {
+      ownerType,
+      ownerId,
+      error: err instanceof Error ? err.message : String(err),
+    });
   });
 }
 

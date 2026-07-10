@@ -1,4 +1,5 @@
 import type { BaseMessageChunk } from "@langchain/core/messages";
+import { logger } from "../../services/logging/LoggerService";
 import { getLLM, getResolvedLLMClientOptionsFromInstance } from "../../llm/factory";
 import {
   invokeStructuredLlmDetailed,
@@ -383,7 +384,13 @@ export async function streamTextPrompt<I>(input: {
           input.options,
         ),
         renderedPromptChars,
-        tokenUsage: await captured.completedUsage.catch(() => null),
+        tokenUsage: await captured.completedUsage.catch((err) => {
+          logger.warn("[PromptRunner] capturedUsage 读取失败（非阻断）", {
+            asset: (input.asset as PromptAsset<unknown, unknown, unknown>).id,
+            error: err instanceof Error ? err.message : String(err),
+          });
+          return null;
+        }),
       });
     }).catch((error) => {
       recordPromptFailure({
@@ -515,7 +522,13 @@ export async function streamStructuredPrompt<I, O, R = O>(input: {
         latencyMs: Date.now() - startedAt,
         invocation: resolved.invocation,
         renderedPromptChars,
-        tokenUsage: await captured.completedUsage.catch(() => null),
+        tokenUsage: await captured.completedUsage.catch((err) => {
+          logger.warn("[PromptRunner] capturedUsage 读取失败（非阻断）", {
+            asset: (input.asset as PromptAsset<unknown, unknown, unknown>).id,
+            error: err instanceof Error ? err.message : String(err),
+          });
+          return null;
+        }),
         postValidateFailureRecovered: resolved.postValidateFailureRecovered,
       });
     }).catch((error) => {

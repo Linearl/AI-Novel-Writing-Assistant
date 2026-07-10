@@ -4,6 +4,7 @@ import type {
   DirectorConfirmRequest,
 } from "@ai-novel/shared/types/novelDirector";
 import type { PipelineJobStatus } from "@ai-novel/shared/types/novel";
+import { logger } from "../../../../services/logging/LoggerService";
 import {
   buildDirectorAutoExecutionDeferredQualityState,
   buildDirectorAutoExecutionPausedLabel,
@@ -157,7 +158,13 @@ export async function stopAutoExecutionForCircuitBreaker(
           auditResults: buffered.auditResults,
         }, logDir, detailFilename);
       }
-    }).catch(() => {});
+    }).catch((err) => {
+      logger.warn("[CircuitBreakerRuntime] 诊断快照持久化失败（非阻断）", {
+        taskId: input.taskId,
+        novelId: input.novelId,
+        error: err instanceof Error ? err.message : String(err),
+      });
+    });
   }
 }
 

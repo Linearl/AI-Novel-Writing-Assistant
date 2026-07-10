@@ -5,6 +5,7 @@ import {
   novelCharacterSaveToLibraryInputSchema,
 } from "@ai-novel/shared/types/characterSync";
 import { z } from "zod";
+import { logger } from "../../../../services/logging/LoggerService";
 import { llmProviderSchema } from "../../../../llm/providerSchema";
 import { validate } from "../../../../middleware/validate";
 import { characterLibrarySyncService } from "../../../../services/character/CharacterLibrarySyncService";
@@ -79,7 +80,12 @@ export function registerNovelCharacterSyncRoutes(input: RegisterNovelCharacterSy
       try {
         const { id } = req.params as z.infer<typeof idParamsSchema>;
         const data = await characterLibrarySyncService.importBaseCharacterToNovel(id, req.body as z.infer<typeof importBaseCharacterToNovelInputSchema>);
-        await characterDynamicsService.rebuildDynamics(id, { sourceType: "rebuild_projection" }).catch(() => null);
+        await characterDynamicsService.rebuildDynamics(id, { sourceType: "rebuild_projection" }).catch((err) => {
+          logger.warn("[NovelCharacterSyncRoutes] rebuildDynamics 失败（非阻断）", {
+            novelId: id,
+            error: err instanceof Error ? err.message : String(err),
+          });
+        });
         res.status(201).json({
           success: true,
           data,
@@ -142,7 +148,12 @@ export function registerNovelCharacterSyncRoutes(input: RegisterNovelCharacterSy
       try {
         const { id, proposalId } = req.params as z.infer<typeof proposalParamsSchema>;
         const data = await characterLibrarySyncService.applyProposal(proposalId);
-        await characterDynamicsService.rebuildDynamics(id, { sourceType: "rebuild_projection" }).catch(() => null);
+        await characterDynamicsService.rebuildDynamics(id, { sourceType: "rebuild_projection" }).catch((err) => {
+          logger.warn("[NovelCharacterSyncRoutes] rebuildDynamics 失败（非阻断）", {
+            novelId: id,
+            error: err instanceof Error ? err.message : String(err),
+          });
+        });
         res.status(200).json({
           success: true,
           data,

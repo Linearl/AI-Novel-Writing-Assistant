@@ -121,7 +121,7 @@ description: "需求任务总清单（SSOT）"
 | 7027 | 遗留代码清理 | p0 | 📋 待办 | - | 0.1 | 2026-07-10 | 2026-07-10 | `B.todo/v0.1-r7027-S2-legacy-code-cleanup/README.md` |  |
 | 7028 | Director 事件系统收敛 | p1 | 📋 待办 | - | 0.1 | 2026-07-10 | 2026-07-10 | `B.todo/v0.1-r7028-C3-director-event-system-consolidation/README.md` |  |
 | 7029 | Prisma Schema 精简 | p8 | 📋 待办 | - | 0.1 | 2026-07-10 | 2026-07-10 | `B.todo/v0.1-r7029-C2-prisma-schema-sizing/README.md` |  |
-| 7031 | 静默吞错日志化：审计复核确认的 .catch(() => {}) 静默吞错修复 | p2 | 📋 待办 | 代码审计-full 独占发现复核报告 — 稳定性 + 部分质量维度 CONFIRMED 条目 | 0.1 | 2026-07-10 | - | `B.todo/v0.1-r7031-M2-silent-catch-logging/README.md` |  |
+| 7031 | 静默吞错日志化：审计复核确认的 .catch(() => {}) 静默吞错修复 | p2 | ✅ 已完成 | 代码审计-full 独占发现复核报告 — 稳定性 + 部分质量维度 CONFIRMED 条目 | 0.1 | 2026-07-10 | 2026-07-10 | `B.todo/v0.1-r7031-M2-silent-catch-logging/README.md` |  |
 | 7032 | 提取硬编码常量：审计复核确认的重复魔数、重复定义、硬编码配置 | p3 | 📋 待办 | 代码审计-full 独占发现复核报告 — 架构/质量维度 CONFIRMED 条目 | 0.1 | 2026-07-10 | - | `B.todo/v0.1-r7032-S3-extract-hardcoded-constants/README.md` |  |
 | 7033 | Prisma Schema 精简 | p1 | ✅ 已完成 | - | 0.1 | 2026-07-10 | 2026-07-10 | `B.2.done/v0.1-r7033-C2-prisma-schema-sizing/README.md` |  |
 | 7034 | Novel Application Services 门面收缩 | p1 | 📋 待办 | - | 0.1 | 2026-07-10 | 2026-07-10 | `B.todo/v0.1-r7034-M2-novel-application-services-facade-contraction/README.md` |  |
@@ -155,7 +155,6 @@ description: "需求任务总清单（SSOT）"
 | 7027 | 遗留代码清理 | `B.todo/v0.1-r7027-S2-legacy-code-cleanup/README.md` |
 | 7028 | Director 事件系统收敛 | `B.todo/v0.1-r7028-C3-director-event-system-consolidation/README.md` |
 | 7029 | Prisma Schema 精简 | `B.todo/v0.1-r7029-C2-prisma-schema-sizing/README.md` |
-| 7031 | 静默吞错日志化：审计复核确认的 .catch(() => {}) 静默吞错修复 | `B.todo/v0.1-r7031-M2-silent-catch-logging/README.md` |
 | 7032 | 提取硬编码常量：审计复核确认的重复魔数、重复定义、硬编码配置 | `B.todo/v0.1-r7032-S3-extract-hardcoded-constants/README.md` |
 | 7034 | Novel Application Services 门面收缩 | `B.todo/v0.1-r7034-M2-novel-application-services-facade-contraction/README.md` |
 | 7035 | ARCH-004: DirectorCommandService ↔ workers/ 循环依赖解耦 — IDispatcher 接口抽象 | `B.todo/v0.1-r7035-C1-director-command-interface-abstract/README.md` |
@@ -241,6 +240,7 @@ description: "需求任务总清单（SSOT）"
 | 7015 | 前端公共样式与组件提取 | `B.2.done/v0.1-r7015-M2-frontend-common-styles-components/README.md` |
 | 7017 | 词汇库审校扫描器 | `B.2.done/v0.1-r7017-M2-vocabulary-audit-scanner/README.md` |
 | 7025 | Desktop 包测试基础设施 | `B.2.done/v0.1-r7025-C2-desktop-test-infrastructure/README.md` |
+| 7031 | 静默吞错日志化：审计复核确认的 .catch(() => {}) 静默吞错修复 | `B.todo/v0.1-r7031-M2-silent-catch-logging/README.md` |
 | 7033 | Prisma Schema 精简 | `B.2.done/v0.1-r7033-C2-prisma-schema-sizing/README.md` |
 | 7036 | SEC-014: API Key AES-256-GCM 加密存储 — secretStore 加 crypto 包装层 | `B.todo/v0.1-r7036-M2-api-key-aes-encrypt/README.md` |
 | 7037 | QUA-022: directorRuntime.ts 渐进拆分（projection/worker/automation 3 域 + barrel index.ts） | `B.todo/v0.1-r7037-M2-director-runtime-split/README.md` |

@@ -1,6 +1,7 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 import type { ChatOpenAI } from "@langchain/openai";
 import { prisma } from "../db/prisma";
+import { logger } from "../services/logging/LoggerService";
 import type { LLMProvider } from "@ai-novel/shared/types/llm";
 
 export interface LlmTokenUsageSnapshot {
@@ -309,7 +310,12 @@ export async function recordTrackedLlmUsage(
           llmCallCount: { increment: 1 },
           lastTokenRecordedAt: now,
         },
-      }).catch(() => null)
+      }).catch((err) => {
+        logger.warn("[UsageTracking] workflowTask 用量写入失败", {
+          workflowTaskId: context.workflowTaskId,
+          error: err instanceof Error ? err.message : String(err),
+        });
+      })
       : Promise.resolve(null),
     context.generationJobId
       ? prisma.generationJob.updateMany({
@@ -321,7 +327,12 @@ export async function recordTrackedLlmUsage(
           llmCallCount: { increment: 1 },
           lastTokenRecordedAt: now,
         },
-      }).catch(() => null)
+      }).catch((err) => {
+        logger.warn("[UsageTracking] generationJob 用量写入失败", {
+          generationJobId: context.generationJobId,
+          error: err instanceof Error ? err.message : String(err),
+        });
+      })
       : Promise.resolve(null),
     context.styleExtractionTaskId
       ? prisma.styleExtractionTask.updateMany({
@@ -333,7 +344,12 @@ export async function recordTrackedLlmUsage(
           llmCallCount: { increment: 1 },
           lastTokenRecordedAt: now,
         },
-      }).catch(() => null)
+      }).catch((err) => {
+        logger.warn("[UsageTracking] styleExtractionTask 用量写入失败", {
+          styleExtractionTaskId: context.styleExtractionTaskId,
+          error: err instanceof Error ? err.message : String(err),
+        });
+      })
       : Promise.resolve(null),
   ]);
 }

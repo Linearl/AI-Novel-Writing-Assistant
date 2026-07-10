@@ -2,6 +2,7 @@ import fs from "node:fs/promises";
 import { createReadStream } from "node:fs";
 import path from "node:path";
 import readline from "node:readline";
+import { logger } from "./LoggerService";
 import { resolveLogsRoot } from "../../runtime/appPaths";
 
 export type LogLevel = "error" | "warn" | "info" | "http" | "verbose" | "debug" | "silly";
@@ -105,11 +106,15 @@ async function readAndFilterEntries(params: LogQueryParams): Promise<LogEntry[]>
     const fileStream = createReadStream(filePath, { encoding: "utf-8" });
     const rl = readline.createInterface({ input: fileStream, crlfDelay: Infinity });
 
-    for await (const line of rl) {
-      const entry = parseLogLine(line);
-      if (entry && matchesFilter(entry, params)) {
-        allEntries.push(entry);
+    try {
+      for await (const line of rl) {
+        const entry = parseLogLine(line);
+        if (entry && matchesFilter(entry, params)) {
+          allEntries.push(entry);
+        }
       }
+    } finally {
+      fileStream.destroy();
     }
   }
 

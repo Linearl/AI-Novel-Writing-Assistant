@@ -1,4 +1,5 @@
 import { prisma } from "../../db/prisma";
+import { logger } from "../../services/logging/LoggerService";
 import { stringifyStringArray } from "../novel/novelP0Utils";
 import { payoffLedgerSyncService } from "../payoff/PayoffLedgerSyncService";
 import { openConflictService } from "./OpenConflictService";
@@ -477,12 +478,24 @@ export class StateService {
         sourceSnapshotId: persistedSnapshot.id,
         trackedConflictKeys: detected.trackedConflictKeys,
         conflicts: detected.conflicts,
-      }).catch(() => null);
+      }).catch((err) => {
+        logger.warn("[StateService] openConflict syncFromStateDiff 失败（非阻断）", {
+          novelId: input.novelId,
+          chapterId: input.chapterId,
+          error: err instanceof Error ? err.message : String(err),
+        });
+      });
       if (!input.skipPayoffLedgerSync) {
         await payoffLedgerSyncService.syncLedger(input.novelId, {
           chapterOrder: input.chapterOrder,
           sourceChapterId: input.chapterId,
-        }).catch(() => null);
+        }).catch((err) => {
+          logger.warn("[StateService] payoffLedgerSync 失败（非阻断）", {
+            novelId: input.novelId,
+            chapterOrder: input.chapterOrder,
+            error: err instanceof Error ? err.message : String(err),
+          });
+        });
       }
     }
 

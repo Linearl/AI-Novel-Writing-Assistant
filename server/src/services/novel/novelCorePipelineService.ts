@@ -1,6 +1,8 @@
 import type { Prisma } from "@prisma/client";
 import { prisma } from "../../db/prisma";
+import { logger } from "../../services/logging/LoggerService";
 import { novelEventBus } from "../../events";
+import { AppError } from "../../middleware/errorHandler";
 import { ChapterRuntimeCoordinator } from "./runtime/ChapterRuntimeCoordinator";
 import {
   logPipelineInfo,
@@ -30,6 +32,11 @@ import {
 
 export { buildPipelineCurrentItemLabel, buildPipelineStageProgress } from "./pipelineJobState";
 
+/** startLock 最长等待时间（毫秒），超时抛 AppError */
+const START_LOCK_TIMEOUT_MS = 30_000;
+/** startLock 退避间隔序列（毫秒） */
+const START_LOCK_BACKOFF_SEQUENCE_MS = [50, 100, 200] as const;
+
 export class NovelCorePipelineService {
   private static readonly activeJobIds = new Set<string>();
   private static readonly startLocks = new Set<string>();
@@ -56,8 +63,19 @@ export class NovelCorePipelineService {
   // ---------------------------------------------------------------------------
 
   private async waitForStartLock(key: string): Promise<void> {
+    const deadline = Date.now() + START_LOCK_TIMEOUT_MS;
+    let backoffIndex = 0;
     while (NovelCorePipelineService.startLocks.has(key)) {
-      await new Promise((resolve) => setTimeout(resolve, 50));
+      if (Date.now() >= deadline) {
+        throw new AppError(
+          `获取启动锁超时（${START_LOCK_TIMEOUT_MS / 1000}s），锁键: ${key}`,
+          503,
+        );
+      }
+      const delay = START_LOCK_BACKOFF_SEQUENCE_MS[backoffIndex]
+        ?? START_LOCK_BACKOFF_SEQUENCE_MS[START_LOCK_BACKOFF_SEQUENCE_MS.length - 1];
+      await new Promise((resolve) => setTimeout(resolve, delay));
+      backoffIndex = Math.min(backoffIndex + 1, START_LOCK_BACKOFF_SEQUENCE_MS.length - 1);
     }
   }
 
@@ -528,8 +546,12 @@ export class NovelCorePipelineService {
     };
 
     void executePipeline(executorDeps, jobId, novelId, options)
-      .catch(() => {
-        // 防止后台任务未处理拒绝导致进程不稳定
+      .catch((err) => {
+        logger.error("[NovelCorePipelineService] 后台流水线执行失败", {
+          jobId,
+          novelId,
+          error: err instanceof Error ? err.message : String(err),
+        });
       })
       .finally(() => {
         NovelCorePipelineService.activeJobIds.delete(jobId);

@@ -8,6 +8,7 @@ import type {
   VolumePlanVersionSummary,
   VolumeSyncPreview,
 } from "@ai-novel/shared/types/novel";
+import { logger } from "../../../services/logging/LoggerService";
 import type { Prisma } from "@prisma/client";
 import { novelEventBus } from "../../../events";
 import type { VolumeUpdateReason } from "../../../events";
@@ -145,7 +146,13 @@ export class NovelVolumeService {
     void novelEventBus.emit({
       type: "volume:updated",
       payload: { novelId, reason },
-    }).catch(() => {});
+    }).catch((err) => {
+      logger.warn("[NovelVolumeService] volume:updated 事件发射失败", {
+        novelId,
+        reason,
+        error: err instanceof Error ? err.message : String(err),
+      });
+    });
   }
 
   private syncPayoffLedger(novelId: string): void {

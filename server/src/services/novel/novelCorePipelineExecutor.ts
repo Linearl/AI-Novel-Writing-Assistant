@@ -1,5 +1,6 @@
 import type { ReviewIssue } from "@ai-novel/shared/types/novel";
 import { prisma } from "../../db/prisma";
+import { logger } from "../../services/logging/LoggerService";
 import { novelEventBus } from "../../events";
 import { ChapterPlanJITService } from "./planning/ChapterPlanJITService";
 import { NovelVolumeService } from "./volume/NovelVolumeService";
@@ -450,7 +451,13 @@ export async function executePipeline(
 
         // pipeline 模式：在处理下一章前，等待当前章的预取完成以实现交错
         if (isPipelineMode && activePrefetchPromise) {
-          await activePrefetchPromise.catch(() => {});
+          await activePrefetchPromise.catch((err) => {
+            logPipelineWarn("N+1 预取等待失败（非阻断，下一章将在组装时重试）", {
+              jobId,
+              nextChapterId: nextChapter.id,
+              error: err instanceof Error ? err.message : String(err),
+            });
+          });
           activePrefetchPromise = null;
         }
 
@@ -520,7 +527,14 @@ export async function executePipeline(
       void novelEventBus.emit({
         type: "pipeline:completed",
         payload: { novelId, jobId, status: finalStatus },
-      }).catch(() => {});
+      }).catch((err) => {
+        logPipelineWarn("pipeline:completed 事件发射失败", {
+          jobId,
+          novelId,
+          status: finalStatus,
+          error: err instanceof Error ? err.message : String(err),
+        });
+      });
     });
   } catch (error) {
     if (error instanceof Error && error.message === "PIPELINE_CANCELLED") {
@@ -542,7 +556,13 @@ export async function executePipeline(
       void novelEventBus.emit({
         type: "pipeline:completed",
         payload: { novelId, jobId, status: "cancelled" },
-      }).catch(() => {});
+      }).catch((err) => {
+        logPipelineWarn("pipeline:completed(cancelled) 事件发射失败", {
+          jobId,
+          novelId,
+          error: err instanceof Error ? err.message : String(err),
+        });
+      });
       return;
     }
 
@@ -579,6 +599,12 @@ export async function executePipeline(
     void novelEventBus.emit({
       type: "pipeline:completed",
       payload: { novelId, jobId, status: "failed" },
-    }).catch(() => {});
+    }).catch((err) => {
+      logPipelineWarn("pipeline:completed(failed) 事件发射失败", {
+        jobId,
+        novelId,
+        error: err instanceof Error ? err.message : String(err),
+      });
+    });
   }
 }

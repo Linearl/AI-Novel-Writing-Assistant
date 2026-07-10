@@ -2,6 +2,7 @@ import fs from "node:fs/promises";
 import fsSync from "node:fs";
 import path from "node:path";
 import readline from "node:readline";
+import { logger } from "../logging/LoggerService";
 
 interface PromptMetaRecord {
   novelId?: string | null;
@@ -124,18 +125,22 @@ export async function buildNovelPromptTraceReport(params: {
       crlfDelay: Infinity,
     });
 
-    for await (const line of reader) {
-      const record = readJsonLine(line);
-      if (!record?.requestId || !record.promptMeta || record.promptMeta.novelId !== params.novelId) {
-        continue;
+    try {
+      for await (const line of reader) {
+        const record = readJsonLine(line);
+        if (!record?.requestId || !record.promptMeta || record.promptMeta.novelId !== params.novelId) {
+          continue;
+        }
+        if (record.event === "request") {
+          requestMetaById.set(record.requestId, record.promptMeta);
+          continue;
+        }
+        if (record.event === "response") {
+          actualPromptTokensById.set(record.requestId, toSafeNumber(record.actualPromptTokens));
+        }
       }
-      if (record.event === "request") {
-        requestMetaById.set(record.requestId, record.promptMeta);
-        continue;
-      }
-      if (record.event === "response") {
-        actualPromptTokensById.set(record.requestId, toSafeNumber(record.actualPromptTokens));
-      }
+    } finally {
+      stream.destroy();
     }
   }
 
