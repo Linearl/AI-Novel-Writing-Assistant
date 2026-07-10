@@ -27,15 +27,6 @@ description: "docs 目录索引（自动生成）"
 | --- | --- | --- |
 | [1.task\B.todo\任务包六件套构成-编号分类规则-自动归档机制.md](./1.task\B.todo\任务包六件套构成-编号分类规则-自动归档机制.md) | --- | - |
 
-## 1.task\B.todo\v0.1\v0.1-r5001-S2-engineering-basics
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r5001-S2-engineering-basics\README.md](./1.task\B.todo\v0.1\v0.1-r5001-S2-engineering-basics\README.md) | 补齐工程化基础配置 — REQ-5001 任务包总线 | 补齐工程化基础配置 — REQ-5001 任务包总线 |
-| [1.task\B.todo\v0.1\v0.1-r5001-S2-engineering-basics\REQ-5001-engineering-basics-original.md](./1.task\B.todo\v0.1\v0.1-r5001-S2-engineering-basics\REQ-5001-engineering-basics-original.md) | 补齐工程化基础配置 — REQ-5001 需求文档（冻结副本） | 补齐工程化基础配置 — REQ-5001 需求文档（冻结副本） |
-| [1.task\B.todo\v0.1\v0.1-r5001-S2-engineering-basics\REQ-5001-engineering-basics.md](./1.task\B.todo\v0.1\v0.1-r5001-S2-engineering-basics\REQ-5001-engineering-basics.md) | 补齐工程化基础配置 — REQ-5001 需求文档，添加 .env.example/.editorconfig/子包README/semver CHANGELOG/Prisma回滚SOP | 补齐工程化基础配置 — REQ-5001 需求文档，添加 .env.example/.editorconfig/子包README/semver CHANGELOG/Prisma回滚SOP |
-| [1.task\B.todo\v0.1\v0.1-r5001-S2-engineering-basics\tasks.md](./1.task\B.todo\v0.1\v0.1-r5001-S2-engineering-basics\tasks.md) | 补齐工程化基础配置 — REQ-5001 任务拆解 | 补齐工程化基础配置 — REQ-5001 任务拆解 |
-
 ## 1.task\B.todo\v0.1\v0.1-r7014-C2-legacy-world-fields-cleanup
 
 | 文件 | 标题 | 描述 |
@@ -133,17 +124,6 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1\v0.1-r7024-M2-client-shared-hooks-abstraction\REQ-7024-client-shared-hooks-abstraction-original.md](./1.task\B.todo\v0.1\v0.1-r7024-M2-client-shared-hooks-abstraction\REQ-7024-client-shared-hooks-abstraction-original.md) | REQ-7024 客户端共享 Hooks 抽象与大文件拆分 — 原始冻结副本 | REQ-7024 客户端共享 Hooks 抽象与大文件拆分 — 原始冻结副本 |
 | [1.task\B.todo\v0.1\v0.1-r7024-M2-client-shared-hooks-abstraction\REQ-7024-client-shared-hooks-abstraction.md](./1.task\B.todo\v0.1\v0.1-r7024-M2-client-shared-hooks-abstraction\REQ-7024-client-shared-hooks-abstraction.md) | REQ-7024 客户端共享 Hooks 抽象与大文件拆分 | REQ-7024 客户端共享 Hooks 抽象与大文件拆分 |
 | [1.task\B.todo\v0.1\v0.1-r7024-M2-client-shared-hooks-abstraction\tasks.md](./1.task\B.todo\v0.1\v0.1-r7024-M2-client-shared-hooks-abstraction\tasks.md) | REQ-7024 客户端共享 Hooks 抽象与大文件拆分 — 任务拆解 | REQ-7024 客户端共享 Hooks 抽象与大文件拆分 — 任务拆解 |
-
-## 1.task\B.todo\v0.1\v0.1-r7025-C2-desktop-test-infrastructure
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r7025-C2-desktop-test-infrastructure\decision_log.md](./1.task\B.todo\v0.1\v0.1-r7025-C2-desktop-test-infrastructure\decision_log.md) | REQ-7025 Desktop 包测试基础设施 — 决策留痕 | REQ-7025 Desktop 包测试基础设施 — 决策留痕 |
-| [1.task\B.todo\v0.1\v0.1-r7025-C2-desktop-test-infrastructure\design.md](./1.task\B.todo\v0.1\v0.1-r7025-C2-desktop-test-infrastructure\design.md) | REQ-7025 Desktop 包测试基础设施 — 方案设计 | REQ-7025 Desktop 包测试基础设施 — 方案设计 |
-| [1.task\B.todo\v0.1\v0.1-r7025-C2-desktop-test-infrastructure\README.md](./1.task\B.todo\v0.1\v0.1-r7025-C2-desktop-test-infrastructure\README.md) | REQ-7025 Desktop 包测试基础设施——README | REQ-7025 Desktop 包测试基础设施——README |
-| [1.task\B.todo\v0.1\v0.1-r7025-C2-desktop-test-infrastructure\REQ-7025-desktop-test-infrastructure-original.md](./1.task\B.todo\v0.1\v0.1-r7025-C2-desktop-test-infrastructure\REQ-7025-desktop-test-infrastructure-original.md) | REQ-7025 Desktop 包测试基础设施 — 原始冻结副本 | REQ-7025 Desktop 包测试基础设施 — 原始冻结副本 |
-| [1.task\B.todo\v0.1\v0.1-r7025-C2-desktop-test-infrastructure\REQ-7025-desktop-test-infrastructure.md](./1.task\B.todo\v0.1\v0.1-r7025-C2-desktop-test-infrastructure\REQ-7025-desktop-test-infrastructure.md) | REQ-7025 Desktop 包测试基础设施 | REQ-7025 Desktop 包测试基础设施 |
-| [1.task\B.todo\v0.1\v0.1-r7025-C2-desktop-test-infrastructure\tasks.md](./1.task\B.todo\v0.1\v0.1-r7025-C2-desktop-test-infrastructure\tasks.md) | REQ-7025 Desktop 包测试基础设施 — 任务拆解 | REQ-7025 Desktop 包测试基础设施 — 任务拆解 |
 
 ## 1.task\B.todo\v0.1\v0.1-r7026-C3-build-chain-module-system-unification
 
@@ -246,9 +226,9 @@ description: "docs 目录索引（自动生成）"
 
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r7038-S2-character-prep-extract-helper\README.md](./1.task\B.todo\v0.1\v0.1-r7038-S2-character-prep-extract-helper\README.md) | QUA-039 任务包总线 — P2 CharacterPreparation 降嵌套 | QUA-039 任务包总线 — P2 CharacterPreparation 降嵌套 |
+| [1.task\B.todo\v0.1\v0.1-r7038-S2-character-prep-extract-helper\README.md](./1.task\B.todo\v0.1\v0.1-r7038-S2-character-prep-extract-helper\README.md) | --- | - |
 | [1.task\B.todo\v0.1\v0.1-r7038-S2-character-prep-extract-helper\REQ-7038-character-prep-extract-helper.md](./1.task\B.todo\v0.1\v0.1-r7038-S2-character-prep-extract-helper\REQ-7038-character-prep-extract-helper.md) | QUA-039: CharacterPreparationService persistCharacterCastOptions() 嵌套 8 层 → ≤4 层（提取辅助函数） | QUA-039: CharacterPreparationService persistCharacterCastOptions() 嵌套 8 层 → ≤4 层（提取辅助函数） |
-| [1.task\B.todo\v0.1\v0.1-r7038-S2-character-prep-extract-helper\tasks.md](./1.task\B.todo\v0.1\v0.1-r7038-S2-character-prep-extract-helper\tasks.md) | QUA-039 任务拆解 | QUA-039 任务拆解 |
+| [1.task\B.todo\v0.1\v0.1-r7038-S2-character-prep-extract-helper\tasks.md](./1.task\B.todo\v0.1\v0.1-r7038-S2-character-prep-extract-helper\tasks.md) | --- | - |
 
 ## 1.task\B.todo\v0.1\v0.1-r7039-S2-scattered-small-fixes
 
