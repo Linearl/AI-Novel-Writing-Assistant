@@ -5,8 +5,9 @@ import type {
   CharacterWorldFocusHints,
 } from "@ai-novel/shared/types/novel";
 import type { LLMProvider } from "@ai-novel/shared/types/llm";
-import { parseCharacterProhibitionsJson } from "../characters/characterHardFacts";
+import { parseCharacterProhibitionsJson, serializeCharacterProhibitions } from "../characters/characterHardFacts";
 import { assessCharacterCastBatch } from "./characterCastQuality";
+import type { CharacterCastOptionResponseParsed } from "../../../prompting/prompts/novel/characterPreparation.promptSchemas";
 
 export interface CharacterPrepOptions {
   provider?: LLMProvider;
@@ -26,6 +27,55 @@ export interface CharacterCastApplyOptions {
 export function toOptionalText(value: string | null | undefined): string | null {
   const normalized = value?.trim() ?? "";
   return normalized || null;
+}
+
+type ParsedMember = CharacterCastOptionResponseParsed["options"][number]["members"][number];
+type ParsedRelation = CharacterCastOptionResponseParsed["options"][number]["relations"][number];
+
+export function buildMemberCreateData(member: ParsedMember, index: number) {
+  return {
+    sortOrder: index,
+    name: member.name,
+    role: member.role,
+    gender: member.gender,
+    castRole: member.castRole,
+    relationToProtagonist: toOptionalText(member.relationToProtagonist),
+    storyFunction: member.storyFunction,
+    shortDescription: toOptionalText(member.shortDescription),
+    personality: toOptionalText(member.personality),
+    background: toOptionalText(member.background),
+    development: toOptionalText(member.development),
+    identityLabel: toOptionalText(member.identityLabel),
+    factionLabel: toOptionalText(member.factionLabel),
+    stanceLabel: toOptionalText(member.stanceLabel),
+    powerLevel: toOptionalText(member.powerLevel),
+    realm: toOptionalText(member.realm),
+    currentLocation: toOptionalText(member.currentLocation),
+    availability: toOptionalText(member.availability),
+    prohibitionsJson: serializeCharacterProhibitions(member.prohibitions),
+    outerGoal: toOptionalText(member.outerGoal),
+    innerNeed: toOptionalText(member.innerNeed),
+    fear: toOptionalText(member.fear),
+    wound: toOptionalText(member.wound),
+    misbelief: toOptionalText(member.misbelief),
+    secret: toOptionalText(member.secret),
+    moralLine: toOptionalText(member.moralLine),
+    firstImpression: toOptionalText(member.firstImpression),
+  };
+}
+
+export function buildRelationCreateData(relation: ParsedRelation, index: number) {
+  return {
+    sortOrder: index,
+    sourceName: relation.sourceName,
+    targetName: relation.targetName,
+    surfaceRelation: relation.surfaceRelation,
+    hiddenTension: toOptionalText(relation.hiddenTension),
+    conflictSource: toOptionalText(relation.conflictSource),
+    secretAsymmetry: toOptionalText(relation.secretAsymmetry),
+    dynamicLabel: toOptionalText(relation.dynamicLabel),
+    nextTurnPoint: toOptionalText(relation.nextTurnPoint),
+  };
 }
 
 export function fillIfMissing(existing: string | null | undefined, incoming: string | null | undefined): string | undefined {

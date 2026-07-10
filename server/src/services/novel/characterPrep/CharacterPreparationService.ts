@@ -29,9 +29,10 @@ import {
   buildCharacterCastRepairReasons,
 } from "./characterCastQuality";
 import { WorldContextGateway } from "../worldContext/WorldContextGateway";
-import { serializeCharacterProhibitions } from "../characters/characterHardFacts";
 import {
   toOptionalText,
+  buildMemberCreateData,
+  buildRelationCreateData,
   serializeCharacterCastOptionWithQuality,
   type CharacterPrepOptions,
 } from "./characterPrepHelpers";
@@ -224,48 +225,10 @@ export class CharacterPreparationService {
             recommendedReason: toOptionalText(option.recommendedReason),
             sourceStoryInput: toOptionalText(storyInput),
             members: {
-              create: option.members.map((member, index) => ({
-                sortOrder: index,
-                name: member.name,
-                role: member.role,
-                gender: member.gender,
-                castRole: member.castRole,
-                relationToProtagonist: toOptionalText(member.relationToProtagonist),
-                storyFunction: member.storyFunction,
-                shortDescription: toOptionalText(member.shortDescription),
-                personality: toOptionalText(member.personality),
-                background: toOptionalText(member.background),
-                development: toOptionalText(member.development),
-                identityLabel: toOptionalText(member.identityLabel),
-                factionLabel: toOptionalText(member.factionLabel),
-                stanceLabel: toOptionalText(member.stanceLabel),
-                powerLevel: toOptionalText(member.powerLevel),
-                realm: toOptionalText(member.realm),
-                currentLocation: toOptionalText(member.currentLocation),
-                availability: toOptionalText(member.availability),
-                prohibitionsJson: serializeCharacterProhibitions(member.prohibitions),
-                outerGoal: toOptionalText(member.outerGoal),
-                innerNeed: toOptionalText(member.innerNeed),
-                fear: toOptionalText(member.fear),
-                wound: toOptionalText(member.wound),
-                misbelief: toOptionalText(member.misbelief),
-                secret: toOptionalText(member.secret),
-                moralLine: toOptionalText(member.moralLine),
-                firstImpression: toOptionalText(member.firstImpression),
-              })),
+              create: option.members.map(buildMemberCreateData),
             },
             relations: {
-              create: option.relations.map((relation, index) => ({
-                sortOrder: index,
-                sourceName: relation.sourceName,
-                targetName: relation.targetName,
-                surfaceRelation: relation.surfaceRelation,
-                hiddenTension: toOptionalText(relation.hiddenTension),
-                conflictSource: toOptionalText(relation.conflictSource),
-                secretAsymmetry: toOptionalText(relation.secretAsymmetry),
-                dynamicLabel: toOptionalText(relation.dynamicLabel),
-                nextTurnPoint: toOptionalText(relation.nextTurnPoint),
-              })),
+              create: option.relations.map(buildRelationCreateData),
             },
           },
         });

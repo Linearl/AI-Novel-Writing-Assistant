@@ -128,7 +128,7 @@ description: "需求任务总清单（SSOT）"
 | 7035 | ARCH-004: DirectorCommandService ↔ workers/ 循环依赖解耦 — IDispatcher 接口抽象 | p1 | 📋 待办 | 代码审计-full 独占发现复核报告 ARCH-004 | 0.1 | 2026-07-10 | - | `B.todo/v0.1-r7035-C1-director-command-interface-abstract/README.md` |  |
 | 7036 | SEC-014: API Key AES-256-GCM 加密存储 — secretStore 加 crypto 包装层 | p2 | ✅ 已完成 | 代码审计-full 独占发现复核报告 SEC-014 | 0.1 | 2026-07-10 | 2026-07-10 | `B.todo/v0.1-r7036-M2-api-key-aes-encrypt/README.md` |  |
 | 7037 | QUA-022: directorRuntime.ts 渐进拆分（projection/worker/automation 3 域 + barrel index.ts） | p2 | 📋 待办 | 代码审计-full 独占发现复核报告 QUA-022 | 0.1 | 2026-07-10 | - | `B.todo/v0.1-r7037-M2-director-runtime-split/README.md` |  |
-| 7038 | QUA-039: CharacterPreparationService persistCharacterCastOptions 提取辅助函数降嵌套 | p2 | 📋 待办 | 代码审计-full 独占发现复核报告 QUA-039 | 0.1 | 2026-07-10 | - | `B.todo/v0.1-r7038-S2-character-prep-extract-helper/README.md` |  |
+| 7038 | QUA-039: CharacterPreparationService persistCharacterCastOptions 提取辅助函数降嵌套 | p2 | ✅ 已完成 | 代码审计-full 独占发现复核报告 QUA-039 | 0.1 | 2026-07-10 | 2026-07-10 | `B.todo/v0.1-r7038-S2-character-prep-extract-helper/README.md` |  |
 | 7039 | 散点小修复：ARCH-005/009/023/024 + STA-025 + PERF-003 + PERF-007/C + COMPAT-004 | p3 | 📋 待办 | 代码审计-full 独占发现复核报告 — 多维度已决策的散点修复 | 0.1 | 2026-07-10 | - | `B.todo/v0.1-r7039-S2-scattered-small-fixes/README.md` |  |
 | 7030 | Novel Application Services 门面收缩 | p1 | 📋 待办 | - | 0.1 | 2026-07-10 | 2026-07-10 | `B.todo/v0.1-r7030-M2-novel-application-services-facade-contraction/README.md` |  |
 
@@ -161,7 +161,6 @@ description: "需求任务总清单（SSOT）"
 | 7034 | Novel Application Services 门面收缩 | `B.todo/v0.1-r7034-M2-novel-application-services-facade-contraction/README.md` |
 | 7035 | ARCH-004: DirectorCommandService ↔ workers/ 循环依赖解耦 — IDispatcher 接口抽象 | `B.todo/v0.1-r7035-C1-director-command-interface-abstract/README.md` |
 | 7037 | QUA-022: directorRuntime.ts 渐进拆分（projection/worker/automation 3 域 + barrel index.ts） | `B.todo/v0.1-r7037-M2-director-runtime-split/README.md` |
-| 7038 | QUA-039: CharacterPreparationService persistCharacterCastOptions 提取辅助函数降嵌套 | `B.todo/v0.1-r7038-S2-character-prep-extract-helper/README.md` |
 | 7039 | 散点小修复：ARCH-005/009/023/024 + STA-025 + PERF-003 + PERF-007/C + COMPAT-004 | `B.todo/v0.1-r7039-S2-scattered-small-fixes/README.md` |
 | 2013 | Director Failed Retry Entry | `B.todo/v0.1-r2013-medium-director-failed-retry-entry/README.md` |
 | 2014 | Chapter Token Budget Dynamic | `B.todo/v0.1-r2014-medium-chapter-token-budget-dynamic/README.md` |
@@ -245,5 +244,6 @@ description: "需求任务总清单（SSOT）"
 | 7017 | 词汇库审校扫描器 | `B.2.done/v0.1-r7017-M2-vocabulary-audit-scanner/README.md` |
 | 7025 | Desktop 包测试基础设施 | `B.2.done/v0.1-r7025-C2-desktop-test-infrastructure/README.md` |
 | 7036 | SEC-014: API Key AES-256-GCM 加密存储 — secretStore 加 crypto 包装层 | `B.todo/v0.1-r7036-M2-api-key-aes-encrypt/README.md` |
+| 7038 | QUA-039: CharacterPreparationService persistCharacterCastOptions 提取辅助函数降嵌套 | `B.todo/v0.1-r7038-S2-character-prep-extract-helper/README.md` |
 
 ---

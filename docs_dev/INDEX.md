@@ -226,9 +226,9 @@ description: "docs 目录索引（自动生成）"
 
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r7038-S2-character-prep-extract-helper\README.md](./1.task\B.todo\v0.1\v0.1-r7038-S2-character-prep-extract-helper\README.md) | --- | - |
+| [1.task\B.todo\v0.1\v0.1-r7038-S2-character-prep-extract-helper\README.md](./1.task\B.todo\v0.1\v0.1-r7038-S2-character-prep-extract-helper\README.md) | QUA-039 任务包总线 — P2 CharacterPreparation 降嵌套 | QUA-039 任务包总线 — P2 CharacterPreparation 降嵌套 |
 | [1.task\B.todo\v0.1\v0.1-r7038-S2-character-prep-extract-helper\REQ-7038-character-prep-extract-helper.md](./1.task\B.todo\v0.1\v0.1-r7038-S2-character-prep-extract-helper\REQ-7038-character-prep-extract-helper.md) | QUA-039: CharacterPreparationService persistCharacterCastOptions() 嵌套 8 层 → ≤4 层（提取辅助函数） | QUA-039: CharacterPreparationService persistCharacterCastOptions() 嵌套 8 层 → ≤4 层（提取辅助函数） |
-| [1.task\B.todo\v0.1\v0.1-r7038-S2-character-prep-extract-helper\tasks.md](./1.task\B.todo\v0.1\v0.1-r7038-S2-character-prep-extract-helper\tasks.md) | --- | - |
+| [1.task\B.todo\v0.1\v0.1-r7038-S2-character-prep-extract-helper\tasks.md](./1.task\B.todo\v0.1\v0.1-r7038-S2-character-prep-extract-helper\tasks.md) | QUA-039 任务拆解 | QUA-039 任务拆解 |
 
 ## 1.task\B.todo\v0.1\v0.1-r7039-S2-scattered-small-fixes
 
