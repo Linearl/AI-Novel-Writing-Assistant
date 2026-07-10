@@ -113,7 +113,7 @@ description: "需求任务总清单（SSOT）"
 | 7019 | 依赖注入提升可测试性 | p1 | ✅ 已完成 | - | 0.1 | 2026-07-10 | 2026-07-10T15:50:23.869Z | `B.2.done/v0.1-r7019-C3-dependency-injection-for-testability/README.md` |  |
 | 7020 | 共享类型 Barrel 统一导出 | p0 | ✅ 已完成 | - | 0.1 | 2026-07-10 | 2026-07-10T15:38:48.817Z | `B.2.done/v0.1-r7020-M2-shared-types-barrel-unification/README.md` |  |
 | 7021 | Zod Schema 去重与共享化 | p1 | ✅ 已完成 | 2026-07-10 全量架构诊断报告 第4条发现 | 0.1 | 2026-07-10 | 2026-07-10T15:38:49.675Z | `B.2.done/v0.1-r7021-M2-zod-schema-deduplication/README.md` |  |
-| 7022 | Services 目录收敛与大文件拆分 | p1 | ✅ 已完成 | 2026-07-10 全量架构诊断报告 第5条发现 | 0.1 | 2026-07-10 | 2026-07-11 | `B.todo/v0.1-r7022-C2-services-directory-consolidation/README.md` |  |
+| 7022 | Services 目录收敛与大文件拆分 | p1 | ✅ 已完成 | 2026-07-10 全量架构诊断报告 第5条发现 | 0.1 | 2026-07-10 | 2026-07-11 | `B.2.done/v0.1-r7022-C2-services-directory-consolidation/README.md` |  |
 | 7023 | 测试目录重构与覆盖率接入 | p2 | ✅ 已完成 | 2026-07-10 全量架构诊断报告 第6条发现 | 0.1 | 2026-07-10 | 2026-07-10T15:50:23.873Z | `B.2.done/v0.1-r7023-M3-test-directory-restructuring/README.md` |  |
 | 7024 | 客户端共享 Hooks 抽象与大文件拆分 | p2 | ✅ 已完成 | 架构诊断报告 2026-07-10 第7条发现 | 0.1 | 2026-07-10 | 2026-07-10 | `B.2.done/v0.1-r7024-M2-client-shared-hooks-abstraction/README.md` | 创建 useApiMutation/useApiQuery 封装重复模式 + 拆分 NovelWorkspaceRail（678 行）及 3 个 >800 行文件 + 替换 ~20 处 inline mutation |
 | 7025 | Desktop 包测试基础设施 | p1 | ✅ 已完成 | 架构诊断报告 2026-07-10 第8条发现 | 0.1 | 2026-07-10 | 2026-07-10 | `B.2.done/v0.1-r7025-C2-desktop-test-infrastructure/README.md` | T1 完成：desktop/tests/目录、helpers/electronStubs+updaterMock、tsconfig.test.json、3 个测试文件(state/dataImport/server 共 40 个测试用例)、pnpm test 脚本。T2-T3(main.ts 拆分)、T4-T7(各模块测试)部分完成。T8(stage-desktop 集成测试)、T9(CI 集成)待后续迭代。 |
@@ -230,7 +230,7 @@ description: "需求任务总清单（SSOT）"
 | 7019 | 依赖注入提升可测试性 | `B.2.done/v0.1-r7019-C3-dependency-injection-for-testability/README.md` |
 | 7020 | 共享类型 Barrel 统一导出 | `B.2.done/v0.1-r7020-M2-shared-types-barrel-unification/README.md` |
 | 7021 | Zod Schema 去重与共享化 | `B.2.done/v0.1-r7021-M2-zod-schema-deduplication/README.md` |
-| 7022 | Services 目录收敛与大文件拆分 | `B.todo/v0.1-r7022-C2-services-directory-consolidation/README.md` |
+| 7022 | Services 目录收敛与大文件拆分 | `B.2.done/v0.1-r7022-C2-services-directory-consolidation/README.md` |
 | 7023 | 测试目录重构与覆盖率接入 | `B.2.done/v0.1-r7023-M3-test-directory-restructuring/README.md` |
 | 7024 | 客户端共享 Hooks 抽象与大文件拆分 | `B.2.done/v0.1-r7024-M2-client-shared-hooks-abstraction/README.md` |
 | 7025 | Desktop 包测试基础设施 | `B.2.done/v0.1-r7025-C2-desktop-test-infrastructure/README.md` |

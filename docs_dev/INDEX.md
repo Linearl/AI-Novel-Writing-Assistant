@@ -27,17 +27,6 @@ description: "docs 目录索引（自动生成）"
 | --- | --- | --- |
 | [1.task\B.todo\任务包六件套构成-编号分类规则-自动归档机制.md](./1.task\B.todo\任务包六件套构成-编号分类规则-自动归档机制.md) | --- | - |
 
-## 1.task\B.todo\v0.1\v0.1-r7022-C2-services-directory-consolidation
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r7022-C2-services-directory-consolidation\decision_log.md](./1.task\B.todo\v0.1\v0.1-r7022-C2-services-directory-consolidation\decision_log.md) | REQ-7022 Services 目录收敛与大文件拆分 —— 决策日志 | REQ-7022 Services 目录收敛与大文件拆分 —— 决策日志 |
-| [1.task\B.todo\v0.1\v0.1-r7022-C2-services-directory-consolidation\design.md](./1.task\B.todo\v0.1\v0.1-r7022-C2-services-directory-consolidation\design.md) | REQ-7022 Services 目录收敛与大文件拆分 —— 技术设计 | REQ-7022 Services 目录收敛与大文件拆分 —— 技术设计 |
-| [1.task\B.todo\v0.1\v0.1-r7022-C2-services-directory-consolidation\README.md](./1.task\B.todo\v0.1\v0.1-r7022-C2-services-directory-consolidation\README.md) | REQ-7022 Services 目录收敛与大文件拆分 —— README | REQ-7022 Services 目录收敛与大文件拆分 —— README |
-| [1.task\B.todo\v0.1\v0.1-r7022-C2-services-directory-consolidation\REQ-7022-services-directory-consolidation-original.md](./1.task\B.todo\v0.1\v0.1-r7022-C2-services-directory-consolidation\REQ-7022-services-directory-consolidation-original.md) | REQ-7022 Services 目录收敛与大文件拆分 —— 需求文档（冻结副本） | REQ-7022 Services 目录收敛与大文件拆分 —— 需求文档（冻结副本） |
-| [1.task\B.todo\v0.1\v0.1-r7022-C2-services-directory-consolidation\REQ-7022-services-directory-consolidation.md](./1.task\B.todo\v0.1\v0.1-r7022-C2-services-directory-consolidation\REQ-7022-services-directory-consolidation.md) | REQ-7022 Services 目录收敛与大文件拆分 —— 需求文档 | REQ-7022 Services 目录收敛与大文件拆分 —— 需求文档 |
-| [1.task\B.todo\v0.1\v0.1-r7022-C2-services-directory-consolidation\tasks.md](./1.task\B.todo\v0.1\v0.1-r7022-C2-services-directory-consolidation\tasks.md) | REQ-7022 Services 目录收敛与大文件拆分 —— 任务清单 | REQ-7022 Services 目录收敛与大文件拆分 —— 任务清单 |
-
 ## 1.task\B.todo\v0.1\v0.1-r7032-S3-extract-hardcoded-constants
 
 | 文件 | 标题 | 描述 |

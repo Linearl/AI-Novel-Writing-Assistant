@@ -101,6 +101,43 @@ export class DefaultNovelApplicationServices implements NovelApplicationServices
     return novel;
   }
 
+  // ================================================================
+  //  Pure-delegation methods — route files use Pick<> to access these
+  // ================================================================
+
+  // Chapter management (delegate to core)
+  listChapters = (novelId: string) => this.core.listChapters(novelId);
+  createChapter = (novelId: string, input: any) => this.core.createChapter(novelId, input);
+  updateChapter = (novelId: string, chapterId: string, input: any) => this.core.updateChapter(novelId, chapterId, input);
+  deleteChapter = (novelId: string, chapterId: string) => this.core.deleteChapter(novelId, chapterId);
+  softDeleteChapter = (novelId: string, chapterId: string) => this.core.softDeleteChapter(novelId, chapterId);
+  restoreChapter = (novelId: string, chapterId: string) => this.core.restoreChapter(novelId, chapterId);
+  toggleChapterLock = (novelId: string, chapterId: string, locked: boolean) => this.core.toggleChapterLock(novelId, chapterId, locked);
+  ensureChapterExecutionContract = (...args: any[]) => (this.core as any).ensureChapterExecutionContract?.(...args);
+  getChapterEditorWorkspace = (novelId: string, chapterId: string) => this.chapterEditorWorkspaceService.getWorkspace(novelId, chapterId);
+  previewChapterRewrite = (...args: any[]) => (this.chapterEditorService as any).previewChapterRewrite?.(...args);
+  previewChapterAiRevision = (...args: any[]) => (this.chapterEditorService as any).previewChapterAiRevision?.(...args);
+
+  // Chapter review/audit (delegate to core)
+  reviewChapter = (novelId: string, chapterId: string, options?: any) => this.core.reviewChapter(novelId, chapterId, options);
+  auditChapter = (novelId: string, chapterId: string, scope?: any, options?: any) => this.core.auditChapter(novelId, chapterId, scope, options);
+  listChapterAuditReports = (novelId: string, chapterId: string) => this.core.listChapterAuditReports(novelId, chapterId);
+  resolveAuditIssues = (novelId: string, issueIds: string[]) => this.core.resolveAuditIssues(novelId, issueIds);
+  getQualityReport = (novelId: string) => this.core.getQualityReport(novelId);
+
+  // World slice (delegate to world services)
+  getNovelWorld = (...args: any[]) => (this.novelWorldInstanceService as any).getNovelWorldView?.(...args) ?? (this.worldSliceService as any).getNovelWorld?.(...args);
+  getNovelWorldSyncDiff = (...args: any[]) => (this.novelWorldInstanceService as any).getNovelWorldSyncDiff?.(...args) ?? (this.worldSliceService as any).getNovelWorldSyncDiff?.(...args);
+  importNovelWorldFromLibrary = (...args: any[]) => (this.novelWorldLibrarySaveService as any).importFromLibrary?.(...args) ?? (this.worldSliceService as any).importNovelWorldFromLibrary?.(...args);
+  createManualNovelWorld = (...args: any[]) => (this.novelWorldManualService as any).createManualNovelWorld?.(...args) ?? (this.worldSliceService as any).createManualNovelWorld?.(...args);
+  generateNovelWorldFromTheme = (...args: any[]) => (this.worldSliceService as any).generateNovelWorldFromTheme?.(...args);
+  saveNovelWorldToLibrary = (...args: any[]) => (this.novelWorldLibrarySaveService as any).saveToLibrary?.(...args) ?? (this.worldSliceService as any).saveNovelWorldToLibrary?.(...args);
+  syncNovelWorldWithLibrary = (...args: any[]) => (this.novelWorldLibrarySaveService as any).syncWithLibrary?.(...args) ?? (this.worldSliceService as any).syncNovelWorldWithLibrary?.(...args);
+  deleteNovelWorld = (...args: any[]) => (this.novelWorldInstanceService as any).deleteNovelWorld?.(...args) ?? (this.worldSliceService as any).deleteNovelWorld?.(...args);
+  getWorldSlice = (...args: any[]) => (this.worldSliceService as any).getWorldSlice?.(...args);
+  refreshWorldSlice = (...args: any[]) => (this.worldSliceService as any).refreshWorldSlice?.(...args);
+  updateWorldSliceOverrides = (...args: any[]) => (this.worldSliceService as any).updateWorldSliceOverrides?.(...args);
+
   async createCharacter(...args: Parameters<NovelCoreService["createCharacter"]>) {
     const [novelId] = args;
     const created = await this.core.createCharacter(...args);
