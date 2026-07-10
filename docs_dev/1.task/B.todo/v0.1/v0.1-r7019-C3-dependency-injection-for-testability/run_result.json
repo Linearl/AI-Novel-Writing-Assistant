@@ -1,16 +1,21 @@
 {
   "reqId": "7019",
   "title": "依赖注入提升可测试性",
-  "status": "requirements_ready",
+  "status": "in_progress",
   "complexity": "C3",
   "priority": "P1",
-  "phase": "requirements",
+  "phase": "implementation",
   "createdAt": "2026-07-10",
   "updatedAt": "2026-07-10",
   "estimatedFiles": "15-25",
+  "completedFiles": [
+    "server/src/platform/di/interfaces.ts",
+    "server/src/platform/di/index.ts",
+    "docs/architecture/dependency-injection.md"
+  ],
   "verification": {
-    "typecheck": "pending",
-    "tests": "pending",
+    "typecheck": "pass (new files no errors; pre-existing shared/ errors unrelated)",
+    "tests": "blocked by pre-existing shared/ build error",
     "parallel": "pending"
   }
 }

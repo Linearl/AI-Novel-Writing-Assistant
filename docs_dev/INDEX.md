@@ -114,17 +114,6 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1\v0.1-r7023-M3-test-directory-restructuring\REQ-7023-test-directory-restructuring.md](./1.task\B.todo\v0.1\v0.1-r7023-M3-test-directory-restructuring\REQ-7023-test-directory-restructuring.md) | REQ-7023 测试目录重构与覆盖率接入 —— 需求文档 | REQ-7023 测试目录重构与覆盖率接入 —— 需求文档 |
 | [1.task\B.todo\v0.1\v0.1-r7023-M3-test-directory-restructuring\tasks.md](./1.task\B.todo\v0.1\v0.1-r7023-M3-test-directory-restructuring\tasks.md) | REQ-7023 测试目录重构与覆盖率接入 —— 任务清单 | REQ-7023 测试目录重构与覆盖率接入 —— 任务清单 |
 
-## 1.task\B.todo\v0.1\v0.1-r7024-M2-client-shared-hooks-abstraction
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r7024-M2-client-shared-hooks-abstraction\decision_log.md](./1.task\B.todo\v0.1\v0.1-r7024-M2-client-shared-hooks-abstraction\decision_log.md) | REQ-7024 客户端共享 Hooks 抽象与大文件拆分 — 决策留痕 | REQ-7024 客户端共享 Hooks 抽象与大文件拆分 — 决策留痕 |
-| [1.task\B.todo\v0.1\v0.1-r7024-M2-client-shared-hooks-abstraction\design.md](./1.task\B.todo\v0.1\v0.1-r7024-M2-client-shared-hooks-abstraction\design.md) | REQ-7024 客户端共享 Hooks 抽象与大文件拆分 — 方案设计 | REQ-7024 客户端共享 Hooks 抽象与大文件拆分 — 方案设计 |
-| [1.task\B.todo\v0.1\v0.1-r7024-M2-client-shared-hooks-abstraction\README.md](./1.task\B.todo\v0.1\v0.1-r7024-M2-client-shared-hooks-abstraction\README.md) | REQ-7024 客户端共享 Hooks 抽象与大文件拆分——README | REQ-7024 客户端共享 Hooks 抽象与大文件拆分——README |
-| [1.task\B.todo\v0.1\v0.1-r7024-M2-client-shared-hooks-abstraction\REQ-7024-client-shared-hooks-abstraction-original.md](./1.task\B.todo\v0.1\v0.1-r7024-M2-client-shared-hooks-abstraction\REQ-7024-client-shared-hooks-abstraction-original.md) | REQ-7024 客户端共享 Hooks 抽象与大文件拆分 — 原始冻结副本 | REQ-7024 客户端共享 Hooks 抽象与大文件拆分 — 原始冻结副本 |
-| [1.task\B.todo\v0.1\v0.1-r7024-M2-client-shared-hooks-abstraction\REQ-7024-client-shared-hooks-abstraction.md](./1.task\B.todo\v0.1\v0.1-r7024-M2-client-shared-hooks-abstraction\REQ-7024-client-shared-hooks-abstraction.md) | REQ-7024 客户端共享 Hooks 抽象与大文件拆分 | REQ-7024 客户端共享 Hooks 抽象与大文件拆分 |
-| [1.task\B.todo\v0.1\v0.1-r7024-M2-client-shared-hooks-abstraction\tasks.md](./1.task\B.todo\v0.1\v0.1-r7024-M2-client-shared-hooks-abstraction\tasks.md) | REQ-7024 客户端共享 Hooks 抽象与大文件拆分 — 任务拆解 | REQ-7024 客户端共享 Hooks 抽象与大文件拆分 — 任务拆解 |
-
 ## 1.task\B.todo\v0.1\v0.1-r7026-C3-build-chain-module-system-unification
 
 | 文件 | 标题 | 描述 |
@@ -296,6 +285,15 @@ description: "docs 目录索引（自动生成）"
 | [1.task\todolist\2026-07-10-B-todo-v0.1-todolist.md](./1.task\todolist\2026-07-10-B-todo-v0.1-todolist.md) | B.todo/v0.1 全量开发 todolist — 23 个任务包执行清单（按并行分组） | B.todo/v0.1 全量开发 todolist — 23 个任务包执行清单（按并行分组） |
 | [1.task\todolist\2026-07-10-v0.1-vocab-atmosphere.md](./1.task\todolist\2026-07-10-v0.1-vocab-atmosphere.md) | REQ-7017 词库审校扫描器 + REQ-2048 氛围写作卡片 — Block 执行计划 | REQ-7017 词库审校扫描器 + REQ-2048 氛围写作卡片 — Block 执行计划 |
 | [1.task\todolist\todolist.md](./1.task\todolist\todolist.md) | v0.1 版本 — 全量任务包分阶段开发追踪清单 | v0.1 版本 — 全量任务包分阶段开发追踪清单 |
+
+## 2.tech\analysis
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [2.tech\analysis\2026-07-10-build-chain-unification-report.md](./2.tech\analysis\2026-07-10-build-chain-unification-report.md) | REQ-7026 构建链模块系统统一 — 综合评估报告与迁移路线图 | REQ-7026 构建链模块系统统一 — 综合评估报告与迁移路线图 |
+| [2.tech\analysis\2026-07-10-cjs-interop-matrix.md](./2.tech\analysis\2026-07-10-cjs-interop-matrix.md) | REQ-7026 CJS/ESM 互操作兼容性矩阵 | REQ-7026 CJS/ESM 互操作兼容性矩阵 |
+| [2.tech\analysis\2026-07-10-project-references-evaluation.md](./2.tech\analysis\2026-07-10-project-references-evaluation.md) | REQ-7026 TypeScript 5.9 Project References 评估 | REQ-7026 TypeScript 5.9 Project References 评估 |
+| [2.tech\analysis\2026-07-10-tsx-benchmark-data.md](./2.tech\analysis\2026-07-10-tsx-benchmark-data.md) | REQ-7026 tsx 运行时可行性基准测试数据 | REQ-7026 tsx 运行时可行性基准测试数据 |
 
 ## 3.analysis\diagnosis\01-active
 

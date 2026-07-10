@@ -1,7 +1,7 @@
 ---
 description: "REQ-7026 构建链模块系统统一——README"
 update_time: 2026-07-10
-status: requirements_ready
+status: done
 ---
 
 # REQ-7026 构建链模块系统统一
@@ -24,6 +24,7 @@ status: requirements_ready
 
 ## 状态
 
-- 当前阶段：需求就绪
+- 当前阶段：已完成
 - 复杂度：C3（高复杂度，研究阶段）
 - 预估影响：全 monorepo 构建链
+- 结论：No-Go（完整 ESM 迁移），Go（增量改善：prebuild hook + Project References）

@@ -7,15 +7,15 @@ update_time: 2026-07-10
 
 ## Phase 1: 调研与选型
 
-- [ ] 1.1 调研 tsyringe：API 设计、依赖、与项目 TypeScript 配置兼容性
-- [ ] 1.2 调研工厂函数手动注入模式：参考项目现有代码模式
-- [ ] 1.3 输出选型对比文档（写在 design.md），给出推荐方案
-- [ ] 1.4 与用户确认选型决策
+- [x] 1.1 调研 tsyringe：API 设计、依赖、与项目 TypeScript 配置兼容性
+- [x] 1.2 调研工厂函数手动注入模式：参考项目现有代码模式
+- [x] 1.3 输出选型对比文档（写在 design.md），给出推荐方案
+- [x] 1.4 与用户确认选型决策
 
 ## Phase 2: 接口定义与基础设施
 
-- [ ] 2.1 定义核心依赖接口（`IDatabase`、`ILlmClient`、`IEventBus` 等）
-- [ ] 2.2 接口文件落位：`server/src/platform/di/interfaces.ts`
+- [x] 2.1 定义核心依赖接口（`IDatabase`、`ILlmClient`、`IEventBus`、`ILogger`）
+- [x] 2.2 接口文件落位：`server/src/platform/di/interfaces.ts`
 - [ ] 2.3 实现真实适配器（`PrismaDatabaseAdapter`、`LlmClientAdapter`）
 
 ## Phase 3: 核心 Service 改造
@@ -34,7 +34,7 @@ update_time: 2026-07-10
 
 ## Phase 5: 文档与验证
 
-- [ ] 5.1 编写 DI 迁移指南（`docs/architecture/dependency-injection.md`）
+- [x] 5.1 编写 DI 迁移指南（`docs/architecture/dependency-injection.md`）
 - [ ] 5.2 全量验证：`pnpm typecheck` + `pnpm test`
 - [ ] 5.3 验证并行测试安全性（`node --test --concurrency=4 server/tests/`）
 

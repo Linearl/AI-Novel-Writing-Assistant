@@ -110,14 +110,14 @@ description: "需求任务总清单（SSOT）"
 | 7016 | 内联 Prompt 提取与模板引擎 | p2 | ✅ 已完成 | 2026-07-09 内联 Prompt 诊断报告 | 0.1 | 2026-07-09 | 2026-07-10 | `B.todo/v0.1-r7016-M2-inline-prompt-extraction/README.md` | 开发 Prompt 模板引擎 + 提取 3 处纯静态内联 prompt 为 YAML + 改造调用方 |
 | 7017 | 词汇库审校扫描器 | p2 | ✅ 已完成 | 木棉写作小红书 OCR 素材 + 审校体系优化 | 0.1 | 2026-07-10 | 2026-07-10 | `B.2.done/v0.1-r7017-M2-vocabulary-audit-scanner/README.md` | 全 8 个任务完成。词库表+扫描引擎+同步集成+审校双挂载+修复注入+前端展示+词库提取 |
 | 7018 | 路由迁移至模块目录 | p1 | 📋 待办 | - | 0.1 | 2026-07-10 | 2026-07-10 | `B.todo/v0.1-r7018-C2-routes-migration-to-modules/README.md` |  |
-| 7019 | 依赖注入提升可测试性 | p1 | 📋 待办 | - | 0.1 | 2026-07-10 | 2026-07-10 | `B.todo/v0.1-r7019-C3-dependency-injection-for-testability/README.md` |  |
+| 7019 | 依赖注入提升可测试性 | p1 | 🚧 进行中 | - | 0.1 | 2026-07-10 | 2026-07-10 | `B.todo/v0.1-r7019-C3-dependency-injection-for-testability/README.md` |  |
 | 7020 | 共享类型 Barrel 统一导出 | p0 | ✅ 已完成 | - | 0.1 | 2026-07-10 | 2026-07-10 | `B.todo/v0.1-r7020-M2-shared-types-barrel-unification/README.md` |  |
 | 7021 | Zod Schema 去重与共享化 | p1 | 📋 待办 | 2026-07-10 全量架构诊断报告 第4条发现 | 0.1 | 2026-07-10 | 2026-07-10 | `B.todo/v0.1-r7021-M2-zod-schema-deduplication/README.md` |  |
 | 7022 | Services 目录收敛与大文件拆分 | p1 | 📋 待办 | 2026-07-10 全量架构诊断报告 第5条发现 | 0.1 | 2026-07-10 | 2026-07-10 | `B.todo/v0.1-r7022-C2-services-directory-consolidation/README.md` |  |
 | 7023 | 测试目录重构与覆盖率接入 | p2 | 📋 待办 | 2026-07-10 全量架构诊断报告 第6条发现 | 0.1 | 2026-07-10 | 2026-07-10 | `B.todo/v0.1-r7023-M3-test-directory-restructuring/README.md` |  |
-| 7024 | 客户端共享 Hooks 抽象与大文件拆分 | p2 | ✅ 已完成 | 架构诊断报告 2026-07-10 第7条发现 | 0.1 | 2026-07-10 | 2026-07-10 | `B.todo/v0.1-r7024-M2-client-shared-hooks-abstraction/README.md` | 创建 useApiMutation/useApiQuery 封装重复模式 + 拆分 NovelWorkspaceRail（678 行）及 3 个 >800 行文件 + 替换 ~20 处 inline mutation |
+| 7024 | 客户端共享 Hooks 抽象与大文件拆分 | p2 | ✅ 已完成 | 架构诊断报告 2026-07-10 第7条发现 | 0.1 | 2026-07-10 | 2026-07-10 | `B.2.done/v0.1-r7024-M2-client-shared-hooks-abstraction/README.md` | 创建 useApiMutation/useApiQuery 封装重复模式 + 拆分 NovelWorkspaceRail（678 行）及 3 个 >800 行文件 + 替换 ~20 处 inline mutation |
 | 7025 | Desktop 包测试基础设施 | p1 | ✅ 已完成 | 架构诊断报告 2026-07-10 第8条发现 | 0.1 | 2026-07-10 | 2026-07-10 | `B.2.done/v0.1-r7025-C2-desktop-test-infrastructure/README.md` | T1 完成：desktop/tests/目录、helpers/electronStubs+updaterMock、tsconfig.test.json、3 个测试文件(state/dataImport/server 共 40 个测试用例)、pnpm test 脚本。T2-T3(main.ts 拆分)、T4-T7(各模块测试)部分完成。T8(stage-desktop 集成测试)、T9(CI 集成)待后续迭代。 |
-| 7026 | 构建链模块系统统一 | p2 | 📋 待办 | 架构诊断报告 2026-07-10 第9条发现 | 0.1 | 2026-07-10 | - | `B.todo/v0.1-r7026-C3-build-chain-module-system-unification/README.md` | 研究型任务包。调研 tsx 运行时可行性 + CJS 互操作兼容性 + Project References 评估 + prisma:generate prebuild + 迁移 ROI 分析。交付评估报告和迁移路线图 |
+| 7026 | 构建链模块系统统一 | p2 | ✅ 已完成 | 架构诊断报告 2026-07-10 第9条发现 | 0.1 | 2026-07-10 | 2026-07-10 | `B.todo/v0.1-r7026-C3-build-chain-module-system-unification/README.md` | 研究型任务包。调研 tsx 运行时可行性 + CJS 互操作兼容性 + Project References 评估 + prisma:generate prebuild + 迁移 ROI 分析。交付评估报告和迁移路线图 |
 | 7027 | 遗留代码清理 | p0 | 📋 待办 | - | 0.1 | 2026-07-10 | 2026-07-10 | `B.todo/v0.1-r7027-S2-legacy-code-cleanup/README.md` |  |
 | 7028 | Director 事件系统收敛 | p1 | 📋 待办 | - | 0.1 | 2026-07-10 | 2026-07-10 | `B.todo/v0.1-r7028-C3-director-event-system-consolidation/README.md` |  |
 | 7029 | Prisma Schema 精简 | p8 | 📋 待办 | - | 0.1 | 2026-07-10 | 2026-07-10 | `B.todo/v0.1-r7029-C2-prisma-schema-sizing/README.md` |  |
@@ -138,16 +138,20 @@ description: "需求任务总清单（SSOT）"
 
 > 说明：用于快速看板，不替代第 3 章全量清单。
 
+### 4.1 🚧 进行中
+
+| 编号 | 任务标题 | 文档 |
+| --- | --- | --- |
+| 7019 | 依赖注入提升可测试性 | `B.todo/v0.1-r7019-C3-dependency-injection-for-testability/README.md` |
+
 ### 4.2 📋 待办
 
 | 编号 | 任务标题 | 文档 |
 | --- | --- | --- |
 | 7018 | 路由迁移至模块目录 | `B.todo/v0.1-r7018-C2-routes-migration-to-modules/README.md` |
-| 7019 | 依赖注入提升可测试性 | `B.todo/v0.1-r7019-C3-dependency-injection-for-testability/README.md` |
 | 7021 | Zod Schema 去重与共享化 | `B.todo/v0.1-r7021-M2-zod-schema-deduplication/README.md` |
 | 7022 | Services 目录收敛与大文件拆分 | `B.todo/v0.1-r7022-C2-services-directory-consolidation/README.md` |
 | 7023 | 测试目录重构与覆盖率接入 | `B.todo/v0.1-r7023-M3-test-directory-restructuring/README.md` |
-| 7026 | 构建链模块系统统一 | `B.todo/v0.1-r7026-C3-build-chain-module-system-unification/README.md` |
 | 7027 | 遗留代码清理 | `B.todo/v0.1-r7027-S2-legacy-code-cleanup/README.md` |
 | 7028 | Director 事件系统收敛 | `B.todo/v0.1-r7028-C3-director-event-system-consolidation/README.md` |
 | 7029 | Prisma Schema 精简 | `B.todo/v0.1-r7029-C2-prisma-schema-sizing/README.md` |
@@ -236,8 +240,9 @@ description: "需求任务总清单（SSOT）"
 | 7016 | 内联 Prompt 提取与模板引擎 | `B.todo/v0.1-r7016-M2-inline-prompt-extraction/README.md` |
 | 7017 | 词汇库审校扫描器 | `B.2.done/v0.1-r7017-M2-vocabulary-audit-scanner/README.md` |
 | 7020 | 共享类型 Barrel 统一导出 | `B.todo/v0.1-r7020-M2-shared-types-barrel-unification/README.md` |
-| 7024 | 客户端共享 Hooks 抽象与大文件拆分 | `B.todo/v0.1-r7024-M2-client-shared-hooks-abstraction/README.md` |
+| 7024 | 客户端共享 Hooks 抽象与大文件拆分 | `B.2.done/v0.1-r7024-M2-client-shared-hooks-abstraction/README.md` |
 | 7025 | Desktop 包测试基础设施 | `B.2.done/v0.1-r7025-C2-desktop-test-infrastructure/README.md` |
+| 7026 | 构建链模块系统统一 | `B.todo/v0.1-r7026-C3-build-chain-module-system-unification/README.md` |
 | 7031 | 静默吞错日志化：审计复核确认的 .catch(() => {}) 静默吞错修复 | `B.2.done/v0.1-r7031-M2-silent-catch-logging/README.md` |
 | 7033 | Prisma Schema 精简 | `B.2.done/v0.1-r7033-C2-prisma-schema-sizing/README.md` |
 | 7035 | ARCH-004: DirectorCommandService ↔ workers/ 循环依赖解耦 — IDispatcher 接口抽象 | `B.todo/v0.1-r7035-C1-director-command-interface-abstract/README.md` |

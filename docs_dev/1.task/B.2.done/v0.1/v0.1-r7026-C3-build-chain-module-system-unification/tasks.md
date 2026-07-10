@@ -4,7 +4,7 @@ description: "REQ-7026 构建链模块系统统一 — 任务拆解"
 
 # REQ-7026 任务拆解
 
-> 状态：待激活
+> 状态：已完成
 
 ## 任务概述
 
@@ -24,13 +24,13 @@ description: "REQ-7026 构建链模块系统统一 — 任务拆解"
 
 | # | 任务 | 优先级 | 预估 | 状态 |
 | --- | --- | --- | --- | --- |
-| T1 | 调研 tsx 运行时生产环境可行性 | P0 | 3h | 待开始 |
-| T2 | CJS/ESM 互操作兼容性测试 | P0 | 2h | 待开始 |
-| T3 | 评估 TypeScript 5.9 Project References | P1 | 2h | 待开始 |
-| T4 | 搭建 tsx server 原型（实验分支） | P1 | 3h | 待开始 |
-| T5 | prisma:generate 加入 prebuild hook | P0 | 30min | 待开始 |
-| T6 | 迁移 ROI 分析与 go/no-go 建议 | P0 | 2h | 待开始 |
-| T7 | 撰写综合评估报告 + 迁移路线图 | P0 | 2h | 待开始 |
+| T1 | 调研 tsx 运行时生产环境可行性 | P0 | 3h | 已完成 |
+| T2 | CJS/ESM 互操作兼容性测试 | P0 | 2h | 已完成 |
+| T3 | 评估 TypeScript 5.9 Project References | P1 | 2h | 已完成 |
+| T4 | 搭建 tsx server 原型（实验分支） | P1 | 3h | 已完成 |
+| T5 | prisma:generate 加入 prebuild hook | P0 | 30min | 已完成 |
+| T6 | 迁移 ROI 分析与 go/no-go 建议 | P0 | 2h | 已完成 |
+| T7 | 撰写综合评估报告 + 迁移路线图 | P0 | 2h | 已完成 |
 
 ---
 
@@ -158,24 +158,24 @@ description: "REQ-7026 构建链模块系统统一 — 任务拆解"
 
 ## DoD
 
-- tsx 可行性评估报告完成（含基准测试数据）
-- CJS 互操作兼容性矩阵完成
-- Project References 对比评估完成
-- tsx server 原型验证完成（通过 or 问题已记录）
-- prisma:generate prebuild hook 已添加并验证
-- go/no-go 建议已完成
-- 综合评估报告 + 迁移路线图已输出
-- 所有调研文档落位 `docs_dev/2.tech/analysis/`
+- [x] tsx 可行性评估报告完成（含基准测试数据）— 2026-07-10
+- [x] CJS 互操作兼容性矩阵完成 — 2026-07-10
+- [x] Project References 对比评估完成 — 2026-07-10
+- [x] tsx server 原型验证完成（通过 or 问题已记录）— 2026-07-10，dev 模式已验证
+- [x] prisma:generate prebuild hook 已添加并验证 — 2026-07-10，pnpm build 触发 prisma generate
+- [x] go/no-go 建议已完成 — No-Go（完整迁移），Go（增量改善）
+- [x] 综合评估报告 + 迁移路线图已输出 — 2026-07-10
+- [x] 所有调研文档落位 `docs_dev/2.tech/analysis/` — 4 份文档
 
 ---
 
 ## 验证步骤
 
-1. 基准测试数据可复现（记录测试环境和命令）
-2. 兼容性矩阵覆盖所有 server 依赖
-3. tsx 原型验证结果可复现（提供分支和操作步骤）
-4. prebuild hook 验证通过
-5. 评估报告完整且包含明确建议
+1. [x] 基准测试数据可复现（记录测试环境和命令）— 见 tsx-benchmark-data.md
+2. [x] 兼容性矩阵覆盖所有 server 依赖 — 见 cjs-interop-matrix.md
+3. [x] tsx 原型验证结果可复现（提供分支和操作步骤）— dev 模式已验证
+4. [x] prebuild hook 验证通过 — `pnpm build` 触发 prisma generate（见构建输出）
+5. [x] 评估报告完整且包含明确建议 — 见 build-chain-unification-report.md
 
 ---
 
