@@ -109,7 +109,7 @@ description: "需求任务总清单（SSOT）"
 | 7015 | 前端公共样式与组件提取 | p2 | ✅ 已完成 | 2026-07-09 前端公共样式与组件诊断报告 | 0.1 | 2026-07-09 | 2026-07-09 | `B.2.done/v0.1-r7015-M2-frontend-common-styles-components/README.md` | 全部完成：Textarea（~120 处）+ StatusBadge（10 处）+ LoadingIndicator（31 处）+ EmptyState（40 处）+ 语义化 token（~500 处）+ CSS 拆分（739→137 行，13 个模块文件）。T4 误诊跳过。 |
 | 7016 | 内联 Prompt 提取与模板引擎 | p2 | ✅ 已完成 | 2026-07-09 内联 Prompt 诊断报告 | 0.1 | 2026-07-09 | 2026-07-10T15:38:47.978Z | `B.2.done/v0.1-r7016-M2-inline-prompt-extraction/README.md` | 开发 Prompt 模板引擎 + 提取 3 处纯静态内联 prompt 为 YAML + 改造调用方 |
 | 7017 | 词汇库审校扫描器 | p2 | ✅ 已完成 | 木棉写作小红书 OCR 素材 + 审校体系优化 | 0.1 | 2026-07-10 | 2026-07-10 | `B.2.done/v0.1-r7017-M2-vocabulary-audit-scanner/README.md` | 全 8 个任务完成。词库表+扫描引擎+同步集成+审校双挂载+修复注入+前端展示+词库提取 |
-| 7018 | 路由迁移至模块目录 | p1 | ✅ 已完成 | - | 0.1 | 2026-07-10 | 2026-07-11 | `B.todo/v0.1-r7018-C2-routes-migration-to-modules/README.md` |  |
+| 7018 | 路由迁移至模块目录 | p1 | ✅ 已完成 | - | 0.1 | 2026-07-10 | 2026-07-11 | `B.2.done/v0.1-r7018-C2-routes-migration-to-modules/README.md` |  |
 | 7019 | 依赖注入提升可测试性 | p1 | ✅ 已完成 | - | 0.1 | 2026-07-10 | 2026-07-10T15:50:23.869Z | `B.2.done/v0.1-r7019-C3-dependency-injection-for-testability/README.md` |  |
 | 7020 | 共享类型 Barrel 统一导出 | p0 | ✅ 已完成 | - | 0.1 | 2026-07-10 | 2026-07-10T15:38:48.817Z | `B.2.done/v0.1-r7020-M2-shared-types-barrel-unification/README.md` |  |
 | 7021 | Zod Schema 去重与共享化 | p1 | ✅ 已完成 | 2026-07-10 全量架构诊断报告 第4条发现 | 0.1 | 2026-07-10 | 2026-07-10T15:38:49.675Z | `B.2.done/v0.1-r7021-M2-zod-schema-deduplication/README.md` |  |
@@ -123,7 +123,7 @@ description: "需求任务总清单（SSOT）"
 | 7031 | 静默吞错日志化：审计复核确认的 .catch(() => {}) 静默吞错修复 | p2 | ✅ 已完成 | 代码审计-full 独占发现复核报告 — 稳定性 + 部分质量维度 CONFIRMED 条目 | 0.1 | 2026-07-10 | 2026-07-10 | `B.2.done/v0.1-r7031-M2-silent-catch-logging/README.md` |  |
 | 7032 | 提取硬编码常量：审计复核确认的重复魔数、重复定义、硬编码配置 | p3 | 📋 待办 | 代码审计-full 独占发现复核报告 — 架构/质量维度 CONFIRMED 条目 | 0.1 | 2026-07-10 | - | `B.todo/v0.1-r7032-S3-extract-hardcoded-constants/README.md` |  |
 | 7033 | Prisma Schema 精简 | p1 | ✅ 已完成 | - | 0.1 | 2026-07-10 | 2026-07-10 | `B.2.done/v0.1-r7033-C2-prisma-schema-sizing/README.md` |  |
-| 7034 | Novel Application Services 门面收缩 | p1 | ✅ 已完成 | - | 0.1 | 2026-07-10 | 2026-07-11 | `B.todo/v0.1-r7034-M2-novel-application-services-facade-contraction/README.md` |  |
+| 7034 | Novel Application Services 门面收缩 | p1 | ✅ 已完成 | - | 0.1 | 2026-07-10 | 2026-07-11 | `B.2.done/v0.1-r7034-M2-novel-application-services-facade-contraction/README.md` |  |
 | 7035 | ARCH-004: DirectorCommandService ↔ workers/ 循环依赖解耦 — IDispatcher 接口抽象 | p1 | ✅ 已完成 | 代码审计-full 独占发现复核报告 ARCH-004 | 0.1 | 2026-07-10 | 2026-07-10T15:38:50.328Z | `B.2.done/v0.1-r7035-C1-director-command-interface-abstract/README.md` |  |
 | 7036 | SEC-014: API Key AES-256-GCM 加密存储 — secretStore 加 crypto 包装层 | p2 | ✅ 已完成 | 代码审计-full 独占发现复核报告 SEC-014 | 0.1 | 2026-07-10 | 2026-07-10 | `B.2.done/v0.1-r7036-M2-api-key-aes-encrypt/README.md` |  |
 | 7037 | QUA-022: directorRuntime.ts 渐进拆分（projection/worker/automation 3 域 + barrel index.ts） | p2 | ✅ 已完成 | 代码审计-full 独占发现复核报告 QUA-022 | 0.1 | 2026-07-10 | 2026-07-10 | `B.2.done/v0.1-r7037-M2-director-runtime-split/README.md` |  |
@@ -228,7 +228,7 @@ description: "需求任务总清单（SSOT）"
 | 7015 | 前端公共样式与组件提取 | `B.2.done/v0.1-r7015-M2-frontend-common-styles-components/README.md` |
 | 7016 | 内联 Prompt 提取与模板引擎 | `B.2.done/v0.1-r7016-M2-inline-prompt-extraction/README.md` |
 | 7017 | 词汇库审校扫描器 | `B.2.done/v0.1-r7017-M2-vocabulary-audit-scanner/README.md` |
-| 7018 | 路由迁移至模块目录 | `B.todo/v0.1-r7018-C2-routes-migration-to-modules/README.md` |
+| 7018 | 路由迁移至模块目录 | `B.2.done/v0.1-r7018-C2-routes-migration-to-modules/README.md` |
 | 7019 | 依赖注入提升可测试性 | `B.2.done/v0.1-r7019-C3-dependency-injection-for-testability/README.md` |
 | 7020 | 共享类型 Barrel 统一导出 | `B.2.done/v0.1-r7020-M2-shared-types-barrel-unification/README.md` |
 | 7021 | Zod Schema 去重与共享化 | `B.2.done/v0.1-r7021-M2-zod-schema-deduplication/README.md` |
@@ -239,7 +239,7 @@ description: "需求任务总清单（SSOT）"
 | 7028 | Director 事件系统收敛 | `B.2.done/v0.1-r7028-C3-director-event-system-consolidation/README.md` |
 | 7031 | 静默吞错日志化：审计复核确认的 .catch(() => {}) 静默吞错修复 | `B.2.done/v0.1-r7031-M2-silent-catch-logging/README.md` |
 | 7033 | Prisma Schema 精简 | `B.2.done/v0.1-r7033-C2-prisma-schema-sizing/README.md` |
-| 7034 | Novel Application Services 门面收缩 | `B.todo/v0.1-r7034-M2-novel-application-services-facade-contraction/README.md` |
+| 7034 | Novel Application Services 门面收缩 | `B.2.done/v0.1-r7034-M2-novel-application-services-facade-contraction/README.md` |
 | 7035 | ARCH-004: DirectorCommandService ↔ workers/ 循环依赖解耦 — IDispatcher 接口抽象 | `B.2.done/v0.1-r7035-C1-director-command-interface-abstract/README.md` |
 | 7036 | SEC-014: API Key AES-256-GCM 加密存储 — secretStore 加 crypto 包装层 | `B.2.done/v0.1-r7036-M2-api-key-aes-encrypt/README.md` |
 | 7037 | QUA-022: directorRuntime.ts 渐进拆分（projection/worker/automation 3 域 + barrel index.ts） | `B.2.done/v0.1-r7037-M2-director-runtime-split/README.md` |

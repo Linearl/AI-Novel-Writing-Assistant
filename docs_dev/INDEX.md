@@ -27,17 +27,6 @@ description: "docs 目录索引（自动生成）"
 | --- | --- | --- |
 | [1.task\B.todo\任务包六件套构成-编号分类规则-自动归档机制.md](./1.task\B.todo\任务包六件套构成-编号分类规则-自动归档机制.md) | --- | - |
 
-## 1.task\B.todo\v0.1\v0.1-r7018-C2-routes-migration-to-modules
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r7018-C2-routes-migration-to-modules\decision_log.md](./1.task\B.todo\v0.1\v0.1-r7018-C2-routes-migration-to-modules\decision_log.md) | REQ-7018 路由迁移至模块目录——决策日志 | REQ-7018 路由迁移至模块目录——决策日志 |
-| [1.task\B.todo\v0.1\v0.1-r7018-C2-routes-migration-to-modules\design.md](./1.task\B.todo\v0.1\v0.1-r7018-C2-routes-migration-to-modules\design.md) | REQ-7018 路由迁移至模块目录——技术设计 | REQ-7018 路由迁移至模块目录——技术设计 |
-| [1.task\B.todo\v0.1\v0.1-r7018-C2-routes-migration-to-modules\README.md](./1.task\B.todo\v0.1\v0.1-r7018-C2-routes-migration-to-modules\README.md) | REQ-7018 路由迁移至模块目录——README | REQ-7018 路由迁移至模块目录——README |
-| [1.task\B.todo\v0.1\v0.1-r7018-C2-routes-migration-to-modules\REQ-7018-routes-migration-to-modules-original.md](./1.task\B.todo\v0.1\v0.1-r7018-C2-routes-migration-to-modules\REQ-7018-routes-migration-to-modules-original.md) | REQ-7018 路由迁移至模块目录——需求文档（冻结副本） | REQ-7018 路由迁移至模块目录——需求文档（冻结副本） |
-| [1.task\B.todo\v0.1\v0.1-r7018-C2-routes-migration-to-modules\REQ-7018-routes-migration-to-modules.md](./1.task\B.todo\v0.1\v0.1-r7018-C2-routes-migration-to-modules\REQ-7018-routes-migration-to-modules.md) | REQ-7018 路由迁移至模块目录——需求文档 | REQ-7018 路由迁移至模块目录——需求文档 |
-| [1.task\B.todo\v0.1\v0.1-r7018-C2-routes-migration-to-modules\tasks.md](./1.task\B.todo\v0.1\v0.1-r7018-C2-routes-migration-to-modules\tasks.md) | REQ-7018 路由迁移至模块目录——任务清单 | REQ-7018 路由迁移至模块目录——任务清单 |
-
 ## 1.task\B.todo\v0.1\v0.1-r7022-C2-services-directory-consolidation
 
 | 文件 | 标题 | 描述 |
@@ -68,17 +57,6 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1\v0.1-r7032-S3-extract-hardcoded-constants\REQ-7032-extract-hardcoded-constants-original.md](./1.task\B.todo\v0.1\v0.1-r7032-S3-extract-hardcoded-constants\REQ-7032-extract-hardcoded-constants-original.md) | 提取硬编码常量 — REQ-7032 需求文档（冻结副本） | 提取硬编码常量 — REQ-7032 需求文档（冻结副本） |
 | [1.task\B.todo\v0.1\v0.1-r7032-S3-extract-hardcoded-constants\REQ-7032-extract-hardcoded-constants.md](./1.task\B.todo\v0.1\v0.1-r7032-S3-extract-hardcoded-constants\REQ-7032-extract-hardcoded-constants.md) | 提取硬编码常量 — REQ-7032 需求文档，修复重复魔数、重复函数定义、硬编码阈值 | 提取硬编码常量 — REQ-7032 需求文档，修复重复魔数、重复函数定义、硬编码阈值 |
 | [1.task\B.todo\v0.1\v0.1-r7032-S3-extract-hardcoded-constants\tasks.md](./1.task\B.todo\v0.1\v0.1-r7032-S3-extract-hardcoded-constants\tasks.md) | 提取硬编码常量 — REQ-7032 任务拆解 | 提取硬编码常量 — REQ-7032 任务拆解 |
-
-## 1.task\B.todo\v0.1\v0.1-r7034-M2-novel-application-services-facade-contraction
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r7034-M2-novel-application-services-facade-contraction\decision_log.md](./1.task\B.todo\v0.1\v0.1-r7034-M2-novel-application-services-facade-contraction\decision_log.md) | REQ-7034 Novel Application Services 门面收缩 — 决策留痕 | REQ-7034 Novel Application Services 门面收缩 — 决策留痕 |
-| [1.task\B.todo\v0.1\v0.1-r7034-M2-novel-application-services-facade-contraction\design.md](./1.task\B.todo\v0.1\v0.1-r7034-M2-novel-application-services-facade-contraction\design.md) | REQ-7034 Novel Application Services 门面收缩 — 方案设计 | REQ-7034 Novel Application Services 门面收缩 — 方案设计 |
-| [1.task\B.todo\v0.1\v0.1-r7034-M2-novel-application-services-facade-contraction\README.md](./1.task\B.todo\v0.1\v0.1-r7034-M2-novel-application-services-facade-contraction\README.md) | REQ-7034 Novel Application Services 门面收缩——README | REQ-7034 Novel Application Services 门面收缩——README |
-| [1.task\B.todo\v0.1\v0.1-r7034-M2-novel-application-services-facade-contraction\REQ-7034-novel-application-services-facade-contraction-original.md](./1.task\B.todo\v0.1\v0.1-r7034-M2-novel-application-services-facade-contraction\REQ-7034-novel-application-services-facade-contraction-original.md) | REQ-7034 Novel Application Services 门面收缩 — 原始冻结副本 | REQ-7034 Novel Application Services 门面收缩 — 原始冻结副本 |
-| [1.task\B.todo\v0.1\v0.1-r7034-M2-novel-application-services-facade-contraction\REQ-7034-novel-application-services-facade-contraction.md](./1.task\B.todo\v0.1\v0.1-r7034-M2-novel-application-services-facade-contraction\REQ-7034-novel-application-services-facade-contraction.md) | REQ-7034 Novel Application Services 门面收缩 | REQ-7034 Novel Application Services 门面收缩 |
-| [1.task\B.todo\v0.1\v0.1-r7034-M2-novel-application-services-facade-contraction\tasks.md](./1.task\B.todo\v0.1\v0.1-r7034-M2-novel-application-services-facade-contraction\tasks.md) | REQ-7034 Novel Application Services 门面收缩 — 任务拆解 | REQ-7034 Novel Application Services 门面收缩 — 任务拆解 |
 
 ## 1.task\template
 
