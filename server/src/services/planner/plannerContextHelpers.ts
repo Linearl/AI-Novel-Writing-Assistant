@@ -1,6 +1,7 @@
 import type { StoryMacroPlan } from "@ai-novel/shared/types/storyMacro";
 import type { ResolvedStyleContext } from "@ai-novel/shared/types/styleEngine";
 import type { PayoffLedgerResponse } from "@ai-novel/shared/types/payoffLedger";
+import { compactText } from "@ai-novel/shared";
 import { buildPlannerStyleContractSummaryText } from "../styleEngine/styleContractText";
 import { buildStoryModePromptBlock, normalizeStoryModeOutput } from "../storyMode/storyModeProfile";
 import { characterDynamicsQueryService } from "../novel/dynamics/CharacterDynamicsQueryService";
@@ -33,10 +34,6 @@ export type PlannerMappedVolume = {
 
 type PlannerCharacterDynamicsOverview = Awaited<ReturnType<typeof characterDynamicsQueryService.getOverview>>;
 
-function compactText(value: string | null | undefined, fallback = ""): string {
-  const trimmed = value?.trim();
-  return trimmed || fallback;
-}
 
 function takeNonEmptyLines(text: string | null | undefined, maxLines: number): string[] {
   if (!text?.trim()) {

@@ -41,6 +41,7 @@ import {
   summarizeWorldRules,
   takeUnique,
   toListBlock,
+import { compactText } from "@ai-novel/shared";
 } from "./chapterLayeredContextShared";
 
 // ---------------------------------------------------------------------------

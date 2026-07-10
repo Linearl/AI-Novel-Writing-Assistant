@@ -46,6 +46,9 @@ import {
   resolveDirectorQualityLoopBudgetNextAction,
 } from "../runtime/DirectorQualityLoopBudgetLedgerService";
 
+/** 管道轮询间隔（毫秒） */
+const PIPELINE_POLL_INTERVAL_MS = 1500;
+
 export class NovelDirectorAutoExecutionRuntime {
   constructor(private readonly deps: NovelDirectorAutoExecutionRuntimeDeps) {}
 
@@ -277,7 +280,7 @@ export class NovelDirectorAutoExecutionRuntime {
             isBackgroundRunning: true,
             resumeStage: "pipeline",
           });
-          await new Promise((resolve) => setTimeout(resolve, 1500));
+          await new Promise((resolve) => setTimeout(resolve, PIPELINE_POLL_INTERVAL_MS));
           continue;
         }
 

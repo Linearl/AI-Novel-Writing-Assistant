@@ -1,5 +1,6 @@
 import type { AuditReport, ReplanResult, StoryPlan } from "@ai-novel/shared/types/novel";
 import { prisma } from "../../db/prisma";
+import { compactText } from "@ai-novel/shared";
 import { characterDynamicsQueryService } from "../novel/dynamics/CharacterDynamicsQueryService";
 import { contextAssemblyService } from "../novel/production/ContextAssemblyService";
 import { buildStateContextBlockFromCanonical } from "../novel/state/CanonicalStateService";
@@ -63,9 +64,6 @@ export const plannerStoryModeSelect = {
   updatedAt: true,
 } as const;
 
-function compactText(value: string | null | undefined, fallback = ""): string {
-  return String(value ?? "").replace(/\s+/g, " ").trim() || fallback;
-}
 
 /**
  * Parses `bookFramingJson` into individual book-framing properties.

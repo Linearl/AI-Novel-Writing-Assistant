@@ -5,6 +5,19 @@ import type {
   DirectorQualityRepairRisk,
 } from "@ai-novel/shared/types/novelDirector";
 
+/**
+ * 断路器阈值配置。
+ *
+ * 覆盖优先级：运行时环境变量 > 此处默认值。
+ * 可通过以下环境变量覆盖（均为整数）：
+ *   DIRECTOR_CB_PATCH_FAILURE_OPEN_AT
+ *   DIRECTOR_CB_REPLAN_LOOP_OPEN_AT
+ *   DIRECTOR_CB_MODEL_FAILURE_OPEN_AT
+ *   DIRECTOR_CB_CHAPTER_TOTAL_TOKEN_LIMIT_BASE
+ *   DIRECTOR_CB_CHAPTER_TOTAL_TOKEN_LIMIT_MULTIPLIER
+ *   DIRECTOR_CB_SINGLE_STEP_TOTAL_TOKEN_LIMIT
+ *   DIRECTOR_CB_USAGE_ANOMALY_OPEN_AT
+ */
 export const DIRECTOR_CIRCUIT_BREAKER_THRESHOLDS = {
   patchFailureOpenAt: 3,
   replanLoopOpenAt: 3,

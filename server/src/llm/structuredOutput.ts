@@ -35,6 +35,12 @@ export interface StructuredOutputDiagnostics {
 
 const QWEN_FAMILY_PATTERN = /(?:^|[/:_-])qwen(?:\d+(?:\.\d+)?)?/i;
 const DASHSCOPE_HOST_PATTERN = /(?:^|\.)dashscope\.aliyuncs\.com$/i;
+n/**
+ * 默认 structured output 安全最大 token 数。
+ * 仅在 LLM family 有特殊限制时在各分支覆盖，否则一律引用此常量。
+ */
+export const DEFAULT_SAFE_STRUCTURED_MAX_TOKENS = 8192;
+
 const MODELSCOPE_HOST_PATTERN = /(?:^|\.)modelscope\.cn$/i;
 const OPENAI_HOST_PATTERN = /(?:^|\.)api\.openai\.com$/i;
 const GEMINI_HOST_PATTERN = /(?:^|\.)generativelanguage\.googleapis\.com$/i;
@@ -159,7 +165,7 @@ export function resolveStructuredOutputProfile(input: {
     return buildProfile({
       family: "anthropic",
       preferredStructuredStrategy: "prompt_json",
-      safeStructuredMaxTokens: 8192,
+      safeStructuredMaxTokens: DEFAULT_SAFE_STRUCTURED_MAX_TOKENS,
     });
   }
   if (input.provider === "gemini" || GEMINI_HOST_PATTERN.test(host)) {
@@ -203,7 +209,7 @@ export function resolveStructuredOutputProfile(input: {
     return buildProfile({
       family: "minimax",
       preferredStructuredStrategy: "prompt_json",
-      safeStructuredMaxTokens: 8192,
+      safeStructuredMaxTokens: DEFAULT_SAFE_STRUCTURED_MAX_TOKENS,
     });
   }
   if (isDashScopeQwen || (input.provider === "qwen" && qwenFamily)) {
@@ -214,7 +220,7 @@ export function resolveStructuredOutputProfile(input: {
       requiresNonThinkingForStructured: qwenMixedThinkingModel,
       supportsReasoningToggle: qwenMixedThinkingModel,
       omitMaxTokensForNativeStructured: qwenNativeStructuredModel,
-      safeStructuredMaxTokens: qwenNativeStructuredModel ? undefined : 8192,
+      safeStructuredMaxTokens: qwenNativeStructuredModel ? undefined : DEFAULT_SAFE_STRUCTURED_MAX_TOKENS,
     });
   }
   if (isModelScopeQwen && qwenFamily) {
@@ -223,14 +229,14 @@ export function resolveStructuredOutputProfile(input: {
       preferredStructuredStrategy: "prompt_json",
       requiresNonThinkingForStructured: qwenMixedThinkingModel && !qwenThinkingOnlyModel,
       supportsReasoningToggle: qwenMixedThinkingModel && !qwenThinkingOnlyModel,
-      safeStructuredMaxTokens: 8192,
+      safeStructuredMaxTokens: DEFAULT_SAFE_STRUCTURED_MAX_TOKENS,
     });
   }
   if (qwenFamily) {
     return buildProfile({
       family: "custom_openai_compatible_qwen",
       preferredStructuredStrategy: "prompt_json",
-      safeStructuredMaxTokens: 8192,
+      safeStructuredMaxTokens: DEFAULT_SAFE_STRUCTURED_MAX_TOKENS,
     });
   }
   if (input.provider === "openai" || OPENAI_HOST_PATTERN.test(host)) {
@@ -245,34 +251,34 @@ export function resolveStructuredOutputProfile(input: {
     return buildProfile({
       family: "anthropic",
       preferredStructuredStrategy: "prompt_json",
-      safeStructuredMaxTokens: 8192,
+      safeStructuredMaxTokens: DEFAULT_SAFE_STRUCTURED_MAX_TOKENS,
     });
   }
   if (input.provider === "siliconflow") {
     return buildProfile({
       family: "siliconflow",
       preferredStructuredStrategy: "prompt_json",
-      safeStructuredMaxTokens: 8192,
+      safeStructuredMaxTokens: DEFAULT_SAFE_STRUCTURED_MAX_TOKENS,
     });
   }
   if (input.provider === "ollama") {
     return buildProfile({
       family: "ollama",
       preferredStructuredStrategy: "prompt_json",
-      safeStructuredMaxTokens: 8192,
+      safeStructuredMaxTokens: DEFAULT_SAFE_STRUCTURED_MAX_TOKENS,
     });
   }
   if (customProvider) {
     return buildProfile({
       family: qwenFamily ? "custom_openai_compatible_qwen" : "custom_openai_compatible",
       preferredStructuredStrategy: "prompt_json",
-      safeStructuredMaxTokens: 8192,
+      safeStructuredMaxTokens: DEFAULT_SAFE_STRUCTURED_MAX_TOKENS,
     });
   }
   return buildProfile({
     family: "default",
     preferredStructuredStrategy: "prompt_json",
-    safeStructuredMaxTokens: 8192,
+    safeStructuredMaxTokens: DEFAULT_SAFE_STRUCTURED_MAX_TOKENS,
   });
 }
 

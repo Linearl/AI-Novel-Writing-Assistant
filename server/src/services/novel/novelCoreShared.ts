@@ -289,7 +289,6 @@ export function normalizeNovelOutput<T extends {
   bookFramingJson?: string | null;
   setupProgressJson?: string | null;
   continuationSetupJson?: string | null;
-  storyWorldSliceCacheJson?: string | null;
   bookContract?: {
     id: string;
     novelId: string;
@@ -327,7 +326,7 @@ export function normalizeNovelOutput<T extends {
   } | null;
 }>(
   novel: T,
-): Omit<T, "continuationBookAnalysisSections" | "commercialTagsJson" | "bookFramingJson" | "setupProgressJson" | "continuationSetupJson" | "storyWorldSliceCacheJson"> & {
+): Omit<T, "continuationBookAnalysisSections" | "commercialTagsJson" | "bookFramingJson" | "setupProgressJson" | "continuationSetupJson"> & {
   continuationBookAnalysisSections: BookAnalysisSectionKey[] | null;
   commercialTags: string[];
   bookSellingPoint: string | null;
@@ -339,9 +338,6 @@ export function normalizeNovelOutput<T extends {
   resourceReadyScore: number | null;
   sourceKnowledgeDocumentId: string | null;
   continuationBookAnalysisId: string | null;
-  storyWorldSliceJson: string | null;
-  storyWorldSliceOverridesJson: string | null;
-  storyWorldSliceSchemaVersion: number;
 } {
   const {
     continuationBookAnalysisSections,
@@ -349,14 +345,12 @@ export function normalizeNovelOutput<T extends {
     bookFramingJson,
     setupProgressJson,
     continuationSetupJson,
-    storyWorldSliceCacheJson,
     ...rest
   } = novel;
 
   const bookFraming = parseBookFramingJson(bookFramingJson);
   const setupProgress = (() => { try { return setupProgressJson ? JSON.parse(setupProgressJson) as Record<string, unknown> : {}; } catch { return {}; } })() as { projectStatus?: string | null; storylineStatus?: string | null; outlineStatus?: string | null; resourceReadyScore?: number | null };
   const continuationSetup = (() => { try { return continuationSetupJson ? JSON.parse(continuationSetupJson) as Record<string, unknown> : {}; } catch { return {}; } })() as { sourceKnowledgeDocumentId?: string | null; continuationBookAnalysisId?: string | null; continuationBookAnalysisSections?: unknown };
-  const worldSliceCache = (() => { try { return storyWorldSliceCacheJson ? JSON.parse(storyWorldSliceCacheJson) as Record<string, unknown> : {}; } catch { return {}; } })() as { storyWorldSliceJson?: string | null; storyWorldSliceOverridesJson?: string | null; storyWorldSliceSchemaVersion?: number | null };
 
   return {
     ...rest,
@@ -371,9 +365,6 @@ export function normalizeNovelOutput<T extends {
     resourceReadyScore: setupProgress.resourceReadyScore ?? null,
     sourceKnowledgeDocumentId: continuationSetup.sourceKnowledgeDocumentId ?? null,
     continuationBookAnalysisId: continuationSetup.continuationBookAnalysisId ?? null,
-    storyWorldSliceJson: worldSliceCache.storyWorldSliceJson ?? null,
-    storyWorldSliceOverridesJson: worldSliceCache.storyWorldSliceOverridesJson ?? null,
-    storyWorldSliceSchemaVersion: worldSliceCache.storyWorldSliceSchemaVersion ?? 1,
     ...(rest.bookContract !== undefined
       ? {
         bookContract: rest.bookContract
@@ -489,6 +480,25 @@ function clamp(score: number): number {
   return Math.max(0, Math.min(100, Math.round(score)));
 }
 
+
+// ---------------------------------------------------------------------------
+// ruleScore 常量
+// ---------------------------------------------------------------------------
+const RULE_SCORE_COHERENCE_LONG_THRESHOLD = 1800;
+const RULE_SCORE_COHERENCE_MID_THRESHOLD = 1200;
+const RULE_SCORE_COHERENCE_LONG = 85;
+const RULE_SCORE_COHERENCE_MID = 75;
+const RULE_SCORE_COHERENCE_DEFAULT = 60;
+
+const RULE_SCORE_PACING_UPPER_THRESHOLD = 3600;
+
+const RULE_SCORE_VOICE_SENTENCE_THRESHOLD = 25;
+const RULE_SCORE_VOICE_DEFAULT = 80;
+const RULE_SCORE_VOICE_LOW = 68;
+
+const RULE_SCORE_ENGAGEMENT_HIGH = 85;
+const RULE_SCORE_ENGAGEMENT_DEFAULT = 72;
+
 export function normalizeScore(value: Partial<QualityScore>): QualityScore {
   const coherence = clamp(value.coherence ?? 0);
   const repetition = clamp(value.repetition ?? 100);
@@ -504,11 +514,15 @@ export function ruleScore(content: string): QualityScore {
   const sentences = text.split(/[。！"?]/).map((item) => item.trim()).filter(Boolean);
   const unique = new Set(sentences);
   const repeatRatio = sentences.length > 0 ? 1 - unique.size / sentences.length : 0;
-  const coherence = text.length >= 1800 ? 85 : text.length >= 1200 ? 75 : 60;
+  const coherence = text.length >= RULE_SCORE_COHERENCE_LONG_THRESHOLD
+    ? RULE_SCORE_COHERENCE_LONG
+    : text.length >= RULE_SCORE_COHERENCE_MID_THRESHOLD
+      ? RULE_SCORE_COHERENCE_MID
+      : RULE_SCORE_COHERENCE_DEFAULT;
   const repetition = clamp(100 - repeatRatio * 100);
-  const pacing = text.length >= 1800 && text.length <= 3600 ? 82 : 70;
-  const voice = sentences.length >= 25 ? 80 : 68;
-  const engagement = /悬念|危机|冲突|转折/.test(text) ? 85 : 72;
+  const pacing = text.length >= RULE_SCORE_COHERENCE_LONG_THRESHOLD && text.length <= RULE_SCORE_PACING_UPPER_THRESHOLD ? 82 : 70;
+  const voice = sentences.length >= RULE_SCORE_VOICE_SENTENCE_THRESHOLD ? RULE_SCORE_VOICE_DEFAULT : RULE_SCORE_VOICE_LOW;
+  const engagement = /悬念|危机|冲突|转折/.test(text) ? RULE_SCORE_ENGAGEMENT_HIGH : RULE_SCORE_ENGAGEMENT_DEFAULT;
   const overall = clamp((coherence + repetition + pacing + voice + engagement) / 5);
   return { coherence, repetition, pacing, voice, engagement, overall };
 }
