@@ -138,6 +138,12 @@ export function useVolumeGenerationMutation({
   const queryClient = useQueryClient();
 
   const applyWorkspaceDocument = (document: VolumePlanDocument) => {
+    // Slim responses have empty volumes/beatSheets/etc by design to reduce payload.
+    // Applying them would clobber the real data and cause a visible flash of empty state.
+    // The full document is always synced via syncSavedVolumeDocumentToCache or the polling timer.
+    if ("slimmed" in document && document.slimmed === true) {
+      return;
+    }
     setVolumeDraft(document.volumes);
     setStrategyPlan(document.strategyPlan);
     setCritiqueReport(document.critiqueReport);
@@ -146,6 +152,11 @@ export function useVolumeGenerationMutation({
   };
 
   const syncSavedVolumeDocumentToCache = (document: VolumePlanDocument) => {
+    // Never overwrite the cache with a slim document (empty volumes/beatSheets).
+    // The full document is either already in cache or will be fetched by the polling timer.
+    if ("slimmed" in document && document.slimmed === true) {
+      return;
+    }
     queryClient.setQueryData<ApiResponse<NovelDetailResponse> | undefined>(
       queryKeys.novels.detail(novelId),
       (previous) => mergeSavedVolumeDocumentIntoNovelDetail(previous, document),
@@ -223,14 +234,12 @@ export function useVolumeGenerationMutation({
           throw new Error("AI 已完成生成，但需要重新读取卷工作区后才能保存，请刷新卷规划后继续。");
         }
         nextDocument = latestWorkspaceResponse.data;
-        if (!autoSyncedToChapterExecution) {
-          return {
-            generatedResponse,
-            persistedResponse: latestWorkspaceResponse,
-            nextDocument,
-            autoSyncedToChapterExecution,
-          };
-        }
+        return {
+          generatedResponse,
+          persistedResponse: latestWorkspaceResponse,
+          nextDocument,
+          autoSyncedToChapterExecution,
+        };
       }
 
       try {

@@ -1,6 +1,7 @@
 import type { VolumePlan, VolumePlanDocument } from "@ai-novel/shared/types/novel";
 import {
   CHAPTER_DETAIL_MODES,
+  detailModeLabel,
   hasAnyChapterDetailDraft,
   hasChapterDetailDraft,
   type ChapterDetailBundleRequest,
@@ -124,6 +125,13 @@ export function buildChapterDetailBatchConfirmationMessage(
   ].filter(Boolean).join("\n\n");
 }
 
+const MAX_RETRY_COUNT = 3;
+const RETRY_DELAY_MS = 2000;
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 export async function runChapterDetailBatchGeneration({
   initialDraft,
   label,
@@ -137,6 +145,8 @@ export async function runChapterDetailBatchGeneration({
 }: RunChapterDetailBatchGenerationArgs): Promise<void> {
   let workingDraft = initialDraft;
   let processedModeCount = 0;
+  let failedCount = 0;
+  const failedChapters: string[] = [];
   setIsGenerating(true);
   setCurrentMode("");
   setCurrentChapterId(targets[0]?.chapterId ?? "");
@@ -151,24 +161,53 @@ export async function runChapterDetailBatchGeneration({
       setCurrentChapterId(target.chapterId);
       for (const mode of missingModes) {
         setCurrentMode(mode);
-        const result = await generateChapterDetail({
-          targetVolumeId,
-          targetChapterId: target.chapterId,
-          detailMode: mode,
-          draftVolumesOverride: workingDraft,
-          suppressSuccessMessage: true,
-        });
-        workingDraft = result.nextDocument.volumes;
-        processedModeCount += 1;
+        let lastError: unknown = null;
+        for (let attempt = 1; attempt <= MAX_RETRY_COUNT; attempt++) {
+          try {
+            const result = await generateChapterDetail({
+              targetVolumeId,
+              targetChapterId: target.chapterId,
+              detailMode: mode,
+              draftVolumesOverride: workingDraft,
+              suppressSuccessMessage: true,
+            });
+            workingDraft = result.nextDocument.volumes;
+            processedModeCount += 1;
+            lastError = null;
+            break;
+          } catch (error) {
+            lastError = error;
+            if (attempt < MAX_RETRY_COUNT) {
+              setStructuredMessage(
+                `第${target.chapterOrder}章 ${detailModeLabel(mode)} 生成失败（第${attempt}次），${RETRY_DELAY_MS / 1000}秒后重试...`,
+              );
+              await sleep(RETRY_DELAY_MS);
+            }
+          }
+        }
+        if (lastError) {
+          failedCount += 1;
+          failedChapters.push(describeChapterTarget(target));
+          console.error(`[chapterDetailBatch] ${describeChapterTarget(target)} ${detailModeLabel(mode)} 最终失败:`, lastError);
+        }
       }
     }
-    setStructuredMessage(
-      processedModeCount > 0
-        ? `${label}的章节目标、执行边界和任务单已补齐并自动保存。`
-        : `${label}当前已经完整，无需重复生成章节细化。`,
-    );
-  } catch {
-    // error message is handled by mutation onError
+
+    if (failedCount === 0) {
+      setStructuredMessage(
+        processedModeCount > 0
+          ? `${label}的章节目标、执行边界和任务单已补齐并自动保存。`
+          : `${label}当前已经完整，无需重复生成章节细化。`,
+      );
+    } else if (processedModeCount > 0) {
+      setStructuredMessage(
+        `部分完成：${processedModeCount} 项已保存，${failedCount} 项失败（${failedChapters.join("、")}）。可重新尝试失败章节。`,
+      );
+    } else {
+      setStructuredMessage(
+        `${label}细化全部失败（${failedChapters.join("、")}）。请检查网络或模型配置后重试。`,
+      );
+    }
   } finally {
     setIsGenerating(false);
     setCurrentChapterId("");

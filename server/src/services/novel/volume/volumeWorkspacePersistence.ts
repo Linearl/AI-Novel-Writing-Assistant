@@ -450,6 +450,10 @@ export async function ensureVolumeWorkspaceDocument(params: {
       : buildVolumeWorkspaceDocument({
         novelId,
         volumes: activeRows,
+        strategyPlan: parsed.strategyPlan,
+        critiqueReport: parsed.critiqueReport,
+        beatSheets: parsed.beatSheets,
+        rebalanceDecisions: parsed.rebalanceDecisions,
         source: activeRows.length > 0 ? "volume" : "empty",
         activeVersionId: activeVersion.id,
     });

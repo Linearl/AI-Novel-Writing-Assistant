@@ -17,23 +17,11 @@ export const readinessSteps = [
     label: "卷骨架",
     description: "确认每卷的开卷抓手、压迫源和兑现方式。",
   },
-  {
-    key: "canGenerateBeatSheet",
-    label: "节奏板",
-    description: "卷骨架稳定后，才适合进入单卷节奏拆分。",
-  },
-  {
-    key: "canGenerateChapterList",
-    label: "拆章节",
-    description: "节奏板准备好后，才能继续拆到章节级别。",
-  },
 ] as const;
 
 export function getNextOutlineAction(readiness: OutlineTabViewProps["readiness"]): string {
   if (!readiness.canGenerateStrategy) return "先生成卷战略建议";
   if (!readiness.canGenerateSkeleton) return "现在适合生成全书卷骨架";
-  if (!readiness.canGenerateBeatSheet) return "卷骨架已准备好，下一步进入节奏 / 拆章";
-  if (!readiness.canGenerateChapterList) return "先做当前卷节奏板，再拆当前卷章节";
   return "卷战略阶段已齐备，可以继续进入节奏 / 拆章";
 }
 
@@ -120,7 +108,7 @@ export default function OutlineStrategyReadiness(props: ReadinessProps) {
             <AiButton variant="outline" onClick={onCritiqueStrategy} disabled={isCritiquingStrategy || !strategyPlan}>
               {isCritiquingStrategy ? "审查中..." : "AI审查卷战略"}
             </AiButton>
-            <AiButton onClick={onGenerateSkeleton} disabled={isGeneratingSkeleton || !readiness.canGenerateSkeleton}>
+            <AiButton onClick={onGenerateSkeleton} disabled={isGeneratingSkeleton || !strategyPlan}>
               {isGeneratingSkeleton ? "生成中..." : volumes.length > 0 ? "重生成全书卷骨架" : "生成全书卷骨架"}
             </AiButton>
             <Button variant="secondary" onClick={onSave} disabled={isSaving}>
@@ -184,9 +172,9 @@ export default function OutlineStrategyReadiness(props: ReadinessProps) {
                     ))}
                   </div>
 
-                  {readiness.blockingReasons.length > 0 ? (
+                  {readiness.blockingReasons.filter((r) => !r.includes("节奏板") && !r.includes("拆章节")).length > 0 ? (
                     <div className="rounded-md border border-amber-200 bg-amber-50 p-3 text-xs text-amber-800">
-                      {readiness.blockingReasons.map((reason) => <div key={reason}>{reason}</div>)}
+                      {readiness.blockingReasons.filter((r) => !r.includes("节奏板") && !r.includes("拆章节")).map((reason) => <div key={reason}>{reason}</div>)}
                     </div>
                   ) : (
                     <div className="rounded-md border border-emerald-200 bg-emerald-50 p-3 text-xs text-emerald-800">

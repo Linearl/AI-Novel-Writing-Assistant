@@ -182,6 +182,19 @@ function getFallbackModels(provider: LLMProvider, currentModel?: string): string
   return Array.from(new Set([...models, currentModel ?? ""].filter(Boolean)));
 }
 
+async function getAllPersistedModels(provider: LLMProvider): Promise<string[]> {
+  try {
+    const record = await prisma.appSetting.findUnique({
+      where: { key: `provider.persistedModels.${provider}` },
+    });
+    if (!record?.value) return [];
+    const parsed = JSON.parse(record.value);
+    return Array.isArray(parsed) ? parsed.filter((item): item is string => typeof item === "string" && item.trim().length > 0) : [];
+  } catch {
+    return [];
+  }
+}
+
 function buildBuiltInProviderStatus(
   provider: BuiltinLLMProvider,
   item: {
@@ -195,6 +208,7 @@ function buildBuiltInProviderStatus(
     requestIntervalMs?: number | null;
   } | undefined,
   imageModel: string | undefined,
+  persistedModels: string[] = [],
 ): BuiltInProviderStatus {
   const savedKey = normalizeOptionalText(item?.key);
   const envKey = getProviderEnvApiKey(provider);
@@ -205,7 +219,10 @@ function buildBuiltInProviderStatus(
     ?? getProviderEnvBaseUrl(provider)
     ?? PROVIDERS[provider].baseURL;
   const requiresApiKey = providerRequiresApiKey(provider);
-  const models = getFallbackModels(provider, configuredModel);
+  const fallbackModels = getFallbackModels(provider, configuredModel);
+  const models = persistedModels.length > 0
+    ? Array.from(new Set([...persistedModels, ...fallbackModels]))
+    : fallbackModels;
   const currentModel = configuredModel ?? models[0] ?? "";
   const currentImageModel = imageModel ?? getDefaultImageModel(provider) ?? null;
   const isConfigured = requiresApiKey ? Boolean(effectiveKey && currentModel) : Boolean(currentModel && currentBaseURL);
@@ -429,8 +446,12 @@ router.get("/api-keys", async (_req, res, next) => {
       ...keys.map((item) => item.provider),
     ]));
     const imageModelMap = await getProviderImageModelMap(allProviders);
+    const persistedModelEntries = await Promise.all(
+      SUPPORTED_PROVIDERS.map(async (provider) => [provider, await getAllPersistedModels(provider)] as const),
+    );
+    const persistedModelMap = new Map(persistedModelEntries);
     const builtInProviders = SUPPORTED_PROVIDERS.map((provider) =>
-      buildBuiltInProviderStatus(provider, keyMap.get(provider), imageModelMap.get(provider)),
+      buildBuiltInProviderStatus(provider, keyMap.get(provider), imageModelMap.get(provider), persistedModelMap.get(provider) ?? []),
     );
     const customProviders = keys
       .filter((item) => !isBuiltInProvider(item.provider))

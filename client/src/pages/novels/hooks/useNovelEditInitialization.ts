@@ -140,8 +140,8 @@ export function useNovelEditInitialization({
       characters: "",
       outline: detail.outline ?? "",
     });
-    if (hydrateVolumeDraftFromDetail) {
-      setVolumeDraft(detail.volumes ?? []);
+    if (hydrateVolumeDraftFromDetail && Array.isArray(detail.volumes) && detail.volumes.length > 0) {
+      setVolumeDraft(detail.volumes);
     }
     const recommendedEndOrder = Math.max(
       detail.estimatedChapterCount ?? DEFAULT_ESTIMATED_CHAPTER_COUNT,
