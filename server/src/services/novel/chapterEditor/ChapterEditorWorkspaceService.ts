@@ -18,6 +18,9 @@ import {
 } from "../../../prompting/prompts/novel/chapterEditor/workspaceDiagnosis.prompts";
 import { NovelCoreService } from "../NovelCoreService";
 import { NovelVolumeService } from "../volume/NovelVolumeService";
+import { StyleBindingService } from "../../styleEngine/StyleBindingService";
+import { buildWriterStyleContractText } from "../../styleEngine/styleContractText";
+import { WritingTechniqueService } from "../../styleEngine/WritingTechniqueService";
 import { logger } from "../../logging/LoggerService";
 import {
   buildAnchorRangeFromParagraphBounds,
@@ -46,6 +49,8 @@ export interface ChapterEditorWorkspaceContext {
   normalizedContent: string;
   paragraphs: ChapterEditorParagraph[];
   styleSummary: string;
+  styleContractText: string;
+  writingTechniques: Array<{ key: string; name: string; description: string; category: string | null }>;
   chapterSummary: string;
   openAuditIssues: AuditIssue[];
   macroContext: ChapterEditorMacroContext;
@@ -251,6 +256,31 @@ export class ChapterEditorWorkspaceService {
     const previousChapter = novel.chapters.find((item) => item.order === chapter.order - 1) ?? null;
     const nextChapter = novel.chapters.find((item) => item.order === chapter.order + 1) ?? null;
     const styleSummary = buildStyleSummary(novel);
+
+    // 获取完整 StyleContract（画像规则 + 反 AI 规则）
+    const styleBindingService = new StyleBindingService();
+    let styleContractText = "";
+    try {
+      const styleContext = await styleBindingService.resolveForGeneration({
+        novelId: novel.id,
+        chapterId: chapter.id,
+      });
+      styleContractText = buildWriterStyleContractText(styleContext.compiledBlocks?.contract);
+    } catch (err) {
+      logger.warn("Failed to resolve style contract for chapter editor", { error: err });
+    }
+
+    // 获取三级池子中的文笔技法
+    const techniqueService = new WritingTechniqueService();
+    let writingTechniques: Array<{ key: string; name: string; description: string; category: string | null }> = [];
+    try {
+      writingTechniques = await techniqueService.resolvePool({
+        novelId: novel.id,
+      });
+    } catch (err) {
+      logger.warn("Failed to resolve writing techniques pool", { error: err });
+    }
+
     const chapterSummary = buildChapterSummary(chapter, normalizedContent);
     const openAuditIssues = auditReports.flatMap((report) => report.issues.filter((issue) => issue.status === "open"));
     const activePlotThreads = buildActivePlotThreads(chapterPlan, latestStateSnapshot, location.volume);
@@ -288,6 +318,8 @@ export class ChapterEditorWorkspaceService {
       normalizedContent,
       paragraphs,
       styleSummary,
+      styleContractText,
+      writingTechniques,
       chapterSummary,
       openAuditIssues,
       macroContext,

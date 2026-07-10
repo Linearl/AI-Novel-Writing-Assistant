@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+import { readFileSync } from "node:fs";
 import type {
   ChapterEditorAiRevisionIntent,
   ChapterEditorMacroContext,
@@ -15,6 +16,7 @@ import {
   chapterEditorRewriteCandidatesPrompt,
   type ChapterEditorRewriteCandidatesPromptInput,
 } from "../../../prompting/prompts/novel/chapterEditor/rewriteCandidates.prompts";
+import { techniqueScreeningPrompt } from "../../../prompting/prompts/writingTechnique/techniqueScreening.prompt";
 import {
   chapterEditorUserIntentPrompt,
   type ChapterEditorUserIntentPromptInput,
@@ -138,6 +140,57 @@ export class NovelChapterEditorService {
       ? input.context ?? buildParagraphWindow(content, targetRange)
       : { beforeParagraphs: [], afterParagraphs: [] };
 
+    // Step 2: AI 筛选文笔技法
+    let techniqueBodyText = "";
+    if (context.writingTechniques.length > 0) {
+      try {
+        const screeningResult = await this.promptRunner({
+          asset: techniqueScreeningPrompt,
+          promptInput: {
+            candidates: context.writingTechniques.map(t => ({
+              key: t.key,
+              name: t.name,
+              description: t.description,
+            })),
+            selectedText: targetRange.text.slice(0, 2000),
+            chapterContext: context.chapterSummary?.slice(0, 500) ?? "",
+          },
+          options: {
+            provider: input.provider ?? "deepseek",
+            temperature: 0.3,
+          },
+        });
+
+        const selectedKeys = (screeningResult.output.selected ?? [])
+          .map(s => s.key)
+          .filter(Boolean);
+
+        if (selectedKeys.length > 0) {
+          const bodies: string[] = [];
+          for (const key of selectedKeys) {
+            const technique = context.writingTechniques.find(t => t.key === key);
+            if (!technique) continue;
+            try {
+              // 读取技法全文（filePath 是相对于项目根的路径）
+              const path = require("node:path");
+              const filePath = path.resolve(process.cwd(), (technique as any).filePath ?? `server/src/data/writingTechniques/${key}.md`);
+              const content = readFileSync(filePath, "utf-8");
+              const bodyMatch = content.match(/^---\n[\s\S]*?\n---\n([\s\S]*)$/);
+              const body = bodyMatch ? bodyMatch[1].trim() : content;
+              bodies.push(`## ${technique.name}\n${body}`);
+            } catch {
+              // 文件读取失败，跳过
+            }
+          }
+          if (bodies.length > 0) {
+            techniqueBodyText = bodies.join("\n\n");
+          }
+        }
+      } catch {
+        // 筛选失败，降级到普通改写（不注入技法）
+      }
+    }
+
     const result = await this.promptRunner({
       asset: chapterEditorRewriteCandidatesPrompt,
       promptInput: {
@@ -150,12 +203,13 @@ export class NovelChapterEditorService {
         afterParagraphs: contextWindow.afterParagraphs,
         goalSummary: context.chapterPlan?.objective?.trim() || context.chapter.expectation?.trim() || null,
         chapterSummary: context.chapterSummary,
-        styleSummary: context.styleSummary || null,
+        styleSummary: context.styleContractText || context.styleSummary || null,
         characterStateSummary: buildCharacterStateSummary(context.latestStateSnapshot),
         worldConstraintSummary: context.macroContext.worldConstraintSummary,
         macroContextSummary: buildMacroContextSummary(context.macroContext),
         resolvedIntentSummary: buildIntentSummary(resolvedIntent),
         constraintsText: buildConstraintsText(input.constraints),
+        writingTechniques: techniqueBodyText || null,
       } satisfies ChapterEditorRewriteCandidatesPromptInput,
       options: {
         provider: input.provider ?? "deepseek",
