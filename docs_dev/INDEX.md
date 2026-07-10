@@ -176,17 +176,6 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1\v0.1-r7032-S3-extract-hardcoded-constants\REQ-7032-extract-hardcoded-constants.md](./1.task\B.todo\v0.1\v0.1-r7032-S3-extract-hardcoded-constants\REQ-7032-extract-hardcoded-constants.md) | 提取硬编码常量 — REQ-7032 需求文档，修复重复魔数、重复函数定义、硬编码阈值 | 提取硬编码常量 — REQ-7032 需求文档，修复重复魔数、重复函数定义、硬编码阈值 |
 | [1.task\B.todo\v0.1\v0.1-r7032-S3-extract-hardcoded-constants\tasks.md](./1.task\B.todo\v0.1\v0.1-r7032-S3-extract-hardcoded-constants\tasks.md) | 提取硬编码常量 — REQ-7032 任务拆解 | 提取硬编码常量 — REQ-7032 任务拆解 |
 
-## 1.task\B.todo\v0.1\v0.1-r7033-C2-prisma-schema-sizing
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r7033-C2-prisma-schema-sizing\decision_log.md](./1.task\B.todo\v0.1\v0.1-r7033-C2-prisma-schema-sizing\decision_log.md) | REQ-7033 Prisma Schema 精简 — 决策留痕 | REQ-7033 Prisma Schema 精简 — 决策留痕 |
-| [1.task\B.todo\v0.1\v0.1-r7033-C2-prisma-schema-sizing\design.md](./1.task\B.todo\v0.1\v0.1-r7033-C2-prisma-schema-sizing\design.md) | REQ-7033 Prisma Schema 精简 — 方案设计 | REQ-7033 Prisma Schema 精简 — 方案设计 |
-| [1.task\B.todo\v0.1\v0.1-r7033-C2-prisma-schema-sizing\README.md](./1.task\B.todo\v0.1\v0.1-r7033-C2-prisma-schema-sizing\README.md) | REQ-7033 Prisma Schema 精简——README | REQ-7033 Prisma Schema 精简——README |
-| [1.task\B.todo\v0.1\v0.1-r7033-C2-prisma-schema-sizing\REQ-7033-prisma-schema-sizing-original.md](./1.task\B.todo\v0.1\v0.1-r7033-C2-prisma-schema-sizing\REQ-7033-prisma-schema-sizing-original.md) | REQ-7033 Prisma Schema 精简 — 原始冻结副本 | REQ-7033 Prisma Schema 精简 — 原始冻结副本 |
-| [1.task\B.todo\v0.1\v0.1-r7033-C2-prisma-schema-sizing\REQ-7033-prisma-schema-sizing.md](./1.task\B.todo\v0.1\v0.1-r7033-C2-prisma-schema-sizing\REQ-7033-prisma-schema-sizing.md) | REQ-7033 Prisma Schema 精简 | REQ-7033 Prisma Schema 精简 |
-| [1.task\B.todo\v0.1\v0.1-r7033-C2-prisma-schema-sizing\tasks.md](./1.task\B.todo\v0.1\v0.1-r7033-C2-prisma-schema-sizing\tasks.md) | REQ-7033 Prisma Schema 精简 — 任务拆解 | REQ-7033 Prisma Schema 精简 — 任务拆解 |
-
 ## 1.task\B.todo\v0.1\v0.1-r7034-M2-novel-application-services-facade-contraction
 
 | 文件 | 标题 | 描述 |
