@@ -13,7 +13,7 @@
 declare namespace NodeJS {
   interface ProcessEnv {
     // ── Server / Network ──────────────────────────────────────────────
-    /** Server listen port (default: 3000) */
+    /** Server listen port (default: 13000) */
     AI_NOVEL_SERVER_PORT?: string;
     /** Legacy alias for AI_NOVEL_SERVER_PORT */
     PORT?: string;

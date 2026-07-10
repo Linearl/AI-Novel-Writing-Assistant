@@ -50,8 +50,8 @@ pnpm dist:desktop:portable  # 便携版
 ## 端口
 
 - 前端：`http://localhost:5173`
-- 后端：`http://localhost:3000`
-- API：`http://localhost:3000/api`
+- 后端：`http://localhost:13000`
+- API：`http://localhost:13000/api`
 
 ## Monorepo 结构
 

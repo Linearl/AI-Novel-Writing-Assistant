@@ -75,9 +75,9 @@ test("development loopback API base adapts to the page host for LAN testing", ()
   assert.equal(
     resolveApiBaseUrlForEnvironment({
       runtimeConfig: { mode: "web" },
-      viteEnv: { ...developmentEnv, VITE_API_BASE_URL: "http://localhost:3000/api" },
+      viteEnv: { ...developmentEnv, VITE_API_BASE_URL: "http://localhost:13000/api" },
       windowLocation: lanDevLocation,
     }),
-    "http://192.168.1.88:3000/api",
+    "http://192.168.1.88:13000/api",
   );
 });

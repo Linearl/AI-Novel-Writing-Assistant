@@ -58,7 +58,7 @@ function resolveDevProxyTarget(): string {
     }
   }
   if (!Number.isFinite(port) || port <= 0) {
-    port = 3000;
+    port = 13000;
   }
 
   const targetHost = configuredHost && !["0.0.0.0", "::"].includes(configuredHost)

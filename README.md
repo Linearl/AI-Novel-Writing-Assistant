@@ -396,7 +396,7 @@ http://192.168.0.37:3000/api
 - 你想把前端显式指向别的 API 地址
 - 你需要固定 `VITE_API_BASE_URL`
 
-如果你已经复制了 `client/.env.example`，又发现浏览器请求都跑到了 `http://localhost:3000/api`，通常就是因为你把 API 显式固定死了。对同机 / 局域网访问，建议直接删除或注释掉 `VITE_API_BASE_URL`。
+如果你已经复制了 `client/.env.example`，又发现浏览器请求都跑到了 `http://localhost:13000/api`，通常就是因为你把 API 显式固定死了。对同机 / 局域网访问，建议直接删除或注释掉 `VITE_API_BASE_URL`。
 
 示例：
 
@@ -412,7 +412,7 @@ Copy-Item client/.env.example client/.env
 
 ```env
 # 同机 / 局域网访问时，通常不需要这一行
-# VITE_API_BASE_URL=http://localhost:3000/api
+# VITE_API_BASE_URL=http://localhost:13000/api
 ```
 
 #### 2.3 模型供应商并不一定要写死在 env
@@ -443,8 +443,8 @@ pnpm dev
 默认情况下：
 
 - 前端：`http://localhost:5173`
-- 后端：`http://localhost:3000`
-- API：`http://localhost:3000/api`
+- 后端：`http://localhost:13000`
+- API：`http://localhost:13000/api`
 
 首次启动服务端时，会自动执行 Prisma generate 和 `db push`。
 只有在你自己修改了 Prisma schema，或者要处理正式迁移流程时，才需要手动使用 Prisma / 数据库相关命令。

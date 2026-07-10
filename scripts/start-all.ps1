@@ -5,9 +5,8 @@
 # Pass -Mode desktop to launch Electron shell
 #
 # Design rules:
-#   1. NEVER touch port 3000 - that is the published release version
-#   2. Dev suite prefers 3100 (server) + 5173 (client), but auto-avoids
-#      occupied ports by scanning upward (3101, 3102, ... / 5174, 5175, ...)
+#   1. Dev suite uses 13000 (server) + 5173 (client), but auto-avoids
+#      occupied ports by scanning upward (13001, 13002, ... / 5174, 5175, ...)
 #   3. Desktop in dev mode is "external": reuses our dev server
 #      (set AI_NOVEL_DESKTOP_SERVER_MODE=external + AI_NOVEL_SERVER_PORT=<resolved>)
 #   4. Logs flow through scripts/run-with-log.cjs -> .logs\<session>\
@@ -18,7 +17,7 @@ param(
     [Alias("h")]
     [switch]$Help,
 
-    [Parameter(HelpMessage = "Start mode: dev (3100+5173), desktop (dev + Electron)")]
+    [Parameter(HelpMessage = "Start mode: dev (13000+5173), desktop (dev + Electron)")]
     [ValidateSet("dev", "desktop")]
     [string]$Mode = "dev",
 
@@ -36,10 +35,10 @@ $LogsDir     = Join-Path $ProjectRoot ".logs"
 $EnvFile     = Join-Path $ProjectRoot "server\.env"
 $ClientEnv   = Join-Path $ProjectRoot "client\.env"
 
-# Isolation ports (3000 is reserved for the published release)
-$DevServerPort = 3100
+# Isolation ports
+$DevServerPort = 13000
 $DevClientPort = 5173
-$ReleasePort   = 3000
+$ReleasePort   = 13000
 
 # Colors
 function Write-Banner {
@@ -74,8 +73,7 @@ Options:
   -Status              Show running processes / ports / health
 
 Port contract:
-  3000     Published release (do not touch)
-  3100+    Dev server (auto-avoids occupied ports, scans upward)
+  13000    Dev/Release server (auto-avoids occupied ports, scans upward)
   5173+    Dev client (auto-avoids occupied ports, scans upward)
 
 Logs:
@@ -289,9 +287,9 @@ function Show-Status {
     }
 }
 
-# ─── Stop dev (never touches 3000) ──────────────────────────────
+# ─── Stop dev ──────────────────────────────────────────────
 function Stop-DevAll {
-    Write-Stage "Stopping dev processes (will NOT touch 3000 release)"
+    Write-Stage "Stopping dev processes"
 
     $devPids = Get-DevPids
     if (-not $devPids) {
@@ -343,7 +341,7 @@ function Stop-DevAll {
         Start-Sleep -Seconds 2
     }
 
-    # Also kill any process actually listening on 3100 / 5173 as a last resort
+    # Also kill any process actually listening on 13000 / 5173 as a last resort
     foreach ($port in @($DevServerPort, $DevClientPort)) {
         if (Test-PortListening -Port $port) {
             $owner = Get-PortOwner -Port $port
@@ -378,11 +376,11 @@ function Start-DevSuite {
     # Port avoidance: if preferred port is busy, scan upward for the next free one
     $script:DevServerPort = Find-AvailablePort -PreferredPort $DevServerPort
     if (-not $script:DevServerPort) {
-        throw "no available port found starting from 3100 (scanned 20 ports). Free up ports and retry."
+        throw "no available port found starting from 13000 (scanned 20 ports). Free up ports and retry."
     }
-    if ($script:DevServerPort -ne 3100) {
-        $occ = Get-PortOwner -Port 3100
-        Write-Warn "port 3100 busy (PID=$($occ.Pid) Name=$($occ.Name)), using $script:DevServerPort instead"
+    if ($script:DevServerPort -ne 13000) {
+        $occ = Get-PortOwner -Port 13000
+        Write-Warn "port 13000 busy (PID=$($occ.Pid) Name=$($occ.Name)), using $script:DevServerPort instead"
     }
 
     $script:DevClientPort = Find-AvailablePort -PreferredPort $DevClientPort

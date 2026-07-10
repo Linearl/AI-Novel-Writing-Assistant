@@ -14,7 +14,7 @@ export const DEFAULT_HOST = "localhost";
 export const BIND_ALL_HOST = "0.0.0.0";
 
 /** Default server port */
-export const DEFAULT_SERVER_PORT = 3000;
+export const DEFAULT_SERVER_PORT = 13000;
 
 /** Default fallback base URL for the auto-director channel callbacks */
 export const DEFAULT_APP_BASE_URL = `http://localhost:${DEFAULT_SERVER_PORT}`;
