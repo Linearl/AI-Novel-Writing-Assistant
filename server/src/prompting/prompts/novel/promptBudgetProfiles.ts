@@ -19,7 +19,7 @@ export const NOVEL_PROMPT_BUDGETS = {
   chapterArtifactDelta: 1400,
   chapterEditorWorkspaceDiagnosis: 1400,
   chapterEditorUserIntent: 900,
-  chapterEditorRewrite: 1400,
+  chapterEditorRewrite: 5000,
   chapterLightAudit: 900,
   chapterReview: 2600,
   chapterRepair: 2200,

@@ -22,6 +22,7 @@ export interface ChapterEditorRewriteCandidatesPromptInput {
   macroContextSummary: string;
   resolvedIntentSummary: string;
   constraintsText: string;
+  writingTechniques?: string | null;
 }
 
 function renderOptionalBlock(title: string, value?: string | null): string {
@@ -112,6 +113,9 @@ export const chapterEditorRewriteCandidatesPrompt: PromptAsset<
       "",
       renderOptionalBlock("【写法与语气】", input.styleSummary),
       "",
+      input.writingTechniques?.trim()
+        ? ["【文笔技法】", "以下是本次改写建议使用的文笔技法，请在改写中适当运用，但不要为了用技法而强行堆砌，保持自然。", "", input.writingTechniques.trim(), ""].join("\n")
+        : "",
       renderOptionalBlock("【角色状态】", input.characterStateSummary),
       "",
       renderOptionalBlock("【世界与设定约束】", input.worldConstraintSummary),
