@@ -1,6 +1,6 @@
 import {
   getWorkflowStepCatalogEntry,
-} from "@ai-novel/shared/types/directorWorkflowStepCatalog";
+} from "@ai-novel/shared";
 import {
   getDirectorExecutionNodeAdapter,
   type DirectorExecutionStage,

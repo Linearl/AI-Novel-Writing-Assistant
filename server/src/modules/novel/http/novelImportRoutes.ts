@@ -2,7 +2,7 @@ import { Router } from "express";
 import { z } from "zod";
 import { validate } from "../../../middleware/validate";
 import { prisma } from "../../../db/prisma";
-import type { ApiResponse } from "@ai-novel/shared/types/api";
+import type { ApiResponse } from "@ai-novel/shared";
 
 const importBodySchema = z.object({
   bundle: z.object({

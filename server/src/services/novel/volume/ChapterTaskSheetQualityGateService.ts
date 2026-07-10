@@ -3,13 +3,13 @@ import type {
   ChapterExecutionContractQualityCandidate,
   ChapterTaskSheetQualityGateResult,
   ChapterTaskSheetQualityMode,
-} from "@ai-novel/shared/types/chapterTaskSheetQuality";
+} from "@ai-novel/shared";
 import {
   assessChapterExecutionContractShape,
   formatChapterTaskSheetQualityFailure,
   mapSemanticAssessmentToQualityGate,
-} from "@ai-novel/shared/types/chapterTaskSheetQuality";
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
+} from "@ai-novel/shared";
+import type { LLMProvider } from "@ai-novel/shared";
 import { runStructuredPrompt } from "../../../prompting/core/promptRunner";
 import {
   chapterTaskSheetQualityPrompt,

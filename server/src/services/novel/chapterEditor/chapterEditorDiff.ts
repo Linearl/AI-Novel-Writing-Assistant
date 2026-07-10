@@ -1,4 +1,4 @@
-import type { ChapterEditorDiffChunk } from "@ai-novel/shared/types/novel";
+import type { ChapterEditorDiffChunk } from "@ai-novel/shared";
 
 type DiffToken = {
   key: string;

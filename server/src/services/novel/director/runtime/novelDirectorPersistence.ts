@@ -1,4 +1,4 @@
-import type { DirectorPlanBlueprint } from "@ai-novel/shared/types/novelDirector";
+import type { DirectorPlanBlueprint } from "@ai-novel/shared";
 import { prisma } from "../../../../db/prisma";
 import { serializeSetupProgressJson } from "../../novelCoreShared";
 

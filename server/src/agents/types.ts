@@ -1,7 +1,7 @@
-import type { AgentApproval, AgentRun, AgentStep } from "@ai-novel/shared/types/agent";
-import type { DirectorPolicyMode, DirectorRuntimePolicySnapshot } from "@ai-novel/shared/types/directorRuntime";
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
-import type { AgentPlan, AgentToolErrorCode } from "@ai-novel/shared/types/agent";
+import type { AgentApproval, AgentRun, AgentStep } from "@ai-novel/shared";
+import type { DirectorPolicyMode, DirectorRuntimePolicySnapshot } from "@ai-novel/shared";
+import type { LLMProvider } from "@ai-novel/shared";
+import type { AgentPlan, AgentToolErrorCode } from "@ai-novel/shared";
 
 export type AgentName = "Planner" | "Writer" | "Reviewer" | "Continuity" | "Repair";
 

@@ -3,8 +3,8 @@ import type {
   CharacterCastQualityAssessment,
   CharacterCastRole,
   CharacterWorldFocusHints,
-} from "@ai-novel/shared/types/novel";
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
+} from "@ai-novel/shared";
+import type { LLMProvider } from "@ai-novel/shared";
 import { parseCharacterProhibitionsJson, serializeCharacterProhibitions } from "../characters/characterHardFacts";
 import { assessCharacterCastBatch } from "./characterCastQuality";
 import type { CharacterCastOptionResponseParsed } from "../../../prompting/prompts/novel/characterPreparation.promptSchemas";

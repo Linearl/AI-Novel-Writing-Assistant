@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { z } from "zod";
-import type { ApiResponse } from "@ai-novel/shared/types/api";
+import type { ApiResponse } from "@ai-novel/shared";
 import {
   feedbackSubmitSchema,
   feedbackFolderNameSchema,
@@ -9,7 +9,7 @@ import {
   type FeedbackCategory,
   type FeedbackListItem,
   type FeedbackDetail,
-} from "@ai-novel/shared/types/feedback";
+} from "@ai-novel/shared";
 import { authMiddleware } from "../../middleware/auth";
 import { validate } from "../../middleware/validate";
 import { logger } from "../../services/logging/LoggerService";

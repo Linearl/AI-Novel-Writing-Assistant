@@ -1,4 +1,4 @@
-import type { QualityScore, ReviewIssue } from "@ai-novel/shared/types/novel";
+import type { QualityScore, ReviewIssue } from "@ai-novel/shared";
 import type { ReviewOptions } from "../novelCoreShared";
 
 export interface ChapterRuntimeAgentPort {

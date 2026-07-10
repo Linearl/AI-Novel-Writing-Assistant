@@ -2,8 +2,8 @@ import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 import type {
   VolumeChapterPlan,
   VolumePlan,
-} from "@ai-novel/shared/types/novel";
-import type { StoryMacroPlan } from "@ai-novel/shared/types/storyMacro";
+} from "@ai-novel/shared";
+import type { StoryMacroPlan } from "@ai-novel/shared";
 import type { PromptAsset } from "../../core/promptTypes";
 import type {
   ChapterDetailMode,

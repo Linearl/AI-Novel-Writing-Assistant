@@ -3,8 +3,8 @@
  * 将 novel 对 planner 的直接调用转为通过中介层
  */
 
-import type { AuditReport, ReplanResult } from "@ai-novel/shared/types/novel";
-import type { PayoffLedgerSummary } from "@ai-novel/shared/types/payoffLedger";
+import type { AuditReport, ReplanResult } from "@ai-novel/shared";
+import type { PayoffLedgerSummary } from "@ai-novel/shared";
 import { plannerService } from "../planner/PlannerService";
 import type { IPlannerMediator } from "./interfaces";
 

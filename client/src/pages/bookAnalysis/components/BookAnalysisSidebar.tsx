@@ -4,8 +4,8 @@ import {
   type BookAnalysis,
   type BookAnalysisPreset,
   type BookAnalysisStatus,
-} from "@ai-novel/shared/types/bookAnalysis";
-import type { KnowledgeDocumentDetail, KnowledgeDocumentSummary } from "@ai-novel/shared/types/knowledge";
+} from "@ai-novel/shared";
+import type { KnowledgeDocumentDetail, KnowledgeDocumentSummary } from "@ai-novel/shared";
 import LLMSelector from "@/components/common/LLMSelector";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

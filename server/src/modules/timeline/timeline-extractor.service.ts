@@ -2,8 +2,8 @@ import type {
   ExtractedTimelineEvent,
   TimelineHookDraft,
   TimelineContextForChapter,
-} from "@ai-novel/shared/types/timeline";
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
+} from "@ai-novel/shared";
+import type { LLMProvider } from "@ai-novel/shared";
 import { runStructuredPrompt } from "../../prompting/core/promptRunner";
 import {
   timelineExtractorPrompt,

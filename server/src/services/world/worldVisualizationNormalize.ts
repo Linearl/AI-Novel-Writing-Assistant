@@ -4,7 +4,7 @@ import type {
   WorldGeographyMapNode,
   WorldGeographyRegionType,
   WorldGeographyRouteType,
-} from "@ai-novel/shared/types/world";
+} from "@ai-novel/shared";
 import {
   type FactionNodeType,
   type GeographyNodeInput,

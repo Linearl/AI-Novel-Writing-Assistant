@@ -5,7 +5,7 @@ import type {
   SupplementalCharacterGenerateInput,
   SupplementalCharacterGenerationMode,
   SupplementalCharacterGenerationResult,
-} from "@ai-novel/shared/types/novel";
+} from "@ai-novel/shared";
 import { useCallback, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { refineSupplementalCharacter } from "@/api/novel/characters";

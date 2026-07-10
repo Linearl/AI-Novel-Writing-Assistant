@@ -1,5 +1,5 @@
-import type { BookAnalysisEvidenceItem, BookAnalysisSection, BookAnalysisSectionKey } from "@ai-novel/shared/types/bookAnalysis";
-import { BOOK_ANALYSIS_SECTIONS, BOOK_ANALYSIS_STRUCTURED_FIELD_SPECS } from "@ai-novel/shared/types/bookAnalysis";
+import type { BookAnalysisEvidenceItem, BookAnalysisSection, BookAnalysisSectionKey } from "@ai-novel/shared";
+import { BOOK_ANALYSIS_SECTIONS, BOOK_ANALYSIS_STRUCTURED_FIELD_SPECS } from "@ai-novel/shared";
 import {
   CHAPTER_HEADING_REGEX,
   CHUNK_OVERLAP_CHARS,

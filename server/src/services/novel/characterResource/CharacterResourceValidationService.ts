@@ -1,9 +1,9 @@
 import type {
   CharacterResourceEventType,
   CharacterResourceUpdatePayload,
-} from "@ai-novel/shared/types/characterResource";
-import type { StateChangeProposal } from "@ai-novel/shared/types/canonicalState";
-import { characterResourceUpdatePayloadSchema } from "@ai-novel/shared/types/characterResource";
+} from "@ai-novel/shared";
+import type { StateChangeProposal } from "@ai-novel/shared";
+import { characterResourceUpdatePayloadSchema } from "@ai-novel/shared";
 import { compactText } from "./characterResourceShared";
 
 const HIGH_RISK_EVENTS = new Set<CharacterResourceEventType>(["lost", "consumed", "destroyed", "damaged"]);

@@ -1,6 +1,6 @@
-import type { DirectorChapterExecutionProgressSummary, DirectorArtifactRef, DirectorArtifactType } from "@ai-novel/shared/types/directorRuntime";
-import type { DirectorAutoExecutionState, DirectorConfirmRequest } from "@ai-novel/shared/types/novelDirector";
-import type { VolumePlanDocument } from "@ai-novel/shared/types/novel";
+import type { DirectorChapterExecutionProgressSummary, DirectorArtifactRef, DirectorArtifactType } from "@ai-novel/shared";
+import type { DirectorAutoExecutionState, DirectorConfirmRequest } from "@ai-novel/shared";
+import type { VolumePlanDocument } from "@ai-novel/shared";
 import { BookContractService } from "../../BookContractService";
 import { CharacterPreparationService } from "../../characterPrep/CharacterPreparationService";
 import { CharacterDynamicsService } from "../../dynamics/CharacterDynamicsService";

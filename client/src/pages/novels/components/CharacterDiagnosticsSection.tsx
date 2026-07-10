@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import type { Character } from "@ai-novel/shared/types/novel";
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
+import type { Character } from "@ai-novel/shared";
+import type { LLMProvider } from "@ai-novel/shared";
 import CharacterCastOptionsSection from "./CharacterCastOptionsSection";
 import CharacterDynamicsSection from "./CharacterDynamicsSection";
 import CollapsibleSummary from "./CollapsibleSummary";

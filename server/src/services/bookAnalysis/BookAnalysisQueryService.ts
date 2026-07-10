@@ -3,8 +3,8 @@ import type {
   BookAnalysisDetail,
   BookAnalysisPublishResult,
   BookAnalysisStatus,
-} from "@ai-novel/shared/types/bookAnalysis";
-import { BOOK_ANALYSIS_SECTIONS } from "@ai-novel/shared/types/bookAnalysis";
+} from "@ai-novel/shared";
+import { BOOK_ANALYSIS_SECTIONS } from "@ai-novel/shared";
 import { prisma } from "../../db/prisma";
 import { AppError } from "../../middleware/errorHandler";
 import { KnowledgeService } from "../knowledge/KnowledgeService";

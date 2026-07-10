@@ -1,5 +1,5 @@
-import type { AutoDirectorFollowUpListResponse, AutoDirectorFollowUpOverview } from "@ai-novel/shared/types/autoDirectorFollowUp";
-import type { AutoDirectorFollowUpSection } from "@ai-novel/shared/types/autoDirectorValidation";
+import type { AutoDirectorFollowUpListResponse, AutoDirectorFollowUpOverview } from "@ai-novel/shared";
+import type { AutoDirectorFollowUpSection } from "@ai-novel/shared";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { AUTO_DIRECTOR_MOBILE_CLASSES } from "@/mobile/autoDirector";

@@ -1,4 +1,4 @@
-import type { GenerationContextPackage } from "@ai-novel/shared/types/chapterRuntime";
+import type { GenerationContextPackage } from "@ai-novel/shared";
 import { buildCompressionLog } from "../../../prompting/core/contextBudget";
 import { prisma } from "../../../db/prisma";
 import { ragServices } from "../../rag";

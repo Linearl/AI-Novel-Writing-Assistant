@@ -1,4 +1,4 @@
-import type { VolumePlan, VolumePlanDocument } from "@ai-novel/shared/types/novel";
+import type { VolumePlan, VolumePlanDocument } from "@ai-novel/shared";
 import {
   CHAPTER_DETAIL_MODES,
   detailModeLabel,

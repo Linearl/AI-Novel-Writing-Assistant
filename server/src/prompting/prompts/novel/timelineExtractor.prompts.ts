@@ -4,7 +4,7 @@ import {
   extractedTimelineEventSchema,
   timelineHookDraftSchema,
   timelineStateChangeSchema,
-} from "@ai-novel/shared/types/timeline";
+} from "@ai-novel/shared";
 import type { PromptAsset } from "../../core/promptTypes";
 import { NOVEL_PROMPT_BUDGETS } from "./promptBudgetProfiles";
 

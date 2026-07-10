@@ -1,7 +1,7 @@
 import type {
   CharacterCastOption,
   CharacterGender,
-} from "@ai-novel/shared/types/novel";
+} from "@ai-novel/shared";
 import type { CharacterCastOptionParsed } from "../../../prompting/prompts/novel/characterPreparation.promptSchemas";
 
 interface CharacterCastMemberLike {

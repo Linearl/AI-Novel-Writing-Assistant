@@ -5,9 +5,9 @@ import type {
   AutoDirectorFollowUpItem,
   AutoDirectorFollowUpReason,
   AutoDirectorMutationActionCode,
-} from "@ai-novel/shared/types/autoDirectorFollowUp";
-import type { NovelWorkflowCheckpoint } from "@ai-novel/shared/types/novelWorkflow";
-import type { TaskStatus } from "@ai-novel/shared/types/task";
+} from "@ai-novel/shared";
+import type { NovelWorkflowCheckpoint } from "@ai-novel/shared";
+import type { TaskStatus } from "@ai-novel/shared";
 import { resolveAutoDirectorFollowUpReason } from "./autoDirectorFollowUpReasonResolver";
 import { extractBlockedAutoDirectorValidationResult } from "./autoDirectorFollowUpValidationResult";
 

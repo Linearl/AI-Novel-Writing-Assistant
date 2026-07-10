@@ -1,15 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { buildStyleIntentSummary } from "@ai-novel/shared/types/styleEngine";
-import { normalizeCommercialTags } from "@ai-novel/shared/types/novelFraming";
+import { buildStyleIntentSummary } from "@ai-novel/shared";
+import { normalizeCommercialTags } from "@ai-novel/shared";
 import type {
   DirectorAutoExecutionPlan,
   DirectorRunMode,
   DirectorTakeoverEntryStep,
   DirectorTakeoverStrategy,
-} from "@ai-novel/shared/types/novelDirector";
-import { buildFullBookAutopilotExecutionPlan } from "@ai-novel/shared/types/novelDirector";
+} from "@ai-novel/shared";
+import { buildFullBookAutopilotExecutionPlan } from "@ai-novel/shared";
 import { getDirectorTaskSnapshot, getDirectorTakeoverReadiness, startDirectorTakeover } from "@/api/novelDirector";
 import { queryKeys } from "@/api/queryKeys";
 import { getStyleBindings, getStyleProfiles } from "@/api/styleEngine";

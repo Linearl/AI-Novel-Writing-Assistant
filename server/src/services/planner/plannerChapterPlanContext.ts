@@ -1,5 +1,5 @@
-import type { StoryPlan, Character, CreativeDecision } from "@ai-novel/shared/types/novel";
-import type { CanonicalTimelineEventState } from "@ai-novel/shared/types/canonicalState";
+import type { StoryPlan, Character, CreativeDecision } from "@ai-novel/shared";
+import type { CanonicalTimelineEventState } from "@ai-novel/shared";
 import type { Prisma } from "@prisma/client";
 import { prisma } from "../../db/prisma";
 import type { PromptContextBlock } from "../../prompting/core/promptTypes";

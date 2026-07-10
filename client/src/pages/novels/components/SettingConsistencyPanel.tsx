@@ -19,7 +19,7 @@ import type {
   Contradiction,
   ContradictionSeverity,
   SettingConsistencyReport,
-} from "@ai-novel/shared/types/settingConsistency";
+} from "@ai-novel/shared";
 import {
   getConsistencyReport,
   ignoreContradiction,

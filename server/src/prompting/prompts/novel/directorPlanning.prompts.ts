@@ -5,8 +5,8 @@ import {
   type DirectorCandidateBatch,
   type DirectorCorrectionPreset,
   type DirectorProjectContextInput,
-} from "@ai-novel/shared/types/novelDirector";
-import type { StoryMacroPlan } from "@ai-novel/shared/types/storyMacro";
+} from "@ai-novel/shared";
+import type { StoryMacroPlan } from "@ai-novel/shared";
 import type { PromptAsset } from "../../core/promptTypes";
 import { renderSelectedContextBlocks } from "../../core/renderContextBlocks";
 import {

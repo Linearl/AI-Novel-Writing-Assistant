@@ -1,8 +1,8 @@
-import type { ApiResponse } from "@ai-novel/shared/types/api";
+import type { ApiResponse } from "@ai-novel/shared";
 import type {
   TimelineCheckReport,
   TimelineContextForChapter,
-} from "@ai-novel/shared/types/timeline";
+} from "@ai-novel/shared";
 import type {
   ChapterEditorAiRevisionRequest,
   ChapterEditorAiRevisionResponse,
@@ -12,7 +12,7 @@ import type {
   ChapterEditorRewritePreviewResponse,
   ChapterStatus,
   TensionLevel,
-} from "@ai-novel/shared/types/novel";
+} from "@ai-novel/shared";
 import { apiClient } from "../client";
 
 export async function getNovelChapters(id: string) {

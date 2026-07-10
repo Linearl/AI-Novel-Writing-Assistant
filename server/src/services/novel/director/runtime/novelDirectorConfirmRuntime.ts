@@ -1,9 +1,9 @@
-import { isFullBookAutopilotRunMode } from "@ai-novel/shared/types/novelDirector";
+import { isFullBookAutopilotRunMode } from "@ai-novel/shared";
 import type {
   BookSpec,
   DirectorConfirmApiResponse,
   DirectorConfirmRequest,
-} from "@ai-novel/shared/types/novelDirector";
+} from "@ai-novel/shared";
 import type { NovelContextService } from "../../NovelContextService";
 import type { NovelWorkflowService } from "../../workflow/NovelWorkflowService";
 import {

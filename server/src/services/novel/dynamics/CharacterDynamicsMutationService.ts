@@ -1,7 +1,7 @@
 import type {
   CharacterRelationStage,
   DynamicCharacterOverview,
-} from "@ai-novel/shared/types/characterDynamics";
+} from "@ai-novel/shared";
 import { prisma } from "../../../db/prisma";
 import type {
   ConfirmCandidateInput,

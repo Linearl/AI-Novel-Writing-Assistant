@@ -4,7 +4,7 @@ import type {
   StoryExpansion,
   StoryMacroPlan,
   StoryMacroState,
-} from "@ai-novel/shared/types/storyMacro";
+} from "@ai-novel/shared";
 import {
   EMPTY_STATE,
   buildConstraintEngine,

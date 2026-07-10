@@ -2,9 +2,9 @@ import type {
   AutoDirectorFollowUpAvailableFilters,
   AutoDirectorFollowUpItem,
   AutoDirectorFollowUpPagination,
-} from "@ai-novel/shared/types/autoDirectorFollowUp";
-import type { AutoDirectorFollowUpSection } from "@ai-novel/shared/types/autoDirectorValidation";
-import type { TaskStatus } from "@ai-novel/shared/types/task";
+} from "@ai-novel/shared";
+import type { AutoDirectorFollowUpSection } from "@ai-novel/shared";
+import type { TaskStatus } from "@ai-novel/shared";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

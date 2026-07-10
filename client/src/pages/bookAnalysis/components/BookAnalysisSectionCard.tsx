@@ -1,4 +1,4 @@
-import type { BookAnalysisSection } from "@ai-novel/shared/types/bookAnalysis";
+import type { BookAnalysisSection } from "@ai-novel/shared";
 import MarkdownViewer from "@/components/common/MarkdownViewer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

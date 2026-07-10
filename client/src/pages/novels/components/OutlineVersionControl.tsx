@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import type { VolumeImpactResult, VolumePlanDiff, VolumePlanVersionSummary } from "@ai-novel/shared/types/novel";
+import type { VolumeImpactResult, VolumePlanDiff, VolumePlanVersionSummary } from "@ai-novel/shared";
 import CollapsibleSummary from "./CollapsibleSummary";
 
 function versionStatusLabel(status: "draft" | "active" | "frozen"): string {

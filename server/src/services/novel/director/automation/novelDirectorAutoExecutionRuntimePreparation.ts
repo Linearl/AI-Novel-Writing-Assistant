@@ -1,9 +1,9 @@
-import type { PipelineJobStatus, VolumePlanDocument } from "@ai-novel/shared/types/novel";
+import type { PipelineJobStatus, VolumePlanDocument } from "@ai-novel/shared";
 import type {
   DirectorAutoExecutionState,
   DirectorConfirmRequest,
-} from "@ai-novel/shared/types/novelDirector";
-import { isFullBookAutopilotRunMode } from "@ai-novel/shared/types/novelDirector";
+} from "@ai-novel/shared";
+import { isFullBookAutopilotRunMode } from "@ai-novel/shared";
 import {
   applyReviewSkipOverride,
   buildRequestedAutoExecutionState,

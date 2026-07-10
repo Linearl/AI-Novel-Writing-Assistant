@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import type { Chapter, ChapterStatus } from "@ai-novel/shared/types/novel";
+import type { Chapter, ChapterStatus } from "@ai-novel/shared";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, BookOpen, Check, Copy, Edit3, FileText, ListTree } from "lucide-react";
 import { Link, useParams, useSearchParams } from "react-router-dom";

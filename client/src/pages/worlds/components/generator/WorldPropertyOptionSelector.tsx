@@ -1,4 +1,4 @@
-import type { WorldPropertyOption } from "@ai-novel/shared/types/worldWizard";
+import type { WorldPropertyOption } from "@ai-novel/shared";
 import { Textarea } from "@/components/ui/textarea";
 
 interface WorldPropertyOptionSelectorProps {

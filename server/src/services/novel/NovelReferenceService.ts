@@ -1,4 +1,4 @@
-import type { BookAnalysisSectionKey } from "@ai-novel/shared/types/bookAnalysis";
+import type { BookAnalysisSectionKey } from "@ai-novel/shared";
 import { prisma } from "../../db/prisma";
 import {
   listActiveKnowledgeDocumentContents,

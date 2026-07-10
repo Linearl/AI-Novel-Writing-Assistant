@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { ApiResponse } from "@ai-novel/shared/types/api";
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
+import type { ApiResponse } from "@ai-novel/shared";
+import type { LLMProvider } from "@ai-novel/shared";
 import {
   type APIKeyStatus,
   createCustomProvider,

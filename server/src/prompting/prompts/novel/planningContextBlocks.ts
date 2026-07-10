@@ -2,8 +2,8 @@ import type {
   DirectorCandidate,
   DirectorCandidateBatch,
   DirectorProjectContextInput,
-} from "@ai-novel/shared/types/novelDirector";
-import type { StoryMacroPlan } from "@ai-novel/shared/types/storyMacro";
+} from "@ai-novel/shared";
+import type { StoryMacroPlan } from "@ai-novel/shared";
 import { createContextBlock } from "../../core/contextBudget";
 import type { PromptContextBlock } from "../../core/promptTypes";
 

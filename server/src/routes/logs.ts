@@ -1,5 +1,5 @@
 import { Router } from "express";
-import type { ApiResponse } from "@ai-novel/shared/types/api";
+import type { ApiResponse } from "@ai-novel/shared";
 import { z } from "zod";
 import { validate } from "../middleware/validate";
 import { queryLogs, type LogLevel } from "../services/logging/logQueryService";

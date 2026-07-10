@@ -1,6 +1,6 @@
-import type { BookContractDraft } from "@ai-novel/shared/types/novelWorkflow";
-import type { DirectorConfirmRequest } from "@ai-novel/shared/types/novelDirector";
-import type { StoryMacroPlan } from "@ai-novel/shared/types/storyMacro";
+import type { BookContractDraft } from "@ai-novel/shared";
+import type { DirectorConfirmRequest } from "@ai-novel/shared";
+import type { StoryMacroPlan } from "@ai-novel/shared";
 import { runStructuredPrompt } from "../../../../prompting/core/promptRunner";
 import {
   buildDirectorBookContractContextBlocks,

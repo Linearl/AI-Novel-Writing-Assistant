@@ -1,7 +1,7 @@
 import type {
   VolumePlan,
   VolumePlanDocument,
-} from "@ai-novel/shared/types/novel";
+} from "@ai-novel/shared";
 import { buildVolumeWorkspaceDocument } from "./volumeWorkspaceDocument";
 
 export const VOLUME_CHAPTER_LIST_PARTIAL_STATUS_PREFIX = "chapter_list_partial";

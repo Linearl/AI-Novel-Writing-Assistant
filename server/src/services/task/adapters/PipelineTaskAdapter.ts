@@ -1,5 +1,5 @@
-import type { PipelineJobStatus } from "@ai-novel/shared/types/novel";
-import type { TaskStatus, UnifiedTaskDetail, UnifiedTaskSummary } from "@ai-novel/shared/types/task";
+import type { PipelineJobStatus } from "@ai-novel/shared";
+import type { TaskStatus, UnifiedTaskDetail, UnifiedTaskSummary } from "@ai-novel/shared";
 import { prisma } from "../../../db/prisma";
 import { AppError } from "../../../middleware/errorHandler";
 import type { NovelApplicationServices } from "../../novel/application/NovelApplicationContracts";

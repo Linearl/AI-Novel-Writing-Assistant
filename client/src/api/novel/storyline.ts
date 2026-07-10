@@ -1,8 +1,8 @@
-import type { ApiResponse } from "@ai-novel/shared/types/api";
+import type { ApiResponse } from "@ai-novel/shared";
 import type {
   StorylineDiff,
   StorylineVersion,
-} from "@ai-novel/shared/types/novel";
+} from "@ai-novel/shared";
 import { apiClient } from "../client";
 
 export async function listStorylineVersions(id: string) {

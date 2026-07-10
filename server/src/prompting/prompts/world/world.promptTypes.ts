@@ -1,5 +1,5 @@
-import type { WorldLayerKey, WorldStructureSectionKey } from "@ai-novel/shared/types/world";
-import type { WorldReferenceAnchor, WorldReferenceMode } from "@ai-novel/shared/types/worldWizard";
+import type { WorldLayerKey, WorldStructureSectionKey } from "@ai-novel/shared";
+import type { WorldReferenceAnchor, WorldReferenceMode } from "@ai-novel/shared";
 
 export interface WorldReferenceInspirationPromptInput {
   userPrompt: string;

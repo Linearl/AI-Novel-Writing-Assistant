@@ -4,14 +4,14 @@ import type {
   AntiAiRuleDraftFields,
   ChapterEditAntiAiExtractResult,
   ChapterEditStyleForkResult,
-} from "@ai-novel/shared/types/styleEngine";
+} from "@ai-novel/shared";
 import type {
   ChapterEditorDiagnosticCard,
   ChapterEditorOperation,
   ChapterEditorRecommendedTask,
   ChapterEditorRevisionScope,
   ChapterEditorTargetRange,
-} from "@ai-novel/shared/types/novel";
+} from "@ai-novel/shared";
 import { createNovelSnapshot, previewChapterAiRevision, updateNovelChapter } from "@/api/novel";
 import { extractAntiAiFromChapterDiff, forkStyleFromChapterDiff, createAntiAiRule, updateStyleProfile, getStyleBindings, createStyleBinding, deleteStyleBinding } from "@/api/styleEngine";
 import { queryKeys } from "@/api/queryKeys";

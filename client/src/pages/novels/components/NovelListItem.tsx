@@ -1,9 +1,9 @@
 import type { KeyboardEvent, MouseEvent } from "react";
-import type { ProjectProgressStatus } from "@ai-novel/shared/types/novel";
+import type { ProjectProgressStatus } from "@ai-novel/shared";
 import type {
   DirectorBookAutomationAction,
   DirectorBookAutomationProjection,
-} from "@ai-novel/shared/types/directorRuntime";
+} from "@ai-novel/shared";
 import { Link } from "react-router-dom";
 import { BookOpen, Gauge } from "lucide-react";
 import type { NovelListItem as NovelListItemData } from "@/api/novel/shared";

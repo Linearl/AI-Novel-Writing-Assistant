@@ -1,4 +1,4 @@
-import type { Chapter, PipelineJob } from "@ai-novel/shared/types/novel";
+import type { Chapter, PipelineJob } from "@ai-novel/shared";
 
 export interface PipelineStageItem {
   key: string;

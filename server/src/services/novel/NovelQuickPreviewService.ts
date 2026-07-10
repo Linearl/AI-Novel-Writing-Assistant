@@ -3,7 +3,7 @@ import type {
   GeneratePreviewChaptersResult,
   QuickPreviewInput,
   QuickPreviewResult,
-} from "@ai-novel/shared/types/novelQuickPreview";
+} from "@ai-novel/shared";
 import { runStructuredPrompt } from "../../prompting/core/promptRunner";
 import { quickPreviewChapterPrompt } from "../../prompting/prompts/novel/quickPreviewChapter.prompts";
 import { quickPreviewPrompt } from "../../prompting/prompts/novel/quickPreview.prompts";

@@ -1,6 +1,6 @@
 import type { Response } from "express";
 import type { BaseMessageChunk } from "@langchain/core/messages";
-import type { SSEFrame } from "@ai-novel/shared/types/api";
+import type { SSEFrame } from "@ai-novel/shared";
 import { PIPELINE_HEARTBEAT_INTERVAL_MS } from "../services/novel/novelCorePipelineHelpers";
 import { RepetitionMonitor } from "./repetition/monitor";
 import { buildMonitorConfigFromEnv } from "./repetition/config";

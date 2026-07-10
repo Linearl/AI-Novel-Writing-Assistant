@@ -1,5 +1,5 @@
-import type { GenerationContextPackage } from "@ai-novel/shared/types/chapterRuntime";
-import type { TimelineCheckResult, TimelineHookDraft } from "@ai-novel/shared/types/timeline";
+import type { GenerationContextPackage } from "@ai-novel/shared";
+import type { TimelineCheckResult, TimelineHookDraft } from "@ai-novel/shared";
 import { prisma } from "../../../db/prisma";
 import {
   storyTimelineService,

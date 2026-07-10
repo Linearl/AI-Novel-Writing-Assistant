@@ -1,5 +1,5 @@
-import { parseChapterScenePlan } from "@ai-novel/shared/types/chapterLengthControl";
-import type { ChapterTaskSheetQualityMode } from "@ai-novel/shared/types/chapterTaskSheetQuality";
+import { parseChapterScenePlan } from "@ai-novel/shared";
+import type { ChapterTaskSheetQualityMode } from "@ai-novel/shared";
 import { prisma } from "../../../db/prisma";
 import { novelFactService } from "../fact/NovelFactService";
 

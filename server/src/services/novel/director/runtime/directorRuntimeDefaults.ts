@@ -2,7 +2,7 @@ import type {
   DirectorPolicyMode,
   DirectorRuntimePolicySnapshot,
   DirectorRuntimeSnapshot,
-} from "@ai-novel/shared/types/directorRuntime";
+} from "@ai-novel/shared";
 
 export function buildDefaultDirectorPolicy(
   mode: DirectorPolicyMode = "run_until_gate",

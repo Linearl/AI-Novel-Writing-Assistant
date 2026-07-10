@@ -11,7 +11,7 @@
  */
 
 import type { Prisma } from "@prisma/client";
-import type { WorldStructuredData } from "@ai-novel/shared/types/world";
+import type { WorldStructuredData } from "@ai-novel/shared";
 import { prisma } from "../../db/prisma";
 
 /** Database client — either the global prisma or a transaction client. */

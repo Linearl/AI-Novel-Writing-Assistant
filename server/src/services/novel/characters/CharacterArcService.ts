@@ -1,4 +1,4 @@
-import type { CharacterArcData } from "@ai-novel/shared/types/characterArc";
+import type { CharacterArcData } from "@ai-novel/shared";
 import { prisma } from "../../../db/prisma";
 
 export class CharacterArcService {

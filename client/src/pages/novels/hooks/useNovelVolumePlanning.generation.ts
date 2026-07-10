@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { Dispatch, SetStateAction } from "react";
-import type { ApiResponse } from "@ai-novel/shared/types/api";
+import type { ApiResponse } from "@ai-novel/shared";
 import type {
   VolumeBeatSheet,
   VolumeCritiqueReport,
@@ -9,8 +9,8 @@ import type {
   VolumePlanningReadiness,
   VolumeRebalanceDecision,
   VolumeStrategyPlan,
-} from "@ai-novel/shared/types/novel";
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
+} from "@ai-novel/shared";
+import type { LLMProvider } from "@ai-novel/shared";
 import {
   generateNovelVolumes,
   getNovelVolumeWorkspace,

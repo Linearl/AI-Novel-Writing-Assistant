@@ -3,7 +3,7 @@ import type {
   StoryWorldSliceForce,
   StoryWorldSliceLocation,
   StoryWorldSliceRule,
-} from "@ai-novel/shared/types/storyWorldSlice";
+} from "@ai-novel/shared";
 
 export interface LegacyWorldContextSource {
   name: string;

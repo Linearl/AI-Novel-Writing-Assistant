@@ -4,8 +4,8 @@ import {
   buildDefaultCharacterImageSourceDescription,
 } from "@ai-novel/shared/imagePrompt";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
-import type { BaseCharacter } from "@ai-novel/shared/types/novel";
+import type { LLMProvider } from "@ai-novel/shared";
+import type { BaseCharacter } from "@ai-novel/shared";
 import {
   generateCharacterImages,
   getImageTask,

@@ -2,7 +2,7 @@ import type {
   DirectorCandidate,
   DirectorCandidateBatch,
   DirectorCorrectionPreset,
-} from "@ai-novel/shared/types/novelDirector";
+} from "@ai-novel/shared";
 
 export function toggleDirectorCorrectionPreset(
   presets: DirectorCorrectionPreset[],

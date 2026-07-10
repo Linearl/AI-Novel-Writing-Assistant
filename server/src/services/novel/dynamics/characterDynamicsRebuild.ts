@@ -1,4 +1,4 @@
-import type { DynamicCharacterOverview } from "@ai-novel/shared/types/characterDynamics";
+import type { DynamicCharacterOverview } from "@ai-novel/shared";
 import { prisma } from "../../../db/prisma";
 import { generateVolumeProjection, extractChapterDynamics } from "./characterDynamicsLlm";
 import type { CharacterDynamicsQueryService } from "./CharacterDynamicsQueryService";

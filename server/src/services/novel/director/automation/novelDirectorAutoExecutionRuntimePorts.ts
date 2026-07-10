@@ -1,11 +1,11 @@
-import type { NovelControlPolicy } from "@ai-novel/shared/types/canonicalState";
-import type { ArtifactSyncMode, PipelineJobStatus, VolumePlanDocument } from "@ai-novel/shared/types/novel";
+import type { NovelControlPolicy } from "@ai-novel/shared";
+import type { ArtifactSyncMode, PipelineJobStatus, VolumePlanDocument } from "@ai-novel/shared";
 import type {
   DirectorAutoExecutionState,
   DirectorConfirmRequest,
   DirectorQualityRepairRisk,
-} from "@ai-novel/shared/types/novelDirector";
-import type { NovelWorkflowCheckpoint } from "@ai-novel/shared/types/novelWorkflow";
+} from "@ai-novel/shared";
+import type { NovelWorkflowCheckpoint } from "@ai-novel/shared";
 import type { DirectorStateProposalResolutionRunResult } from "../runtime/DirectorStateProposalResolutionService";
 import { directorAutomationLedgerEventService } from "../runtime/DirectorAutomationLedgerEventService";
 import type { DirectorAutoExecutionChapterRef } from "./novelDirectorAutoExecution";

@@ -6,7 +6,7 @@ import type {
   ChapterEditorOperation,
   ChapterEditorRevisionScope,
   ChapterEditorWorkspaceResponse,
-} from "@ai-novel/shared/types/novel";
+} from "@ai-novel/shared";
 
 export interface ChapterEditorSelectionRange {
   from: number;

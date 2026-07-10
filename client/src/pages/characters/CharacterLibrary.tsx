@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useMutation, useQueries, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { ImageAsset } from "@ai-novel/shared/types/image";
-import type { BaseCharacter } from "@ai-novel/shared/types/novel";
+import type { ImageAsset } from "@ai-novel/shared";
+import type { BaseCharacter } from "@ai-novel/shared";
 import { deleteBaseCharacter, getBaseCharacterList, updateBaseCharacter } from "@/api/character";
 import { deleteImageAsset, listImageAssets, setPrimaryImageAsset } from "@/api/images";
 import { queryKeys } from "@/api/queryKeys";

@@ -9,7 +9,7 @@ import type {
   DirectorRuntimeProjection,
   DirectorTaskFactSummary,
   DirectorWorkerHealthSummary,
-} from "@ai-novel/shared/types/directorRuntime";
+} from "@ai-novel/shared";
 
 type DashboardTaskLike = {
   status: string;

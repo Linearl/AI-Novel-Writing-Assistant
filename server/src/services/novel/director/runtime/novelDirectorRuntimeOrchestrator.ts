@@ -1,12 +1,12 @@
 import type {
   DirectorArtifactRef,
   DirectorStepRun,
-} from "@ai-novel/shared/types/directorRuntime";
+} from "@ai-novel/shared";
 import type {
   DirectorAutoExecutionState,
   DirectorConfirmRequest,
-} from "@ai-novel/shared/types/novelDirector";
-import type { NovelWorkflowStage } from "@ai-novel/shared/types/novelWorkflow";
+} from "@ai-novel/shared";
+import type { NovelWorkflowStage } from "@ai-novel/shared";
 import { AppError } from "../../../../middleware/errorHandler";
 import type { NovelWorkflowService } from "../../workflow/NovelWorkflowService";
 import type { DirectorPolicyRequest } from "./DirectorPolicyEngine";

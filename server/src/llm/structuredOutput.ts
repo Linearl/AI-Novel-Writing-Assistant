@@ -1,6 +1,6 @@
 import { toJSONSchema, type ZodType } from "zod";
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
-import type { ModelRouteRequestProtocol } from "@ai-novel/shared/types/novel";
+import type { LLMProvider } from "@ai-novel/shared";
+import type { ModelRouteRequestProtocol } from "@ai-novel/shared";
 import { isBuiltInProvider } from "./providers";
 
 export type StructuredExecutionMode = "plain" | "structured";
@@ -35,7 +35,7 @@ export interface StructuredOutputDiagnostics {
 
 const QWEN_FAMILY_PATTERN = /(?:^|[/:_-])qwen(?:\d+(?:\.\d+)?)?/i;
 const DASHSCOPE_HOST_PATTERN = /(?:^|\.)dashscope\.aliyuncs\.com$/i;
-n/**
+/**
  * 默认 structured output 安全最大 token 数。
  * 仅在 LLM family 有特殊限制时在各分支覆盖，否则一律引用此常量。
  */

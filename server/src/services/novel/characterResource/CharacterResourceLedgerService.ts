@@ -3,7 +3,7 @@ import type {
   CharacterResourceLedgerItem,
   CharacterResourceRiskSignal,
   CharacterResourceUpdatePayload,
-} from "@ai-novel/shared/types/characterResource";
+} from "@ai-novel/shared";
 import type { Prisma } from "@prisma/client";
 import { prisma } from "../../../db/prisma";
 import {

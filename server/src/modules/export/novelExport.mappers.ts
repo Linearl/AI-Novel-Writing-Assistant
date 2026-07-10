@@ -1,4 +1,4 @@
-import type { PipelineJob } from "@ai-novel/shared/types/novel";
+import type { PipelineJob } from "@ai-novel/shared";
 import type { NovelApplicationServices } from "../../services/novel/application/NovelApplicationContracts";
 import type {
   ExportAuditIssue,

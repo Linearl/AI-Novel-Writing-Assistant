@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import type { UnifiedTaskDetail } from "@ai-novel/shared/types/task";
-import type { PreviewChapter, QuickPreviewCandidate } from "@ai-novel/shared/types/novelQuickPreview";
+import type { UnifiedTaskDetail } from "@ai-novel/shared";
+import type { PreviewChapter, QuickPreviewCandidate } from "@ai-novel/shared";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { BOOK_ANALYSIS_SECTIONS } from "@ai-novel/shared/types/bookAnalysis";
+import { BOOK_ANALYSIS_SECTIONS } from "@ai-novel/shared";
 import { flattenGenreTreeOptions, getGenreTree } from "@/api/genre";
 import { bootstrapNovelWorkflow } from "@/api/novelWorkflow";
 import { createNovel } from "@/api/novel";

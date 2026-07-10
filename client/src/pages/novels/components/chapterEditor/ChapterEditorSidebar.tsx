@@ -1,4 +1,4 @@
-import type { Chapter, ChapterEditorDiagnosticCard, ChapterEditorWorkspaceResponse } from "@ai-novel/shared/types/novel";
+import type { Chapter, ChapterEditorDiagnosticCard, ChapterEditorWorkspaceResponse } from "@ai-novel/shared";
 import { Download } from "lucide-react";
 import { exportChapterTxt } from "@/api/novel/txtIo";
 import { Button } from "@/components/ui/button";

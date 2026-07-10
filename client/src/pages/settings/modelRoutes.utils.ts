@@ -7,7 +7,7 @@ import type {
   ModelRouteRequestProtocol,
   ModelRouteStructuredResponseFormat,
   ModelRouteTaskType,
-} from "@ai-novel/shared/types/novel";
+} from "@ai-novel/shared";
 
 export interface RouteDraft {
   provider: string;

@@ -1,4 +1,4 @@
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
+import type { LLMProvider } from "@ai-novel/shared";
 import { prisma } from "../db/prisma";
 import { logger } from "../services/logging/LoggerService";
 import {

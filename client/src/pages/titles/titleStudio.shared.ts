@@ -1,4 +1,4 @@
-import type { TitleSuggestionStyle } from "@ai-novel/shared/types/title";
+import type { TitleSuggestionStyle } from "@ai-novel/shared";
 
 export function getTitleStyleLabel(style: TitleSuggestionStyle): string {
   switch (style) {

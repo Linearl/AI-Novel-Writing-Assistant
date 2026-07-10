@@ -1,5 +1,5 @@
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
-import type { WorldConsistencyReport, WorldLayerKey } from "@ai-novel/shared/types/world";
+import type { LLMProvider } from "@ai-novel/shared";
+import type { WorldConsistencyReport, WorldLayerKey } from "@ai-novel/shared";
 import { prisma } from "../../db/prisma";
 import { runStructuredPrompt } from "../../prompting/core/promptRunner";
 import {

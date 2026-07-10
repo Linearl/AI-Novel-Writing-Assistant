@@ -12,7 +12,7 @@ import type {
   WorldForceRelation,
   WorldLocation,
   WorldStructuredData,
-} from "@ai-novel/shared/types/world";
+} from "@ai-novel/shared";
 
 import {
   dedupeByName,
@@ -140,7 +140,7 @@ export function buildWorldStructureFromLegacySource(source: WorldStructureSource
 /*  buildWorldStructureSeedFromSource                                 */
 /* ------------------------------------------------------------------ */
 
-import { parseWorldGenerationBlueprint } from "@ai-novel/shared/types/worldWizard";
+import { parseWorldGenerationBlueprint } from "@ai-novel/shared";
 
 export function buildWorldStructureSeedFromSource(source: WorldStructureSource): WorldStructuredData {
   const seeded = buildWorldStructureFromLegacySource(source);

@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type {
   DirectorPolicyMode,
   DirectorRuntimeSnapshot,
-} from "@ai-novel/shared/types/directorRuntime";
+} from "@ai-novel/shared";
 import { updateDirectorRuntimePolicy } from "@/api/novelDirector";
 import { queryKeys } from "@/api/queryKeys";
 import { Badge } from "@/components/ui/badge";

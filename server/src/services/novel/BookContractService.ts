@@ -1,4 +1,4 @@
-import type { BookContract, BookContractDraft } from "@ai-novel/shared/types/novelWorkflow";
+import type { BookContract, BookContractDraft } from "@ai-novel/shared";
 import { prisma } from "../../db/prisma";
 
 function mapRowToBookContract(row: {

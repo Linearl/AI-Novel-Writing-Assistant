@@ -1,5 +1,5 @@
-import type { DirectorDashboardView } from "@ai-novel/shared/types/directorRuntime";
-import type { UnifiedTaskDetail } from "@ai-novel/shared/types/task";
+import type { DirectorDashboardView } from "@ai-novel/shared";
+import type { UnifiedTaskDetail } from "@ai-novel/shared";
 import { Badge } from "@/components/ui/badge";
 import {
   formatCheckpoint,

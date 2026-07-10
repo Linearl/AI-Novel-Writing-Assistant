@@ -5,7 +5,7 @@
  * Exports from the NovelWorld's structuredDataJson + the NovelWorld title/coverSummary.
  */
 
-import type { WorldStructuredData, WorldProfile, WorldRules } from "@ai-novel/shared/types/world";
+import type { WorldStructuredData, WorldProfile, WorldRules } from "@ai-novel/shared";
 
 /* ------------------------------------------------------------------ */
 /*  Export                                                             */

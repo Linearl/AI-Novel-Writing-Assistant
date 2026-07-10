@@ -1,9 +1,9 @@
-import type { DirectorConfirmRequest } from "@ai-novel/shared/types/novelDirector";
+import type { DirectorConfirmRequest } from "@ai-novel/shared";
 import type {
   DirectorArtifactRef,
   DirectorChapterExecutionProgressItem,
   DirectorChapterExecutionProgressSummary,
-} from "@ai-novel/shared/types/directorRuntime";
+} from "@ai-novel/shared";
 import type { DirectorCandidateStageNode } from "../phases/novelDirectorCandidateNodeAdapters";
 import { getDirectorInputFromSeedPayload } from "../runtime/novelDirectorHelpers";
 import {

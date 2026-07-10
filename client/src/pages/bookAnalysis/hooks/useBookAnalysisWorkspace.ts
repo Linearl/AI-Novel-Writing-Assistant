@@ -6,8 +6,8 @@ import type {
   BookAnalysisSection,
   BookAnalysisSectionKey,
   BookAnalysisStatus,
-} from "@ai-novel/shared/types/bookAnalysis";
-import { BOOK_ANALYSIS_PRESETS } from "@ai-novel/shared/types/bookAnalysis";
+} from "@ai-novel/shared";
+import { BOOK_ANALYSIS_PRESETS } from "@ai-novel/shared";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   archiveBookAnalysis,

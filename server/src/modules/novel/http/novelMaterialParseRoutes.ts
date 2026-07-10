@@ -7,12 +7,12 @@
 import { Router } from "express";
 import { z } from "zod";
 import type { Request, Response, NextFunction } from "express";
-import type { ApiResponse } from "@ai-novel/shared/types/api";
+import type { ApiResponse } from "@ai-novel/shared";
 import { validate } from "../../../middleware/validate";
 import { invokeStructuredLlm } from "../../../llm/structuredInvoke";
 import { getRegisteredPromptAsset } from "../../../prompting/registry";
 import { materialParseOutputSchema, type MaterialParseOutput } from "../../../prompting/prompts/novel/materialParse.promptSchemas";
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
+import type { LLMProvider } from "@ai-novel/shared";
 
 /* ── Zod schemas ───────────────────────────────────────────────────── */
 

@@ -7,7 +7,7 @@ import type {
   StoryMacroLocks,
   StoryMacroPhase,
   StoryMacroTurningPoint,
-} from "@ai-novel/shared/types/storyMacro";
+} from "@ai-novel/shared";
 import {
   normalizeConflictLayers,
   normalizeConstraints,

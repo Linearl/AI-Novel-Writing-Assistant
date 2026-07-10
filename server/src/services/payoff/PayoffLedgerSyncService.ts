@@ -1,7 +1,7 @@
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
-import type { AuditReport, OpenConflict, PayoffLedgerResponse } from "@ai-novel/shared/types/novel";
-import type { PayoffLedgerItem } from "@ai-novel/shared/types/payoffLedger";
-import { NORMALIZED_STATUS_MAP } from "@ai-novel/shared/types/payoffLedger";
+import type { LLMProvider } from "@ai-novel/shared";
+import type { AuditReport, OpenConflict, PayoffLedgerResponse } from "@ai-novel/shared";
+import type { PayoffLedgerItem } from "@ai-novel/shared";
+import { NORMALIZED_STATUS_MAP } from "@ai-novel/shared";
 import { prisma } from "../../db/prisma";
 import { runStructuredPrompt } from "../../prompting/core/promptRunner";
 import { payoffDetectionPrompt } from "../../prompting/prompts/payoff/payoffDetection.prompts";

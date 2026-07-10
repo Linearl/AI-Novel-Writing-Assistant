@@ -1,4 +1,4 @@
-import type { Character } from "@ai-novel/shared/types/novel";
+import type { Character } from "@ai-novel/shared";
 import { Badge } from "@/components/ui/badge";
 import { getCastRoleLabel, getCharacterGenderLabel, isProtagonistCharacter } from "./characterAssetWorkspace.helpers";
 

@@ -1,4 +1,4 @@
-import type { CharacterExitStatus } from "@ai-novel/shared/types/novelCharacter";
+import type { CharacterExitStatus } from "@ai-novel/shared";
 import { Badge } from "@/components/ui/badge";
 
 const EXIT_STATUS_CONFIG: Record<

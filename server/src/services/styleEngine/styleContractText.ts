@@ -5,7 +5,7 @@ import type {
   StyleContractSectionKey,
   StyleContractViolationSource,
   StyleDetectionRuleType,
-} from "@ai-novel/shared/types/styleEngine";
+} from "@ai-novel/shared";
 
 export const WRITER_STYLE_CONTRACT_SECTIONS: StyleContractSectionKey[] = [
   "narrative",

@@ -2,7 +2,7 @@ import type {
   AntiAiRule,
   StyleExtractionFeature,
   StyleRuleSet,
-} from "@ai-novel/shared/types/styleEngine";
+} from "@ai-novel/shared";
 
 export interface StyleMetadataDraft {
   category?: string | null;

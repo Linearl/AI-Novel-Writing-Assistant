@@ -21,7 +21,7 @@ import { NovelChapterEditorService } from "../chapterEditor/NovelChapterEditorSe
 import { ChapterEditorWorkspaceService } from "../chapterEditor/ChapterEditorWorkspaceService";
 import { characterExitInferenceService } from "../characterExit/characterExitInferenceService";
 import type { NovelApplicationServices } from "./NovelApplicationContracts";
-import type { NovelSnapshotListItem } from "@ai-novel/shared/types/novel";
+import type { NovelSnapshotListItem } from "@ai-novel/shared";
 
 function toNovelSnapshotListItem(snapshot: {
   id: string;

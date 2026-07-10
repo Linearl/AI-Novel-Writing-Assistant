@@ -4,7 +4,7 @@ import type {
   DirectorArtifactSource,
   DirectorArtifactStatus,
   DirectorArtifactType,
-} from "@ai-novel/shared/types/directorRuntime";
+} from "@ai-novel/shared";
 
 const ARTIFACT_SCHEMA_VERSION = "legacy-wrapper-v1";
 

@@ -1,5 +1,5 @@
-import type { DirectorArtifactRef } from "@ai-novel/shared/types/directorRuntime";
-import type { NovelWorkflowStage } from "@ai-novel/shared/types/novelWorkflow";
+import type { DirectorArtifactRef } from "@ai-novel/shared";
+import type { NovelWorkflowStage } from "@ai-novel/shared";
 
 export type DirectorCandidateStageNode =
   | "candidate_generation"

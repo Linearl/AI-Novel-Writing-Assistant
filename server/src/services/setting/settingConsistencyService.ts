@@ -10,7 +10,7 @@ import { settingConsistencyStorage } from "./settingConsistencyStorage";
 import type {
   SettingConsistencyReport,
   IgnoredContradiction,
-} from "@ai-novel/shared/types/settingConsistency";
+} from "@ai-novel/shared";
 
 /* ── Prompt ID constants ───────────────────────────────────────────── */
 

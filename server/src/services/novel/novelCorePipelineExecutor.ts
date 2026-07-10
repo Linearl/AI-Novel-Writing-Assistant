@@ -1,4 +1,4 @@
-import type { ReviewIssue } from "@ai-novel/shared/types/novel";
+import type { ReviewIssue } from "@ai-novel/shared";
 import { prisma } from "../../db/prisma";
 import { logger } from "../../services/logging/LoggerService";
 import { novelEventBus } from "../../events";

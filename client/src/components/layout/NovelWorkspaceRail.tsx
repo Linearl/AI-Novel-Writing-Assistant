@@ -9,9 +9,9 @@ import {
   ListTodo,
 } from "lucide-react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
-import type { DirectorLockScope } from "@ai-novel/shared/types/novelDirector";
-import type { VolumePlan } from "@ai-novel/shared/types/novel";
-import type { UnifiedTaskDetail } from "@ai-novel/shared/types/task";
+import type { DirectorLockScope } from "@ai-novel/shared";
+import type { VolumePlan } from "@ai-novel/shared";
+import type { UnifiedTaskDetail } from "@ai-novel/shared";
 import { getNovelDetail, getNovelQualityReport, getNovelVolumeWorkspace } from "@/api/novel";
 import { getDirectorBookAutomationProjection, getDirectorRuntimeProjection, getDirectorTaskSnapshot } from "@/api/novelDirector";
 import { continueNovelWorkflow, getActiveAutoDirectorTask } from "@/api/novelWorkflow";

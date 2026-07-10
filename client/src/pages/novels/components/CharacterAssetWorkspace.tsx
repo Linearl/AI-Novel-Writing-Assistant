@@ -6,8 +6,8 @@ import type {
   CharacterVisibleProfileBatchResult,
   CharacterVisibleProfileField,
   CharacterVisibleProfileSuggestion,
-} from "@ai-novel/shared/types/novel";
-import type { CharacterResourceLedgerItem } from "@ai-novel/shared/types/characterResource";
+} from "@ai-novel/shared";
+import type { CharacterResourceLedgerItem } from "@ai-novel/shared";
 import AiButton from "@/components/common/AiButton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

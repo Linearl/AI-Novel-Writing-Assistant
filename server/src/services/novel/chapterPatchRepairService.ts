@@ -1,11 +1,11 @@
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
-import type { ReviewIssue } from "@ai-novel/shared/types/novel";
-import type { ChapterRepairContext, ChapterRuntimePackage } from "@ai-novel/shared/types/chapterRuntime";
+import type { LLMProvider } from "@ai-novel/shared";
+import type { ReviewIssue } from "@ai-novel/shared";
+import type { ChapterRepairContext, ChapterRuntimePackage } from "@ai-novel/shared";
 import {
   applyChapterPatchRepairPlan,
   type ChapterPatchApplyResult,
   type ChapterPatchRepairPlan,
-} from "@ai-novel/shared/types/chapterPatchRepair";
+} from "@ai-novel/shared";
 import { runStructuredPrompt } from "../../prompting/core/promptRunner";
 import { buildChapterRepairContextBlocks } from "../../prompting/prompts/novel/chapterLayeredContext";
 import { chapterPatchRepairPrompt } from "../../prompting/prompts/novel/chapterPatchRepair.prompts";

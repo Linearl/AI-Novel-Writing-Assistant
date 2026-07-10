@@ -1,16 +1,16 @@
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
-import type { NovelControlPolicy } from "@ai-novel/shared/types/canonicalState";
+import type { LLMProvider } from "@ai-novel/shared";
+import type { NovelControlPolicy } from "@ai-novel/shared";
 import type {
   ArtifactSyncMode,
   ChapterGenerationState,
   PipelineJobStatus,
   PipelineRunMode,
-} from "@ai-novel/shared/types/novel";
+} from "@ai-novel/shared";
 import type {
   DirectorAutoExecutionPlan,
   DirectorAutoExecutionState,
-} from "@ai-novel/shared/types/novelDirector";
-import { parseChapterScenePlan } from "@ai-novel/shared/types/chapterLengthControl";
+} from "@ai-novel/shared";
+import { parseChapterScenePlan } from "@ai-novel/shared";
 import { resolveDirectorQualityLoopBudgetNextAction } from "../runtime/DirectorQualityLoopBudgetLedgerService";
 import {
   buildPipelineBackgroundActivityLabels,

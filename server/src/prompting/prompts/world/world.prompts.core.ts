@@ -6,7 +6,7 @@
  * have been moved to world.prompts.inspiration.ts.
  */
 
-import type { WorldReferenceMode } from "@ai-novel/shared/types/worldWizard";
+import type { WorldReferenceMode } from "@ai-novel/shared";
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 import { z } from "zod";
 import type { PromptAsset } from "../../core/promptTypes";

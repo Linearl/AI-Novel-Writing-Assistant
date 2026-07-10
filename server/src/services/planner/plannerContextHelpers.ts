@@ -1,6 +1,6 @@
-import type { StoryMacroPlan } from "@ai-novel/shared/types/storyMacro";
-import type { ResolvedStyleContext } from "@ai-novel/shared/types/styleEngine";
-import type { PayoffLedgerResponse } from "@ai-novel/shared/types/payoffLedger";
+import type { StoryMacroPlan } from "@ai-novel/shared";
+import type { ResolvedStyleContext } from "@ai-novel/shared";
+import type { PayoffLedgerResponse } from "@ai-novel/shared";
 import { compactText } from "@ai-novel/shared";
 import { buildPlannerStyleContractSummaryText } from "../styleEngine/styleContractText";
 import { buildStoryModePromptBlock, normalizeStoryModeOutput } from "../storyMode/storyModeProfile";

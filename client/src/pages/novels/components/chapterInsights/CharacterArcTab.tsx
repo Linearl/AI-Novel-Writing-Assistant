@@ -15,7 +15,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Badge } from "@/components/ui/badge";
 import { LoadingIndicator } from "@/components/ui/loading-indicator";
-import type { Character } from "@ai-novel/shared/types/novel";
+import type { Character } from "@ai-novel/shared";
 
 interface CharacterArcTabProps {
   novelId: string;

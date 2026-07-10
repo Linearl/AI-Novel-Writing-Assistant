@@ -1,5 +1,5 @@
-import type { BookAnalysisSectionKey } from "@ai-novel/shared/types/bookAnalysis";
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
+import type { BookAnalysisSectionKey } from "@ai-novel/shared";
+import type { LLMProvider } from "@ai-novel/shared";
 import { prisma } from "../../db/prisma";
 import { AppError } from "../../middleware/errorHandler";
 import { logger } from "../logging/LoggerService";

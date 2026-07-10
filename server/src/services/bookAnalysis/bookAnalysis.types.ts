@@ -1,4 +1,4 @@
-import type { BookAnalysisEvidenceItem, BookAnalysisSectionKey } from "@ai-novel/shared/types/bookAnalysis";
+import type { BookAnalysisEvidenceItem, BookAnalysisSectionKey } from "@ai-novel/shared";
 
 export type AnalysisTask =
   | { analysisId: string; kind: "full" }

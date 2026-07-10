@@ -1,4 +1,4 @@
-import type { CreativeHubStreamFrame } from "@ai-novel/shared/types/api";
+import type { CreativeHubStreamFrame } from "@ai-novel/shared";
 import { Badge } from "@/components/ui/badge";
 
 function toStatusLabel(status: string): string {

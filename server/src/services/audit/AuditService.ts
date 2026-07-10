@@ -1,6 +1,6 @@
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
-import type { AuditReport, AuditType, QualityScore, ReviewIssue } from "@ai-novel/shared/types/novel";
-import type { ChapterRuntimePackage, GenerationContextPackage } from "@ai-novel/shared/types/chapterRuntime";
+import type { LLMProvider } from "@ai-novel/shared";
+import type { AuditReport, AuditType, QualityScore, ReviewIssue } from "@ai-novel/shared";
+import type { ChapterRuntimePackage, GenerationContextPackage } from "@ai-novel/shared";
 import { prisma } from "../../db/prisma";
 import { payoffLedgerSyncService } from "../payoff/PayoffLedgerSyncService";
 import { buildStoryModePromptBlock, normalizeStoryModeOutput } from "../storyMode/storyModeProfile";

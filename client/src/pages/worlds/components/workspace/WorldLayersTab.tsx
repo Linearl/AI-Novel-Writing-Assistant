@@ -1,5 +1,5 @@
 import type { Dispatch, SetStateAction } from "react";
-import type { World } from "@ai-novel/shared/types/world";
+import type { World } from "@ai-novel/shared";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";

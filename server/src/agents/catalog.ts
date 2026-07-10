@@ -1,4 +1,4 @@
-import type { AgentCatalog, AgentCatalogAgent } from "@ai-novel/shared/types/agent";
+import type { AgentCatalog, AgentCatalogAgent } from "@ai-novel/shared";
 import { getPermissionMatrixSummary } from "./approvalPolicy";
 import { listAgentToolDefinitions } from "./toolRegistry";
 

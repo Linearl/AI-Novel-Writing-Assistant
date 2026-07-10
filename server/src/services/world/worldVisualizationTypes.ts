@@ -5,7 +5,7 @@ import type {
   WorldGeographyMapNode,
   WorldGeographyRegionType,
   WorldGeographyRouteType,
-} from "@ai-novel/shared/types/world";
+} from "@ai-novel/shared";
 
 export type FactionNodeType = "state" | "faction" | "race" | "organization" | "other";
 

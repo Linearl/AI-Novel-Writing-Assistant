@@ -15,14 +15,14 @@ import type {
   GenerationContextPackage,
   MacroConstraintContext,
   VolumeWindowContext,
-} from "@ai-novel/shared/types/chapterRuntime";
+} from "@ai-novel/shared";
 import {
   parseChapterScenePlan,
   resolveLengthBudgetContract,
-} from "@ai-novel/shared/types/chapterLengthControl";
-import { sanitizeCreativeMustAdvanceItems } from "@ai-novel/shared/types/chapterCreativeContract";
-import type { ReviewIssue } from "@ai-novel/shared/types/novel";
-import type { StoryMacroPlan } from "@ai-novel/shared/types/storyMacro";
+} from "@ai-novel/shared";
+import { sanitizeCreativeMustAdvanceItems } from "@ai-novel/shared";
+import type { ReviewIssue } from "@ai-novel/shared";
+import type { StoryMacroPlan } from "@ai-novel/shared";
 import type { PromptContextBlock } from "../../core/promptTypes";
 import {
   buildDynamicCharacterGuidance,
@@ -41,7 +41,6 @@ import {
   summarizeWorldRules,
   takeUnique,
   toListBlock,
-import { compactText } from "@ai-novel/shared";
 } from "./chapterLayeredContextShared";
 
 // ---------------------------------------------------------------------------
@@ -515,7 +514,7 @@ export function sanitizeWriterContextBlocks(blocks: PromptContextBlock[]): {
 // Re-export: selectCharacterHardFactsForWriter (used by buildChapterWriteContext above)
 // ---------------------------------------------------------------------------
 
-import type { ChapterWriteContext as _CWC } from "@ai-novel/shared/types/chapterRuntime";
+import type { ChapterWriteContext as _CWC } from "@ai-novel/shared";
 
 function selectCharacterHardFactsForWriter(input: {
   hardFacts: _CWC["characterHardFacts"];

@@ -1,4 +1,4 @@
-import type { AuditReport, ReplanResult, StoryPlan } from "@ai-novel/shared/types/novel";
+import type { AuditReport, ReplanResult, StoryPlan } from "@ai-novel/shared";
 import { prisma } from "../../db/prisma";
 import { compactText } from "@ai-novel/shared";
 import { characterDynamicsQueryService } from "../novel/dynamics/CharacterDynamicsQueryService";

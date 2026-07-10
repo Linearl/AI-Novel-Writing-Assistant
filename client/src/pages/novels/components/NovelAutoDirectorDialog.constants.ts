@@ -1,7 +1,7 @@
-import type { TaskStatus } from "@ai-novel/shared/types/task";
+import type { TaskStatus } from "@ai-novel/shared";
 import {
   DIRECTOR_CANDIDATE_SETUP_STEPS,
-} from "@ai-novel/shared/types/novelDirector";
+} from "@ai-novel/shared";
 
 export const ACTIVE_DIRECTOR_TASK_STATUSES = new Set<TaskStatus>(["queued", "running", "waiting_approval"]);
 

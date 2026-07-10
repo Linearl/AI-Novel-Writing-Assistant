@@ -9,11 +9,11 @@
  *   - chapterLayeredContextCharacters.ts (character guidance helpers)
  */
 
-import type { ReviewIssue } from "@ai-novel/shared/types/novel";
+import type { ReviewIssue } from "@ai-novel/shared";
 import type {
   GenerationContextPackage,
   ChapterRepairContext,
-} from "@ai-novel/shared/types/chapterRuntime";
+} from "@ai-novel/shared";
 import type { PromptContextBlock } from "../../core/promptTypes";
 import { RUNTIME_PROMPT_BUDGET_PROFILES } from "./promptBudgetProfiles";
 import {

@@ -1,11 +1,11 @@
 ﻿import type {
   AutoDirectorAction,
-} from "@ai-novel/shared/types/autoDirectorFollowUp";
-import type { TaskKind, TaskStatus } from "@ai-novel/shared/types/task";
+} from "@ai-novel/shared";
+import type { TaskKind, TaskStatus } from "@ai-novel/shared";
 import type {
   NovelWorkflowMilestoneType,
   NovelWorkflowResumeTarget,
-} from "@ai-novel/shared/types/novelWorkflow";
+} from "@ai-novel/shared";
 
 export const ACTIVE_STATUSES = new Set<TaskStatus>(["queued", "running", "waiting_approval"]);
 export const ANOMALY_STATUSES = new Set<TaskStatus>(["failed", "cancelled"]);

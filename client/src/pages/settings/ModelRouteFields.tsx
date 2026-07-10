@@ -13,7 +13,7 @@ import {
 import type {
   ModelRouteRequestProtocol,
   ModelRouteStructuredResponseFormat,
-} from "@ai-novel/shared/types/novel";
+} from "@ai-novel/shared";
 
 interface ModelRouteFieldsProps {
   draft: RouteDraft;

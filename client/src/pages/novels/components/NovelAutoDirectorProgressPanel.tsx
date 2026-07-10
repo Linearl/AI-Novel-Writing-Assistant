@@ -1,18 +1,18 @@
 ﻿import type {
   NovelWorkflowMilestone,
   NovelWorkflowMilestoneType,
-} from "@ai-novel/shared/types/novelWorkflow";
+} from "@ai-novel/shared";
 import type {
   DirectorDashboardAction,
   DirectorDashboardMode,
   DirectorDisplayStepStatus,
-} from "@ai-novel/shared/types/directorRuntime";
+} from "@ai-novel/shared";
 import {
   DIRECTOR_CANDIDATE_SETUP_STEPS,
   extractDirectorTaskSeedPayloadFromMeta,
-} from "@ai-novel/shared/types/novelDirector";
+} from "@ai-novel/shared";
 import { Badge } from "@/components/ui/badge";
-import type { UnifiedTaskDetail } from "@ai-novel/shared/types/task";
+import type { UnifiedTaskDetail } from "@ai-novel/shared";
 import { useQuery } from "@tanstack/react-query";
 import {
   getDirectorTaskSnapshot,

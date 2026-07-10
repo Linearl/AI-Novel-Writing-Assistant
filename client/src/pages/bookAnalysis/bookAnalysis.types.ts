@@ -1,5 +1,5 @@
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
-import type { BookAnalysisSectionKey } from "@ai-novel/shared/types/bookAnalysis";
+import type { LLMProvider } from "@ai-novel/shared";
+import type { BookAnalysisSectionKey } from "@ai-novel/shared";
 
 export interface SectionDraft {
   editedContent: string;

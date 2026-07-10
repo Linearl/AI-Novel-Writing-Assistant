@@ -1,4 +1,4 @@
-import type { AntiAiRule } from "@ai-novel/shared/types/styleEngine";
+import type { AntiAiRule } from "@ai-novel/shared";
 import { prisma } from "../../db/prisma";
 import { mapAntiAiRuleRow } from "./helpers";
 

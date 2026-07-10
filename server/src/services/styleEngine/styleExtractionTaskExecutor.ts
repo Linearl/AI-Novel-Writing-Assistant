@@ -1,4 +1,4 @@
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
+import type { LLMProvider } from "@ai-novel/shared";
 import { prisma } from "../../db/prisma";
 import { runWithLlmUsageTracking } from "../../llm/usageTracking";
 import { AppError } from "../../middleware/errorHandler";

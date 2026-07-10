@@ -1,4 +1,4 @@
-import type { StateChangeProposal } from "@ai-novel/shared/types/canonicalState";
+import type { StateChangeProposal } from "@ai-novel/shared";
 import { createHash } from "node:crypto";
 import { prisma } from "../../../db/prisma";
 import {

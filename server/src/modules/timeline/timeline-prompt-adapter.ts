@@ -1,4 +1,4 @@
-import type { TimelineContextForChapter } from "@ai-novel/shared/types/timeline";
+import type { TimelineContextForChapter } from "@ai-novel/shared";
 
 function listBlock<T>(title: string, items: T[], render: (item: T) => string): string {
   if (items.length === 0) {

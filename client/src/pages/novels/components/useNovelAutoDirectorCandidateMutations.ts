@@ -5,7 +5,7 @@ import {
   type DirectorCandidateBatch,
   type DirectorCorrectionPreset,
   mergeDirectorCandidateBatches,
-} from "@ai-novel/shared/types/novelDirector";
+} from "@ai-novel/shared";
 import {
   generateDirectorCandidates,
   getDirectorCommandResult,

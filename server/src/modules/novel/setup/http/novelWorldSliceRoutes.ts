@@ -1,16 +1,16 @@
 import type { Router } from "express";
-import type { ApiResponse } from "@ai-novel/shared/types/api";
+import type { ApiResponse } from "@ai-novel/shared";
 import {
   storyWorldSliceBuilderModeSchema,
   storyWorldSliceOverridesSchema,
-} from "@ai-novel/shared/types/storyWorldSlice";
+} from "@ai-novel/shared";
 import {
   novelWorldGenerateInputSchema,
   novelWorldImportInputSchema,
   novelWorldManualInputSchema,
   novelWorldSaveToLibraryInputSchema,
   novelWorldSyncInputSchema,
-} from "@ai-novel/shared/types/novelWorld";
+} from "@ai-novel/shared";
 import { z } from "zod";
 import { llmProviderSchema } from "../../../../llm/providerSchema";
 import { validate } from "../../../../middleware/validate";

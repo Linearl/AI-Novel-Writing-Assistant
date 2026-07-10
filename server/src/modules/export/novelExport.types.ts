@@ -10,12 +10,12 @@ import type {
   PipelineJob,
   PlotBeat,
   VolumePlanDocument,
-} from "@ai-novel/shared/types/novel";
-import type { CharacterCastOption } from "@ai-novel/shared/types/novelCharacter";
-import type { BookContract } from "@ai-novel/shared/types/novelWorkflow";
-import type { StoryMacroPlan } from "@ai-novel/shared/types/storyMacro";
-import type { StoryWorldSliceView } from "@ai-novel/shared/types/storyWorldSlice";
-import type { NovelExportScope } from "@ai-novel/shared/types/novelExport";
+} from "@ai-novel/shared";
+import type { CharacterCastOption } from "@ai-novel/shared";
+import type { BookContract } from "@ai-novel/shared";
+import type { StoryMacroPlan } from "@ai-novel/shared";
+import type { StoryWorldSliceView } from "@ai-novel/shared";
+import type { NovelExportScope } from "@ai-novel/shared";
 
 export type ExportChapter = Chapter & { chapterSummary?: ChapterSummary | null };
 export type ExportCharacter = Character;

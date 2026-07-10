@@ -1,11 +1,11 @@
-import type { ApiResponse, CreativeHubStreamFrame } from "@ai-novel/shared/types/api";
+import type { ApiResponse, CreativeHubStreamFrame } from "@ai-novel/shared";
 import type {
   CreativeHubMessage,
   CreativeHubResourceBinding,
   CreativeHubThread,
   CreativeHubThreadHistoryItem,
   CreativeHubThreadState,
-} from "@ai-novel/shared/types/creativeHub";
+} from "@ai-novel/shared";
 import { API_BASE_URL } from "@/lib/constants";
 import { apiClient } from "./client";
 

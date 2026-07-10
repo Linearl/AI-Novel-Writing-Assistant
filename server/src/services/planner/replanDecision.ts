@@ -3,13 +3,13 @@ import type {
   GenerationNextAction,
   CanonicalStateSnapshot,
   CanonicalPayoffState,
-} from "@ai-novel/shared/types/canonicalState";
+} from "@ai-novel/shared";
 import type {
   AuditIssue,
   AuditReport,
   ReplanRecommendation,
-} from "@ai-novel/shared/types/novel";
-import type { PayoffLedgerSummary } from "@ai-novel/shared/types/payoffLedger";
+} from "@ai-novel/shared";
+import type { PayoffLedgerSummary } from "@ai-novel/shared";
 
 type ReplanSignal =
   | "overdue_payoff"

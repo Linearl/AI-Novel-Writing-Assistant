@@ -3,7 +3,7 @@ import { z } from "zod";
 import type { Request, Response, NextFunction } from "express";
 import { validate } from "../../../../middleware/validate";
 import { novelRiskService } from "../../../../services/novel/risk/NovelRiskService";
-import type { ApiResponse } from "@ai-novel/shared/types/api";
+import type { ApiResponse } from "@ai-novel/shared";
 
 const novelIdParamsSchema = z.object({ novelId: z.string().min(1) });
 const riskIdParamsSchema = z.object({ novelId: z.string().min(1), riskId: z.string().min(1) });

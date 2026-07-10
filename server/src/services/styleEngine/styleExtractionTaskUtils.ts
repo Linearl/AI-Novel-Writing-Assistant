@@ -1,5 +1,5 @@
 import { Prisma } from "@prisma/client";
-import type { StyleExtractionDraft, StyleFeatureDecision } from "@ai-novel/shared/types/styleEngine";
+import type { StyleExtractionDraft, StyleFeatureDecision } from "@ai-novel/shared";
 
 type PresetKey = "imitate" | "balanced" | "transfer";
 

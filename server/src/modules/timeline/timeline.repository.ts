@@ -6,7 +6,7 @@ import type {
   TimelineHook,
   TimelineHookResolveMode,
   TimelineIssue,
-} from "@ai-novel/shared/types/timeline";
+} from "@ai-novel/shared";
 import { prisma } from "../../db/prisma";
 import type { Prisma } from "@prisma/client";
 

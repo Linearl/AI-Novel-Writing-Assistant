@@ -4,7 +4,7 @@ import type {
   DirectorHighRiskStrategyConfig,
   DirectorTakeoverExecutableRangeSnapshot,
   DirectorTakeoverStrategy,
-} from "@ai-novel/shared/types/novelDirector";
+} from "@ai-novel/shared";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { AUTO_DIRECTOR_MOBILE_CLASSES } from "@/mobile/autoDirector";

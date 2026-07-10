@@ -1,10 +1,10 @@
 import { createHash } from "node:crypto";
 import { resolveChapterOrder, markTimelineCheckpoint, claimTimelineCheckpoint, markTimelineCheckpointFailed } from "./chapterTimelineCheckpointPersistence";
-import type { GenerationContextPackage } from "@ai-novel/shared/types/chapterRuntime";
+import type { GenerationContextPackage } from "@ai-novel/shared";
 import type {
   TimelineCheckResult,
   TimelineContextForChapter,
-} from "@ai-novel/shared/types/timeline";
+} from "@ai-novel/shared";
 import { prisma } from "../../../db/prisma";
 import {
   storyTimelineService,

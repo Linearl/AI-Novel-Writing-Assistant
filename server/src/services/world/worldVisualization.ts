@@ -12,7 +12,7 @@
 
 import type {
   WorldVisualizationPayload,
-} from "@ai-novel/shared/types/world";
+} from "@ai-novel/shared";
 import { runStructuredPrompt } from "../../prompting/core/promptRunner";
 import { worldVisualizationPrompt } from "../../prompting/prompts/world/world.prompts";
 import {
@@ -54,7 +54,7 @@ import {
 
 import type {
   WorldGeographyMapEdge,
-} from "@ai-novel/shared/types/world";
+} from "@ai-novel/shared";
 
 /* ------------------------------------------------------------------ */
 /*  Fallback builders (text-only, no structured data)                  */

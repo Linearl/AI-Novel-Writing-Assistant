@@ -5,7 +5,7 @@ import type {
   DirectorArtifactStatus,
   DirectorArtifactTargetType,
   DirectorArtifactType,
-} from "@ai-novel/shared/types/directorRuntime";
+} from "@ai-novel/shared";
 import {
   buildDirectorArtifactRef,
   stableDirectorContentHash,

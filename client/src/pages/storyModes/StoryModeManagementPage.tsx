@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { StoryModeProfile } from "@ai-novel/shared/types/storyMode";
+import type { StoryModeProfile } from "@ai-novel/shared";
 import {
   createStoryModeChildren,
   createStoryModeTree,

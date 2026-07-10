@@ -5,8 +5,8 @@ import type {
   UnifiedTaskDetail,
   UnifiedTaskListResponse,
   UnifiedTaskSummary,
-} from "@ai-novel/shared/types/task";
-import type { DirectorLLMOptions } from "@ai-novel/shared/types/novelDirector";
+} from "@ai-novel/shared";
+import type { DirectorLLMOptions } from "@ai-novel/shared";
 import { prisma } from "../../db/prisma";
 import { AppError } from "../../middleware/errorHandler";
 import { getSharedNovelServices } from "../novel/application/sharedNovelServices";

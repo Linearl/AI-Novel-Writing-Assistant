@@ -77,8 +77,8 @@ import {
   normalizeWorldBindingSupport,
   normalizeWorldStructuredData,
 } from "./worldStructureNormalization";
-import type { WorldStructuredData } from "@ai-novel/shared/types/world";
-import type { WorldBindingSupport } from "@ai-novel/shared/types/world";
+import type { WorldStructuredData } from "@ai-novel/shared";
+import type { WorldBindingSupport } from "@ai-novel/shared";
 
 /**
  * Parse the raw JSON strings stored in Prisma into structured data.

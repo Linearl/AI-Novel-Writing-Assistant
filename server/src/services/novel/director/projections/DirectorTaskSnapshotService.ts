@@ -3,7 +3,7 @@ import type {
   DirectorTaskFactInspectionResponse,
   DirectorTaskSnapshot,
   DirectorTaskSnapshotResponse,
-} from "@ai-novel/shared/types/directorRuntime";
+} from "@ai-novel/shared";
 import { DirectorEventProjectionService } from "../runtime/DirectorEventProjectionService";
 import { DirectorRuntimeStore } from "../runtime/DirectorRuntimeStore";
 import { DirectorStateReader } from "../DirectorStateReader";

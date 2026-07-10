@@ -17,8 +17,8 @@ import type {
   VolumeRebalanceDecision,
   VolumeStrategyPlan,
   VolumeSyncPreview,
-} from "@ai-novel/shared/types/novel";
-import type { StoryWorldSliceOverrides, StoryWorldSliceView } from "@ai-novel/shared/types/storyWorldSlice";
+} from "@ai-novel/shared";
+import type { StoryWorldSliceOverrides, StoryWorldSliceView } from "@ai-novel/shared";
 import type {
   NovelWorldGenerateInput,
   NovelWorldImportInput,
@@ -27,8 +27,8 @@ import type {
   NovelWorldSyncDiff,
   NovelWorldSyncInput,
   NovelWorldView,
-} from "@ai-novel/shared/types/novelWorld";
-import type { BookAnalysisSectionKey } from "@ai-novel/shared/types/bookAnalysis";
+} from "@ai-novel/shared";
+import type { BookAnalysisSectionKey } from "@ai-novel/shared";
 import type { ExistingOutlineChapter } from "./volumePlan.utils";
 
 interface BuildNovelEditPlanningTabsInput {

@@ -8,8 +8,8 @@ import type {
   StyleContractSectionKey,
   StyleProfile,
   StyleRuleSet,
-} from "@ai-novel/shared/types/styleEngine";
-import { isStyleCompatibilityField } from "@ai-novel/shared/types/styleEngine";
+} from "@ai-novel/shared";
+import { isStyleCompatibilityField } from "@ai-novel/shared";
 import { clamp } from "./helpers";
 
 type StyleSectionKey = keyof StyleRuleSet;

@@ -3,11 +3,11 @@ import type {
   VolumePlanDocument,
   VolumePlan,
   VolumeSyncPreview,
-} from "@ai-novel/shared/types/novel";
+} from "@ai-novel/shared";
 import {
   assessChapterExecutionContractShape,
   formatChapterTaskSheetQualityFailure,
-} from "@ai-novel/shared/types/chapterTaskSheetQuality";
+} from "@ai-novel/shared";
 import { prisma } from "../../../db/prisma";
 
 /** 判断章节是否已细化（有执行合同） */

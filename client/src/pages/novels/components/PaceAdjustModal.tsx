@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import type { VolumePlan } from "@ai-novel/shared/types/novel";
+import type { VolumePlan } from "@ai-novel/shared";
 import { getNovelVolumeWorkspace, updateNovelVolumes } from "@/api/novel/volumes";
 import { queryKeys } from "@/api/queryKeys";
 import { Button } from "@/components/ui/button";

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { MAX_VOLUME_COUNT } from "@ai-novel/shared/types/volumePlanning";
+import { MAX_VOLUME_COUNT } from "@ai-novel/shared";
 import { llmProviderSchema } from "../../../llm/providerSchema";
 import { chapterRuntimeRequestSchema } from "../../../services/novel/runtime/chapterRuntimeSchema";
 

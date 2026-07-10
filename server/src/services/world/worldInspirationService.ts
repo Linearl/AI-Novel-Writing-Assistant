@@ -1,9 +1,9 @@
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
+import type { LLMProvider } from "@ai-novel/shared";
 import {
   createEmptyWorldReferenceSeedBundle,
   type WorldOptionRefinementLevel,
   type WorldReferenceMode,
-} from "@ai-novel/shared/types/worldWizard";
+} from "@ai-novel/shared";
 import { runStructuredPrompt } from "../../prompting/core/promptRunner";
 import {
   worldInspirationConceptCardLocalizationPrompt,

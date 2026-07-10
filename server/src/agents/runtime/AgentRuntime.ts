@@ -1,4 +1,4 @@
-import type { AgentRunDetail, ReplayRequest } from "@ai-novel/shared/types/agent";
+import type { AgentRunDetail, ReplayRequest } from "@ai-novel/shared";
 import { createStructuredPlan } from "../orchestrator";
 import { AgentTraceStore } from "../traceStore";
 import type {

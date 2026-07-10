@@ -1,11 +1,11 @@
 /**
  * REQ-2038: Setting consistency check — client API functions.
  */
-import type { ApiResponse } from "@ai-novel/shared/types/api";
+import type { ApiResponse } from "@ai-novel/shared";
 import type {
   SettingConsistencyReport,
   ConsistencyCheckBody,
-} from "@ai-novel/shared/types/settingConsistency";
+} from "@ai-novel/shared";
 import { apiClient, type ApiHttpError } from "./client";
 
 /** Trigger an async consistency check for a novel's world settings. */

@@ -3,7 +3,7 @@
  * Extracted from world.prompts.ts for modularity.
  */
 
-import type { WorldReferenceMode } from "@ai-novel/shared/types/worldWizard";
+import type { WorldReferenceMode } from "@ai-novel/shared";
 import { z } from "zod";
 import type { WorldStructureSectionPromptInput } from "./world.promptTypes";
 import { worldStructureSectionOutputSchema } from "../../../services/world/worldSchemas";

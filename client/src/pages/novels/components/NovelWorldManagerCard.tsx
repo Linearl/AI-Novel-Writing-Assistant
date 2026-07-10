@@ -6,7 +6,7 @@ import type {
   NovelWorldSyncDiff,
   NovelWorldSyncInput,
   NovelWorldView,
-} from "@ai-novel/shared/types/novelWorld";
+} from "@ai-novel/shared";
 import { exportWorldTxt, importWorldTxt } from "@/api/novel/txtIo";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

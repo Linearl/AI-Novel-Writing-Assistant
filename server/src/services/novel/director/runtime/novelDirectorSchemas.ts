@@ -2,7 +2,7 @@ import { z } from "zod";
 import {
   DIRECTOR_MAX_TARGET_CHAPTER_COUNT,
   DIRECTOR_MIN_TARGET_CHAPTER_COUNT,
-} from "@ai-novel/shared/types/novelDirector";
+} from "@ai-novel/shared";
 
 const nonEmptyString = z.string().trim().min(1);
 

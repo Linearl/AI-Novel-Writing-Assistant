@@ -10,7 +10,7 @@ import path from "node:path";
 import type {
   SettingConsistencyReport,
   IgnoredContradiction,
-} from "@ai-novel/shared/types/settingConsistency";
+} from "@ai-novel/shared";
 
 /* ── Path helpers ──────────────────────────────────────────────────── */
 

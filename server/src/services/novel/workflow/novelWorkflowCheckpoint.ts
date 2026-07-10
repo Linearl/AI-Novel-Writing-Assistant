@@ -1,4 +1,4 @@
-import type { NovelWorkflowCheckpoint, NovelWorkflowLane, NovelWorkflowResumeTarget, NovelWorkflowStage } from "@ai-novel/shared/types/novelWorkflow";
+import type { NovelWorkflowCheckpoint, NovelWorkflowLane, NovelWorkflowResumeTarget, NovelWorkflowStage } from "@ai-novel/shared";
 import { buildNovelCreateResumeTarget, parseResumeTarget } from "./novelWorkflow.shared";
 import {
   defaultProgressForStage,

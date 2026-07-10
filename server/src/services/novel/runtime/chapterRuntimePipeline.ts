@@ -1,6 +1,6 @@
-import type { ChapterRuntimePackage, GenerationContextPackage } from "@ai-novel/shared/types/chapterRuntime";
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
-import type { QualityScore, ReviewIssue } from "@ai-novel/shared/types/novel";
+import type { ChapterRuntimePackage, GenerationContextPackage } from "@ai-novel/shared";
+import type { LLMProvider } from "@ai-novel/shared";
+import type { QualityScore, ReviewIssue } from "@ai-novel/shared";
 import type { ChapterRuntimeRequestInput } from "./chapterRuntimeSchema";
 import { detectForbiddenStyleEntities } from "../../styleEngine/styleGenerationSanitizer";
 import {

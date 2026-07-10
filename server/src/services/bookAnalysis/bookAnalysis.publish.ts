@@ -1,4 +1,4 @@
-import type { BookAnalysisDetail, BookAnalysisPublishResult } from "@ai-novel/shared/types/bookAnalysis";
+import type { BookAnalysisDetail, BookAnalysisPublishResult } from "@ai-novel/shared";
 import { prisma } from "../../db/prisma";
 import { AppError } from "../../middleware/errorHandler";
 import type { KnowledgeService } from "../knowledge/KnowledgeService";

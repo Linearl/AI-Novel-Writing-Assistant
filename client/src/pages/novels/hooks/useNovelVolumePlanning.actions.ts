@@ -4,7 +4,7 @@ import type {
   VolumeGenerationScopeInput,
   VolumePlan,
   VolumePlanDocument,
-} from "@ai-novel/shared/types/novel";
+} from "@ai-novel/shared";
 import { findBeatSheet } from "../volumePlan.utils";
 import type { ChapterDetailMode } from "../chapterDetailPlanning.shared";
 

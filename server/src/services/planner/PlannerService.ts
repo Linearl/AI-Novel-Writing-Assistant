@@ -1,7 +1,7 @@
-import type { GenerationContextPackage } from "@ai-novel/shared/types/chapterRuntime";
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
-import type { AuditReport, ReplanResult } from "@ai-novel/shared/types/novel";
-import type { PayoffLedgerSummary } from "@ai-novel/shared/types/payoffLedger";
+import type { GenerationContextPackage } from "@ai-novel/shared";
+import type { LLMProvider } from "@ai-novel/shared";
+import type { AuditReport, ReplanResult } from "@ai-novel/shared";
+import type { PayoffLedgerSummary } from "@ai-novel/shared";
 import { prisma } from "../../db/prisma";
 import { parseJsonStringArray } from "../novel/novelP0Utils";
 import { payoffLedgerSyncService } from "../payoff/PayoffLedgerSyncService";

@@ -3,14 +3,14 @@ import type {
   DirectorAutoExecutionPlan,
   DirectorTakeoverExecutableRangeSnapshot,
   DirectorTakeoverPipelineJobSnapshot,
-} from "@ai-novel/shared/types/novelDirector";
-import { isFullBookAutopilotRunMode } from "@ai-novel/shared/types/novelDirector";
+} from "@ai-novel/shared";
+import { isFullBookAutopilotRunMode } from "@ai-novel/shared";
 import type { DirectorTakeoverNovelContext } from "./novelDirectorTakeover";
 import type { DirectorTakeoverAssetSnapshot } from "./novelDirectorTakeoverHelpers";
-import type { StoryMacroPlan } from "@ai-novel/shared/types/storyMacro";
+import type { StoryMacroPlan } from "@ai-novel/shared";
 import type { BookContractService } from "../../BookContractService";
 import type { DirectorWorkflowSeedPayload } from "./novelDirectorHelpers";
-import type { VolumePlanDocument } from "@ai-novel/shared/types/novel";
+import type { VolumePlanDocument } from "@ai-novel/shared";
 import { prisma } from "../../../../db/prisma";
 import { normalizeNovelOutput } from "../../novelCoreShared";
 import { DIRECTOR_PROGRESS } from "../projections/novelDirectorProgress";

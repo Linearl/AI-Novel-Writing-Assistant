@@ -1,7 +1,7 @@
 import { prisma } from "../../../db/prisma";
 import { runStructuredPrompt } from "../../../prompting/core/promptRunner";
 import { characterExitInferencePrompt } from "../../../prompting/prompts/novel/characterExitInference.prompts";
-import type { CharacterExitStatus } from "@ai-novel/shared/types/novelCharacter";
+import type { CharacterExitStatus } from "@ai-novel/shared";
 
 const DEFAULT_CONFIDENCE_THRESHOLD = 0.7;
 const DEFAULT_FREEZE_THRESHOLD = 5;

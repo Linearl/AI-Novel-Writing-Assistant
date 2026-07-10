@@ -1,4 +1,4 @@
-import { buildStyleIntentSummary } from "@ai-novel/shared/types/styleEngine";
+import { buildStyleIntentSummary } from "@ai-novel/shared";
 import { AppError } from "../../../middleware/errorHandler";
 import {
   runWithLlmUsageTracking,
@@ -11,7 +11,7 @@ import type {
   DirectorRuntimeSnapshot,
   DirectorManualEditImpact,
   DirectorWorkspaceAnalysis,
-} from "@ai-novel/shared/types/directorRuntime";
+} from "@ai-novel/shared";
 import type {
   DirectorContinuationMode,
   DirectorCandidatePatchRequest,
@@ -28,7 +28,7 @@ import type {
   DirectorTakeoverReadinessResponse,
   DirectorTakeoverRequest,
   DirectorTakeoverResponse,
-} from "@ai-novel/shared/types/novelDirector";
+} from "@ai-novel/shared";
 import { BookContractService } from "../BookContractService";
 import { CharacterPreparationService } from "../characterPrep/CharacterPreparationService";
 import { CharacterDynamicsService } from "../dynamics/CharacterDynamicsService";
@@ -52,7 +52,7 @@ import {
 import {
   normalizeDirectorAutoApprovalConfig,
   shouldAutoApproveDirectorApprovalPoint,
-} from "@ai-novel/shared/types/autoDirectorApproval";
+} from "@ai-novel/shared";
 import { recordAutoDirectorAutoApprovalFromTask } from "../../task/autoDirectorFollowUps/autoDirectorAutoApprovalAudit";
 import { flattenPreparedOutlineChapters } from "./recovery/novelDirectorStructuredOutlineRecovery";
 import { DirectorRuntimeService } from "./runtime/DirectorRuntimeService";

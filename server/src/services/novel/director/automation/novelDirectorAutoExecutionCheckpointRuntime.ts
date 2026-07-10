@@ -2,10 +2,10 @@ import type {
   DirectorAutoExecutionState,
   DirectorConfirmRequest,
   DirectorQualityRepairRisk,
-} from "@ai-novel/shared/types/novelDirector";
-import { isDirectorAutoExecutionRunMode, isFullBookAutopilotRunMode } from "@ai-novel/shared/types/novelDirector";
-import type { PipelineJobStatus } from "@ai-novel/shared/types/novel";
-import type { NovelWorkflowCheckpoint } from "@ai-novel/shared/types/novelWorkflow";
+} from "@ai-novel/shared";
+import { isDirectorAutoExecutionRunMode, isFullBookAutopilotRunMode } from "@ai-novel/shared";
+import type { PipelineJobStatus } from "@ai-novel/shared";
+import type { NovelWorkflowCheckpoint } from "@ai-novel/shared";
 import { buildNovelEditResumeTarget } from "../../workflow/novelWorkflow.shared";
 import {
   buildDirectorAutoExecutionCompletedLabel,

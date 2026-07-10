@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { AlertTriangle, Bug, CheckCircle2, RefreshCw } from "lucide-react";
-import type { DirectorTaskFactInspectionStep } from "@ai-novel/shared/types/directorRuntime";
+import type { DirectorTaskFactInspectionStep } from "@ai-novel/shared";
 import { getDirectorNovelFactInspection } from "@/api/novelDirector";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

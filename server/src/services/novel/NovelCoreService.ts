@@ -18,7 +18,7 @@ import {
   TitleGenerateOptions,
   UpdateNovelInput,
 } from "./novelCoreShared";
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
+import type { LLMProvider } from "@ai-novel/shared";
 import { NovelCoreCharacterService } from "./novelCoreCharacterService";
 import { NovelCoreCrudService } from "./novelCoreCrudService";
 import { NovelCoreGenerationService } from "./novelCoreGenerationService";

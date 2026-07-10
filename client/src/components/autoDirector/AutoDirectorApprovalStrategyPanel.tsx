@@ -1,7 +1,7 @@
 import type {
   DirectorAutoApprovalGroup,
   DirectorAutoApprovalPoint,
-} from "@ai-novel/shared/types/autoDirectorApproval";
+} from "@ai-novel/shared";
 import AutoDirectorApprovalPointMultiSelect, {
   summarizeDirectorAutoApprovalPoints,
 } from "./AutoDirectorApprovalPointMultiSelect";

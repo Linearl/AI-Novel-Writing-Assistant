@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef } from "react";
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
+import type { LLMProvider } from "@ai-novel/shared";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { ApiResponse } from "@ai-novel/shared/types/api";
+import type { ApiResponse } from "@ai-novel/shared";
 import {
   type APIKeyStatus,
   getAPIKeySettings,

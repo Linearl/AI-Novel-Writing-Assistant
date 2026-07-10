@@ -1,5 +1,5 @@
-import { NOVEL_LIST_PAGE_LIMIT_DEFAULT, NOVEL_LIST_PAGE_LIMIT_MAX } from "@ai-novel/shared/types/pagination";
-import type { NovelExportFormat, NovelExportScope } from "@ai-novel/shared/types/novelExport";
+import { NOVEL_LIST_PAGE_LIMIT_DEFAULT, NOVEL_LIST_PAGE_LIMIT_MAX } from "@ai-novel/shared";
+import type { NovelExportFormat, NovelExportScope } from "@ai-novel/shared";
 import type {
   Chapter,
   Character,
@@ -8,7 +8,7 @@ import type {
   NovelBible,
   NovelStoryMode,
   PlotBeat,
-} from "@ai-novel/shared/types/novel";
+} from "@ai-novel/shared";
 
 export type NovelListItem = Pick<
   Novel,

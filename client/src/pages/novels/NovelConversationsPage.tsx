@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import type { CreativeHubThread } from "@ai-novel/shared/types/creativeHub";
+import type { CreativeHubThread } from "@ai-novel/shared";
 import { listCreativeHubThreads } from "@/api/creativeHub";
 import { queryKeys } from "@/api/queryKeys";
 import { Badge } from "@/components/ui/badge";

@@ -1,4 +1,4 @@
-import type { StoryModeProfile } from "@ai-novel/shared/types/storyMode";
+import type { StoryModeProfile } from "@ai-novel/shared";
 
 export interface StoryModeSeedNode {
   id: string;

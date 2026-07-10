@@ -1,4 +1,4 @@
-import type { TaskStatus, UnifiedTaskSummary } from "@ai-novel/shared/types/task";
+import type { TaskStatus, UnifiedTaskSummary } from "@ai-novel/shared";
 
 const WORKFLOW_PROXY_PIPELINE_STATUSES = new Set<TaskStatus>([
   "queued",

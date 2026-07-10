@@ -2,7 +2,7 @@ import { Router } from "express";
 import { z } from "zod";
 import type { Request, Response, NextFunction } from "express";
 import { validate } from "../../../../middleware/validate";
-import type { ApiResponse } from "@ai-novel/shared/types/api";
+import type { ApiResponse } from "@ai-novel/shared";
 import { novelPaceCurveService } from "../../../../services/novel/pace/NovelPaceCurveService";
 
 const novelIdParamsSchema = z.object({ novelId: z.string().min(1) });

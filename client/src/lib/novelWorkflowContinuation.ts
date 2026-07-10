@@ -1,6 +1,6 @@
-import type { DirectorCommandAcceptedResponse } from "@ai-novel/shared/types/directorRuntime";
-import type { DirectorContinuationMode } from "@ai-novel/shared/types/novelDirector";
-import type { UnifiedTaskDetail } from "@ai-novel/shared/types/task";
+import type { DirectorCommandAcceptedResponse } from "@ai-novel/shared";
+import type { DirectorContinuationMode } from "@ai-novel/shared";
+import type { UnifiedTaskDetail } from "@ai-novel/shared";
 
 export function resolveWorkflowContinuationFeedback(
   task: UnifiedTaskDetail | DirectorCommandAcceptedResponse | null | undefined,

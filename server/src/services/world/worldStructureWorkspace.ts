@@ -1,5 +1,5 @@
 import type { Prisma } from "@prisma/client";
-import type { WorldVisualizationPayload } from "@ai-novel/shared/types/world";
+import type { WorldVisualizationPayload } from "@ai-novel/shared";
 import { prisma } from "../../db/prisma";
 import { runStructuredPrompt } from "../../prompting/core/promptRunner";
 import {

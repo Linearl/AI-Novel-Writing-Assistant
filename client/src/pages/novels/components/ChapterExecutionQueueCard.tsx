@@ -1,4 +1,4 @@
-import type { Chapter } from "@ai-novel/shared/types/novel";
+import type { Chapter } from "@ai-novel/shared";
 import { Lock, LockOpen } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

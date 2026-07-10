@@ -6,7 +6,7 @@ import type {
   DirectorManualEditInventory,
   DirectorWorkspaceAnalysis,
   DirectorWorkspaceInventory,
-} from "@ai-novel/shared/types/directorRuntime";
+} from "@ai-novel/shared";
 
 function timestampOf(value?: string | null): number {
   if (!value) {

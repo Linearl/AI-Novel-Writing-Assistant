@@ -4,7 +4,7 @@ import type {
   AiManualEditImpactDecision,
   DirectorManualEditInventory,
   DirectorWorkspaceInventory,
-} from "@ai-novel/shared/types/directorRuntime";
+} from "@ai-novel/shared";
 import type { PromptAsset } from "../../core/promptTypes";
 import { renderSelectedContextBlocks } from "../../core/renderContextBlocks";
 

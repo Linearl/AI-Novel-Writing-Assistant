@@ -11,7 +11,7 @@ import {
   getDirectorInputFromSeedPayload,
   type DirectorWorkflowSeedPayload,
 } from "../runtime/novelDirectorHelpers";
-import type { DirectorTakeoverRequest } from "@ai-novel/shared/types/novelDirector";
+import type { DirectorTakeoverRequest } from "@ai-novel/shared";
 
 export type DirectorCommandExecutionOutcome = "completed" | "cancelled";
 

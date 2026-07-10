@@ -4,7 +4,7 @@ import {
   DIRECTOR_AUTO_APPROVAL_POINTS,
   normalizeDirectorAutoApprovalPointCodes,
   type DirectorAutoApprovalPreferenceSettings,
-} from "@ai-novel/shared/types/autoDirectorApproval";
+} from "@ai-novel/shared";
 import { prisma } from "../../db/prisma";
 
 const APPROVAL_POINT_CODES_KEY = "autoDirector.approvalPreference.approvalPointCodes";

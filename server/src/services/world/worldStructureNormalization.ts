@@ -18,7 +18,7 @@ import type {
   WorldRules,
   WorldStructuredData,
   WorldStructureSectionKey,
-} from "@ai-novel/shared/types/world";
+} from "@ai-novel/shared";
 
 import {
   WORLD_STRUCTURE_SCHEMA_VERSION,

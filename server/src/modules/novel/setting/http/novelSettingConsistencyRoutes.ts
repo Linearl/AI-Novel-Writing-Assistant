@@ -9,7 +9,7 @@
 import { Router } from "express";
 import { z } from "zod";
 import type { Request, Response, NextFunction } from "express";
-import type { ApiResponse } from "@ai-novel/shared/types/api";
+import type { ApiResponse } from "@ai-novel/shared";
 import { validate } from "../../../../middleware/validate";
 import { settingConsistencyService } from "../../../../services/setting/settingConsistencyService";
 

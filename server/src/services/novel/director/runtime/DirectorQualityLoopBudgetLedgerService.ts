@@ -7,7 +7,7 @@ import type {
   DirectorQualityLoopBudgetLedger,
   DirectorQualityLoopBudgetNextAction,
   DirectorQualityLoopBudgetWindow,
-} from "@ai-novel/shared/types/novelDirector";
+} from "@ai-novel/shared";
 
 export const DIRECTOR_QUALITY_LOOP_BUDGET_LIMITS = {
   /** patch 预算提升到 2：首次锚点失配后允许一次宽松锚点重试（Root B）*/

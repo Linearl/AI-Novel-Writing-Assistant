@@ -3,11 +3,11 @@ import { z } from "zod";
 import type {
   StoryWorldSliceBuilderMode,
   StoryWorldSliceOverrides,
-} from "@ai-novel/shared/types/storyWorldSlice";
+} from "@ai-novel/shared";
 import type {
   WorldBindingSupport,
   WorldStructuredData,
-} from "@ai-novel/shared/types/world";
+} from "@ai-novel/shared";
 import type { PromptAsset } from "../../core/promptTypes";
 import { buildBookFramingSummary } from "../../../services/novel/bookFraming";
 import { storyWorldSliceRawPayloadSchema } from "./storyWorldSlice.promptSchemas";

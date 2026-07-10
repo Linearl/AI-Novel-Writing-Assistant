@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import type { TensionLevel } from "@ai-novel/shared/types/novel";
-import { TENSION_LEVEL_LABELS } from "@ai-novel/shared/types/novel";
+import type { TensionLevel } from "@ai-novel/shared";
+import { TENSION_LEVEL_LABELS } from "@ai-novel/shared";
 import {
   getChapterExecutionDetailStatus,
   type ChapterDetailBatchSelection,

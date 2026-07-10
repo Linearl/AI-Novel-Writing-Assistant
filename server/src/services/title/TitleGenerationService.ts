@@ -1,5 +1,5 @@
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
-import type { TitleFactorySuggestion } from "@ai-novel/shared/types/title";
+import type { LLMProvider } from "@ai-novel/shared";
+import type { TitleFactorySuggestion } from "@ai-novel/shared";
 import { prisma } from "../../db/prisma";
 import { resolveLLMClientOptions } from "../../llm/factory";
 import { selectStructuredOutputStrategy } from "../../llm/structuredOutput";

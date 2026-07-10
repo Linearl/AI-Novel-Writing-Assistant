@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { CreativeHubProductionStatus } from "@ai-novel/shared/types/creativeHub";
+import type { CreativeHubProductionStatus } from "@ai-novel/shared";
 import { getNovelDetail, updateNovel } from "@/api/novel";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";

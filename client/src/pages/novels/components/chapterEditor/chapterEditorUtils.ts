@@ -1,5 +1,5 @@
 import type { Descendant, Value } from "platejs";
-import type { ChapterEditorOperation } from "@ai-novel/shared/types/novel";
+import type { ChapterEditorOperation } from "@ai-novel/shared";
 import type {
   ChapterEditorRequestBuilderInput,
   ChapterEditorSelectionRange,

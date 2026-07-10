@@ -3,7 +3,7 @@ import type {
   CharacterCastOption,
   SupplementalCharacterApplyResult,
   SupplementalCharacterCandidate,
-} from "@ai-novel/shared/types/novel";
+} from "@ai-novel/shared";
 import { prisma } from "../../../db/prisma";
 import { NovelContextService } from "../NovelContextService";
 import {

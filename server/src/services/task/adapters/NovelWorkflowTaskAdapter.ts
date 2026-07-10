@@ -1,13 +1,13 @@
 import type {
   NovelWorkflowCheckpoint,
-} from "@ai-novel/shared/types/novelWorkflow";
+} from "@ai-novel/shared";
 import type {
   DirectorAutoExecutionState,
   DirectorLLMOptions,
   DirectorTaskNotice,
-} from "@ai-novel/shared/types/novelDirector";
-import type { ResourceRef } from "@ai-novel/shared/types/agent";
-import type { TaskStatus, UnifiedTaskDetail, UnifiedTaskSummary } from "@ai-novel/shared/types/task";
+} from "@ai-novel/shared";
+import type { ResourceRef } from "@ai-novel/shared";
+import type { TaskStatus, UnifiedTaskDetail, UnifiedTaskSummary } from "@ai-novel/shared";
 import { prisma } from "../../../db/prisma";
 import { AppError } from "../../../middleware/errorHandler";
 import { DirectorCommandService } from "../../novel/director/commands/DirectorCommandService";

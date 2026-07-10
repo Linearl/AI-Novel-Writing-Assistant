@@ -1,6 +1,6 @@
 import { prisma } from "../../db/prisma";
 import { ragConfig } from "../../config/rag";
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
+import type { LLMProvider } from "@ai-novel/shared";
 import {
   getProviderEnvApiKey,
   isBuiltInProvider,

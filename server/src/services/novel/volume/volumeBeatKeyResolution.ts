@@ -3,7 +3,7 @@ import type {
   VolumeBeatSheet,
   VolumeChapterPlan,
   VolumePlan,
-} from "@ai-novel/shared/types/novel";
+} from "@ai-novel/shared";
 
 export function parseBeatChapterSpan(chapterSpanHint: string): { start: number; end: number } | null {
   const matches = Array.from(chapterSpanHint.matchAll(/\d+/g), (match) => Number(match[0]));

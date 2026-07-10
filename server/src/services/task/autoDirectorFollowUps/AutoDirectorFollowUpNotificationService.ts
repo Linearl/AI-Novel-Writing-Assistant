@@ -2,9 +2,9 @@ import type {
   AutoDirectorAction,
   AutoDirectorChannelNotificationPayload,
   AutoDirectorEventType,
-} from "@ai-novel/shared/types/autoDirectorFollowUp";
-import type { DirectorAutoApprovalPointCode } from "@ai-novel/shared/types/autoDirectorApproval";
-import type { NovelWorkflowCheckpoint } from "@ai-novel/shared/types/novelWorkflow";
+} from "@ai-novel/shared";
+import type { DirectorAutoApprovalPointCode } from "@ai-novel/shared";
+import type { NovelWorkflowCheckpoint } from "@ai-novel/shared";
 import { prisma } from "../../../db/prisma";
 import { DingTalkNotifier } from "./DingTalkNotifier";
 import { WeComNotifier } from "./WeComNotifier";

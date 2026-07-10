@@ -10,7 +10,7 @@ import type {
   VolumePlanVersionSummary,
   VolumeRebalanceDecision,
   VolumeStrategyPlan,
-} from "@ai-novel/shared/types/novel";
+} from "@ai-novel/shared";
 import {
   activateVolumeVersion,
   analyzeVolumeImpact,

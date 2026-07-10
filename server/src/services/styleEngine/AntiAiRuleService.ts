@@ -1,10 +1,10 @@
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
+import type { LLMProvider } from "@ai-novel/shared";
 import type {
   AntiAiRule,
   AntiAiRuleAiDraftRequest,
   AntiAiRuleAiDraftResult,
   AntiAiRuleDraftFields,
-} from "@ai-novel/shared/types/styleEngine";
+} from "@ai-novel/shared";
 import { prisma } from "../../db/prisma";
 import { runStructuredPrompt } from "../../prompting/core/promptRunner";
 import { antiAiRuleAiDraftPrompt } from "../../prompting/prompts/style/style.prompts";

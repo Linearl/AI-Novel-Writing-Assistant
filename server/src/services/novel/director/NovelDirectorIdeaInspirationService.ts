@@ -1,7 +1,7 @@
 import type {
   DirectorIdeaInspirationRequest,
   DirectorIdeaInspirationsResponse,
-} from "@ai-novel/shared/types/novelDirector";
+} from "@ai-novel/shared";
 import { runStructuredPrompt } from "../../../prompting/core/promptRunner";
 import { directorIdeaInspirationPrompt } from "../../../prompting/prompts/novel/ideaInspiration.prompts";
 import { buildBookFramingSummary } from "../bookFraming";

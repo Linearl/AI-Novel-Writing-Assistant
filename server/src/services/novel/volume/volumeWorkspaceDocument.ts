@@ -10,7 +10,7 @@ import type {
   VolumeStrategyPlan,
   VolumeStrategyVolume,
   VolumeUncertaintyMarker,
-} from "@ai-novel/shared/types/novel";
+} from "@ai-novel/shared";
 import {
   buildDerivedOutlineFromVolumes,
   buildDerivedStructuredOutlineFromVolumes,

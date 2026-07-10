@@ -2,7 +2,7 @@ import { useState } from "react";
 import type {
   AntiAiRuleDraftFields,
   ChapterEditAntiAiExtractResult,
-} from "@ai-novel/shared/types/styleEngine";
+} from "@ai-novel/shared";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,

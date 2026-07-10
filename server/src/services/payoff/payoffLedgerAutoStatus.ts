@@ -1,5 +1,5 @@
-import type { PayoffLedgerNormalizedStatus } from "@ai-novel/shared/types/payoffLedger";
-import { NORMALIZED_STATUS_MAP } from "@ai-novel/shared/types/payoffLedger";
+import type { PayoffLedgerNormalizedStatus } from "@ai-novel/shared";
+import { NORMALIZED_STATUS_MAP } from "@ai-novel/shared";
 import { prisma } from "../../db/prisma";
 
 interface StatusComputationInput {

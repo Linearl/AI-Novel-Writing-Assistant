@@ -1,5 +1,5 @@
-import type { ChapterRepairIssue } from "@ai-novel/shared/types/chapterRuntime";
-import type { TimelineIssue } from "@ai-novel/shared/types/timeline";
+import type { ChapterRepairIssue } from "@ai-novel/shared";
+import type { TimelineIssue } from "@ai-novel/shared";
 
 function severityToRepairSeverity(severity: TimelineIssue["severity"]): ChapterRepairIssue["severity"] {
   if (severity === "blocking") return "critical";

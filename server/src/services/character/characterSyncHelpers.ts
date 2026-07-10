@@ -11,7 +11,7 @@ import {
   type CharacterLibraryLink,
   type CharacterSyncFieldUpdate,
   type CharacterSyncProposal,
-} from "@ai-novel/shared/types/characterSync";
+} from "@ai-novel/shared";
 
 /* ------------------------------------------------------------------ */
 /*  Constants                                                         */

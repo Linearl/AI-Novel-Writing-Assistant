@@ -1,7 +1,7 @@
 import type {
   VolumeGenerationScope,
   VolumePlanDocument,
-} from "@ai-novel/shared/types/novel";
+} from "@ai-novel/shared";
 import { prisma } from "../../../db/prisma";
 import { runStructuredPrompt } from "../../../prompting/core/promptRunner";
 import {
@@ -60,7 +60,7 @@ import { logger } from "../../logging/LoggerService";
 import {
   MAX_VOLUME_COUNT,
   buildVolumeCountGuidance,
-} from "@ai-novel/shared/types/volumePlanning";
+} from "@ai-novel/shared";
 
 type StoryMacroPlanResult = Awaited<ReturnType<StoryMacroPlanService["getPlan"]>> | null;
 

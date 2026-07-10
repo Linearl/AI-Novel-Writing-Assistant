@@ -1,4 +1,4 @@
-import type { VolumeBeat, VolumePlanDocument } from "@ai-novel/shared/types/novel";
+import type { VolumeBeat, VolumePlanDocument } from "@ai-novel/shared";
 import { runStructuredPrompt } from "../../../prompting/core/promptRunner";
 import { volumeBeatSheetPrompt } from "../../../prompting/prompts/novel/volume/beatSheet.prompts";
 import { buildVolumeBeatSheetContextBlocks } from "../../../prompting/prompts/novel/volume/contextBlocks";

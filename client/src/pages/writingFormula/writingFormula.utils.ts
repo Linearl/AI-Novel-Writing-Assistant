@@ -4,7 +4,7 @@ import {
   type StyleExtractionDraft,
   type StyleProfileFeature,
   type StyleRuleSet,
-} from "@ai-novel/shared/types/styleEngine";
+} from "@ai-novel/shared";
 
 export function prettyJson(value: unknown) {
   return JSON.stringify(value ?? {}, null, 2);

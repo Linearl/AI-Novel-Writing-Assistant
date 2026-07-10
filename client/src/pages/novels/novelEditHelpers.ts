@@ -1,5 +1,5 @@
-import type { DirectorDashboardMode, DirectorTaskSnapshot } from "@ai-novel/shared/types/directorRuntime";
-import type { DirectorLockScope } from "@ai-novel/shared/types/novelDirector";
+import type { DirectorDashboardMode, DirectorTaskSnapshot } from "@ai-novel/shared";
+import type { DirectorLockScope } from "@ai-novel/shared";
 import { scopeFromWorkspaceTab } from "./novelWorkspaceNavigation";
 import type { NovelEditTakeoverState } from "./components/NovelEditView.types";
 import type { ChapterExecutionBackgroundActivity } from "./components/chapterExecution.shared";

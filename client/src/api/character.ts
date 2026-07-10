@@ -1,6 +1,6 @@
-import type { ApiResponse } from "@ai-novel/shared/types/api";
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
-import type { BaseCharacter } from "@ai-novel/shared/types/novel";
+import type { ApiResponse } from "@ai-novel/shared";
+import type { LLMProvider } from "@ai-novel/shared";
+import type { BaseCharacter } from "@ai-novel/shared";
 import { apiClient } from "./client";
 
 export interface CharacterGenerateConstraints {

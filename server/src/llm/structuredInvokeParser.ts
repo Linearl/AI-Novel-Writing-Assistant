@@ -1,6 +1,6 @@
 import { z, type ZodError, type ZodType } from "zod";
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
-import type { ModelRouteRequestProtocol } from "@ai-novel/shared/types/novel";
+import type { LLMProvider } from "@ai-novel/shared";
+import type { ModelRouteRequestProtocol } from "@ai-novel/shared";
 import type { TaskType } from "./modelRouter";
 import { relaxGeneratedContentSchema } from "./generatedContentSchema";
 import { repairWithLlm } from "./structuredInvokeRepair";

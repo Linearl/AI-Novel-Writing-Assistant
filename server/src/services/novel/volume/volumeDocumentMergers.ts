@@ -6,7 +6,7 @@ import type {
   VolumePlanDocument,
   VolumeRebalanceDecision,
   VolumeStrategyPlan,
-} from "@ai-novel/shared/types/novel";
+} from "@ai-novel/shared";
 import { buildVolumeWorkspaceDocument } from "./volumeWorkspaceDocument";
 import type { ChapterDetailMode } from "./volumeModels";
 import {

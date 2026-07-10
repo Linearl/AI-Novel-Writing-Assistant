@@ -1,4 +1,4 @@
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
+import type { LLMProvider } from "@ai-novel/shared";
 import { runStructuredPrompt } from "../../prompting/core/promptRunner";
 import { worldReferenceInspirationPrompt } from "../../prompting/prompts/world/world.prompts";
 import {
@@ -7,7 +7,7 @@ import {
   type WorldReferenceAnchor,
   type WorldReferenceMode,
   type WorldReferenceSeedBundle,
-} from "@ai-novel/shared/types/worldWizard";
+} from "@ai-novel/shared";
 
 export interface ReferenceConceptCard {
   worldType: string;

@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import type { TitleFactorySuggestion } from "@ai-novel/shared/types/title";
+import type { TitleFactorySuggestion } from "@ai-novel/shared";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { flattenGenreTreeOptions, type GenreTreeNode } from "@/api/genre";
 import { generateNovelTitles, type NovelListResponse } from "@/api/novel";

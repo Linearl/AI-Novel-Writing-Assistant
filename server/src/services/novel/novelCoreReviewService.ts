@@ -1,5 +1,5 @@
-import type { AuditReport, QualityScore, ReviewIssue } from "@ai-novel/shared/types/novel";
-import type { GenerationContextPackage } from "@ai-novel/shared/types/chapterRuntime";
+import type { AuditReport, QualityScore, ReviewIssue } from "@ai-novel/shared";
+import type { GenerationContextPackage } from "@ai-novel/shared";
 import { prisma } from "../../db/prisma";
 import { logger } from "../../services/logging/LoggerService";
 import { runStructuredPrompt } from "../../prompting/core/promptRunner";

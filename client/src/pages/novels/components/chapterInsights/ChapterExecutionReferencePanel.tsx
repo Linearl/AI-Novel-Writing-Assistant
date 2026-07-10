@@ -5,9 +5,9 @@ import type {
   ReplanResult,
   StoryPlan,
   StoryStateSnapshot,
-} from "@ai-novel/shared/types/novel";
-import type { SSEFrame } from "@ai-novel/shared/types/api";
-import type { ChapterRuntimePackage } from "@ai-novel/shared/types/chapterRuntime";
+} from "@ai-novel/shared";
+import type { SSEFrame } from "@ai-novel/shared";
+import type { ChapterRuntimePackage } from "@ai-novel/shared";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import StreamOutput from "@/components/common/StreamOutput";

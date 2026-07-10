@@ -3,7 +3,7 @@
  * Used by volumeGenerationSchemas.ts and volumeWorkspaceDocument.ts.
  */
 
-import type { VolumeRebalanceDecision } from "@ai-novel/shared/types/novel";
+import type { VolumeRebalanceDecision } from "@ai-novel/shared";
 
 const REBALANCE_DIRECTION_ALIASES: Record<string, VolumeRebalanceDecision["direction"]> = {
   pull_forward: "pull_forward",

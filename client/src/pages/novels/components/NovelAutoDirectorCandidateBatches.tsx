@@ -1,10 +1,10 @@
-import type { TitleFactorySuggestion } from "@ai-novel/shared/types/title";
+import type { TitleFactorySuggestion } from "@ai-novel/shared";
 import {
   DIRECTOR_CORRECTION_PRESETS,
   type DirectorCandidate,
   type DirectorCandidateBatch,
   type DirectorCorrectionPreset,
-} from "@ai-novel/shared/types/novelDirector";
+} from "@ai-novel/shared";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

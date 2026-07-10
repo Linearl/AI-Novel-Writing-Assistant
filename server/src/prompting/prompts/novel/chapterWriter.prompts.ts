@@ -1,7 +1,7 @@
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 import type { PromptAsset } from "../../core/promptTypes";
 import { renderSelectedContextBlocks } from "../../core/renderContextBlocks";
-import type { TensionLevel } from "@ai-novel/shared/types/novel";
+import type { TensionLevel } from "@ai-novel/shared";
 import { NOVEL_PROMPT_BUDGETS } from "./promptBudgetProfiles";
 
 const TENSION_INSTRUCTIONS: Record<TensionLevel, string> = {

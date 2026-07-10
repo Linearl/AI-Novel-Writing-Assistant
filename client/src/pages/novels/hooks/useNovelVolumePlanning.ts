@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type Dispatch, type SetStateAction } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { buildVolumeCountGuidance } from "@ai-novel/shared/types/volumePlanning";
+import { buildVolumeCountGuidance } from "@ai-novel/shared";
 import type {
   VolumeBeatSheet,
   VolumeCountGuidance,
@@ -9,8 +9,8 @@ import type {
   VolumePlanDocument,
   VolumeRebalanceDecision,
   VolumeStrategyPlan,
-} from "@ai-novel/shared/types/novel";
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
+} from "@ai-novel/shared";
+import type { LLMProvider } from "@ai-novel/shared";
 import { queryKeys } from "@/api/queryKeys";
 import { useConfirm } from "@/components/useConfirm";
 import {

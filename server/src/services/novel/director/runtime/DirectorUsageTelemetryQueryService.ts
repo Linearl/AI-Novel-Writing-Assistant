@@ -4,7 +4,7 @@ import type {
   DirectorPromptUsageSummary,
   DirectorStepRun,
   DirectorStepUsageSummary,
-} from "@ai-novel/shared/types/directorRuntime";
+} from "@ai-novel/shared";
 import { prisma } from "../../../../db/prisma";
 
 interface DirectorUsageRow {

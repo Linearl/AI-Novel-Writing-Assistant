@@ -7,8 +7,8 @@ import {
   DEFAULT_NOVEL_COVER_IMAGE_SIZE,
   type ImageAsset,
   type ImageGenerationTask,
-} from "@ai-novel/shared/types/image";
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
+} from "@ai-novel/shared";
+import type { LLMProvider } from "@ai-novel/shared";
 import { prisma } from "../../db/prisma";
 import { AppError } from "../../middleware/errorHandler";
 import {

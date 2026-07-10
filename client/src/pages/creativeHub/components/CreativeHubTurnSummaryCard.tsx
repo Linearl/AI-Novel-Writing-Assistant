@@ -1,4 +1,4 @@
-import type { CreativeHubTurnSummary } from "@ai-novel/shared/types/creativeHub";
+import type { CreativeHubTurnSummary } from "@ai-novel/shared";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 

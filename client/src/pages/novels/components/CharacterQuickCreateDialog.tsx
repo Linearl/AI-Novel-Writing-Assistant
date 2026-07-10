@@ -1,4 +1,4 @@
-import type { BaseCharacter, Character } from "@ai-novel/shared/types/novel";
+import type { BaseCharacter, Character } from "@ai-novel/shared";
 import AiButton from "@/components/common/AiButton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

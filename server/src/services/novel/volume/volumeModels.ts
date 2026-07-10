@@ -1,5 +1,5 @@
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
-import type { ChapterTaskSheetQualityMode } from "@ai-novel/shared/types/chapterTaskSheetQuality";
+import type { LLMProvider } from "@ai-novel/shared";
+import type { ChapterTaskSheetQualityMode } from "@ai-novel/shared";
 import type {
   VolumeChapterListGenerationMode,
   VolumeBeatSheet,
@@ -14,7 +14,7 @@ import type {
   VolumeStrategyPlan,
   VolumePlanVersion,
   VolumePlanVersionSummary,
-} from "@ai-novel/shared/types/novel";
+} from "@ai-novel/shared";
 import type { Prisma } from "@prisma/client";
 import { prisma } from "../../../db/prisma";
 

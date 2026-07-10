@@ -3,7 +3,7 @@ import type {
   DirectorArtifactType,
   DirectorEvent,
   DirectorRuntimeSnapshot,
-} from "@ai-novel/shared/types/directorRuntime";
+} from "@ai-novel/shared";
 import { prisma } from "../../../../db/prisma";
 import { withSqliteRetry } from "../../../../db/sqliteRetry";
 import { normalizeDirectorArtifactRef } from "./DirectorArtifactLedger";

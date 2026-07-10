@@ -1,5 +1,5 @@
 import type { BaseMessage, BaseMessageChunk } from "@langchain/core/messages";
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
+import type { LLMProvider } from "@ai-novel/shared";
 import type { ZodType } from "zod";
 import type { TaskType } from "../../llm/modelRouter";
 import type { PromptSlotDef, ResolvedSlots } from "../slots/slotTypes";

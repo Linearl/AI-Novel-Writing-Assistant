@@ -7,7 +7,7 @@ import {
 import type { DirectorPlanningStage } from "../phases/novelDirectorStageNodeAdapters";
 import {
   getWorkflowStepWriteContractRequirements,
-} from "@ai-novel/shared/types/directorWorkflowStepCatalog";
+} from "@ai-novel/shared";
 import type { WorkflowStepModuleDescriptor } from "./WorkflowStepModule";
 import { WorkflowStepModuleRegistry } from "./WorkflowStepModuleRegistry";
 import {

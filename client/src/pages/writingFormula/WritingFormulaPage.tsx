@@ -1,32 +1,21 @@
 import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type {
   StyleBinding,
   StyleProfile,
   StyleProfileFeature,
-} from "@ai-novel/shared/types/styleEngine";
+} from "@ai-novel/shared";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import OpenInCreativeHubButton from "@/components/creativeHub/OpenInCreativeHubButton";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { getNovelDetail, getNovelList } from "@/api/novel";
 import { queryKeys } from "@/api/queryKeys";
-import { apiClient } from "@/api/client";
 import {
-  createStyleBinding,
-  deleteStyleBinding,
-  deleteStyleProfile,
-  detectStyleIssues,
-  exportStyleProfile,
-  extractStyleFeaturesFromText,
   getAntiAiRules,
   getStyleBindings,
   getStyleProfiles,
   getStyleTemplates,
-  importStyleProfile,
-  rewriteStyleIssues,
-  testWriteWithStyleProfile,
-  updateStyleProfile,
 } from "@/api/styleEngine";
 import { useLLMStore } from "@/store/llmStore";
 import WritingFormulaAdvancedWorkspace from "./components/WritingFormulaAdvancedWorkspace";
@@ -39,14 +28,9 @@ import {
   useWritingFormulaCreateFlow,
 } from "./useWritingFormulaCreateFlow";
 import { useWritingFormulaDialogFocus, type WritingFormulaDialogFocusIntent } from "./useWritingFormulaDialogFocus";
+import { useWritingFormulaMutations } from "./useWritingFormulaMutations";
 import { buildLandingProfileItems } from "./writingFormulaLandingItems";
-import {
-  buildProfileFeaturesFromDraft,
-  buildRuleSetFromExtractedFeatures,
-  normalizeCsv,
-  parseJsonInput,
-  prettyJson,
-} from "./writingFormula.utils";
+import { buildRuleSetFromExtractedFeatures, prettyJson } from "./writingFormula.utils";
 import { normalizeWritingFormulaMode } from "./writingFormulaV2.shared";
 
 type WorkspaceDialog = null | "editor" | "workbench" | "clean";
@@ -281,16 +265,6 @@ export default function WritingFormulaPage() {
     setFocusIntent: setEditorFocusIntent,
   });
 
-  async function refreshStyleData() {
-    await Promise.all([
-      queryClient.invalidateQueries({ queryKey: queryKeys.styleEngine.profiles }),
-      queryClient.invalidateQueries({ queryKey: queryKeys.styleEngine.templates }),
-      queryClient.invalidateQueries({ queryKey: queryKeys.styleEngine.antiAiRules }),
-      queryClient.invalidateQueries({ queryKey: queryKeys.styleEngine.bindings(selectedProfileId || "selected-none") }),
-      queryClient.invalidateQueries({ queryKey: queryKeys.styleEngine.bindings("all") }),
-    ]);
-  }
-
   const createFlow = useWritingFormulaCreateFlow({
     llm,
     refreshStyleData,
@@ -315,120 +289,44 @@ export default function WritingFormulaPage() {
     }
   };
 
-  const reextractFeaturesMutation = useMutation({
-    mutationFn: async () => {
-      if (!selectedProfileId || !editor.sourceContent.trim()) {
-        throw new Error("请先准备原文样本。");
-      }
+  async function refreshStyleData() {
+    await Promise.all([
+      queryClient.invalidateQueries({ queryKey: queryKeys.styleEngine.profiles }),
+      queryClient.invalidateQueries({ queryKey: queryKeys.styleEngine.templates }),
+      queryClient.invalidateQueries({ queryKey: queryKeys.styleEngine.antiAiRules }),
+      queryClient.invalidateQueries({ queryKey: queryKeys.styleEngine.bindings(selectedProfileId || "selected-none") }),
+      queryClient.invalidateQueries({ queryKey: queryKeys.styleEngine.bindings("all") }),
+    ]);
+  }
 
-      return extractStyleFeaturesFromText({
-        name: editor.name.trim() || selectedProfile?.name || "文本提取写法",
-        category: editor.category || undefined,
-        sourceText: editor.sourceContent,
-        provider: llm.provider,
-        model: llm.model,
-        temperature: llm.temperature,
-      });
-    },
-    onSuccess: (response) => {
-      const draft = response.data;
-      if (!draft) {
-        return;
-      }
-
-      const extractedFeatures = buildProfileFeaturesFromDraft(draft);
-      const ruleSet = buildRuleSetFromExtractedFeatures(extractedFeatures);
-      setEditor((prev) => ({
-        ...prev,
-        extractedFeatures,
-        analysisMarkdown: draft.analysisMarkdown || prev.analysisMarkdown,
-        narrativeRules: prettyJson(ruleSet.narrativeRules),
-        characterRules: prettyJson(ruleSet.characterRules),
-        languageRules: prettyJson(ruleSet.languageRules),
-        rhythmRules: prettyJson(ruleSet.rhythmRules),
-      }));
-      setMessage(
-        extractedFeatures.length > 0
-          ? `已重新提取 ${extractedFeatures.length} 条特征，请确认后保存。`
-          : "这次仍然没有生成可用特征，建议检查原文样本是否足够完整。",
-      );
-    },
+  const mutations = useWritingFormulaMutations({
+    selectedProfileId,
+    editor,
+    bindingForm,
+    llm: { provider: llm.provider, model: llm.model, temperature: llm.temperature },
+    detectInput,
+    refreshStyleData,
+    setEditor,
+    setMessage,
+    setSelectedProfileId,
+    setActiveWorkspaceDialog,
+    setTestWriteOutput,
+    setRewritePreview,
+    setImportDialogOpen,
   });
 
-  const saveProfileMutation = useMutation({
-    mutationFn: async () => {
-      if (!selectedProfileId) {
-        return;
-      }
-
-      await updateStyleProfile(selectedProfileId, {
-        name: editor.name,
-        description: editor.description,
-        category: editor.category,
-        tags: normalizeCsv(editor.tags),
-        applicableGenres: normalizeCsv(editor.applicableGenres),
-        sourceContent: editor.sourceContent || undefined,
-        extractedFeatures: editor.extractedFeatures,
-        analysisMarkdown: editor.analysisMarkdown,
-        narrativeRules: parseJsonInput(editor.narrativeRules),
-        characterRules: parseJsonInput(editor.characterRules),
-        languageRules: parseJsonInput(editor.languageRules),
-        rhythmRules: parseJsonInput(editor.rhythmRules),
-        antiAiRuleIds: editor.antiAiRuleIds,
-      });
-    },
-    onSuccess: async () => {
-      setMessage("写法资产保存完成。");
-      await refreshStyleData();
-    },
-  });
-
-  const deleteProfileMutation = useMutation({
-    mutationFn: (id: string) => deleteStyleProfile(id),
-    onSuccess: async (_response, deletedProfileId) => {
-      setMessage("这套写法已删除。");
-      if (deletedProfileId === selectedProfileId) {
-        setSelectedProfileId("");
-        setActiveWorkspaceDialog(null);
-      }
-      await refreshStyleData();
-    },
-  });
-
-  const exportProfileMutation = useMutation({
-    mutationFn: async (profileId: string) => {
-      const response = await apiClient.get(`/style-profiles/${profileId}/export`, {
-        responseType: "blob",
-      });
-      const blob = response.data as Blob;
-      const contentDisposition = response.headers?.["content-disposition"] ?? "";
-      const filenameMatch = contentDisposition.match(/filename="?([^";\n]+)"?/);
-      const filename = filenameMatch ? decodeURIComponent(filenameMatch[1]) : "style-profile.json";
-
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = filename;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
-    },
-    onSuccess: () => {
-      setMessage("写法资产导出完成。");
-    },
-  });
-
-  const importProfileMutation = useMutation({
-    mutationFn: async (payload: { profileData: Record<string, unknown>; conflictStrategy: "overwrite" | "create_new" | "skip" }) => {
-      return importStyleProfile(payload);
-    },
-    onSuccess: async (response) => {
-      setMessage(response.data?.message ?? "导入完成。");
-      setImportDialogOpen(false);
-      await refreshStyleData();
-    },
-  });
+  const {
+    reextractFeaturesMutation,
+    saveProfileMutation,
+    deleteProfileMutation,
+    exportProfileMutation,
+    importProfileMutation,
+    createBindingMutation,
+    deleteBindingMutation,
+    testWriteMutation,
+    detectionMutation,
+    rewriteMutation,
+  } = mutations;
 
   const handleImportFileSelect = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -456,111 +354,6 @@ export default function WritingFormulaPage() {
       }
     }
   };
-
-  const createBindingMutation = useMutation({
-    mutationFn: async () => {
-      if (!selectedProfileId) {
-        return;
-      }
-
-      const targetId = bindingForm.targetType === "chapter"
-        ? bindingForm.chapterId
-        : bindingForm.targetType === "task"
-          ? bindingForm.taskTargetId
-          : bindingForm.novelId;
-
-      await createStyleBinding({
-        styleProfileId: selectedProfileId,
-        targetType: bindingForm.targetType,
-        targetId,
-        priority: bindingForm.priority,
-        weight: bindingForm.weight,
-      });
-    },
-    onSuccess: async () => {
-      setMessage("这套写法会参与目标对象的生成。");
-      await refreshStyleData();
-    },
-  });
-
-  const deleteBindingMutation = useMutation({
-    mutationFn: (id: string) => deleteStyleBinding(id),
-    onSuccess: async () => {
-      await refreshStyleData();
-    },
-  });
-
-  const testWriteMutation = useMutation({
-    mutationFn: () => {
-      if (!selectedProfileId) {
-        throw new Error("请先选择写法资产。");
-      }
-
-      return testWriteWithStyleProfile(selectedProfileId, {
-        mode: testWriteForm.mode,
-        topic: testWriteForm.topic || undefined,
-        sourceText: testWriteForm.sourceText || undefined,
-        targetLength: testWriteForm.targetLength,
-        provider: llm.provider,
-        model: llm.model,
-        temperature: llm.temperature,
-      });
-    },
-    onSuccess: (response) => setTestWriteOutput(response.data?.output ?? ""),
-  });
-
-  const detectionMutation = useMutation({
-    mutationFn: () => {
-      if (!selectedProfileId) {
-        throw new Error("请先选择写法资产。");
-      }
-
-      return detectStyleIssues({
-        content: detectInput,
-        styleProfileId: selectedProfileId,
-        provider: llm.provider,
-        model: llm.model,
-        temperature: 0.2,
-      });
-    },
-  });
-
-  const rewriteMutation = useMutation({
-    mutationFn: async () => {
-      if (!selectedProfileId) {
-        throw new Error("请先选择写法资产。");
-      }
-
-      const report = detectionMutation.data?.data ?? (await detectStyleIssues({
-        content: detectInput,
-        styleProfileId: selectedProfileId,
-        provider: llm.provider,
-        model: llm.model,
-        temperature: 0.2,
-      })).data;
-
-      if (!report || report.violations.length === 0) {
-        return { data: { content: detectInput } };
-      }
-
-      return rewriteStyleIssues({
-        content: detectInput,
-        styleProfileId: selectedProfileId,
-        issues: report.violations.map((item) => ({
-          ruleName: item.ruleName,
-          excerpt: item.excerpt,
-          suggestion: item.suggestion,
-        })),
-        provider: llm.provider,
-        model: llm.model,
-        temperature: 0.5,
-      });
-    },
-    onSuccess: (response) => {
-      setRewritePreview(response.data?.content ?? "");
-      setMessage("修订稿已经生成，可以继续在去 AI 味里检查和调整。");
-    },
-  });
 
   useEffect(() => {
     testWriteMutation.reset();

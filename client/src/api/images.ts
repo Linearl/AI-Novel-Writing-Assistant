@@ -1,6 +1,6 @@
-import type { ApiResponse } from "@ai-novel/shared/types/api";
-import type { ImageAsset, ImageGenerationTask } from "@ai-novel/shared/types/image";
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
+import type { ApiResponse } from "@ai-novel/shared";
+import type { ImageAsset, ImageGenerationTask } from "@ai-novel/shared";
+import type { LLMProvider } from "@ai-novel/shared";
 import { apiClient } from "./client";
 import { API_BASE_URL } from "@/lib/constants";
 

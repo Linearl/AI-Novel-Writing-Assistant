@@ -3,7 +3,7 @@ import type {
   DirectorCircuitBreakerReason,
   DirectorCircuitBreakerState,
   DirectorQualityRepairRisk,
-} from "@ai-novel/shared/types/novelDirector";
+} from "@ai-novel/shared";
 
 /**
  * 断路器阈值配置。

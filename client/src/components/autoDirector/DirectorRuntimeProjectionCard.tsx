@@ -3,8 +3,8 @@ import type {
   DirectorPolicyMode,
   DirectorRuntimeProjection,
   DirectorRuntimeProjectionStatus,
-} from "@ai-novel/shared/types/directorRuntime";
-import { getDirectorNodeDisplayLabel } from "@ai-novel/shared/types/directorRuntime";
+} from "@ai-novel/shared";
+import { getDirectorNodeDisplayLabel } from "@ai-novel/shared";
 import {
   Activity,
   AlertTriangle,

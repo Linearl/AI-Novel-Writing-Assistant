@@ -1,6 +1,6 @@
 import { Router } from "express";
-import type { ApiResponse } from "@ai-novel/shared/types/api";
-import type { BuiltinLLMProvider, LLMProvider } from "@ai-novel/shared/types/llm";
+import type { ApiResponse } from "@ai-novel/shared";
+import type { BuiltinLLMProvider, LLMProvider } from "@ai-novel/shared";
 import { z } from "zod";
 import { prisma } from "../db/prisma";
 import { setProviderSecretCache } from "../llm/factory";

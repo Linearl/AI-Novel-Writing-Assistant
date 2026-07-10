@@ -7,15 +7,15 @@ import type {
   StoryWorldSliceOverrides,
   StoryWorldSliceRule,
   StoryWorldSliceView,
-} from "@ai-novel/shared/types/storyWorldSlice";
+} from "@ai-novel/shared";
 import {
   storyWorldSliceOverridesSchema,
   storyWorldSliceSchema,
-} from "@ai-novel/shared/types/storyWorldSlice";
+} from "@ai-novel/shared";
 import type {
   WorldBindingSupport,
   WorldStructuredData,
-} from "@ai-novel/shared/types/world";
+} from "@ai-novel/shared";
 
 export const STORY_WORLD_SLICE_SCHEMA_VERSION = 1;
 

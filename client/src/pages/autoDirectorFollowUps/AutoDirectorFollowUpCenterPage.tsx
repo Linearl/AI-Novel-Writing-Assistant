@@ -6,16 +6,16 @@ import type {
   AutoDirectorFollowUpReason,
   AutoDirectorChannelType,
   AutoDirectorMutationActionCode,
-} from "@ai-novel/shared/types/autoDirectorFollowUp";
+} from "@ai-novel/shared";
 import {
   AUTO_DIRECTOR_CHANNEL_TYPES,
   AUTO_DIRECTOR_FOLLOW_UP_REASONS,
-} from "@ai-novel/shared/types/autoDirectorFollowUp";
+} from "@ai-novel/shared";
 import {
   AUTO_DIRECTOR_FOLLOW_UP_SECTIONS,
   type AutoDirectorFollowUpSection,
-} from "@ai-novel/shared/types/autoDirectorValidation";
-import type { TaskStatus } from "@ai-novel/shared/types/task";
+} from "@ai-novel/shared";
+import type { TaskStatus } from "@ai-novel/shared";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   executeAutoDirectorFollowUpAction,

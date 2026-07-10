@@ -1,4 +1,4 @@
-import type { KnowledgeBindingTargetType } from "@ai-novel/shared/types/knowledge";
+import type { KnowledgeBindingTargetType } from "@ai-novel/shared";
 import { prisma } from "../../db/prisma";
 import { computeChunkHash, normalizeRagText } from "../rag/utils";
 

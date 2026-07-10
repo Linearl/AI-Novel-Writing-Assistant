@@ -3,8 +3,8 @@
  * 解耦 novel 和 planner 的双向循环引用
  */
 
-import type { AuditReport, ReplanResult } from "@ai-novel/shared/types/novel";
-import type { PayoffLedgerSummary } from "@ai-novel/shared/types/payoffLedger";
+import type { AuditReport, ReplanResult } from "@ai-novel/shared";
+import type { PayoffLedgerSummary } from "@ai-novel/shared";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 

@@ -15,7 +15,7 @@ import type {
   VolumePlanVersion,
   VolumePlanVersionSummary,
   VolumeSyncPreview,
-} from "@ai-novel/shared/types/novel";
+} from "@ai-novel/shared";
 import { prisma } from "../../../db/prisma";
 import { logMemoryUsage } from "../../../runtime/memoryTelemetry";
 import { buildVolumeDiff, buildVolumeDiffSummary, buildVolumeImpactResult, hasPayoffLedgerRelevantPlanChanges } from "./volumePlanUtils";

@@ -2,13 +2,13 @@ import type {
   DirectorAutoExecutionPlan,
   DirectorAutoExecutionState,
   DirectorTakeoverEntryStep,
-} from "@ai-novel/shared/types/novelDirector";
+} from "@ai-novel/shared";
 import {
   type VolumePlanDocument,
-} from "@ai-novel/shared/types/novel";
+} from "@ai-novel/shared";
 import {
   DIRECTOR_TAKEOVER_ENTRY_STEPS,
-} from "@ai-novel/shared/types/novelDirector";
+} from "@ai-novel/shared";
 import { prisma } from "../../../../db/prisma";
 import {
   normalizeDirectorAutoExecutionPlan,

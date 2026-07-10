@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import type { VolumePlan } from "@ai-novel/shared/types/novel";
+import type { VolumePlan } from "@ai-novel/shared";
 
 interface VolumePayoffOverviewCardProps {
   selectedVolume: VolumePlan;

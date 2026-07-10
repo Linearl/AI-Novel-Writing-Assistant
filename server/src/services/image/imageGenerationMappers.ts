@@ -1,6 +1,6 @@
 import path from "node:path";
 import { buildCharacterImagePrompt } from "@ai-novel/shared/imagePrompt";
-import type { ImageAsset, ImageGenerationTask } from "@ai-novel/shared/types/image";
+import type { ImageAsset, ImageGenerationTask } from "@ai-novel/shared";
 import { AppError } from "../../middleware/errorHandler";
 import { buildImageAssetPublicUrl, parseImageAssetMetadata } from "./imageAssetStorage";
 

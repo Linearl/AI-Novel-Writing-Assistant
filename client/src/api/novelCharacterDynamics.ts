@@ -1,9 +1,9 @@
-import type { ApiResponse } from "@ai-novel/shared/types/api";
+import type { ApiResponse } from "@ai-novel/shared";
 import type {
   CharacterCandidate,
   CharacterRelationStage,
   DynamicCharacterOverview,
-} from "@ai-novel/shared/types/characterDynamics";
+} from "@ai-novel/shared";
 import { apiClient } from "./client";
 
 export async function getCharacterDynamicsOverview(id: string, chapterOrder?: number) {

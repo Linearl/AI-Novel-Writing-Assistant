@@ -4,7 +4,7 @@ import type {
   WorldReferenceMode,
   WorldReferenceSeedBundle,
   WorldReferenceSeedSelection,
-} from "@ai-novel/shared/types/worldWizard";
+} from "@ai-novel/shared";
 
 export type InspirationMode = "free" | "reference" | "random";
 

@@ -1,5 +1,5 @@
-import type { Chapter, ChapterRole, WaterContentAnalysis, WordCountTarget } from "@ai-novel/shared/types/novel";
-import { CHAPTER_ROLE_LABELS } from "@ai-novel/shared/types/novel";
+import type { Chapter, ChapterRole, WaterContentAnalysis, WordCountTarget } from "@ai-novel/shared";
+import { CHAPTER_ROLE_LABELS } from "@ai-novel/shared";
 import { Badge } from "@/components/ui/badge";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { cn } from "@/lib/utils";

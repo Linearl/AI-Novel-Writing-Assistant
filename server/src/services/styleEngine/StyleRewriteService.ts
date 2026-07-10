@@ -1,4 +1,4 @@
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
+import type { LLMProvider } from "@ai-novel/shared";
 import { runTextPrompt } from "../../prompting/core/promptRunner";
 import { styleRewritePrompt } from "../../prompting/prompts/style/style.prompts";
 import { buildWriterStyleContractText } from "./styleContractText";

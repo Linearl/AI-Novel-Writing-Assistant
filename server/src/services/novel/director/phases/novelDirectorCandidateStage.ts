@@ -13,8 +13,8 @@ import {
   type DirectorProjectContextInput,
   type DirectorRefineResponse,
   type DirectorRefinementRequest,
-} from "@ai-novel/shared/types/novelDirector";
-import type { TitleFactorySuggestion } from "@ai-novel/shared/types/title";
+} from "@ai-novel/shared";
+import type { TitleFactorySuggestion } from "@ai-novel/shared";
 import { runStructuredPrompt } from "../../../../prompting/core/promptRunner";
 import {
   buildDirectorCandidateContextBlocks,

@@ -7,8 +7,8 @@ import type {
   StoryMacroFieldValue,
   StoryMacroLocks,
   StoryMacroState,
-} from "@ai-novel/shared/types/storyMacro";
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
+} from "@ai-novel/shared";
+import type { LLMProvider } from "@ai-novel/shared";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   buildNovelStoryConstraintEngine,

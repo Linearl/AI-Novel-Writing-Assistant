@@ -8,7 +8,7 @@
 import type {
   WorldStructuredData,
   WorldBindingSupport,
-} from "@ai-novel/shared/types/world";
+} from "@ai-novel/shared";
 
 import { formatRuleText } from "./worldStructureHelpers";
 

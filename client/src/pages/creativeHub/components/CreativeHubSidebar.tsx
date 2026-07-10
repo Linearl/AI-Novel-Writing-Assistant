@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import type { FailureDiagnostic } from "@ai-novel/shared/types/agent";
+import type { FailureDiagnostic } from "@ai-novel/shared";
 import type {
   CreativeHubInterrupt,
   CreativeHubNovelSetupStatus,
@@ -7,8 +7,8 @@ import type {
   CreativeHubResourceBinding,
   CreativeHubThread,
   CreativeHubTurnSummary,
-} from "@ai-novel/shared/types/creativeHub";
-import type { CreativeHubStreamFrame } from "@ai-novel/shared/types/api";
+} from "@ai-novel/shared";
+import type { CreativeHubStreamFrame } from "@ai-novel/shared";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

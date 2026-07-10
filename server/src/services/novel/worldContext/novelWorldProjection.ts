@@ -1,4 +1,4 @@
-import type { NovelWorldHandbook } from "@ai-novel/shared/types/novelWorld";
+import type { NovelWorldHandbook } from "@ai-novel/shared";
 import { normalizeWorldStructuredData } from "../../world/worldStructure";
 import { safeJsonParse } from "../../../platform/json";
 

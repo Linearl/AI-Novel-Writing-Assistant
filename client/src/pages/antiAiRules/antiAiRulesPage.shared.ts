@@ -1,4 +1,4 @@
-import type { AntiAiRule } from "@ai-novel/shared/types/styleEngine";
+import type { AntiAiRule } from "@ai-novel/shared";
 
 export type RuleFilter = "all" | "global" | "style" | "disabled";
 

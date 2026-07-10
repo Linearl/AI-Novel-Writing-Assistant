@@ -12,9 +12,9 @@ import type {
   SupplementalCharacterGenerateInput,
   SupplementalCharacterGenerationMode,
   SupplementalCharacterGenerationResult,
-} from "@ai-novel/shared/types/novel";
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
-import type { CharacterResourceLedgerItem } from "@ai-novel/shared/types/characterResource";
+} from "@ai-novel/shared";
+import type { LLMProvider } from "@ai-novel/shared";
+import type { CharacterResourceLedgerItem } from "@ai-novel/shared";
 import { exportCharactersTxt, importCharactersTxt } from "@/api/novel/txtIo";
 import AiButton from "@/components/common/AiButton";
 import { Badge } from "@/components/ui/badge";

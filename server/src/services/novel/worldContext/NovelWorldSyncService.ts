@@ -1,5 +1,5 @@
-import type { NovelWorldSyncDiff, NovelWorldSyncInput, NovelWorldSyncSection } from "@ai-novel/shared/types/novelWorld";
-import type { WorldStructuredData } from "@ai-novel/shared/types/world";
+import type { NovelWorldSyncDiff, NovelWorldSyncInput, NovelWorldSyncSection } from "@ai-novel/shared";
+import type { WorldStructuredData } from "@ai-novel/shared";
 import { prisma } from "../../../db/prisma";
 import {
   applyStructuredWorldToLegacyFields,

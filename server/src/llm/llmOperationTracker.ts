@@ -1,5 +1,5 @@
 import { EventEmitter } from "node:events";
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
+import type { LLMProvider } from "@ai-novel/shared";
 import type { TaskType } from "./modelRouter";
 import type { PromptInvocationMeta } from "../prompting/core/promptTypes";
 

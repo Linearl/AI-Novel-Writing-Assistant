@@ -1,15 +1,15 @@
 import type {
   DirectorSessionState,
-} from "@ai-novel/shared/types/novelDirector";
+} from "@ai-novel/shared";
 import type {
   AutoDirectorAction,
-} from "@ai-novel/shared/types/autoDirectorFollowUp";
+} from "@ai-novel/shared";
 import type {
   DirectorBookAutomationProjection,
   DirectorBookAutomationAction,
   DirectorTaskSnapshot,
-} from "@ai-novel/shared/types/directorRuntime";
-import type { UnifiedTaskDetail } from "@ai-novel/shared/types/task";
+} from "@ai-novel/shared";
+import type { UnifiedTaskDetail } from "@ai-novel/shared";
 import { toast } from "@/components/ui/toast";
 import { useStructuredOutlineWorkspaceStore } from "./stores/useStructuredOutlineWorkspaceStore";
 import {

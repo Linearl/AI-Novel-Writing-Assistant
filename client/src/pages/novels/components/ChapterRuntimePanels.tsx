@@ -1,5 +1,5 @@
-import type { ChapterRuntimePackage } from "@ai-novel/shared/types/chapterRuntime";
-import type { AuditReport, ReplanRecommendation, ReplanResult, StoryPlan, StoryStateSnapshot } from "@ai-novel/shared/types/novel";
+import type { ChapterRuntimePackage } from "@ai-novel/shared";
+import type { AuditReport, ReplanRecommendation, ReplanResult, StoryPlan, StoryStateSnapshot } from "@ai-novel/shared";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";

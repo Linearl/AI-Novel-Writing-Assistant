@@ -5,7 +5,7 @@ import {
   type StyleProfile,
   type StyleProfileFeature,
   type StyleRulePatch,
-} from "@ai-novel/shared/types/styleEngine";
+} from "@ai-novel/shared";
 import type { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import WritingTechniquePanel from "./WritingTechniquePanel";

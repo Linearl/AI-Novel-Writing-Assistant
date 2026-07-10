@@ -1,9 +1,9 @@
-import type { DirectorIdeaInspiration, DirectorRunMode, DirectorWorldSetupMode, DirectorHighRiskStrategyConfig } from "@ai-novel/shared/types/novelDirector";
+import type { DirectorIdeaInspiration, DirectorRunMode, DirectorWorldSetupMode, DirectorHighRiskStrategyConfig } from "@ai-novel/shared";
 import type {
   DirectorAutoApprovalGroup,
   DirectorAutoApprovalPoint,
-} from "@ai-novel/shared/types/autoDirectorApproval";
-import type { StyleIntentSummary } from "@ai-novel/shared/types/styleEngine";
+} from "@ai-novel/shared";
+import type { StyleIntentSummary } from "@ai-novel/shared";
 import LLMSelector from "@/components/common/LLMSelector";
 import AutoDirectorApprovalStrategyPanel from "@/components/autoDirector/AutoDirectorApprovalStrategyPanel";
 import { Button } from "@/components/ui/button";

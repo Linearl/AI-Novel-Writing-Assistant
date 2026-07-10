@@ -1,8 +1,8 @@
 import type {
   DirectorAutoExecutionState,
   DirectorConfirmRequest,
-} from "@ai-novel/shared/types/novelDirector";
-import { isDirectorAutoExecutionRunMode } from "@ai-novel/shared/types/novelDirector";
+} from "@ai-novel/shared";
+import { isDirectorAutoExecutionRunMode } from "@ai-novel/shared";
 import {
   hasDirectorSyncedChapterExecutionContext,
 } from "../automation/novelDirectorAutoExecution";

@@ -1,15 +1,15 @@
-import type { SSEFrame } from "@ai-novel/shared/types/api";
+import type { SSEFrame } from "@ai-novel/shared";
 import type {
   AuditReport,
   Chapter,
   StoryStateSnapshot,
-} from "@ai-novel/shared/types/novel";
-import type { ChapterRuntimePackage } from "@ai-novel/shared/types/chapterRuntime";
-import { parseChapterScenePlan } from "@ai-novel/shared/types/chapterLengthControl";
+} from "@ai-novel/shared";
+import type { ChapterRuntimePackage } from "@ai-novel/shared";
+import { parseChapterScenePlan } from "@ai-novel/shared";
 import {
   classifyChapterQualityLoopRisk,
   hasContinuableChapterQualityLoopRiskFlags,
-} from "@ai-novel/shared/types/chapterQualityLoop";
+} from "@ai-novel/shared";
 import { Link } from "react-router-dom";
 import AiButton from "@/components/common/AiButton";
 import AiActionLabel from "@/components/common/AiActionLabel";

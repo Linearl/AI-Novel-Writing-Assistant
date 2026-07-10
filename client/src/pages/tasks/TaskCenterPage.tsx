@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { DirectorContinuationMode } from "@ai-novel/shared/types/novelDirector";
-import type { TaskKind, TaskStatus, UnifiedTaskStep } from "@ai-novel/shared/types/task";
+import type { DirectorContinuationMode } from "@ai-novel/shared";
+import type { TaskKind, TaskStatus, UnifiedTaskStep } from "@ai-novel/shared";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import type { NovelWorkflowMilestone } from "@ai-novel/shared/types/novelWorkflow";
+import type { NovelWorkflowMilestone } from "@ai-novel/shared";
 import { getDirectorTaskSnapshot } from "@/api/novelDirector";
 import { continueNovelWorkflow } from "@/api/novelWorkflow";
 import { archiveTask, cancelTask, getTaskDetail, listTasks, retryTask } from "@/api/tasks";

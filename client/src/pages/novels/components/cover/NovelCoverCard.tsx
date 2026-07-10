@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { StatusBadge } from "@/components/ui/status-badge";
 import type { NovelBasicFormState } from "../../novelBasicInfo.shared";
-import type { StoryWorldSliceView } from "@ai-novel/shared/types/storyWorldSlice";
+import type { StoryWorldSliceView } from "@ai-novel/shared";
 import { NovelCoverDialog } from "./NovelCoverDialog";
 
 interface GenreOption {

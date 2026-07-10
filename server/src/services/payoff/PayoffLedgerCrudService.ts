@@ -3,8 +3,8 @@ import type {
   PayoffLedgerListResponse,
   PayoffLedgerNormalizedStatus,
   PayoffLedgerStatus,
-} from "@ai-novel/shared/types/payoffLedger";
-import { NORMALIZED_STATUS_MAP } from "@ai-novel/shared/types/payoffLedger";
+} from "@ai-novel/shared";
+import { NORMALIZED_STATUS_MAP } from "@ai-novel/shared";
 import { prisma } from "../../db/prisma";
 import {
   buildPayoffLedgerSummary,

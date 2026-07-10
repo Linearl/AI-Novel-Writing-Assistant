@@ -12,7 +12,7 @@ import {
   WandSparkles,
   Workflow,
 } from "lucide-react";
-import type { WorldStructuredData, WorldVisualizationPayload } from "@ai-novel/shared/types/world";
+import type { WorldStructuredData, WorldVisualizationPayload } from "@ai-novel/shared";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

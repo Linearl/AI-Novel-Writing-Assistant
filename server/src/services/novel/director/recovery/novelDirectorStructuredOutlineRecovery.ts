@@ -3,9 +3,9 @@ import type {
   VolumeChapterPlan,
   VolumePlan,
   VolumePlanDocument,
-} from "@ai-novel/shared/types/novel";
-import { assessChapterExecutionContractShape } from "@ai-novel/shared/types/chapterTaskSheetQuality";
-import type { DirectorAutoExecutionPlan } from "@ai-novel/shared/types/novelDirector";
+} from "@ai-novel/shared";
+import { assessChapterExecutionContractShape } from "@ai-novel/shared";
+import type { DirectorAutoExecutionPlan } from "@ai-novel/shared";
 import {
   buildDirectorAutoExecutionScopeLabel,
   countDirectorAutoExecutionChapterRange,

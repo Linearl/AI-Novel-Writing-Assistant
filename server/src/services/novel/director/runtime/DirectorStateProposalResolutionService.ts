@@ -1,10 +1,10 @@
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
-import type { StateChangeProposal } from "@ai-novel/shared/types/canonicalState";
+import type { LLMProvider } from "@ai-novel/shared";
+import type { StateChangeProposal } from "@ai-novel/shared";
 import type {
   DirectorStateProposalResolution,
   DirectorStateProposalResolutionDecision,
-} from "@ai-novel/shared/types/stateProposalResolution";
-import { characterResourceUpdatePayloadSchema } from "@ai-novel/shared/types/characterResource";
+} from "@ai-novel/shared";
+import { characterResourceUpdatePayloadSchema } from "@ai-novel/shared";
 import type { Prisma } from "@prisma/client";
 import { prisma } from "../../../../db/prisma";
 import { withSqliteRetry } from "../../../../db/sqliteRetry";

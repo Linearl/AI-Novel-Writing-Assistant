@@ -1,8 +1,8 @@
 import type {
   DirectorArtifactRef,
   DirectorArtifactType,
-} from "@ai-novel/shared/types/directorRuntime";
-import { hasContinuableChapterQualityLoopRiskFlags } from "@ai-novel/shared/types/chapterQualityLoop";
+} from "@ai-novel/shared";
+import { hasContinuableChapterQualityLoopRiskFlags } from "@ai-novel/shared";
 import {
   buildDirectorArtifactId,
   compactDirectorArtifactDependencies,

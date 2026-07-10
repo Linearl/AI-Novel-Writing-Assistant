@@ -1,5 +1,5 @@
-import type { CharacterCastOption } from "@ai-novel/shared/types/novel";
-import type { DirectorConfirmRequest } from "@ai-novel/shared/types/novelDirector";
+import type { CharacterCastOption } from "@ai-novel/shared";
+import type { DirectorConfirmRequest } from "@ai-novel/shared";
 import type { CharacterPreparationService } from "../../characterPrep/CharacterPreparationService";
 import type { NovelContextService } from "../../NovelContextService";
 import type { NovelVolumeService } from "../../volume/NovelVolumeService";

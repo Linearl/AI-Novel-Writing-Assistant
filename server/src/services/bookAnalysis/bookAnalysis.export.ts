@@ -2,7 +2,7 @@ import {
   BOOK_ANALYSIS_STRUCTURED_FIELD_LABELS,
   type BookAnalysisDetail,
   type BookAnalysisSection,
-} from "@ai-novel/shared/types/bookAnalysis";
+} from "@ai-novel/shared";
 import { getEffectiveContent } from "./bookAnalysis.utils";
 
 function sectionContentToMarkdown(section: BookAnalysisSection): string {

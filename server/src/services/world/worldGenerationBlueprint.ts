@@ -1,9 +1,9 @@
 import type { World as PrismaWorld } from "@prisma/client";
-import type { WorldLayerKey } from "@ai-novel/shared/types/world";
+import type { WorldLayerKey } from "@ai-novel/shared";
 import {
   parseWorldGenerationBlueprint,
   type WorldGenerationBlueprint,
-} from "@ai-novel/shared/types/worldWizard";
+} from "@ai-novel/shared";
 
 type WorldTextField =
   | "description"

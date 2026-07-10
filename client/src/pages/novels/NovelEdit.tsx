@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { BOOK_ANALYSIS_SECTIONS } from "@ai-novel/shared/types/bookAnalysis";
-import type { DirectorContinuationMode, DirectorSessionState } from "@ai-novel/shared/types/novelDirector";
-import type { AutoDirectorAction, AutoDirectorMutationActionCode } from "@ai-novel/shared/types/autoDirectorFollowUp";
-import type { DirectorBookAutomationAction } from "@ai-novel/shared/types/directorRuntime";
-import type { NovelExportDownloadFormat, NovelExportScope } from "@ai-novel/shared/types/novelExport";
+import { BOOK_ANALYSIS_SECTIONS } from "@ai-novel/shared";
+import type { DirectorContinuationMode, DirectorSessionState } from "@ai-novel/shared";
+import type { AutoDirectorAction, AutoDirectorMutationActionCode } from "@ai-novel/shared";
+import type { DirectorBookAutomationAction } from "@ai-novel/shared";
+import type { NovelExportDownloadFormat, NovelExportScope } from "@ai-novel/shared";
 import type {
   PipelineRepairMode,
   PipelineRunMode,
@@ -14,7 +14,7 @@ import type {
   VolumePlan,
   VolumeRebalanceDecision,
   VolumeStrategyPlan,
-} from "@ai-novel/shared/types/novel";
+} from "@ai-novel/shared";
 import NovelEditView from "./components/NovelEditView";
 import type { LLMSelectorValue } from "@/components/common/LLMSelector";
 import { getBaseCharacterList } from "@/api/character";

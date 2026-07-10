@@ -1,7 +1,7 @@
 import type {
   DirectorArtifactRef,
   DirectorWorkspaceInventory,
-} from "@ai-novel/shared/types/directorRuntime";
+} from "@ai-novel/shared";
 import { prisma } from "../../../../db/prisma";
 import { normalizeDirectorArtifactRef } from "./DirectorArtifactLedger";
 import {

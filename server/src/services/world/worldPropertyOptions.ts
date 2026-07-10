@@ -1,12 +1,12 @@
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
-import type { WorldLayerKey } from "@ai-novel/shared/types/world";
+import type { LLMProvider } from "@ai-novel/shared";
+import type { WorldLayerKey } from "@ai-novel/shared";
 import type {
   WorldPropertyChoice,
   WorldOptionRefinementLevel,
   WorldPropertyOption,
   WorldReferenceAnchor,
   WorldReferenceMode,
-} from "@ai-novel/shared/types/worldWizard";
+} from "@ai-novel/shared";
 import { runStructuredPrompt } from "../../prompting/core/promptRunner";
 import { worldPropertyOptionsPrompt } from "../../prompting/prompts/world/world.prompts";
 

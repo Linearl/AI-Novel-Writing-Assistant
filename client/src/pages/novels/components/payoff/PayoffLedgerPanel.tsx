@@ -9,7 +9,7 @@ import type {
   PayoffLedgerItem,
   PayoffLedgerNormalizedStatus,
   PayoffLedgerSummary,
-} from "@ai-novel/shared/types/novel";
+} from "@ai-novel/shared";
 
 /* ------------------------------------------------------------------ */
 /*  Constants                                                          */

@@ -1,9 +1,9 @@
 import { useCallback, useMemo, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import type { NovelRiskRecord, RiskAssessment, RiskStatus } from "@ai-novel/shared/types/novelRisk";
+import type { NovelRiskRecord, RiskAssessment, RiskStatus } from "@ai-novel/shared";
 import { apiClient } from "@/api/client";
 import { queryKeys } from "@/api/queryKeys";
-import type { ApiResponse } from "@ai-novel/shared/types/api";
+import type { ApiResponse } from "@ai-novel/shared";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";

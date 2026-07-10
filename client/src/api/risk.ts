@@ -5,8 +5,8 @@ import type {
   RiskStatus,
   RiskType,
   RiskSeverity,
-} from "@ai-novel/shared/types/novelRisk";
-import type { ApiResponse } from "@ai-novel/shared/types/api";
+} from "@ai-novel/shared";
+import type { ApiResponse } from "@ai-novel/shared";
 import { apiClient } from "./client";
 
 export interface RiskExportResult {

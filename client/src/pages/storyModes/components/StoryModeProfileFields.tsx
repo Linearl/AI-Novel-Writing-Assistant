@@ -1,4 +1,4 @@
-import type { StoryModeProfile } from "@ai-novel/shared/types/storyMode";
+import type { StoryModeProfile } from "@ai-novel/shared";
 import { Textarea } from "@/components/ui/textarea";
 
 function linesToList(value: string): string[] {

@@ -1,4 +1,4 @@
-import type { DirectorConfirmRequest } from "@ai-novel/shared/types/novelDirector";
+import type { DirectorConfirmRequest } from "@ai-novel/shared";
 import { prisma } from "../../../../db/prisma";
 import { buildNovelEditResumeTarget } from "../../workflow/novelWorkflow.shared";
 import { getChapterTitleDiversityIssue } from "../../volume/chapterTitleDiversity";

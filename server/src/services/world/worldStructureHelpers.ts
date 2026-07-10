@@ -3,7 +3,7 @@
  * Extracted from worldStructure.ts for modularity.
  */
 
-import type { WorldLocation, WorldRule } from "@ai-novel/shared/types/world";
+import type { WorldLocation, WorldRule } from "@ai-novel/shared";
 import { safeParseJSON } from "../../platform/json";
 
 /* ------------------------------------------------------------------ */

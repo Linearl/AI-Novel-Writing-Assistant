@@ -1,4 +1,4 @@
-import type { UnifiedTaskSummary } from "@ai-novel/shared/types/task";
+import type { UnifiedTaskSummary } from "@ai-novel/shared";
 import { Badge } from "@/components/ui/badge";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

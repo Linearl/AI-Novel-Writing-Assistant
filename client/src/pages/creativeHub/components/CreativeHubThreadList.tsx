@@ -1,4 +1,4 @@
-import type { CreativeHubThread } from "@ai-novel/shared/types/creativeHub";
+import type { CreativeHubThread } from "@ai-novel/shared";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 

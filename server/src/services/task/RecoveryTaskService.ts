@@ -2,7 +2,7 @@ import type {
   RecoverableTaskListResponse,
   RecoverableTaskSummary,
   TaskKind,
-} from "@ai-novel/shared/types/task";
+} from "@ai-novel/shared";
 import { prisma } from "../../db/prisma";
 import { AppError } from "../../middleware/errorHandler";
 import { bookAnalysisService } from "../bookAnalysis/BookAnalysisService";

@@ -1,9 +1,9 @@
-import type { ApiResponse } from "@ai-novel/shared/types/api";
-import type { BookAnalysisSectionKey } from "@ai-novel/shared/types/bookAnalysis";
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
-import type { NovelExportFormat, NovelExportScope } from "@ai-novel/shared/types/novelExport";
-import type { TitleFactorySuggestion } from "@ai-novel/shared/types/title";
-import type { NovelCreateResourceRecommendation } from "@ai-novel/shared/types/novelResourceRecommendation";
+import type { ApiResponse } from "@ai-novel/shared";
+import type { BookAnalysisSectionKey } from "@ai-novel/shared";
+import type { LLMProvider } from "@ai-novel/shared";
+import type { NovelExportFormat, NovelExportScope } from "@ai-novel/shared";
+import type { TitleFactorySuggestion } from "@ai-novel/shared";
+import type { NovelCreateResourceRecommendation } from "@ai-novel/shared";
 import type {
   AIFreedom,
   Chapter,
@@ -14,7 +14,7 @@ import type {
   PacePreference,
   ProjectMode,
   ProjectProgressStatus,
-} from "@ai-novel/shared/types/novel";
+} from "@ai-novel/shared";
 import { apiClient } from "../client";
 import {
   buildNovelExportFallbackFileName,

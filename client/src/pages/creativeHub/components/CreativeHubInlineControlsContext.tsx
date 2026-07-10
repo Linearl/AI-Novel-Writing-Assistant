@@ -1,6 +1,6 @@
 import { createContext, useContext, type PropsWithChildren } from "react";
-import type { FailureDiagnostic } from "@ai-novel/shared/types/agent";
-import type { CreativeHubInterrupt } from "@ai-novel/shared/types/creativeHub";
+import type { FailureDiagnostic } from "@ai-novel/shared";
+import type { CreativeHubInterrupt } from "@ai-novel/shared";
 
 interface CreativeHubInlineControlsValue {
   interrupt?: CreativeHubInterrupt;

@@ -6,8 +6,8 @@ import type {
   PayoffLedgerSourceRef,
   PayoffLedgerStatus,
   PayoffLedgerSummary,
-} from "@ai-novel/shared/types/payoffLedger";
-import { NORMALIZED_STATUS_MAP } from "@ai-novel/shared/types/payoffLedger";
+} from "@ai-novel/shared";
+import { NORMALIZED_STATUS_MAP } from "@ai-novel/shared";
 
 type PayoffLedgerRowLike = {
   id: string;

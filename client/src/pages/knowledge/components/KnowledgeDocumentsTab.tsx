@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import type { KnowledgeDocumentStatus, KnowledgeDocumentSummary } from "@ai-novel/shared/types/knowledge";
+import type { KnowledgeDocumentStatus, KnowledgeDocumentSummary } from "@ai-novel/shared";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";

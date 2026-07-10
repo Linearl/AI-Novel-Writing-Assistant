@@ -11,7 +11,7 @@ import {
   ReferenceLine,
   ResponsiveContainer,
 } from "recharts";
-import type { PaceCurveData, PaceCurveVolume } from "@ai-novel/shared/types/novel";
+import type { PaceCurveData, PaceCurveVolume } from "@ai-novel/shared";
 import { getPaceCurveData } from "@/api/novel/paceCurve";
 import { queryKeys } from "@/api/queryKeys";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

@@ -1,6 +1,6 @@
 import { useMutation, type QueryClient } from "@tanstack/react-query";
-import type { PipelineRepairMode, PipelineRunMode, VolumePlanDocument } from "@ai-novel/shared/types/novel";
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
+import type { PipelineRepairMode, PipelineRunMode, VolumePlanDocument } from "@ai-novel/shared";
+import type { LLMProvider } from "@ai-novel/shared";
 import {
   createNovelChapter,
   generateChapterHook,

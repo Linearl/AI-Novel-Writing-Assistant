@@ -2,8 +2,8 @@ import type {
   StateChangeProposal,
   StateCommitResult,
   StateVersionRecord,
-} from "@ai-novel/shared/types/canonicalState";
-import { characterResourceUpdatePayloadSchema } from "@ai-novel/shared/types/characterResource";
+} from "@ai-novel/shared";
+import { characterResourceUpdatePayloadSchema } from "@ai-novel/shared";
 import type { Prisma } from "@prisma/client";
 import { prisma } from "../../../db/prisma";
 import { characterResourceLedgerService } from "../characterResource/CharacterResourceLedgerService";

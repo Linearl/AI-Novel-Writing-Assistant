@@ -5,7 +5,7 @@ import type {
   VolumePlanningReadiness,
   VolumeStrategyPlan,
   VolumeSyncPreview,
-} from "@ai-novel/shared/types/novel";
+} from "@ai-novel/shared";
 
 export interface ExistingOutlineChapter {
   id: string;

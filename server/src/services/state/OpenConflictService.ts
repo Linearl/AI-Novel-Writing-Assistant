@@ -1,4 +1,4 @@
-import type { AuditReport } from "@ai-novel/shared/types/novel";
+import type { AuditReport } from "@ai-novel/shared";
 import { prisma } from "../../db/prisma";
 import type { StateDiffConflictCandidate } from "./stateConflictDetection";
 

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { ChapterEditStyleForkResult } from "@ai-novel/shared/types/styleEngine";
+import type { ChapterEditStyleForkResult } from "@ai-novel/shared";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,

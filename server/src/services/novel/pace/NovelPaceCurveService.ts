@@ -1,4 +1,4 @@
-import type { PaceCurveData } from "@ai-novel/shared/types/novel";
+import type { PaceCurveData } from "@ai-novel/shared";
 import { prisma } from "../../../db/prisma";
 
 const WRITTEN_GENERATION_STATES = new Set(["drafted", "reviewed", "repaired", "approved", "published"]);

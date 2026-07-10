@@ -14,8 +14,8 @@ import type {
   DirectorRunMode,
   DirectorSessionState,
   DirectorTaskNotice,
-} from "@ai-novel/shared/types/novelDirector";
-import type { DirectorRuntimeSnapshot } from "@ai-novel/shared/types/directorRuntime";
+} from "@ai-novel/shared";
+import type { DirectorRuntimeSnapshot } from "@ai-novel/shared";
 import {
   DIRECTOR_CORRECTION_PRESETS,
   DIRECTOR_MAX_TARGET_CHAPTER_COUNT,
@@ -23,17 +23,17 @@ import {
   buildFullBookAutopilotExecutionPlan,
   isDirectorAutoExecutionRunMode,
   isFullBookAutopilotRunMode,
-} from "@ai-novel/shared/types/novelDirector";
+} from "@ai-novel/shared";
 import {
   buildFullDirectorAutoApprovalConfig,
   normalizeDirectorAutoApprovalConfig,
   type DirectorAutoApprovalConfig,
-} from "@ai-novel/shared/types/autoDirectorApproval";
-import type { BookContractDraft } from "@ai-novel/shared/types/novelWorkflow";
-import type { TitleFactorySuggestion } from "@ai-novel/shared/types/title";
+} from "@ai-novel/shared";
+import type { BookContractDraft } from "@ai-novel/shared";
+import type { TitleFactorySuggestion } from "@ai-novel/shared";
 import { titleGenerationService } from "../../../title/TitleGenerationService";
 import { isNearDuplicateTitle } from "../../../title/titleGeneration.shared";
-import type { NovelWorkflowResumeTarget } from "@ai-novel/shared/types/novelWorkflow";
+import type { NovelWorkflowResumeTarget } from "@ai-novel/shared";
 import type {
   DirectorBookContractParsed,
   DirectorCandidateResponse,

@@ -1,11 +1,11 @@
-import type { ApiResponse } from "@ai-novel/shared/types/api";
-import type { DirectorCommandAcceptedResponse } from "@ai-novel/shared/types/directorRuntime";
-import type { DirectorContinuationMode } from "@ai-novel/shared/types/novelDirector";
+import type { ApiResponse } from "@ai-novel/shared";
+import type { DirectorCommandAcceptedResponse } from "@ai-novel/shared";
+import type { DirectorContinuationMode } from "@ai-novel/shared";
 import type {
   NovelWorkflowCheckpoint,
   NovelWorkflowStage,
-} from "@ai-novel/shared/types/novelWorkflow";
-import type { TaskStatus, UnifiedTaskDetail } from "@ai-novel/shared/types/task";
+} from "@ai-novel/shared";
+import type { TaskStatus, UnifiedTaskDetail } from "@ai-novel/shared";
 import { apiClient } from "./client";
 
 export async function bootstrapNovelWorkflow(payload: {

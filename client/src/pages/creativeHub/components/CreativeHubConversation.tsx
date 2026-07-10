@@ -4,8 +4,8 @@ import {
   ThreadPrimitive,
   type AssistantRuntime,
 } from "@assistant-ui/react";
-import type { FailureDiagnostic } from "@ai-novel/shared/types/agent";
-import type { CreativeHubInterrupt } from "@ai-novel/shared/types/creativeHub";
+import type { FailureDiagnostic } from "@ai-novel/shared";
+import type { CreativeHubInterrupt } from "@ai-novel/shared";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CreativeHubInlineControlsProvider } from "./CreativeHubInlineControlsContext";

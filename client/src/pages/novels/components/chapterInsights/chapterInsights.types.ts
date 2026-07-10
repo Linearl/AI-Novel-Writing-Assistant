@@ -1,7 +1,7 @@
-import type { ChapterRuntimePackage } from "@ai-novel/shared/types/chapterRuntime";
-import type { Chapter, StoryPlan, StoryStateSnapshot } from "@ai-novel/shared/types/novel";
-import type { CharacterResourceContext } from "@ai-novel/shared/types/characterResource";
-import type { TimelineCheckReport } from "@ai-novel/shared/types/timeline";
+import type { ChapterRuntimePackage } from "@ai-novel/shared";
+import type { Chapter, StoryPlan, StoryStateSnapshot } from "@ai-novel/shared";
+import type { CharacterResourceContext } from "@ai-novel/shared";
+import type { TimelineCheckReport } from "@ai-novel/shared";
 import type { ChapterTimelineViewData, ChapterTabViewProps } from "../NovelEditView.types";
 
 export type TimelineCheckSummary =

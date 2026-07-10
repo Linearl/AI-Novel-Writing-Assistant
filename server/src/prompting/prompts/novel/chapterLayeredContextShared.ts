@@ -1,8 +1,8 @@
 import type {
   ChapterWriteContext,
   GenerationContextPackage,
-} from "@ai-novel/shared/types/chapterRuntime";
-import { resolveLengthBudgetContract } from "@ai-novel/shared/types/chapterLengthControl";
+} from "@ai-novel/shared";
+import { resolveLengthBudgetContract } from "@ai-novel/shared";
 import { buildPlannerStyleContractSummaryText } from "../../../services/styleEngine/styleContractText";
 
 export function compactText(value: string | null | undefined, fallback = ""): string {

@@ -2,8 +2,8 @@ import type {
   DirectorBookAutomationAction,
   DirectorBookAutomationDisplayState,
   DirectorBookAutomationProjection,
-} from "@ai-novel/shared/types/directorRuntime";
-import { getDirectorNodeDisplayLabel } from "@ai-novel/shared/types/directorRuntime";
+} from "@ai-novel/shared";
+import { getDirectorNodeDisplayLabel } from "@ai-novel/shared";
 import {
   Activity,
   AlertTriangle,

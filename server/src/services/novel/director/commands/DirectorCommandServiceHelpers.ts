@@ -3,7 +3,7 @@ import type {
   DirectorCommandAcceptedResponse,
   DirectorRunCommandStatus,
   DirectorRunCommandType,
-} from "@ai-novel/shared/types/directorRuntime";
+} from "@ai-novel/shared";
 import type {
   DirectorConfirmRequest,
   DirectorContinuationMode,
@@ -12,8 +12,8 @@ import type {
   DirectorCandidatesRequest,
   DirectorRefinementRequest,
   DirectorTakeoverRequest,
-} from "@ai-novel/shared/types/novelDirector";
-import type { DirectorRuntimePolicyUpdateRequest } from "@ai-novel/shared/types/directorRuntime";
+} from "@ai-novel/shared";
+import type { DirectorRuntimePolicyUpdateRequest } from "@ai-novel/shared";
 
 export interface DirectorCommandPayload {
   candidatesRequest?: DirectorCandidatesRequest;

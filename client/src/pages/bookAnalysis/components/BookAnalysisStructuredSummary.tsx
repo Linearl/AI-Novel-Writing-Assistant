@@ -1,7 +1,7 @@
 import {
   BOOK_ANALYSIS_STRUCTURED_FIELD_LABELS,
   type BookAnalysisSection,
-} from "@ai-novel/shared/types/bookAnalysis";
+} from "@ai-novel/shared";
 
 interface SummaryRow {
   key: string;

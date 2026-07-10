@@ -1,5 +1,5 @@
-import type { CharacterHardFacts } from "@ai-novel/shared/types/novel";
-import type { GenerationContextPackage } from "@ai-novel/shared/types/chapterRuntime";
+import type { CharacterHardFacts } from "@ai-novel/shared";
+import type { GenerationContextPackage } from "@ai-novel/shared";
 
 export function normalizeCharacterProhibitions(value: unknown): string[] {
   if (!Array.isArray(value)) {

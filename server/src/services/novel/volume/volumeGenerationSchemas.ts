@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { chapterSceneCardSchema } from "@ai-novel/shared/types/chapterLengthControl";
-import type { VolumeCountRange } from "@ai-novel/shared/types/novel";
-import { MAX_VOLUME_COUNT } from "@ai-novel/shared/types/volumePlanning";
+import { chapterSceneCardSchema } from "@ai-novel/shared";
+import type { VolumeCountRange } from "@ai-novel/shared";
+import { MAX_VOLUME_COUNT } from "@ai-novel/shared";
 
 function normalizeObjectAlias(raw: unknown, aliasMap: Record<string, string[]>): unknown {
   if (!raw || typeof raw !== "object" || Array.isArray(raw)) {

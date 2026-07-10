@@ -1,11 +1,11 @@
 import type {
   WorldSkeletonGenerationCounts,
   WorldSkeletonPreset,
-} from "@ai-novel/shared/types/worldWizard";
+} from "@ai-novel/shared";
 import {
   WORLD_SKELETON_COUNT_LIMITS,
   WORLD_SKELETON_PRESET_COUNTS,
-} from "@ai-novel/shared/types/worldWizard";
+} from "@ai-novel/shared";
 import { Button } from "@/components/ui/button";
 
 const PRESET_CARDS: Array<{

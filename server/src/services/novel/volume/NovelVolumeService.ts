@@ -7,7 +7,7 @@ import type {
   VolumePlanVersion,
   VolumePlanVersionSummary,
   VolumeSyncPreview,
-} from "@ai-novel/shared/types/novel";
+} from "@ai-novel/shared";
 import { logger } from "../../../services/logging/LoggerService";
 import type { Prisma } from "@prisma/client";
 import { novelEventBus } from "../../../events";

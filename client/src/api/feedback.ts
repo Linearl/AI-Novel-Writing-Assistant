@@ -1,10 +1,10 @@
-import type { ApiResponse } from "@ai-novel/shared/types/api";
+import type { ApiResponse } from "@ai-novel/shared";
 import type {
   FeedbackListItem,
   FeedbackDetail,
   FeedbackComment,
   FeedbackListResponse,
-} from "@ai-novel/shared/types/feedback";
+} from "@ai-novel/shared";
 import { apiClient } from "./client";
 
 export async function submitFeedback(payload: {

@@ -2,7 +2,7 @@ import type {
   TaskStatus,
   UnifiedTaskStep,
   UnifiedTaskSummary,
-} from "@ai-novel/shared/types/task";
+} from "@ai-novel/shared";
 
 export interface ListTasksFilters {
   kind?: "book_analysis" | "novel_pipeline" | "knowledge_document" | "image_generation" | "agent_run" | "novel_workflow" | "style_extraction";

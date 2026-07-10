@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import type { ChapterRuntimePackage } from "@ai-novel/shared/types/chapterRuntime";
-import type { Chapter, StoryPlan } from "@ai-novel/shared/types/novel";
+import type { ChapterRuntimePackage } from "@ai-novel/shared";
+import type { Chapter, StoryPlan } from "@ai-novel/shared";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { chapterStatusLabel, generationStateLabel, resolveDisplayedChapterStatus } from "../chapterExecution.shared";

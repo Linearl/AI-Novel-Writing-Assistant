@@ -1,8 +1,8 @@
 import type {
   DirectorAutoExecutionState,
   DirectorConfirmRequest,
-} from "@ai-novel/shared/types/novelDirector";
-import { isFullBookAutopilotRunMode } from "@ai-novel/shared/types/novelDirector";
+} from "@ai-novel/shared";
+import { isFullBookAutopilotRunMode } from "@ai-novel/shared";
 import { parsePipelinePayload } from "../../pipelineJobState";
 import {
   buildDirectorAutoExecutionPausedLabel,

@@ -1,9 +1,9 @@
 import { Router } from "express";
-import type { ApiResponse } from "@ai-novel/shared/types/api";
+import type { ApiResponse } from "@ai-novel/shared";
 import { z } from "zod";
 import {
   AUTO_DIRECTOR_FOLLOW_UP_REASONS,
-} from "@ai-novel/shared/types/autoDirectorFollowUp";
+} from "@ai-novel/shared";
 import { authMiddleware } from "../middleware/auth";
 import { validate } from "../middleware/validate";
 import { AutoDirectorFollowUpActionExecutor } from "../services/task/autoDirectorFollowUps/AutoDirectorFollowUpActionExecutor";

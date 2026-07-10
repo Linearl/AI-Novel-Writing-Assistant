@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import type { BookAnalysis } from "@ai-novel/shared/types/bookAnalysis";
-import type { KnowledgeDocumentDetail, KnowledgeDocumentSummary } from "@ai-novel/shared/types/knowledge";
-import type { StyleExtractionSourceProcessingMode, StyleTemplate } from "@ai-novel/shared/types/styleEngine";
-import type { UnifiedTaskDetail } from "@ai-novel/shared/types/task";
+import type { BookAnalysis } from "@ai-novel/shared";
+import type { KnowledgeDocumentDetail, KnowledgeDocumentSummary } from "@ai-novel/shared";
+import type { StyleExtractionSourceProcessingMode, StyleTemplate } from "@ai-novel/shared";
+import type { UnifiedTaskDetail } from "@ai-novel/shared";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {

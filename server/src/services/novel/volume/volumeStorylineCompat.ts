@@ -5,7 +5,7 @@ import type {
   VolumePlan,
   VolumePlanDiff,
   VolumePlanVersion,
-} from "@ai-novel/shared/types/novel";
+} from "@ai-novel/shared";
 import {
   buildDerivedOutlineFromVolumes,
   buildFallbackVolumesFromLegacy,

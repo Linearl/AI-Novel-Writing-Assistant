@@ -1,4 +1,4 @@
-import type { VolumeBeatSheet } from "@ai-novel/shared/types/novel";
+import type { VolumeBeatSheet } from "@ai-novel/shared";
 
 export function parseBeatSheetChapterSpan(chapterSpanHint: string): { start: number; end: number } | null {
   const matches = Array.from(chapterSpanHint.matchAll(/\d+/g), (match) => Number(match[0]));

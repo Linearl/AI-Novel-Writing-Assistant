@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { z } from "zod";
-import { NOVEL_EXPORT_FORMAT_VALUES, NOVEL_EXPORT_SCOPE_VALUES } from "@ai-novel/shared/types/novelExport";
+import { NOVEL_EXPORT_FORMAT_VALUES, NOVEL_EXPORT_SCOPE_VALUES } from "@ai-novel/shared";
 import { authMiddleware } from "../../../middleware/auth";
 import { validate } from "../../../middleware/validate";
 import { logger } from "../../../services/logging/LoggerService";

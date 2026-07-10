@@ -4,11 +4,11 @@ import type {
   VolumeGenerationScopeInput,
   VolumePlan,
   VolumePlanDocument,
-} from "@ai-novel/shared/types/novel";
+} from "@ai-novel/shared";
 import {
   normalizeChapterScenePlan,
   serializeChapterScenePlan,
-} from "@ai-novel/shared/types/chapterLengthControl";
+} from "@ai-novel/shared";
 import { runStructuredPrompt } from "../../../prompting/core/promptRunner";
 import { volumeChapterExecutionContractPrompt } from "../../../prompting/prompts/novel/volume/chapterDetail.prompts";
 import { buildVolumeChapterDetailContextBlocks } from "../../../prompting/prompts/novel/volume/contextBlocks";

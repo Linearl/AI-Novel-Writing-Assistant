@@ -1,6 +1,6 @@
-﻿import type { NovelAutoDirectorTaskSummary } from "@ai-novel/shared/types/novel";
-import type { NovelWorkflowCheckpoint } from "@ai-novel/shared/types/novelWorkflow";
-import type { TaskStatus } from "@ai-novel/shared/types/task";
+﻿import type { NovelAutoDirectorTaskSummary } from "@ai-novel/shared";
+import type { NovelWorkflowCheckpoint } from "@ai-novel/shared";
+import type { TaskStatus } from "@ai-novel/shared";
 
 export type WorkflowBadgeVariant = "default" | "outline" | "secondary" | "destructive";
 

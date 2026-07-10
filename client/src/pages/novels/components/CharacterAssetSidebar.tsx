@@ -1,6 +1,6 @@
 import { useState } from "react";
-import type { Character } from "@ai-novel/shared/types/novel";
-import type { CharacterExitStatus } from "@ai-novel/shared/types/novelCharacter";
+import type { Character } from "@ai-novel/shared";
+import type { CharacterExitStatus } from "@ai-novel/shared";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CharacterExitBadge } from "@/components/character/CharacterExitBadge";

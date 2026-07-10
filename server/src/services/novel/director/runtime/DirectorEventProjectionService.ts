@@ -6,8 +6,8 @@ import type {
   DirectorTaskFactSummary,
   DirectorRuntimeVisibleRiskBadge,
   DirectorWorkspaceInventory,
-} from "@ai-novel/shared/types/directorRuntime";
-import { classifyChapterQualityLoopRisk } from "@ai-novel/shared/types/chapterQualityLoop";
+} from "@ai-novel/shared";
+import { classifyChapterQualityLoopRisk } from "@ai-novel/shared";
 import {
   timestampOf,
   latestStep,

@@ -5,7 +5,7 @@ import type {
   NovelWorkflowMilestoneType,
   NovelWorkflowResumeTarget,
   NovelWorkflowStage,
-} from "@ai-novel/shared/types/novelWorkflow";
+} from "@ai-novel/shared";
 
 export const NOVEL_WORKFLOW_STAGE_LABELS: Record<NovelWorkflowStage, string> = {
   project_setup: "项目设定",

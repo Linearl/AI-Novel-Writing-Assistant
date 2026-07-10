@@ -12,14 +12,14 @@ import {
   type LangGraphInterruptState,
   type LangGraphStreamCallback,
 } from "@assistant-ui/react-langgraph";
-import type { FailureDiagnostic } from "@ai-novel/shared/types/agent";
+import type { FailureDiagnostic } from "@ai-novel/shared";
 import type {
   CreativeHubInterrupt,
   CreativeHubMessage,
   CreativeHubResourceBinding,
   CreativeHubTurnSummary,
-} from "@ai-novel/shared/types/creativeHub";
-import type { CreativeHubStreamFrame } from "@ai-novel/shared/types/api";
+} from "@ai-novel/shared";
+import type { CreativeHubStreamFrame } from "@ai-novel/shared";
 import { toast } from "@/components/ui/toast";
 import { streamCreativeHubRun } from "@/api/creativeHub";
 import {

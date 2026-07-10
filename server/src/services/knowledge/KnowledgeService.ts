@@ -2,7 +2,7 @@ import type {
   KnowledgeBindingTargetType,
   KnowledgeDocumentStatus,
   KnowledgeRecallTestResult,
-} from "@ai-novel/shared/types/knowledge";
+} from "@ai-novel/shared";
 import { prisma } from "../../db/prisma";
 import { ragServices } from "../rag";
 import {

@@ -1,7 +1,7 @@
 import { Annotation } from "@langchain/langgraph";
 import type { AgentRuntimeResult } from "../agents/types";
-import type { CreativeHubCheckpointRef, CreativeHubInterrupt, CreativeHubMessage, CreativeHubResourceBinding, CreativeHubThread } from "@ai-novel/shared/types/creativeHub";
-import type { FailureDiagnostic } from "@ai-novel/shared/types/agent";
+import type { CreativeHubCheckpointRef, CreativeHubInterrupt, CreativeHubMessage, CreativeHubResourceBinding, CreativeHubThread } from "@ai-novel/shared";
+import type { FailureDiagnostic } from "@ai-novel/shared";
 
 export const CreativeHubInterruptGraphState = Annotation.Root({
   invocationId: Annotation<string>(),

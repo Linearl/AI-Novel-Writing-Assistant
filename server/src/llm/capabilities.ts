@@ -2,7 +2,7 @@ import {
   isBuiltinLLMProvider,
   type BuiltinLLMProvider,
   type LLMProvider,
-} from "@ai-novel/shared/types/llm";
+} from "@ai-novel/shared";
 import {
   canUseForcedJsonOutput,
   resolveStructuredOutputProfile,

@@ -1,5 +1,5 @@
 import type { BaseMessageChunk } from "@langchain/core/messages";
-import type { QualityScore, ReviewIssue } from "@ai-novel/shared/types/novel";
+import type { QualityScore, ReviewIssue } from "@ai-novel/shared";
 import type { StreamDoneHelpers } from "../../../../llm/streaming";
 import { prisma } from "../../../../db/prisma";
 import { streamTextPrompt } from "../../../../prompting/core/promptRunner";

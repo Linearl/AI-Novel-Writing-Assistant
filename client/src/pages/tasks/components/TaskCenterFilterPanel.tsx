@@ -1,4 +1,4 @@
-import type { TaskKind, TaskStatus } from "@ai-novel/shared/types/task";
+import type { TaskKind, TaskStatus } from "@ai-novel/shared";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import type { TaskSortMode } from "../taskCenterUtils";

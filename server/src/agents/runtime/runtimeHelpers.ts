@@ -6,7 +6,7 @@ import type {
   ToolExecutionContext,
 } from "../types";
 import type { AgentToolError } from "../types";
-import type { AgentToolErrorCode } from "@ai-novel/shared/types/agent";
+import type { AgentToolErrorCode } from "@ai-novel/shared";
 
 export interface ToolExecutionResult {
   tool: ToolCall["tool"];

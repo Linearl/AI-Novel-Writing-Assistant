@@ -2,7 +2,7 @@ import {
   DIRECTOR_RUN_MODES,
   type DirectorCandidateBatch,
   type DirectorCandidatesRequest,
-} from "@ai-novel/shared/types/novelDirector";
+} from "@ai-novel/shared";
 import type { NovelWorkflowService } from "../../workflow/NovelWorkflowService";
 import {
   getDirectorLlmOptionsFromSeedPayload,

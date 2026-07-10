@@ -2,7 +2,7 @@ import type {
   DirectorBookAutomationArtifactSummary,
   DirectorBookAutomationArtifactTypeSummary,
   DirectorBookAutomationRecentArtifact,
-} from "@ai-novel/shared/types/directorRuntime";
+} from "@ai-novel/shared";
 import { prisma } from "../../../../db/prisma";
 
 export interface DirectorArtifactLedgerQueryRow {

@@ -1,4 +1,4 @@
-import type { NovelWorkflowResumeTarget } from "@ai-novel/shared/types/novelWorkflow";
+import type { NovelWorkflowResumeTarget } from "@ai-novel/shared";
 import { AppError } from "../../../../middleware/errorHandler";
 import {
   acquireScopedHighMemoryReservation,

@@ -1,8 +1,8 @@
 import type {
   NovelWorkflowCheckpoint,
   NovelWorkflowStage,
-} from "@ai-novel/shared/types/novelWorkflow";
-import type { TaskStatus } from "@ai-novel/shared/types/task";
+} from "@ai-novel/shared";
+import type { TaskStatus } from "@ai-novel/shared";
 import { syncNovelWorkflowStage } from "@/api/novelWorkflow";
 
 export function workflowStageFromTab(tab: string): NovelWorkflowStage {

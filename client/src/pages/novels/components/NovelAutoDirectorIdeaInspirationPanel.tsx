@@ -1,4 +1,4 @@
-import type { DirectorIdeaInspiration } from "@ai-novel/shared/types/novelDirector";
+import type { DirectorIdeaInspiration } from "@ai-novel/shared";
 import { Check, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AUTO_DIRECTOR_MOBILE_CLASSES } from "@/mobile/autoDirector";

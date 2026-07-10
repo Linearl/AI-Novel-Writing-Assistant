@@ -6,7 +6,7 @@ import type {
   StyleProfileFeature,
   StyleSourceType,
   StyleTemplate,
-} from "@ai-novel/shared/types/styleEngine";
+} from "@ai-novel/shared";
 import { prisma } from "../../db/prisma";
 import { ensureStyleEngineSeedData } from "./StyleEngineSeedService";
 import {

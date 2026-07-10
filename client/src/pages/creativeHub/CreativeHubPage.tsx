@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { ApiResponse } from "@ai-novel/shared/types/api";
-import type { CreativeHubResourceBinding, CreativeHubThread } from "@ai-novel/shared/types/creativeHub";
+import type { ApiResponse } from "@ai-novel/shared";
+import type { CreativeHubResourceBinding, CreativeHubThread } from "@ai-novel/shared";
 import type { LangChainMessage } from "@assistant-ui/react-langgraph";
 import { useSearchParams } from "react-router-dom";
 import { AlertTriangle } from "lucide-react";

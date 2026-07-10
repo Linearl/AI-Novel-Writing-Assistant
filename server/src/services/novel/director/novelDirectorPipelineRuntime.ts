@@ -1,15 +1,15 @@
-import type { CharacterCastOption, VolumePlanDocument } from "@ai-novel/shared/types/novel";
-import type { DirectorConfirmRequest } from "@ai-novel/shared/types/novelDirector";
+import type { CharacterCastOption, VolumePlanDocument } from "@ai-novel/shared";
+import type { DirectorConfirmRequest } from "@ai-novel/shared";
 import {
   isDirectorAutoExecutionRunMode,
   isFullBookAutopilotRunMode,
-} from "@ai-novel/shared/types/novelDirector";
+} from "@ai-novel/shared";
 import {
   normalizeDirectorAutoApprovalConfig,
   shouldAutoApproveDirectorApprovalPoint,
   shouldAutoApproveDirectorCheckpoint,
   type DirectorAutoApprovalPointCode,
-} from "@ai-novel/shared/types/autoDirectorApproval";
+} from "@ai-novel/shared";
 import type { BookContractService } from "../BookContractService";
 import type { CharacterPreparationService } from "../characterPrep/CharacterPreparationService";
 import { generateAutoCharacterCastDraft, persistCharacterCastOptionsDraft } from "../characterPrep/characterCastGeneration";

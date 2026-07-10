@@ -1,4 +1,4 @@
-import type { PayoffLedgerEvidence, PayoffLedgerSourceRef } from "@ai-novel/shared/types/payoffLedger";
+import type { PayoffLedgerEvidence, PayoffLedgerSourceRef } from "@ai-novel/shared";
 
 export interface NovelChapterReferenceSeed {
   id: string;

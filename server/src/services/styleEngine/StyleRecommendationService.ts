@@ -1,9 +1,9 @@
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
+import type { LLMProvider } from "@ai-novel/shared";
 import type {
   StyleProfile,
   StyleRecommendationCandidate,
   StyleRecommendationResult,
-} from "@ai-novel/shared/types/styleEngine";
+} from "@ai-novel/shared";
 import { prisma } from "../../db/prisma";
 import { runStructuredPrompt } from "../../prompting/core/promptRunner";
 import { styleRecommendationPrompt } from "../../prompting/prompts/style/style.prompts";

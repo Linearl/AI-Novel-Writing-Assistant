@@ -1,4 +1,4 @@
-import type { ApiResponse } from "@ai-novel/shared/types/api";
+import type { ApiResponse } from "@ai-novel/shared";
 import type {
   DirectorBookAutomationProjectionResponse,
   DirectorCommandResultResponse,
@@ -11,7 +11,7 @@ import type {
   DirectorManualEditImpactResponse,
   DirectorTaskSnapshotResponse,
   DirectorWorkspaceAnalysisResponse,
-} from "@ai-novel/shared/types/directorRuntime";
+} from "@ai-novel/shared";
 import type {
   DirectorContinuationMode,
   DirectorCandidatePatchRequest,
@@ -23,7 +23,7 @@ import type {
   DirectorRefinementRequest,
   DirectorTakeoverReadinessResponse,
   DirectorTakeoverRequest,
-} from "@ai-novel/shared/types/novelDirector";
+} from "@ai-novel/shared";
 import { apiClient } from "./client";
 
 export async function getDirectorTaskSnapshot(directorTaskId: string) {

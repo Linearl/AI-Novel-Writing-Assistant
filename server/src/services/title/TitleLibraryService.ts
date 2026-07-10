@@ -1,4 +1,4 @@
-import type { TitleLibraryEntry, TitleLibraryListResult } from "@ai-novel/shared/types/title";
+import type { TitleLibraryEntry, TitleLibraryListResult } from "@ai-novel/shared";
 import { prisma } from "../../db/prisma";
 import { AppError } from "../../middleware/errorHandler";
 

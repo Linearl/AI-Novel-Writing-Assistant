@@ -1,5 +1,5 @@
-import type { AutoDirectorFollowUpItem, AutoDirectorMutationActionCode } from "@ai-novel/shared/types/autoDirectorFollowUp";
-import type { AutoDirectorFollowUpSection } from "@ai-novel/shared/types/autoDirectorValidation";
+import type { AutoDirectorFollowUpItem, AutoDirectorMutationActionCode } from "@ai-novel/shared";
+import type { AutoDirectorFollowUpSection } from "@ai-novel/shared";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { AUTO_DIRECTOR_MOBILE_CLASSES } from "@/mobile/autoDirector";

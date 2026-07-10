@@ -1,7 +1,7 @@
 import { useState } from "react";
-import type { SSEFrame } from "@ai-novel/shared/types/api";
-import type { ChapterRuntimePackage } from "@ai-novel/shared/types/chapterRuntime";
-import type { AuditReport, Chapter, StoryStateSnapshot } from "@ai-novel/shared/types/novel";
+import type { SSEFrame } from "@ai-novel/shared";
+import type { ChapterRuntimePackage } from "@ai-novel/shared";
+import type { AuditReport, Chapter, StoryStateSnapshot } from "@ai-novel/shared";
 import { Link } from "react-router-dom";
 import AiButton from "@/components/common/AiButton";
 import { Badge } from "@/components/ui/badge";

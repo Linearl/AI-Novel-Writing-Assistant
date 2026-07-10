@@ -1,4 +1,4 @@
-import type { StyleExtractionPreset } from "@ai-novel/shared/types/styleEngine";
+import type { StyleExtractionPreset } from "@ai-novel/shared";
 import type { StyleCreationCoreDraft } from "./styleCreation";
 import { logger } from "../logging/LoggerService";
 

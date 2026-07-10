@@ -1,5 +1,5 @@
 import { HumanMessage, type BaseMessage } from "@langchain/core/messages";
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
+import type { LLMProvider } from "@ai-novel/shared";
 import { getLLM } from "../../llm/factory";
 import { invokeStructuredLlmDetailed } from "../../llm/structuredInvoke";
 import { toText } from "../../services/novel/novelP0Utils";

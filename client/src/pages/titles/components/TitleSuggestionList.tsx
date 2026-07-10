@@ -1,4 +1,4 @@
-import type { TitleFactorySuggestion } from "@ai-novel/shared/types/title";
+import type { TitleFactorySuggestion } from "@ai-novel/shared";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";

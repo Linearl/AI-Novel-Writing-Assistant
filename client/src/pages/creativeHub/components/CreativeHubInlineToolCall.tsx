@@ -5,7 +5,7 @@ import CreativeHubToolResultCard from "./CreativeHubToolResultCard";
 import CreativeHubDebugTraceCard, { type CreativeHubDebugTraceEntry } from "./CreativeHubDebugTraceCard";
 import CreativeHubTurnSummaryCard from "./CreativeHubTurnSummaryCard";
 import { useCreativeHubInlineControls } from "./CreativeHubInlineControlsContext";
-import type { CreativeHubTurnSummary } from "@ai-novel/shared/types/creativeHub";
+import type { CreativeHubTurnSummary } from "@ai-novel/shared";
 
 function formatArgs(argsText: string | undefined): string | null {
   const text = argsText?.trim();

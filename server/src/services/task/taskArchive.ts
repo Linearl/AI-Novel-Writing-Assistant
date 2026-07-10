@@ -1,4 +1,4 @@
-import type { TaskKind } from "@ai-novel/shared/types/task";
+import type { TaskKind } from "@ai-novel/shared";
 import { prisma } from "../../db/prisma";
 
 export async function archiveTask(taskKind: TaskKind, taskId: string): Promise<void> {

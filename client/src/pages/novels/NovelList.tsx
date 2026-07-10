@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
-import type { DirectorContinuationMode } from "@ai-novel/shared/types/novelDirector";
+import type { DirectorContinuationMode } from "@ai-novel/shared";
 import type {
   DirectorBookAutomationAction,
   DirectorBookAutomationProjection,
-} from "@ai-novel/shared/types/directorRuntime";
+} from "@ai-novel/shared";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { RotateCcw } from "lucide-react";

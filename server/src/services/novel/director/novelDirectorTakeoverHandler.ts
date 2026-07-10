@@ -1,6 +1,6 @@
 import { AppError } from "../../../middleware/errorHandler";
-import type { DirectorTakeoverRequest, DirectorTakeoverResponse } from "@ai-novel/shared/types/novelDirector";
-import { isFullBookAutopilotRunMode } from "@ai-novel/shared/types/novelDirector";
+import type { DirectorTakeoverRequest, DirectorTakeoverResponse } from "@ai-novel/shared";
+import { isFullBookAutopilotRunMode } from "@ai-novel/shared";
 import {
   buildDirectorWorkflowSeedPayload,
   applyDirectorRunModeContract,

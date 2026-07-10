@@ -1,4 +1,4 @@
-import type { StoryPlanRole } from "@ai-novel/shared/types/novel";
+import type { StoryPlanRole } from "@ai-novel/shared";
 
 export interface PlannerOutput {
   title?: string;

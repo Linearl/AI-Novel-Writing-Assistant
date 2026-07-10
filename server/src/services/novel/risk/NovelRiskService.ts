@@ -8,7 +8,7 @@ import type {
   RiskSeverity,
   RiskStatus,
   RiskType,
-} from "@ai-novel/shared/types/novelRisk";
+} from "@ai-novel/shared";
 
 function toRecord(row: any): NovelRiskRecord {
   return {

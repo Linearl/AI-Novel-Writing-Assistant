@@ -8,9 +8,9 @@ import type {
   DirectorTakeoverStartPhase,
   DirectorTakeoverStrategy,
   DirectorTakeoverStageReadiness,
-} from "@ai-novel/shared/types/novelDirector";
+} from "@ai-novel/shared";
 import type { DirectorTakeoverAssetSnapshot } from "./novelDirectorTakeoverHelpers";
-import { DIRECTOR_TAKEOVER_ENTRY_STEPS } from "@ai-novel/shared/types/novelDirector";
+import { DIRECTOR_TAKEOVER_ENTRY_STEPS } from "@ai-novel/shared";
 import type { DirectorTakeoverNovelContext } from "./novelDirectorTakeover";
 import type { DirectorTakeoverResolvedPlan } from "./novelDirectorTakeover";
 import {

@@ -3,7 +3,7 @@ import type {
   LanguageRules,
   NarrativeRules,
   RhythmRules,
-} from "@ai-novel/shared/types/styleEngine";
+} from "@ai-novel/shared";
 
 export interface DefaultTemplateDefinition {
   key: string;

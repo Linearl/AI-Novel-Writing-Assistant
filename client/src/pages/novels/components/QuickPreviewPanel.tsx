@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { PreviewChapter, QuickPreviewCandidate } from "@ai-novel/shared/types/novelQuickPreview";
+import type { PreviewChapter, QuickPreviewCandidate } from "@ai-novel/shared";
 import { useMutation } from "@tanstack/react-query";
 import { generatePreviewChapters, generateQuickPreview } from "@/api/novel/quickPreview";
 import AiButton from "@/components/common/AiButton";

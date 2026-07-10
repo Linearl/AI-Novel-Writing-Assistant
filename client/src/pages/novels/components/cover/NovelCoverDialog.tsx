@@ -4,10 +4,10 @@ import {
   DEFAULT_NOVEL_COVER_IMAGE_COUNT,
   DEFAULT_NOVEL_COVER_IMAGE_SIZE,
   type ImageAsset,
-} from "@ai-novel/shared/types/image";
+} from "@ai-novel/shared";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
+import type { LLMProvider } from "@ai-novel/shared";
 import { StatusBadge } from "@/components/ui/status-badge";
 import {
   deleteImageAsset,
@@ -26,7 +26,7 @@ import { getAPIKeySettings } from "@/api/settings";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import type { StoryWorldSliceView } from "@ai-novel/shared/types/storyWorldSlice";
+import type { StoryWorldSliceView } from "@ai-novel/shared";
 import type { NovelBasicFormState } from "../../novelBasicInfo.shared";
 import {
   buildNovelCoverDraftContext,

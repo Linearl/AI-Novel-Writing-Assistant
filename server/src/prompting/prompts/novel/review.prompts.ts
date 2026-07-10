@@ -2,7 +2,7 @@ import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 import { z } from "zod";
 import type { PromptAsset } from "../../core/promptTypes";
 import { renderSelectedContextBlocks } from "../../core/renderContextBlocks";
-import type { TensionLevel } from "@ai-novel/shared/types/novel";
+import type { TensionLevel } from "@ai-novel/shared";
 import { fullAuditOutputSchema } from "../../../services/audit/auditSchemas";
 import { chapterSummaryOutputSchema } from "../../../services/novel/chapterSummarySchemas";
 import { NOVEL_PROMPT_BUDGETS } from "./promptBudgetProfiles";

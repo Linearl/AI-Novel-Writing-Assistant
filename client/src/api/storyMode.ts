@@ -1,6 +1,6 @@
-import type { ApiResponse } from "@ai-novel/shared/types/api";
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
-import type { NovelStoryMode, StoryModeProfile } from "@ai-novel/shared/types/storyMode";
+import type { ApiResponse } from "@ai-novel/shared";
+import type { LLMProvider } from "@ai-novel/shared";
+import type { NovelStoryMode, StoryModeProfile } from "@ai-novel/shared";
 import { apiClient } from "./client";
 
 export interface StoryModeTreeNode extends NovelStoryMode {

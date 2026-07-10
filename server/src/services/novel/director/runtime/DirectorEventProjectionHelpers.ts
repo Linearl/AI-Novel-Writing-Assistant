@@ -10,12 +10,12 @@ import type {
   DirectorTaskFactSummary,
   DirectorStepRun,
   DirectorWorkspaceInventory,
-} from "@ai-novel/shared/types/directorRuntime";
+} from "@ai-novel/shared";
 import type {
   DirectorQualityLoopBudgetEntry,
   DirectorQualityLoopBudgetNextAction,
-} from "@ai-novel/shared/types/novelDirector";
-import { classifyChapterQualityLoopRisk } from "@ai-novel/shared/types/chapterQualityLoop";
+} from "@ai-novel/shared";
+import { classifyChapterQualityLoopRisk } from "@ai-novel/shared";
 import { resolveDirectorQualityLoopBudgetNextAction } from "./DirectorQualityLoopBudgetLedgerService";
 
 export function timestampOf(value?: string | null): number {

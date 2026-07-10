@@ -2,7 +2,7 @@ import { z } from "zod";
 import type {
   KnowledgeDocumentStatus,
   KnowledgeIndexStatus,
-} from "@ai-novel/shared/types/knowledge";
+} from "@ai-novel/shared";
 import {
   toolCountSchema,
   toolListLimitSchema,

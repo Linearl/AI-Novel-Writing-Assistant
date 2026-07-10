@@ -1,5 +1,5 @@
-import type { ApiResponse } from "@ai-novel/shared/types/api";
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
+import type { ApiResponse } from "@ai-novel/shared";
+import type { LLMProvider } from "@ai-novel/shared";
 import type {
   World,
   WorldBindingSupport,
@@ -12,7 +12,7 @@ import type {
   WorldStructureSectionKey,
   WorldTemplate,
   WorldVisualizationPayload,
-} from "@ai-novel/shared/types/world";
+} from "@ai-novel/shared";
 import type {
   WorldOptionRefinementLevel,
   WorldPropertyOption,
@@ -23,7 +23,7 @@ import type {
   WorldReferenceSeedBundle,
   WorldSkeletonGenerationOptions,
   WorldSkeletonGenerationPayload,
-} from "@ai-novel/shared/types/worldWizard";
+} from "@ai-novel/shared";
 import { apiClient } from "./client";
 
 const WORLD_GENERATE_ALL_TIMEOUT_MS = 3 * 60 * 1000;

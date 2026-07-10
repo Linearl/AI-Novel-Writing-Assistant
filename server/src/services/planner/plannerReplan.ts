@@ -1,4 +1,4 @@
-import type { AuditReport, ReplanResult, StoryPlan } from "@ai-novel/shared/types/novel";
+import type { AuditReport, ReplanResult, StoryPlan } from "@ai-novel/shared";
 import type { GenerateChapterPlanOptions } from "./plannerChapterGeneration";
 import { prisma } from "../../db/prisma";
 import { contextAssemblyService } from "../novel/production/ContextAssemblyService";

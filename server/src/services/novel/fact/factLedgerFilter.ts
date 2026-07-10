@@ -1,7 +1,7 @@
 import type {
   ChapterExecutionMissingObligation,
   ChapterExecutionObligationCoverage,
-} from "@ai-novel/shared/types/chapterRuntime";
+} from "@ai-novel/shared";
 import type { NovelFactWriteItem } from "./NovelFactService";
 
 export type FactLedgerExclusionReason =

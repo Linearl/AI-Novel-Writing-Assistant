@@ -4,10 +4,10 @@ import type {
   DirectorTakeoverEntryStep,
   DirectorTakeoverRequest,
   DirectorTakeoverResponse,
-} from "@ai-novel/shared/types/novelDirector";
-import { isFullBookAutopilotRunMode } from "@ai-novel/shared/types/novelDirector";
+} from "@ai-novel/shared";
+import { isFullBookAutopilotRunMode } from "@ai-novel/shared";
 import { buildNovelEditResumeTarget } from "../../workflow/novelWorkflow.shared";
-import type { DirectorConfirmRequest } from "@ai-novel/shared/types/novelDirector";
+import type { DirectorConfirmRequest } from "@ai-novel/shared";
 import { buildDirectorSessionState } from "./novelDirectorHelpers";
 import {
   resolveDirectorTakeoverPlan,

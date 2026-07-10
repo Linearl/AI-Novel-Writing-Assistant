@@ -1,12 +1,12 @@
-import type { VolumePlanDocument } from "@ai-novel/shared/types/novel";
+import type { VolumePlanDocument } from "@ai-novel/shared";
 import type {
   DirectorConfirmRequest,
   DirectorTaskNotice,
-} from "@ai-novel/shared/types/novelDirector";
+} from "@ai-novel/shared";
 import {
   isDirectorAutoExecutionRunMode,
   isFullBookAutopilotRunMode,
-} from "@ai-novel/shared/types/novelDirector";
+} from "@ai-novel/shared";
 import type { VolumeGenerationPhaseEvent } from "../../volume/volumeModels";
 import { getChapterTitleDiversityIssue } from "../../volume/chapterTitleDiversity";
 import { buildNovelEditResumeTarget } from "../../workflow/novelWorkflow.shared";

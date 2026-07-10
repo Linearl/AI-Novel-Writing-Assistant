@@ -1,4 +1,4 @@
-import type { AntiAiRule, StyleDetectionReport } from "@ai-novel/shared/types/styleEngine";
+import type { AntiAiRule, StyleDetectionReport } from "@ai-novel/shared";
 import { FlaskConical, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

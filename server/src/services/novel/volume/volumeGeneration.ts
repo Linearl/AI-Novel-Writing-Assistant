@@ -2,7 +2,7 @@ import type {
   VolumeChapterPlan,
   VolumePlan,
   VolumePlanDocument,
-} from "@ai-novel/shared/types/novel";
+} from "@ai-novel/shared";
 import { prisma } from "../../../db/prisma";
 import { runStructuredPrompt } from "../../../prompting/core/promptRunner";
 import {

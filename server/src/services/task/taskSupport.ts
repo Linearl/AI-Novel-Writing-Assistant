@@ -1,4 +1,4 @@
-import type { TaskKind, TaskStatus } from "@ai-novel/shared/types/task";
+import type { TaskKind, TaskStatus } from "@ai-novel/shared";
 import {
   extractStructuredOutputErrorCategory,
 } from "../../llm/structuredOutput";

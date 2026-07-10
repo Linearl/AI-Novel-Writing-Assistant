@@ -1,4 +1,4 @@
-import type { WorldConsistencyIssue, WorldConsistencyReport } from "@ai-novel/shared/types/world";
+import type { WorldConsistencyIssue, WorldConsistencyReport } from "@ai-novel/shared";
 
 const ISSUE_CODE_LABELS: Record<string, string> = {
   THEMATIC_INCOHERENCE: "主题框架不一致",

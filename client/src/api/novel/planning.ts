@@ -1,5 +1,5 @@
-import type { ApiResponse } from "@ai-novel/shared/types/api";
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
+import type { ApiResponse } from "@ai-novel/shared";
+import type { LLMProvider } from "@ai-novel/shared";
 import type {
   AuditIssue,
   AuditReport,
@@ -10,7 +10,7 @@ import type {
   ReviewIssue,
   StoryPlan,
   StoryStateSnapshot,
-} from "@ai-novel/shared/types/novel";
+} from "@ai-novel/shared";
 import { apiClient } from "../client";
 import type { DraftOptimizePreview } from "./shared";
 

@@ -2,8 +2,8 @@ import type {
   DirectorAutoExecutionState,
   DirectorCircuitBreakerState,
   DirectorConfirmRequest,
-} from "@ai-novel/shared/types/novelDirector";
-import type { PipelineJobStatus } from "@ai-novel/shared/types/novel";
+} from "@ai-novel/shared";
+import type { PipelineJobStatus } from "@ai-novel/shared";
 import { logger } from "../../../../services/logging/LoggerService";
 import {
   buildDirectorAutoExecutionDeferredQualityState,

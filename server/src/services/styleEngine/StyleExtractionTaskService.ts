@@ -1,8 +1,8 @@
 import { Prisma } from "@prisma/client";
 import type {
   StyleExtractionSourceProcessingMode,
-} from "@ai-novel/shared/types/styleEngine";
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
+} from "@ai-novel/shared";
+import type { LLMProvider } from "@ai-novel/shared";
 import { prisma } from "../../db/prisma";
 import { AppError } from "../../middleware/errorHandler";
 import { getStyleEngineRuntimeSettings } from "../settings/StyleEngineRuntimeSettingsService";

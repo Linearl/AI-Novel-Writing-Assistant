@@ -2,7 +2,7 @@ import type {
   AutoDirectorAction,
   AutoDirectorFollowUpDetail,
   AutoDirectorFollowUpItem,
-} from "@ai-novel/shared/types/autoDirectorFollowUp";
+} from "@ai-novel/shared";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

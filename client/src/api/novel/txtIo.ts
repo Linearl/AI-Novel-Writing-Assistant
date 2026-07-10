@@ -1,4 +1,4 @@
-import type { ApiResponse } from "@ai-novel/shared/types/api";
+import type { ApiResponse } from "@ai-novel/shared";
 import { apiClient } from "../client";
 import { buildExportTimestamp, extractFileName } from "./shared";
 

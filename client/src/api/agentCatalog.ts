@@ -1,5 +1,5 @@
-import type { ApiResponse } from "@ai-novel/shared/types/api";
-import type { AgentCatalog } from "@ai-novel/shared/types/agent";
+import type { ApiResponse } from "@ai-novel/shared";
+import type { AgentCatalog } from "@ai-novel/shared";
 import { apiClient } from "./client";
 
 export async function getAgentCatalog() {

@@ -1,9 +1,9 @@
-import type { DirectorIdeaInspiration, DirectorRunMode, DirectorWorldSetupMode } from "@ai-novel/shared/types/novelDirector";
+import type { DirectorIdeaInspiration, DirectorRunMode, DirectorWorldSetupMode } from "@ai-novel/shared";
 import type {
   DirectorAutoApprovalGroup,
   DirectorAutoApprovalPoint,
-} from "@ai-novel/shared/types/autoDirectorApproval";
-import type { StyleIntentSummary } from "@ai-novel/shared/types/styleEngine";
+} from "@ai-novel/shared";
+import type { StyleIntentSummary } from "@ai-novel/shared";
 import type { NovelBasicFormState } from "../novelBasicInfo.shared";
 import type { DirectorAutoExecutionDraftState } from "./directorAutoExecutionPlan.shared";
 import NovelAutoDirectorSetupPanel from "./NovelAutoDirectorSetupPanel";

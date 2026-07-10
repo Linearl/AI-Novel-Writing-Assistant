@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { z } from "zod";
-import type { ApiResponse } from "@ai-novel/shared/types/api";
+import type { ApiResponse } from "@ai-novel/shared";
 import type {
   DirectorBookAutomationProjectionResponse,
   DirectorCommandAcceptedResponse,
@@ -10,7 +10,7 @@ import type {
   DirectorTaskFactInspectionResponse,
   DirectorTaskSnapshotResponse,
   DirectorWorkspaceAnalysisResponse,
-} from "@ai-novel/shared/types/directorRuntime";
+} from "@ai-novel/shared";
 import {
   DIRECTOR_AUTO_EXECUTION_MODES,
   DIRECTOR_CORRECTION_PRESETS,
@@ -26,13 +26,13 @@ import {
   type DirectorRefinementRequest,
   type DirectorRunMode,
   type DirectorTakeoverRequest,
-} from "@ai-novel/shared/types/novelDirector";
-import { DIRECTOR_POLICY_MODES } from "@ai-novel/shared/types/directorRuntime";
+} from "@ai-novel/shared";
+import { DIRECTOR_POLICY_MODES } from "@ai-novel/shared";
 import {
   BOOK_FRAMING_COMMERCIAL_TAG_MAX_LENGTH,
   BOOK_FRAMING_MAX_COMMERCIAL_TAGS,
-} from "@ai-novel/shared/types/novelFraming";
-import { DIRECTOR_AUTO_APPROVAL_POINTS } from "@ai-novel/shared/types/autoDirectorApproval";
+} from "@ai-novel/shared";
+import { DIRECTOR_AUTO_APPROVAL_POINTS } from "@ai-novel/shared";
 import { validate } from "../../../../middleware/validate";
 import { llmProviderSchema } from "../../../../llm/providerSchema";
 import { DirectorBookAutomationProjectionService } from "../projections/DirectorBookAutomationProjectionService";

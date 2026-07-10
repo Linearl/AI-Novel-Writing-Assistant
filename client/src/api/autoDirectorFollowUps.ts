@@ -1,4 +1,4 @@
-import type { ApiResponse } from "@ai-novel/shared/types/api";
+import type { ApiResponse } from "@ai-novel/shared";
 import type {
   AutoDirectorActionExecutionResult,
   AutoDirectorBatchActionExecutionResult,
@@ -7,7 +7,7 @@ import type {
   AutoDirectorFollowUpListResponse,
   AutoDirectorFollowUpOverview,
   AutoDirectorMutationActionCode,
-} from "@ai-novel/shared/types/autoDirectorFollowUp";
+} from "@ai-novel/shared";
 import type { ApiHttpError } from "./client";
 import { apiClient } from "./client";
 

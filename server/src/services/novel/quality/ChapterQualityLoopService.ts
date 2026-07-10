@@ -1,10 +1,10 @@
-import type { ChapterRuntimePackage } from "@ai-novel/shared/types/chapterRuntime";
-import type { QualityScore, ReviewIssue, TensionLevel } from "@ai-novel/shared/types/novel";
+import type { ChapterRuntimePackage } from "@ai-novel/shared";
+import type { QualityScore, ReviewIssue, TensionLevel } from "@ai-novel/shared";
 import type { ChapterStatus, Prisma } from "@prisma/client";
 import {
   buildChapterQualityLoopAssessment,
   type ChapterQualityLoopAssessment,
-} from "@ai-novel/shared/types/chapterQualityLoop";
+} from "@ai-novel/shared";
 import { prisma } from "../../../db/prisma";
 import { directorAutomationLedgerEventService } from "../director/runtime/DirectorAutomationLedgerEventService";
 import type { QualityDebtAttribution } from "../runtime/chapterRuntimePipeline";

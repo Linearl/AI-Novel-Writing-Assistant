@@ -1,4 +1,4 @@
-import type { GenerationContextPackage } from "@ai-novel/shared/types/chapterRuntime";
+import type { GenerationContextPackage } from "@ai-novel/shared";
 import type { PromptAsset, PromptContextBlock } from "../../prompting/core/promptTypes";
 import { resolvePromptContextBlocksForAsset } from "../../prompting/context/promptContextResolution";
 import {

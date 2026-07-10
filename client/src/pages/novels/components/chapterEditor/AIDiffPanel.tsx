@@ -1,4 +1,4 @@
-import type { ChapterEditorCandidate } from "@ai-novel/shared/types/novel";
+import type { ChapterEditorCandidate } from "@ai-novel/shared";
 import { Button } from "@/components/ui/button";
 import type { ChapterEditorSessionState } from "./chapterEditorTypes";
 

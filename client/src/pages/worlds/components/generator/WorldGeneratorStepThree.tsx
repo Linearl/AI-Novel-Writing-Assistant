@@ -1,4 +1,4 @@
-import type { WorldSkeletonGenerationPayload } from "@ai-novel/shared/types/worldWizard";
+import type { WorldSkeletonGenerationPayload } from "@ai-novel/shared";
 import { Button } from "@/components/ui/button";
 
 interface WorldGeneratorStepThreeProps {

@@ -1,4 +1,4 @@
-import type { StateChangeProposal } from "@ai-novel/shared/types/canonicalState";
+import type { StateChangeProposal } from "@ai-novel/shared";
 import { prisma } from "../../../db/prisma";
 
 function compactText(value: string | null | undefined): string {

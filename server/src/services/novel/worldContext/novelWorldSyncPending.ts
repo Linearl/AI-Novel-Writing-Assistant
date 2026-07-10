@@ -1,4 +1,4 @@
-import type { NovelWorldSyncSection } from "@ai-novel/shared/types/novelWorld";
+import type { NovelWorldSyncSection } from "@ai-novel/shared";
 
 const VALID_SYNC_SECTIONS = new Set<NovelWorldSyncSection>([
   "profile",

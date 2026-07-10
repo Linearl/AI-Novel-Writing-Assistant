@@ -1,6 +1,6 @@
 import type { BaseMessageChunk } from "@langchain/core/messages";
 import type { StreamDoneHelpers, StreamDonePayload } from "../../../llm/streaming";
-import type { QualityScore, ReviewIssue } from "@ai-novel/shared/types/novel";
+import type { QualityScore, ReviewIssue } from "@ai-novel/shared";
 import { prisma } from "../../../db/prisma";
 import { auditService } from "../../audit/AuditService";
 import { plannerMediator } from "../../mediation/NovelPlannerMediator";

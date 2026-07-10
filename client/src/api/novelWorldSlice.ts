@@ -1,5 +1,5 @@
-import type { ApiResponse } from "@ai-novel/shared/types/api";
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
+import type { ApiResponse } from "@ai-novel/shared";
+import type { LLMProvider } from "@ai-novel/shared";
 import type {
   NovelWorldGenerateInput,
   NovelWorldImportInput,
@@ -8,12 +8,12 @@ import type {
   NovelWorldSyncDiff,
   NovelWorldSyncInput,
   NovelWorldView,
-} from "@ai-novel/shared/types/novelWorld";
+} from "@ai-novel/shared";
 import type {
   StoryWorldSliceBuilderMode,
   StoryWorldSliceOverrides,
   StoryWorldSliceView,
-} from "@ai-novel/shared/types/storyWorldSlice";
+} from "@ai-novel/shared";
 import { apiClient } from "./client";
 
 export async function getNovelWorld(id: string) {

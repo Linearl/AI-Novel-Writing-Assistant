@@ -1,5 +1,5 @@
-import type { DirectorDisplayStageKey } from "@ai-novel/shared/types/directorRuntime";
-import type { DirectorLockScope } from "@ai-novel/shared/types/novelDirector";
+import type { DirectorDisplayStageKey } from "@ai-novel/shared";
+import type { DirectorLockScope } from "@ai-novel/shared";
 
 export type NovelWorkspaceFlowTab =
   | "basic"

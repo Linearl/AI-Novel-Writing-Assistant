@@ -17,7 +17,7 @@ import {
   type WorldSkeletonGenerationCounts,
   type WorldSkeletonGenerationPayload,
   type WorldSkeletonPreset,
-} from "@ai-novel/shared/types/worldWizard";
+} from "@ai-novel/shared";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/components/ui/toast";

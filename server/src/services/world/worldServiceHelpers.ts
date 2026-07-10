@@ -1,5 +1,5 @@
 import type { Prisma } from "@prisma/client";
-import type { WorldLayerKey, WorldStructuredData } from "@ai-novel/shared/types/world";
+import type { WorldLayerKey, WorldStructuredData } from "@ai-novel/shared";
 import { LAYER_FIELD_MAP, WORLD_LAYER_ORDER } from "./worldTemplates";
 import {
   buildWorldBindingSupport,

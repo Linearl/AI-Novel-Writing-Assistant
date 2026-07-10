@@ -1,11 +1,11 @@
-import type { GenerationContextPackage } from "@ai-novel/shared/types/chapterRuntime";
+import type { GenerationContextPackage } from "@ai-novel/shared";
 import type {
   ExtractedTimelineEvent,
   TimelineCheckResult,
   TimelineContextForChapter,
   TimelineHookDraft,
-} from "@ai-novel/shared/types/timeline";
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
+} from "@ai-novel/shared";
+import type { LLMProvider } from "@ai-novel/shared";
 
 export type ChapterTimelineFinalizationMode = "stable" | "degraded";
 export type TimelineFinalizationClaimStatus = "claimed" | "already_done" | "running";

@@ -1,4 +1,4 @@
-import type { GenerationContextPackage } from "@ai-novel/shared/types/chapterRuntime";
+import type { GenerationContextPackage } from "@ai-novel/shared";
 import { parseJsonStringArray } from "../novelP0Utils";
 import { plannerMediator } from "../../mediation/NovelPlannerMediator";
 import { parseJsonStringArraySafe } from "./runtimeContextBlocks";

@@ -1,6 +1,6 @@
 import type { Router } from "express";
-import type { ApiResponse } from "@ai-novel/shared/types/api";
-import type { BookFramingSuggestionInput } from "@ai-novel/shared/types/novelFraming";
+import type { ApiResponse } from "@ai-novel/shared";
+import type { BookFramingSuggestionInput } from "@ai-novel/shared";
 import { z } from "zod";
 import { llmProviderSchema } from "../../../../llm/providerSchema";
 import { validate } from "../../../../middleware/validate";

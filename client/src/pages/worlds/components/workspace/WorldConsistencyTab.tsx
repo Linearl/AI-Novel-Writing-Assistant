@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import type { WorldConsistencyIssue, WorldConsistencyReport } from "@ai-novel/shared/types/world";
+import type { WorldConsistencyIssue, WorldConsistencyReport } from "@ai-novel/shared";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {

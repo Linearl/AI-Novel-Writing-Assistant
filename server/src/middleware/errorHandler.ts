@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import type { ApiResponse } from "@ai-novel/shared/types/api";
+import type { ApiResponse } from "@ai-novel/shared";
 import { ZodError, type ZodIssue } from "zod";
 import { logger } from "../services/logging/LoggerService";
 

@@ -2,8 +2,8 @@ import type { BaseMessageChunk } from "@langchain/core/messages";
 import type {
   ChapterRuntimePackage,
   GenerationContextPackage,
-} from "@ai-novel/shared/types/chapterRuntime";
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
+} from "@ai-novel/shared";
+import type { LLMProvider } from "@ai-novel/shared";
 import type { TaskType } from "../../llm/modelRouter";
 import { createContextBlock } from "../../prompting/core/contextBudget";
 import { runTextPrompt, streamTextPrompt } from "../../prompting/core/promptRunner";

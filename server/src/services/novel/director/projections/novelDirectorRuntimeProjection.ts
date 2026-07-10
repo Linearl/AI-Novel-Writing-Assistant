@@ -5,7 +5,7 @@ import type {
   DirectorRuntimeProjectionEvent,
   DirectorRuntimeProjection,
   DirectorRuntimeSnapshot,
-} from "@ai-novel/shared/types/directorRuntime";
+} from "@ai-novel/shared";
 import { prisma } from "../../../../db/prisma";
 import { buildDefaultDirectorPolicy } from "../runtime/directorRuntimeDefaults";
 import { DirectorEventProjectionService } from "../runtime/DirectorEventProjectionService";

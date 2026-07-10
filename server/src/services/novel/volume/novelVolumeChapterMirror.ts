@@ -5,7 +5,7 @@
  * Pure extraction — no functional changes.
  */
 
-import type { VolumePlanDocument } from "@ai-novel/shared/types/novel";
+import type { VolumePlanDocument } from "@ai-novel/shared";
 import { prisma } from "../../../db/prisma";
 
 export async function hydrateCanonicalChapterFields(

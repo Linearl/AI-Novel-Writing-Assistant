@@ -1,7 +1,7 @@
 import type {
   DirectorBookAutomationAction,
   DirectorBookAutomationProjection,
-} from "@ai-novel/shared/types/directorRuntime";
+} from "@ai-novel/shared";
 import { LayoutDashboard } from "lucide-react";
 import AICockpit from "./AICockpit";
 import { Button } from "@/components/ui/button";

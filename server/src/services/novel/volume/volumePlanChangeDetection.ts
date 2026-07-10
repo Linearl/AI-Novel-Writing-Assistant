@@ -7,7 +7,7 @@ import type {
   VolumePlanDiffVolume,
   VolumeSyncPreview,
   VolumeSyncPreviewItem,
-} from "@ai-novel/shared/types/novel";
+} from "@ai-novel/shared";
 
 export interface ExistingChapterRecord {
   id: string;

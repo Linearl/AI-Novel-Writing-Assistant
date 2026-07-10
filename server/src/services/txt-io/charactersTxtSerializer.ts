@@ -12,7 +12,7 @@
  * ```
  */
 
-import type { Character, CharacterRelation } from "@ai-novel/shared/types/novelCharacter";
+import type { Character, CharacterRelation } from "@ai-novel/shared";
 
 /* ------------------------------------------------------------------ */
 /*  Export                                                             */

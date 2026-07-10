@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from "react";
-import type { ImageAsset } from "@ai-novel/shared/types/image";
+import type { ImageAsset } from "@ai-novel/shared";
 import { resolveImageAssetUrl } from "@/api/images";
-import type { BaseCharacter } from "@ai-novel/shared/types/novel";
+import type { BaseCharacter } from "@ai-novel/shared";
 import { Button } from "@/components/ui/button";
 import { AppDialogContent, Dialog } from "@/components/ui/dialog";
 import { LoadingIndicator } from "@/components/ui/loading-indicator";

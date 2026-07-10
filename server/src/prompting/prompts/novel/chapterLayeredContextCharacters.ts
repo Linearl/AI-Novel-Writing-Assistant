@@ -1,7 +1,7 @@
 import type {
   ChapterWriteContext,
   GenerationContextPackage,
-} from "@ai-novel/shared/types/chapterRuntime";
+} from "@ai-novel/shared";
 import { compactText, takeUnique } from "./chapterLayeredContextShared";
 
 function buildVisibleProfileSummary(

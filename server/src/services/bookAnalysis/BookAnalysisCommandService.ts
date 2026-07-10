@@ -2,9 +2,9 @@ import type {
   BookAnalysisDetail,
   BookAnalysisSectionKey,
   BookAnalysisStatus,
-} from "@ai-novel/shared/types/bookAnalysis";
-import { BOOK_ANALYSIS_SECTIONS } from "@ai-novel/shared/types/bookAnalysis";
-import type { LLMProvider } from "@ai-novel/shared/types/llm";
+} from "@ai-novel/shared";
+import { BOOK_ANALYSIS_SECTIONS } from "@ai-novel/shared";
+import type { LLMProvider } from "@ai-novel/shared";
 import { prisma } from "../../db/prisma";
 import { AppError } from "../../middleware/errorHandler";
 import { getBookAnalysisMaxConcurrentTasks } from "./bookAnalysis.config";

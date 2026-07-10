@@ -1,5 +1,5 @@
-import type { StoryPlan, StoryPlanLevel, StoryPlanRole } from "@ai-novel/shared/types/novel";
-import { sanitizeCreativeMustAdvanceItems } from "@ai-novel/shared/types/chapterCreativeContract";
+import type { StoryPlan, StoryPlanLevel, StoryPlanRole } from "@ai-novel/shared";
+import { sanitizeCreativeMustAdvanceItems } from "@ai-novel/shared";
 
 export interface PlannerPlanMetadata {
   planRole: StoryPlanRole | null;
