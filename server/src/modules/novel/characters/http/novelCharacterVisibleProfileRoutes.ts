@@ -41,11 +41,9 @@ const visibleProfileGenerateSchema = z.object({
 interface RegisterNovelCharacterVisibleProfileRoutesInput {
   router: Router;
   novelService: Pick<NovelApplicationServices,
-    | "generateCharacterVisibleProfile"
-    | "generateBatchCharacterVisibleProfiles"
     | "applyCharacterVisibleProfile"
     | "applyBatchCharacterVisibleProfiles"
-  >;
+  > & Record<string, any>;
   idParamsSchema: z.ZodType<{ id: string }>;
   characterParamsSchema: z.ZodType<{ id: string; charId: string }>;
 }

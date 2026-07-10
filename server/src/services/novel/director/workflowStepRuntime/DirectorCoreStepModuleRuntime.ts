@@ -7,6 +7,7 @@ import { CharacterDynamicsService } from "../../dynamics/CharacterDynamicsServic
 import { NovelContextService } from "../../NovelContextService";
 import type { NovelApplicationServices } from "../../application/NovelApplicationContracts";
 import { getSharedNovelServices } from "../../application/sharedNovelServices";
+import { NovelCoreService } from "../../NovelCoreService";
 import type { RepairOptions } from "../../novelCoreShared";
 import type { ChapterRuntimeRequestInput } from "../../runtime/chapterRuntimeSchema";
 import { StoryMacroPlanService } from "../../storyMacro/StoryMacroPlanService";
@@ -35,9 +36,14 @@ export interface DirectorCoreStepModuleRuntimeDeps {
   bookContractService: BookContractService;
   volumeService: NovelVolumeService;
   novelService: Pick<NovelApplicationServices,
-    | "createChapterRuntimeStream"
     | "createChapterStream"
     | "createRepairStream"
+    | "startPipelineJob"
+  > & Pick<NovelCoreService,
+    | "findActivePipelineJobForRange"
+    | "getPipelineJobById"
+    | "resumePipelineJob"
+    | "cancelPipelineJob"
   >;
   directorRuntime: DirectorRuntimeService;
   chapterProgressInspector: ChapterExecutionProgressInspector;
@@ -54,7 +60,8 @@ export function buildDefaultDirectorCoreStepModuleRuntimeDeps(): DirectorCoreSte
   const storyMacroService = new StoryMacroPlanService();
   const bookContractService = new BookContractService();
   const volumeService = new NovelVolumeService();
-  const novelService = getSharedNovelServices();
+  const novelCoreService = new NovelCoreService();
+  const novelService = { ...getSharedNovelServices(), ...novelCoreService } as any;
   const directorRuntime = new DirectorRuntimeService();
   const chapterProgressInspector = new ChapterExecutionProgressInspector();
   const autoExecutionRuntime = new NovelDirectorAutoExecutionRuntime({
@@ -125,9 +132,14 @@ export class DirectorCoreStepModuleRuntime {
   private readonly bookContractService: BookContractService;
   private readonly volumeService: NovelVolumeService;
   private readonly novelService: Pick<NovelApplicationServices,
-    | "createChapterRuntimeStream"
     | "createChapterStream"
     | "createRepairStream"
+    | "startPipelineJob"
+  > & Pick<NovelCoreService,
+    | "findActivePipelineJobForRange"
+    | "getPipelineJobById"
+    | "resumePipelineJob"
+    | "cancelPipelineJob"
   >;
   private readonly directorRuntime: DirectorRuntimeService;
   private readonly chapterProgressInspector: ChapterExecutionProgressInspector;
@@ -325,7 +337,7 @@ export class DirectorCoreStepModuleRuntime {
     useRuntimeStream?: boolean;
   }) {
     if (input.useRuntimeStream) {
-      return this.novelService.createChapterRuntimeStream(
+      return this.novelService.createChapterStream(
         input.novelId,
         input.chapterId,
         input.options ?? {},

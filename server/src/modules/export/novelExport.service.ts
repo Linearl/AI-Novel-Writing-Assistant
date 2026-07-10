@@ -2,6 +2,10 @@ import type { NovelExportFormat, NovelExportScope } from "@ai-novel/shared";
 import { prisma } from "../../db/prisma";
 import { AppError } from "../../middleware/errorHandler";
 import { getSharedNovelServices } from "../../services/novel/application/sharedNovelServices";
+import { NovelCoreService } from "../../services/novel/NovelCoreService";
+import { NovelWorldSliceService } from "../../services/novel/storyWorldSlice/NovelWorldSliceService";
+import { CharacterPreparationService } from "../../services/novel/characterPrep/CharacterPreparationService";
+import { NovelVolumeService } from "../../services/novel/volume/NovelVolumeService";
 import { StoryMacroPlanService } from "../../services/novel/storyMacro/StoryMacroPlanService";
 import {
   buildExportTimestamp,
@@ -23,6 +27,10 @@ import type { NovelExportBundle } from "./novelExport.types";
 
 export class NovelExportService {
   private readonly novelService = getSharedNovelServices();
+  private readonly coreService = new NovelCoreService();
+  private readonly worldSliceService = new NovelWorldSliceService();
+  private readonly characterPreparationService = new CharacterPreparationService();
+  private readonly volumeService = new NovelVolumeService();
   private readonly storyMacroPlanService = new StoryMacroPlanService();
 
   private buildFileName(title: string, scope: NovelExportScope, format: Exclude<NovelExportFormat, "txt">): string {
@@ -89,13 +97,13 @@ export class NovelExportService {
       characterTimelineRows,
     ] = await Promise.all([
       this.storyMacroPlanService.getPlan(novelId),
-      this.novelService.getWorldSlice(novelId),
-      this.novelService.listCharacterRelations(novelId),
-      this.novelService.listCharacterCastOptions(novelId),
-      this.novelService.getVolumes(novelId),
-      this.novelService.getLatestStateSnapshot(novelId),
-      this.novelService.getPayoffLedger(novelId).catch(() => null),
-      this.novelService.getQualityReport(novelId),
+      this.worldSliceService.getWorldSliceView(novelId),
+      this.characterPreparationService.listCharacterRelations(novelId),
+      this.characterPreparationService.listCharacterCastOptions(novelId),
+      this.volumeService.getVolumes(novelId),
+      this.coreService.getLatestStateSnapshot(novelId),
+      this.coreService.getPayoffLedger(novelId).catch(() => null),
+      this.coreService.getQualityReport(novelId),
       prisma.generationJob.findFirst({
         where: { novelId },
         orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],

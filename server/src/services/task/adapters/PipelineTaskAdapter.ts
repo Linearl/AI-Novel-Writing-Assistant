@@ -2,7 +2,7 @@ import type { PipelineJobStatus } from "@ai-novel/shared";
 import type { TaskStatus, UnifiedTaskDetail, UnifiedTaskSummary } from "@ai-novel/shared";
 import { prisma } from "../../../db/prisma";
 import { AppError } from "../../../middleware/errorHandler";
-import type { NovelApplicationServices } from "../../novel/application/NovelApplicationContracts";
+import type { NovelCoreService } from "../../novel/NovelCoreService";
 import {
   decoratePipelineJob,
   parsePipelinePayload,
@@ -61,7 +61,7 @@ type PipelineRow = {
 export class PipelineTaskAdapter {
   private readonly workflowService = new NovelWorkflowService();
 
-  constructor(private readonly novelService: Pick<NovelApplicationServices, "retryPipelineJob" | "cancelPipelineJob">) {}
+  constructor(private readonly novelService: Pick<NovelCoreService, "retryPipelineJob" | "cancelPipelineJob">) {}
 
   private toSummary(row: PipelineRow): UnifiedTaskSummary {
     const payload = parsePipelinePayload(row.payload);

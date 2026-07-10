@@ -8,8 +8,7 @@ import { AppError } from "../../middleware/errorHandler";
 import { bookAnalysisService } from "../bookAnalysis/BookAnalysisService";
 import { imageGenerationService } from "../image/ImageGenerationService";
 import { NovelPipelineRuntimeService } from "../novel/NovelPipelineRuntimeService";
-import type { NovelApplicationServices } from "../novel/application/NovelApplicationContracts";
-import { getSharedNovelServices } from "../novel/application/sharedNovelServices";
+import { NovelCoreService } from "../novel/NovelCoreService";
 import { DirectorCommandService } from "../novel/director/commands/DirectorCommandService";
 import { NovelWorkflowRuntimeService } from "../novel/workflow/NovelWorkflowRuntimeService";
 import { styleExtractionTaskService } from "../styleEngine/StyleExtractionTaskService";
@@ -69,7 +68,7 @@ export class RecoveryTaskService {
     private readonly novelWorkflowRuntimeService = new NovelWorkflowRuntimeService(),
     private readonly novelPipelineRuntimeService = new NovelPipelineRuntimeService(),
     private readonly directorCommandService: AutoDirectorRecoveryCommandPort = new DirectorCommandService(),
-    private readonly novelService: Pick<NovelApplicationServices, "resumePipelineJob"> = getSharedNovelServices(),
+    private readonly novelService: Pick<NovelCoreService, "resumePipelineJob"> = new NovelCoreService(),
     private readonly initializationDeps: RecoveryInitializationDeps = {
       markPendingBookAnalysesForManualRecovery: () => bookAnalysisService.markPendingAnalysesForManualRecovery(),
       markPendingImageTasksForManualRecovery: () => imageGenerationService.markPendingTasksForManualRecovery(),

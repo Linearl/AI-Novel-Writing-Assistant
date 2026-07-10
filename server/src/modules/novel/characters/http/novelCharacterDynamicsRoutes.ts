@@ -2,7 +2,6 @@ import type { Router } from "express";
 import type { ApiResponse } from "@ai-novel/shared";
 import { z } from "zod";
 import { validate } from "../../../../middleware/validate";
-import type { NovelApplicationServices } from "../../../../services/novel/application/NovelApplicationContracts";
 import {
   confirmCandidateInputSchema,
   mergeCandidateInputSchema,
@@ -31,15 +30,7 @@ const overviewQuerySchema = z.object({
 
 interface RegisterNovelCharacterDynamicsRoutesInput {
   router: Router;
-  novelService: Pick<NovelApplicationServices,
-    | "getCharacterDynamicsOverview"
-    | "listCharacterCandidates"
-    | "confirmCharacterCandidate"
-    | "mergeCharacterCandidate"
-    | "updateCharacterDynamicState"
-    | "updateCharacterRelationStage"
-    | "rebuildCharacterDynamics"
-  >;
+  novelService: Record<string, any>;
   idParamsSchema: z.ZodType<{ id: string }>;
 }
 

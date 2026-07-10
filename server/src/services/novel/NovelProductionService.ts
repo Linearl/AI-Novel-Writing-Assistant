@@ -4,6 +4,7 @@ import { runStructuredPrompt } from "../../prompting/core/promptRunner";
 import { novelProductionCharactersPrompt } from "../../prompting/prompts/novel/production.prompts";
 import { WorldService } from "../world/WorldService";
 import { getSharedNovelServices } from "./application/sharedNovelServices";
+import { NovelCoreService } from "./NovelCoreService";
 import { collectStream, extractJsonArray, parseStructuredOutline } from "./novelProductionHelpers";
 import { novelProductionStatusService, type ProductionStatusResult } from "./NovelProductionStatusService";
 
@@ -15,6 +16,8 @@ interface NovelLlmOptions {
 
 export class NovelProductionService {
   private readonly novelService = getSharedNovelServices();
+
+  private readonly novelCoreService = new NovelCoreService();
 
   private readonly worldService = new WorldService();
 
@@ -197,7 +200,7 @@ export class NovelProductionService {
   async generateStoryBible(input: {
     novelId: string;
   } & NovelLlmOptions) {
-    const { stream, onDone } = await this.novelService.createBibleStream(input.novelId, {
+    const { stream, onDone } = await this.novelCoreService.createBibleStream(input.novelId, {
       provider: input.provider,
       model: input.model,
       temperature: input.temperature,
@@ -226,7 +229,7 @@ export class NovelProductionService {
     novelId: string;
     description?: string;
   } & NovelLlmOptions) {
-    const { stream, onDone } = await this.novelService.createOutlineStream(input.novelId, {
+    const { stream, onDone } = await this.novelCoreService.createOutlineStream(input.novelId, {
       provider: input.provider,
       model: input.model,
       temperature: input.temperature,

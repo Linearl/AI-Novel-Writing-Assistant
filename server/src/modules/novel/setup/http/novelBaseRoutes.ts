@@ -140,14 +140,7 @@ const createResourceRecommendationSchema = z.object({
 
 interface RegisterNovelBaseRoutesInput {
   router: Router;
-  novelService: Pick<NovelApplicationServices,
-    | "listNovels"
-    | "createNovel"
-    | "getNovelById"
-    | "getNovelStructuredOutline"
-    | "updateNovel"
-    | "deleteNovel"
-  >;
+  novelService: Pick<NovelApplicationServices, "getNovelById"> & Record<string, any>;
 }
 
 export function registerNovelBaseRoutes(input: RegisterNovelBaseRoutesInput): void {

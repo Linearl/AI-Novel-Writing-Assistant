@@ -38,6 +38,7 @@ import {
   buildDirectorWorkflowSeedPayload,
 } from "./runtime/novelDirectorHelpers";
 import { getSharedNovelServices } from "../application/sharedNovelServices";
+import { NovelCoreService } from "../NovelCoreService";
 import { StoryMacroPlanService } from "../storyMacro/StoryMacroPlanService";
 import { NovelVolumeService } from "../volume/NovelVolumeService";
 import { NovelWorkflowService } from "../workflow/NovelWorkflowService";
@@ -95,7 +96,8 @@ export class NovelDirectorService {
   private readonly characterPreparationService = new CharacterPreparationService();
   private readonly storyMacroService = new StoryMacroPlanService();
   private readonly bookContractService = new BookContractService();
-  private readonly novelService = getSharedNovelServices();
+  private readonly novelCoreService = new NovelCoreService();
+  private readonly novelService = { ...getSharedNovelServices(), ...this.novelCoreService } as any;
   private readonly characterDynamicsService = new CharacterDynamicsService();
   private readonly volumeService = new NovelVolumeService();
   private readonly workflowService = new NovelWorkflowService();

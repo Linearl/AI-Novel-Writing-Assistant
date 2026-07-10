@@ -1,8 +1,10 @@
 import { prisma } from "../../db/prisma";
 import { getSharedNovelServices } from "../../services/novel/application/sharedNovelServices";
+import { NovelCoreService } from "../../services/novel/NovelCoreService";
 import { AgentToolError } from "../types";
 
 export const novelService = getSharedNovelServices();
+export const coreService = new NovelCoreService();
 
 export async function getChapter(novelId: string, chapterId: string) {
   const chapter = await prisma.chapter.findFirst({

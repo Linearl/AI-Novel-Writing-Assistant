@@ -3,6 +3,7 @@ import type { AgentToolName } from "../types";
 import type { AgentToolDefinition } from "./toolTypes";
 import {
   buildPatchedContent,
+  coreService,
   getChapter,
   makeDiffSummary,
   novelService,
@@ -69,7 +70,7 @@ export const writeToolDefinitions: Partial<
           summary: "dryRun: 章节草稿将被写入，但未实际落库。",
         });
       }
-      const updated = await novelService.updateChapter(input.novelId, input.chapterId, {
+      const updated = await coreService.updateChapter(input.novelId, input.chapterId, {
         content: input.content,
         ...(input.title ? { title: input.title } : {}),
       });
@@ -113,7 +114,7 @@ export const writeToolDefinitions: Partial<
           afterPreview: diff.afterPreview,
         });
       }
-      const updated = await novelService.updateChapter(input.novelId, input.chapterId, {
+      const updated = await coreService.updateChapter(input.novelId, input.chapterId, {
         content: after,
       });
       return applyChapterPatchOutputSchema.parse({

@@ -17,21 +17,12 @@ const snapshotRestoreSchema = z.object({
 interface RegisterNovelSnapshotCharacterRoutesInput {
   router: Router;
   novelService: Pick<NovelApplicationServices,
-    | "listCharacters"
     | "createCharacter"
     | "updateCharacter"
     | "deleteCharacter"
-    | "listCharacterTimeline"
-    | "syncCharacterTimeline"
-    | "syncAllCharacterTimeline"
-    | "evolveCharacter"
-    | "checkCharacterAgainstWorld"
-    | "createBibleStream"
     | "createNovelSnapshot"
-    | "listNovelSnapshots"
     | "restoreFromSnapshot"
-    | "importCharactersFromOutline"
-  >;
+  > & Record<string, any>;
   idParamsSchema: z.ZodType<{ id: string }>;
   characterParamsSchema: z.ZodType<{ id: string; charId: string }>;
   characterSchema: z.ZodTypeAny;

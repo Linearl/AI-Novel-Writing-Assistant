@@ -12,8 +12,7 @@ interface RegisterNovelStorylineRoutesInput {
     | "activateStorylineVersion"
     | "freezeStorylineVersion"
     | "getStorylineDiff"
-    | "analyzeStorylineImpact"
-  >;
+  > & Record<string, any>;
   idParamsSchema: z.ZodType<{ id: string }>;
   storylineVersionParamsSchema: z.ZodType<{ id: string; versionId: string }>;
   storylineDiffQuerySchema: z.ZodTypeAny;

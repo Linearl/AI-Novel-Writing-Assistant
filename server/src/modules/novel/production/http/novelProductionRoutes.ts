@@ -10,15 +10,7 @@ import { chapterService } from "../../../../services/novel/ChapterService";
 
 interface RegisterNovelProductionRoutesInput {
   router: Router;
-  novelService: Pick<NovelApplicationServices,
-    | "createOutlineStream"
-    | "createStructuredOutlineStream"
-    | "generateTitles"
-    | "createBeatStream"
-    | "generateChapterHook"
-    | "startPipelineJob"
-    | "getPipelineJob"
-  >;
+  novelService: Pick<NovelApplicationServices, "createStructuredOutlineStream" | "startPipelineJob"> & Record<string, any>;
   novelDraftOptimizeService: NovelDraftOptimizeService;
   idParamsSchema: z.ZodType<{ id: string }>;
   pipelineJobParamsSchema: z.ZodType<{ id: string; jobId: string }>;

@@ -60,17 +60,6 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1\v0.1-r7027-S2-legacy-code-cleanup\REQ-7027-legacy-code-cleanup.md](./1.task\B.todo\v0.1\v0.1-r7027-S2-legacy-code-cleanup\REQ-7027-legacy-code-cleanup.md) | REQ-7027 遗留代码清理 | REQ-7027 遗留代码清理 |
 | [1.task\B.todo\v0.1\v0.1-r7027-S2-legacy-code-cleanup\tasks.md](./1.task\B.todo\v0.1\v0.1-r7027-S2-legacy-code-cleanup\tasks.md) | REQ-7027 遗留代码清理 — 任务拆解 | REQ-7027 遗留代码清理 — 任务拆解 |
 
-## 1.task\B.todo\v0.1\v0.1-r7028-C3-director-event-system-consolidation
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r7028-C3-director-event-system-consolidation\decision_log.md](./1.task\B.todo\v0.1\v0.1-r7028-C3-director-event-system-consolidation\decision_log.md) | REQ-7028 Director 事件系统收敛 — 决策留痕 | REQ-7028 Director 事件系统收敛 — 决策留痕 |
-| [1.task\B.todo\v0.1\v0.1-r7028-C3-director-event-system-consolidation\design.md](./1.task\B.todo\v0.1\v0.1-r7028-C3-director-event-system-consolidation\design.md) | REQ-7028 Director 事件系统收敛 — 方案设计 | REQ-7028 Director 事件系统收敛 — 方案设计 |
-| [1.task\B.todo\v0.1\v0.1-r7028-C3-director-event-system-consolidation\README.md](./1.task\B.todo\v0.1\v0.1-r7028-C3-director-event-system-consolidation\README.md) | REQ-7028 Director 事件系统收敛——README | REQ-7028 Director 事件系统收敛——README |
-| [1.task\B.todo\v0.1\v0.1-r7028-C3-director-event-system-consolidation\REQ-7028-director-event-system-consolidation-original.md](./1.task\B.todo\v0.1\v0.1-r7028-C3-director-event-system-consolidation\REQ-7028-director-event-system-consolidation-original.md) | REQ-7028 Director 事件系统收敛 — 原始冻结副本 | REQ-7028 Director 事件系统收敛 — 原始冻结副本 |
-| [1.task\B.todo\v0.1\v0.1-r7028-C3-director-event-system-consolidation\REQ-7028-director-event-system-consolidation.md](./1.task\B.todo\v0.1\v0.1-r7028-C3-director-event-system-consolidation\REQ-7028-director-event-system-consolidation.md) | REQ-7028 Director 事件系统收敛 | REQ-7028 Director 事件系统收敛 |
-| [1.task\B.todo\v0.1\v0.1-r7028-C3-director-event-system-consolidation\tasks.md](./1.task\B.todo\v0.1\v0.1-r7028-C3-director-event-system-consolidation\tasks.md) | REQ-7028 Director 事件系统收敛 — 任务拆解 | REQ-7028 Director 事件系统收敛 — 任务拆解 |
-
 ## 1.task\B.todo\v0.1\v0.1-r7032-S3-extract-hardcoded-constants
 
 | 文件 | 标题 | 描述 |

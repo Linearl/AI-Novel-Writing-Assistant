@@ -1,236 +1,53 @@
 import type { NovelCoreService } from "../NovelCoreService";
 
-type NovelApplicationMethod = (...args: any[]) => any;
 type NovelDetailWithVolumeWorkspace = NonNullable<Awaited<ReturnType<NovelCoreService["getNovelById"]>>> & {
   volumes?: unknown;
   volumeSource?: unknown;
   activeVolumeVersionId?: string | null;
 };
 
+/**
+ * Coordination-only interface for cross-service operations.
+ * Pure-delegation methods have been removed.
+ * Callers should inject the specific sub-service they need directly.
+ * @see REQ-7034
+ */
 export interface NovelApplicationServices {
-  listNovels: NovelApplicationMethod;
-  createNovel: NovelApplicationMethod;
-  getNovelById: (...args: Parameters<NovelCoreService["getNovelById"]>) => Promise<NovelDetailWithVolumeWorkspace | null>;
-  getNovelStructuredOutline: (id: string) => Promise<string | null>;
-  updateNovel: NovelApplicationMethod;
-  deleteNovel: NovelApplicationMethod;
-  listChapters: NovelApplicationMethod;
-  createChapter: NovelApplicationMethod;
-  updateChapter: NovelApplicationMethod;
-  deleteChapter: NovelApplicationMethod;
-  softDeleteChapter: NovelApplicationMethod;
-  restoreChapter: NovelApplicationMethod;
-  toggleChapterLock: NovelApplicationMethod;
-  listCharacters: NovelApplicationMethod;
-  createCharacter: NovelApplicationMethod;
-  updateCharacter: NovelApplicationMethod;
-  deleteCharacter: NovelApplicationMethod;
-  listCharacterTimeline: NovelApplicationMethod;
-  syncCharacterTimeline: NovelApplicationMethod;
-  syncAllCharacterTimeline: NovelApplicationMethod;
-  evolveCharacter: NovelApplicationMethod;
-  checkCharacterAgainstWorld: NovelApplicationMethod;
-  setCharacterExitStatus: NovelApplicationMethod;
-  createNovelSnapshot: NovelApplicationMethod;
-  listNovelSnapshots: NovelApplicationMethod;
-  restoreFromSnapshot: NovelApplicationMethod;
-  createOutlineStream: NovelApplicationMethod;
-  createStructuredOutlineStream: NovelApplicationMethod;
-  createChapterStream: NovelApplicationMethod;
-  createChapterRuntimeStream: NovelApplicationMethod;
-  generateTitles: NovelApplicationMethod;
-  createBibleStream: NovelApplicationMethod;
-  createBeatStream: NovelApplicationMethod;
-  generateChapterHook: NovelApplicationMethod;
-  reviewChapter: NovelApplicationMethod;
-  createRepairStream: NovelApplicationMethod;
-  getQualityReport: NovelApplicationMethod;
-  startPipelineJob: NovelApplicationMethod;
-  getPipelineJob: NovelApplicationMethod;
-  getPipelineJobById: NovelApplicationMethod;
-  findActivePipelineJobForRange: NovelApplicationMethod;
-  resumePipelineJob: NovelApplicationMethod;
-  retryPipelineJob: NovelApplicationMethod;
-  cancelPipelineJob: NovelApplicationMethod;
-  getVolumes: NovelApplicationMethod;
-  updateVolumes: NovelApplicationMethod;
-  generateVolumes: NovelApplicationMethod;
-  listVolumeVersions: NovelApplicationMethod;
-  getVolumeVersion: NovelApplicationMethod;
-  createVolumeDraft: NovelApplicationMethod;
-  activateVolumeVersion: NovelApplicationMethod;
-  freezeVolumeVersion: NovelApplicationMethod;
-  getVolumeDiff: NovelApplicationMethod;
-  analyzeVolumeImpact: NovelApplicationMethod;
-  syncVolumeChapters: NovelApplicationMethod;
-  ensureChapterExecutionContract: NovelApplicationMethod;
-  migrateLegacyVolumes: NovelApplicationMethod;
-  listStorylineVersions: NovelApplicationMethod;
-  createStorylineDraft: NovelApplicationMethod;
-  activateStorylineVersion: NovelApplicationMethod;
-  freezeStorylineVersion: NovelApplicationMethod;
-  getStorylineDiff: NovelApplicationMethod;
-  analyzeStorylineImpact: NovelApplicationMethod;
-  previewChapterRewrite: NovelApplicationMethod;
-  previewChapterAiRevision: NovelApplicationMethod;
-  getChapterEditorWorkspace: NovelApplicationMethod;
-  getNovelState: NovelApplicationMethod;
-  getLatestStateSnapshot: NovelApplicationMethod;
-  getChapterStateSnapshot: NovelApplicationMethod;
-  rebuildNovelState: NovelApplicationMethod;
-  generateBookPlan: NovelApplicationMethod;
-  generateArcPlan: NovelApplicationMethod;
-  generateChapterPlan: NovelApplicationMethod;
-  getChapterPlan: NovelApplicationMethod;
-  replanNovel: NovelApplicationMethod;
-  auditChapter: NovelApplicationMethod;
-  listChapterAuditReports: NovelApplicationMethod;
-  resolveAuditIssues: NovelApplicationMethod;
-  getPayoffLedger: NovelApplicationMethod;
-  getWorldSlice: NovelApplicationMethod;
-  refreshWorldSlice: NovelApplicationMethod;
-  updateWorldSliceOverrides: NovelApplicationMethod;
-  getNovelWorld: NovelApplicationMethod;
-  getNovelWorldSyncDiff: NovelApplicationMethod;
-  importNovelWorldFromLibrary: NovelApplicationMethod;
-  createManualNovelWorld: NovelApplicationMethod;
-  generateNovelWorldFromTheme: NovelApplicationMethod;
-  saveNovelWorldToLibrary: NovelApplicationMethod;
-  syncNovelWorldWithLibrary: NovelApplicationMethod;
-  deleteNovelWorld: NovelApplicationMethod;
-  listCharacterRelations: NovelApplicationMethod;
-  listCharacterCastOptions: NovelApplicationMethod;
-  generateCharacterCastOptions: NovelApplicationMethod;
-  applyCharacterCastOption: NovelApplicationMethod;
-  generateSupplementalCharacters: NovelApplicationMethod;
-  applySupplementalCharacter: NovelApplicationMethod;
-  refineSupplementalCharacter: NovelApplicationMethod;
-  deleteCharacterCastOption: NovelApplicationMethod;
-  clearCharacterCastOptions: NovelApplicationMethod;
-  generateCharacterVisibleProfile: NovelApplicationMethod;
-  generateBatchCharacterVisibleProfiles: NovelApplicationMethod;
-  applyCharacterVisibleProfile: NovelApplicationMethod;
-  applyBatchCharacterVisibleProfiles: NovelApplicationMethod;
-  getCharacterDynamicsOverview: NovelApplicationMethod;
-  listCharacterCandidates: NovelApplicationMethod;
-  confirmCharacterCandidate: NovelApplicationMethod;
-  mergeCharacterCandidate: NovelApplicationMethod;
-  updateCharacterDynamicState: NovelApplicationMethod;
-  updateCharacterRelationStage: NovelApplicationMethod;
-  rebuildCharacterDynamics: NovelApplicationMethod;
-  importCharactersFromOutline: NovelApplicationMethod;
+  getNovelById: (id: string) => Promise<NovelDetailWithVolumeWorkspace | null>;
+  createCharacter: (...args: any[]) => Promise<any>;
+  updateCharacter: (...args: any[]) => Promise<any>;
+  deleteCharacter: (...args: any[]) => Promise<void>;
+  createNovelSnapshot: (...args: any[]) => Promise<any>;
+  restoreFromSnapshot: (novelId: string, snapshotId: string) => Promise<NovelDetailWithVolumeWorkspace | null>;
+  createStructuredOutlineStream: (...args: any[]) => Promise<any>;
+  createChapterStream: (...args: any[]) => Promise<any>;
+  createRepairStream: (...args: any[]) => Promise<any>;
+  startPipelineJob: (...args: any[]) => Promise<any>;
+  listStorylineVersions: (...args: any[]) => Promise<any[]>;
+  createStorylineDraft: (...args: any[]) => Promise<any>;
+  activateStorylineVersion: (...args: any[]) => Promise<any>;
+  freezeStorylineVersion: (...args: any[]) => Promise<any>;
+  getStorylineDiff: (...args: any[]) => Promise<any>;
+  applyCharacterVisibleProfile: (...args: any[]) => Promise<any>;
+  applyBatchCharacterVisibleProfiles: (...args: any[]) => Promise<any>;
 }
 
 export const novelApplicationServiceMethodNames = [
-  "listNovels",
-  "createNovel",
   "getNovelById",
-  "getNovelStructuredOutline",
-  "updateNovel",
-  "deleteNovel",
-  "listChapters",
-  "createChapter",
-  "updateChapter",
-  "deleteChapter",
-  "softDeleteChapter",
-  "restoreChapter",
-  "toggleChapterLock",
-  "listCharacters",
   "createCharacter",
   "updateCharacter",
   "deleteCharacter",
-  "listCharacterTimeline",
-  "syncCharacterTimeline",
-  "syncAllCharacterTimeline",
-  "evolveCharacter",
-  "checkCharacterAgainstWorld",
-  "setCharacterExitStatus",
   "createNovelSnapshot",
-  "listNovelSnapshots",
   "restoreFromSnapshot",
-  "createOutlineStream",
   "createStructuredOutlineStream",
   "createChapterStream",
-  "createChapterRuntimeStream",
-  "generateTitles",
-  "createBibleStream",
-  "createBeatStream",
-  "generateChapterHook",
-  "reviewChapter",
   "createRepairStream",
-  "getQualityReport",
   "startPipelineJob",
-  "getPipelineJob",
-  "getPipelineJobById",
-  "findActivePipelineJobForRange",
-  "resumePipelineJob",
-  "retryPipelineJob",
-  "cancelPipelineJob",
-  "getVolumes",
-  "updateVolumes",
-  "generateVolumes",
-  "listVolumeVersions",
-  "getVolumeVersion",
-  "createVolumeDraft",
-  "activateVolumeVersion",
-  "freezeVolumeVersion",
-  "getVolumeDiff",
-  "analyzeVolumeImpact",
-  "syncVolumeChapters",
-  "ensureChapterExecutionContract",
-  "migrateLegacyVolumes",
   "listStorylineVersions",
   "createStorylineDraft",
   "activateStorylineVersion",
   "freezeStorylineVersion",
   "getStorylineDiff",
-  "analyzeStorylineImpact",
-  "previewChapterRewrite",
-  "previewChapterAiRevision",
-  "getChapterEditorWorkspace",
-  "getNovelState",
-  "getLatestStateSnapshot",
-  "getChapterStateSnapshot",
-  "rebuildNovelState",
-  "generateBookPlan",
-  "generateArcPlan",
-  "generateChapterPlan",
-  "getChapterPlan",
-  "replanNovel",
-  "auditChapter",
-  "listChapterAuditReports",
-  "resolveAuditIssues",
-  "getPayoffLedger",
-  "getWorldSlice",
-  "refreshWorldSlice",
-  "updateWorldSliceOverrides",
-  "getNovelWorld",
-  "getNovelWorldSyncDiff",
-  "importNovelWorldFromLibrary",
-  "createManualNovelWorld",
-  "generateNovelWorldFromTheme",
-  "saveNovelWorldToLibrary",
-  "syncNovelWorldWithLibrary",
-  "deleteNovelWorld",
-  "listCharacterRelations",
-  "listCharacterCastOptions",
-  "generateCharacterCastOptions",
-  "applyCharacterCastOption",
-  "generateSupplementalCharacters",
-  "applySupplementalCharacter",
-  "refineSupplementalCharacter",
-  "deleteCharacterCastOption",
-  "clearCharacterCastOptions",
-  "generateCharacterVisibleProfile",
-  "generateBatchCharacterVisibleProfiles",
   "applyCharacterVisibleProfile",
   "applyBatchCharacterVisibleProfiles",
-  "getCharacterDynamicsOverview",
-  "listCharacterCandidates",
-  "confirmCharacterCandidate",
-  "mergeCharacterCandidate",
-  "updateCharacterDynamicState",
-  "updateCharacterRelationStage",
-  "rebuildCharacterDynamics",
-  "importCharactersFromOutline",
 ] as const satisfies readonly (keyof NovelApplicationServices)[];
