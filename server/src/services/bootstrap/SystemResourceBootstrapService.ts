@@ -2,14 +2,13 @@ import type { Prisma } from "@prisma/client";
 import { prisma } from "../../db/prisma";
 import { BUILT_IN_STORY_MODE_SEEDS, type StoryModeSeedNode } from "../../db/storyModeSeeds";
 import {
-  DEFAULT_ANTI_AI_RULES,
   DEFAULT_STARTER_STYLE_PROFILES,
   DEFAULT_STYLE_TEMPLATES,
-  type DefaultAntiAiRuleDefinition,
   type DefaultStarterStyleProfileDefinition,
   type DefaultTemplateDefinition,
 } from "../styleEngine/defaults";
 import { serializeJson } from "../styleEngine/helpers";
+import { syncAntiAiRulesFromFileSystem, syncWritingTechniquesFromFileSystem } from "../styleEngine/FileToDbSyncService";
 import { serializeStoryModeProfile } from "../storyMode/storyModeProfile";
 
 export type SystemResourceSeedMode = "missing_only" | "sync_existing";
@@ -29,6 +28,8 @@ export interface StyleEngineSeedReport {
   styleTemplatesUpdated: number;
   antiAiRulesCreated: number;
   antiAiRulesUpdated: number;
+  writingTechniquesCreated: number;
+  writingTechniquesUpdated: number;
   styleProfilesCreated: number;
   styleProfilesUpdated: number;
 }
@@ -45,6 +46,8 @@ const EMPTY_STYLE_ENGINE_REPORT: StyleEngineSeedReport = {
   styleTemplatesUpdated: 0,
   antiAiRulesCreated: 0,
   antiAiRulesUpdated: 0,
+  writingTechniquesCreated: 0,
+  writingTechniquesUpdated: 0,
   styleProfilesCreated: 0,
   styleProfilesUpdated: 0,
 };
@@ -267,6 +270,8 @@ function mergeBootstrapReport(
     styleTemplatesUpdated: base.styleTemplatesUpdated + (patch.styleTemplatesUpdated ?? 0),
     antiAiRulesCreated: base.antiAiRulesCreated + (patch.antiAiRulesCreated ?? 0),
     antiAiRulesUpdated: base.antiAiRulesUpdated + (patch.antiAiRulesUpdated ?? 0),
+    writingTechniquesCreated: base.writingTechniquesCreated + (patch.writingTechniquesCreated ?? 0),
+    writingTechniquesUpdated: base.writingTechniquesUpdated + (patch.writingTechniquesUpdated ?? 0),
     styleProfilesCreated: base.styleProfilesCreated + (patch.styleProfilesCreated ?? 0),
     styleProfilesUpdated: base.styleProfilesUpdated + (patch.styleProfilesUpdated ?? 0),
   };
@@ -281,6 +286,8 @@ function mergeStyleEngineReport(
     styleTemplatesUpdated: base.styleTemplatesUpdated + (patch.styleTemplatesUpdated ?? 0),
     antiAiRulesCreated: base.antiAiRulesCreated + (patch.antiAiRulesCreated ?? 0),
     antiAiRulesUpdated: base.antiAiRulesUpdated + (patch.antiAiRulesUpdated ?? 0),
+    writingTechniquesCreated: base.writingTechniquesCreated + (patch.writingTechniquesCreated ?? 0),
+    writingTechniquesUpdated: base.writingTechniquesUpdated + (patch.writingTechniquesUpdated ?? 0),
     styleProfilesCreated: base.styleProfilesCreated + (patch.styleProfilesCreated ?? 0),
     styleProfilesUpdated: base.styleProfilesUpdated + (patch.styleProfilesUpdated ?? 0),
   };
@@ -402,21 +409,6 @@ function buildStyleTemplateWriteData(template: DefaultTemplateDefinition) {
   };
 }
 
-function buildAntiAiRuleWriteData(rule: DefaultAntiAiRuleDefinition) {
-  return {
-    name: rule.name,
-    type: rule.type,
-    severity: rule.severity,
-    description: rule.description,
-    detectPatternsJson: serializeJson(rule.detectPatterns),
-    rewriteSuggestion: rule.rewriteSuggestion,
-    promptInstruction: rule.promptInstruction,
-    autoRewrite: rule.autoRewrite,
-    enabled: rule.enabled,
-    globalBaselineEnabled: rule.globalBaselineEnabled,
-  };
-}
-
 function buildStarterStyleProfileSourceRef(definition: DefaultStarterStyleProfileDefinition): string {
   return `${STARTER_STYLE_PROFILE_SOURCE_PREFIX}${definition.key}`;
 }
@@ -523,33 +515,24 @@ async function seedStarterStyleProfiles(
 export async function seedStyleEngineStarterData(
   mode: SystemResourceSeedMode = "missing_only",
 ): Promise<StyleEngineSeedReport> {
+  let report = { ...EMPTY_STYLE_ENGINE_REPORT };
+
+  // 反 AI 规则从 YAML 文件同步（替代原 DEFAULT_ANTI_AI_RULES 硬编码）
+  const antiAiResult = await syncAntiAiRulesFromFileSystem(mode);
+  report = mergeStyleEngineReport(report, {
+    antiAiRulesCreated: antiAiResult.created,
+    antiAiRulesUpdated: antiAiResult.updated,
+  });
+
+  // 文笔技法从 MD 文件同步
+  const techniqueResult = await syncWritingTechniquesFromFileSystem(mode);
+  report = mergeStyleEngineReport(report, {
+    writingTechniquesCreated: techniqueResult.created,
+    writingTechniquesUpdated: techniqueResult.updated,
+  });
+
+  // 写法模板和风格画像仍在事务中处理
   return prisma.$transaction(async (tx) => {
-    let report = { ...EMPTY_STYLE_ENGINE_REPORT };
-
-    for (const rule of DEFAULT_ANTI_AI_RULES) {
-      const existing = await tx.antiAiRule.findUnique({
-        where: { key: rule.key },
-        select: { id: true },
-      });
-      if (existing) {
-        if (mode === "sync_existing") {
-          await tx.antiAiRule.update({
-            where: { key: rule.key },
-            data: buildAntiAiRuleWriteData(rule),
-          });
-          report = mergeStyleEngineReport(report, { antiAiRulesUpdated: 1 });
-        }
-        continue;
-      }
-
-      await tx.antiAiRule.create({
-        data: {
-          key: rule.key,
-          ...buildAntiAiRuleWriteData(rule),
-        },
-      });
-      report = mergeStyleEngineReport(report, { antiAiRulesCreated: 1 });
-    }
 
     for (const template of DEFAULT_STYLE_TEMPLATES) {
       const existing = await tx.styleTemplate.findUnique({

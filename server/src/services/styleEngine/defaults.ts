@@ -1,6 +1,4 @@
 import type {
-  AntiAiRuleType,
-  AntiAiSeverity,
   CharacterRules,
   LanguageRules,
   NarrativeRules,
@@ -22,19 +20,8 @@ export interface DefaultTemplateDefinition {
   defaultAntiAiRuleKeys: string[];
 }
 
-export interface DefaultAntiAiRuleDefinition {
-  key: string;
-  name: string;
-  type: AntiAiRuleType;
-  severity: AntiAiSeverity;
-  description: string;
-  detectPatterns: string[];
-  rewriteSuggestion: string;
-  promptInstruction: string;
-  autoRewrite: boolean;
-  enabled: boolean;
-  globalBaselineEnabled: boolean;
-}
+// DEFAULT_ANTI_AI_RULES 已迁移至 server/src/data/antiAiRules/*.yaml
+// 启动时由 FileToDbSyncService.syncAntiAiRulesFromFileSystem() 自动同步到数据库
 
 export interface DefaultStarterStyleProfileDefinition {
   key: string;
@@ -447,161 +434,5 @@ export const DEFAULT_STARTER_STYLE_PROFILES: DefaultStarterStyleProfileDefinitio
   },
 ];
 
-export const DEFAULT_ANTI_AI_RULES: DefaultAntiAiRuleDefinition[] = [
-  {
-    key: "forbid-explicit-psychology",
-    name: "禁止解释型心理描写",
-    type: "forbidden",
-    severity: "high",
-    description: "禁止直接使用“他感到”“他意识到”等句式解释人物心理。",
-    detectPatterns: ["他感到", "她感到", "他意识到", "她意识到", "他明白了", "她明白了"],
-    rewriteSuggestion: "把心理解释改成动作、语气、停顿、环境反应或结果。",
-    promptInstruction: "禁止直接解释人物心理，人物状态必须通过行为、动作、语气或环境反应体现。",
-    autoRewrite: true,
-    enabled: true,
-    globalBaselineEnabled: true,
-  },
-  {
-    key: "forbid-ending-elevation",
-    name: "禁止段尾升华",
-    type: "forbidden",
-    severity: "high",
-    description: "禁止在段尾或收尾处用总结句升华主题。",
-    detectPatterns: ["生活就是", "命运总会", "归根结底", "说到底", "这就是"],
-    rewriteSuggestion: "删除升华句，回到具体动作、现场或悬而未决的处境。",
-    promptInstruction: "禁止段尾升华或总结主题，收尾必须落回具体情境。",
-    autoRewrite: true,
-    enabled: true,
-    globalBaselineEnabled: true,
-  },
-  {
-    key: "forbid-theme-summary",
-    name: "禁止总结主题",
-    type: "forbidden",
-    severity: "high",
-    description: "禁止把段落写成总结中心思想或提炼人生道理。",
-    detectPatterns: ["这说明", "这意味着", "归根结底", "其实就是"],
-    rewriteSuggestion: "删掉主题总结，让信息通过事件和结果自然显现。",
-    promptInstruction: "不要总结主题，不要替读者提炼中心思想。",
-    autoRewrite: true,
-    enabled: true,
-    globalBaselineEnabled: true,
-  },
-  {
-    key: "forbid-direct-preaching",
-    name: "禁止直接说教",
-    type: "forbidden",
-    severity: "medium",
-    description: "禁止作者替角色或读者做直接价值判断和说教。",
-    detectPatterns: ["我们都应该", "人总要学会", "真正重要的是"],
-    rewriteSuggestion: "改成角色具体处境或对话，不做抽象说教。",
-    promptInstruction: "禁止直接说教或价值判断，让意义落在事件本身。",
-    autoRewrite: true,
-    enabled: true,
-    globalBaselineEnabled: true,
-  },
-  {
-    key: "risk-even-paragraph-length",
-    name: "段落长度过于整齐",
-    type: "risk",
-    severity: "medium",
-    description: "段落长度和节奏过于平均，容易产生 AI 作文感。",
-    detectPatterns: ["段落整齐", "节奏平均"],
-    rewriteSuggestion: "打破段落长度均衡，让句子和段落有自然起伏。",
-    promptInstruction: "注意避免每段都过于工整、平均和像标准作文。",
-    autoRewrite: false,
-    enabled: true,
-    globalBaselineEnabled: true,
-  },
-  {
-    key: "risk-three-paragraphs-exposition",
-    name: "连续三段解释性叙事",
-    type: "risk",
-    severity: "high",
-    description: "连续几段只有解释没有动作，会削弱现场感。",
-    detectPatterns: ["连续解释", "没有动作"],
-    rewriteSuggestion: "插入动作、对话、环境反馈，减少连段说明。",
-    promptInstruction: "注意避免连续几段只有解释没有动作或对话。",
-    autoRewrite: false,
-    enabled: true,
-    globalBaselineEnabled: true,
-  },
-  {
-    key: "risk-dialogue-too-functional",
-    name: "对话纯功能推进",
-    type: "risk",
-    severity: "medium",
-    description: "对话只有信息推进，没有人物语气和生活噪音。",
-    detectPatterns: ["告诉你", "我们现在要", "接下来就"],
-    rewriteSuggestion: "补入停顿、绕弯、语气差异和无效信息。",
-    promptInstruction: "对话不要只承担推进剧情功能，要保留人物语气和生活噪音。",
-    autoRewrite: false,
-    enabled: true,
-    globalBaselineEnabled: true,
-  },
-  {
-    key: "risk-repeated-sentence-structure",
-    name: "句式重复率过高",
-    type: "risk",
-    severity: "medium",
-    description: "连续句式过于整齐，容易显得机械。",
-    detectPatterns: ["首先", "然后", "接着", "最后"],
-    rewriteSuggestion: "拉开句式长度和起句方式，打散结构。",
-    promptInstruction: "警惕连续句式重复和排比化表达。",
-    autoRewrite: false,
-    enabled: true,
-    globalBaselineEnabled: true,
-  },
-  {
-    key: "encourage-useless-action",
-    name: "鼓励无意义小动作",
-    type: "encourage",
-    severity: "low",
-    description: "鼓励加入真实但不推动主线的小动作增强人味。",
-    detectPatterns: [],
-    rewriteSuggestion: "补入挠头、点烟、抠包装、挪椅子等小动作。",
-    promptInstruction: "优先加入真实但不推动主线的小动作，增加生活感。",
-    autoRewrite: false,
-    enabled: true,
-    globalBaselineEnabled: false,
-  },
-  {
-    key: "encourage-reality-gap",
-    name: "鼓励现实落差",
-    type: "encourage",
-    severity: "low",
-    description: "让人物预期和现实结果之间出现落差。",
-    detectPatterns: [],
-    rewriteSuggestion: "补出人物预期与实际结果之间的差距。",
-    promptInstruction: "优先制造现实落差，让人物预期和结果不完全一致。",
-    autoRewrite: false,
-    enabled: true,
-    globalBaselineEnabled: false,
-  },
-  {
-    key: "encourage-hard-mouth-compensation",
-    name: "鼓励嘴硬补偿",
-    type: "encourage",
-    severity: "low",
-    description: "人物吃瘪后用嘴硬、转移或找补来维持体面。",
-    detectPatterns: [],
-    rewriteSuggestion: "给角色补一句嘴硬找补或自我合理化。",
-    promptInstruction: "人物吃瘪后可用嘴硬、转移或找补来补偿体面。",
-    autoRewrite: false,
-    enabled: true,
-    globalBaselineEnabled: false,
-  },
-  {
-    key: "encourage-life-noise",
-    name: "鼓励生活噪音",
-    type: "encourage",
-    severity: "low",
-    description: "适当加入与主线不完全相关的生活噪音增加现场感。",
-    detectPatterns: [],
-    rewriteSuggestion: "补入环境声、杂音、小打断或生活性信息。",
-    promptInstruction: "适当保留生活噪音和无效信息，增强现场感。",
-    autoRewrite: false,
-    enabled: true,
-    globalBaselineEnabled: false,
-  },
-];
+// DEFAULT_ANTI_AI_RULES 已迁移至 server/src/data/antiAiRules/*.yaml
+// 启动时由 FileToDbSyncService.syncAntiAiRulesFromFileSystem() 自动同步到数据库
