@@ -193,6 +193,8 @@ function createWorkspaceContext() {
       to: 11,
     }],
     styleSummary: "restrained · 视角: third_person · 节奏: balanced · 情绪强度: medium",
+    styleContractText: "",
+    writingTechniques: [],
     chapterSummary: "The lead braces for the next hit.",
     openAuditIssues: [{
       id: "issue-1",
