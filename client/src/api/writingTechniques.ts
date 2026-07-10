@@ -47,6 +47,12 @@ export async function toggleWritingTechnique(key: string, enabled: boolean): Pro
   await apiClient.put(`/writing-techniques/${key}/toggle`, { enabled });
 }
 
+// 批量开关
+export async function toggleAllWritingTechniques(enabled: boolean): Promise<{ count: number; enabled: boolean }> {
+  const { data } = await apiClient.put(`/writing-techniques/bulk/toggle`, { enabled });
+  return data.data;
+}
+
 // 三级池子解析
 export async function resolveTechniquePool(params?: {
   styleProfileId?: string;
