@@ -4,7 +4,7 @@ const assert = require("node:assert/strict");
 const {
   assessChapterExecutionContractShape,
   formatChapterTaskSheetQualityFailure,
-} = require("../../../shared/dist/types/chapterTaskSheetQuality.js");
+} = require("../../../../shared/dist/types/chapterTaskSheetQuality.js");
 const {
   ChapterTaskSheetQualityGateService,
 } = require("../../../dist/services/novel/volume/ChapterTaskSheetQualityGateService.js");
@@ -161,7 +161,7 @@ test("chapter task sheet quality service passes usable semantic assessments", as
 
 test("chapter task sheet quality prompt is registered as a product prompt asset", () => {
   const registrySource = require("node:fs").readFileSync(
-    require("node:path").join(__dirname, "..", "src", "prompting", "registry.ts"),
+    require("node:path").join(__dirname, "..", "..", "..", "src", "prompting", "registry.ts"),
     "utf8",
   );
   assert.match(registrySource, /novel\.volume\.chapter_task_sheet_quality@v1/);

@@ -1,6 +1,9 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const http = require("node:http");
+
+process.env.API_TOKEN = "test-token";
+
 const { createApp } = require("../../dist/app.js");
 const { imageGenerationService } = require("../../dist/services/image/ImageGenerationService.js");
 const { imagePromptOptimizationService } = require("../../dist/services/image/ImagePromptOptimizationService.js");
@@ -107,6 +110,7 @@ test("image routes accept and return novel_cover payloads", async () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
       },
       body: JSON.stringify({
         sceneType: "novel_cover",
@@ -142,6 +146,7 @@ test("image routes accept and return novel_cover payloads", async () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
       },
       body: JSON.stringify({
         sceneType: "novel_cover",
@@ -163,7 +168,9 @@ test("image routes accept and return novel_cover payloads", async () => {
       outputLanguage: "zh",
     });
 
-    const listResponse = await httpFetch(`http://127.0.0.1:${port}/api/images/assets?sceneType=novel_cover&sceneId=novel-cover-1`);
+    const listResponse = await httpFetch(`http://127.0.0.1:${port}/api/images/assets?sceneType=novel_cover&sceneId=novel-cover-1`, {
+      headers: { Authorization: "Bearer test-token" },
+    });
     assert.equal(listResponse.status, 200);
     const listPayload = await listResponse.json();
     assert.equal(listPayload.success, true);

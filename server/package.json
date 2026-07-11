@@ -19,6 +19,7 @@
     "dev:api": "node scripts/ensure-dev-prisma.cjs && node scripts/stop-stale-dev-server.cjs && tsx watch --clear-screen=false --exclude \"./dist/**\" --exclude \"./tests/**\" --exclude \"./src/prisma/migrations/**\" --exclude \"**/*.log\" --exclude \"**/*.tmp\" src/app.ts",
     "prebuild": "prisma generate --config prisma.config.ts",
     "build": "tsc -p tsconfig.json",
+    "postbuild": "node -e \"const fs=require('fs'),p=require('path');const src=p.join(__dirname,'src/prompts');const dest=p.join(__dirname,'dist/prompts');if(fs.existsSync(src)){fs.mkdirSync(dest,{recursive:true});fs.readdirSync(src).forEach(f=>fs.copyFileSync(p.join(src,f),p.join(dest,f)))}\"",
     "start": "node dist/app.js",
     "start:api": "node dist/app.js",
     "typecheck": "pnpm prisma:generate && tsc -p tsconfig.json --noEmit",

@@ -163,3 +163,58 @@ rules:
     suggestions:
       - 用具体动作写克制的状态
       - 如"他握紧的拳头慢慢松开""她深吸一口气，将话咽了回去"
+
+  # === 极迪来源补充 ===
+  - key: replaceable-sudden
+    name: 忽然/突然（高频）
+    pattern: "(忽然|突然)"
+    matchType: regex
+    category: replaceable_word
+    weight: 0.3
+    suggestions:
+      - 替换（二字）：蓦地、遽然、倏忽、陡然、猝然
+      - 替换（三字）：冷不丁、猛地一下、一不留神
+      - 替换（四字）：毫无征兆、猝不及防、始料未及、晴天霹雳
+      - 替换（短语）：像被人从背后推了一把 / 像一盆冷水兜头浇下
+
+  - key: replaceable-laugh-variant
+    name: 轻笑/嗤笑（场景化）
+    pattern: "(轻笑|嗤笑|笑着说|笑了笑)"
+    matchType: regex
+    category: replaceable_word
+    weight: 0.3
+    suggestions:
+      - 优雅从容：嘴角微扬、噙着笑、唇边浮起一丝浅笑
+      - 戏谑嘲讽：嗤地一声笑出来、鼻腔里哼出一声笑
+      - 温柔宠溺：眼底漾开笑意、轻轻弯了弯嘴角
+      - 危险神秘：意味深长地勾了勾唇、笑意不达眼底
+      - 无奈苦笑：扯了扯嘴角、苦涩地弯了弯唇
+      - 俏皮灵动：眼睛弯成月牙、噗嗤一声笑出来
+
+  - key: replaceable-eye-red-extended
+    name: 耳朵微红/眼眶发红（情绪身体反应）
+    pattern: "(耳朵微红|耳尖泛红|眼眶发红|眼眶微红)"
+    matchType: regex
+    category: replaceable_word
+    weight: 0.3
+    suggestions:
+      - 吃醋：攥紧了杯子 / 嘴唇抿成一条线 / 指甲掐进掌心
+      - 心痛：像被人捏住了心脏 / 呼吸一滞 / 一口气堵在喉咙
+      - 心动：心跳漏了一拍 / 耳边嗡嗡作响 / 手心沁出薄汗
+      - 害羞：把脸埋进围巾 / 低头摆弄衣角 / 目光四处躲闪
+      - 暧昧：声音不自觉放轻 / 空气突然变稠 / 指尖碰到又缩回
+      - 动情：喉结滚动了一下 / 呼吸变得又轻又浅 / 无意识咬住下唇
+
+  - key: replaceable-look-extended
+    name: 看（场景化扩展）
+    pattern: "^(看|看着|看了看)$"
+    matchType: regex
+    category: replaceable_word
+    weight: 0.2
+    suggestions:
+      - 专注/深情：凝视、定定地望着、目光钉在XX身上
+      - 不屑/轻蔑：瞥了一眼、乜斜、目光扫过就收回
+      - 警惕/紧张：窥视、余光瞟着、眼睛一瞬不瞬地盯着
+      - 怅惘/回忆：远眺、失神地望着、目光穿过XX落在远处
+      - 偷偷/暗恋：悄悄抬眼、从睫毛缝隙里偷看、假装不经意地瞥向
+      - 审视/打量：上下打量、目光像X光一样扫过、眼神掂量着

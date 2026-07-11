@@ -1,6 +1,9 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const http = require("node:http");
+
+process.env.API_TOKEN = "test-token";
+
 const { createApp } = require("../../dist/app.js");
 const { DirectorCommandService } = require("../../dist/services/novel/director/commands/DirectorCommandService.js");
 const { DirectorTaskSnapshotService } = require("../../dist/services/novel/director/projections/DirectorTaskSnapshotService.js");
@@ -22,12 +25,15 @@ function requestJson(port, method, path, body) {
       port,
       path,
       method,
-      headers: payload
-        ? {
-          "Content-Type": "application/json",
-          "Content-Length": Buffer.byteLength(payload),
-        }
-        : undefined,
+      headers: {
+        ...(payload
+          ? {
+            "Content-Type": "application/json",
+            "Content-Length": Buffer.byteLength(payload),
+          }
+          : {}),
+        Authorization: "Bearer test-token",
+      },
     }, (res) => {
       let raw = "";
       res.setEncoding("utf8");

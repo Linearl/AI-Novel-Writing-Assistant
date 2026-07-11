@@ -14,6 +14,7 @@ const structuredFallbackSettings = require("../../dist/llm/structuredFallbackSet
 const {
   DefaultNovelApplicationServices,
 } = require("../../dist/services/novel/application/NovelApplicationServices.js");
+const { getSharedNovelServices } = require("../../dist/services/novel/application/sharedNovelServices.js");
 const { NovelFramingSuggestionService } = require("../../dist/services/novel/NovelFramingSuggestionService.js");
 const { ragServices } = require("../../dist/services/rag/index.js");
 const { providerBalanceService } = require("../../dist/services/settings/ProviderBalanceService.js");
@@ -155,7 +156,7 @@ test("PUT /api/settings/rag saves extended settings and auto-enqueues reindex", 
         embeddingTimeoutMs: current.embeddingTimeoutMs,
         embeddingMaxRetries: current.embeddingMaxRetries,
         embeddingRetryBaseMs: current.embeddingRetryBaseMs,
-        enabled: current.enabled,
+        enabled: true,
         qdrantUrl: current.qdrantUrl,
         qdrantTimeoutMs: current.qdrantTimeoutMs,
         qdrantUpsertMaxBytes: current.qdrantUpsertMaxBytes,
@@ -1565,16 +1566,17 @@ test("creative hub interrupt route resumes via langgraph and updates thread stat
 });
 
 test("novel state and planning routes return success payloads", async () => {
+  const singleton = getSharedNovelServices();
   const originalMethods = {
-    getNovelState: DefaultNovelApplicationServices.prototype.getNovelState,
-    getLatestStateSnapshot: DefaultNovelApplicationServices.prototype.getLatestStateSnapshot,
-    getChapterStateSnapshot: DefaultNovelApplicationServices.prototype.getChapterStateSnapshot,
-    rebuildNovelState: DefaultNovelApplicationServices.prototype.rebuildNovelState,
-    generateBookPlan: DefaultNovelApplicationServices.prototype.generateBookPlan,
-    generateArcPlan: DefaultNovelApplicationServices.prototype.generateArcPlan,
-    generateChapterPlan: DefaultNovelApplicationServices.prototype.generateChapterPlan,
-    getChapterPlan: DefaultNovelApplicationServices.prototype.getChapterPlan,
-    replanNovel: DefaultNovelApplicationServices.prototype.replanNovel,
+    getNovelState: singleton.getNovelState,
+    getLatestStateSnapshot: singleton.getLatestStateSnapshot,
+    getChapterStateSnapshot: singleton.getChapterStateSnapshot,
+    rebuildNovelState: singleton.rebuildNovelState,
+    generateBookPlan: singleton.generateBookPlan,
+    generateArcPlan: singleton.generateArcPlan,
+    generateChapterPlan: singleton.generateChapterPlan,
+    getChapterPlan: singleton.getChapterPlan,
+    replanNovel: singleton.replanNovel,
   };
   const novelId = "novel-route-test";
   const chapterId = "chapter-route-test";
@@ -1620,15 +1622,15 @@ test("novel state and planning routes return success payloads", async () => {
       updatedAt: new Date().toISOString(),
     }],
   };
-  DefaultNovelApplicationServices.prototype.getNovelState = async () => ({ latestSnapshot: snapshot, snapshots: [snapshot] });
-  DefaultNovelApplicationServices.prototype.getLatestStateSnapshot = async () => snapshot;
-  DefaultNovelApplicationServices.prototype.getChapterStateSnapshot = async () => snapshot;
-  DefaultNovelApplicationServices.prototype.rebuildNovelState = async () => ({ rebuiltCount: 1, latestSnapshot: snapshot });
-  DefaultNovelApplicationServices.prototype.generateBookPlan = async () => ({ ...plan, chapterId: null, level: "book", scenes: [] });
-  DefaultNovelApplicationServices.prototype.generateArcPlan = async () => ({ ...plan, chapterId: null, level: "arc", externalRef: "arc-1", scenes: [] });
-  DefaultNovelApplicationServices.prototype.generateChapterPlan = async () => plan;
-  DefaultNovelApplicationServices.prototype.getChapterPlan = async () => plan;
-  DefaultNovelApplicationServices.prototype.replanNovel = async () => ({ ...plan, id: "plan-replanned" });
+  singleton.getNovelState = async () => ({ latestSnapshot: snapshot, snapshots: [snapshot] });
+  singleton.getLatestStateSnapshot = async () => snapshot;
+  singleton.getChapterStateSnapshot = async () => snapshot;
+  singleton.rebuildNovelState = async () => ({ rebuiltCount: 1, latestSnapshot: snapshot });
+  singleton.generateBookPlan = async () => ({ ...plan, chapterId: null, level: "book", scenes: [] });
+  singleton.generateArcPlan = async () => ({ ...plan, chapterId: null, level: "arc", externalRef: "arc-1", scenes: [] });
+  singleton.generateChapterPlan = async () => plan;
+  singleton.getChapterPlan = async () => plan;
+  singleton.replanNovel = async () => ({ ...plan, id: "plan-replanned" });
 
   const app = createApp();
   const server = http.createServer(app);
@@ -1716,16 +1718,17 @@ test("novel state and planning routes return success payloads", async () => {
     assert.equal(replanResponse.status, 200);
     assert.equal((await replanResponse.json()).data.id, "plan-replanned");
   } finally {
-    Object.assign(DefaultNovelApplicationServices.prototype, originalMethods);
+    Object.assign(singleton, originalMethods);
     await new Promise((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
   }
 });
 
 test("novel world slice routes return success payloads", async () => {
+  const singleton = getSharedNovelServices();
   const originalMethods = {
-    getWorldSlice: DefaultNovelApplicationServices.prototype.getWorldSlice,
-    refreshWorldSlice: DefaultNovelApplicationServices.prototype.refreshWorldSlice,
-    updateWorldSliceOverrides: DefaultNovelApplicationServices.prototype.updateWorldSliceOverrides,
+    getWorldSlice: singleton.getWorldSlice,
+    refreshWorldSlice: singleton.refreshWorldSlice,
+    updateWorldSliceOverrides: singleton.updateWorldSliceOverrides,
   };
   const novelId = "novel-world-slice-route";
   const worldSliceView = {
@@ -1799,12 +1802,12 @@ test("novel world slice routes return success payloads", async () => {
     isStale: false,
   };
 
-  DefaultNovelApplicationServices.prototype.getWorldSlice = async () => worldSliceView;
-  DefaultNovelApplicationServices.prototype.refreshWorldSlice = async () => ({
+  singleton.getWorldSlice = async () => worldSliceView;
+  singleton.refreshWorldSlice = async () => ({
     ...worldSliceView,
     isStale: false,
   });
-  DefaultNovelApplicationServices.prototype.updateWorldSliceOverrides = async () => ({
+  singleton.updateWorldSliceOverrides = async () => ({
     ...worldSliceView,
     overrides: {
       ...worldSliceView.overrides,
@@ -1852,16 +1855,17 @@ test("novel world slice routes return success payloads", async () => {
     assert.equal(updateResponse.status, 200);
     assert.equal((await updateResponse.json()).data.overrides.scopeNote, "只保留现实压力。");
   } finally {
-    Object.assign(DefaultNovelApplicationServices.prototype, originalMethods);
+    Object.assign(singleton, originalMethods);
     await new Promise((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
   }
 });
 
 test("novel audit routes return success payloads", async () => {
+  const singleton = getSharedNovelServices();
   const originalMethods = {
-    auditChapter: DefaultNovelApplicationServices.prototype.auditChapter,
-    listChapterAuditReports: DefaultNovelApplicationServices.prototype.listChapterAuditReports,
-    resolveAuditIssues: DefaultNovelApplicationServices.prototype.resolveAuditIssues,
+    auditChapter: singleton.auditChapter,
+    listChapterAuditReports: singleton.listChapterAuditReports,
+    resolveAuditIssues: singleton.resolveAuditIssues,
   };
   const novelId = "novel-audit-route-test";
   const chapterId = "chapter-audit-route-test";
@@ -1907,9 +1911,9 @@ test("novel audit routes return success payloads", async () => {
     }],
     auditReports: [report],
   };
-  DefaultNovelApplicationServices.prototype.auditChapter = async () => auditResult;
-  DefaultNovelApplicationServices.prototype.listChapterAuditReports = async () => [report];
-  DefaultNovelApplicationServices.prototype.resolveAuditIssues = async () => [{ ...issue, status: "resolved" }];
+  singleton.auditChapter = async () => auditResult;
+  singleton.listChapterAuditReports = async () => [report];
+  singleton.resolveAuditIssues = async () => [{ ...issue, status: "resolved" }];
 
   const app = createApp();
   const server = http.createServer(app);
@@ -1950,7 +1954,7 @@ test("novel audit routes return success payloads", async () => {
     assert.equal(resolveResponse.status, 200);
     assert.equal((await resolveResponse.json()).data[0].status, "resolved");
   } finally {
-    Object.assign(DefaultNovelApplicationServices.prototype, originalMethods);
+    Object.assign(singleton, originalMethods);
     await new Promise((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
   }
 });

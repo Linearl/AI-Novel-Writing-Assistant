@@ -1,6 +1,9 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const http = require("node:http");
+
+process.env.API_TOKEN = "test-token";
+
 const { createApp } = require("../../dist/app.js");
 const { prisma } = require("../../dist/db/prisma.js");
 
@@ -69,7 +72,9 @@ test("GET /api/settings/api-keys exposes image generation metadata for supported
   const server = http.createServer(app);
   const port = await listen(server);
   try {
-    const response = await originalFetch(`http://127.0.0.1:${port}/api/settings/api-keys`);
+    const response = await originalFetch(`http://127.0.0.1:${port}/api/settings/api-keys`, {
+      headers: { Authorization: "Bearer test-token" },
+    });
     assert.equal(response.status, 200);
     const payload = await response.json();
     assert.equal(payload.success, true);
@@ -144,6 +149,7 @@ test("PUT /api/settings/api-keys/openai saves image generation model settings", 
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
       },
       body: JSON.stringify({
         key: "test-openai-key",
@@ -223,6 +229,7 @@ test("POST /api/settings/custom-providers saves optional image model settings", 
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer test-token",
       },
       body: JSON.stringify({
         name: "codex",

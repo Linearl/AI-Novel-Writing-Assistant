@@ -1,0 +1,21 @@
+key: forbid-direct-preaching-v2
+name: 禁止说教（归谬替代）
+type: forbidden
+severity: medium
+description: 禁止直接说教式表达，应使用归谬法（顺着逻辑推演到荒谬）替代。
+detectPatterns:
+  - 这告诉我们
+  - 这说明了
+  - 由此可见
+  - 从中我们学到
+  - 所以我们应该
+  - 真正重要的是
+  - 我们都应该
+  - 人总要学会
+  - 最重要的是
+  - 这个故事告诉我们
+rewriteSuggestion: 用归谬法替代：顺着对方的逻辑推演到荒谬，让读者自己得出结论。先承认对方观点，再沿着逻辑推演一步，推到一个明显不合理的结局，让逻辑自己崩塌。
+promptInstruction: 禁止直接说教。如需表达道理，使用归谬法——顺着逻辑推演到荒谬，让读者自行体会。三句口诀：先顺着对方逻辑走一步，再推到荒谬让逻辑自己站不住，最后让道理自然显现。
+autoRewrite: false
+defaultEnabled: true
+defaultGlobalBaseline: true

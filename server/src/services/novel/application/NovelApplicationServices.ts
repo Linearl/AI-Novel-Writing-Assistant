@@ -105,6 +105,12 @@ export class DefaultNovelApplicationServices implements NovelApplicationServices
   //  Pure-delegation methods — route files use Pick<> to access these
   // ================================================================
 
+  // Novel CRUD (delegate to core)
+  listNovels = (...args: any[]) => (this.core as any).listNovels(...args);
+  createNovel = (...args: any[]) => (this.core as any).createNovel(...args);
+  updateNovel = (...args: any[]) => (this.core as any).updateNovel(...args);
+  deleteNovel = (...args: any[]) => (this.core as any).deleteNovel(...args);
+
   // Chapter management (delegate to core)
   listChapters = (novelId: string) => this.core.listChapters(novelId);
   createChapter = (novelId: string, input: any) => this.core.createChapter(novelId, input);
@@ -137,6 +143,17 @@ export class DefaultNovelApplicationServices implements NovelApplicationServices
   getWorldSlice = (...args: any[]) => (this.worldSliceService as any).getWorldSlice?.(...args);
   refreshWorldSlice = (...args: any[]) => (this.worldSliceService as any).refreshWorldSlice?.(...args);
   updateWorldSliceOverrides = (...args: any[]) => (this.worldSliceService as any).updateWorldSliceOverrides?.(...args);
+
+  // Planning & state (delegate to core)
+  getNovelState = (...args: any[]) => (this.core as any).getNovelState?.(...args);
+  getLatestStateSnapshot = (...args: any[]) => (this.core as any).getLatestStateSnapshot?.(...args);
+  getChapterStateSnapshot = (...args: any[]) => (this.core as any).getChapterStateSnapshot?.(...args);
+  rebuildNovelState = (...args: any[]) => (this.core as any).rebuildNovelState?.(...args);
+  generateBookPlan = (...args: any[]) => (this.core as any).generateBookPlan?.(...args);
+  generateArcPlan = (...args: any[]) => (this.core as any).generateArcPlan?.(...args);
+  generateChapterPlan = (...args: any[]) => (this.core as any).generateChapterPlan?.(...args);
+  getChapterPlan = (...args: any[]) => (this.core as any).getChapterPlan?.(...args);
+  replanNovel = (...args: any[]) => (this.core as any).replanNovel?.(...args);
 
   async createCharacter(...args: Parameters<NovelCoreService["createCharacter"]>) {
     const [novelId] = args;

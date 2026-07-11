@@ -5,7 +5,7 @@ const {
   buildChapterQualityLoopAssessment,
   classifyChapterQualityLoopRiskFlags,
   hasContinuableChapterQualityLoopRiskFlags,
-} = require("../../../shared/dist/types/chapterQualityLoop.js");
+} = require("../../../../shared/dist/types/chapterQualityLoop.js");
 const {
   buildChapterQualityLoopChapterUpdate,
 } = require("../../../dist/services/novel/quality/ChapterQualityLoopService.js");

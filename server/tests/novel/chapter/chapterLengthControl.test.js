@@ -6,7 +6,7 @@ const {
   parseChapterScenePlan,
   resolveLengthBudgetContract,
   serializeChapterScenePlan,
-} = require("../../../shared/dist/types/chapterLengthControl.js");
+} = require("../../../../shared/dist/types/chapterLengthControl.js");
 
 test("chapter length control normalizes scene targets to the chapter target budget", () => {
   const plan = normalizeChapterScenePlan({

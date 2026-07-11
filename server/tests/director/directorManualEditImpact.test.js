@@ -199,57 +199,94 @@ test("workspace analyzer defaults to deterministic inventory interpretation", as
     throw new Error("structured LLM should not be called by default");
   });
 
-  const originalFindUnique = prisma.novel.findUnique;
-  const originalKnowledgeFindUnique = prisma.knowledgeDocument?.findUnique;
+  // Save original prisma methods for restore
+  const originals = {
+    novelFindUnique: prisma.novel.findUnique,
+    bookContractFindUnique: prisma.bookContract?.findUnique,
+    storyMacroPlanFindUnique: prisma.storyMacroPlan?.findUnique,
+    characterCount: prisma.character?.count,
+    characterFindFirst: prisma.character?.findFirst,
+    volumePlanFindMany: prisma.volumePlan?.findMany,
+    volumeChapterPlanCount: prisma.volumeChapterPlan?.count,
+    volumeChapterPlanFindMany: prisma.volumeChapterPlan?.findMany,
+    worldFindUnique: prisma.world?.findUnique,
+    knowledgeDocumentFindUnique: prisma.knowledgeDocument?.findUnique,
+    bookAnalysisFindUnique: prisma.bookAnalysis?.findUnique,
+    chapterFindMany: prisma.chapter?.findMany,
+    qualityReportFindMany: prisma.qualityReport?.findMany,
+    auditReportFindMany: prisma.auditReport?.findMany,
+    storyStateSnapshotFindMany: prisma.storyStateSnapshot?.findMany,
+    payoffLedgerItemFindMany: prisma.payoffLedgerItem?.findMany,
+    characterResourceLedgerItemFindMany: prisma.characterResourceLedgerItem?.findMany,
+    generationJobFindFirst: prisma.generationJob?.findFirst,
+    novelWorkflowTaskFindFirst: prisma.novelWorkflowTask?.findFirst,
+    directorArtifactFindMany: prisma.directorArtifact?.findMany,
+  };
+
+  // Mock novel findUnique (with continuationSetupJson for hasSourceKnowledge)
   prisma.novel.findUnique = async () => ({
     id: "novel-1",
     title: "测试小说",
     worldId: null,
-    sourceKnowledgeDocumentId: "kd-1",
-    continuationBookAnalysisId: null,
+    continuationSetupJson: JSON.stringify({ sourceKnowledgeDocumentId: "kd-1" }),
     updatedAt: new Date(),
   });
-  if (prisma.knowledgeDocument) {
-    prisma.knowledgeDocument.findUnique = async () => ({
-      id: "kd-1",
-      activeVersionId: "v1",
-      activeVersionNumber: 1,
-      updatedAt: new Date(),
-    });
-  }
+
+  // Mock all plan-data calls to return empty/null (no contracts, characters, volumes)
+  if (prisma.bookContract) prisma.bookContract.findUnique = async () => null;
+  if (prisma.storyMacroPlan) prisma.storyMacroPlan.findUnique = async () => null;
+  if (prisma.character) prisma.character.count = async () => 0;
+  if (prisma.character) prisma.character.findFirst = async () => null;
+  if (prisma.volumePlan) prisma.volumePlan.findMany = async () => [];
+  if (prisma.volumeChapterPlan) prisma.volumeChapterPlan.count = async () => 0;
+  if (prisma.volumeChapterPlan) prisma.volumeChapterPlan.findMany = async () => [];
+  // worldId is null, so world is not queried
+  if (prisma.knowledgeDocument) prisma.knowledgeDocument.findUnique = async () => ({
+    id: "kd-1",
+    activeVersionId: "v1",
+    activeVersionNumber: 1,
+    updatedAt: new Date(),
+  });
+  if (prisma.bookAnalysis) prisma.bookAnalysis.findUnique = async () => null;
+
+  // Mock all chapter/state-data calls to return empty
+  if (prisma.chapter) prisma.chapter.findMany = async () => [];
+  if (prisma.qualityReport) prisma.qualityReport.findMany = async () => [];
+  if (prisma.auditReport) prisma.auditReport.findMany = async () => [];
+  if (prisma.storyStateSnapshot) prisma.storyStateSnapshot.findMany = async () => [];
+  if (prisma.payoffLedgerItem) prisma.payoffLedgerItem.findMany = async () => [];
+  if (prisma.characterResourceLedgerItem) prisma.characterResourceLedgerItem.findMany = async () => [];
+  if (prisma.generationJob) prisma.generationJob.findFirst = async () => null;
+  if (prisma.novelWorkflowTask) prisma.novelWorkflowTask.findFirst = async () => null;
+  if (prisma.directorArtifact) prisma.directorArtifact.findMany = async () => [];
+
   t.after(() => {
     promptRunner.setPromptRunnerStructuredInvokerForTests();
-    prisma.novel.findUnique = originalFindUnique;
-    if (originalKnowledgeFindUnique && prisma.knowledgeDocument) {
-      prisma.knowledgeDocument.findUnique = originalKnowledgeFindUnique;
-    }
+    // Restore all prisma methods
+    prisma.novel.findUnique = originals.novelFindUnique;
+    if (prisma.bookContract && originals.bookContractFindUnique) prisma.bookContract.findUnique = originals.bookContractFindUnique;
+    if (prisma.storyMacroPlan && originals.storyMacroPlanFindUnique) prisma.storyMacroPlan.findUnique = originals.storyMacroPlanFindUnique;
+    if (prisma.character && originals.characterCount) prisma.character.count = originals.characterCount;
+    if (prisma.character && originals.characterFindFirst) prisma.character.findFirst = originals.characterFindFirst;
+    if (prisma.volumePlan && originals.volumePlanFindMany) prisma.volumePlan.findMany = originals.volumePlanFindMany;
+    if (prisma.volumeChapterPlan && originals.volumeChapterPlanCount) prisma.volumeChapterPlan.count = originals.volumeChapterPlanCount;
+    if (prisma.volumeChapterPlan && originals.volumeChapterPlanFindMany) prisma.volumeChapterPlan.findMany = originals.volumeChapterPlanFindMany;
+    if (prisma.world && originals.worldFindUnique) prisma.world.findUnique = originals.worldFindUnique;
+    if (prisma.knowledgeDocument && originals.knowledgeDocumentFindUnique) prisma.knowledgeDocument.findUnique = originals.knowledgeDocumentFindUnique;
+    if (prisma.bookAnalysis && originals.bookAnalysisFindUnique) prisma.bookAnalysis.findUnique = originals.bookAnalysisFindUnique;
+    if (prisma.chapter && originals.chapterFindMany) prisma.chapter.findMany = originals.chapterFindMany;
+    if (prisma.qualityReport && originals.qualityReportFindMany) prisma.qualityReport.findMany = originals.qualityReportFindMany;
+    if (prisma.auditReport && originals.auditReportFindMany) prisma.auditReport.findMany = originals.auditReportFindMany;
+    if (prisma.storyStateSnapshot && originals.storyStateSnapshotFindMany) prisma.storyStateSnapshot.findMany = originals.storyStateSnapshotFindMany;
+    if (prisma.payoffLedgerItem && originals.payoffLedgerItemFindMany) prisma.payoffLedgerItem.findMany = originals.payoffLedgerItemFindMany;
+    if (prisma.characterResourceLedgerItem && originals.characterResourceLedgerItemFindMany) prisma.characterResourceLedgerItem.findMany = originals.characterResourceLedgerItemFindMany;
+    if (prisma.generationJob && originals.generationJobFindFirst) prisma.generationJob.findFirst = originals.generationJobFindFirst;
+    if (prisma.novelWorkflowTask && originals.novelWorkflowTaskFindFirst) prisma.novelWorkflowTask.findFirst = originals.novelWorkflowTaskFindFirst;
+    if (prisma.directorArtifact && originals.directorArtifactFindMany) prisma.directorArtifact.findMany = originals.directorArtifactFindMany;
   });
 
   const analyzer = new DirectorWorkspaceAnalyzer({
     recordWorkspaceAnalysis: async () => {},
-  });
-  analyzer.buildInventory = async () => ({
-    novelId: "novel-1",
-    novelTitle: "测试小说",
-    hasBookContract: false,
-    hasStoryMacro: false,
-    hasCharacters: false,
-    hasVolumeStrategy: false,
-    hasChapterPlan: false,
-    chapterCount: 0,
-    draftedChapterCount: 0,
-    approvedChapterCount: 0,
-    pendingRepairChapterCount: 0,
-    hasActivePipelineJob: false,
-    hasActiveDirectorRun: false,
-    hasWorldBinding: false,
-    hasSourceKnowledge: true,
-    hasContinuationAnalysis: false,
-    missingArtifactTypes: ["book_contract"],
-    staleArtifacts: [],
-    protectedUserContentArtifacts: [],
-    needsRepairArtifacts: [],
-    artifacts: [],
   });
 
   const analysis = await analyzer.analyze({

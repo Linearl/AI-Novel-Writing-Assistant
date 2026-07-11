@@ -3,7 +3,7 @@ const assert = require("node:assert/strict");
 
 const {
   applyChapterPatchRepairPlan,
-} = require("../../../shared/dist/types/chapterPatchRepair.js");
+} = require("../../../../shared/dist/types/chapterPatchRepair.js");
 const {
   ChapterPatchRepairFailedError,
   ChapterPatchRepairService,

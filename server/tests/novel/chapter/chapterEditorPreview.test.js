@@ -8,6 +8,7 @@ const { createApp } = require("../../../dist/app.js");
 const {
   DefaultNovelApplicationServices,
 } = require("../../../dist/services/novel/application/NovelApplicationServices.js");
+const { getSharedNovelServices } = require("../../../dist/services/novel/application/sharedNovelServices.js");
 const { NovelChapterEditorService } = require("../../../dist/services/novel/chapterEditor/NovelChapterEditorService.js");
 const { ChapterEditorWorkspaceService } = require("../../../dist/services/novel/chapterEditor/ChapterEditorWorkspaceService.js");
 
@@ -411,9 +412,10 @@ test("ChapterEditorWorkspaceService maps diagnosis paragraphs into anchor ranges
 });
 
 test("GET workspace and POST ai-revision-preview routes return the new editor payloads", async () => {
-  const originalWorkspaceMethod = DefaultNovelApplicationServices.prototype.getChapterEditorWorkspace;
-  const originalRevisionMethod = DefaultNovelApplicationServices.prototype.previewChapterAiRevision;
-  DefaultNovelApplicationServices.prototype.getChapterEditorWorkspace = async () => ({
+  const singleton = getSharedNovelServices();
+  const originalWorkspaceMethod = singleton.getChapterEditorWorkspace;
+  const originalRevisionMethod = singleton.previewChapterAiRevision;
+  singleton.getChapterEditorWorkspace = async () => ({
     chapterMeta: {
       chapterId: "chapter-1",
       order: 1,
@@ -459,7 +461,7 @@ test("GET workspace and POST ai-revision-preview routes return the new editor pa
     },
     refreshReason: "已基于本章内容实时生成修文建议。",
   });
-  DefaultNovelApplicationServices.prototype.previewChapterAiRevision = async (_novelId, _chapterId, payload) => ({
+  singleton.previewChapterAiRevision = async (_novelId, _chapterId, payload) => ({
     sessionId: "session-1",
     scope: payload.scope,
     resolvedIntent: {
@@ -541,8 +543,8 @@ test("GET workspace and POST ai-revision-preview routes return the new editor pa
     assert.equal(revisionPayload.data.scope, "chapter");
     assert.equal(revisionPayload.data.candidates.length, 2);
   } finally {
-    DefaultNovelApplicationServices.prototype.getChapterEditorWorkspace = originalWorkspaceMethod;
-    DefaultNovelApplicationServices.prototype.previewChapterAiRevision = originalRevisionMethod;
+    singleton.getChapterEditorWorkspace = originalWorkspaceMethod;
+    singleton.previewChapterAiRevision = originalRevisionMethod;
     await new Promise((resolve, reject) => server.close((error) => (error ? reject(error) : resolve())));
   }
 });

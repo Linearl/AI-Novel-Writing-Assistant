@@ -3,6 +3,7 @@ const assert = require("node:assert/strict");
 const http = require("node:http");
 const fs = require("node:fs");
 const path = require("node:path");
+const { execSync } = require("node:child_process");
 
 // Set API_TOKEN before importing app so auth middleware can validate
 process.env.API_TOKEN = "test-token";
@@ -18,12 +19,16 @@ function listen(server) {
   });
 }
 
-const FEEDBACK_DIR = path.join(__dirname, "..", "storage", "feedback");
+const FEEDBACK_DIR = path.join(__dirname, "..", "..", "storage", "feedback");
 
 function cleanup() {
   try {
     if (fs.existsSync(FEEDBACK_DIR)) {
-      fs.rmSync(FEEDBACK_DIR, { recursive: true, force: true });
+      if (process.platform === "win32") {
+        execSync(`rmdir /s /q "${FEEDBACK_DIR}"`, { stdio: "pipe" });
+      } else {
+        fs.rmSync(FEEDBACK_DIR, { recursive: true, force: true });
+      }
     }
   } catch {
     // ignore

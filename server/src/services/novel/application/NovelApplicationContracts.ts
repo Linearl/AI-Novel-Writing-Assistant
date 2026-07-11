@@ -32,6 +32,23 @@ export interface NovelApplicationServices {
   applyCharacterVisibleProfile: (...args: any[]) => Promise<any>;
   applyBatchCharacterVisibleProfiles: (...args: any[]) => Promise<any>;
 
+  // Novel CRUD (delegate to core)
+  listNovels: (...args: any[]) => Promise<any>;
+  createNovel: (...args: any[]) => Promise<any>;
+  updateNovel: (...args: any[]) => Promise<any>;
+  deleteNovel: (...args: any[]) => Promise<any>;
+
+  // Planning & state (delegate to core)
+  getNovelState: (...args: any[]) => Promise<any>;
+  getLatestStateSnapshot: (...args: any[]) => Promise<any>;
+  getChapterStateSnapshot: (...args: any[]) => Promise<any>;
+  rebuildNovelState: (...args: any[]) => Promise<any>;
+  generateBookPlan: (...args: any[]) => Promise<any>;
+  generateArcPlan: (...args: any[]) => Promise<any>;
+  generateChapterPlan: (...args: any[]) => Promise<any>;
+  getChapterPlan: (...args: any[]) => Promise<any>;
+  replanNovel: (...args: any[]) => Promise<any>;
+
   // Chapter management (used by route files)
   listChapters: (...args: any[]) => Promise<any>;
   createChapter: (...args: any[]) => Promise<any>;
@@ -84,6 +101,19 @@ export const novelApplicationServiceMethodNames = [
   "getStorylineDiff",
   "applyCharacterVisibleProfile",
   "applyBatchCharacterVisibleProfiles",
+  "listNovels",
+  "createNovel",
+  "updateNovel",
+  "deleteNovel",
+  "getNovelState",
+  "getLatestStateSnapshot",
+  "getChapterStateSnapshot",
+  "rebuildNovelState",
+  "generateBookPlan",
+  "generateArcPlan",
+  "generateChapterPlan",
+  "getChapterPlan",
+  "replanNovel",
   "reviewChapter",
   "auditChapter",
   "listChapterAuditReports",

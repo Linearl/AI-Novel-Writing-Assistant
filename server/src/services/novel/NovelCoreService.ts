@@ -168,9 +168,9 @@ export class NovelCoreService {
     return this.generationService.createStructuredOutlineStream(novelId, options);
   }
 
-  async createChapterStream(novelId: string, chapterId: string, options: ChapterGenerateOptions = {}) {
+  createChapterStream = async (novelId: string, chapterId: string, options: ChapterGenerateOptions = {}) => {
     return this.generationService.createChapterStream(novelId, chapterId, options);
-  }
+  };
 
   async generateTitles(novelId: string, options: TitleGenerateOptions = {}) {
     return this.generationService.generateTitles(novelId, options);
@@ -184,9 +184,9 @@ export class NovelCoreService {
     return this.generationService.createBeatStream(novelId, options);
   }
 
-  async startPipelineJob(novelId: string, options: PipelineRunOptions) {
+  startPipelineJob = async (novelId: string, options: PipelineRunOptions) => {
     return this.pipelineService.startPipelineJob(novelId, options);
-  }
+  };
 
   async getPipelineJob(novelId: string, jobId: string) {
     return this.pipelineService.getPipelineJob(novelId, jobId);
@@ -221,9 +221,9 @@ export class NovelCoreService {
     return this.reviewService.reviewChapter(novelId, chapterId, options);
   }
 
-  async createRepairStream(novelId: string, chapterId: string, options: RepairOptions = {}) {
+  createRepairStream = async (novelId: string, chapterId: string, options: RepairOptions = {}) => {
     return this.reviewService.createRepairStream(novelId, chapterId, options);
-  }
+  };
 
   async getNovelState(novelId: string) {
     return this.reviewService.getNovelState(novelId);
