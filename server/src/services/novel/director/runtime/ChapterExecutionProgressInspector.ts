@@ -150,6 +150,14 @@ export class ChapterExecutionProgressInspector {
     const recoverableChapters = matrix.filter((chapter) => chapter.recoverable);
     const totalStageCount = Math.max(1, matrix.length * CHAPTER_EXECUTION_PROGRESS_STAGES.length);
     const completedStageCount = matrix.reduce((sum, chapter) => sum + chapter.completedStages.length, 0);
+
+    // 当所有章节都已完成（approved 或 completed）时，强制 ratio 为 1.0（100%）
+    // 避免因为某些章节缺少个别阶段导致进度卡在 99%
+    const allChaptersCompleted = matrix.length > 0 && matrix.every((chapter) => (
+      chapter.status === "approved" || chapter.status === "completed"
+    ));
+    const ratio = allChaptersCompleted ? 1 : (matrix.length === 0 ? 0 : completedStageCount / totalStageCount);
+
     return {
       totalChapters: matrix.length,
       draftedChapterCount,
@@ -165,7 +173,7 @@ export class ChapterExecutionProgressInspector {
         startOrder: recoverableChapters[0]?.chapterOrder ?? null,
         endOrder: recoverableChapters[recoverableChapters.length - 1]?.chapterOrder ?? null,
       },
-      ratio: matrix.length === 0 ? 0 : completedStageCount / totalStageCount,
+      ratio,
       chapters: matrix,
     };
   }
