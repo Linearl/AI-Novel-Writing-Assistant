@@ -22,6 +22,7 @@ description: "docs 目录索引（自动生成）"
 | [0.version_plan\v0.1-acceptance-criteria.md](./0.version_plan\v0.1-acceptance-criteria.md) | v0.1 产品级验收标准 — 用户能否利用系统独立完成一部 AI 味不重的小说 | v0.1 产品级验收标准 — 用户能否利用系统独立完成一部 AI 味不重的小说 |
 | [0.version_plan\v0.1-release-notes.md](./0.version_plan\v0.1-release-notes.md) | v0.1 版本详细说明 — 架构修复 + 易用性改进的完整交付清单 | v0.1 版本详细说明 — 架构修复 + 易用性改进的完整交付清单 |
 | [0.version_plan\v0.2-release-notes.md](./0.version_plan\v0.2-release-notes.md) | v0.2 版本详细说明 — 流程自动化 + 质量控制，解决长篇小说频繁阻塞问题 | v0.2 版本详细说明 — 流程自动化 + 质量控制，解决长篇小说频繁阻塞问题 |
+| [0.version_plan\v0.2-task-breakdown.md](./0.version_plan\v0.2-task-breakdown.md) | v0.2 任务包清单 — 16个任务包详细说明（流程自动化 + 质量控制） | v0.2 任务包清单 — 16个任务包详细说明（流程自动化 + 质量控制） |
 
 ## 1.task
 
@@ -29,6 +30,7 @@ description: "docs 目录索引（自动生成）"
 | --- | --- | --- |
 | [1.task\README.md](./1.task\README.md) | > 由 `init` 路由扫描 `1.task/B.todo/` 和 `1.task/B.2.done/` 自动生成。 | - |
 | [1.task\requirements.md](./1.task\requirements.md) | --- | - |
+| [1.task\requirements.new.md](./1.task\requirements.new.md) | --- | - |
 
 ## 1.task\B.todo
 
@@ -44,6 +46,17 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1\v0.1-r7032-S3-extract-hardcoded-constants\REQ-7032-extract-hardcoded-constants-original.md](./1.task\B.todo\v0.1\v0.1-r7032-S3-extract-hardcoded-constants\REQ-7032-extract-hardcoded-constants-original.md) | 提取硬编码常量 — REQ-7032 需求文档（冻结副本） | 提取硬编码常量 — REQ-7032 需求文档（冻结副本） |
 | [1.task\B.todo\v0.1\v0.1-r7032-S3-extract-hardcoded-constants\REQ-7032-extract-hardcoded-constants.md](./1.task\B.todo\v0.1\v0.1-r7032-S3-extract-hardcoded-constants\REQ-7032-extract-hardcoded-constants.md) | 提取硬编码常量 — REQ-7032 需求文档，修复重复魔数、重复函数定义、硬编码阈值 | 提取硬编码常量 — REQ-7032 需求文档，修复重复魔数、重复函数定义、硬编码阈值 |
 | [1.task\B.todo\v0.1\v0.1-r7032-S3-extract-hardcoded-constants\tasks.md](./1.task\B.todo\v0.1\v0.1-r7032-S3-extract-hardcoded-constants\tasks.md) | 提取硬编码常量 — REQ-7032 任务拆解 | 提取硬编码常量 — REQ-7032 任务拆解 |
+
+## 1.task\B.todo\v1.1-r3011-C2-novel-preview-controls
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v1.1-r3011-C2-novel-preview-controls\decision_log.md](./1.task\B.todo\v1.1-r3011-C2-novel-preview-controls\decision_log.md) | - **时间**：2026-07-11 22:30 | - |
+| [1.task\B.todo\v1.1-r3011-C2-novel-preview-controls\design.md](./1.task\B.todo\v1.1-r3011-C2-novel-preview-controls\design.md) | 本设计实现了小说预览页面的控制面板，允许用户在预览时实时调节显示设置。控制面板位于页面标题和"复制正文"按钮之间的空白区域。 | - |
+| [1.task\B.todo\v1.1-r3011-C2-novel-preview-controls\handoff-ticket.md](./1.task\B.todo\v1.1-r3011-C2-novel-preview-controls\handoff-ticket.md) | | 字段 | 值 | | - |
+| [1.task\B.todo\v1.1-r3011-C2-novel-preview-controls\README.md](./1.task\B.todo\v1.1-r3011-C2-novel-preview-controls\README.md) | | 字段 | 值 | | - |
+| [1.task\B.todo\v1.1-r3011-C2-novel-preview-controls\REQ-3011-novel-preview-controls.md](./1.task\B.todo\v1.1-r3011-C2-novel-preview-controls\REQ-3011-novel-preview-controls.md) | **需求编号**：3011 | - |
+| [1.task\B.todo\v1.1-r3011-C2-novel-preview-controls\tasks.md](./1.task\B.todo\v1.1-r3011-C2-novel-preview-controls\tasks.md) | | 阶段 | 任务数 | 预计工作量 | | - |
 
 ## 1.task\template
 
