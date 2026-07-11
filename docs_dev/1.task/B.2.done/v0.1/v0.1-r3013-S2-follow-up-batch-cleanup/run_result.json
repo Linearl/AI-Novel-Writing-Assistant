@@ -3,9 +3,9 @@
   "title": "导演跟进任务列表全选与批量清理",
   "priority": "P2",
   "version": "v0.1",
-  "status": "requirements_ready",
+  "status": "done",
   "createdAt": "2026-07-11",
-  "completedAt": null,
+  "completedAt": "2026-07-11",
   "tags": ["ui", "auto-director", "batch-operations"],
   "source": "用户反馈",
   "targetFiles": [
