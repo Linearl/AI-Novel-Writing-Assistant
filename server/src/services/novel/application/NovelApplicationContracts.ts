@@ -18,6 +18,7 @@ export interface NovelApplicationServices {
   createCharacter: (...args: any[]) => Promise<any>;
   updateCharacter: (...args: any[]) => Promise<any>;
   deleteCharacter: (...args: any[]) => Promise<void>;
+  listNovelSnapshots: (novelId: string) => Promise<any[]>;
   createNovelSnapshot: (...args: any[]) => Promise<any>;
   restoreFromSnapshot: (novelId: string, snapshotId: string) => Promise<NovelDetailWithVolumeWorkspace | null>;
   createStructuredOutlineStream: (...args: any[]) => Promise<any>;
@@ -41,6 +42,7 @@ export interface NovelApplicationServices {
   // Planning & state (delegate to core)
   getNovelState: (...args: any[]) => Promise<any>;
   getLatestStateSnapshot: (...args: any[]) => Promise<any>;
+  getPayoffLedger: (novelId: string, chapterOrder?: number) => Promise<any>;
   getChapterStateSnapshot: (...args: any[]) => Promise<any>;
   rebuildNovelState: (...args: any[]) => Promise<any>;
   generateBookPlan: (...args: any[]) => Promise<any>;
@@ -69,6 +71,23 @@ export interface NovelApplicationServices {
   resolveAuditIssues: (...args: any[]) => Promise<any>;
   getQualityReport: (...args: any[]) => Promise<any>;
 
+  // Volume workspace (delegate to volumeService)
+  getVolumes: (...args: any[]) => Promise<any>;
+  listVolumeVersions: (...args: any[]) => Promise<any>;
+  updateVolumes: (...args: any[]) => Promise<any>;
+  generateVolumes: (...args: any[]) => Promise<any>;
+  createVolumeDraft: (...args: any[]) => Promise<any>;
+  activateVolumeVersion: (...args: any[]) => Promise<any>;
+  freezeVolumeVersion: (...args: any[]) => Promise<any>;
+  getVolumeVersion: (...args: any[]) => Promise<any>;
+  getVolumeDiff: (...args: any[]) => Promise<any>;
+  analyzeVolumeImpact: (...args: any[]) => Promise<any>;
+  syncVolumeChapters: (...args: any[]) => Promise<any>;
+  migrateLegacyVolumes: (...args: any[]) => Promise<any>;
+
+  // Character timeline (delegate to core)
+  listCharacterTimeline: (...args: any[]) => Promise<any>;
+
   // World slice (used by route files)
   getNovelWorld: (...args: any[]) => Promise<any>;
   getNovelWorldSyncDiff: (...args: any[]) => Promise<any>;
@@ -88,6 +107,7 @@ export const novelApplicationServiceMethodNames = [
   "createCharacter",
   "updateCharacter",
   "deleteCharacter",
+  "listNovelSnapshots",
   "createNovelSnapshot",
   "restoreFromSnapshot",
   "createStructuredOutlineStream",
@@ -107,6 +127,7 @@ export const novelApplicationServiceMethodNames = [
   "deleteNovel",
   "getNovelState",
   "getLatestStateSnapshot",
+  "getPayoffLedger",
   "getChapterStateSnapshot",
   "rebuildNovelState",
   "generateBookPlan",
@@ -141,4 +162,17 @@ export const novelApplicationServiceMethodNames = [
   "getChapterEditorWorkspace",
   "previewChapterRewrite",
   "previewChapterAiRevision",
+  "getVolumes",
+  "listVolumeVersions",
+  "updateVolumes",
+  "generateVolumes",
+  "createVolumeDraft",
+  "activateVolumeVersion",
+  "freezeVolumeVersion",
+  "getVolumeVersion",
+  "getVolumeDiff",
+  "analyzeVolumeImpact",
+  "syncVolumeChapters",
+  "migrateLegacyVolumes",
+  "listCharacterTimeline",
 ] as const;

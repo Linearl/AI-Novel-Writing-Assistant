@@ -144,9 +144,27 @@ export class DefaultNovelApplicationServices implements NovelApplicationServices
   refreshWorldSlice = (...args: any[]) => (this.worldSliceService as any).refreshWorldSlice?.(...args);
   updateWorldSliceOverrides = (...args: any[]) => (this.worldSliceService as any).updateWorldSliceOverrides?.(...args);
 
+  // Volume workspace (delegate to volumeService)
+  async getVolumes(...args: any[]) { return (this.volumeService as any).getVolumes(...args); }
+  async listVolumeVersions(...args: any[]) { return (this.volumeService as any).listVolumeVersions(...args); }
+  async updateVolumes(...args: any[]) { return (this.volumeService as any).updateVolumes(...args); }
+  async generateVolumes(...args: any[]) { return (this.volumeService as any).generateVolumes(...args); }
+  async createVolumeDraft(...args: any[]) { return (this.volumeService as any).createVolumeDraft(...args); }
+  async activateVolumeVersion(...args: any[]) { return (this.volumeService as any).activateVolumeVersion(...args); }
+  async freezeVolumeVersion(...args: any[]) { return (this.volumeService as any).freezeVolumeVersion(...args); }
+  async getVolumeVersion(...args: any[]) { return (this.volumeService as any).getVolumeVersion(...args); }
+  async getVolumeDiff(...args: any[]) { return (this.volumeService as any).getVolumeDiff(...args); }
+  async analyzeVolumeImpact(...args: any[]) { return (this.volumeService as any).analyzeVolumeImpact(...args); }
+  async syncVolumeChapters(...args: any[]) { return (this.volumeService as any).syncVolumeChapters(...args); }
+  async migrateLegacyVolumes(...args: any[]) { return (this.volumeService as any).migrateLegacyVolumes(...args); }
+
+  // Character timeline (delegate to core)
+  async listCharacterTimeline(...args: any[]) { return (this.core as any).listCharacterTimeline(...args); }
+
   // Planning & state (delegate to core)
   getNovelState = (...args: any[]) => (this.core as any).getNovelState?.(...args);
   getLatestStateSnapshot = (...args: any[]) => (this.core as any).getLatestStateSnapshot?.(...args);
+  getPayoffLedger = (novelId: string, chapterOrder?: number) => this.core.getPayoffLedger(novelId, chapterOrder);
   getChapterStateSnapshot = (...args: any[]) => (this.core as any).getChapterStateSnapshot?.(...args);
   rebuildNovelState = (...args: any[]) => (this.core as any).rebuildNovelState?.(...args);
   generateBookPlan = (...args: any[]) => (this.core as any).generateBookPlan?.(...args);
@@ -173,6 +191,10 @@ export class DefaultNovelApplicationServices implements NovelApplicationServices
     const [novelId] = args;
     await this.core.deleteCharacter(...args);
     await this.characterDynamicsService.rebuildDynamics(novelId, { sourceType: "rebuild_projection" }).catch(() => null);
+  }
+
+  async listNovelSnapshots(novelId: string) {
+    return this.core.listNovelSnapshots(novelId);
   }
 
   async createNovelSnapshot(novelId: string, triggerType: "manual" | "auto_milestone" | "before_pipeline", label?: string) {
