@@ -119,6 +119,14 @@ export default function NovelPreview() {
     [chapters],
   );
 
+  const selectChapter = (chapter: Chapter) => {
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      next.set("chapterId", chapter.id);
+      return next;
+    });
+  };
+
   useEffect(() => {
     if (!activeChapter || selectedChapterId === activeChapter.id) {
       return;
@@ -131,13 +139,53 @@ export default function NovelPreview() {
     }, { replace: true });
   }, [activeChapter, selectedChapterId, setSearchParams]);
 
-  const selectChapter = (chapter: Chapter) => {
-    setSearchParams((prev) => {
-      const next = new URLSearchParams(prev);
-      next.set("chapterId", chapter.id);
-      return next;
-    });
-  };
+  // 键盘快捷键：左右键翻页（仅在非编辑模式下生效）
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // 检查是否在编辑模式（URL包含 /chapters/ 说明在编辑页）
+      const isEditMode = window.location.pathname.includes('/chapters/');
+      if (isEditMode) {
+        return;
+      }
+
+      // 检查当前焦点是否在输入元素上（避免与输入框冲突）
+      const activeElement = document.activeElement;
+      if (activeElement instanceof HTMLInputElement ||
+          activeElement instanceof HTMLTextAreaElement ||
+          activeElement instanceof HTMLSelectElement ||
+          activeElement?.getAttribute('contenteditable') === 'true') {
+        return;
+      }
+
+      // 只处理左右键
+      if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') {
+        return;
+      }
+
+      event.preventDefault();
+
+      const currentIndex = chapters.findIndex((ch) => ch.id === activeChapter?.id);
+      if (currentIndex === -1) {
+        return;
+      }
+
+      let targetIndex: number;
+      if (event.key === 'ArrowLeft') {
+        targetIndex = Math.max(0, currentIndex - 1); // 上一章（第一篇不往前）
+      } else {
+        targetIndex = Math.min(chapters.length - 1, currentIndex + 1); // 下一章（最后一章不往后）
+      }
+
+      if (targetIndex !== currentIndex && chapters[targetIndex]) {
+        selectChapter(chapters[targetIndex]);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [chapters, activeChapter, selectChapter]);
 
   const copyActiveChapter = async () => {
     if (!activeChapter || !activeContent) {
