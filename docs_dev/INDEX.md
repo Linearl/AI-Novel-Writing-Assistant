@@ -38,6 +38,17 @@ description: "docs 目录索引（自动生成）"
 | --- | --- | --- |
 | [1.task\B.todo\任务包六件套构成-编号分类规则-自动归档机制.md](./1.task\B.todo\任务包六件套构成-编号分类规则-自动归档机制.md) | --- | - |
 
+## 1.task\B.todo\v0.1\v0.1-r3011-C2-novel-preview-controls
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.1\v0.1-r3011-C2-novel-preview-controls\decision_log.md](./1.task\B.todo\v0.1\v0.1-r3011-C2-novel-preview-controls\decision_log.md) | - **时间**：2026-07-11 22:30 | - |
+| [1.task\B.todo\v0.1\v0.1-r3011-C2-novel-preview-controls\design.md](./1.task\B.todo\v0.1\v0.1-r3011-C2-novel-preview-controls\design.md) | 本设计实现了小说预览页面的控制面板，允许用户在预览时实时调节显示设置。控制面板位于页面标题和"复制正文"按钮之间的空白区域。 | - |
+| [1.task\B.todo\v0.1\v0.1-r3011-C2-novel-preview-controls\handoff-ticket.md](./1.task\B.todo\v0.1\v0.1-r3011-C2-novel-preview-controls\handoff-ticket.md) | | 字段 | 值 | | - |
+| [1.task\B.todo\v0.1\v0.1-r3011-C2-novel-preview-controls\README.md](./1.task\B.todo\v0.1\v0.1-r3011-C2-novel-preview-controls\README.md) | | 字段 | 值 | | - |
+| [1.task\B.todo\v0.1\v0.1-r3011-C2-novel-preview-controls\REQ-3011-novel-preview-controls.md](./1.task\B.todo\v0.1\v0.1-r3011-C2-novel-preview-controls\REQ-3011-novel-preview-controls.md) | **需求编号**：3011 | - |
+| [1.task\B.todo\v0.1\v0.1-r3011-C2-novel-preview-controls\tasks.md](./1.task\B.todo\v0.1\v0.1-r3011-C2-novel-preview-controls\tasks.md) | | 阶段 | 任务数 | 预计工作量 | | - |
+
 ## 1.task\B.todo\v0.1\v0.1-r7032-S3-extract-hardcoded-constants
 
 | 文件 | 标题 | 描述 |
@@ -46,17 +57,6 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1\v0.1-r7032-S3-extract-hardcoded-constants\REQ-7032-extract-hardcoded-constants-original.md](./1.task\B.todo\v0.1\v0.1-r7032-S3-extract-hardcoded-constants\REQ-7032-extract-hardcoded-constants-original.md) | 提取硬编码常量 — REQ-7032 需求文档（冻结副本） | 提取硬编码常量 — REQ-7032 需求文档（冻结副本） |
 | [1.task\B.todo\v0.1\v0.1-r7032-S3-extract-hardcoded-constants\REQ-7032-extract-hardcoded-constants.md](./1.task\B.todo\v0.1\v0.1-r7032-S3-extract-hardcoded-constants\REQ-7032-extract-hardcoded-constants.md) | 提取硬编码常量 — REQ-7032 需求文档，修复重复魔数、重复函数定义、硬编码阈值 | 提取硬编码常量 — REQ-7032 需求文档，修复重复魔数、重复函数定义、硬编码阈值 |
 | [1.task\B.todo\v0.1\v0.1-r7032-S3-extract-hardcoded-constants\tasks.md](./1.task\B.todo\v0.1\v0.1-r7032-S3-extract-hardcoded-constants\tasks.md) | 提取硬编码常量 — REQ-7032 任务拆解 | 提取硬编码常量 — REQ-7032 任务拆解 |
-
-## 1.task\B.todo\v1.1-r3011-C2-novel-preview-controls
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v1.1-r3011-C2-novel-preview-controls\decision_log.md](./1.task\B.todo\v1.1-r3011-C2-novel-preview-controls\decision_log.md) | - **时间**：2026-07-11 22:30 | - |
-| [1.task\B.todo\v1.1-r3011-C2-novel-preview-controls\design.md](./1.task\B.todo\v1.1-r3011-C2-novel-preview-controls\design.md) | 本设计实现了小说预览页面的控制面板，允许用户在预览时实时调节显示设置。控制面板位于页面标题和"复制正文"按钮之间的空白区域。 | - |
-| [1.task\B.todo\v1.1-r3011-C2-novel-preview-controls\handoff-ticket.md](./1.task\B.todo\v1.1-r3011-C2-novel-preview-controls\handoff-ticket.md) | | 字段 | 值 | | - |
-| [1.task\B.todo\v1.1-r3011-C2-novel-preview-controls\README.md](./1.task\B.todo\v1.1-r3011-C2-novel-preview-controls\README.md) | | 字段 | 值 | | - |
-| [1.task\B.todo\v1.1-r3011-C2-novel-preview-controls\REQ-3011-novel-preview-controls.md](./1.task\B.todo\v1.1-r3011-C2-novel-preview-controls\REQ-3011-novel-preview-controls.md) | **需求编号**：3011 | - |
-| [1.task\B.todo\v1.1-r3011-C2-novel-preview-controls\tasks.md](./1.task\B.todo\v1.1-r3011-C2-novel-preview-controls\tasks.md) | | 阶段 | 任务数 | 预计工作量 | | - |
 
 ## 1.task\template
 

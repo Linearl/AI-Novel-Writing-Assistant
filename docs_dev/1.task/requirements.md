@@ -80,7 +80,7 @@ description: "需求任务总清单（SSOT）"
 | 3008 | 日志中心 | p4 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r3008-medium-log-center/README.md` |  |
 | 3009 | Tab 切换性能优化 | p3 | ✅ 已完成 | 性能分析 | 0.1 | 2026-07-03 | 2026-07-04 | `B.2.done/v0.1-r3009-C2-tab-switch-performance/README.md` | NovelEdit tab 切换延迟优化 |
 | 3010 | Create Page Material Import | p4 | ✅ 已完成 | - | 0.1 | 2026-07-08T00:00:00.000Z | 2026-07-09T00:00:00.000Z | `B.2.done/v0.1-r3010-M2-create-page-material-import/README.md` |  |
-| 3011 | 小说预览页面增强控制面板 | p4 | 📋 待办 | - | 1.1 | - | - | `B.todo/v1.1-r3011-C2-novel-preview-controls/README.md` |  |
+| 3011 | 小说预览页面增强控制面板 | p4 | 📋 待办 | - | 0.1 | - | - | `B.todo/v1.1-r3011-C2-novel-preview-controls/README.md` |  |
 | 3004 | Novel Conversation Archive | p4 | 📋 待办 | - | 0.1 | 2026-06-26T00:00:00.000Z | 2026-06-26T00:00:00.000Z | `B.todo/v0.1-r3004-medium-novel-conversation-archive/README.md` |  |
 
 ### 3.4 文档和规范任务（5xxx）

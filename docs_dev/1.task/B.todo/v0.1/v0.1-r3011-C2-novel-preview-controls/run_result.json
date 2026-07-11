@@ -1,10 +1,10 @@
 {
   "task_id": "REQ-3011",
   "title": "小说预览页面增强控制面板",
-  "version": "v1.1",
+  "version": "v0.1",
   "status": "requirements_ready",
   "created_at": "2026-07-11T22:30:00+08:00",
-  "updated_at": "2026-07-11T22:30:00+08:00",
+  "updated_at": "2026-07-11T22:45:00+08:00",
 
   "requirement_status": {
     "status": "approved",
@@ -26,12 +26,12 @@
   },
 
   "paths": {
-    "task_dir": "docs_dev/1.task/B.todo/v1.1-r3011-C2-novel-preview-controls",
-    "requirements": "docs_dev/1.task/B.todo/v1.1-r3011-C2-novel-preview-controls/REQ-3011-novel-preview-controls.md",
-    "design": "docs_dev/1.task/B.todo/v1.1-r3011-C2-novel-preview-controls/design.md",
-    "tasks": "docs_dev/1.task/B.todo/v1.1-r3011-C2-novel-preview-controls/tasks.md",
-    "decision_log": "docs_dev/1.task/B.todo/v1.1-r3011-C2-novel-preview-controls/decision_log.md",
-    "handoff_ticket": "docs_dev/1.task/B.todo/v1.1-r3011-C2-novel-preview-controls/handoff-ticket.md"
+    "task_dir": "docs_dev/1.task/B.todo/v0.1/v0.1-r3011-C2-novel-preview-controls",
+    "requirements": "docs_dev/1.task/B.todo/v0.1/v0.1-r3011-C2-novel-preview-controls/REQ-3011-novel-preview-controls.md",
+    "design": "docs_dev/1.task/B.todo/v0.1/v0.1-r3011-C2-novel-preview-controls/design.md",
+    "tasks": "docs_dev/1.task/B.todo/v0.1/v0.1-r3011-C2-novel-preview-controls/tasks.md",
+    "decision_log": "docs_dev/1.task/B.todo/v0.1/v0.1-r3011-C2-novel-preview-controls/decision_log.md",
+    "handoff_ticket": "docs_dev/1.task/B.todo/v0.1/v0.1-r3011-C2-novel-preview-controls/handoff-ticket.md"
   },
 
   "workflow": {
