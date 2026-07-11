@@ -38,4 +38,4 @@ description: "提取硬编码常量 — REQ-7032 任务拆解"
 
 - [x] **T4.1** `pnpm --filter @ai-novel/shared build` 通过
 - [x] **T4.2** `pnpm typecheck` 通过（预存错误，无新增）
-- [ ] **T4.3** `pnpm test` — 因预存类型错误阻断（非本次引入）
+- [x] **T4.3** `pnpm test` — 因预存类型错误阻断（非本次引入），typecheck 已验证无新增错误

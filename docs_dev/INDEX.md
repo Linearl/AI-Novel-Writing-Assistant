@@ -58,6 +58,172 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1\v0.1-r7032-S3-extract-hardcoded-constants\REQ-7032-extract-hardcoded-constants.md](./1.task\B.todo\v0.1\v0.1-r7032-S3-extract-hardcoded-constants\REQ-7032-extract-hardcoded-constants.md) | 提取硬编码常量 — REQ-7032 需求文档，修复重复魔数、重复函数定义、硬编码阈值 | 提取硬编码常量 — REQ-7032 需求文档，修复重复魔数、重复函数定义、硬编码阈值 |
 | [1.task\B.todo\v0.1\v0.1-r7032-S3-extract-hardcoded-constants\tasks.md](./1.task\B.todo\v0.1\v0.1-r7032-S3-extract-hardcoded-constants\tasks.md) | 提取硬编码常量 — REQ-7032 任务拆解 | 提取硬编码常量 — REQ-7032 任务拆解 |
 
+## 1.task\B.todo\v0.2
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.2\v0.2-architecture-knowledge.md](./1.task\B.todo\v0.2\v0.2-architecture-knowledge.md) | v0.2 架构知识库 — 16个任务包的完整技术背景、决策和方案 | v0.2 架构知识库 — 16个任务包的完整技术背景、决策和方案 |
+
+## 1.task\B.todo\v0.2\v0.2-r7040-C1-api-retry
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.2\v0.2-r7040-C1-api-retry\decision_log.md](./1.task\B.todo\v0.2\v0.2-r7040-C1-api-retry\decision_log.md) | REQ-7040: API失败自动重试 — 决策日志 | REQ-7040: API失败自动重试 — 决策日志 |
+| [1.task\B.todo\v0.2\v0.2-r7040-C1-api-retry\design.md](./1.task\B.todo\v0.2\v0.2-r7040-C1-api-retry\design.md) | REQ-7040: API失败自动重试 — 技术设计 | REQ-7040: API失败自动重试 — 技术设计 |
+| [1.task\B.todo\v0.2\v0.2-r7040-C1-api-retry\README.md](./1.task\B.todo\v0.2\v0.2-r7040-C1-api-retry\README.md) | REQ-XXXX: 任务标题 | REQ-XXXX: 任务标题 |
+| [1.task\B.todo\v0.2\v0.2-r7040-C1-api-retry\REQ-7040.md](./1.task\B.todo\v0.2\v0.2-r7040-C1-api-retry\REQ-7040.md) | REQ-7040: API失败自动重试 — 需求文档（工作副本） | REQ-7040: API失败自动重试 — 需求文档（工作副本） |
+| [1.task\B.todo\v0.2\v0.2-r7040-C1-api-retry\tasks.md](./1.task\B.todo\v0.2\v0.2-r7040-C1-api-retry\tasks.md) | REQ-7040: API失败自动重试 — 任务清单 | REQ-7040: API失败自动重试 — 任务清单 |
+
+## 1.task\B.todo\v0.2\v0.2-r7041-S1-model-fallback
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.2\v0.2-r7041-S1-model-fallback\decision_log.md](./1.task\B.todo\v0.2\v0.2-r7041-S1-model-fallback\decision_log.md) | REQ-7041: 模型备用切换 — 决策日志 | REQ-7041: 模型备用切换 — 决策日志 |
+| [1.task\B.todo\v0.2\v0.2-r7041-S1-model-fallback\design.md](./1.task\B.todo\v0.2\v0.2-r7041-S1-model-fallback\design.md) | REQ-7041: 模型备用切换 — 技术设计 | REQ-7041: 模型备用切换 — 技术设计 |
+| [1.task\B.todo\v0.2\v0.2-r7041-S1-model-fallback\README.md](./1.task\B.todo\v0.2\v0.2-r7041-S1-model-fallback\README.md) | REQ-7041: 模型备用切换 — 任务包README | REQ-7041: 模型备用切换 — 任务包README |
+| [1.task\B.todo\v0.2\v0.2-r7041-S1-model-fallback\REQ-7041.md](./1.task\B.todo\v0.2\v0.2-r7041-S1-model-fallback\REQ-7041.md) | REQ-7041: 模型备用切换 — 需求文档（工作副本） | REQ-7041: 模型备用切换 — 需求文档（工作副本） |
+| [1.task\B.todo\v0.2\v0.2-r7041-S1-model-fallback\tasks.md](./1.task\B.todo\v0.2\v0.2-r7041-S1-model-fallback\tasks.md) | REQ-7041: 模型备用切换 — 任务清单 | REQ-7041: 模型备用切换 — 任务清单 |
+
+## 1.task\B.todo\v0.2\v0.2-r7042-S1-error-classifier
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.2\v0.2-r7042-S1-error-classifier\decision_log.md](./1.task\B.todo\v0.2\v0.2-r7042-S1-error-classifier\decision_log.md) | REQ-7042: 错误分类器 — 决策日志 | REQ-7042: 错误分类器 — 决策日志 |
+| [1.task\B.todo\v0.2\v0.2-r7042-S1-error-classifier\design.md](./1.task\B.todo\v0.2\v0.2-r7042-S1-error-classifier\design.md) | REQ-7042: 错误分类器 — 技术设计 | REQ-7042: 错误分类器 — 技术设计 |
+| [1.task\B.todo\v0.2\v0.2-r7042-S1-error-classifier\README.md](./1.task\B.todo\v0.2\v0.2-r7042-S1-error-classifier\README.md) | REQ-7042: 错误分类器 | REQ-7042: 错误分类器 |
+| [1.task\B.todo\v0.2\v0.2-r7042-S1-error-classifier\REQ-7042.md](./1.task\B.todo\v0.2\v0.2-r7042-S1-error-classifier\REQ-7042.md) | REQ-7042: 错误分类器 — 需求文档（工作副本） | REQ-7042: 错误分类器 — 需求文档（工作副本） |
+| [1.task\B.todo\v0.2\v0.2-r7042-S1-error-classifier\tasks.md](./1.task\B.todo\v0.2\v0.2-r7042-S1-error-classifier\tasks.md) | REQ-7042: 错误分类器 — 任务清单 | REQ-7042: 错误分类器 — 任务清单 |
+
+## 1.task\B.todo\v0.2\v0.2-r7043-S2-network-monitor
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.2\v0.2-r7043-S2-network-monitor\decision_log.md](./1.task\B.todo\v0.2\v0.2-r7043-S2-network-monitor\decision_log.md) | REQ-7043: 网络状态监控 — 决策日志 | REQ-7043: 网络状态监控 — 决策日志 |
+| [1.task\B.todo\v0.2\v0.2-r7043-S2-network-monitor\design.md](./1.task\B.todo\v0.2\v0.2-r7043-S2-network-monitor\design.md) | REQ-7043: 网络状态监控 — 技术设计 | REQ-7043: 网络状态监控 — 技术设计 |
+| [1.task\B.todo\v0.2\v0.2-r7043-S2-network-monitor\README.md](./1.task\B.todo\v0.2\v0.2-r7043-S2-network-monitor\README.md) | REQ-7043: 网络状态监控 | REQ-7043: 网络状态监控 |
+| [1.task\B.todo\v0.2\v0.2-r7043-S2-network-monitor\REQ-7043.md](./1.task\B.todo\v0.2\v0.2-r7043-S2-network-monitor\REQ-7043.md) | REQ-7043: 网络状态监控 — 需求文档（工作副本） | REQ-7043: 网络状态监控 — 需求文档（工作副本） |
+| [1.task\B.todo\v0.2\v0.2-r7043-S2-network-monitor\tasks.md](./1.task\B.todo\v0.2\v0.2-r7043-S2-network-monitor\tasks.md) | REQ-7043: 网络状态监控 — 任务清单 | REQ-7043: 网络状态监控 — 任务清单 |
+
+## 1.task\B.todo\v0.2\v0.2-r7044-S2-checkpoint-management
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.2\v0.2-r7044-S2-checkpoint-management\decision_log.md](./1.task\B.todo\v0.2\v0.2-r7044-S2-checkpoint-management\decision_log.md) | REQ-7044: 检查点管理 — 决策日志 | REQ-7044: 检查点管理 — 决策日志 |
+| [1.task\B.todo\v0.2\v0.2-r7044-S2-checkpoint-management\design.md](./1.task\B.todo\v0.2\v0.2-r7044-S2-checkpoint-management\design.md) | REQ-7044: 检查点管理 — 技术设计 | REQ-7044: 检查点管理 — 技术设计 |
+| [1.task\B.todo\v0.2\v0.2-r7044-S2-checkpoint-management\README.md](./1.task\B.todo\v0.2\v0.2-r7044-S2-checkpoint-management\README.md) | REQ-7044: 检查点管理 — 任务总线 | REQ-7044: 检查点管理 — 任务总线 |
+| [1.task\B.todo\v0.2\v0.2-r7044-S2-checkpoint-management\REQ-7044.md](./1.task\B.todo\v0.2\v0.2-r7044-S2-checkpoint-management\REQ-7044.md) | REQ-7044: 检查点管理 — 需求文档（工作副本） | REQ-7044: 检查点管理 — 需求文档（工作副本） |
+| [1.task\B.todo\v0.2\v0.2-r7044-S2-checkpoint-management\tasks.md](./1.task\B.todo\v0.2\v0.2-r7044-S2-checkpoint-management\tasks.md) | REQ-7044: 检查点管理 — 任务清单 | REQ-7044: 检查点管理 — 任务清单 |
+
+## 1.task\B.todo\v0.2\v0.2-r7046-C1-batch-task-queue
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.2\v0.2-r7046-C1-batch-task-queue\decision_log.md](./1.task\B.todo\v0.2\v0.2-r7046-C1-batch-task-queue\decision_log.md) | REQ-7046: 批量任务队列 — 决策日志 | REQ-7046: 批量任务队列 — 决策日志 |
+| [1.task\B.todo\v0.2\v0.2-r7046-C1-batch-task-queue\design.md](./1.task\B.todo\v0.2\v0.2-r7046-C1-batch-task-queue\design.md) | REQ-7046: 批量任务队列 — 技术设计 | REQ-7046: 批量任务队列 — 技术设计 |
+| [1.task\B.todo\v0.2\v0.2-r7046-C1-batch-task-queue\README.md](./1.task\B.todo\v0.2\v0.2-r7046-C1-batch-task-queue\README.md) | REQ-7046: 批量任务队列 — 任务总线 | REQ-7046: 批量任务队列 — 任务总线 |
+| [1.task\B.todo\v0.2\v0.2-r7046-C1-batch-task-queue\REQ-7046.md](./1.task\B.todo\v0.2\v0.2-r7046-C1-batch-task-queue\REQ-7046.md) | REQ-7046: 批量任务队列 — 需求文档（工作副本） | REQ-7046: 批量任务队列 — 需求文档（工作副本） |
+| [1.task\B.todo\v0.2\v0.2-r7046-C1-batch-task-queue\tasks.md](./1.task\B.todo\v0.2\v0.2-r7046-C1-batch-task-queue\tasks.md) | REQ-7046: 批量任务队列 — 任务清单 | REQ-7046: 批量任务队列 — 任务清单 |
+
+## 1.task\B.todo\v0.2\v0.2-r7047-S1-progress-visualization
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.2\v0.2-r7047-S1-progress-visualization\decision_log.md](./1.task\B.todo\v0.2\v0.2-r7047-S1-progress-visualization\decision_log.md) | REQ-7047: 进度可视化 — 决策日志 | REQ-7047: 进度可视化 — 决策日志 |
+| [1.task\B.todo\v0.2\v0.2-r7047-S1-progress-visualization\design.md](./1.task\B.todo\v0.2\v0.2-r7047-S1-progress-visualization\design.md) | REQ-7047: 进度可视化 — 技术设计 | REQ-7047: 进度可视化 — 技术设计 |
+| [1.task\B.todo\v0.2\v0.2-r7047-S1-progress-visualization\README.md](./1.task\B.todo\v0.2\v0.2-r7047-S1-progress-visualization\README.md) | REQ-7047: 进度可视化 — 任务总线 | REQ-7047: 进度可视化 — 任务总线 |
+| [1.task\B.todo\v0.2\v0.2-r7047-S1-progress-visualization\REQ-7047.md](./1.task\B.todo\v0.2\v0.2-r7047-S1-progress-visualization\REQ-7047.md) | REQ-7047: 进度可视化 — 需求文档（工作副本） | REQ-7047: 进度可视化 — 需求文档（工作副本） |
+| [1.task\B.todo\v0.2\v0.2-r7047-S1-progress-visualization\tasks.md](./1.task\B.todo\v0.2\v0.2-r7047-S1-progress-visualization\tasks.md) | REQ-7047: 进度可视化 — 任务清单 | REQ-7047: 进度可视化 — 任务清单 |
+
+## 1.task\B.todo\v0.2\v0.2-r7048-S1-realtime-quality-check
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.2\v0.2-r7048-S1-realtime-quality-check\decision_log.md](./1.task\B.todo\v0.2\v0.2-r7048-S1-realtime-quality-check\decision_log.md) | REQ-7048: 实时质量检查器 — 决策日志 | REQ-7048: 实时质量检查器 — 决策日志 |
+| [1.task\B.todo\v0.2\v0.2-r7048-S1-realtime-quality-check\design.md](./1.task\B.todo\v0.2\v0.2-r7048-S1-realtime-quality-check\design.md) | REQ-7048: 实时质量检查器 — 技术设计 | REQ-7048: 实时质量检查器 — 技术设计 |
+| [1.task\B.todo\v0.2\v0.2-r7048-S1-realtime-quality-check\README.md](./1.task\B.todo\v0.2\v0.2-r7048-S1-realtime-quality-check\README.md) | REQ-7048: 实时质量检查器 — 任务总线 | REQ-7048: 实时质量检查器 — 任务总线 |
+| [1.task\B.todo\v0.2\v0.2-r7048-S1-realtime-quality-check\REQ-7048.md](./1.task\B.todo\v0.2\v0.2-r7048-S1-realtime-quality-check\REQ-7048.md) | REQ-7048: 实时质量检查器 — 需求文档（工作副本） | REQ-7048: 实时质量检查器 — 需求文档（工作副本） |
+| [1.task\B.todo\v0.2\v0.2-r7048-S1-realtime-quality-check\tasks.md](./1.task\B.todo\v0.2\v0.2-r7048-S1-realtime-quality-check\tasks.md) | REQ-7048: 实时质量检查器 — 任务清单 | REQ-7048: 实时质量检查器 — 任务清单 |
+
+## 1.task\B.todo\v0.2\v0.2-r7049-S1-auto-regeneration
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.2\v0.2-r7049-S1-auto-regeneration\decision_log.md](./1.task\B.todo\v0.2\v0.2-r7049-S1-auto-regeneration\decision_log.md) | REQ-7049: 自动重新生成 — 决策日志 | REQ-7049: 自动重新生成 — 决策日志 |
+| [1.task\B.todo\v0.2\v0.2-r7049-S1-auto-regeneration\design.md](./1.task\B.todo\v0.2\v0.2-r7049-S1-auto-regeneration\design.md) | REQ-7049: 自动重新生成 — 技术设计 | REQ-7049: 自动重新生成 — 技术设计 |
+| [1.task\B.todo\v0.2\v0.2-r7049-S1-auto-regeneration\README.md](./1.task\B.todo\v0.2\v0.2-r7049-S1-auto-regeneration\README.md) | REQ-7049: 自动重新生成 — 任务总线 | REQ-7049: 自动重新生成 — 任务总线 |
+| [1.task\B.todo\v0.2\v0.2-r7049-S1-auto-regeneration\REQ-7049.md](./1.task\B.todo\v0.2\v0.2-r7049-S1-auto-regeneration\REQ-7049.md) | REQ-7049: 自动重新生成 — 需求文档（工作副本） | REQ-7049: 自动重新生成 — 需求文档（工作副本） |
+| [1.task\B.todo\v0.2\v0.2-r7049-S1-auto-regeneration\tasks.md](./1.task\B.todo\v0.2\v0.2-r7049-S1-auto-regeneration\tasks.md) | REQ-7049: 自动重新生成 — 任务清单 | REQ-7049: 自动重新生成 — 任务清单 |
+
+## 1.task\B.todo\v0.2\v0.2-r7050-C1-ai-smell-detection
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.2\v0.2-r7050-C1-ai-smell-detection\decision_log.md](./1.task\B.todo\v0.2\v0.2-r7050-C1-ai-smell-detection\decision_log.md) | REQ-7050: AI味自动检测 — 决策日志 | REQ-7050: AI味自动检测 — 决策日志 |
+| [1.task\B.todo\v0.2\v0.2-r7050-C1-ai-smell-detection\design.md](./1.task\B.todo\v0.2\v0.2-r7050-C1-ai-smell-detection\design.md) | REQ-7050: AI味自动检测 — 技术设计 | REQ-7050: AI味自动检测 — 技术设计 |
+| [1.task\B.todo\v0.2\v0.2-r7050-C1-ai-smell-detection\README.md](./1.task\B.todo\v0.2\v0.2-r7050-C1-ai-smell-detection\README.md) | REQ-7050: AI味自动检测 — 任务总线 | REQ-7050: AI味自动检测 — 任务总线 |
+| [1.task\B.todo\v0.2\v0.2-r7050-C1-ai-smell-detection\REQ-7050.md](./1.task\B.todo\v0.2\v0.2-r7050-C1-ai-smell-detection\REQ-7050.md) | REQ-7050: AI味自动检测 — 需求文档（工作副本） | REQ-7050: AI味自动检测 — 需求文档（工作副本） |
+| [1.task\B.todo\v0.2\v0.2-r7050-C1-ai-smell-detection\tasks.md](./1.task\B.todo\v0.2\v0.2-r7050-C1-ai-smell-detection\tasks.md) | REQ-7050: AI味自动检测 — 任务清单 | REQ-7050: AI味自动检测 — 任务清单 |
+
+## 1.task\B.todo\v0.2\v0.2-r7051-C1-consistency-monitor
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.2\v0.2-r7051-C1-consistency-monitor\decision_log.md](./1.task\B.todo\v0.2\v0.2-r7051-C1-consistency-monitor\decision_log.md) | REQ-7051: 一致性实时监控 — 决策日志 | REQ-7051: 一致性实时监控 — 决策日志 |
+| [1.task\B.todo\v0.2\v0.2-r7051-C1-consistency-monitor\design.md](./1.task\B.todo\v0.2\v0.2-r7051-C1-consistency-monitor\design.md) | REQ-7051: 一致性实时监控 — 技术设计 | REQ-7051: 一致性实时监控 — 技术设计 |
+| [1.task\B.todo\v0.2\v0.2-r7051-C1-consistency-monitor\README.md](./1.task\B.todo\v0.2\v0.2-r7051-C1-consistency-monitor\README.md) | REQ-7051: 一致性实时监控 — 任务总线 | REQ-7051: 一致性实时监控 — 任务总线 |
+| [1.task\B.todo\v0.2\v0.2-r7051-C1-consistency-monitor\REQ-7051.md](./1.task\B.todo\v0.2\v0.2-r7051-C1-consistency-monitor\REQ-7051.md) | REQ-7051: 一致性实时监控 — 需求文档（工作副本） | REQ-7051: 一致性实时监控 — 需求文档（工作副本） |
+| [1.task\B.todo\v0.2\v0.2-r7051-C1-consistency-monitor\tasks.md](./1.task\B.todo\v0.2\v0.2-r7051-C1-consistency-monitor\tasks.md) | REQ-7051: 一致性实时监控 — 任务清单 | REQ-7051: 一致性实时监控 — 任务清单 |
+
+## 1.task\B.todo\v0.2\v0.2-r7052-S1-background-task-manager
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.2\v0.2-r7052-S1-background-task-manager\decision_log.md](./1.task\B.todo\v0.2\v0.2-r7052-S1-background-task-manager\decision_log.md) | REQ-7052: 后台任务管理 — 决策日志 | REQ-7052: 后台任务管理 — 决策日志 |
+| [1.task\B.todo\v0.2\v0.2-r7052-S1-background-task-manager\design.md](./1.task\B.todo\v0.2\v0.2-r7052-S1-background-task-manager\design.md) | REQ-7052: 后台任务管理 — 技术设计 | REQ-7052: 后台任务管理 — 技术设计 |
+| [1.task\B.todo\v0.2\v0.2-r7052-S1-background-task-manager\README.md](./1.task\B.todo\v0.2\v0.2-r7052-S1-background-task-manager\README.md) | REQ-7052: 后台任务管理 | REQ-7052: 后台任务管理 |
+| [1.task\B.todo\v0.2\v0.2-r7052-S1-background-task-manager\REQ-7052.md](./1.task\B.todo\v0.2\v0.2-r7052-S1-background-task-manager\REQ-7052.md) | REQ-7052: 后台任务管理 — 需求文档（工作副本） | REQ-7052: 后台任务管理 — 需求文档（工作副本） |
+| [1.task\B.todo\v0.2\v0.2-r7052-S1-background-task-manager\tasks.md](./1.task\B.todo\v0.2\v0.2-r7052-S1-background-task-manager\tasks.md) | REQ-7052: 后台任务管理 — 任务清单 | REQ-7052: 后台任务管理 — 任务清单 |
+
+## 1.task\B.todo\v0.2\v0.2-r7053-S2-node-notification
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.2\v0.2-r7053-S2-node-notification\decision_log.md](./1.task\B.todo\v0.2\v0.2-r7053-S2-node-notification\decision_log.md) | REQ-7053: 关键节点通知 — 决策日志 | REQ-7053: 关键节点通知 — 决策日志 |
+| [1.task\B.todo\v0.2\v0.2-r7053-S2-node-notification\design.md](./1.task\B.todo\v0.2\v0.2-r7053-S2-node-notification\design.md) | REQ-7053: 关键节点通知 — 技术设计 | REQ-7053: 关键节点通知 — 技术设计 |
+| [1.task\B.todo\v0.2\v0.2-r7053-S2-node-notification\README.md](./1.task\B.todo\v0.2\v0.2-r7053-S2-node-notification\README.md) | REQ-7053: 关键节点通知 | REQ-7053: 关键节点通知 |
+| [1.task\B.todo\v0.2\v0.2-r7053-S2-node-notification\REQ-7053.md](./1.task\B.todo\v0.2\v0.2-r7053-S2-node-notification\REQ-7053.md) | REQ-7053: 关键节点通知 — 需求文档（工作副本） | REQ-7053: 关键节点通知 — 需求文档（工作副本） |
+| [1.task\B.todo\v0.2\v0.2-r7053-S2-node-notification\tasks.md](./1.task\B.todo\v0.2\v0.2-r7053-S2-node-notification\tasks.md) | REQ-7053: 关键节点通知 — 任务清单 | REQ-7053: 关键节点通知 — 任务清单 |
+
+## 1.task\B.todo\v0.2\v0.2-r7056-C1-character-consistency
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.2\v0.2-r7056-C1-character-consistency\decision_log.md](./1.task\B.todo\v0.2\v0.2-r7056-C1-character-consistency\decision_log.md) | REQ-7056: 跨章节人物一致性 — 决策日志 | REQ-7056: 跨章节人物一致性 — 决策日志 |
+| [1.task\B.todo\v0.2\v0.2-r7056-C1-character-consistency\design.md](./1.task\B.todo\v0.2\v0.2-r7056-C1-character-consistency\design.md) | REQ-7056: 跨章节人物一致性 — 技术设计 | REQ-7056: 跨章节人物一致性 — 技术设计 |
+| [1.task\B.todo\v0.2\v0.2-r7056-C1-character-consistency\README.md](./1.task\B.todo\v0.2\v0.2-r7056-C1-character-consistency\README.md) | REQ-7056: 跨章节人物一致性 | REQ-7056: 跨章节人物一致性 |
+| [1.task\B.todo\v0.2\v0.2-r7056-C1-character-consistency\REQ-7056.md](./1.task\B.todo\v0.2\v0.2-r7056-C1-character-consistency\REQ-7056.md) | REQ-7056: 跨章节人物一致性 — 需求文档（工作副本） | REQ-7056: 跨章节人物一致性 — 需求文档（工作副本） |
+| [1.task\B.todo\v0.2\v0.2-r7056-C1-character-consistency\tasks.md](./1.task\B.todo\v0.2\v0.2-r7056-C1-character-consistency\tasks.md) | REQ-7056: 跨章节人物一致性 — 任务清单 | REQ-7056: 跨章节人物一致性 — 任务清单 |
+
+## 1.task\B.todo\v0.2\v0.2-r7057-S2-ai-smell-trend
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.2\v0.2-r7057-S2-ai-smell-trend\decision_log.md](./1.task\B.todo\v0.2\v0.2-r7057-S2-ai-smell-trend\decision_log.md) | REQ-7057: AI味趋势追踪 — 决策日志 | REQ-7057: AI味趋势追踪 — 决策日志 |
+| [1.task\B.todo\v0.2\v0.2-r7057-S2-ai-smell-trend\design.md](./1.task\B.todo\v0.2\v0.2-r7057-S2-ai-smell-trend\design.md) | REQ-7057: AI味趋势追踪 — 技术设计 | REQ-7057: AI味趋势追踪 — 技术设计 |
+| [1.task\B.todo\v0.2\v0.2-r7057-S2-ai-smell-trend\README.md](./1.task\B.todo\v0.2\v0.2-r7057-S2-ai-smell-trend\README.md) | REQ-7057: AI味趋势追踪 | REQ-7057: AI味趋势追踪 |
+| [1.task\B.todo\v0.2\v0.2-r7057-S2-ai-smell-trend\REQ-7057.md](./1.task\B.todo\v0.2\v0.2-r7057-S2-ai-smell-trend\REQ-7057.md) | REQ-7057: AI味趋势追踪 — 需求文档（工作副本） | REQ-7057: AI味趋势追踪 — 需求文档（工作副本） |
+| [1.task\B.todo\v0.2\v0.2-r7057-S2-ai-smell-trend\tasks.md](./1.task\B.todo\v0.2\v0.2-r7057-S2-ai-smell-trend\tasks.md) | REQ-7057: AI味趋势追踪 — 任务清单 | REQ-7057: AI味趋势追踪 — 任务清单 |
+
+## 1.task\B.todo\v0.2\v0.2-r7058-S2-env-validation
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.2\v0.2-r7058-S2-env-validation\decision_log.md](./1.task\B.todo\v0.2\v0.2-r7058-S2-env-validation\decision_log.md) | REQ-7058: 环境变量启动校验 — 决策日志 | REQ-7058: 环境变量启动校验 — 决策日志 |
+| [1.task\B.todo\v0.2\v0.2-r7058-S2-env-validation\design.md](./1.task\B.todo\v0.2\v0.2-r7058-S2-env-validation\design.md) | REQ-7058: 环境变量启动校验 — 技术设计 | REQ-7058: 环境变量启动校验 — 技术设计 |
+| [1.task\B.todo\v0.2\v0.2-r7058-S2-env-validation\README.md](./1.task\B.todo\v0.2\v0.2-r7058-S2-env-validation\README.md) | REQ-7058: 环境变量启动校验 | REQ-7058: 环境变量启动校验 |
+| [1.task\B.todo\v0.2\v0.2-r7058-S2-env-validation\REQ-7058.md](./1.task\B.todo\v0.2\v0.2-r7058-S2-env-validation\REQ-7058.md) | REQ-7058: 环境变量启动校验 — 需求文档（工作副本） | REQ-7058: 环境变量启动校验 — 需求文档（工作副本） |
+| [1.task\B.todo\v0.2\v0.2-r7058-S2-env-validation\tasks.md](./1.task\B.todo\v0.2\v0.2-r7058-S2-env-validation\tasks.md) | REQ-7058: 环境变量启动校验 — 任务清单 | REQ-7058: 环境变量启动校验 — 任务清单 |
+
 ## 1.task\template
 
 | 文件 | 标题 | 描述 |
@@ -145,6 +311,12 @@ description: "docs 目录索引（自动生成）"
 | [2.tech\analysis\2026-07-10-cjs-interop-matrix.md](./2.tech\analysis\2026-07-10-cjs-interop-matrix.md) | REQ-7026 CJS/ESM 互操作兼容性矩阵 | REQ-7026 CJS/ESM 互操作兼容性矩阵 |
 | [2.tech\analysis\2026-07-10-project-references-evaluation.md](./2.tech\analysis\2026-07-10-project-references-evaluation.md) | REQ-7026 TypeScript 5.9 Project References 评估 | REQ-7026 TypeScript 5.9 Project References 评估 |
 | [2.tech\analysis\2026-07-10-tsx-benchmark-data.md](./2.tech\analysis\2026-07-10-tsx-benchmark-data.md) | REQ-7026 tsx 运行时可行性基准测试数据 | REQ-7026 tsx 运行时可行性基准测试数据 |
+
+## 2.tech\architecture
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [2.tech\architecture\llm-tool-calling-mechanism.md](./2.tech\architecture\llm-tool-calling-mechanism.md) | LLM 工具调用机制详解 — 从LLM响应到数据库写入的完整流程 | LLM 工具调用机制详解 — 从LLM响应到数据库写入的完整流程 |
 
 ## 3.analysis\diagnosis\01-active
 

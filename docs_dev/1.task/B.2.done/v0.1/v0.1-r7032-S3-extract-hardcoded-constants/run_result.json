@@ -3,9 +3,9 @@
   "title": "提取硬编码常量：审计复核确认的重复魔数、重复定义、硬编码配置",
   "priority": "P3",
   "version": "v0.1",
-  "status": "requirements_ready",
+  "status": "done",
   "createdAt": "2026-07-10",
-  "completedAt": null,
+  "completedAt": "2026-07-11",
   "tags": ["audit-fix", "maintainability", "architecture"],
   "source": "代码审计-full 独占发现复核报告 — 架构/质量维度 CONFIRMED 条目",
   "targetFiles": [
