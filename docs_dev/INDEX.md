@@ -38,6 +38,17 @@ description: "docs 目录索引（自动生成）"
 | --- | --- | --- |
 | [1.task\B.todo\任务包六件套构成-编号分类规则-自动归档机制.md](./1.task\B.todo\任务包六件套构成-编号分类规则-自动归档机制.md) | --- | - |
 
+## 1.task\B.todo\v0.1\v0.1-r3013-S2-follow-up-batch-cleanup
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.1\v0.1-r3013-S2-follow-up-batch-cleanup\decision_log.md](./1.task\B.todo\v0.1\v0.1-r3013-S2-follow-up-batch-cleanup\decision_log.md) | REQ-3013 导演跟进任务列表全选与批量清理 — 决策日志 | REQ-3013 导演跟进任务列表全选与批量清理 — 决策日志 |
+| [1.task\B.todo\v0.1\v0.1-r3013-S2-follow-up-batch-cleanup\design.md](./1.task\B.todo\v0.1\v0.1-r3013-S2-follow-up-batch-cleanup\design.md) | REQ-3013 导演跟进任务列表全选与批量清理 — 设计方案 | REQ-3013 导演跟进任务列表全选与批量清理 — 设计方案 |
+| [1.task\B.todo\v0.1\v0.1-r3013-S2-follow-up-batch-cleanup\README.md](./1.task\B.todo\v0.1\v0.1-r3013-S2-follow-up-batch-cleanup\README.md) | 导演跟进任务列表全选与批量清理 — REQ-3013 任务包总线 | 导演跟进任务列表全选与批量清理 — REQ-3013 任务包总线 |
+| [1.task\B.todo\v0.1\v0.1-r3013-S2-follow-up-batch-cleanup\REQ-3013-follow-up-batch-cleanup-original.md](./1.task\B.todo\v0.1\v0.1-r3013-S2-follow-up-batch-cleanup\REQ-3013-follow-up-batch-cleanup-original.md) | REQ-3013 导演跟进任务列表全选与批量清理 — 需求工作副本 | REQ-3013 导演跟进任务列表全选与批量清理 — 需求工作副本 |
+| [1.task\B.todo\v0.1\v0.1-r3013-S2-follow-up-batch-cleanup\REQ-3013-follow-up-batch-cleanup.md](./1.task\B.todo\v0.1\v0.1-r3013-S2-follow-up-batch-cleanup\REQ-3013-follow-up-batch-cleanup.md) | REQ-3013 导演跟进任务列表全选与批量清理 — 需求工作副本 | REQ-3013 导演跟进任务列表全选与批量清理 — 需求工作副本 |
+| [1.task\B.todo\v0.1\v0.1-r3013-S2-follow-up-batch-cleanup\tasks.md](./1.task\B.todo\v0.1\v0.1-r3013-S2-follow-up-batch-cleanup\tasks.md) | REQ-3013 导演跟进任务列表全选与批量清理 — 任务拆解 | REQ-3013 导演跟进任务列表全选与批量清理 — 任务拆解 |
+
 ## 1.task\B.todo\v0.2
 
 | 文件 | 标题 | 描述 |
