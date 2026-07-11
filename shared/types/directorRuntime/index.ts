@@ -1,6 +1,6 @@
-import type { LLMProvider } from "../llm";
-import type { NovelWorkflowStage } from "../novelWorkflow";
-import type { DirectorCircuitBreakerState, DirectorQualityLoopBudgetNextAction } from "../novelDirector";
+import type { LLMProvider } from "../llm.js";
+import type { NovelWorkflowStage } from "../novelWorkflow.js";
+import type { DirectorCircuitBreakerState, DirectorQualityLoopBudgetNextAction } from "../novelDirector.js";
 
 export const DIRECTOR_POLICY_MODES = [
   "suggest_only",
@@ -534,6 +534,6 @@ export interface DirectorWorkspaceAnalysis {
 
 // --- Sub-file re-exports ---
 
-export * from "./worker";
-export * from "./projection";
-export * from "./automation";
+export * from "./worker.js";
+export * from "./projection.js";
+export * from "./automation.js";

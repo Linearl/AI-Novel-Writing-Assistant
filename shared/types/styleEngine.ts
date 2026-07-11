@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { antiAiSeveritySchema } from "./chapterCore";
-import type { LLMProvider } from "./llm";
+import { antiAiSeveritySchema } from "./chapterCore.js";
+import type { LLMProvider } from "./llm.js";
 
 export type StyleSourceType =
   | "manual"

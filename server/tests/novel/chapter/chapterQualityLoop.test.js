@@ -8,7 +8,7 @@ const {
 } = require("../../../shared/dist/types/chapterQualityLoop.js");
 const {
   buildChapterQualityLoopChapterUpdate,
-} = require("../../dist/services/novel/quality/ChapterQualityLoopService.js");
+} = require("../../../dist/services/novel/quality/ChapterQualityLoopService.js");
 
 function score(overrides = {}) {
   return {

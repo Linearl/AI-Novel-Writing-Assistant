@@ -4,13 +4,13 @@ const assert = require("node:assert/strict");
 const {
   isVagueVisibleProfileText,
   pickApplicableVisibleProfileFields,
-} = require("../../dist/services/novel/characterProfile/CharacterVisibleProfileService");
+} = require("../../../dist/services/novel/characterProfile/CharacterVisibleProfileService");
 const {
   buildParticipantText,
-} = require("../../dist/prompting/prompts/novel/chapterLayeredContextShared");
+} = require("../../../dist/prompting/prompts/novel/chapterLayeredContextShared");
 const {
   characterVisibleProfileCompletionPrompt,
-} = require("../../dist/prompting/prompts/novel/characterVisibleProfile.prompts");
+} = require("../../../dist/prompting/prompts/novel/characterVisibleProfile.prompts");
 
 test("visible profile field selection preserves existing clear profile", () => {
   const result = pickApplicableVisibleProfileFields({

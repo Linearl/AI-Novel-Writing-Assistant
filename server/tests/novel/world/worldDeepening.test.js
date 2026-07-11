@@ -1,7 +1,7 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const { WorldService } = require("../../dist/services/world/WorldService.js");
-const { prisma } = require("../../dist/db/prisma.js");
+const { WorldService } = require("../../../dist/services/world/WorldService.js");
+const { prisma } = require("../../../dist/db/prisma.js");
 
 test("answerDeepeningQuestions normalizes legacy targetField aliases before world update", async () => {
   const service = new WorldService();

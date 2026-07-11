@@ -4,12 +4,12 @@ const http = require("node:http");
 
 process.env.API_TOKEN = "test-token";
 
-const { createApp } = require("../../dist/app.js");
+const { createApp } = require("../../../dist/app.js");
 const {
   DefaultNovelApplicationServices,
-} = require("../../dist/services/novel/application/NovelApplicationServices.js");
-const { NovelChapterEditorService } = require("../../dist/services/novel/chapterEditor/NovelChapterEditorService.js");
-const { ChapterEditorWorkspaceService } = require("../../dist/services/novel/chapterEditor/ChapterEditorWorkspaceService.js");
+} = require("../../../dist/services/novel/application/NovelApplicationServices.js");
+const { NovelChapterEditorService } = require("../../../dist/services/novel/chapterEditor/NovelChapterEditorService.js");
+const { ChapterEditorWorkspaceService } = require("../../../dist/services/novel/chapterEditor/ChapterEditorWorkspaceService.js");
 
 function listen(server) {
   return new Promise((resolve) => {

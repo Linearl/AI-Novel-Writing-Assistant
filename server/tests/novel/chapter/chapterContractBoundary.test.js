@@ -3,7 +3,7 @@ const test = require("node:test");
 
 const {
   buildChapterPayoffDirectives,
-} = require("../../dist/services/novel/production/ContextAssemblyService.js");
+} = require("../../../dist/services/novel/production/ContextAssemblyService.js");
 
 function createPayoff(overrides) {
   return {

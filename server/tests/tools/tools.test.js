@@ -77,7 +77,7 @@ test("character arc query tools have correct metadata (REQ-2031)", () => {
 });
 
 test("agent tool definitions keep zod declarations in dedicated schema modules", () => {
-  const toolsDir = path.join(__dirname, "..", "src", "agents", "tools");
+  const toolsDir = path.join(__dirname, "..", "..", "src", "agents", "tools");
   const violations = [];
   const allowlist = new Set(["bookAnalysisTools.ts"]);
 

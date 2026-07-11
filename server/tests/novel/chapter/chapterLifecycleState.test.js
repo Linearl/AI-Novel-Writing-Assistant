@@ -5,7 +5,7 @@ const {
   chapterStatePairAfterManualQualityReview,
   chapterStatePairAfterPipelineApproval,
   mergeChapterPatchForGenerationStateBump,
-} = require("../../dist/services/novel/chapterLifecycleState.js");
+} = require("../../../dist/services/novel/chapterLifecycleState.js");
 
 test("chapterStatePairAfterManualQualityReview matches pass / fail semantics", () => {
   assert.deepEqual(chapterStatePairAfterManualQualityReview(true), {

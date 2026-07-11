@@ -1,10 +1,10 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 
-const { prisma } = require("../../dist/db/prisma.js");
+const { prisma } = require("../../../dist/db/prisma.js");
 const {
   CharacterResourceLedgerService,
-} = require("../../dist/services/novel/characterResource/CharacterResourceLedgerService.js");
+} = require("../../../dist/services/novel/characterResource/CharacterResourceLedgerService.js");
 
 test("getRejectedIntentsForChapter returns parsed intents from validationNotesJson", async () => {
   const service = new CharacterResourceLedgerService();

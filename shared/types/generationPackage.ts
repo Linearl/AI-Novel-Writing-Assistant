@@ -5,24 +5,24 @@
  * Imports shared schemas from chapterCore, chapterStyle, and chapterContext.
  */
 import { z } from "zod";
-import { generationNextActionSchema } from "./canonicalState";
-import { timelineCheckResultSchema } from "./timeline";
+import { generationNextActionSchema } from "./canonicalState.js";
+import { timelineCheckResultSchema } from "./timeline.js";
 import {
   auditTypeSchema,
   runtimeAuditIssueSchema,
   chapterGenerationStateSchema,
   runtimeQualityScoreSchema,
-} from "./chapterCore";
+} from "./chapterCore.js";
 import {
   runtimeStyleReviewSchema,
   runtimeLengthControlSchema,
-} from "./chapterStyle";
+} from "./chapterStyle.js";
 import {
   chapterExecutionObligationContractSchema,
   chapterExecutionObligationCoverageSchema,
   chapterFailureClassificationSchema,
   generationContextPackageSchema,
-} from "./chapterContext";
+} from "./chapterContext.js";
 
 // ---------------------------------------------------------------------------
 // Acceptance schemas

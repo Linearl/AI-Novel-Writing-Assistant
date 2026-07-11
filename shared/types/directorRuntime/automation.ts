@@ -9,11 +9,11 @@ import type {
   DirectorPromptUsageSummary,
   DirectorStepUsageSummary,
   DirectorUsageAttributionStatus,
-} from "./index";
-import type { DirectorCircuitBreakerState } from "../novelDirector";
-import type { DirectorDashboardView, DirectorWorkerHealthSummary } from "./worker";
-import type { DirectorRuntimeProjection } from "./projection";
-import type { DirectorRunCommandType } from "./worker";
+} from "./index.js";
+import type { DirectorCircuitBreakerState } from "../novelDirector.js";
+import type { DirectorDashboardView, DirectorWorkerHealthSummary } from "./worker.js";
+import type { DirectorRuntimeProjection } from "./projection.js";
+import type { DirectorRunCommandType } from "./worker.js";
 
 export type DirectorBookAutomationStatus =
   | "idle"

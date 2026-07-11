@@ -1,13 +1,13 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const promptRunner = require("../../dist/prompting/core/promptRunner.js");
+const promptRunner = require("../../../dist/prompting/core/promptRunner.js");
 
 const {
   runPipelineChapterWithRuntime,
-} = require("../../dist/services/novel/runtime/chapterRuntimePipeline.js");
+} = require("../../../dist/services/novel/runtime/chapterRuntimePipeline.js");
 const {
   ChapterEmptyContentError,
-} = require("../../dist/services/novel/runtime/chapterEmptyContentError.js");
+} = require("../../../dist/services/novel/runtime/chapterEmptyContentError.js");
 
 function createRuntimePackage(overallScore, options = {}) {
   return {

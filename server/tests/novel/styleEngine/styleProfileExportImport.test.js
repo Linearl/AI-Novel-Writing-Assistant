@@ -4,7 +4,7 @@ const http = require("node:http");
 
 process.env.API_TOKEN = "test-token";
 
-const { createApp } = require("../../dist/app.js");
+const { createApp } = require("../../../dist/app.js");
 
 function listen(server) {
   return new Promise((resolve) => {
@@ -40,7 +40,7 @@ const SAMPLE_PROFILE = {
 };
 
 test("GET /api/style-profiles/:id/export 返回正确 JSON 信封结构", async () => {
-  const { StyleProfileService } = require("../../dist/services/styleEngine/StyleProfileService.js");
+  const { StyleProfileService } = require("../../../dist/services/styleEngine/StyleProfileService.js");
   const originalGetById = StyleProfileService.prototype.getProfileById;
 
   StyleProfileService.prototype.getProfileById = async function (id) {
@@ -86,7 +86,7 @@ test("GET /api/style-profiles/:id/export 返回正确 JSON 信封结构", async 
 });
 
 test("GET /api/style-profiles/:id/export 不存在的档案返回 404", async () => {
-  const { StyleProfileService } = require("../../dist/services/styleEngine/StyleProfileService.js");
+  const { StyleProfileService } = require("../../../dist/services/styleEngine/StyleProfileService.js");
   const originalGetById = StyleProfileService.prototype.getProfileById;
 
   StyleProfileService.prototype.getProfileById = async () => null;
@@ -110,7 +110,7 @@ test("GET /api/style-profiles/:id/export 不存在的档案返回 404", async ()
 });
 
 test("POST /api/style-profiles/import create_new 策略创建新档案", async () => {
-  const { StyleProfileService } = require("../../dist/services/styleEngine/StyleProfileService.js");
+  const { StyleProfileService } = require("../../../dist/services/styleEngine/StyleProfileService.js");
   const originalImportProfile = StyleProfileService.prototype.importProfile;
 
   StyleProfileService.prototype.importProfile = async function (input) {
@@ -162,7 +162,7 @@ test("POST /api/style-profiles/import create_new 策略创建新档案", async (
 });
 
 test("POST /api/style-profiles/import overwrite 策略传递覆盖参数", async () => {
-  const { StyleProfileService } = require("../../dist/services/styleEngine/StyleProfileService.js");
+  const { StyleProfileService } = require("../../../dist/services/styleEngine/StyleProfileService.js");
   const originalImportProfile = StyleProfileService.prototype.importProfile;
   let capturedInput = null;
 
@@ -210,7 +210,7 @@ test("POST /api/style-profiles/import overwrite 策略传递覆盖参数", async
 });
 
 test("POST /api/style-profiles/import skip 策略传递跳过参数", async () => {
-  const { StyleProfileService } = require("../../dist/services/styleEngine/StyleProfileService.js");
+  const { StyleProfileService } = require("../../../dist/services/styleEngine/StyleProfileService.js");
   const originalImportProfile = StyleProfileService.prototype.importProfile;
 
   StyleProfileService.prototype.importProfile = async function (input) {

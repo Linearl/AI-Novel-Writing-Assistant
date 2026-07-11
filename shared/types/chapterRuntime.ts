@@ -84,10 +84,10 @@ export {
   type RuntimeCharacterRelationStage,
   type RuntimeDynamicCharacterOverviewItem,
   type RuntimeDynamicCharacterCurrentVolume,
-} from "./chapterCore";
+} from "./chapterCore.js";
 
 // Backward-compat: original chapterRuntime.ts exported RuntimeDynamicCharacterOverview
-export type { DynamicCharacterOverview as RuntimeDynamicCharacterOverview } from "./chapterCore";
+export type { DynamicCharacterOverview as RuntimeDynamicCharacterOverview } from "./chapterCore.js";
 
 // Style contract & length control
 export {
@@ -116,7 +116,7 @@ export {
   type RuntimeSceneGenerationResult,
   type RuntimeSceneRoundResult,
   type RuntimeLengthControl,
-} from "./chapterStyle";
+} from "./chapterStyle.js";
 
 // Prompt context & generation context package
 export {
@@ -171,7 +171,7 @@ export {
   type ChapterRepairIssue,
   type ChapterRepairContext,
   type GenerationContextPackage,
-} from "./chapterContext";
+} from "./chapterContext.js";
 
 // Acceptance, audit report & orchestration package
 export {
@@ -189,4 +189,4 @@ export {
   type ChapterAcceptanceAssetSyncRecommendation,
   type RuntimeAuditReport,
   type ChapterRuntimePackage,
-} from "./generationPackage";
+} from "./generationPackage.js";

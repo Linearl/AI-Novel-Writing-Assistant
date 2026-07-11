@@ -1,6 +1,6 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const { normalizeGeneratedWorldPayload } = require("../../dist/services/world/worldPersistence.js");
+const { normalizeGeneratedWorldPayload } = require("../../../dist/services/world/worldPersistence.js");
 
 test("normalizeGeneratedWorldPayload flattens object world fields into strings", () => {
   const payload = normalizeGeneratedWorldPayload({

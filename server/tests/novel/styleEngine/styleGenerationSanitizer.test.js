@@ -4,7 +4,7 @@ const assert = require("node:assert/strict");
 const {
   detectForbiddenStyleEntities,
   sanitizeStyleContextForGeneration,
-} = require("../../dist/services/styleEngine/styleGenerationSanitizer.js");
+} = require("../../../dist/services/styleEngine/styleGenerationSanitizer.js");
 
 function section(key, text) {
   return {

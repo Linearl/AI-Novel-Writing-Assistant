@@ -4,13 +4,13 @@ const http = require("node:http");
 
 process.env.API_TOKEN = "test-token";
 
-const { createApp } = require("../../dist/app.js");
+const { createApp } = require("../../../dist/app.js");
 const {
   characterLibrarySyncService,
-} = require("../../dist/services/character/CharacterLibrarySyncService.js");
+} = require("../../../dist/services/character/CharacterLibrarySyncService.js");
 const {
   sanitizeBaseCharacterDraft,
-} = require("../../dist/services/character/characterSyncHelpers.js");
+} = require("../../../dist/services/character/characterSyncHelpers.js");
 
 function listen(server) {
   return new Promise((resolve) => {

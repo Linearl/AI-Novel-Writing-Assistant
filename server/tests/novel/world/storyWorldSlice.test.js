@@ -5,8 +5,8 @@ const {
   normalizeStoryWorldSlice,
   parseStoryWorldSliceOverrides,
   STORY_WORLD_SLICE_SCHEMA_VERSION,
-} = require("../../dist/services/novel/storyWorldSlice/storyWorldSlicePersistence.js");
-const { buildWorldStructureFromLegacySource, buildWorldBindingSupport } = require("../../dist/services/world/worldStructure.js");
+} = require("../../../dist/services/novel/storyWorldSlice/storyWorldSlicePersistence.js");
+const { buildWorldStructureFromLegacySource, buildWorldBindingSupport } = require("../../../dist/services/world/worldStructure.js");
 
 function buildStructuredWorld() {
   return {

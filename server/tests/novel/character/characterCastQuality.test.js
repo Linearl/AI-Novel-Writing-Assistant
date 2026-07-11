@@ -4,10 +4,10 @@ const assert = require("node:assert/strict");
 const {
   assessCharacterCastBatch,
   buildCharacterCastBlockedMessage,
-} = require("../../dist/services/novel/characterPrep/characterCastQuality.js");
+} = require("../../../dist/services/novel/characterPrep/characterCastQuality.js");
 const {
   characterCastOptionResponseSchema,
-} = require("../../dist/prompting/prompts/novel/characterPreparation.promptSchemas.js");
+} = require("../../../dist/prompting/prompts/novel/characterPreparation.promptSchemas.js");
 
 test("core character cast schema preserves full profile and hard facts", () => {
   const parsed = characterCastOptionResponseSchema.parse({

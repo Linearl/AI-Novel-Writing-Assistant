@@ -3,7 +3,7 @@ const assert = require("node:assert/strict");
 
 const {
   mergeProjectionAssignments,
-} = require("../../dist/services/novel/dynamics/characterDynamicsUtils.js");
+} = require("../../../dist/services/novel/dynamics/characterDynamicsUtils.js");
 
 test("mergeProjectionAssignments merges duplicate character-volume assignments deterministically", () => {
   const merged = mergeProjectionAssignments([

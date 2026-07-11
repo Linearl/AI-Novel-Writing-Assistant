@@ -2,7 +2,7 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const {
   buildWorldBlueprintPromptBlock,
-} = require("../../dist/services/world/worldGenerationBlueprint.js");
+} = require("../../../dist/services/world/worldGenerationBlueprint.js");
 
 test("buildWorldBlueprintPromptBlock includes reference context and selected choice details", () => {
   const prompt = buildWorldBlueprintPromptBlock({

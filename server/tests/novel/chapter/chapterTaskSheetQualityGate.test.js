@@ -7,7 +7,7 @@ const {
 } = require("../../../shared/dist/types/chapterTaskSheetQuality.js");
 const {
   ChapterTaskSheetQualityGateService,
-} = require("../../dist/services/novel/volume/ChapterTaskSheetQualityGateService.js");
+} = require("../../../dist/services/novel/volume/ChapterTaskSheetQualityGateService.js");
 
 function buildSceneCards() {
   return JSON.stringify({

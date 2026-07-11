@@ -8,16 +8,16 @@ import type {
   ProjectMode,
   ProjectProgressStatus,
   StoryPlanLevel,
-} from "./novel";
-import type { LLMProvider } from "./llm";
-import type { ArtifactSyncMode } from "./novel";
-import type { BookAnalysisSectionKey } from "./bookAnalysis";
-import type { NovelWorkflowResumeTarget, NovelWorkflowStage } from "./novelWorkflow";
-import type { StoryMacroPlan } from "./storyMacro";
-import type { BookContract, BookContractDraft } from "./novelWorkflow";
-import type { TitleFactorySuggestion } from "./title";
-import type { StyleIntentSummary } from "./styleEngine";
-import type { DirectorAutoApprovalConfig } from "./autoDirectorApproval";
+} from "./novel.js";
+import type { LLMProvider } from "./llm.js";
+import type { ArtifactSyncMode } from "./novel.js";
+import type { BookAnalysisSectionKey } from "./bookAnalysis.js";
+import type { NovelWorkflowResumeTarget, NovelWorkflowStage } from "./novelWorkflow.js";
+import type { StoryMacroPlan } from "./storyMacro.js";
+import type { BookContract, BookContractDraft } from "./novelWorkflow.js";
+import type { TitleFactorySuggestion } from "./title.js";
+import type { StyleIntentSummary } from "./styleEngine.js";
+import type { DirectorAutoApprovalConfig } from "./autoDirectorApproval.js";
 
 export const DIRECTOR_CORRECTION_PRESETS = [
   {

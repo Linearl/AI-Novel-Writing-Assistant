@@ -9,7 +9,7 @@ const {
   buildChapterWriterContextBlocks,
   buildChapterReviewContextBlocks,
   buildChapterRepairContextBlocks,
-} = require("../../dist/prompting/prompts/novel/chapterLayeredContext.js");
+} = require("../../../dist/prompting/prompts/novel/chapterLayeredContext.js");
 
 function createContextPackage() {
   const now = new Date().toISOString();

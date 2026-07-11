@@ -5,16 +5,16 @@
  * Imports shared enums from chapterCore and style/length schemas from chapterStyle.
  */
 import { z } from "zod";
-import { chapterScenePlanSchema, lengthBudgetContractSchema } from "./chapterLengthControl";
+import { chapterScenePlanSchema, lengthBudgetContractSchema } from "./chapterLengthControl.js";
 import {
   canonicalStateSnapshotSchema,
   chapterStateGoalSchema,
   chapterPayoffDirectiveSchema,
   generationNextActionSchema,
-} from "./canonicalState";
-import { characterResourceContextSchema } from "./characterResource";
-import { storyWorldSliceSchema } from "./storyWorldSlice";
-import { timelineContextForChapterSchema } from "./timeline";
+} from "./canonicalState.js";
+import { characterResourceContextSchema } from "./characterResource.js";
+import { storyWorldSliceSchema } from "./storyWorldSlice.js";
+import { timelineContextForChapterSchema } from "./timeline.js";
 import {
   auditSeveritySchema,
   auditModeSchema,
@@ -30,11 +30,11 @@ import {
   runtimeCreativeDecisionSchema,
   runtimeAuditIssueSchema,
   runtimeContinuationSchema,
-} from "./chapterCore";
+} from "./chapterCore.js";
 import {
   runtimeStyleContractSchema,
   runtimeStyleContextSchema,
-} from "./chapterStyle";
+} from "./chapterStyle.js";
 
 // ---------------------------------------------------------------------------
 // Prompt budget & context gating

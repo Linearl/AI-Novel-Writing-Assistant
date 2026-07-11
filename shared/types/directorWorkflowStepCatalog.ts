@@ -2,7 +2,7 @@ import type {
   NovelWorkflowCheckpoint,
   NovelWorkflowMilestoneType,
   NovelWorkflowStage,
-} from "./novelWorkflow";
+} from "./novelWorkflow.js";
 import {
   WORKFLOW_CHECKPOINT_CATALOG,
   WORKFLOW_DISPLAY_STAGES,

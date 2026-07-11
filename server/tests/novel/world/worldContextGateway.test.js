@@ -3,7 +3,7 @@ const assert = require("node:assert/strict");
 const {
   buildWorldContextBlockFromSlice,
   WorldContextGateway,
-} = require("../../dist/services/novel/worldContext/WorldContextGateway.js");
+} = require("../../../dist/services/novel/worldContext/WorldContextGateway.js");
 
 function buildSlice() {
   return {

@@ -4,21 +4,21 @@ const http = require("node:http");
 
 process.env.API_TOKEN = "test-token";
 
-const { createApp } = require("../../dist/app.js");
-const { StyleCompiler } = require("../../dist/services/styleEngine/StyleCompiler.js");
-const { buildStyleExtractionSourceInput } = require("../../dist/services/styleEngine/StyleExtractionSourceInput.js");
-const { StyleProfileService } = require("../../dist/services/styleEngine/StyleProfileService.js");
-const { styleExtractionTaskService } = require("../../dist/services/styleEngine/StyleExtractionTaskService.js");
-const { StyleBindingService } = require("../../dist/services/styleEngine/StyleBindingService.js");
-const { StyleDetectionService } = require("../../dist/services/styleEngine/StyleDetectionService.js");
-const { StyleRewriteService } = require("../../dist/services/styleEngine/StyleRewriteService.js");
-const { AntiAiRuleService } = require("../../dist/services/styleEngine/AntiAiRuleService.js");
-const { AntiAiPolicyResolver } = require("../../dist/services/styleEngine/AntiAiPolicyResolver.js");
-const { prisma } = require("../../dist/db/prisma.js");
-const styleEngineSeedService = require("../../dist/services/styleEngine/StyleEngineSeedService.js");
-const promptRunner = require("../../dist/prompting/core/promptRunner.js");
-const { KnowledgeService } = require("../../dist/services/knowledge/KnowledgeService.js");
-const { taskCenterService } = require("../../dist/services/task/TaskCenterService.js");
+const { createApp } = require("../../../dist/app.js");
+const { StyleCompiler } = require("../../../dist/services/styleEngine/StyleCompiler.js");
+const { buildStyleExtractionSourceInput } = require("../../../dist/services/styleEngine/StyleExtractionSourceInput.js");
+const { StyleProfileService } = require("../../../dist/services/styleEngine/StyleProfileService.js");
+const { styleExtractionTaskService } = require("../../../dist/services/styleEngine/StyleExtractionTaskService.js");
+const { StyleBindingService } = require("../../../dist/services/styleEngine/StyleBindingService.js");
+const { StyleDetectionService } = require("../../../dist/services/styleEngine/StyleDetectionService.js");
+const { StyleRewriteService } = require("../../../dist/services/styleEngine/StyleRewriteService.js");
+const { AntiAiRuleService } = require("../../../dist/services/styleEngine/AntiAiRuleService.js");
+const { AntiAiPolicyResolver } = require("../../../dist/services/styleEngine/AntiAiPolicyResolver.js");
+const { prisma } = require("../../../dist/db/prisma.js");
+const styleEngineSeedService = require("../../../dist/services/styleEngine/StyleEngineSeedService.js");
+const promptRunner = require("../../../dist/prompting/core/promptRunner.js");
+const { KnowledgeService } = require("../../../dist/services/knowledge/KnowledgeService.js");
+const { taskCenterService } = require("../../../dist/services/task/TaskCenterService.js");
 
 function listen(server) {
   return new Promise((resolve) => {
@@ -497,7 +497,7 @@ test("StyleRewriteService includes preview anti-ai rules in the repair prompt", 
 
 test("style detection prompt requires broad anti-ai recall and non-copyable suggestions", () => {
   const rendered = promptRunner.preparePromptExecution({
-    asset: require("../../dist/prompting/prompts/style/style.prompts.js").styleDetectionPrompt,
+    asset: require("../../../dist/prompting/prompts/style/style.prompts.js").styleDetectionPrompt,
     promptInput: {
       styleContractText: "none",
       styleContractMetaText: "none",
@@ -516,7 +516,7 @@ test("style detection prompt requires broad anti-ai recall and non-copyable sugg
 
 test("style rewrite prompt avoids suggestion copying and factual hook injection", () => {
   const rendered = promptRunner.preparePromptExecution({
-    asset: require("../../dist/prompting/prompts/style/style.prompts.js").styleRewritePrompt,
+    asset: require("../../../dist/prompting/prompts/style/style.prompts.js").styleRewritePrompt,
     promptInput: {
       styleContractText: "none",
       content: "原文",

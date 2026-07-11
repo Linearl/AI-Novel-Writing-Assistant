@@ -3,11 +3,11 @@ const assert = require("node:assert/strict");
 const {
   buildWorldBindingSupport,
   normalizeWorldStructuredData,
-} = require("../../dist/services/world/worldStructure.js");
+} = require("../../../dist/services/world/worldStructure.js");
 const {
   buildFallbackWorldVisualizationPayload,
   buildWorldVisualizationPayload,
-} = require("../../dist/services/world/worldVisualization.js");
+} = require("../../../dist/services/world/worldVisualization.js");
 
 test("buildFallbackWorldVisualizationPayload extracts chinese faction types and relations", () => {
   const payload = buildFallbackWorldVisualizationPayload({

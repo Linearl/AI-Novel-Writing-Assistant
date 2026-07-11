@@ -9,9 +9,9 @@ import type {
   DirectorPromptUsageSummary,
   DirectorRuntimeSnapshot,
   DirectorStepUsageSummary,
-} from "./index";
-import type { DirectorWorkerHealthSummary } from "./worker";
-import type { DirectorCircuitBreakerState, DirectorQualityLoopBudgetNextAction } from "../novelDirector";
+} from "./index.js";
+import type { DirectorWorkerHealthSummary } from "./worker.js";
+import type { DirectorCircuitBreakerState, DirectorQualityLoopBudgetNextAction } from "../novelDirector.js";
 
 export type DirectorRuntimeProjectionStatus =
   | "idle"

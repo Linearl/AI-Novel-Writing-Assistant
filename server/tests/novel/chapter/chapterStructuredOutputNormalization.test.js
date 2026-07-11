@@ -3,13 +3,13 @@ const assert = require("node:assert/strict");
 
 const {
   chapterAcceptanceAssessmentSchema,
-} = require("../../dist/prompting/prompts/novel/chapterAcceptance.prompts.js");
+} = require("../../../dist/prompting/prompts/novel/chapterAcceptance.prompts.js");
 const {
   chapterArtifactDeltaOutputSchema,
-} = require("../../dist/prompting/prompts/novel/chapterArtifactDelta.prompts.js");
+} = require("../../../dist/prompting/prompts/novel/chapterArtifactDelta.prompts.js");
 const {
   timelineExtractorOutputSchema,
-} = require("../../dist/prompting/prompts/novel/timelineExtractor.prompts.js");
+} = require("../../../dist/prompting/prompts/novel/timelineExtractor.prompts.js");
 
 test("chapter acceptance schema normalizes common review category and repair target aliases", () => {
   const parsed = chapterAcceptanceAssessmentSchema.parse({

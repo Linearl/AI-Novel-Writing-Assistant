@@ -8,10 +8,10 @@ const {
   buildWorldStructureSeedFromSource,
   normalizeWorldStructuredData,
   parseWorldStructurePayload,
-} = require("../../dist/services/world/worldStructure.js");
+} = require("../../../dist/services/world/worldStructure.js");
 const {
   mergeWorldStructureSection,
-} = require("../../dist/services/world/worldServiceShared.js");
+} = require("../../../dist/services/world/worldServiceShared.js");
 
 function createSource(overrides = {}) {
   return {

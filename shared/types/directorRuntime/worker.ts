@@ -7,8 +7,8 @@ import type {
   DirectorStepBlocker,
   DirectorTaskFactSummary,
   DirectorWorkspaceAnalysis,
-} from "./index";
-import type { DirectorRuntimeProjection } from "./projection";
+} from "./index.js";
+import type { DirectorRuntimeProjection } from "./projection.js";
 
 export type DirectorWorkerDerivedState =
   | "idle"

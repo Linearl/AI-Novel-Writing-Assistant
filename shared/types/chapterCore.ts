@@ -5,8 +5,8 @@
  * Other chapterRuntime sub-modules import shared enums/types from here.
  */
 import { z } from "zod";
-import type { LLMProvider } from "./llm";
-import { characterResourceContextSchema } from "./characterResource";
+import type { LLMProvider } from "./llm.js";
+import { characterResourceContextSchema } from "./characterResource.js";
 
 // ---------------------------------------------------------------------------
 // Internal enum schemas (not individually type-exported; consumed via parent

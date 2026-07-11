@@ -4,8 +4,8 @@ const http = require("node:http");
 
 process.env.API_TOKEN = "test-token";
 
-const { createApp } = require("../../dist/app.js");
-const { prisma } = require("../../dist/db/prisma.js");
+const { createApp } = require("../../../dist/app.js");
+const { prisma } = require("../../../dist/db/prisma.js");
 
 function listen(server) {
   return new Promise((resolve) => {

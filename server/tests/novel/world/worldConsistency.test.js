@@ -4,7 +4,7 @@ const {
   buildConsistencySummary,
   localizeConsistencyField,
   localizeConsistencyIssue,
-} = require("../../dist/services/world/worldConsistency.js");
+} = require("../../../dist/services/world/worldConsistency.js");
 
 test("buildConsistencySummary returns chinese summaries", () => {
   assert.equal(buildConsistencySummary("pass", 0, 0), "一致性检查通过，未发现明显硬冲突。");

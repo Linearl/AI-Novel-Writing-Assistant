@@ -3,7 +3,7 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
 
-const repoRoot = path.resolve(__dirname, "..");
+const repoRoot = path.resolve(__dirname, "..", "..");
 const directorRoot = path.join(repoRoot, "src", "services", "novel", "director");
 const routesRoot = path.join(repoRoot, "src", "routes");
 
@@ -19,13 +19,12 @@ test("director root stays limited to compatibility facades", () => {
     .sort();
 
   assert.deepEqual(rootTsFiles, [
-    "DirectorStateCommitter.ts",
-    "DirectorStateReader.ts",
-    "DirectorStateStore.ts",
+    "DirectorEventBridge.ts",
     "NovelDirectorIdeaInspirationService.ts",
     "NovelDirectorService.ts",
     "novelDirectorConfirmNodeAdapters.ts",
     "novelDirectorPipelineRuntime.ts",
+    "novelDirectorTakeoverHandler.ts",
   ]);
 });
 

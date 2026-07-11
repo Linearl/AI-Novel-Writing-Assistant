@@ -13,7 +13,7 @@ import {
   antiAiSeveritySchema,
   styleContractIssueCategorySchema,
   styleContractViolationSourceSchema,
-} from "./chapterCore";
+} from "./chapterCore.js";
 
 // ---------------------------------------------------------------------------
 // Style contract schemas

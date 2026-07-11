@@ -1,4 +1,4 @@
-import type { LLMProvider } from "./llm";
+import type { LLMProvider } from "./llm.js";
 
 export type BookAnalysisStatus = "draft" | "queued" | "running" | "succeeded" | "failed" | "cancelled" | "archived";
 export type BookAnalysisSectionStatus = "idle" | "running" | "succeeded" | "failed";
