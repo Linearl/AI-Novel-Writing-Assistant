@@ -1,0 +1,27 @@
+{
+  "reqId": "3012",
+  "title": "任务中心批量操作功能",
+  "status": "pass",
+  "priority": "P1",
+  "complexity": "C2",
+  "created": "2026-07-11T00:00:00Z",
+  "updated": "2026-07-11T00:00:00Z",
+  "phases": {
+    "requirements": "done",
+    "design": "done",
+    "implementation": "done",
+    "testing": "done",
+    "verification": "done"
+  },
+  "metrics": {
+    "totalTasks": 12,
+    "completedTasks": 12,
+    "progress": 100
+  },
+  "artifacts": {
+    "requirements": "REQ-3012-task-center-batch-operations.md",
+    "design": "design.md",
+    "tasks": "tasks.md",
+    "decisionLog": "decision_log.md"
+  }
+}

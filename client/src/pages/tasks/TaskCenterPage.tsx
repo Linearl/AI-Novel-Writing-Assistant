@@ -59,6 +59,8 @@ export default function TaskCenterPage() {
   const [keyword, setKeyword] = useState("");
   const [onlyAnomaly, setOnlyAnomaly] = useState(false);
   const [sortMode, setSortMode] = useState<TaskSortMode>("updated_desc");
+  const [selectedTaskIds, setSelectedTaskIds] = useState<Set<string>>(new Set());
+  const [isCancelling, setIsCancelling] = useState(false);
 
   const selectedKind = (searchParams.get("kind") as TaskKind | null) ?? null;
   const selectedId = searchParams.get("id");
@@ -146,6 +148,59 @@ export default function TaskCenterPage() {
       });
     }
   }, [selectedKind, selectedId, setSearchParams, visibleRows]);
+
+  // 筛选条件变化时清除选中状态
+  useEffect(() => {
+    setSelectedTaskIds(new Set());
+  }, [listParamsKey]);
+
+  // 批量取消功能
+  const handleBatchCancel = async () => {
+    if (selectedTaskIds.size === 0) {
+      return;
+    }
+
+    setIsCancelling(true);
+    let successCount = 0;
+    let skipCount = 0;
+    let failCount = 0;
+
+    const canCancelStatuses = new Set(['queued', 'waiting_approval']);
+
+    for (const taskKey of selectedTaskIds) {
+      const [taskKind, taskId] = taskKey.split(':') as [TaskKind, string];
+      const task = visibleRows.find((t) => t.kind === taskKind && t.id === taskId);
+
+      if (!task || !canCancelStatuses.has(task.status)) {
+        skipCount++;
+        continue;
+      }
+
+      try {
+        await cancelTask(taskKind, taskId);
+        successCount++;
+      } catch {
+        failCount++;
+      }
+    }
+
+    setIsCancelling(false);
+    setSelectedTaskIds(new Set());
+    await invalidateTaskQueries();
+
+    if (successCount > 0) {
+      const message = failCount > 0
+        ? `成功取消 ${successCount} 个任务，${failCount} 个取消失败`
+        : skipCount > 0
+          ? `成功取消 ${successCount} 个任务，跳过 ${skipCount} 个不可取消的任务`
+          : `成功取消 ${successCount} 个任务`;
+      toast.success(message);
+    } else if (failCount > 0) {
+      toast.error(`取消操作失败，请重试`);
+    } else {
+      toast.info(`选中的任务中没有可取消的任务`);
+    }
+  };
 
   const runningCount = allRows.filter((item) => item.status === "running").length;
   const queuedCount = allRows.filter((item) => item.status === "queued").length;
@@ -389,6 +444,10 @@ export default function TaskCenterPage() {
               return next;
             });
           }}
+          selectedTaskIds={selectedTaskIds}
+          onSelectionChange={setSelectedTaskIds}
+          onBatchCancel={handleBatchCancel}
+          isCancelling={isCancelling}
         />
 
         <Card>

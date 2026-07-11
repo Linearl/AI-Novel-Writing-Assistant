@@ -38,6 +38,17 @@ description: "docs 目录索引（自动生成）"
 | --- | --- | --- |
 | [1.task\B.todo\任务包六件套构成-编号分类规则-自动归档机制.md](./1.task\B.todo\任务包六件套构成-编号分类规则-自动归档机制.md) | --- | - |
 
+## 1.task\B.todo\v0.1\v0.1-r3012-C2-task-center-batch-operations
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.1\v0.1-r3012-C2-task-center-batch-operations\decision_log.md](./1.task\B.todo\v0.1\v0.1-r3012-C2-task-center-batch-operations\decision_log.md) | **日期**: 2026-07-11 | - |
+| [1.task\B.todo\v0.1\v0.1-r3012-C2-task-center-batch-operations\design.md](./1.task\B.todo\v0.1\v0.1-r3012-C2-task-center-batch-operations\design.md) | ``` | - |
+| [1.task\B.todo\v0.1\v0.1-r3012-C2-task-center-batch-operations\README.md](./1.task\B.todo\v0.1\v0.1-r3012-C2-task-center-batch-operations\README.md) | --- | - |
+| [1.task\B.todo\v0.1\v0.1-r3012-C2-task-center-batch-operations\REQ-3012-task-center-batch-operations-original.md](./1.task\B.todo\v0.1\v0.1-r3012-C2-task-center-batch-operations\REQ-3012-task-center-batch-operations-original.md) | --- | - |
+| [1.task\B.todo\v0.1\v0.1-r3012-C2-task-center-batch-operations\REQ-3012-task-center-batch-operations.md](./1.task\B.todo\v0.1\v0.1-r3012-C2-task-center-batch-operations\REQ-3012-task-center-batch-operations.md) | --- | - |
+| [1.task\B.todo\v0.1\v0.1-r3012-C2-task-center-batch-operations\tasks.md](./1.task\B.todo\v0.1\v0.1-r3012-C2-task-center-batch-operations\tasks.md) | - **REQ编号**: 3012 | - |
+
 ## 1.task\B.todo\v0.2
 
 | 文件 | 标题 | 描述 |
