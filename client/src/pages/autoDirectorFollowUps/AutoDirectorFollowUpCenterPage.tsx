@@ -25,6 +25,7 @@ import {
   listAutoDirectorFollowUps,
   revalidateAutoDirectorFollowUpDetail,
 } from "@/api/autoDirectorFollowUps";
+import { batchArchiveTasks } from "@/api/tasks";
 import { queryKeys } from "@/api/queryKeys";
 import { AutoDirectorFollowUpBatchBar } from "./components/AutoDirectorFollowUpBatchBar";
 import { AutoDirectorFollowUpDetailPanel } from "./components/AutoDirectorFollowUpDetail";
@@ -266,6 +267,21 @@ export default function AutoDirectorFollowUpCenterPage() {
     },
   });
 
+  const batchArchiveMutation = useMutation({
+    mutationFn: async (archiveItems: AutoDirectorFollowUpItem[]) => {
+      const tasks = archiveItems.map((i) => ({ kind: "novel_workflow" as const, id: i.taskId }));
+      return batchArchiveTasks(tasks);
+    },
+    onSuccess: async (_response, archiveItems) => {
+      await invalidateFollowUps();
+      toast.success(`已归档 ${archiveItems.length} 项任务`);
+      setSelectedDirectorTaskIds([]);
+    },
+    onError: (error) => {
+      toast.error(error instanceof Error ? error.message : "批量归档失败");
+    },
+  });
+
   const revalidationMutation = useMutation({
     mutationFn: revalidateAutoDirectorFollowUpDetail,
     onSuccess: async (response, directorTaskId) => {
@@ -331,6 +347,17 @@ export default function AutoDirectorFollowUpCenterPage() {
       }
       return current.filter((id) => id !== directorTaskId);
     });
+  };
+
+  const handleSelectAll = (checked: boolean) => {
+    if (!checked) {
+      setSelectedDirectorTaskIds([]);
+      return;
+    }
+    const selectableKeys = items
+      .filter((i) => i.supportsBatch)
+      .map((i) => i.autoApprovalRecordId ?? i.directorTaskId);
+    setSelectedDirectorTaskIds(Array.from(new Set(selectableKeys)));
   };
 
   const handleExecuteAction = async (item: AutoDirectorFollowUpItem, action: AutoDirectorAction) => {
@@ -408,6 +435,7 @@ export default function AutoDirectorFollowUpCenterPage() {
           onSelectTask={handleSelectTask}
           onFilterChange={handleFilterChange}
           onToggleSelected={handleToggleSelected}
+          onSelectAll={handleSelectAll}
           onPageChange={(nextPage: number) => {
             setSearchParams((prev) => {
               const next = new URLSearchParams(prev);
@@ -434,9 +462,10 @@ export default function AutoDirectorFollowUpCenterPage() {
       <AutoDirectorFollowUpBatchBar
         selectedItems={selectedItems}
         batchActionCode={batchActionCode}
-        loading={batchMutation.isPending}
+        loading={batchMutation.isPending || batchArchiveMutation.isPending}
         onClear={() => setSelectedDirectorTaskIds([])}
         onExecute={handleExecuteBatch}
+        onBatchArchive={() => batchArchiveMutation.mutate(selectedItems)}
       />
     </div>
   );

@@ -4,12 +4,15 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { AUTO_DIRECTOR_MOBILE_CLASSES } from "@/mobile/autoDirector";
 
+const ARCHIVABLE_STATUSES = new Set(["succeeded", "failed", "cancelled"]);
+
 interface AutoDirectorFollowUpBatchBarProps {
   selectedItems: AutoDirectorFollowUpItem[];
   batchActionCode: AutoDirectorMutationActionCode | null;
   loading: boolean;
   onClear: () => void;
   onExecute: () => void | Promise<void>;
+  onBatchArchive: () => void;
 }
 
 function formatBatchActionLabel(actionCode: AutoDirectorMutationActionCode | null): string {
@@ -33,11 +36,13 @@ export function AutoDirectorFollowUpBatchBar({
   loading,
   onClear,
   onExecute,
+  onBatchArchive,
 }: AutoDirectorFollowUpBatchBarProps) {
   if (selectedItems.length === 0) {
     return null;
   }
   const selectedSection = getSelectedSection(selectedItems);
+  const allArchivable = selectedItems.every((item) => ARCHIVABLE_STATUSES.has(item.status));
 
   return (
     <Card className={AUTO_DIRECTOR_MOBILE_CLASSES.followUpBatchBar}>
@@ -50,9 +55,19 @@ export function AutoDirectorFollowUpBatchBar({
               : "该分区不提供批量动作"}
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-2 md:flex">
+        <div className="grid grid-cols-3 gap-2 md:flex">
           <Button variant="outline" size="sm" className="w-full md:w-auto" onClick={onClear} disabled={loading}>
             清空
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            className="w-full md:w-auto"
+            onClick={onBatchArchive}
+            disabled={!allArchivable || loading}
+            title={allArchivable ? "归档所选任务" : "仅终态任务（已完成/失败/已取消）可归档"}
+          >
+            批量归档
           </Button>
           <Button size="sm" className="w-full md:w-auto" onClick={() => void onExecute()} disabled={!batchActionCode || loading}>
             执行批量动作

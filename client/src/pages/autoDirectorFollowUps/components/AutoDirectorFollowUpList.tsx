@@ -34,6 +34,7 @@ interface AutoDirectorFollowUpListPanelProps {
   onSelectTask: (taskId: string) => void;
   onFilterChange: (key: "reason" | "status" | "supportsBatch" | "channelType", value: string) => void;
   onToggleSelected: (taskId: string, checked: boolean) => void;
+  onSelectAll: (checked: boolean) => void;
   onPageChange: (page: number) => void;
 }
 
@@ -125,6 +126,32 @@ export function AutoDirectorFollowUpListPanel(props: AutoDirectorFollowUpListPan
         </div>
 
         <div className="space-y-3">
+          {/* 全选行 */}
+          {props.items.length > 0 && !props.loading ? (() => {
+            const selectableItems = props.items.filter((i) => i.supportsBatch);
+            const allSelected = selectableItems.length > 0 && selectableItems.every(
+              (i) => props.selectedTaskIds.includes(i.autoApprovalRecordId ?? i.directorTaskId),
+            );
+            const someSelected = selectableItems.some(
+              (i) => props.selectedTaskIds.includes(i.autoApprovalRecordId ?? i.directorTaskId),
+            );
+            return (
+              <label className="flex cursor-pointer items-center gap-2 text-sm text-muted-foreground">
+                <input
+                  type="checkbox"
+                  checked={allSelected}
+                  ref={(el) => { if (el) el.indeterminate = someSelected && !allSelected; }}
+                  onChange={(e) => props.onSelectAll(e.target.checked)}
+                  disabled={props.actionLoading || selectableItems.length === 0}
+                />
+                <span>
+                  全选可批量项（{selectableItems.length}）
+                  {props.selectedTaskIds.length > 0 ? ` · 已选 ${props.selectedTaskIds.length}` : ""}
+                </span>
+              </label>
+            );
+          })() : null}
+
           {props.loading ? (
             <LoadingIndicator text="正在加载跟进项..." className={`rounded-md border border-dashed p-6 ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`} />
           ) : null}
