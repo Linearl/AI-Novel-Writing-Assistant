@@ -1,7 +1,7 @@
 {
   "reqId": "3012",
   "title": "任务中心批量操作功能",
-  "status": "pass",
+  "status": "done",
   "priority": "P1",
   "complexity": "C2",
   "created": "2026-07-11T00:00:00Z",
@@ -14,8 +14,8 @@
     "verification": "done"
   },
   "metrics": {
-    "totalTasks": 12,
-    "completedTasks": 12,
+    "totalTasks": 15,
+    "completedTasks": 15,
     "progress": 100
   },
   "artifacts": {

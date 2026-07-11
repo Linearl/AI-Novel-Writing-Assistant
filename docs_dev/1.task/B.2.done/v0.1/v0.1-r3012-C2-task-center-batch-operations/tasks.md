@@ -50,16 +50,31 @@
   - 自动跳过不可取消的任务
   - 显示操作结果（成功/失败数量）
 
-### Phase 4: 测试和验证
+### Phase 4: 批量归档功能
 
-- [ ] 4.1 类型检查
+- [ ] 4.1 修改 TaskBatchActionBar 组件
+  - 添加"批量归档"按钮
+  - 传入 onBatchArchive 回调和 isArchiving 状态
+  
+- [ ] 4.2 修改 TaskCenterListPanel
+  - 传递批量归档回调到 TaskBatchActionBar
+  
+- [ ] 4.3 在 TaskCenterPage 实现批量归档逻辑
+  - 使用 archiveTask API 逐个归档选中的任务
+  - 自动跳过不可归档的任务（非 succeeded/failed/cancelled 状态）
+  - 显示操作结果（成功/失败/跳过数量）
+
+### Phase 5: 测试和验证
+
+- [ ] 5.1 类型检查
   - 运行 pnpm typecheck 确保无错误
   
-- [ ] 4.2 功能测试
+- [ ] 5.2 功能测试
   - 测试多选功能
   - 测试全选功能
   - 测试批量取消功能
-  - 测试边界情况（无可取消任务等）
+  - 测试批量归档功能
+  - 测试边界情况（无可归档任务等）
 
 ## 完成标准
 
