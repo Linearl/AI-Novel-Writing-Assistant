@@ -80,9 +80,7 @@ description: "需求任务总清单（SSOT）"
 | 3008 | 日志中心 | p4 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r3008-medium-log-center/README.md` |  |
 | 3009 | Tab 切换性能优化 | p3 | ✅ 已完成 | 性能分析 | 0.1 | 2026-07-03 | 2026-07-04 | `B.2.done/v0.1-r3009-C2-tab-switch-performance/README.md` | NovelEdit tab 切换延迟优化 |
 | 3010 | Create Page Material Import | p4 | ✅ 已完成 | - | 0.1 | 2026-07-08T00:00:00.000Z | 2026-07-09T00:00:00.000Z | `B.2.done/v0.1-r3010-M2-create-page-material-import/README.md` |  |
-| 3011 | 小说预览页面增强控制面板 | p4 | 📋 待办 | - | 0.1 | - | - | `B.2.done/v0.1-r3011-C2-novel-preview-controls/README.md` |  |
-| 3012 | 任务中心批量操作功能 | p1 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r3012-C2-task-center-batch-operations/README.md` |  |
-| 3013 | Follow Up Batch Cleanup | p4 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r3013-S2-follow-up-batch-cleanup/README.md` |  |
+| 3011 | 小说预览页面增强控制面板 | p4 | 📋 待办 | - | 1.1 | - | - | `B.todo/v1.1-r3011-C2-novel-preview-controls/README.md` |  |
 | 3004 | Novel Conversation Archive | p4 | 📋 待办 | - | 0.1 | 2026-06-26T00:00:00.000Z | 2026-06-26T00:00:00.000Z | `B.todo/v0.1-r3004-medium-novel-conversation-archive/README.md` |  |
 
 ### 3.4 文档和规范任务（5xxx）
@@ -124,7 +122,7 @@ description: "需求任务总清单（SSOT）"
 | 7027 | 遗留代码清理 | p0 | ✅ 已完成 | - | 0.1 | 2026-07-10 | 2026-07-11 | `B.2.done/v0.1-r7027-S2-legacy-code-cleanup/README.md` |  |
 | 7028 | Director 事件系统收敛 | p1 | ✅ 已完成 | - | 0.1 | 2026-07-10 | 2026-07-11 | `B.2.done/v0.1-r7028-C3-director-event-system-consolidation/README.md` |  |
 | 7031 | 静默吞错日志化：审计复核确认的 .catch(() => {}) 静默吞错修复 | p2 | ✅ 已完成 | 代码审计-full 独占发现复核报告 — 稳定性 + 部分质量维度 CONFIRMED 条目 | 0.1 | 2026-07-10 | 2026-07-10 | `B.2.done/v0.1-r7031-M2-silent-catch-logging/README.md` |  |
-| 7032 | 提取硬编码常量：审计复核确认的重复魔数、重复定义、硬编码配置 | p3 | ✅ 已完成 | 代码审计-full 独占发现复核报告 — 架构/质量维度 CONFIRMED 条目 | 0.1 | 2026-07-10 | 2026-07-11 | `B.2.done/v0.1-r7032-S3-extract-hardcoded-constants/README.md` |  |
+| 7032 | 提取硬编码常量：审计复核确认的重复魔数、重复定义、硬编码配置 | p3 | 📋 待办 | 代码审计-full 独占发现复核报告 — 架构/质量维度 CONFIRMED 条目 | 0.1 | 2026-07-10 | - | `B.todo/v0.1-r7032-S3-extract-hardcoded-constants/README.md` |  |
 | 7033 | Prisma Schema 精简 | p1 | ✅ 已完成 | - | 0.1 | 2026-07-10 | 2026-07-10 | `B.2.done/v0.1-r7033-C2-prisma-schema-sizing/README.md` |  |
 | 7034 | Novel Application Services 门面收缩 | p1 | ✅ 已完成 | - | 0.1 | 2026-07-10 | 2026-07-11 | `B.2.done/v0.1-r7034-M2-novel-application-services-facade-contraction/README.md` |  |
 | 7035 | ARCH-004: DirectorCommandService ↔ workers/ 循环依赖解耦 — IDispatcher 接口抽象 | p1 | ✅ 已完成 | 代码审计-full 独占发现复核报告 ARCH-004 | 0.1 | 2026-07-10 | 2026-07-10T15:38:50.328Z | `B.2.done/v0.1-r7035-C1-director-command-interface-abstract/README.md` |  |
@@ -132,22 +130,6 @@ description: "需求任务总清单（SSOT）"
 | 7037 | QUA-022: directorRuntime.ts 渐进拆分（projection/worker/automation 3 域 + barrel index.ts） | p2 | ✅ 已完成 | 代码审计-full 独占发现复核报告 QUA-022 | 0.1 | 2026-07-10 | 2026-07-10 | `B.2.done/v0.1-r7037-M2-director-runtime-split/README.md` |  |
 | 7038 | QUA-039: CharacterPreparationService persistCharacterCastOptions 提取辅助函数降嵌套 | p2 | ✅ 已完成 | 代码审计-full 独占发现复核报告 QUA-039 | 0.1 | 2026-07-10 | 2026-07-10 | `B.2.done/v0.1-r7038-S2-character-prep-extract-helper/README.md` |  |
 | 7039 | 散点小修复：ARCH-005/009/023/024 + STA-025 + PERF-003 + PERF-007/C + COMPAT-004 | p3 | ✅ 已完成 | 代码审计-full 独占发现复核报告 — 多维度已决策的散点修复 | 0.1 | 2026-07-10 | 2026-07-10T15:38:52.495Z | `B.2.done/v0.1-r7039-S2-scattered-small-fixes/README.md` |  |
-| 7040 | API 失败自动重试 | p1 | 📋 待办 | 2026-07-10 架构诊断报告 + v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.todo/v0.2-r7040-C1-api-retry/README.md` |  |
-| 7041 | 模型备用切换 | p1 | 📋 待办 | 2026-07-10 架构诊断报告 + v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.todo/v0.2-r7041-S1-model-fallback/README.md` |  |
-| 7042 | 错误分类器 | p1 | 📋 待办 | 2026-07-10 架构诊断报告 + v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.todo/v0.2-r7042-S1-error-classifier/README.md` |  |
-| 7043 | 网络状态监控 | p2 | 📋 待办 | 2026-07-10 架构诊断报告 + v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.todo/v0.2-r7043-S2-network-monitor/README.md` |  |
-| 7044 | checkpoint management | p2 | 📋 待办 | v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.todo/v0.2-r7044-S2-checkpoint-management/README.md` |  |
-| 7046 | batch task queue | p2 | 📋 待办 | v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.todo/v0.2-r7046-C1-batch-task-queue/README.md` |  |
-| 7047 | progress visualization | p2 | 📋 待办 | v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.todo/v0.2-r7047-S1-progress-visualization/README.md` |  |
-| 7048 | 实时质量检查器 | p1 | 📋 待办 | v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.todo/v0.2-r7048-S1-realtime-quality-check/README.md` |  |
-| 7049 | 自动重新生成 | p1 | 📋 待办 | v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.todo/v0.2-r7049-S1-auto-regeneration/README.md` |  |
-| 7050 | AI 味自动检测 | p1 | 📋 待办 | v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.todo/v0.2-r7050-C1-ai-smell-detection/README.md` |  |
-| 7051 | 一致性实时监控 | p1 | 📋 待办 | v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.todo/v0.2-r7051-C1-consistency-monitor/README.md` |  |
-| 7052 | background task manager | p2 | 📋 待办 | v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.todo/v0.2-r7052-S1-background-task-manager/README.md` |  |
-| 7053 | node notification | p2 | 📋 待办 | v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.todo/v0.2-r7053-S2-node-notification/README.md` |  |
-| 7056 | character consistency | p2 | 📋 待办 | v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.todo/v0.2-r7056-C1-character-consistency/README.md` |  |
-| 7057 | ai smell trend | p2 | 📋 待办 | v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.todo/v0.2-r7057-S2-ai-smell-trend/README.md` |  |
-| 7058 | env validation | p2 | 📋 待办 | v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.todo/v0.2-r7058-S2-env-validation/README.md` |  |
 | 7029 | Prisma Schema 精简 | p8 | 📋 待办 | - | 0.1 | 2026-07-10 | 2026-07-10 | `B.todo/v0.1-r7029-C2-prisma-schema-sizing/README.md` |  |
 | 7030 | Novel Application Services 门面收缩 | p1 | 📋 待办 | - | 0.1 | 2026-07-10 | 2026-07-10 | `B.todo/v0.1-r7030-M2-novel-application-services-facade-contraction/README.md` |  |
 
@@ -161,24 +143,8 @@ description: "需求任务总清单（SSOT）"
 
 | 编号 | 任务标题 | 文档 |
 | --- | --- | --- |
-| 3011 | 小说预览页面增强控制面板 | `B.2.done/v0.1-r3011-C2-novel-preview-controls/README.md` |
-| 3013 | Follow Up Batch Cleanup | `B.todo/v0.1-r3013-S2-follow-up-batch-cleanup/README.md` |
-| 7040 | API 失败自动重试 | `B.todo/v0.2-r7040-C1-api-retry/README.md` |
-| 7041 | 模型备用切换 | `B.todo/v0.2-r7041-S1-model-fallback/README.md` |
-| 7042 | 错误分类器 | `B.todo/v0.2-r7042-S1-error-classifier/README.md` |
-| 7043 | 网络状态监控 | `B.todo/v0.2-r7043-S2-network-monitor/README.md` |
-| 7044 | checkpoint management | `B.todo/v0.2-r7044-S2-checkpoint-management/README.md` |
-| 7046 | batch task queue | `B.todo/v0.2-r7046-C1-batch-task-queue/README.md` |
-| 7047 | progress visualization | `B.todo/v0.2-r7047-S1-progress-visualization/README.md` |
-| 7048 | 实时质量检查器 | `B.todo/v0.2-r7048-S1-realtime-quality-check/README.md` |
-| 7049 | 自动重新生成 | `B.todo/v0.2-r7049-S1-auto-regeneration/README.md` |
-| 7050 | AI 味自动检测 | `B.todo/v0.2-r7050-C1-ai-smell-detection/README.md` |
-| 7051 | 一致性实时监控 | `B.todo/v0.2-r7051-C1-consistency-monitor/README.md` |
-| 7052 | background task manager | `B.todo/v0.2-r7052-S1-background-task-manager/README.md` |
-| 7053 | node notification | `B.todo/v0.2-r7053-S2-node-notification/README.md` |
-| 7056 | character consistency | `B.todo/v0.2-r7056-C1-character-consistency/README.md` |
-| 7057 | ai smell trend | `B.todo/v0.2-r7057-S2-ai-smell-trend/README.md` |
-| 7058 | env validation | `B.todo/v0.2-r7058-S2-env-validation/README.md` |
+| 3011 | 小说预览页面增强控制面板 | `B.todo/v1.1-r3011-C2-novel-preview-controls/README.md` |
+| 7032 | 提取硬编码常量：审计复核确认的重复魔数、重复定义、硬编码配置 | `B.todo/v0.1-r7032-S3-extract-hardcoded-constants/README.md` |
 | 2013 | Director Failed Retry Entry | `B.todo/v0.1-r2013-medium-director-failed-retry-entry/README.md` |
 | 2014 | Chapter Token Budget Dynamic | `B.todo/v0.1-r2014-medium-chapter-token-budget-dynamic/README.md` |
 | 3004 | Novel Conversation Archive | `B.todo/v0.1-r3004-medium-novel-conversation-archive/README.md` |
@@ -244,7 +210,6 @@ description: "需求任务总清单（SSOT）"
 | 3008 | 日志中心 | `B.2.done/v0.1-r3008-medium-log-center/README.md` |
 | 3009 | Tab 切换性能优化 | `B.2.done/v0.1-r3009-C2-tab-switch-performance/README.md` |
 | 3010 | Create Page Material Import | `B.2.done/v0.1-r3010-M2-create-page-material-import/README.md` |
-| 3012 | 任务中心批量操作功能 | `B.2.done/v0.1-r3012-C2-task-center-batch-operations/README.md` |
 | 5001 | 补齐工程化基础配置：.env.example / .editorconfig / 子包 README / semver CHANGELOG / Prisma 回滚方案 | `B.2.done/v0.1-r5001-S2-engineering-basics/README.md` |
 | 7001 | Auto-Director 测试隔离修复 | `B.2.done/v0.1-r7001-simple-auto-director-test-fix/README.md` |
 | 7002 | NovelEdit.tsx 大文件拆分 | `B.2.done/v0.1-r7002-complex-novel-edit-refactor/README.md` |
@@ -275,7 +240,6 @@ description: "需求任务总清单（SSOT）"
 | 7027 | 遗留代码清理 | `B.2.done/v0.1-r7027-S2-legacy-code-cleanup/README.md` |
 | 7028 | Director 事件系统收敛 | `B.2.done/v0.1-r7028-C3-director-event-system-consolidation/README.md` |
 | 7031 | 静默吞错日志化：审计复核确认的 .catch(() => {}) 静默吞错修复 | `B.2.done/v0.1-r7031-M2-silent-catch-logging/README.md` |
-| 7032 | 提取硬编码常量：审计复核确认的重复魔数、重复定义、硬编码配置 | `B.2.done/v0.1-r7032-S3-extract-hardcoded-constants/README.md` |
 | 7033 | Prisma Schema 精简 | `B.2.done/v0.1-r7033-C2-prisma-schema-sizing/README.md` |
 | 7034 | Novel Application Services 门面收缩 | `B.2.done/v0.1-r7034-M2-novel-application-services-facade-contraction/README.md` |
 | 7035 | ARCH-004: DirectorCommandService ↔ workers/ 循环依赖解耦 — IDispatcher 接口抽象 | `B.2.done/v0.1-r7035-C1-director-command-interface-abstract/README.md` |
