@@ -46,6 +46,7 @@ import writingTechniquesRouter from "./modules/writing/http/writingTechniques";
 import atmosphereCardsRouter from "./modules/writing/http/atmosphereCards";
 import storyModeRouter from "./modules/novel/storyMode/http/storyMode";
 import tasksRouter from "./modules/tasks/http/tasks";
+import logsRouter from "./modules/logs/http/logsRoutes";
 import titleLibraryRouter from "./modules/novel/titleLibrary/http/titleLibrary";
 import worldRouter from "./modules/setup/world/http";
 import writingFormulaRouter from "./modules/writing/http/writingFormula";
@@ -171,6 +172,7 @@ export function createApp() {
   app.use("/api/prompt-workbench", promptWorkbenchRouter);
   app.use("/api/images", imagesRouter);
   app.use("/api/tasks", tasksRouter);
+  app.use("/api/logs", logsRouter);
   app.use("/api/auto-director/follow-ups", autoDirectorFollowUpsRouter);
   app.use("/api/settings/auto-director", settingsAutoDirectorRouter);
   app.use("/api/auto-director/channel-callbacks", autoDirectorChannelCallbacksRouter);
