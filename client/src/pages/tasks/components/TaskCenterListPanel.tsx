@@ -74,6 +74,13 @@ export default function TaskCenterListPanel({
             />
           )}
         </div>
+        <TaskBatchActionBar
+          selectedCount={selectedTaskIds.size}
+          onBatchCancel={onBatchCancel}
+          onBatchArchive={onBatchArchive}
+          isCancelling={isCancelling}
+          isArchiving={isArchiving}
+        />
       </CardHeader>
       <CardContent className="space-y-3">
         {tasks.map((task) => {
@@ -133,13 +140,6 @@ export default function TaskCenterListPanel({
             当前没有符合条件的任务。
           </EmptyState>
         ) : null}
-        <TaskBatchActionBar
-          selectedCount={selectedTaskIds.size}
-          onBatchCancel={onBatchCancel}
-          onBatchArchive={onBatchArchive}
-          isCancelling={isCancelling}
-          isArchiving={isArchiving}
-        />
       </CardContent>
     </Card>
   );
