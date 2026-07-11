@@ -21,7 +21,9 @@ interface TaskCenterListPanelProps {
   selectedTaskIds: Set<string>;
   onSelectionChange: (taskIds: Set<string>) => void;
   onBatchCancel: () => void;
+  onBatchArchive: () => void;
   isCancelling: boolean;
+  isArchiving: boolean;
 }
 
 export default function TaskCenterListPanel({
@@ -32,7 +34,9 @@ export default function TaskCenterListPanel({
   selectedTaskIds,
   onSelectionChange,
   onBatchCancel,
+  onBatchArchive,
   isCancelling,
+  isArchiving,
 }: TaskCenterListPanelProps) {
   const allSelected = tasks.length > 0 && tasks.every((task) => selectedTaskIds.has(`${task.kind}:${task.id}`));
   const someSelected = tasks.some((task) => selectedTaskIds.has(`${task.kind}:${task.id}`));
@@ -132,7 +136,9 @@ export default function TaskCenterListPanel({
         <TaskBatchActionBar
           selectedCount={selectedTaskIds.size}
           onBatchCancel={onBatchCancel}
+          onBatchArchive={onBatchArchive}
           isCancelling={isCancelling}
+          isArchiving={isArchiving}
         />
       </CardContent>
     </Card>

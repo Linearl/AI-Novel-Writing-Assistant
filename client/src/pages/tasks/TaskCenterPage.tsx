@@ -61,6 +61,7 @@ export default function TaskCenterPage() {
   const [sortMode, setSortMode] = useState<TaskSortMode>("updated_desc");
   const [selectedTaskIds, setSelectedTaskIds] = useState<Set<string>>(new Set());
   const [isCancelling, setIsCancelling] = useState(false);
+  const [isArchiving, setIsArchiving] = useState(false);
 
   const selectedKind = (searchParams.get("kind") as TaskKind | null) ?? null;
   const selectedId = searchParams.get("id");
@@ -199,6 +200,52 @@ export default function TaskCenterPage() {
       toast.error(`取消操作失败，请重试`);
     } else {
       toast.info(`选中的任务中没有可取消的任务`);
+    }
+  };
+
+  // 批量归档功能
+  const handleBatchArchive = async () => {
+    if (selectedTaskIds.size === 0) {
+      return;
+    }
+
+    setIsArchiving(true);
+    let successCount = 0;
+    let skipCount = 0;
+    let failCount = 0;
+
+    for (const taskKey of selectedTaskIds) {
+      const [taskKind, taskId] = taskKey.split(':') as [TaskKind, string];
+      const task = visibleRows.find((t) => t.kind === taskKind && t.id === taskId);
+
+      if (!task || !ARCHIVABLE_STATUSES.has(task.status)) {
+        skipCount++;
+        continue;
+      }
+
+      try {
+        await archiveTask(taskKind, taskId);
+        successCount++;
+      } catch {
+        failCount++;
+      }
+    }
+
+    setIsArchiving(false);
+    setSelectedTaskIds(new Set());
+    await invalidateTaskQueries();
+
+    if (successCount > 0) {
+      const message = failCount > 0
+        ? `成功归档 ${successCount} 个任务，${failCount} 个归档失败`
+        : skipCount > 0
+          ? `成功归档 ${successCount} 个任务，跳过 ${skipCount} 个不可归档的任务`
+          : `成功归档 ${successCount} 个任务`;
+      toast.success(message);
+    } else if (failCount > 0) {
+      toast.error(`归档操作失败，请重试`);
+    } else {
+      toast.info(`选中的任务中没有可归档的任务`);
     }
   };
 
@@ -447,7 +494,9 @@ export default function TaskCenterPage() {
           selectedTaskIds={selectedTaskIds}
           onSelectionChange={setSelectedTaskIds}
           onBatchCancel={handleBatchCancel}
+          onBatchArchive={handleBatchArchive}
           isCancelling={isCancelling}
+          isArchiving={isArchiving}
         />
 
         <Card>

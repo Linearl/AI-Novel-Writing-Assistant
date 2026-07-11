@@ -4,11 +4,13 @@ import { Button } from '@/components/ui/button';
 interface TaskBatchActionBarProps {
   selectedCount: number;
   onBatchCancel: () => void;
+  onBatchArchive: () => void;
   isCancelling: boolean;
+  isArchiving: boolean;
 }
 
 export const TaskBatchActionBar = React.memo<TaskBatchActionBarProps>(
-  ({ selectedCount, onBatchCancel, isCancelling }) => {
+  ({ selectedCount, onBatchCancel, onBatchArchive, isCancelling, isArchiving }) => {
     if (selectedCount === 0) {
       return null;
     }
@@ -18,15 +20,26 @@ export const TaskBatchActionBar = React.memo<TaskBatchActionBarProps>(
         <span className="text-sm text-foreground">
           已选中 <span className="font-semibold">{selectedCount}</span> 个任务
         </span>
-        <Button
-          type="button"
-          size="sm"
-          variant="destructive"
-          onClick={onBatchCancel}
-          disabled={isCancelling}
-        >
-          {isCancelling ? '取消中...' : '批量取消'}
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            onClick={onBatchArchive}
+            disabled={isArchiving}
+          >
+            {isArchiving ? '归档中...' : '批量归档'}
+          </Button>
+          <Button
+            type="button"
+            size="sm"
+            variant="destructive"
+            onClick={onBatchCancel}
+            disabled={isCancelling}
+          >
+            {isCancelling ? '取消中...' : '批量取消'}
+          </Button>
+        </div>
       </div>
     );
   }
