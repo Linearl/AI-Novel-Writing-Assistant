@@ -161,6 +161,9 @@ export default function TaskCenterPage() {
       return;
     }
 
+    // 快照任务列表，避免在循环中使用动态更新的 visibleRows
+    const tasksSnapshot = new Map(visibleRows.map((t) => [`${t.kind}:${t.id}`, t]));
+
     setIsCancelling(true);
     let successCount = 0;
     let skipCount = 0;
@@ -169,8 +172,7 @@ export default function TaskCenterPage() {
     const canCancelStatuses = new Set(['queued', 'waiting_approval']);
 
     for (const taskKey of selectedTaskIds) {
-      const [taskKind, taskId] = taskKey.split(':') as [TaskKind, string];
-      const task = visibleRows.find((t) => t.kind === taskKind && t.id === taskId);
+      const task = tasksSnapshot.get(taskKey);
 
       if (!task || !canCancelStatuses.has(task.status)) {
         skipCount++;
@@ -178,7 +180,7 @@ export default function TaskCenterPage() {
       }
 
       try {
-        await cancelTask(taskKind, taskId);
+        await cancelTask(task.kind, task.id);
         successCount++;
       } catch {
         failCount++;
@@ -209,14 +211,16 @@ export default function TaskCenterPage() {
       return;
     }
 
+    // 快照任务列表，避免在循环中使用动态更新的 visibleRows
+    const tasksSnapshot = new Map(visibleRows.map((t) => [`${t.kind}:${t.id}`, t]));
+
     setIsArchiving(true);
     let successCount = 0;
     let skipCount = 0;
     let failCount = 0;
 
     for (const taskKey of selectedTaskIds) {
-      const [taskKind, taskId] = taskKey.split(':') as [TaskKind, string];
-      const task = visibleRows.find((t) => t.kind === taskKind && t.id === taskId);
+      const task = tasksSnapshot.get(taskKey);
 
       if (!task || !ARCHIVABLE_STATUSES.has(task.status)) {
         skipCount++;
@@ -224,7 +228,7 @@ export default function TaskCenterPage() {
       }
 
       try {
-        await archiveTask(taskKind, taskId);
+        await archiveTask(task.kind, task.id);
         successCount++;
       } catch {
         failCount++;
