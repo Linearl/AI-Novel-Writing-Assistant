@@ -122,7 +122,7 @@ description: "需求任务总清单（SSOT）"
 | 7027 | 遗留代码清理 | p0 | ✅ 已完成 | - | 0.1 | 2026-07-10 | 2026-07-11 | `B.2.done/v0.1-r7027-S2-legacy-code-cleanup/README.md` |  |
 | 7028 | Director 事件系统收敛 | p1 | ✅ 已完成 | - | 0.1 | 2026-07-10 | 2026-07-11 | `B.2.done/v0.1-r7028-C3-director-event-system-consolidation/README.md` |  |
 | 7031 | 静默吞错日志化：审计复核确认的 .catch(() => {}) 静默吞错修复 | p2 | ✅ 已完成 | 代码审计-full 独占发现复核报告 — 稳定性 + 部分质量维度 CONFIRMED 条目 | 0.1 | 2026-07-10 | 2026-07-10 | `B.2.done/v0.1-r7031-M2-silent-catch-logging/README.md` |  |
-| 7032 | 提取硬编码常量：审计复核确认的重复魔数、重复定义、硬编码配置 | p3 | ✅ 已完成 | 代码审计-full 独占发现复核报告 — 架构/质量维度 CONFIRMED 条目 | 0.1 | 2026-07-10 | 2026-07-11 | `B.todo/v0.1-r7032-S3-extract-hardcoded-constants/README.md` |  |
+| 7032 | 提取硬编码常量：审计复核确认的重复魔数、重复定义、硬编码配置 | p3 | ✅ 已完成 | 代码审计-full 独占发现复核报告 — 架构/质量维度 CONFIRMED 条目 | 0.1 | 2026-07-10 | 2026-07-11 | `B.2.done/v0.1-r7032-S3-extract-hardcoded-constants/README.md` |  |
 | 7033 | Prisma Schema 精简 | p1 | ✅ 已完成 | - | 0.1 | 2026-07-10 | 2026-07-10 | `B.2.done/v0.1-r7033-C2-prisma-schema-sizing/README.md` |  |
 | 7034 | Novel Application Services 门面收缩 | p1 | ✅ 已完成 | - | 0.1 | 2026-07-10 | 2026-07-11 | `B.2.done/v0.1-r7034-M2-novel-application-services-facade-contraction/README.md` |  |
 | 7035 | ARCH-004: DirectorCommandService ↔ workers/ 循环依赖解耦 — IDispatcher 接口抽象 | p1 | ✅ 已完成 | 代码审计-full 独占发现复核报告 ARCH-004 | 0.1 | 2026-07-10 | 2026-07-10T15:38:50.328Z | `B.2.done/v0.1-r7035-C1-director-command-interface-abstract/README.md` |  |
@@ -271,7 +271,7 @@ description: "需求任务总清单（SSOT）"
 | 7027 | 遗留代码清理 | `B.2.done/v0.1-r7027-S2-legacy-code-cleanup/README.md` |
 | 7028 | Director 事件系统收敛 | `B.2.done/v0.1-r7028-C3-director-event-system-consolidation/README.md` |
 | 7031 | 静默吞错日志化：审计复核确认的 .catch(() => {}) 静默吞错修复 | `B.2.done/v0.1-r7031-M2-silent-catch-logging/README.md` |
-| 7032 | 提取硬编码常量：审计复核确认的重复魔数、重复定义、硬编码配置 | `B.todo/v0.1-r7032-S3-extract-hardcoded-constants/README.md` |
+| 7032 | 提取硬编码常量：审计复核确认的重复魔数、重复定义、硬编码配置 | `B.2.done/v0.1-r7032-S3-extract-hardcoded-constants/README.md` |
 | 7033 | Prisma Schema 精简 | `B.2.done/v0.1-r7033-C2-prisma-schema-sizing/README.md` |
 | 7034 | Novel Application Services 门面收缩 | `B.2.done/v0.1-r7034-M2-novel-application-services-facade-contraction/README.md` |
 | 7035 | ARCH-004: DirectorCommandService ↔ workers/ 循环依赖解耦 — IDispatcher 接口抽象 | `B.2.done/v0.1-r7035-C1-director-command-interface-abstract/README.md` |

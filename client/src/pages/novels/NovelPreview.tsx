@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { ControlPanel, usePreviewSettings } from "./components/NovelPreviewControls";
 
 function countWords(content: string | null | undefined): number {
   const text = content?.trim() ?? "";
@@ -83,6 +84,7 @@ export default function NovelPreview() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [copiedChapterId, setCopiedChapterId] = useState<string | null>(null);
   const selectedChapterId = searchParams.get("chapterId") ?? "";
+  const { settings, onUpdate } = usePreviewSettings();
 
   const novelQuery = useQuery({
     queryKey: queryKeys.novels.detail(id),
@@ -361,10 +363,26 @@ export default function NovelPreview() {
                   </div>
                 ) : null}
               </div>
+              <ControlPanel settings={settings} onUpdate={onUpdate} className="mt-3" />
             </CardHeader>
             <CardContent className="min-h-0 overflow-y-auto p-0 lg:max-h-[calc(100vh-21rem)]">
               {activeContent ? (
-                <article className="mx-auto max-w-3xl whitespace-pre-wrap px-5 py-6 text-base leading-8 text-slate-900 md:px-8">
+                <article
+                  className="mx-auto whitespace-pre-wrap px-5 py-6 leading-8 md:px-8"
+                  style={{
+                    fontSize: `${settings.fontSize}px`,
+                    fontFamily: settings.fontFamily === 'song' ? '"SimSun", "Song", serif'
+                      : settings.fontFamily === 'hei' ? '"SimHei", "Heiti", sans-serif'
+                      : settings.fontFamily === 'kai' ? '"KaiTi", "楷体", serif'
+                      : settings.fontFamily === 'fangsong' ? '"FangSong", "仿宋", serif'
+                      : settings.fontFamily === 'yahei' ? '"Microsoft YaHei", "微软雅黑", sans-serif'
+                      : 'system-ui, -apple-system, sans-serif',
+                    fontWeight: settings.isBold ? 'bold' : 'normal',
+                    maxWidth: `${settings.pageWidth}px`,
+                    backgroundColor: settings.backgroundColor.background,
+                    color: settings.backgroundColor.text,
+                  }}
+                >
                   {activeContent}
                 </article>
               ) : (

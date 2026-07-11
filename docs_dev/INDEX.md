@@ -49,15 +49,6 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1\v0.1-r3011-C2-novel-preview-controls\REQ-3011-novel-preview-controls.md](./1.task\B.todo\v0.1\v0.1-r3011-C2-novel-preview-controls\REQ-3011-novel-preview-controls.md) | **需求编号**：3011 | - |
 | [1.task\B.todo\v0.1\v0.1-r3011-C2-novel-preview-controls\tasks.md](./1.task\B.todo\v0.1\v0.1-r3011-C2-novel-preview-controls\tasks.md) | | 阶段 | 任务数 | 预计工作量 | | - |
 
-## 1.task\B.todo\v0.1\v0.1-r7032-S3-extract-hardcoded-constants
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r7032-S3-extract-hardcoded-constants\README.md](./1.task\B.todo\v0.1\v0.1-r7032-S3-extract-hardcoded-constants\README.md) | 提取硬编码常量 — REQ-7032 任务包总线 | 提取硬编码常量 — REQ-7032 任务包总线 |
-| [1.task\B.todo\v0.1\v0.1-r7032-S3-extract-hardcoded-constants\REQ-7032-extract-hardcoded-constants-original.md](./1.task\B.todo\v0.1\v0.1-r7032-S3-extract-hardcoded-constants\REQ-7032-extract-hardcoded-constants-original.md) | 提取硬编码常量 — REQ-7032 需求文档（冻结副本） | 提取硬编码常量 — REQ-7032 需求文档（冻结副本） |
-| [1.task\B.todo\v0.1\v0.1-r7032-S3-extract-hardcoded-constants\REQ-7032-extract-hardcoded-constants.md](./1.task\B.todo\v0.1\v0.1-r7032-S3-extract-hardcoded-constants\REQ-7032-extract-hardcoded-constants.md) | 提取硬编码常量 — REQ-7032 需求文档，修复重复魔数、重复函数定义、硬编码阈值 | 提取硬编码常量 — REQ-7032 需求文档，修复重复魔数、重复函数定义、硬编码阈值 |
-| [1.task\B.todo\v0.1\v0.1-r7032-S3-extract-hardcoded-constants\tasks.md](./1.task\B.todo\v0.1\v0.1-r7032-S3-extract-hardcoded-constants\tasks.md) | 提取硬编码常量 — REQ-7032 任务拆解 | 提取硬编码常量 — REQ-7032 任务拆解 |
-
 ## 1.task\B.todo\v0.2
 
 | 文件 | 标题 | 描述 |
