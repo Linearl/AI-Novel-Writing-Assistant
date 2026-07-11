@@ -191,7 +191,7 @@ export function createApp() {
 
     const response: ApiResponse<null> = {
       success: false,
-      error: "接口不存在。",
+      error: `接口不存在：${req.method} ${req.originalUrl}`,
     };
     res.status(404).json(response);
   });

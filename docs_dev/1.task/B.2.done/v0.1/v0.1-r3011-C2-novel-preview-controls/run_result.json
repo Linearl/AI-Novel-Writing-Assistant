@@ -12,8 +12,8 @@
   },
 
   "task_status": {
-    "status": "requirements_ready",
-    "updated_at": "2026-07-11T22:30:00+08:00"
+    "status": "done",
+    "updated_at": "2026-07-11T23:50:00+08:00"
   },
 
   "metadata": {
@@ -114,6 +114,6 @@
     "阶段四：测试与验收"
   ],
 
-  "completed_at": null,
+  "completed_at": "2026-07-11T23:50:00+08:00",
   "approved_at": "2026-07-11T22:30:00+08:00"
 }
