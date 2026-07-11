@@ -64,6 +64,8 @@ description: "需求任务总清单（SSOT）"
 | 2046 | Style Profile Export Import | p3 | ✅ 已完成 | - | 0.1 | 2026-07-08T00:00:00.000Z | 2026-07-08T10:00:00.000Z | `B.2.done/v0.1-r2046-M3-style-profile-export-import/README.md` |  |
 | 2047 | 文笔资料库 | p3 | ✅ 已完成 | - | 0.1 | 2026-07-09T00:00:00.000Z | 2026-07-10T00:00:00.000Z | `B.2.done/v0.1-r2047-C2-writing-technique-library/README.md` |  |
 | 2048 | REQ-2048 氛围写作参考卡 | p3 | ✅ 已完成 | - | 0.1 | 2026-07-10 | 2026-07-10 | `B.2.done/v0.1-r2048-M2-atmosphere-writing-cards/README.md` | T1-T8 全部完成。17 张氛围卡已入库。修复流挂载通过 atmosphereMatch.prompt 实现。 |
+| 2049 | 审校上下文增强 — 补齐审校缺失的全局字段 | p2 | 📋 待办 | 审校质量分析 | 0.1 | 2026-07-11 | - | `B.todo/v0.1-r2049-S2-review-context-enhance/README.md` |  |
+| 2050 | 全局审校 + 跨章节问题回灌 | p1 | 📋 待办 | 审校质量分析 | 0.1 | 2026-07-12 | - | `B.todo/v0.1-r2050-C1-global-review-feedback/README.md` |  |
 | 2013 | Director Failed Retry Entry | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2013-medium-director-failed-retry-entry/README.md` |  |
 | 2014 | Chapter Token Budget Dynamic | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2014-medium-chapter-token-budget-dynamic/README.md` |  |
 
@@ -82,7 +84,7 @@ description: "需求任务总清单（SSOT）"
 | 3010 | Create Page Material Import | p4 | ✅ 已完成 | - | 0.1 | 2026-07-08T00:00:00.000Z | 2026-07-09T00:00:00.000Z | `B.2.done/v0.1-r3010-M2-create-page-material-import/README.md` |  |
 | 3011 | 小说预览页面增强控制面板 | p4 | 📋 待办 | - | 0.1 | - | - | `B.2.done/v0.1-r3011-C2-novel-preview-controls/README.md` |  |
 | 3012 | 任务中心批量操作功能 | p1 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r3012-C2-task-center-batch-operations/README.md` |  |
-| 3013 | 导演跟进任务列表全选与批量清理 | p2 | ✅ 已完成 | 用户反馈 | 0.1 | 2026-07-11 | 2026-07-11 | `B.todo/v0.1-r3013-S2-follow-up-batch-cleanup/README.md` |  |
+| 3013 | 导演跟进任务列表全选与批量清理 | p2 | ✅ 已完成 | 用户反馈 | 0.1 | 2026-07-11 | 2026-07-11 | `B.2.done/v0.1-r3013-S2-follow-up-batch-cleanup/README.md` |  |
 | 3004 | Novel Conversation Archive | p4 | 📋 待办 | - | 0.1 | 2026-06-26T00:00:00.000Z | 2026-06-26T00:00:00.000Z | `B.todo/v0.1-r3004-medium-novel-conversation-archive/README.md` |  |
 
 ### 3.4 文档和规范任务（5xxx）
@@ -161,6 +163,8 @@ description: "需求任务总清单（SSOT）"
 
 | 编号 | 任务标题 | 文档 |
 | --- | --- | --- |
+| 2049 | 审校上下文增强 — 补齐审校缺失的全局字段 | `B.todo/v0.1-r2049-S2-review-context-enhance/README.md` |
+| 2050 | 全局审校 + 跨章节问题回灌 | `B.todo/v0.1-r2050-C1-global-review-feedback/README.md` |
 | 3011 | 小说预览页面增强控制面板 | `B.2.done/v0.1-r3011-C2-novel-preview-controls/README.md` |
 | 7040 | API 失败自动重试 | `B.todo/v0.2-r7040-C1-api-retry/README.md` |
 | 7041 | 模型备用切换 | `B.todo/v0.2-r7041-S1-model-fallback/README.md` |
@@ -244,7 +248,7 @@ description: "需求任务总清单（SSOT）"
 | 3009 | Tab 切换性能优化 | `B.2.done/v0.1-r3009-C2-tab-switch-performance/README.md` |
 | 3010 | Create Page Material Import | `B.2.done/v0.1-r3010-M2-create-page-material-import/README.md` |
 | 3012 | 任务中心批量操作功能 | `B.2.done/v0.1-r3012-C2-task-center-batch-operations/README.md` |
-| 3013 | 导演跟进任务列表全选与批量清理 | `B.todo/v0.1-r3013-S2-follow-up-batch-cleanup/README.md` |
+| 3013 | 导演跟进任务列表全选与批量清理 | `B.2.done/v0.1-r3013-S2-follow-up-batch-cleanup/README.md` |
 | 5001 | 补齐工程化基础配置：.env.example / .editorconfig / 子包 README / semver CHANGELOG / Prisma 回滚方案 | `B.2.done/v0.1-r5001-S2-engineering-basics/README.md` |
 | 7001 | Auto-Director 测试隔离修复 | `B.2.done/v0.1-r7001-simple-auto-director-test-fix/README.md` |
 | 7002 | NovelEdit.tsx 大文件拆分 | `B.2.done/v0.1-r7002-complex-novel-edit-refactor/README.md` |

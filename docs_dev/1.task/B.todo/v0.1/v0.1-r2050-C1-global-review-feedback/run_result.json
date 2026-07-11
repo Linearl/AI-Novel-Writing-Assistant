@@ -1,0 +1,20 @@
+{
+  "reqId": "REQ-2050",
+  "title": "全局审校 + 跨章节问题回灌",
+  "priority": "P1",
+  "version": "v0.1",
+  "status": "requirements_ready",
+  "createdAt": "2026-07-12",
+  "completedAt": null,
+  "tags": ["audit", "global-review", "cross-chapter", "quality"],
+  "source": "审校质量分析",
+  "targetFiles": [
+    "server/src/prisma/schema.prisma",
+    "server/src/prompting/prompts/audit/audit.prompts.ts",
+    "server/src/services/audit/AuditService.ts",
+    "server/src/services/audit/auditPromptContext.ts",
+    "server/src/modules/novel/production/http/novelReviewRoutes.ts"
+  ],
+  "estimatedEffort": "4-6h",
+  "complexity": "complex"
+}

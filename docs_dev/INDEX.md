@@ -38,16 +38,26 @@ description: "docs 目录索引（自动生成）"
 | --- | --- | --- |
 | [1.task\B.todo\任务包六件套构成-编号分类规则-自动归档机制.md](./1.task\B.todo\任务包六件套构成-编号分类规则-自动归档机制.md) | --- | - |
 
-## 1.task\B.todo\v0.1\v0.1-r3013-S2-follow-up-batch-cleanup
+## 1.task\B.todo\v0.1\v0.1-r2049-S2-review-context-enhance
 
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r3013-S2-follow-up-batch-cleanup\decision_log.md](./1.task\B.todo\v0.1\v0.1-r3013-S2-follow-up-batch-cleanup\decision_log.md) | REQ-3013 导演跟进任务列表全选与批量清理 — 决策日志 | REQ-3013 导演跟进任务列表全选与批量清理 — 决策日志 |
-| [1.task\B.todo\v0.1\v0.1-r3013-S2-follow-up-batch-cleanup\design.md](./1.task\B.todo\v0.1\v0.1-r3013-S2-follow-up-batch-cleanup\design.md) | REQ-3013 导演跟进任务列表全选与批量清理 — 设计方案 | REQ-3013 导演跟进任务列表全选与批量清理 — 设计方案 |
-| [1.task\B.todo\v0.1\v0.1-r3013-S2-follow-up-batch-cleanup\README.md](./1.task\B.todo\v0.1\v0.1-r3013-S2-follow-up-batch-cleanup\README.md) | 导演跟进任务列表全选与批量清理 — REQ-3013 任务包总线 | 导演跟进任务列表全选与批量清理 — REQ-3013 任务包总线 |
-| [1.task\B.todo\v0.1\v0.1-r3013-S2-follow-up-batch-cleanup\REQ-3013-follow-up-batch-cleanup-original.md](./1.task\B.todo\v0.1\v0.1-r3013-S2-follow-up-batch-cleanup\REQ-3013-follow-up-batch-cleanup-original.md) | REQ-3013 导演跟进任务列表全选与批量清理 — 需求工作副本 | REQ-3013 导演跟进任务列表全选与批量清理 — 需求工作副本 |
-| [1.task\B.todo\v0.1\v0.1-r3013-S2-follow-up-batch-cleanup\REQ-3013-follow-up-batch-cleanup.md](./1.task\B.todo\v0.1\v0.1-r3013-S2-follow-up-batch-cleanup\REQ-3013-follow-up-batch-cleanup.md) | REQ-3013 导演跟进任务列表全选与批量清理 — 需求工作副本 | REQ-3013 导演跟进任务列表全选与批量清理 — 需求工作副本 |
-| [1.task\B.todo\v0.1\v0.1-r3013-S2-follow-up-batch-cleanup\tasks.md](./1.task\B.todo\v0.1\v0.1-r3013-S2-follow-up-batch-cleanup\tasks.md) | REQ-3013 导演跟进任务列表全选与批量清理 — 任务拆解 | REQ-3013 导演跟进任务列表全选与批量清理 — 任务拆解 |
+| [1.task\B.todo\v0.1\v0.1-r2049-S2-review-context-enhance\design.md](./1.task\B.todo\v0.1\v0.1-r2049-S2-review-context-enhance\design.md) | REQ-2049 审校上下文增强 — 方案设计 | REQ-2049 审校上下文增强 — 方案设计 |
+| [1.task\B.todo\v0.1\v0.1-r2049-S2-review-context-enhance\README.md](./1.task\B.todo\v0.1\v0.1-r2049-S2-review-context-enhance\README.md) | REQ-2049 审校上下文增强 — 补齐审校缺失的全局字段 — 任务总线 | REQ-2049 审校上下文增强 — 补齐审校缺失的全局字段 — 任务总线 |
+| [1.task\B.todo\v0.1\v0.1-r2049-S2-review-context-enhance\REQ-2049-review-context-enhance-original.md](./1.task\B.todo\v0.1\v0.1-r2049-S2-review-context-enhance\REQ-2049-review-context-enhance-original.md) | REQ-2049 审校上下文增强 — 补齐审校缺失的全局字段（冻结副本） | REQ-2049 审校上下文增强 — 补齐审校缺失的全局字段（冻结副本） |
+| [1.task\B.todo\v0.1\v0.1-r2049-S2-review-context-enhance\REQ-2049-review-context-enhance.md](./1.task\B.todo\v0.1\v0.1-r2049-S2-review-context-enhance\REQ-2049-review-context-enhance.md) | REQ-2049 审校上下文增强 — 补齐审校缺失的全局字段 | REQ-2049 审校上下文增强 — 补齐审校缺失的全局字段 |
+| [1.task\B.todo\v0.1\v0.1-r2049-S2-review-context-enhance\tasks.md](./1.task\B.todo\v0.1\v0.1-r2049-S2-review-context-enhance\tasks.md) | REQ-2049 审校上下文增强 — 任务拆解 | REQ-2049 审校上下文增强 — 任务拆解 |
+
+## 1.task\B.todo\v0.1\v0.1-r2050-C1-global-review-feedback
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.1\v0.1-r2050-C1-global-review-feedback\decision_log.md](./1.task\B.todo\v0.1\v0.1-r2050-C1-global-review-feedback\decision_log.md) | REQ-2050 决策留痕 | REQ-2050 决策留痕 |
+| [1.task\B.todo\v0.1\v0.1-r2050-C1-global-review-feedback\design.md](./1.task\B.todo\v0.1\v0.1-r2050-C1-global-review-feedback\design.md) | REQ-2050 方案设计 | REQ-2050 方案设计 |
+| [1.task\B.todo\v0.1\v0.1-r2050-C1-global-review-feedback\README.md](./1.task\B.todo\v0.1\v0.1-r2050-C1-global-review-feedback\README.md) | REQ-2050 全局审校 + 跨章节问题回灌 任务总线 | REQ-2050 全局审校 + 跨章节问题回灌 任务总线 |
+| [1.task\B.todo\v0.1\v0.1-r2050-C1-global-review-feedback\REQ-2050-global-review-feedback-original.md](./1.task\B.todo\v0.1\v0.1-r2050-C1-global-review-feedback\REQ-2050-global-review-feedback-original.md) | REQ-2050 全局审校 + 跨章节问题回灌 | REQ-2050 全局审校 + 跨章节问题回灌 |
+| [1.task\B.todo\v0.1\v0.1-r2050-C1-global-review-feedback\REQ-2050-global-review-feedback.md](./1.task\B.todo\v0.1\v0.1-r2050-C1-global-review-feedback\REQ-2050-global-review-feedback.md) | REQ-2050 全局审校 + 跨章节问题回灌 | REQ-2050 全局审校 + 跨章节问题回灌 |
+| [1.task\B.todo\v0.1\v0.1-r2050-C1-global-review-feedback\tasks.md](./1.task\B.todo\v0.1\v0.1-r2050-C1-global-review-feedback\tasks.md) | REQ-2050 任务拆解 | REQ-2050 任务拆解 |
 
 ## 1.task\B.todo\v0.2
 
