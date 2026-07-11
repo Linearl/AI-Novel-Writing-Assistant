@@ -14,6 +14,15 @@ description: "docs 目录索引（自动生成）"
 | --- | --- | --- |
 | [README.md](./README.md) | > 这是 **ll-workflow-core 专用** 的工作目录,与项目业务侧 `docs/` 隔离。 | - |
 
+## 0.version_plan
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [0.version_plan\README.md](./0.version_plan\README.md) | 项目版本路线图（SSOT）— 定义 v0.1-v0.3 版本目标、里程碑和交付计划 | 项目版本路线图（SSOT）— 定义 v0.1-v0.3 版本目标、里程碑和交付计划 |
+| [0.version_plan\v0.1-acceptance-criteria.md](./0.version_plan\v0.1-acceptance-criteria.md) | v0.1 产品级验收标准 — 用户能否利用系统独立完成一部 AI 味不重的小说 | v0.1 产品级验收标准 — 用户能否利用系统独立完成一部 AI 味不重的小说 |
+| [0.version_plan\v0.1-release-notes.md](./0.version_plan\v0.1-release-notes.md) | v0.1 版本详细说明 — 架构修复 + 易用性改进的完整交付清单 | v0.1 版本详细说明 — 架构修复 + 易用性改进的完整交付清单 |
+| [0.version_plan\v0.2-release-notes.md](./0.version_plan\v0.2-release-notes.md) | v0.2 版本详细说明 — 流程自动化 + 质量控制，解决长篇小说频繁阻塞问题 | v0.2 版本详细说明 — 流程自动化 + 质量控制，解决长篇小说频繁阻塞问题 |
+
 ## 1.task
 
 | 文件 | 标题 | 描述 |
@@ -132,24 +141,23 @@ description: "docs 目录索引（自动生成）"
 | [3.analysis\diagnosis\01-active\2026-06-26-项目主工作流诊断报告.md](./3.analysis\diagnosis\01-active\2026-06-26-项目主工作流诊断报告.md) | > 日期：2026-06-26 | - |
 | [3.analysis\diagnosis\01-active\2026-06-28-harness-audit.md](./3.analysis\diagnosis\01-active\2026-06-28-harness-audit.md) | AI 小说创作工作台 Harness 审计报告 — 五种介质完备性与合理性评估 | AI 小说创作工作台 Harness 审计报告 — 五种介质完备性与合理性评估 |
 | [3.analysis\diagnosis\01-active\2026-06-28-health-check.md](./3.analysis\diagnosis\01-active\2026-06-28-health-check.md) | 2026-06-28 项目健康检查报告 — 五维评估 + 债务模式识别 + 行动建议 | 2026-06-28 项目健康检查报告 — 五维评估 + 债务模式识别 + 行动建议 |
-| [3.analysis\diagnosis\01-active\2026-06-30-v0.1-第二轮任务包完成度诊断.md](./3.analysis\diagnosis\01-active\2026-06-30-v0.1-第二轮任务包完成度诊断.md) | --- | - |
 | [3.analysis\diagnosis\01-active\2026-06-30-图数据库能力诊断.md](./3.analysis\diagnosis\01-active\2026-06-30-图数据库能力诊断.md) | 项目图结构能力诊断：盘点现有图模型、识别存储瓶颈、评估专用图数据库引入可行性 | 项目图结构能力诊断：盘点现有图模型、识别存储瓶颈、评估专用图数据库引入可行性 |
-| [3.analysis\diagnosis\01-active\2026-07-08-产品需求优先级诊断报告.md](./3.analysis\diagnosis\01-active\2026-07-08-产品需求优先级诊断报告.md) | AI Novel 产品需求优先级诊断报告 — 基于王慧文产品课框架，分析哪些需求该做、哪些不做、为什么 | AI Novel 产品需求优先级诊断报告 — 基于王慧文产品课框架，分析哪些需求该做、哪些不做、为什么 |
-| [3.analysis\diagnosis\01-active\2026-07-08-产品需求讨论决策记录.md](./3.analysis\diagnosis\01-active\2026-07-08-产品需求讨论决策记录.md) | > 日期：2026-07-08 | - |
 
-## 3.analysis\diagnosis\01-active\2026-07-01-代码审计-full
+## 3.analysis\diagnosis\02-outdated
 
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
-| [3.analysis\diagnosis\01-active\2026-07-01-代码审计-full\README.md](./3.analysis\diagnosis\01-active\2026-07-01-代码审计-full\README.md) | AI-Novel 全量代码审计报告，覆盖安全、稳定性、架构、质量、性能、可测试性、可观测性、可维护性、兼容性共 9 个维度 | AI-Novel 全量代码审计报告，覆盖安全、稳定性、架构、质量、性能、可测试性、可观测性、可维护性、兼容性共 9 个维度 |
-| [3.analysis\diagnosis\01-active\2026-07-01-代码审计-full\复核报告-独有发现.md](./3.analysis\diagnosis\01-active\2026-07-01-代码审计-full\复核报告-独有发现.md) | 79条独有发现的逐条复核报告 — 4个子代理并行验证，标记CONFIRMED/PARTIALLY_TRUE/FALSE_POSITIVE，提供优先级调整建议和候选修复方案 | 79条独有发现的逐条复核报告 — 4个子代理并行验证，标记CONFIRMED/PARTIALLY_TRUE/FALSE_POSITIVE，提供优先级调整建议和候选修复方案 |
-| [3.analysis\diagnosis\01-active\2026-07-01-代码审计-full\独占发现-对比全量审计.md](./3.analysis\diagnosis\01-active\2026-07-01-代码审计-full\独占发现-对比全量审计.md) | 对比 代码审计-full 与 全量代码审计-full 的独占发现 — 约79项未被全量审计覆盖的问题，覆盖安全/稳定性/架构/质量/性能/可测试性/可观测性/可维护性/兼容性9个维度 | 对比 代码审计-full 与 全量代码审计-full 的独占发现 — 约79项未被全量审计覆盖的问题，覆盖安全/稳定性/架构/质量/性能/可测试性/可观测性/可维护性/兼容性9个维度 |
+| [3.analysis\diagnosis\02-outdated\2026-06-30-v0.1-第二轮任务包完成度诊断.md](./3.analysis\diagnosis\02-outdated\2026-06-30-v0.1-第二轮任务包完成度诊断.md) | --- | - |
+| [3.analysis\diagnosis\02-outdated\2026-07-08-产品需求优先级诊断报告.md](./3.analysis\diagnosis\02-outdated\2026-07-08-产品需求优先级诊断报告.md) | AI Novel 产品需求优先级诊断报告 — 基于王慧文产品课框架，分析哪些需求该做、哪些不做、为什么 | AI Novel 产品需求优先级诊断报告 — 基于王慧文产品课框架，分析哪些需求该做、哪些不做、为什么 |
+| [3.analysis\diagnosis\02-outdated\2026-07-08-产品需求讨论决策记录.md](./3.analysis\diagnosis\02-outdated\2026-07-08-产品需求讨论决策记录.md) | > 日期：2026-07-08 | - |
 
-## 3.analysis\diagnosis\01-active\improve-codebase-architecture
+## 3.analysis\diagnosis\02-outdated\2026-07-01-代码审计-full
 
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
-| [3.analysis\diagnosis\01-active\improve-codebase-architecture\2026-07-10-architecture-diagnosis.md](./3.analysis\diagnosis\01-active\improve-codebase-architecture\2026-07-10-architecture-diagnosis.md) | 项目架构全面诊断报告 — 识别 10 个架构摩擦点，按影响度排序，含根因分析与改进建议 | 项目架构全面诊断报告 — 识别 10 个架构摩擦点，按影响度排序，含根因分析与改进建议 |
+| [3.analysis\diagnosis\02-outdated\2026-07-01-代码审计-full\README.md](./3.analysis\diagnosis\02-outdated\2026-07-01-代码审计-full\README.md) | AI-Novel 全量代码审计报告，覆盖安全、稳定性、架构、质量、性能、可测试性、可观测性、可维护性、兼容性共 9 个维度 | AI-Novel 全量代码审计报告，覆盖安全、稳定性、架构、质量、性能、可测试性、可观测性、可维护性、兼容性共 9 个维度 |
+| [3.analysis\diagnosis\02-outdated\2026-07-01-代码审计-full\复核报告-独有发现.md](./3.analysis\diagnosis\02-outdated\2026-07-01-代码审计-full\复核报告-独有发现.md) | 79条独有发现的逐条复核报告 — 4个子代理并行验证，标记CONFIRMED/PARTIALLY_TRUE/FALSE_POSITIVE，提供优先级调整建议和候选修复方案 | 79条独有发现的逐条复核报告 — 4个子代理并行验证，标记CONFIRMED/PARTIALLY_TRUE/FALSE_POSITIVE，提供优先级调整建议和候选修复方案 |
+| [3.analysis\diagnosis\02-outdated\2026-07-01-代码审计-full\独占发现-对比全量审计.md](./3.analysis\diagnosis\02-outdated\2026-07-01-代码审计-full\独占发现-对比全量审计.md) | 对比 代码审计-full 与 全量代码审计-full 的独占发现 — 约79项未被全量审计覆盖的问题，覆盖安全/稳定性/架构/质量/性能/可测试性/可观测性/可维护性/兼容性9个维度 | 对比 代码审计-full 与 全量代码审计-full 的独占发现 — 约79项未被全量审计覆盖的问题，覆盖安全/稳定性/架构/质量/性能/可测试性/可观测性/可维护性/兼容性9个维度 |
 
 ## 3.analysis\diagnosis\02-outdated\2026-07-01-全量代码审计-full
 
@@ -169,6 +177,12 @@ description: "docs 目录索引（自动生成）"
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
 | [3.analysis\diagnosis\02-outdated\2026-07-01-全量代码审计-full\skipped\debt_backlog.md](./3.analysis\diagnosis\02-outdated\2026-07-01-全量代码审计-full\skipped\debt_backlog.md) | 技术债台账 — 基于 2026-07-01 全量代码审计 | 技术债台账 — 基于 2026-07-01 全量代码审计 |
+
+## 3.analysis\diagnosis\02-outdated\improve-codebase-architecture
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [3.analysis\diagnosis\02-outdated\improve-codebase-architecture\2026-07-10-architecture-diagnosis.md](./3.analysis\diagnosis\02-outdated\improve-codebase-architecture\2026-07-10-architecture-diagnosis.md) | 项目架构全面诊断报告 — 识别 10 个架构摩擦点，按影响度排序，含根因分析与改进建议 | 项目架构全面诊断报告 — 识别 10 个架构摩擦点，按影响度排序，含根因分析与改进建议 |
 
 ## 3.analysis\evidence\v0.1
 
@@ -190,6 +204,7 @@ description: "docs 目录索引（自动生成）"
 
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
+| [4.misc\2026-07-11-novelService-prototype-methods-lost.md](./4.misc\2026-07-11-novelService-prototype-methods-lost.md) | 2026-07-11 自动导演 novelService 原型方法丢失问题分析与修复 | 2026-07-11 自动导演 novelService 原型方法丢失问题分析与修复 |
 | [4.misc\inspiration-rose-thief.md](./4.misc\inspiration-rose-thief.md) | 《玫瑰窃贼》歌曲衍生小说大纲 — 提取自柳爽同名歌曲，用于新小说灵感注入 | 《玫瑰窃贼》歌曲衍生小说大纲 — 提取自柳爽同名歌曲，用于新小说灵感注入 |
 | [4.misc\novel-outline-bug-system.md](./4.misc\novel-outline-bug-system.md) | > 整理时间：2026-06-25 | 用途：创建新书时的设定输入参考 | - |
 

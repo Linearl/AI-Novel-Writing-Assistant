@@ -97,7 +97,20 @@ export class NovelDirectorService {
   private readonly storyMacroService = new StoryMacroPlanService();
   private readonly bookContractService = new BookContractService();
   private readonly novelCoreService = new NovelCoreService();
-  private readonly novelService = { ...getSharedNovelServices(), ...this.novelCoreService } as any;
+  private readonly novelService = (() => {
+    const src = this.novelCoreService;
+    // 先展开共享服务 + 实例属性（箭头函数类字段等 own properties）
+    const base: Record<string, unknown> = { ...getSharedNovelServices(), ...src };
+    // 再沿原型链收集并 bind 普通方法（展开类实例不会拷贝原型方法）
+    for (let proto = Object.getPrototypeOf(src); proto && proto !== Object.prototype; proto = Object.getPrototypeOf(proto)) {
+      for (const name of Object.getOwnPropertyNames(proto)) {
+        if (name !== "constructor" && typeof proto[name] === "function" && !(name in base)) {
+          base[name] = proto[name].bind(src);
+        }
+      }
+    }
+    return base;
+  })() as any;
   private readonly characterDynamicsService = new CharacterDynamicsService();
   private readonly volumeService = new NovelVolumeService();
   private readonly workflowService = new NovelWorkflowService();

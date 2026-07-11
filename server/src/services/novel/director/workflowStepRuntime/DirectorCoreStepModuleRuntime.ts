@@ -61,7 +61,19 @@ export function buildDefaultDirectorCoreStepModuleRuntimeDeps(): DirectorCoreSte
   const bookContractService = new BookContractService();
   const volumeService = new NovelVolumeService();
   const novelCoreService = new NovelCoreService();
-  const novelService = { ...getSharedNovelServices(), ...novelCoreService } as any;
+  const novelService = (() => {
+    // 先展开共享服务 + 实例属性（箭头函数类字段等 own properties）
+    const base: Record<string, unknown> = { ...getSharedNovelServices(), ...novelCoreService };
+    // 再沿原型链收集并 bind 普通方法（展开类实例不会拷贝原型方法）
+    for (let proto = Object.getPrototypeOf(novelCoreService); proto && proto !== Object.prototype; proto = Object.getPrototypeOf(proto)) {
+      for (const name of Object.getOwnPropertyNames(proto)) {
+        if (name !== "constructor" && typeof proto[name] === "function" && !(name in base)) {
+          base[name] = (proto[name] as Function).bind(novelCoreService);
+        }
+      }
+    }
+    return base;
+  })() as any;
   const directorRuntime = new DirectorRuntimeService();
   const chapterProgressInspector = new ChapterExecutionProgressInspector();
   const autoExecutionRuntime = new NovelDirectorAutoExecutionRuntime({

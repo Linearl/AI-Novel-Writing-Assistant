@@ -14,61 +14,8 @@ function resolveDataDir(subdir: string): string {
 }
 
 // --- YAML 解析（轻量内联，不引入外部依赖） ---
-
-function parseSimpleYaml(text: string): Record<string, unknown> {
-  const result: Record<string, unknown> = {};
-  let currentKey: string | null = null;
-  let inArray = false;
-  let arrayItems: string[] = [];
-
-  for (const rawLine of text.split("\n")) {
-    const line = rawLine.replace(/\r$/, "");
-    if (!line.trim() || line.trim().startsWith("#")) continue;
-
-    // 数组项（以 "- " 开头）
-    if (/^\s+-\s/.test(line)) {
-      const value = line.replace(/^\s*-\s*/, "").trim();
-      if (currentKey && inArray) {
-        arrayItems.push(unquote(value));
-      }
-      continue;
-    }
-
-    // 普通 key: value
-    const match = line.match(/^([a-zA-Z_][a-zA-Z0-9_]*)\s*:\s*(.*)/);
-    if (match) {
-      // 保存前一个数组
-      if (currentKey && inArray) {
-        result[currentKey] = arrayItems;
-        arrayItems = [];
-        inArray = false;
-      }
-
-      currentKey = match[1];
-      const value = match[2].trim();
-
-      if (value === "" || value === "[]") {
-        // 可能是数组的开始，或者是空数组
-        if (value === "[]") {
-          result[currentKey] = [];
-          currentKey = null;
-        } else {
-          inArray = true;
-        }
-      } else {
-        result[currentKey] = parseYamlValue(unquote(value));
-        inArray = false;
-      }
-    }
-  }
-
-  // 处理最后一个数组
-  if (currentKey && inArray && arrayItems.length > 0) {
-    result[currentKey] = arrayItems;
-  }
-
-  return result;
-}
+// 支持：扁平 key-value、纯字符串数组、对象数组（含嵌套子数组）
+// 策略：用缩进→上下文 Map，每个缩进级别记录当前容器和正在构建的对象
 
 function unquote(value: string): string {
   if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
@@ -84,6 +31,141 @@ function parseYamlValue(value: string): unknown {
   if (/^-?\d+$/.test(value)) return parseInt(value, 10);
   if (/^-?\d+\.\d+$/.test(value)) return parseFloat(value);
   return value;
+}
+
+interface YamlCtx {
+  container: Record<string, unknown> | unknown[];
+  currentObj: Record<string, unknown> | null;
+  arrayKey: string | null; // 当前对象中活跃的子数组属性名（如 "suggestions"）
+}
+
+function parseSimpleYaml(text: string): Record<string, unknown> {
+  const result: Record<string, unknown> = {};
+  // 每个缩进级别的上下文；-1 = 根
+  const ctxMap = new Map<number, YamlCtx>();
+  ctxMap.set(-1, { container: result, currentObj: null, arrayKey: null });
+
+  /** 找到 <= indent 的最大缩进级别的上下文 */
+  function findCtx(indent: number): YamlCtx {
+    let bestKey = -Infinity;
+    for (const k of ctxMap.keys()) {
+      if (k <= indent && k > bestKey) bestKey = k;
+    }
+    return ctxMap.get(bestKey)!;
+  }
+
+  for (const rawLine of text.split("\n")) {
+    const line = rawLine.replace(/\r$/, "");
+    if (!line.trim() || line.trim().startsWith("#")) continue;
+
+    const indent = line.search(/\S/);
+
+    // --- 数组项（"- " 开头） ---
+    if (/^\s*-\s/.test(line)) {
+      const afterDash = line.replace(/^\s*-\s*/, "");
+      const kvMatch = afterDash.match(/^([a-zA-Z_][a-zA-Z0-9_]*)\s*:\s*(.*)/);
+
+      if (kvMatch) {
+        // "- key: value" → 对象数组中的新对象
+        const ctx = findCtx(indent);
+
+        if (Array.isArray(ctx.container)) {
+          // 父容器是数组 → 保存前一个对象，开始新对象
+          if (ctx.currentObj) {
+            ctx.container.push(ctx.currentObj);
+          }
+          const obj: Record<string, unknown> = {};
+          obj[kvMatch[1]] = kvMatch[2].trim() === "" ? null : parseYamlValue(unquote(kvMatch[2].trim()));
+          ctx.currentObj = obj;
+          ctx.arrayKey = null;
+          // 注册当前缩进上下文指向同一个数组容器
+          ctxMap.set(indent, ctx);
+        } else {
+          // 父容器不是数组 → 检查是否有 arrayKey（如 rules: 后首次遇到 - key:）
+          if (ctx.arrayKey) {
+            const arr: unknown[] = [];
+            (ctx.container as Record<string, unknown>)[ctx.arrayKey] = arr;
+            ctx.arrayKey = null;
+            const obj: Record<string, unknown> = {};
+            obj[kvMatch[1]] = kvMatch[2].trim() === "" ? null : parseYamlValue(unquote(kvMatch[2].trim()));
+            ctxMap.set(indent, { container: arr, currentObj: obj, arrayKey: null });
+          } else {
+            // 检查上级缩进是否有 arrayKey（如 suggestions: 后的子数组）
+            const parentCtx = findCtx(indent - 2);
+            if (parentCtx && parentCtx.arrayKey && parentCtx.currentObj) {
+              const arr: unknown[] = [];
+              parentCtx.currentObj[parentCtx.arrayKey] = arr;
+              parentCtx.arrayKey = null;
+              const obj: Record<string, unknown> = {};
+              obj[kvMatch[1]] = kvMatch[2].trim() === "" ? null : parseYamlValue(unquote(kvMatch[2].trim()));
+              ctxMap.set(indent, { container: arr, currentObj: obj, arrayKey: null });
+            }
+          }
+        }
+      } else {
+        // 纯字符串数组项
+        const ctx = findCtx(indent);
+        const value = afterDash.trim();
+        if (Array.isArray(ctx.container)) {
+          if (ctx.currentObj && ctx.arrayKey) {
+            // 追加到当前对象的子数组属性
+            let arr = ctx.currentObj[ctx.arrayKey];
+            if (arr == null) { arr = []; ctx.currentObj[ctx.arrayKey] = arr; }
+            if (Array.isArray(arr)) arr.push(unquote(value));
+          } else {
+            // 追加到父数组
+            ctx.container.push(unquote(value));
+          }
+        }
+      }
+      continue;
+    }
+
+    // --- key: value 行 ---
+    const match = line.match(/^\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*:\s*(.*)/);
+    if (match) {
+      const key = match[1];
+      const value = match[2].trim();
+      const ctx = findCtx(indent);
+
+      if (value === "" || value === "[]") {
+        if (value === "[]") {
+          if (Array.isArray(ctx.container)) {
+            if (ctx.currentObj) ctx.currentObj[key] = [];
+          } else {
+            ctx.container[key] = [];
+          }
+        } else {
+          // 空值 → 标记为活跃子数组属性
+          if (Array.isArray(ctx.container)) {
+            if (ctx.currentObj) {
+              ctx.currentObj[key] = null;
+              ctx.arrayKey = key;
+            }
+          } else {
+            ctx.container[key] = null;
+            ctx.arrayKey = key;
+          }
+        }
+      } else {
+        if (Array.isArray(ctx.container)) {
+          if (ctx.currentObj) ctx.currentObj[key] = parseYamlValue(unquote(value));
+        } else {
+          ctx.container[key] = parseYamlValue(unquote(value));
+        }
+      }
+    }
+  }
+
+  // 收尾：保存所有未完成的对象
+  for (const ctx of ctxMap.values()) {
+    if (Array.isArray(ctx.container) && ctx.currentObj) {
+      ctx.container.push(ctx.currentObj);
+      ctx.currentObj = null;
+    }
+  }
+
+  return result;
 }
 
 // --- MD frontmatter 解析 ---
