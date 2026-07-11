@@ -70,10 +70,44 @@ function firstMissing(completed: Set<ChapterExecutionProgressStage>): ChapterExe
     ?? "reviewable_or_approved";
 }
 
+export interface ChapterExecutionProgressScope {
+  startOrder?: number;
+  endOrder?: number;
+}
+
 export class ChapterExecutionProgressInspector {
-  async inspectNovel(novelId: string): Promise<ChapterExecutionProgressSummary> {
+  async inspectNovel(novelId: string, scope?: ChapterExecutionProgressScope): Promise<ChapterExecutionProgressSummary> {
+    // 如果没有显式传 scope，自动从最新的 auto_director 任务中读取目标范围
+    let resolvedScope = scope;
+    if (!resolvedScope) {
+      try {
+        const latestAutoTask = await prisma.novelWorkflowTask.findFirst({
+          where: { novelId, lane: "auto_director", status: { in: ["running", "waiting_approval", "succeeded"] } },
+          orderBy: { updatedAt: "desc" },
+          select: { seedPayloadJson: true },
+        });
+        if (latestAutoTask?.seedPayloadJson) {
+          const payload = JSON.parse(latestAutoTask.seedPayloadJson);
+          const autoExec = payload?.autoExecution;
+          if (autoExec?.startOrder != null && autoExec?.endOrder != null) {
+            resolvedScope = { startOrder: autoExec.startOrder, endOrder: autoExec.endOrder };
+          }
+        }
+      } catch {
+        // 忽略解析错误，使用全量
+      }
+    }
+
+    const whereClause: Record<string, unknown> = { novelId };
+    if (resolvedScope?.startOrder != null) {
+      (whereClause as any).order = { ...(whereClause as any).order, gte: resolvedScope.startOrder };
+    }
+    if (resolvedScope?.endOrder != null) {
+      (whereClause as any).order = { ...(whereClause as any).order, lte: resolvedScope.endOrder };
+    }
+
     const chapters = await prisma.chapter.findMany({
-      where: { novelId },
+      where: whereClause,
       orderBy: { order: "asc" },
       select: {
         id: true,
