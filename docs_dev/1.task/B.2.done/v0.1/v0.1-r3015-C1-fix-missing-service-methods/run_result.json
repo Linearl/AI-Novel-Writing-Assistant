@@ -1,0 +1,27 @@
+{
+  "reqId": "3015",
+  "title": "修复缺失的服务方法",
+  "status": "in_progress",
+  "priority": "P0",
+  "complexity": "C1",
+  "created": "2026-07-12T00:00:00Z",
+  "updated": "2026-07-12T00:00:00Z",
+  "phases": {
+    "requirements": "done",
+    "design": "done",
+    "implementation": "in_progress",
+    "testing": "pending",
+    "verification": "pending"
+  },
+  "metrics": {
+    "totalTasks": 5,
+    "completedTasks": 2,
+    "progress": 40
+  },
+  "artifacts": {
+    "requirements": "REQ-3015-fix-missing-service-methods.md",
+    "design": "design.md",
+    "tasks": "tasks.md",
+    "decisionLog": "decision_log.md"
+  }
+}

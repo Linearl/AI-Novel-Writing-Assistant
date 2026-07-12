@@ -100,6 +100,38 @@ export interface NovelApplicationServices {
   getWorldSlice: (...args: any[]) => Promise<any>;
   refreshWorldSlice: (...args: any[]) => Promise<any>;
   updateWorldSliceOverrides: (...args: any[]) => Promise<any>;
+
+  // Missing methods (added to fix "is not a function" errors)
+  analyzeStorylineImpact: (...args: any[]) => Promise<any>;
+  applyCharacterCastOption: (...args: any[]) => Promise<any>;
+  applySupplementalCharacter: (...args: any[]) => Promise<any>;
+  checkCharacterAgainstWorld: (...args: any[]) => Promise<any>;
+  clearCharacterCastOptions: (...args: any[]) => Promise<any>;
+  confirmCharacterCandidate: (...args: any[]) => Promise<any>;
+  createBeatStream: (...args: any[]) => Promise<any>;
+  createBibleStream: (...args: any[]) => Promise<any>;
+  createOutlineStream: (...args: any[]) => Promise<any>;
+  deleteCharacterCastOption: (...args: any[]) => Promise<any>;
+  evolveCharacter: (...args: any[]) => Promise<any>;
+  generateBatchCharacterVisibleProfiles: (...args: any[]) => Promise<any>;
+  generateChapterHook: (...args: any[]) => Promise<any>;
+  generateCharacterCastOptions: (...args: any[]) => Promise<any>;
+  generateCharacterVisibleProfile: (...args: any[]) => Promise<any>;
+  generateSupplementalCharacters: (...args: any[]) => Promise<any>;
+  generateTitles: (...args: any[]) => Promise<any>;
+  getCharacterDynamicsOverview: (...args: any[]) => Promise<any>;
+  getNovelStructuredOutline: (...args: any[]) => Promise<any>;
+  getPipelineJob: (...args: any[]) => Promise<any>;
+  importCharactersFromOutline: (...args: any[]) => Promise<any>;
+  listCharacterCandidates: (...args: any[]) => Promise<any>;
+  listCharacterCastOptions: (...args: any[]) => Promise<any>;
+  listCharacterRelations: (...args: any[]) => Promise<any>;
+  listCharacters: (...args: any[]) => Promise<any>;
+  mergeCharacterCandidate: (...args: any[]) => Promise<any>;
+  rebuildCharacterDynamics: (...args: any[]) => Promise<any>;
+  refineSupplementalCharacter: (...args: any[]) => Promise<any>;
+  syncAllCharacterTimeline: (...args: any[]) => Promise<any>;
+  syncCharacterTimeline: (...args: any[]) => Promise<any>;
 }
 
 export const novelApplicationServiceMethodNames = [
@@ -175,4 +207,34 @@ export const novelApplicationServiceMethodNames = [
   "syncVolumeChapters",
   "migrateLegacyVolumes",
   "listCharacterTimeline",
+  "analyzeStorylineImpact",
+  "applyCharacterCastOption",
+  "applySupplementalCharacter",
+  "checkCharacterAgainstWorld",
+  "clearCharacterCastOptions",
+  "confirmCharacterCandidate",
+  "createBeatStream",
+  "createBibleStream",
+  "createOutlineStream",
+  "deleteCharacterCastOption",
+  "evolveCharacter",
+  "generateBatchCharacterVisibleProfiles",
+  "generateChapterHook",
+  "generateCharacterCastOptions",
+  "generateCharacterVisibleProfile",
+  "generateSupplementalCharacters",
+  "generateTitles",
+  "getCharacterDynamicsOverview",
+  "getNovelStructuredOutline",
+  "getPipelineJob",
+  "importCharactersFromOutline",
+  "listCharacterCandidates",
+  "listCharacterCastOptions",
+  "listCharacterRelations",
+  "listCharacters",
+  "mergeCharacterCandidate",
+  "rebuildCharacterDynamics",
+  "refineSupplementalCharacter",
+  "syncAllCharacterTimeline",
+  "syncCharacterTimeline",
 ] as const;

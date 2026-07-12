@@ -373,6 +373,41 @@ export class DefaultNovelApplicationServices implements NovelApplicationServices
     await this.characterDynamicsService.rebuildDynamics(novelId, { sourceType: "rebuild_projection" }).catch(() => null);
     return result;
   }
+
+  // ================================================================
+  //  Missing methods — delegate to appropriate sub-services
+  // ================================================================
+
+  analyzeStorylineImpact = (...args: any[]) => (this.volumeService as any).analyzeStorylineImpact?.(...args);
+  applyCharacterCastOption = (...args: any[]) => (this.characterPreparationService as any).applyCharacterCastOption?.(...args);
+  applySupplementalCharacter = (...args: any[]) => (this.characterPreparationService as any).applySupplementalCharacter?.(...args);
+  checkCharacterAgainstWorld = (...args: any[]) => (this.characterPreparationService as any).checkCharacterAgainstWorld?.(...args);
+  clearCharacterCastOptions = (...args: any[]) => (this.characterPreparationService as any).clearCharacterCastOptions?.(...args);
+  confirmCharacterCandidate = (...args: any[]) => (this.characterPreparationService as any).confirmCharacterCandidate?.(...args);
+  createBeatStream = (...args: any[]) => (this.core as any).createBeatStream?.(...args);
+  createBibleStream = (...args: any[]) => (this.core as any).createBibleStream?.(...args);
+  createOutlineStream = (...args: any[]) => (this.core as any).createOutlineStream?.(...args);
+  deleteCharacterCastOption = (...args: any[]) => (this.characterPreparationService as any).deleteCharacterCastOption?.(...args);
+  evolveCharacter = (...args: any[]) => (this.characterDynamicsService as any).evolveCharacter?.(...args);
+  generateBatchCharacterVisibleProfiles = (...args: any[]) => (this.characterVisibleProfileService as any).generateBatchVisibleProfiles?.(...args);
+  generateChapterHook = (...args: any[]) => (this.core as any).generateChapterHook?.(...args);
+  generateCharacterCastOptions = (...args: any[]) => (this.characterPreparationService as any).generateCharacterCastOptions?.(...args);
+  generateCharacterVisibleProfile = (...args: any[]) => (this.characterVisibleProfileService as any).generateCharacterVisibleProfile?.(...args);
+  generateSupplementalCharacters = (...args: any[]) => (this.characterPreparationService as any).generateSupplementalCharacters?.(...args);
+  generateTitles = (...args: any[]) => (this.core as any).generateTitles?.(...args);
+  getCharacterDynamicsOverview = (...args: any[]) => (this.characterDynamicsService as any).getCharacterDynamicsOverview?.(...args);
+  getNovelStructuredOutline = (...args: any[]) => (this.core as any).getNovelStructuredOutline?.(...args);
+  getPipelineJob = (...args: any[]) => (this.core as any).getPipelineJob?.(...args);
+  importCharactersFromOutline = (...args: any[]) => (this.characterPreparationService as any).importCharactersFromOutline?.(...args);
+  listCharacterCandidates = (...args: any[]) => (this.characterPreparationService as any).listCharacterCandidates?.(...args);
+  listCharacterCastOptions = (...args: any[]) => (this.characterPreparationService as any).listCharacterCastOptions?.(...args);
+  listCharacterRelations = (...args: any[]) => (this.characterDynamicsService as any).listCharacterRelations?.(...args);
+  listCharacters = (...args: any[]) => (this.core as any).listCharacters?.(...args);
+  mergeCharacterCandidate = (...args: any[]) => (this.characterPreparationService as any).mergeCharacterCandidate?.(...args);
+  rebuildCharacterDynamics = (...args: any[]) => (this.characterDynamicsService as any).rebuildDynamics?.(...args);
+  refineSupplementalCharacter = (...args: any[]) => (this.characterPreparationService as any).refineSupplementalCharacter?.(...args);
+  syncAllCharacterTimeline = (...args: any[]) => (this.core as any).syncAllCharacterTimeline?.(...args);
+  syncCharacterTimeline = (...args: any[]) => (this.core as any).syncCharacterTimeline?.(...args);
 }
 
 export function createNovelApplicationServices(): NovelApplicationServices {
