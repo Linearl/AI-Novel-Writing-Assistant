@@ -44,6 +44,7 @@ description: "REQ-2049 审校上下文增强 — 方案设计"
 | 4 | `timeline_context` | `timeline_context` | 100 | YES（条件） | 条件（可能空） |
 | 5 | `previous_chapter_hook` | `previous_chapter_hook` | 100 | YES | YES |
 | 6 | `story_macro` | `story_macro` | 98 | YES | **NO** |
+| 6.5 | `payoff_directives` | `payoff_directives` | 98 | YES（条件） | **NO**（条件可能跳过） |
 | 7 | `obligation_contract` | `obligation_contract` | 99 | YES | YES |
 | 8 | `character_hard_facts` | `character_hard_facts` | 99 | YES | YES |
 | 9 | `state_goal` | `state_goal` | 97 | YES | YES |

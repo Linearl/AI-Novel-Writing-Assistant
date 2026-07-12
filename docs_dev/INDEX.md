@@ -44,7 +44,7 @@ description: "docs 目录索引（自动生成）"
 | --- | --- | --- |
 | [1.task\B.todo\v0.1\v0.1-r2049-S2-review-context-enhance\design.md](./1.task\B.todo\v0.1\v0.1-r2049-S2-review-context-enhance\design.md) | REQ-2049 审校上下文增强 — 方案设计 | REQ-2049 审校上下文增强 — 方案设计 |
 | [1.task\B.todo\v0.1\v0.1-r2049-S2-review-context-enhance\README.md](./1.task\B.todo\v0.1\v0.1-r2049-S2-review-context-enhance\README.md) | REQ-2049 审校上下文增强 — 补齐审校缺失的全局字段 — 任务总线 | REQ-2049 审校上下文增强 — 补齐审校缺失的全局字段 — 任务总线 |
-| [1.task\B.todo\v0.1\v0.1-r2049-S2-review-context-enhance\REQ-2049-review-context-enhance-original.md](./1.task\B.todo\v0.1\v0.1-r2049-S2-review-context-enhance\REQ-2049-review-context-enhance-original.md) | REQ-2049 审校上下文增强 — 补齐审校缺失的全局字段（冻结副本） | REQ-2049 审校上下文增强 — 补齐审校缺失的全局字段（冻结副本） |
+| [1.task\B.todo\v0.1\v0.1-r2049-S2-review-context-enhance\REQ-2049-review-context-enhance-original.md](./1.task\B.todo\v0.1\v0.1-r2049-S2-review-context-enhance\REQ-2049-review-context-enhance-original.md) | REQ-2049 审校上下文增强 — 补齐审校缺失的全局字段 | REQ-2049 审校上下文增强 — 补齐审校缺失的全局字段 |
 | [1.task\B.todo\v0.1\v0.1-r2049-S2-review-context-enhance\REQ-2049-review-context-enhance.md](./1.task\B.todo\v0.1\v0.1-r2049-S2-review-context-enhance\REQ-2049-review-context-enhance.md) | REQ-2049 审校上下文增强 — 补齐审校缺失的全局字段 | REQ-2049 审校上下文增强 — 补齐审校缺失的全局字段 |
 | [1.task\B.todo\v0.1\v0.1-r2049-S2-review-context-enhance\tasks.md](./1.task\B.todo\v0.1\v0.1-r2049-S2-review-context-enhance\tasks.md) | REQ-2049 审校上下文增强 — 任务拆解 | REQ-2049 审校上下文增强 — 任务拆解 |
 

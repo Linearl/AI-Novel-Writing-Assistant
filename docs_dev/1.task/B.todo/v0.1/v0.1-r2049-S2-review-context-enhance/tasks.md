@@ -26,7 +26,7 @@ description: "REQ-2049 审校上下文增强 — 任务拆解"
 - 估时：0.25h
 - 状态：todo
 
-### T1.2: audit.prompts.ts — full prompt 增加 book_contract、story_macro、timeline_context、character_dynamics context requirements
+### T1.2: audit.prompts.ts — full prompt 增加 book_contract、story_macro、timeline_context、character_dynamics、payoff_directives context requirements
 
 - 依赖：无（与 T1.1 并行）
 - 目标文件：`server/src/prompting/prompts/audit/audit.prompts.ts`
@@ -36,18 +36,20 @@ description: "REQ-2049 审校上下文增强 — 任务拆解"
     - `{ group: "story_macro", priority: 98 }`
     - `{ group: "timeline_context", priority: 100 }`
     - `{ group: "character_dynamics", priority: 91 }`
-  - `auditChapterPrompt.contextPolicy.preferredGroups` 包含以上 4 个 group
-  - `auditChapterPrompt.contextPolicy.dropOrder` 不包含以上 4 个 group
+    - `{ group: "payoff_directives", priority: 98 }`
+  - `auditChapterPrompt.contextPolicy.preferredGroups` 包含以上 5 个 group
+  - `auditChapterPrompt.contextPolicy.dropOrder` 不包含以上 5 个 group
 - 估时：0.25h
 - 状态：todo
 
-### T2.1: chapterLayeredContextBlocks.ts — review 模式下确保 timeline_context 和 character_dynamics 注入
+### T2.1: chapterLayeredContextBlocks.ts — review 模式下确保 timeline_context、character_dynamics、payoff_directives 注入
 
 - 依赖：T1.1, T1.2（确认 contextRequirements 正确后修改 block builder）
 - 目标文件：`server/src/prompting/prompts/novel/chapterLayeredContextBlocks.ts`
 - DoD：
   - `buildChapterWriterContextBlocks` 中，review 模式下 `includeTimelineContext` 始终为 `true`（timeline 块已有 fallback 占位逻辑）
   - `buildChapterWriterContextBlocks` 中，review 模式下 `includeCharacterDynamics` 始终为 `true`
+  - `buildChapterWriterContextBlocks` 中，review 模式下 `includePayoffDirectives` 始终为 `true`（即使无数据也输出占位）
   - 无空块或 undefined 注入（filter 逻辑不变）
 - 估时：0.5h
 - 状态：todo
