@@ -337,6 +337,7 @@ description: "docs 目录索引（自动生成）"
 | [3.analysis\diagnosis\01-active\2026-06-28-harness-audit.md](./3.analysis\diagnosis\01-active\2026-06-28-harness-audit.md) | AI 小说创作工作台 Harness 审计报告 — 五种介质完备性与合理性评估 | AI 小说创作工作台 Harness 审计报告 — 五种介质完备性与合理性评估 |
 | [3.analysis\diagnosis\01-active\2026-06-28-health-check.md](./3.analysis\diagnosis\01-active\2026-06-28-health-check.md) | 2026-06-28 项目健康检查报告 — 五维评估 + 债务模式识别 + 行动建议 | 2026-06-28 项目健康检查报告 — 五维评估 + 债务模式识别 + 行动建议 |
 | [3.analysis\diagnosis\01-active\2026-06-30-图数据库能力诊断.md](./3.analysis\diagnosis\01-active\2026-06-30-图数据库能力诊断.md) | 项目图结构能力诊断：盘点现有图模型、识别存储瓶颈、评估专用图数据库引入可行性 | 项目图结构能力诊断：盘点现有图模型、识别存储瓶颈、评估专用图数据库引入可行性 |
+| [3.analysis\diagnosis\01-active\2026-07-12-玫瑰窃贼故事漏洞诊断.md](./3.analysis\diagnosis\01-active\2026-07-12-玫瑰窃贼故事漏洞诊断.md) | 玫瑰窃贼小说大纲执行度与故事漏洞诊断报告，重点检查聋哑学徒设定违反、大纲偏离与情节逻辑问题 | 玫瑰窃贼小说大纲执行度与故事漏洞诊断报告，重点检查聋哑学徒设定违反、大纲偏离与情节逻辑问题 |
 
 ## 3.analysis\diagnosis\02-outdated
 

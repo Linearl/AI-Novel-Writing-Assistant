@@ -86,6 +86,7 @@ description: "需求任务总清单（SSOT）"
 | 3012 | 任务中心批量操作功能 | p1 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r3012-C2-task-center-batch-operations/README.md` |  |
 | 3013 | 导演跟进任务列表全选与批量清理 | p2 | ✅ 已完成 | 用户反馈 | 0.1 | 2026-07-11 | 2026-07-11 | `B.2.done/v0.1-r3013-S2-follow-up-batch-cleanup/README.md` |  |
 | 3014 | 批量润色功能 | p4 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r3014-C2-batch-style-polish/README.md` |  |
+| 3016 | 服务器日志系统实现 | p1 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r3016-C2-server-logging-system/README.md` |  |
 | 3004 | Novel Conversation Archive | p4 | 📋 待办 | - | 0.1 | 2026-06-26T00:00:00.000Z | 2026-06-26T00:00:00.000Z | `B.todo/v0.1-r3004-medium-novel-conversation-archive/README.md` |  |
 
 ### 3.4 文档和规范任务（5xxx）
@@ -251,6 +252,7 @@ description: "需求任务总清单（SSOT）"
 | 3010 | Create Page Material Import | `B.2.done/v0.1-r3010-M2-create-page-material-import/README.md` |
 | 3012 | 任务中心批量操作功能 | `B.2.done/v0.1-r3012-C2-task-center-batch-operations/README.md` |
 | 3013 | 导演跟进任务列表全选与批量清理 | `B.2.done/v0.1-r3013-S2-follow-up-batch-cleanup/README.md` |
+| 3016 | 服务器日志系统实现 | `B.2.done/v0.1-r3016-C2-server-logging-system/README.md` |
 | 5001 | 补齐工程化基础配置：.env.example / .editorconfig / 子包 README / semver CHANGELOG / Prisma 回滚方案 | `B.2.done/v0.1-r5001-S2-engineering-basics/README.md` |
 | 7001 | Auto-Director 测试隔离修复 | `B.2.done/v0.1-r7001-simple-auto-director-test-fix/README.md` |
 | 7002 | NovelEdit.tsx 大文件拆分 | `B.2.done/v0.1-r7002-complex-novel-edit-refactor/README.md` |

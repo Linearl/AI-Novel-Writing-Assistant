@@ -1,0 +1,27 @@
+{
+  "reqId": "3016",
+  "title": "服务器日志系统实现",
+  "status": "done",
+  "priority": "P1",
+  "complexity": "C2",
+  "created": "2026-07-12T00:00:00Z",
+  "updated": "2026-07-12T00:00:00Z",
+  "phases": {
+    "requirements": "done",
+    "design": "done",
+    "implementation": "done",
+    "testing": "done",
+    "verification": "done"
+  },
+  "metrics": {
+    "totalTasks": 8,
+    "completedTasks": 8,
+    "progress": 100
+  },
+  "artifacts": {
+    "requirements": "REQ-3016-server-logging-system.md",
+    "design": "design.md",
+    "tasks": "tasks.md",
+    "decisionLog": "decision_log.md"
+  }
+}
