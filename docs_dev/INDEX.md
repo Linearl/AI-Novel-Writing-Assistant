@@ -59,6 +59,15 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1\v0.1-r2050-C1-global-review-feedback\REQ-2050-global-review-feedback.md](./1.task\B.todo\v0.1\v0.1-r2050-C1-global-review-feedback\REQ-2050-global-review-feedback.md) | REQ-2050 全局审校 + 跨章节问题回灌 | REQ-2050 全局审校 + 跨章节问题回灌 |
 | [1.task\B.todo\v0.1\v0.1-r2050-C1-global-review-feedback\tasks.md](./1.task\B.todo\v0.1\v0.1-r2050-C1-global-review-feedback\tasks.md) | REQ-2050 任务拆解 | REQ-2050 任务拆解 |
 
+## 1.task\B.todo\v0.1\v0.1-r3014-C2-batch-style-polish
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.1\v0.1-r3014-C2-batch-style-polish\decision_log.md](./1.task\B.todo\v0.1\v0.1-r3014-C2-batch-style-polish\decision_log.md) | - **时间**：2026-07-12 10:00 | - |
+| [1.task\B.todo\v0.1\v0.1-r3014-C2-batch-style-polish\README.md](./1.task\B.todo\v0.1\v0.1-r3014-C2-batch-style-polish\README.md) | | 字段 | 值 | | - |
+| [1.task\B.todo\v0.1\v0.1-r3014-C2-batch-style-polish\REQ-3014-batch-style-polish.md](./1.task\B.todo\v0.1\v0.1-r3014-C2-batch-style-polish\REQ-3014-batch-style-polish.md) | **需求编号**：3014 | - |
+| [1.task\B.todo\v0.1\v0.1-r3014-C2-batch-style-polish\tasks.md](./1.task\B.todo\v0.1\v0.1-r3014-C2-batch-style-polish\tasks.md) | | 阶段 | 任务数 | 预计工作量 | | - |
+
 ## 1.task\B.todo\v0.2
 
 | 文件 | 标题 | 描述 |

@@ -85,6 +85,7 @@ description: "需求任务总清单（SSOT）"
 | 3011 | 小说预览页面增强控制面板 | p4 | 📋 待办 | - | 0.1 | - | - | `B.2.done/v0.1-r3011-C2-novel-preview-controls/README.md` |  |
 | 3012 | 任务中心批量操作功能 | p1 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r3012-C2-task-center-batch-operations/README.md` |  |
 | 3013 | 导演跟进任务列表全选与批量清理 | p2 | ✅ 已完成 | 用户反馈 | 0.1 | 2026-07-11 | 2026-07-11 | `B.2.done/v0.1-r3013-S2-follow-up-batch-cleanup/README.md` |  |
+| 3014 | 批量润色功能 | p4 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r3014-C2-batch-style-polish/README.md` |  |
 | 3004 | Novel Conversation Archive | p4 | 📋 待办 | - | 0.1 | 2026-06-26T00:00:00.000Z | 2026-06-26T00:00:00.000Z | `B.todo/v0.1-r3004-medium-novel-conversation-archive/README.md` |  |
 
 ### 3.4 文档和规范任务（5xxx）
@@ -166,6 +167,7 @@ description: "需求任务总清单（SSOT）"
 | 2049 | 审校上下文增强 — 补齐审校缺失的全局字段 | `B.todo/v0.1-r2049-S2-review-context-enhance/README.md` |
 | 2050 | 全局审校 + 跨章节问题回灌 | `B.todo/v0.1-r2050-C1-global-review-feedback/README.md` |
 | 3011 | 小说预览页面增强控制面板 | `B.2.done/v0.1-r3011-C2-novel-preview-controls/README.md` |
+| 3014 | 批量润色功能 | `B.todo/v0.1-r3014-C2-batch-style-polish/README.md` |
 | 7040 | API 失败自动重试 | `B.todo/v0.2-r7040-C1-api-retry/README.md` |
 | 7041 | 模型备用切换 | `B.todo/v0.2-r7041-S1-model-fallback/README.md` |
 | 7042 | 错误分类器 | `B.todo/v0.2-r7042-S1-error-classifier/README.md` |
