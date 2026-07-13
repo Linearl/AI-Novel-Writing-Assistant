@@ -387,6 +387,7 @@ description: "docs 目录索引（自动生成）"
 | [3.analysis\diagnosis\02-outdated\2026-06-30-v0.1-第二轮任务包完成度诊断.md](./3.analysis\diagnosis\02-outdated\2026-06-30-v0.1-第二轮任务包完成度诊断.md) | --- | - |
 | [3.analysis\diagnosis\02-outdated\2026-07-08-产品需求优先级诊断报告.md](./3.analysis\diagnosis\02-outdated\2026-07-08-产品需求优先级诊断报告.md) | AI Novel 产品需求优先级诊断报告 — 基于王慧文产品课框架，分析哪些需求该做、哪些不做、为什么 | AI Novel 产品需求优先级诊断报告 — 基于王慧文产品课框架，分析哪些需求该做、哪些不做、为什么 |
 | [3.analysis\diagnosis\02-outdated\2026-07-08-产品需求讨论决策记录.md](./3.analysis\diagnosis\02-outdated\2026-07-08-产品需求讨论决策记录.md) | > 日期：2026-07-08 | - |
+| [3.analysis\diagnosis\02-outdated\diagnosis-inline-prompts.md](./3.analysis\diagnosis\02-outdated\diagnosis-inline-prompts.md) | > 诊断日期：2026-07-09 | - |
 
 ## 3.analysis\diagnosis\02-outdated\2026-07-01-代码审计-full
 
