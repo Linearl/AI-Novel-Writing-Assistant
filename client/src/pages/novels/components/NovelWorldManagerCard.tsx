@@ -506,47 +506,6 @@ export default function NovelWorldManagerCard(props: NovelWorldManagerCardProps)
                 本书世界会作为独立副本使用。需要同步时，可以手动推送本书世界或拉取世界库内容。
               </div>
             ) : null}
-            {props.manualDiffResult?.hasDifferences ? (
-              <div className="mt-3 rounded-md border border-amber-500/50 bg-amber-500/10 p-3">
-                <div className="text-sm font-medium text-amber-600 dark:text-amber-400">
-                  手动对比发现 {props.manualDiffResult.fieldDiffs.length} 处差异
-                </div>
-                <div className="mt-2 text-xs leading-5 text-muted-foreground">
-                  版本对比：世界库 v{props.manualDiffResult.worldVersion} / 本书同步基准 v{props.manualDiffResult.novelSyncBaseVersion}
-                </div>
-                <div className="mt-2 max-h-40 overflow-y-auto">
-                  {props.manualDiffResult.fieldDiffs.slice(0, 10).map((diff) => (
-                    <div key={diff.field} className="mt-1 rounded bg-background/50 px-2 py-1 text-xs">
-                      <span className="font-medium text-foreground">{diff.field}</span>
-                      <span className="ml-2 text-muted-foreground">不一致</span>
-                    </div>
-                  ))}
-                  {props.manualDiffResult.fieldDiffs.length > 10 && (
-                    <div className="mt-1 text-xs text-muted-foreground">
-                      ...还有 {props.manualDiffResult.fieldDiffs.length - 10} 处差异
-                    </div>
-                  )}
-                </div>
-                <div className="mt-3 flex items-center gap-2">
-                  <Button
-                    type="button"
-                    variant="default"
-                    size="sm"
-                    disabled={props.isSyncing}
-                    onClick={() => props.onSync({ direction: "pull" })}
-                  >
-                    {props.isSyncing ? "同步中..." : "立即拉取世界库更新"}
-                  </Button>
-                  <span className="text-xs text-muted-foreground">
-                    将世界库的最新内容同步到本书世界
-                  </span>
-                </div>
-              </div>
-            ) : props.manualDiffResult && !props.manualDiffResult.hasDifferences ? (
-              <div className="mt-3 rounded-md border border-border/60 bg-muted/30 p-3 text-sm text-muted-foreground">
-                手动对比确认：世界库和本书世界内容一致（世界库 v{props.manualDiffResult.worldVersion}，本书同步基准 v{props.manualDiffResult.novelSyncBaseVersion}）。
-              </div>
-            ) : null}
             {syncDiff?.canSync === false ? (
               <div className="mt-3 rounded-md border border-dashed p-3 text-sm text-muted-foreground">
                 {syncDiff.reason ?? "暂无法同步。"}
