@@ -28,6 +28,8 @@ server/src/prisma/dev.db-journal
 .tmp/
 .codegraph/
 .trae/
+tests/
+server/server/
 server/.tmp/
 desktop/build/
 desktop/runtime-migration-smoke/
