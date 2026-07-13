@@ -712,4 +712,12 @@ export class NovelWorldInstanceService {
   async syncWithLibrary(novelId: string, input: NovelWorldSyncInput): Promise<NovelWorldSyncDiff> {
     return this.syncService.syncWithLibrary(novelId, input);
   }
+
+  async syncNovelWorldWithLibrary(novelId: string, input: NovelWorldSyncInput): Promise<NovelWorldSyncDiff> {
+    return this.syncService.syncWithLibrary(novelId, input);
+  }
+
+  async syncWithLibrary(novelId: string, input: NovelWorldSyncInput): Promise<NovelWorldSyncDiff> {
+    return this.syncService.syncWithLibrary(novelId, input);
+  }
 }

@@ -138,7 +138,7 @@ export class DefaultNovelApplicationServices implements NovelApplicationServices
   createManualNovelWorld = (...args: any[]) => (this.novelWorldManualService as any).createManualNovelWorld?.(...args) ?? (this.worldSliceService as any).createManualNovelWorld?.(...args);
   generateNovelWorldFromTheme = (...args: any[]) => (this.novelWorldInstanceService as any).generateFromNovelTheme?.(...args);
   saveNovelWorldToLibrary = (...args: any[]) => (this.novelWorldLibrarySaveService as any).saveToLibrary?.(...args) ?? (this.worldSliceService as any).saveNovelWorldToLibrary?.(...args);
-  syncNovelWorldWithLibrary = (...args: any[]) => (this.novelWorldLibrarySaveService as any).syncWithLibrary?.(...args) ?? (this.worldSliceService as any).syncNovelWorldWithLibrary?.(...args);
+  syncNovelWorldWithLibrary = (...args: any[]) => (this.novelWorldInstanceService as any).syncWithLibrary?.(...args) ?? (this.novelWorldLibrarySaveService as any).syncWithLibrary?.(...args) ?? (this.worldSliceService as any).syncNovelWorldWithLibrary?.(...args);
   deleteNovelWorld = (...args: any[]) => (this.novelWorldInstanceService as any).deleteNovelWorld?.(...args) ?? (this.worldSliceService as any).deleteNovelWorld?.(...args);
   getWorldSlice = (...args: any[]) => (this.worldSliceService as any).getWorldSlice?.(...args);
   refreshWorldSlice = (...args: any[]) => (this.worldSliceService as any).refreshWorldSlice?.(...args);
