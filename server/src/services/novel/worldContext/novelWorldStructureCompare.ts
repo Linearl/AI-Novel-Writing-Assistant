@@ -30,6 +30,12 @@ function compareObjects(
 
   for (const key of allKeys) {
     const fullPath = prefix ? `${prefix}.${key}` : key;
+
+    // 忽略metadata.lastGeneratedAt字段（同步后会自动更新）
+    if (fullPath === "metadata.lastGeneratedAt") {
+      continue;
+    }
+
     const val1 = obj1[key];
     const val2 = obj2[key];
 
