@@ -137,6 +137,9 @@ export interface BasicTabProps {
   onSyncNovelWorld: (payload: NovelWorldSyncInput) => void;
   onRefreshWorldSlice: () => void;
   onSaveWorldSliceOverrides: (patch: StoryWorldSliceOverrides) => void;
+  manualDiffResult: import("@/api/novelWorldSlice").ManualDiffResult | null;
+  isManualDiffing: boolean;
+  onRunManualDiff: () => void;
   isSaving: boolean;
   projectQuickStart?: ReactNode;
   directorTakeoverEntry?: ReactNode;

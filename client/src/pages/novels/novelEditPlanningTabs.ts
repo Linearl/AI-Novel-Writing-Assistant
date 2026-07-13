@@ -67,6 +67,9 @@ interface BuildNovelEditPlanningTabsInput {
   onSyncNovelWorld: (payload: NovelWorldSyncInput) => void;
   onRefreshWorldSlice: () => void;
   onSaveWorldSliceOverrides: (patch: StoryWorldSliceOverrides) => void;
+  manualDiffResult: import("@/api/novelWorldSlice").ManualDiffResult | null;
+  isManualDiffing: boolean;
+  onRunManualDiff: () => void;
   isSavingBasic: boolean;
   projectQuickStart?: BasicTabProps["projectQuickStart"];
   basicDirectorTakeoverEntry?: BasicTabProps["directorTakeoverEntry"];
@@ -199,6 +202,9 @@ export function buildNovelEditPlanningTabs(input: BuildNovelEditPlanningTabsInpu
     onSyncNovelWorld: input.onSyncNovelWorld,
     onRefreshWorldSlice: input.onRefreshWorldSlice,
     onSaveWorldSliceOverrides: input.onSaveWorldSliceOverrides,
+    manualDiffResult: input.manualDiffResult,
+    isManualDiffing: input.isManualDiffing,
+    onRunManualDiff: input.onRunManualDiff,
     isSaving: input.isSavingBasic,
     projectQuickStart: input.projectQuickStart,
     directorTakeoverEntry: input.basicDirectorTakeoverEntry,

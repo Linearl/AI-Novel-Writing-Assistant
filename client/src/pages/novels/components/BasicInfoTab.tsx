@@ -34,11 +34,14 @@ export default function BasicInfoTab(props: BasicTabProps) {
         isSavingToLibrary={props.isSavingNovelWorldToLibrary}
         isLoadingSyncDiff={props.isLoadingNovelWorldSyncDiff}
         isSyncing={props.isSyncingNovelWorld}
+        manualDiffResult={props.manualDiffResult}
+        isManualDiffing={props.isManualDiffing}
         onImport={props.onImportNovelWorld}
         onCreateManual={props.onCreateManualNovelWorld}
         onGenerate={props.onGenerateNovelWorld}
         onSaveToLibrary={props.onSaveNovelWorldToLibrary}
         onSync={props.onSyncNovelWorld}
+        onManualDiff={props.onRunManualDiff}
         isDeleting={props.isDeletingNovelWorld}
         onDelete={props.onDeleteNovelWorld}
       />

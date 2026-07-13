@@ -79,11 +79,28 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1\v0.1-r3014-C2-batch-style-polish\REQ-3014-batch-style-polish.md](./1.task\B.todo\v0.1\v0.1-r3014-C2-batch-style-polish\REQ-3014-batch-style-polish.md) | **需求编号**：3014 | - |
 | [1.task\B.todo\v0.1\v0.1-r3014-C2-batch-style-polish\tasks.md](./1.task\B.todo\v0.1\v0.1-r3014-C2-batch-style-polish\tasks.md) | | 阶段 | 任务数 | 预计工作量 | | - |
 
+## 1.task\B.todo\v0.1\v0.1-rXXXX-C1-world-sync-manual-diff
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.1\v0.1-rXXXX-C1-world-sync-manual-diff\README.md](./1.task\B.todo\v0.1\v0.1-rXXXX-C1-world-sync-manual-diff\README.md) | 世界工作台修改世界库后，小说世界的同步功能存在以下问题： | - |
+
 ## 1.task\B.todo\v0.2
 
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
 | [1.task\B.todo\v0.2\v0.2-architecture-knowledge.md](./1.task\B.todo\v0.2\v0.2-architecture-knowledge.md) | v0.2 架构知识库 — 16个任务包的完整技术背景、决策和方案 | v0.2 架构知识库 — 16个任务包的完整技术背景、决策和方案 |
+
+## 1.task\B.todo\v0.2\v0.2-r3019-C3-feedback-github-issue-generator
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.2\v0.2-r3019-C3-feedback-github-issue-generator\decision_log.md](./1.task\B.todo\v0.2\v0.2-r3019-C3-feedback-github-issue-generator\decision_log.md) | REQ-3019 决策留痕 | REQ-3019 决策留痕 |
+| [1.task\B.todo\v0.2\v0.2-r3019-C3-feedback-github-issue-generator\design.md](./1.task\B.todo\v0.2\v0.2-r3019-C3-feedback-github-issue-generator\design.md) | REQ-3019 方案设计 | REQ-3019 方案设计 |
+| [1.task\B.todo\v0.2\v0.2-r3019-C3-feedback-github-issue-generator\README.md](./1.task\B.todo\v0.2\v0.2-r3019-C3-feedback-github-issue-generator\README.md) | REQ-3019 用户反馈→AI 生成 GitHub Issue 任务总线 | REQ-3019 用户反馈→AI 生成 GitHub Issue 任务总线 |
+| [1.task\B.todo\v0.2\v0.2-r3019-C3-feedback-github-issue-generator\REQ-3019-feedback-github-issue-generator-original.md](./1.task\B.todo\v0.2\v0.2-r3019-C3-feedback-github-issue-generator\REQ-3019-feedback-github-issue-generator-original.md) | REQ-3019 用户反馈→AI 生成 GitHub Issue（冻结副本） | REQ-3019 用户反馈→AI 生成 GitHub Issue（冻结副本） |
+| [1.task\B.todo\v0.2\v0.2-r3019-C3-feedback-github-issue-generator\REQ-3019-feedback-github-issue-generator.md](./1.task\B.todo\v0.2\v0.2-r3019-C3-feedback-github-issue-generator\REQ-3019-feedback-github-issue-generator.md) | REQ-3019 用户反馈→AI 生成 GitHub Issue | REQ-3019 用户反馈→AI 生成 GitHub Issue |
+| [1.task\B.todo\v0.2\v0.2-r3019-C3-feedback-github-issue-generator\tasks.md](./1.task\B.todo\v0.2\v0.2-r3019-C3-feedback-github-issue-generator\tasks.md) | REQ-3019 任务拆解 | REQ-3019 任务拆解 |
 
 ## 1.task\B.todo\v0.2\v0.2-r7040-C1-api-retry
 
@@ -345,6 +362,12 @@ description: "docs 目录索引（自动生成）"
 | --- | --- | --- |
 | [2.tech\guide\2026-07-12-material-paste-context-injection.md](./2.tech\guide\2026-07-12-material-paste-context-injection.md) | 在手动创建小说模式中，用户可以通过"粘贴素材"功能将一大段创作素材粘贴进去。AI会自动解析这段素材，并将解析出的信息（世界观、角色、大纲等）保存到小说的基本信息 | - |
 | [2.tech\guide\2026-07-12-novel-technique-ai-recommend.md](./2.tech\guide\2026-07-12-novel-technique-ai-recommend.md) | 在项目设定的文笔技法面板中添加了"AI帮我挑"功能，与写法引擎中的实现类似。该功能会根据小说的标题和描述，自动推荐适合的文笔技法。 | - |
+
+## 3.analysis\diagnosis
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [3.analysis\diagnosis\2026-07-13-feedback-feature-diagnosis.md](./3.analysis\diagnosis\2026-07-13-feedback-feature-diagnosis.md) | 用户反馈→AI 生成 GitHub Issue 功能的需求诊断与改进方案 | 用户反馈→AI 生成 GitHub Issue 功能的需求诊断与改进方案 |
 
 ## 3.analysis\diagnosis\01-active
 

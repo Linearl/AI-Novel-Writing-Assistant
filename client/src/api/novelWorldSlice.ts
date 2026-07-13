@@ -82,3 +82,22 @@ export async function updateNovelWorldSliceOverrides(id: string, payload: StoryW
   const { data } = await apiClient.put<ApiResponse<StoryWorldSliceView>>(`/novels/${id}/world-slice/overrides`, payload);
   return data;
 }
+
+export interface ManualDiffResult {
+  hasDifferences: boolean;
+  fieldDiffs: Array<{
+    field: string;
+    worldValue: unknown;
+    novelValue: unknown;
+    isDifferent: boolean;
+  }>;
+  worldVersion: number;
+  novelSyncBaseVersion: number;
+  worldUpdatedAt: string;
+  novelLastSyncedAt: string | null;
+}
+
+export async function getManualDiff(novelId: string) {
+  const { data } = await apiClient.get<ApiResponse<ManualDiffResult>>(`/novels/${novelId}/novel-world/manual-diff`);
+  return data;
+}

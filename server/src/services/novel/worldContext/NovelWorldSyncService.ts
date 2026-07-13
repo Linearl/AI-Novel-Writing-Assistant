@@ -10,6 +10,7 @@ import {
 } from "../../world/worldStructure";
 import type { NovelWorldInstanceRow } from "./NovelWorldInstanceService";
 import { safeJsonParse } from "./novelWorldProjection";
+import { compareStructures, convertToSyncDifferences } from "./novelWorldStructureCompare";
 
 export const SYNC_SECTIONS: NovelWorldSyncSection[] = ["profile", "rules", "factions", "forces", "locations", "relations"];
 
@@ -227,7 +228,26 @@ export class NovelWorldSyncService {
       sourceWorld.structureJson,
       sourceWorld.bindingSupportJson,
     ).structure;
-    const differences = buildSyncDiffItems(localStructure, libraryStructure);
+
+    // 使用新的对比逻辑（复用手动对比的compareStructures）
+    const worldStructureJson = safeJsonParse<Record<string, unknown> | null>(sourceWorld.structureJson, null);
+    const novelStructureJson = safeJsonParse<Record<string, unknown> | null>(novelWorld.structuredDataJson, null);
+    const compareResult = compareStructures(worldStructureJson, novelStructureJson);
+
+    // 调试日志
+    console.log("[getSyncDiff] NovelWorld ID:", novelWorld.id);
+    console.log("[getSyncDiff] sourceWorldId:", novelWorld.sourceWorldId);
+    console.log("[getSyncDiff] worldStructureJson length:", worldStructureJson ? JSON.stringify(worldStructureJson).length : 0);
+    console.log("[getSyncDiff] novelStructureJson length:", novelStructureJson ? JSON.stringify(novelStructureJson).length : 0);
+    console.log("[getSyncDiff] compareResult:", compareResult);
+
+    // 转换为sync diff格式
+    const differences = compareResult.hasDifferences
+      ? convertToSyncDifferences(compareResult, sourceWorld.name, novelWorld.title ?? "本书世界")
+      : [];
+
+    console.log("[getSyncDiff] differences count:", differences.length);
+
     await this.persistPendingChanges(novelWorld.id, buildSyncPendingChangesPayload(differences));
     return {
       canSync: true,

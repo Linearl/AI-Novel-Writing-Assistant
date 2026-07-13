@@ -23,6 +23,8 @@ import {
   syncNovelWorldWithLibrary,
   updateNovelWorldSliceOverrides,
   deleteNovelWorld,
+  getManualDiff,
+  type ManualDiffResult,
 } from "@/api/novelWorldSlice";
 
 interface UseNovelWorldSliceOptions {
@@ -45,6 +47,8 @@ export function useNovelWorldSlice({
   onNovelWorldImported,
 }: UseNovelWorldSliceOptions) {
   const [worldSliceMessage, setWorldSliceMessage] = useState("");
+  const [manualDiffResult, setManualDiffResult] = useState<ManualDiffResult | null>(null);
+  const [isManualDiffing, setIsManualDiffing] = useState(false);
 
   const novelWorldQuery = useQuery({
     queryKey: queryKeys.novels.novelWorld(novelId),
@@ -88,6 +92,7 @@ export function useNovelWorldSlice({
     enabled: Boolean(
       novelId
       && enabled
+      && novelWorldQuery.isSuccess
       && novelWorldQuery.data?.data?.novelWorld?.sourceWorldId,
     ),
     staleTime: 60_000,
@@ -203,5 +208,25 @@ export function useNovelWorldSlice({
     refreshWorldSlice: () => refreshWorldSliceMutation.mutate(),
     saveWorldSliceOverrides: (patch: StoryWorldSliceOverrides) => saveWorldSliceOverridesMutation.mutate(patch),
     deleteNovelWorld: () => deleteNovelWorldMutation.mutate(),
+    manualDiffResult,
+    isManualDiffing,
+    runManualDiff: async () => {
+      setIsManualDiffing(true);
+      try {
+        const result = await getManualDiff(novelId);
+        setManualDiffResult(result.data ?? null);
+        if (result.data?.hasDifferences) {
+          toast.success(`发现 ${result.data.fieldDiffs.length} 处差异，需要同步。`);
+        } else {
+          toast.info("世界库和本书世界内容一致。");
+        }
+      } catch (error) {
+        console.error("Manual diff failed:", error);
+        toast.error("对比失败，请重试。");
+        setManualDiffResult(null);
+      } finally {
+        setIsManualDiffing(false);
+      }
+    },
   };
 }

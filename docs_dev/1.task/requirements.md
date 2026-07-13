@@ -93,6 +93,7 @@ description: "需求任务总清单（SSOT）"
 | 3016 | 服务器日志系统实现 | p1 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r3016-C2-server-logging-system/README.md` |  |
 | 3017 | 创建页面路径选择卡片 | p3 | ✅ 已完成 | 用户需求讨论 | 0.1 | 2026-07-13 | 2026-07-13 | `B.2.done/v0.1-r3017-M3-create-page-path-selection-card/README.md` | 在创建小说页面顶部新增路径选择卡片，统一 AI 自动导演开书、素材导入、手动填写三种路径 |
 | 3018 | 创建页面路径选择卡片集成 | p4 | ✅ 已完成 | REQ-3017 后续 | 0.1 | 2026-07-13 | 2026-07-13 | `B.2.done/v0.1-r3018-S3-path-selection-card-complete/README.md` | PathSelectionCard 组件已创建，Home/NovelList 已合并创建按钮，待集成到创建页面 |
+| 3019 | Feedback Github Issue Generator | p4 | 📋 待办 | docs_dev/3.analysis/diagnosis/2026-07-13-feedback-feature-diagnosis.md | 0.2 | 2026-07-13 | - | `B.todo/v0.2-r3019-C3-feedback-github-issue-generator/README.md` |  |
 | 3004 | Novel Conversation Archive | p4 | 📋 待办 | - | 0.1 | 2026-06-26T00:00:00.000Z | 2026-06-26T00:00:00.000Z | `B.todo/v0.1-r3004-medium-novel-conversation-archive/README.md` |  |
 
 ### 3.4 文档和规范任务（5xxx）
@@ -178,6 +179,7 @@ description: "需求任务总清单（SSOT）"
 | 2051 | 角色重要度分级（CharacterTier） | `B.todo/v0.1-r2051-C2-character-tier-importance-level/README.md` |
 | 3011 | 小说预览页面增强控制面板 | `B.2.done/v0.1-r3011-C2-novel-preview-controls/README.md` |
 | 3014 | 批量润色功能 | `B.todo/v0.1-r3014-C2-batch-style-polish/README.md` |
+| 3019 | Feedback Github Issue Generator | `B.todo/v0.2-r3019-C3-feedback-github-issue-generator/README.md` |
 | 7040 | 卷规划服务层拆分重构 | `B.2.done/v0.1-r7040-C2-volume-service-refactor/README.md` |
 | 7041 | 模型备用切换 | `B.2.done/v0.1-r7041-S4-scattered-client-fixes/README.md` |
 | 7042 | 错误分类器 | `B.todo/v0.2-r7042-S1-error-classifier/README.md` |

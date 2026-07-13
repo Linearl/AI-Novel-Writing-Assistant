@@ -21,6 +21,7 @@ import { registerNovelStoryMacroRoutes } from "../planning/http/novelStoryMacroR
 import { registerNovelStorylineRoutes } from "../planning/http/novelStorylineRoutes";
 import { registerNovelVolumeRoutes } from "../planning/http/novelVolumeRoutes";
 import { registerNovelWorldSliceRoutes } from "../setup/http/novelWorldSliceRoutes";
+import { registerManualDiffRoutes } from "../setup/http/novelWorldManualDiffRoutes";
 import novelChapterSummaryRouter from "../production/http/novelChapterSummary";
 import novelDecisionsRouter from "../state/http/novelDecisions";
 import { createNovelImportRoutes } from "./novelImportRoutes";
@@ -196,6 +197,11 @@ export function registerNovelHttpRoutes(router: Router, services: NovelHttpServi
     router,
     idParamsSchema,
     novelService,
+  });
+
+  registerManualDiffRoutes({
+    router,
+    idParamsSchema,
   });
 
   registerNovelChapterGenerationRoutes({
