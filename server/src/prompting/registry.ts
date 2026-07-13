@@ -510,6 +510,10 @@ const promptAssetLoaderEntries: PromptAssetLoaderEntry[] = [
     load: () => require("./prompts/world/world.prompts").worldStructureSectionPrompt as UnknownPromptAsset,
   },
   {
+    key: "world.structure.modify@v1",
+    load: () => require("./prompts/world/world.prompts").worldStructureModifyPrompt as UnknownPromptAsset,
+  },
+  {
     key: "world.axioms.suggest@v1",
     load: () => require("./prompts/world/world.prompts").worldAxiomSuggestionPrompt as UnknownPromptAsset,
   },

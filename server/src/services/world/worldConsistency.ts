@@ -19,6 +19,7 @@ export interface ConsistencyIssueDraft {
   code: string;
   message: string;
   detail?: string;
+  suggestion?: string;
   source: "rule" | "llm";
   targetField?: string;
 }

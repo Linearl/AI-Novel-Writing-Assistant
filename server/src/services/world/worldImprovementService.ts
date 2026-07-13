@@ -372,6 +372,7 @@ export async function checkWorldConsistency(
         code: issue.code ?? "LLM_REVIEW",
         message: issue.message.trim(),
         detail: issue.detail,
+        suggestion: (issue as any).suggestion,
         source: "llm",
         targetField: issue.targetField,
       }));
@@ -555,6 +556,7 @@ export async function fixConsistencyIssue(
         structureJson: structuredFields.structureJson as string,
         bindingSupportJson: structuredFields.bindingSupportJson as string,
         structureSchemaVersion: WORLD_STRUCTURE_SCHEMA_VERSION,
+        version: { increment: 1 },
       },
     });
     await syncWorldEdgeTables(worldId, modifiedStructure, tx);
