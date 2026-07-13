@@ -103,6 +103,7 @@ async function loadGenerationContext(params: {
         narrativePov: true,
         pacePreference: true,
         emotionIntensity: true,
+        outline: true,  // 用户粘贴的完整素材（世界观、角色、大纲、章节梗概等）
         primaryStoryMode: {
           select: {
             id: true,

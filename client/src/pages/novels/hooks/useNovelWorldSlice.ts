@@ -10,6 +10,7 @@ import type {
 } from "@ai-novel/shared";
 import type { LLMProvider } from "@ai-novel/shared";
 import { queryKeys } from "@/api/queryKeys";
+import { toast } from "@/components/ui/toast";
 import {
   getNovelWorld,
   getNovelWorldSlice,
@@ -108,6 +109,7 @@ export function useNovelWorldSlice({
   const generateNovelWorldMutation = useMutation({
     mutationFn: (payload: NovelWorldGenerateInput) => generateNovelWorldFromTheme(novelId, payload),
     onSuccess: async (_response, payload) => {
+      toast.success("本书世界已生成完成。现在可以开始创作了。");
       setWorldSliceMessage("已根据本书主题生成世界，后续会按这套世界整理可用设定。");
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: queryKeys.novels.novelWorld(novelId) }),

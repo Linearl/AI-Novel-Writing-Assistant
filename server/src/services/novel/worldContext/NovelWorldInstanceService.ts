@@ -47,6 +47,37 @@ export interface NovelWorldInstanceRow {
   updatedAt: Date | string;
 }
 
+function extractImportedMaterialFromOutline(outline: string | null): string | undefined {
+  if (!outline) return undefined;
+  const worldMatch = outline.match(/【世界观设定】\s*\n([\s\S]*?)(?=\n【|$)/);
+  const charactersMatch = outline.match(/【角色阵容】\s*\n([\s\S]*?)(?=\n【|$)/);
+  const outlineStoryMatch = outline.match(/【故事大纲】\s*\n([\s\S]*?)(?=\n【|$)/);
+
+  const parts: string[] = [];
+  if (worldMatch?.[1]?.trim()) parts.push(`世界观设定：\n${worldMatch[1].trim()}`);
+  if (charactersMatch?.[1]?.trim()) parts.push(`角色阵容：\n${charactersMatch[1].trim()}`);
+  if (outlineStoryMatch?.[1]?.trim()) parts.push(`故事大纲：\n${outlineStoryMatch[1].trim()}`);
+
+  return parts.length > 0 ? parts.join("\n\n") : undefined;
+}
+
+export interface NovelWorldGenerationValidationResult {
+  overallScore: number;
+  matches: Array<{
+    aspect: string;
+    score: number;
+    detail: string;
+  }>;
+  deviations: Array<{
+    aspect: string;
+    sourceMaterial: string;
+    generatedContent: string;
+    severity: "minor" | "moderate" | "major";
+    suggestion: string;
+  }>;
+  summary: string;
+}
+
 export interface NovelWorldInstanceView {
   hasNovelWorld: boolean;
   novelWorld: {
@@ -72,6 +103,7 @@ export interface NovelWorldInstanceView {
   handbook?: NovelWorldHandbook | null;
   assets: NovelWorldAssetSummary[];
   syncHistory: NovelWorldSyncRecordSummary[];
+  generationValidation?: NovelWorldGenerationValidationResult | null;
 }
 
 interface LegacyNovelWorldSourceRow {
@@ -93,6 +125,7 @@ export class NovelWorldInstanceService {
     row: NovelWorldInstanceRow | null,
     assets: NovelWorldAssetSummary[] = serializeNovelWorldAssetRows([]),
     syncHistory: NovelWorldSyncRecordSummary[] = [],
+    generationValidation?: NovelWorldGenerationValidationResult | null
   ): NovelWorldInstanceView {
     if (!row) {
       return {
@@ -101,6 +134,7 @@ export class NovelWorldInstanceService {
         handbook: null,
         assets: [],
         syncHistory: [],
+        generationValidation: generationValidation ?? null,
       };
     }
     const syncPending = parseSyncPendingChanges(row.syncPendingChangesJson);
@@ -129,6 +163,7 @@ export class NovelWorldInstanceService {
       handbook: buildNovelWorldHandbook(row),
       assets,
       syncHistory,
+      generationValidation: generationValidation ?? null,
     };
   }
 
@@ -189,9 +224,12 @@ export class NovelWorldInstanceService {
     return rows[0] ?? null;
   }
 
-  async getNovelWorldView(novelId: string): Promise<NovelWorldInstanceView> {
+  async getNovelWorldView(
+    novelId: string,
+    generationValidation?: NovelWorldGenerationValidationResult | null
+  ): Promise<NovelWorldInstanceView> {
     const row = await this.ensureFromLegacyNovel(novelId);
-    return this.serializeView(row, await this.getAssetSummaries(row), await listNovelWorldSyncRecords(row?.id));
+    return this.serializeView(row, await this.getAssetSummaries(row), await listNovelWorldSyncRecords(row?.id), generationValidation);
   }
 
   async deleteNovelWorld(novelId: string): Promise<void> {
@@ -417,6 +455,7 @@ export class NovelWorldInstanceService {
         targetAudience: true,
         bookFramingJson: true,
         commercialTagsJson: true,
+        outline: true,
         genre: { select: { name: true } },
         primaryStoryMode: { select: { name: true } },
         secondaryStoryMode: { select: { name: true } },
@@ -436,6 +475,8 @@ export class NovelWorldInstanceService {
     const bookSellingPoint = bookFraming.bookSellingPoint ?? "";
     const first30ChapterPromise = bookFraming.first30ChapterPromise ?? "";
 
+    const importedMaterial = extractImportedMaterialFromOutline(novel.outline);
+
     const result = await runStructuredPrompt({
       asset: novelThemeWorldGenerationPrompt,
       promptInput: {
@@ -450,6 +491,7 @@ export class NovelWorldInstanceService {
         secondaryStoryModeName: novel.secondaryStoryMode?.name ?? "",
         storyMacroContext: input.storyMacroContext,
         bookContractContext: input.bookContractContext,
+        importedMaterial,
       },
       options: {
         novelId: input.novelId,
@@ -626,7 +668,37 @@ export class NovelWorldInstanceService {
       `;
     });
 
-    return this.getNovelWorldView(input.novelId);
+    let generationValidation: NovelWorldGenerationValidationResult | null = null;
+    if (importedMaterial) {
+      try {
+        const { novelThemeWorldValidationPrompt } = await import("../../../prompting/prompts/world/world.prompts.generation");
+        const validationInput = {
+          importedMaterial,
+          generatedWorldTitle: title,
+          generatedWorldSummary: coverSummary || "",
+          generatedWorldRules: JSON.stringify(structuredData.rules ?? {}),
+          generatedWorldFactions: JSON.stringify(structuredData.factions ?? []),
+          generatedWorldForces: JSON.stringify(structuredData.forces ?? []),
+          generatedWorldLocations: JSON.stringify(structuredData.locations ?? []),
+        };
+        const validationResult = await runStructuredPrompt({
+          asset: novelThemeWorldValidationPrompt,
+          promptInput: validationInput,
+          options: {
+            novelId: input.novelId,
+            provider: input.provider ?? "deepseek",
+            model: input.model,
+            temperature: 0.3,
+            entrypoint: "novel-world-validate",
+          },
+        });
+        generationValidation = validationResult.output as NovelWorldGenerationValidationResult;
+      } catch (error) {
+        console.error("World generation validation failed (non-blocking):", error);
+      }
+    }
+
+    return this.getNovelWorldView(input.novelId, generationValidation);
   }
 
   async getSyncDiff(novelId: string): Promise<NovelWorldSyncDiff> {

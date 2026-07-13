@@ -275,6 +275,29 @@ export interface StructureUpdateInput {
   bindingSupport?: unknown;
 }
 
+export interface StructureModifyInput {
+  intent: string;
+  structure: unknown;
+  bindingSupport?: unknown;
+  provider?: string;
+  model?: string;
+}
+
+export interface StructureModifyChange {
+  section: string;
+  description: string;
+  entityType?: string;
+  entityName?: string;
+}
+
+export interface StructureModifyOutput {
+  worldId: string;
+  modifiedStructure: unknown;
+  bindingSupport: unknown;
+  changes: StructureModifyChange[];
+  summary: string;
+}
+
 export function cleanJsonText(source: string): string {
   return source.replace(/```json|```/gi, "").trim();
 }

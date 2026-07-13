@@ -26,8 +26,7 @@ import NovelListItem, { NovelListCockpitDialog } from "./components/NovelListIte
 
 type StatusFilter = "all" | "draft" | "published";
 type WritingModeFilter = "all" | "original" | "continuation";
-const DIRECTOR_CREATE_LINK = "/novels/create?mode=director";
-const MANUAL_CREATE_LINK = "/novels/create";
+const CREATE_LINK = "/novels/create";
 const NOVEL_LIST_PAGE_SIZE = 24;
 
 function createDownload(blob: Blob, fileName: string): void {
@@ -253,10 +252,7 @@ export default function NovelList() {
             </Button>
           ) : null}
           <Button asChild>
-            <Link to={DIRECTOR_CREATE_LINK}>AI 自动导演开书</Link>
-          </Button>
-          <Button asChild variant="outline">
-            <Link to={MANUAL_CREATE_LINK}>手动创建小说</Link>
+            <Link to={CREATE_LINK}>创建小说</Link>
           </Button>
         </div>
       </div>
@@ -304,11 +300,8 @@ export default function NovelList() {
           {allNovels.length === 0 ? (
             <CardContent className="flex flex-wrap gap-2">
               <Button asChild>
-                <Link to={DIRECTOR_CREATE_LINK}>AI 自动导演开书</Link>
-              </Button>
-              <Button asChild variant="outline">
-                <Link to={MANUAL_CREATE_LINK}>手动创建小说</Link>
-              </Button>
+            <Link to={CREATE_LINK}>创建小说</Link>
+          </Button>
             </CardContent>
           ) : null}
         </Card>

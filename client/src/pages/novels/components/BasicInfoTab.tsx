@@ -127,7 +127,11 @@ export default function BasicInfoTab(props: BasicTabProps) {
         </summary>
 
         <div className="mt-4">
-          <NovelWritingTechniquePanel novelId={props.novelId} />
+          <NovelWritingTechniquePanel
+            novelId={props.novelId}
+            novelTitle={props.basicForm.title}
+            novelDescription={props.basicForm.description}
+          />
         </div>
       </details>
     </div>

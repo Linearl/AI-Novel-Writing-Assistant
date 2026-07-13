@@ -358,7 +358,6 @@ function Stop-DevAll {
     }
     Write-Ok "stop completed"
 }
-}
 
 # ─── Start dev suite ────────────────────────────────────────
 function Start-DevSuite {

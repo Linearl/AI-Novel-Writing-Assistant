@@ -62,6 +62,7 @@ export interface VolumeGenerationNovel {
   pacePreference: string | null;
   emotionIntensity: string | null;
   storyModePromptBlock?: string | null;
+  outline?: string | null;  // 用户粘贴的完整素材（世界观、角色、大纲、章节梗概等）
   genre: {
     name: string;
   } | null;

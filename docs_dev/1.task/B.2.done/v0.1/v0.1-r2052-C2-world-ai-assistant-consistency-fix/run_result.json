@@ -1,0 +1,12 @@
+{
+  "reqId": "REQ-2052",
+  "title": "世界观AI助手与一致性修复功能",
+  "tag": "C2",
+  "version": "0.1",
+  "status": "done",
+  "priority": "p2",
+  "complexity": "complex",
+  "createdAt": "2026-07-13",
+  "completedAt": "2026-07-13",
+  "source": "功能开发"
+}

@@ -29,6 +29,7 @@ import { createNovelPaceCurveRoutes } from "../pace/http/novelPaceCurveRoutes";
 import { createNovelSettingConsistencyRoutes } from "../setting/http/novelSettingConsistencyRoutes";
 import { registerNovelTxtImportExportRoutes } from "./novelTxtImportExportRoutes";
 import { createNovelMaterialParseRoutes } from "./novelMaterialParseRoutes";
+import { createNovelResetRoutes } from "./novelResetRoutes";
 import type { NovelHttpServices } from "./novelHttpServices";
 import {
   aiRevisionPreviewSchema,
@@ -248,4 +249,5 @@ export function registerNovelHttpRoutes(router: Router, services: NovelHttpServi
   router.use(createPayoffLedgerCrudRoutes());
   registerNovelTxtImportExportRoutes({ router });
   router.use(createNovelMaterialParseRoutes());
+  router.use(createNovelResetRoutes());
 }

@@ -293,6 +293,7 @@ export interface WorldConsistencyIssue {
   code: string;
   message: string;
   detail?: string | null;
+  suggestion?: string | null;
   source: "rule" | "llm";
   status: "open" | "resolved" | "ignored";
   targetField?: string | null;

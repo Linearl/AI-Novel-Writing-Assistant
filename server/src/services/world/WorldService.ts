@@ -49,6 +49,7 @@ import {
   answerWorldDeepeningQuestions,
   checkWorldConsistency,
   createWorldDeepeningQuestions,
+  fixConsistencyIssue,
   updateWorldConsistencyIssueStatus,
 } from "./worldImprovementService";
 import { buildWorldLayerGeneration } from "./worldLayerGeneration";
@@ -64,6 +65,7 @@ import {
   getWorldOverview,
   getWorldStructure,
   getWorldVisualization,
+  modifyWorldStructure,
   updateWorldStructure,
 } from "./worldStructureWorkspace";
 import {
@@ -78,6 +80,7 @@ import {
   type RefineWorldInput,
   type StructureBackfillInput,
   type StructureGenerateInput,
+  type StructureModifyInput,
   type StructureUpdateInput,
   type WorldGenerateInput,
   type WorldTextField,
@@ -516,7 +519,7 @@ export class WorldService {
     });
   }
 
-  async checkConsistency(worldId: string, options: { provider?: LLMProvider; model?: string } = {}): Promise<WorldConsistencyReport> {
+  async checkConsistency(worldId: string, options: { provider?: LLMProvider; model?: string; referenceMaterials?: string } = {}): Promise<WorldConsistencyReport> {
     return checkWorldConsistency(worldId, options, {
       createSnapshot: (id, label) => this.createSnapshot(id, label),
       queueWorldUpsert: (id) => this.queueRagUpsert("world", id),
@@ -525,6 +528,13 @@ export class WorldService {
 
   async updateConsistencyIssueStatus(worldId: string, issueId: string, status: "open" | "resolved" | "ignored") {
     return updateWorldConsistencyIssueStatus(worldId, issueId, status);
+  }
+
+  async fixConsistencyIssue(worldId: string, issueId: string, options: { provider?: LLMProvider; model?: string; customSuggestion?: string } = {}) {
+    return fixConsistencyIssue(worldId, issueId, options, {
+      createSnapshot: (id, label) => this.createSnapshot(id, label),
+      queueWorldUpsert: (id) => this.queueRagUpsert("world", id),
+    });
   }
 
   async getOverview(worldId: string) {
@@ -549,6 +559,10 @@ export class WorldService {
 
   async generateStructure(worldId: string, input: StructureGenerateInput) {
     return generateWorldStructure(worldId, input);
+  }
+
+  async modifyStructure(worldId: string, input: StructureModifyInput) {
+    return modifyWorldStructure(worldId, input);
   }
 
   async getVisualization(worldId: string): Promise<WorldVisualizationPayload> {

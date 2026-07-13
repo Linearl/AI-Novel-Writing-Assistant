@@ -68,8 +68,10 @@ export function createNovelMaterialParseRoutes(): Router {
     async (req: Request, res: Response, next: NextFunction) => {
       try {
         const { material, provider, model } = req.body as z.infer<typeof parseMaterialBodySchema>;
+        console.log(`[INFO] POST /parse-material - Provider: ${provider}, Model: ${model}, Material length: ${material.length}`);
 
         const parsed = await parseMaterial(material, { provider, model });
+        console.log(`[INFO] POST /parse-material - Parse successful`);
 
         res.status(200).json({
           success: true,
@@ -77,6 +79,7 @@ export function createNovelMaterialParseRoutes(): Router {
           message: "素材解析完成。",
         } satisfies ApiResponse<MaterialParseOutput>);
       } catch (error) {
+        console.error(`[ERROR] POST /parse-material failed:`, error);
         next(error);
       }
     },

@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import FeedbackDialog from "@/components/feedback/FeedbackDialog";
 
-const DIRECTOR_CREATE_LINK = "/novels/create?mode=director";
+const CREATE_LINK = "/novels/create";
 
 interface GuideStep {
   title: string;
@@ -81,7 +81,7 @@ const goalEntries: GoalEntry[] = [
   {
     title: "从零开书",
     description: "适合只有一个灵感，还没想清楚题材、卖点、主角和前期剧情。",
-    href: DIRECTOR_CREATE_LINK,
+    href: CREATE_LINK,
     action: "开始第一本小说",
     icon: Sparkles,
   },
@@ -160,7 +160,7 @@ export default function HelpPage() {
           </div>
           <div className="flex flex-wrap gap-2">
             <Button asChild size="lg">
-              <Link to={DIRECTOR_CREATE_LINK}>开始第一本小说</Link>
+              <Link to={CREATE_LINK}>开始第一本小说</Link>
             </Button>
             <Button asChild size="lg" variant="outline">
               <Link to="/settings">配置模型</Link>

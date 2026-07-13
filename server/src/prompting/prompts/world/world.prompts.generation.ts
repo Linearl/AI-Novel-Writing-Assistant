@@ -16,6 +16,7 @@ import {
   type NovelThemeWorldValidationPromptInput,
   type WorldStructureBackfillPromptInput,
   type WorldStructureSectionPromptInput,
+  type WorldStructureModifyPromptInput,
 } from "./world.promptTypes";
 import {
   worldAxiomSuggestionSchema,
@@ -23,6 +24,7 @@ import {
   worldLooseObjectSchema,
   novelThemeWorldGenerationSchema,
   worldGenerationValidationResultSchema,
+  worldStructureModifyOutputSchema,
 } from "./world.promptSchemas";
 import { worldStructuredDataSchema, worldStructureSectionOutputSchema } from "../../../services/world/worldSchemas";
 import {
@@ -604,6 +606,65 @@ export const novelThemeWorldValidationPrompt: PromptAsset<
       `势力阵营：${input.generatedWorldFactions}`,
       `主要势力：${input.generatedWorldForces}`,
       `故事地点：${input.generatedWorldLocations}`,
+    ].join("\n")),
+  ],
+};
+
+export const worldStructureModifyPrompt: PromptAsset<
+  WorldStructureModifyPromptInput,
+  z.infer<typeof worldStructureModifyOutputSchema>
+> = {
+  id: "world.structure.modify",
+  version: "v1",
+  taskType: "planner",
+  mode: "structured",
+  language: "zh",
+  contextPolicy: {
+    maxTokensBudget: 0,
+  },
+  outputSchema: worldStructureModifyOutputSchema,
+  render: (input) => [
+    new SystemMessage([
+      "你是世界设定结构化修改器。",
+      "你的任务是根据用户的自然语言修改意图，精确修改世界结构的特定部分。",
+      "",
+      "只输出一个合法 JSON，不要输出 Markdown、解释、注释或额外文本。",
+      "",
+      "输出字段必须包括：modifiedStructure（修改后的完整结构）、changes（变更明细列表）、summary（总结说明）。",
+      "",
+      "核心规则：",
+      "1. **精确执行**：只能修改用户意图明确要求的部分，不得改动无关内容。",
+      "2. **保留ID**：所有现有实体 ID 必须保留不变。新增实体使用 'new-{timestamp}' 格式的 ID。",
+      "3. **最小改动**：只修改必要的字段值，不要重构整个结构。",
+      "4. **一致保证**：修改后的结构必须内部一致（如：删除势力时，也要清理 locationControls 中对该势力的引用）。",
+      "",
+      "changes 数组要求：",
+      "1. 必须列出所有实际修改的项目。",
+      "2. 每个 change 包含：section（所属区块）、description（人类可读描述）。",
+      "3. 可选包含：entityType（实体类型：faction/force/location/rule/relation/profile）、entityName（旧名 -> 新名）。",
+      "4. description 应清楚说明做了什么修改，如「将势力'拾光花坊'改名为'玫瑰时光花坊'」。",
+      "",
+      "summary 要求：",
+      "1. 用一句话概括所有修改，如「已完成 1 处修改：势力改名」。",
+      "2. 如果意图模糊，选择最合理的解读并在 summary 中说明。",
+      "3. 如果无法执行用户意图，返回空 changes 数组并在 summary 中说明原因。",
+      "",
+      "其他要求：",
+      "1. 所有文本使用简体中文。",
+      "2. 不要新增与用户意图无关的实体或规则。",
+      "3. 不要修改世界的类型、核心公理（rules.axioms）或整体框架，除非用户明确要求。",
+      "4. 修改后的结构必须保持完整性和可读性。",
+    ].join("\n")),
+    new HumanMessage([
+      `用户意图：${input.intent}`,
+      `世界名称：${input.worldName}`,
+      `世界类型：${input.worldType}`,
+      "",
+      "当前结构（JSON）：",
+      JSON.stringify(input.currentStructure, null, 2),
+      "",
+      "当前绑定建议（JSON）：",
+      JSON.stringify(input.currentBindingSupport, null, 2),
     ].join("\n")),
   ],
 };

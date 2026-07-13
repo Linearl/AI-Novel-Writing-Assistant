@@ -177,6 +177,14 @@ export const deepeningAnswerSchema = z.object({
 export const consistencyCheckSchema = z.object({
   provider: providerSchema.optional(),
   model: z.string().optional(),
+  referenceMaterials: z.string().max(100000).optional(),
+});
+
+export const consistencyFixSchema = z.object({
+  issueId: z.string().min(1),
+  provider: providerSchema.optional(),
+  model: z.string().optional(),
+  customSuggestion: z.string().max(5000).optional(),
 });
 
 export const consistencyIssuePatchSchema = z.object({
@@ -279,6 +287,14 @@ export const worldImportSchema = z.object({
   format: z.enum(["json", "markdown", "text"]),
   content: z.string().trim().min(1),
   name: z.string().optional(),
+  provider: providerSchema.optional(),
+  model: z.string().optional(),
+});
+
+export const structureModifySchema = z.object({
+  intent: z.string().trim().min(1).max(2000),
+  structure: z.unknown(),
+  bindingSupport: z.unknown().optional(),
   provider: providerSchema.optional(),
   model: z.string().optional(),
 });

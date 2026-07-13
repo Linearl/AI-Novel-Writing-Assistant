@@ -5,6 +5,7 @@ import { z } from "zod";
 import { validate } from "../../../../middleware/validate";
 import {
   consistencyCheckSchema,
+  consistencyFixSchema,
   consistencyIssuePatchSchema,
   deepeningAnswerSchema,
   deepeningQuestionSchema,
@@ -15,6 +16,7 @@ import {
   requireWorldWizard,
   structureBackfillSchema,
   structureGenerateSchema,
+  structureModifySchema,
   structureUpdateSchema,
   suggestAxiomsSchema,
   updateAxiomsSchema,
@@ -147,6 +149,26 @@ function registerConsistencyRoutes(router: Router) {
       res.status(200).json({ success: true, data, message: "Issue status updated." } satisfies ApiResponse<typeof data>);
     } catch (error) { next(error); }
   });
+
+  router.post("/:id/consistency/fix", requireWorldWizard, validate({ params: worldIdSchema, body: consistencyFixSchema }), async (req: any, res: any, next: any) => {
+    try {
+      const { id } = req.params as z.infer<typeof worldIdSchema>;
+      const { issueId, provider, model, customSuggestion } = req.body as z.infer<typeof consistencyFixSchema>;
+      const data = await worldService.fixConsistencyIssue(id, issueId, { provider, model, customSuggestion });
+      res.status(200).json({ success: true, data, message: "Issue fixed." } satisfies ApiResponse<typeof data>);
+    } catch (error) { next(error); }
+  });
+}
+
+// Sub-function: Register AI assistant routes
+function registerAIAssistantRoutes(router: Router) {
+  router.post("/:id/structure/modify", requireWorldWizard, validate({ params: worldIdSchema, body: structureModifySchema }), async (req: any, res: any, next: any) => {
+    try {
+      const { id } = req.params as z.infer<typeof worldIdSchema>;
+      const data = await worldService.modifyStructure(id, req.body as z.infer<typeof structureModifySchema>);
+      res.status(200).json({ success: true, data, message: "Structure modified by AI assistant." } satisfies ApiResponse<typeof data>);
+    } catch (error) { next(error); }
+  });
 }
 
 export function registerStructureWorldRoutes(router: Router): void {
@@ -154,6 +176,7 @@ export function registerStructureWorldRoutes(router: Router): void {
   registerLayerRoutes(router);
   registerDeepeningRoutes(router);
   registerConsistencyRoutes(router);
+  registerAIAssistantRoutes(router);
 
   router.get("/:id/overview", requireWorldWizard, validate({ params: worldIdSchema }), async (req: any, res: any, next: any) => {
     try {

@@ -13,6 +13,7 @@ import type { DirectorLockScope } from "@ai-novel/shared";
 import type { VolumePlan } from "@ai-novel/shared";
 import type { UnifiedTaskDetail } from "@ai-novel/shared";
 import { getNovelDetail, getNovelQualityReport, getNovelVolumeWorkspace } from "@/api/novel";
+import { getNovelStoryMacroPlan } from "@/api/novelStoryMacro";
 import { getDirectorBookAutomationProjection, getDirectorRuntimeProjection, getDirectorTaskSnapshot } from "@/api/novelDirector";
 import { continueNovelWorkflow, getActiveAutoDirectorTask } from "@/api/novelWorkflow";
 import { retryTask } from "@/api/tasks";
@@ -149,6 +150,12 @@ export default function NovelWorkspaceRail(props: NovelWorkspaceRailProps) {
     queryFn: () => getNovelQualityReport(novelId),
     enabled: Boolean(novelId),
   });
+  const storyMacroQuery = useQuery({
+    queryKey: queryKeys.novels.storyMacro(novelId),
+    queryFn: () => getNovelStoryMacroPlan(novelId),
+    enabled: Boolean(novelId),
+    retry: false,
+  });
   const activeTaskQuery = useQuery({
     queryKey: queryKeys.novels.autoDirectorTask(novelId),
     queryFn: () => getActiveAutoDirectorTask(novelId),
@@ -174,6 +181,7 @@ export default function NovelWorkspaceRail(props: NovelWorkspaceRailProps) {
   const novelDetail = novelDetailQuery.data?.data;
   const workspace = volumeWorkspaceQuery.data?.data;
   const qualitySummary = qualityReportQuery.data?.data?.summary;
+  const storyMacroPlan = storyMacroQuery.data?.data ?? null;
   const latestActiveTask = activeTaskQuery.isFetchedAfterMount
     ? activeTaskQuery.data?.data ?? null
     : null;
@@ -273,7 +281,12 @@ export default function NovelWorkspaceRail(props: NovelWorkspaceRailProps) {
       || novelDetail?.bible?.worldRules?.trim()
       || novelDetail?.bible?.rawContent?.trim(),
     );
-    const storyMacroReady = characterReady
+    const storyMacroReady = Boolean(
+      storyMacroPlan
+      && typeof storyMacroPlan.storyInput === "string"
+      && storyMacroPlan.storyInput.trim()
+      && storyMacroPlan.decomposition,
+    ) || characterReady
       || outlineReady
       || structuredReady
       || chapterReady
@@ -290,7 +303,7 @@ export default function NovelWorkspaceRail(props: NovelWorkspaceRailProps) {
       chapter: chapterReady,
       pipeline: pipelineReady,
     } satisfies Record<NovelWorkspaceFlowTab, boolean>, effectiveResetSteps);
-  }, [effectiveResetSteps, novelDetail?.bible?.coreSetting, novelDetail?.bible?.mainPromise, novelDetail?.bible?.characterArcs, novelDetail?.bible?.worldRules, novelDetail?.bible?.rawContent, novelDetail?.chapters, novelDetail?.characters, novelDetail?.plotBeats, qualitySummary, workspace]);
+  }, [effectiveResetSteps, storyMacroPlan, novelDetail?.bible?.coreSetting, novelDetail?.bible?.mainPromise, novelDetail?.bible?.characterArcs, novelDetail?.bible?.worldRules, novelDetail?.bible?.rawContent, novelDetail?.chapters, novelDetail?.characters, novelDetail?.plotBeats, qualitySummary, workspace]);
 
   const workflowIndex = workflowCurrentTab
     ? NOVEL_WORKSPACE_FLOW_STEPS.findIndex((item) => item.key === workflowCurrentTab)

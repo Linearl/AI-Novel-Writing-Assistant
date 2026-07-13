@@ -5,11 +5,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import LLMSelector from "@/components/common/LLMSelector";
+import { WandSparkles } from "lucide-react";
+import type { WorldBindingSupport, WorldStructuredData } from "@ai-novel/shared";
 import {
   answerWorldDeepeningQuestions,
   backfillWorldStructure,
   deleteWorld,
   checkWorldConsistency,
+  fixWorldConsistencyIssue,
   confirmWorldLayer,
   createWorldLibraryItem,
   createWorldSnapshot,
@@ -48,6 +51,7 @@ import WorldDeepeningTab from "./components/workspace/WorldDeepeningTab";
 import WorldHandbookEditor from "./components/workspace/WorldHandbookEditor";
 import WorldLayersTab from "./components/workspace/WorldLayersTab";
 import WorldOverviewTab from "./components/workspace/WorldOverviewTab";
+import WorldAIAssistantDialog from "./components/workspace/WorldAIAssistantDialog";
 import WorldStructureTab from "./components/workspace/WorldStructureTab";
 import {
   LAYERS,
@@ -81,6 +85,12 @@ export default function WorldWorkspace() {
   const [refineLevel, setRefineLevel] = useState<"light" | "deep">("light");
   const [activeTab, setActiveTab] = useState("structure");
   const [advancedStructureOpen, setAdvancedStructureOpen] = useState(false);
+  const [aiAssistantOpen, setAiAssistantOpen] = useState(false);
+  const [pendingAIModification, setPendingAIModification] = useState<{
+    structure: WorldStructuredData;
+    bindingSupport: WorldBindingSupport;
+  } | null>(null);
+  const [referenceMaterials, setReferenceMaterials] = useState<string>("");
 
   const worldDetailQuery = useQuery({
     queryKey: queryKeys.worlds.detail(id),
@@ -207,13 +217,34 @@ export default function WorldWorkspace() {
     },
   });
   const consistencyMutation = useMutation({
-    mutationFn: () => checkWorldConsistency(id, { provider: llm.provider, model: llm.model }),
+    mutationFn: (refMaterials?: string) => checkWorldConsistency(id, {
+      provider: llm.provider,
+      model: llm.model,
+      referenceMaterials: refMaterials,
+    }),
     onSuccess: invalidateWorld,
   });
   const patchIssueMutation = useMutation({
     mutationFn: (payload: { issueId: string; status: "open" | "resolved" | "ignored" }) =>
       patchWorldConsistencyIssue(id, payload.issueId, payload.status),
     onSuccess: invalidateWorld,
+  });
+  const fixIssueMutation = useMutation({
+    mutationFn: (payload: { issueId: string; customSuggestion?: string }) =>
+      fixWorldConsistencyIssue(id, payload.issueId, {
+        provider: llm.provider,
+        model: llm.model,
+        customSuggestion: payload.customSuggestion,
+      }),
+    onSuccess: async (response) => {
+      await invalidateWorld();
+      if (response.data?.summary) {
+        toast.success(response.data.summary);
+      }
+    },
+    onError: (error) => {
+      toast.error(error instanceof Error ? error.message : "修复失败，请重试。");
+    },
   });
   const saveStructureMutation = useMutation({
     mutationFn: (payload: Parameters<typeof updateWorldStructure>[1]) => updateWorldStructure(id, payload),
@@ -308,6 +339,15 @@ export default function WorldWorkspace() {
           <div className="flex flex-wrap items-center justify-end gap-2">
             <LLMSelector />
             <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setAiAssistantOpen(true)}
+              disabled={!structureQuery.data?.data?.structure}
+            >
+              <WandSparkles className="mr-1 h-4 w-4" />
+              AI 助手
+            </Button>
+            <Button
               variant="destructive"
               size="sm"
               onClick={handleDelete}
@@ -318,6 +358,18 @@ export default function WorldWorkspace() {
           </div>
         </CardHeader>
       </Card>
+
+      <WorldAIAssistantDialog
+        worldId={id}
+        currentStructure={structureQuery.data?.data?.structure ?? null}
+        currentBindingSupport={structureQuery.data?.data?.bindingSupport ?? null}
+        onApply={(modifiedStructure, modifiedBindingSupport) => {
+          setPendingAIModification({ structure: modifiedStructure, bindingSupport: modifiedBindingSupport });
+          setAiAssistantOpen(false);
+        }}
+        open={aiAssistantOpen}
+        onOpenChange={setAiAssistantOpen}
+      />
 
       <Tabs
         value={activeTab}
@@ -383,6 +435,8 @@ export default function WorldWorkspace() {
               onOpenLayers={() => setActiveTab("layers")}
               onOpenOverview={() => setActiveTab("overview")}
               onOpenAdvanced={() => setAdvancedStructureOpen(true)}
+              pendingAIModification={pendingAIModification}
+              onAIModificationApplied={() => setPendingAIModification(null)}
             />
           ) : (
             <>
@@ -498,8 +552,12 @@ export default function WorldWorkspace() {
             report={consistencyReport}
             issues={consistencyIssues}
             checkPending={consistencyMutation.isPending}
-            onCheck={() => consistencyMutation.mutate()}
+            onCheck={(refMaterials) => consistencyMutation.mutate(refMaterials)}
             onPatchIssue={(payload) => patchIssueMutation.mutate(payload)}
+            onFixIssue={(issueId, customSuggestion) => fixIssueMutation.mutate({ issueId, customSuggestion })}
+            fixPendingIssueId={fixIssueMutation.isPending ? fixIssueMutation.variables?.issueId : null}
+            referenceMaterials={referenceMaterials}
+            onReferenceMaterialsChange={setReferenceMaterials}
           />
         </TabsContent>
 

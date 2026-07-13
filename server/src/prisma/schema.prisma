@@ -1271,6 +1271,7 @@ model WorldConsistencyIssue {
   code        String
   message     String
   detail      String?
+  suggestion  String?
   source      String   @default("rule")
   status      String   @default("open")
   targetField String?

@@ -666,6 +666,7 @@ export default function NovelWorldManagerCard(props: NovelWorldManagerCardProps)
           isImporting={props.isImporting}
           isGenerating={props.isGenerating}
           isCreatingManual={props.isCreatingManual}
+          hasExistingWorld={Boolean(novelWorld)}
           onImport={props.onImport}
           onCreateManual={props.onCreateManual}
           onGenerate={props.onGenerate}

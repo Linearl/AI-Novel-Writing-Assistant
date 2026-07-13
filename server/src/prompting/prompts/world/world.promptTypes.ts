@@ -26,11 +26,30 @@ export interface NovelThemeWorldGenerationPromptInput {
   secondaryStoryModeName: string;
   storyMacroContext?: string;
   bookContractContext?: string;
+  importedMaterial?: string;
+}
+
+export interface NovelThemeWorldValidationPromptInput {
+  importedMaterial: string;
+  generatedWorldTitle: string;
+  generatedWorldSummary: string;
+  generatedWorldRules: string;
+  generatedWorldFactions: string;
+  generatedWorldForces: string;
+  generatedWorldLocations: string;
 }
 
 export interface WorldStructureSectionPromptInput {
   section: WorldStructureSectionKey;
   promptSource: string;
+  currentStructure: unknown;
+  currentBindingSupport: unknown;
+}
+
+export interface WorldStructureModifyPromptInput {
+  intent: string;
+  worldName: string;
+  worldType: string;
   currentStructure: unknown;
   currentBindingSupport: unknown;
 }
@@ -91,6 +110,7 @@ export interface WorldConsistencyPromptInput {
   axioms: string;
   coreSettingsJson: string;
   ragContext: string;
+  referenceMaterials?: string;
 }
 
 export interface WorldLayerGenerationPromptInput {

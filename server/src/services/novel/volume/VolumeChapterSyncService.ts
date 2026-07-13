@@ -29,6 +29,11 @@ import {
   persistActiveVolumeWorkspace,
   runVolumeWorkspaceTransaction,
 } from "./volumeWorkspacePersistence";
+import {
+  collectTitleChangedChapters,
+  regenerateChaptersForTitleChanges,
+  type TitleChangedChapter,
+} from "./ChapterTitleSyncRegeneration";
 
 export interface VolumeChapterSyncServiceDeps {
   ensureVolumeWorkspace: (novelId: string) => Promise<VolumePlanDocument>;
@@ -40,6 +45,7 @@ export interface VolumeChapterSyncServiceDeps {
   ) => Promise<{ versionId: string; version: number }>;
   emitVolumeUpdated: (novelId: string, reason: VolumeUpdateReason) => void;
   syncPayoffLedger: (novelId: string) => void;
+  onTitleChanged?: (chapters: TitleChangedChapter[]) => void;
 }
 
 export interface VolumeChapterSyncOptions {
@@ -192,6 +198,12 @@ export class VolumeChapterSyncService {
     }
     if (options.syncPayoffLedger ?? shouldSyncPayoffLedger) {
       this.deps.syncPayoffLedger(novelId);
+    }
+    if (this.deps.onTitleChanged) {
+      const titleChangedChapters = collectTitleChangedChapters(plan.preview, novelId, existingChapters);
+      if (titleChangedChapters.length > 0) {
+        this.deps.onTitleChanged(titleChangedChapters);
+      }
     }
     return plan.preview;
   }

@@ -59,6 +59,17 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1\v0.1-r2050-C1-global-review-feedback\REQ-2050-global-review-feedback.md](./1.task\B.todo\v0.1\v0.1-r2050-C1-global-review-feedback\REQ-2050-global-review-feedback.md) | REQ-2050 全局审校 + 跨章节问题回灌 | REQ-2050 全局审校 + 跨章节问题回灌 |
 | [1.task\B.todo\v0.1\v0.1-r2050-C1-global-review-feedback\tasks.md](./1.task\B.todo\v0.1\v0.1-r2050-C1-global-review-feedback\tasks.md) | REQ-2050 任务拆解 | REQ-2050 任务拆解 |
 
+## 1.task\B.todo\v0.1\v0.1-r2051-C2-character-tier-importance-level
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.1\v0.1-r2051-C2-character-tier-importance-level\decision_log.md](./1.task\B.todo\v0.1\v0.1-r2051-C2-character-tier-importance-level\decision_log.md) | REQ-2051 决策日志 | REQ-2051 决策日志 |
+| [1.task\B.todo\v0.1\v0.1-r2051-C2-character-tier-importance-level\design.md](./1.task\B.todo\v0.1\v0.1-r2051-C2-character-tier-importance-level\design.md) | REQ-2051 角色重要度分级技术设计文档 | REQ-2051 角色重要度分级技术设计文档 |
+| [1.task\B.todo\v0.1\v0.1-r2051-C2-character-tier-importance-level\README.md](./1.task\B.todo\v0.1\v0.1-r2051-C2-character-tier-importance-level\README.md) | --- | - |
+| [1.task\B.todo\v0.1\v0.1-r2051-C2-character-tier-importance-level\REQ-2051-character-tier-importance-level-original.md](./1.task\B.todo\v0.1\v0.1-r2051-C2-character-tier-importance-level\REQ-2051-character-tier-importance-level-original.md) | REQ-2051 角色重要度分级（CharacterTier）功能需求规格 | REQ-2051 角色重要度分级（CharacterTier）功能需求规格 |
+| [1.task\B.todo\v0.1\v0.1-r2051-C2-character-tier-importance-level\REQ-2051-character-tier-importance-level.md](./1.task\B.todo\v0.1\v0.1-r2051-C2-character-tier-importance-level\REQ-2051-character-tier-importance-level.md) | REQ-2051 角色重要度分级（CharacterTier）功能需求规格 | REQ-2051 角色重要度分级（CharacterTier）功能需求规格 |
+| [1.task\B.todo\v0.1\v0.1-r2051-C2-character-tier-importance-level\tasks.md](./1.task\B.todo\v0.1\v0.1-r2051-C2-character-tier-importance-level\tasks.md) | REQ-2051 角色重要度分级任务分解 | REQ-2051 角色重要度分级任务分解 |
+
 ## 1.task\B.todo\v0.1\v0.1-r3014-C2-batch-style-polish
 
 | 文件 | 标题 | 描述 |
@@ -328,6 +339,13 @@ description: "docs 目录索引（自动生成）"
 | --- | --- | --- |
 | [2.tech\architecture\llm-tool-calling-mechanism.md](./2.tech\architecture\llm-tool-calling-mechanism.md) | LLM 工具调用机制详解 — 从LLM响应到数据库写入的完整流程 | LLM 工具调用机制详解 — 从LLM响应到数据库写入的完整流程 |
 
+## 2.tech\guide
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [2.tech\guide\2026-07-12-material-paste-context-injection.md](./2.tech\guide\2026-07-12-material-paste-context-injection.md) | 在手动创建小说模式中，用户可以通过"粘贴素材"功能将一大段创作素材粘贴进去。AI会自动解析这段素材，并将解析出的信息（世界观、角色、大纲等）保存到小说的基本信息 | - |
+| [2.tech\guide\2026-07-12-novel-technique-ai-recommend.md](./2.tech\guide\2026-07-12-novel-technique-ai-recommend.md) | 在项目设定的文笔技法面板中添加了"AI帮我挑"功能，与写法引擎中的实现类似。该功能会根据小说的标题和描述，自动推荐适合的文笔技法。 | - |
+
 ## 3.analysis\diagnosis\01-active
 
 | 文件 | 标题 | 描述 |
@@ -412,6 +430,7 @@ description: "docs 目录索引（自动生成）"
 | [4.misc\issues\2026-06-29-skipcompleted-filters-unplanned-chapters.md](./4.misc\issues\2026-06-29-skipcompleted-filters-unplanned-chapters.md) | skipCompleted 过滤器与自动导演"待处理"定义冲突，导致无内容章节触发 pipeline 报错 | skipCompleted 过滤器与自动导演"待处理"定义冲突，导致无内容章节触发 pipeline 报错 |
 | [4.misc\issues\2026-06-30-json-soft-ref-fk-deficiency.md](./4.misc\issues\2026-06-30-json-soft-ref-fk-deficiency.md) | 上游项目 JSON 软引用 FK 缺失问题 — 供上游作者参考的 issue 分析 | 上游项目 JSON 软引用 FK 缺失问题 — 供上游作者参考的 issue 分析 |
 | [4.misc\issues\2026-07-03-novelcreate-bootstrap-polling-loop.md](./4.misc\issues\2026-07-03-novelcreate-bootstrap-polling-loop.md) | NovelCreate.tsx 中 useEffect + setSearchParams 形成无限循环，bootstrap 接口被以 ~1200 req/s 的速率疯狂调用 | NovelCreate.tsx 中 useEffect + setSearchParams 形成无限循环，bootstrap 接口被以 ~1200 req/s 的速率疯狂调用 |
+| [4.misc\issues\2026-07-12-material-import-failure-troubleshooting.md](./4.misc\issues\2026-07-12-material-import-failure-troubleshooting.md) | 用户在创建小说时使用"粘贴素材"功能，点击导入后提示导入失败。 | - |
 | [4.misc\issues\rag-worker-ui-toggle-ignored.md](./4.misc\issues\rag-worker-ui-toggle-ignored.md) | **状态**: 已修复 (local) | 待提交 upstream | - |
 | [4.misc\issues\sse-buffer-flush-missing-done-frame.md](./4.misc\issues\sse-buffer-flush-missing-done-frame.md) | **状态**: 已修复 | - |
 | [4.misc\issues\useNovelEditWorkflow-bootstrap-loop.md](./4.misc\issues\useNovelEditWorkflow-bootstrap-loop.md) | `useNovelEditWorkflow` hook 中的 `bootstrapMutation` useEffect 依赖 `workflowTaskId` | - |

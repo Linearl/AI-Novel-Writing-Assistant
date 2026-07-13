@@ -23,6 +23,8 @@ import {
 } from "./volumePlanUtils";
 import { generateVolumePlanDocument } from "./volumeGenerationOrchestrator";
 import { VolumeChapterSyncService } from "./VolumeChapterSyncService";
+import { regenerateChaptersForTitleChanges } from "./ChapterTitleSyncRegeneration";
+import { ChapterRuntimeCoordinator } from "../runtime/ChapterRuntimeCoordinator";
 import { getLegacyVolumeSource } from "./legacyVolumeSource";
 import {
   type VolumeDraftInput,
@@ -409,6 +411,18 @@ export class NovelVolumeService {
       ),
       emitVolumeUpdated: (targetNovelId, reason) => this.emitVolumeUpdated(targetNovelId, reason),
       syncPayoffLedger: (targetNovelId) => this.syncPayoffLedger(targetNovelId),
+      onTitleChanged: (chapters) => {
+        void regenerateChaptersForTitleChanges(chapters, {
+          runPipelineChapter: async (targetNovelId, chapterId) => {
+            const coordinator = new ChapterRuntimeCoordinator();
+            await coordinator.runPipelineChapter(targetNovelId, chapterId);
+          },
+        }).catch((err) => {
+          logger.warn("[NovelVolumeService] 章节标题变更后重新生成失败", {
+            error: err instanceof Error ? err.message : String(err),
+          });
+        });
+      },
     }).syncVolumeChaptersWithOptions(novelId, input, options);
   }
 

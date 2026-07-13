@@ -51,6 +51,7 @@ export const worldConsistencyIssuesSchema = z.array(z.object({
   message: z.string().trim().optional(),
   detail: z.string().trim().optional(),
   targetField: z.string().trim().optional(),
+  suggestion: z.string().trim().optional(),
 }).passthrough());
 
 export const worldLooseObjectSchema = z.record(z.string(), z.unknown());
@@ -81,4 +82,34 @@ export const worldImportExtractionSchema = z.object({
   economy: z.string().trim().optional().nullable(),
   factions: z.string().trim().optional().nullable(),
   selectedElements: z.string().trim().optional().nullable(),
+}).passthrough();
+
+export const worldGenerationValidationResultSchema = z.object({
+  overallScore: z.number().min(0).max(100),
+  matches: z.array(z.object({
+    aspect: z.string().trim(),
+    score: z.number().min(0).max(100),
+    detail: z.string().trim(),
+  })),
+  deviations: z.array(z.object({
+    aspect: z.string().trim(),
+    sourceMaterial: z.string().trim(),
+    generatedContent: z.string().trim(),
+    severity: z.enum(["minor", "moderate", "major"]),
+    suggestion: z.string().trim(),
+  })),
+  summary: z.string().trim(),
+});
+
+export const worldStructureModifyChangeSchema = z.object({
+  section: z.enum(["profile", "rules", "factions", "locations", "relations"]),
+  description: z.string().trim().min(1),
+  entityType: z.enum(["faction", "force", "location", "rule", "relation", "profile"]).optional(),
+  entityName: z.string().trim().optional(),
+}).passthrough();
+
+export const worldStructureModifyOutputSchema = z.object({
+  modifiedStructure: worldStructuredDataSchema,
+  changes: z.array(worldStructureModifyChangeSchema).min(1),
+  summary: z.string().trim().min(1),
 }).passthrough();

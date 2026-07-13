@@ -118,3 +118,17 @@ export async function recommendTechniquesForProfile(
   });
   return data.data;
 }
+
+// AI 推荐技法 for 小说
+export async function recommendTechniquesForNovel(
+  novelId: string,
+  novelTitle: string,
+  novelDescription?: string,
+): Promise<WritingTechniqueRecommendation[]> {
+  const { data } = await apiClient.post("/writing-techniques/recommend-for-novel", {
+    novelId,
+    novelTitle,
+    novelDescription,
+  });
+  return data.data;
+}

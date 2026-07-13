@@ -16,12 +16,15 @@ import {
 import {
   worldStructureBackfillPrompt,
   worldStructureSectionPrompt,
+  worldStructureModifyPrompt,
 } from "../../prompting/prompts/world/world.prompts";
 import { buildWorldVisualizationPayload } from "./worldVisualization";
 import { syncWorldEdgeTables } from "./worldEdgeTableSync";
 import {
   type StructureBackfillInput,
   type StructureGenerateInput,
+  type StructureModifyInput,
+  type StructureModifyOutput,
   type StructureUpdateInput,
   buildWorldStructurePromptSource,
   mergeWorldStructureSection,
@@ -240,6 +243,57 @@ export async function generateWorldStructure(
     section: input.section,
     structure: mergedStructure,
     bindingSupport: nextBindingSupport,
+  };
+}
+
+export async function modifyWorldStructure(
+  worldId: string,
+  input: StructureModifyInput,
+): Promise<StructureModifyOutput> {
+  const world = await getRequiredWorld(worldId);
+
+  const stored = parseWorldStructurePayload(world.structureJson, world.bindingSupportJson);
+  const currentStructure = stored.hasStructuredData
+    ? stored.structure
+    : buildWorldStructureSeedFromSource(world);
+  const currentBindingSupport = input.bindingSupport
+    ? normalizeWorldBindingSupport(input.bindingSupport, stored.bindingSupport)
+    : buildWorldBindingSupport(currentStructure);
+
+  const result = await runStructuredPrompt({
+    asset: worldStructureModifyPrompt,
+    promptInput: {
+      intent: input.intent,
+      worldName: world.name ?? "",
+      worldType: world.worldType ?? "custom",
+      currentStructure,
+      currentBindingSupport,
+    },
+    options: {
+      provider: input.provider ?? "deepseek",
+      model: input.model,
+      temperature: 0.3,
+    },
+  });
+
+  const output = result.output as {
+    modifiedStructure: Record<string, unknown>;
+    changes?: Array<{ section: string; description: string; entityType?: string; entityName?: string }>;
+    summary?: string;
+  };
+  const modifiedStructure = normalizeWorldStructuredData(output.modifiedStructure, currentStructure);
+  modifiedStructure.metadata = {
+    ...modifiedStructure.metadata,
+    schemaVersion: WORLD_STRUCTURE_SCHEMA_VERSION,
+  };
+  const modifiedBindingSupport = buildWorldBindingSupport(modifiedStructure);
+
+  return {
+    worldId,
+    modifiedStructure,
+    bindingSupport: modifiedBindingSupport,
+    changes: output.changes ?? [],
+    summary: output.summary ?? "修改已完成",
   };
 }
 

@@ -350,6 +350,7 @@ export async function checkWorldConsistency(
   payload?: {
     provider?: LLMProvider;
     model?: string;
+    referenceMaterials?: string;
   },
 ) {
   const { data } = await apiClient.post<ApiResponse<WorldConsistencyReport>>(
@@ -368,6 +369,25 @@ export async function patchWorldConsistencyIssue(
     `/worlds/${id}/consistency/issues/${issueId}`,
     { status },
   );
+  return data;
+}
+
+export async function fixWorldConsistencyIssue(
+  id: string,
+  issueId: string,
+  options?: {
+    provider?: LLMProvider;
+    model?: string;
+    customSuggestion?: string;
+  },
+) {
+  const { data } = await apiClient.post<ApiResponse<{
+    worldId: string;
+    issueId: string;
+    fixed: boolean;
+    changes: Array<{ section: string; description: string }>;
+    summary: string;
+  }>>(`/worlds/${id}/consistency/fix`, { issueId, ...options });
   return data;
 }
 
@@ -488,5 +508,37 @@ export async function importWorldData(payload: {
   model?: string;
 }) {
   const { data } = await apiClient.post<ApiResponse<World>>("/worlds/import", payload);
+  return data;
+}
+
+export interface WorldStructureModifyChange {
+  section: string;
+  description: string;
+  entityType?: string;
+  entityName?: string;
+}
+
+export interface WorldStructureModifyResult {
+  worldId: string;
+  modifiedStructure: WorldStructuredData;
+  bindingSupport: WorldBindingSupport;
+  changes: WorldStructureModifyChange[];
+  summary: string;
+}
+
+export async function modifyWorldStructure(
+  id: string,
+  payload: {
+    intent: string;
+    structure: WorldStructuredData;
+    bindingSupport?: WorldBindingSupport;
+    provider?: LLMProvider;
+    model?: string;
+  },
+) {
+  const { data } = await apiClient.post<ApiResponse<WorldStructureModifyResult>>(
+    `/worlds/${id}/structure/modify`,
+    payload,
+  );
   return data;
 }

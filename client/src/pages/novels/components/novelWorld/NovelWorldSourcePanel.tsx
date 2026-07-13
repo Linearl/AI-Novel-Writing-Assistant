@@ -19,6 +19,7 @@ interface NovelWorldSourcePanelProps {
   isImporting: boolean;
   isGenerating: boolean;
   isCreatingManual: boolean;
+  hasExistingWorld: boolean;
   onImport: (payload: NovelWorldImportInput) => void;
   onCreateManual: (payload?: NovelWorldManualInput) => void;
   onGenerate: (payload: NovelWorldGenerateInput) => void;
@@ -146,9 +147,18 @@ export default function NovelWorldSourcePanel(props: NovelWorldSourcePanelProps)
 
       {worldSetupMode === "generate" ? (
         <div className="rounded-lg border border-border/70 bg-background p-4">
-          <div className="text-sm font-medium text-foreground">根据本书生成世界</div>
-          <div className="mt-1 text-sm leading-6 text-muted-foreground">
-            系统会根据标题、简介、卖点、读者承诺和类型信息生成一套本书世界。适合新书起步时快速形成可用舞台。
+          <div className="flex items-start justify-between">
+            <div>
+              <div className="text-sm font-medium text-foreground">根据本书生成世界</div>
+              <div className="mt-1 text-sm leading-6 text-muted-foreground">
+                系统会根据标题、简介、卖点、读者承诺和类型信息生成一套本书世界。适合新书起步时快速形成可用舞台。
+              </div>
+            </div>
+            {props.hasExistingWorld && (
+              <span className="rounded-md bg-green-50 px-2 py-1 text-xs text-green-600">
+                已生成
+              </span>
+            )}
           </div>
           <div className="mt-3 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
             <label className="flex items-start gap-3 text-sm text-muted-foreground">
@@ -167,7 +177,7 @@ export default function NovelWorldSourcePanel(props: NovelWorldSourcePanelProps)
               disabled={props.isGenerating || props.isCreatingManual}
             >
               <Sparkles className="size-4" />
-              {props.isGenerating ? "生成中..." : "生成本书世界"}
+              {props.isGenerating ? "生成中..." : (props.hasExistingWorld ? "重新生成本书世界" : "生成本书世界")}
             </Button>
           </div>
         </div>

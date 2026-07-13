@@ -5,6 +5,7 @@ import { runStructuredPrompt } from "../../prompting/core/promptRunner";
 import {
   worldConsistencyPrompt,
   worldDeepeningQuestionsPrompt,
+  worldStructureModifyPrompt,
 } from "../../prompting/prompts/world/world.prompts";
 import { buildConsistencySummary, localizeConsistencyIssue } from "./worldConsistency";
 import {
@@ -16,6 +17,14 @@ import {
   nowISO,
 } from "./worldServiceShared";
 import { ragServices } from "../rag";
+import {
+  applyStructuredWorldToLegacyFields,
+  buildWorldBindingSupport,
+  normalizeWorldStructuredData,
+  parseWorldStructurePayload,
+  WORLD_STRUCTURE_SCHEMA_VERSION,
+} from "./worldStructure";
+import { syncWorldEdgeTables } from "./worldEdgeTableSync";
 
 interface WorldImprovementCallbacks {
   createSnapshot: (worldId: string, label?: string) => Promise<unknown>;
@@ -244,7 +253,7 @@ export async function answerWorldDeepeningQuestions(
 
 export async function checkWorldConsistency(
   worldId: string,
-  options: { provider?: LLMProvider; model?: string } = {},
+  options: { provider?: LLMProvider; model?: string; referenceMaterials?: string } = {},
   callbacks: WorldImprovementCallbacks,
 ): Promise<WorldConsistencyReport> {
   const world = await getRequiredWorld(worldId);
@@ -339,6 +348,7 @@ export async function checkWorldConsistency(
           factions: world.factions,
         }),
         ragContext,
+        referenceMaterials: options.referenceMaterials,
       },
       options: {
         provider: options.provider ?? "deepseek",
@@ -389,6 +399,7 @@ export async function checkWorldConsistency(
         code: item.code,
         message: item.message,
         detail: item.detail ?? null,
+        suggestion: (item as any).suggestion ?? null,
         source: item.source,
         status: item.severity === "pass" ? "resolved" : "open",
         targetField: item.targetField ?? null,
@@ -454,4 +465,113 @@ export async function updateWorldConsistencyIssueStatus(
     throw new Error("Issue does not belong to world.");
   }
   return updated;
+}
+
+export async function fixConsistencyIssue(
+  worldId: string,
+  issueId: string,
+  options: { provider?: LLMProvider; model?: string; customSuggestion?: string } = {},
+  callbacks: WorldImprovementCallbacks,
+) {
+  const world = await getRequiredWorld(worldId);
+  const issue = await prisma.worldConsistencyIssue.findUnique({ where: { id: issueId } });
+
+  if (!issue) {
+    throw new Error("Issue not found.");
+  }
+  if (issue.worldId !== worldId) {
+    throw new Error("Issue does not belong to world.");
+  }
+  const issueWithSuggestion = issue as typeof issue & { suggestion?: string };
+  if (!issueWithSuggestion.suggestion) {
+    throw new Error("Issue has no suggestion for fix.");
+  }
+
+  const stored = parseWorldStructurePayload(world.structureJson, world.bindingSupportJson);
+  const currentStructure = stored.hasStructuredData ? stored.structure : null;
+
+  if (!currentStructure) {
+    throw new Error("World structure not found. Please generate structure first.");
+  }
+
+  const fixSuggestion = options.customSuggestion || issueWithSuggestion.suggestion;
+
+  const result = await runStructuredPrompt({
+    asset: worldStructureModifyPrompt,
+    promptInput: {
+      intent: options.customSuggestion
+        ? `修复问题「${issue.message}」：${options.customSuggestion}`
+        : `修复问题「${issue.message}」：${issueWithSuggestion.suggestion}`,
+      worldName: world.name ?? "",
+      worldType: world.worldType ?? "custom",
+      currentStructure,
+      currentBindingSupport: buildWorldBindingSupport(currentStructure),
+    },
+    options: {
+      provider: options.provider ?? "deepseek",
+      model: options.model,
+      temperature: 0.3,
+    },
+  });
+
+  const output = result.output as {
+    modifiedStructure: Record<string, unknown>;
+    changes?: Array<{ section: string; description: string; entityType?: string; entityName?: string }>;
+    summary?: string;
+  };
+
+  const modifiedStructure = normalizeWorldStructuredData(output.modifiedStructure, currentStructure);
+  const modifiedBindingSupport = buildWorldBindingSupport(modifiedStructure);
+
+  const structuredFields = applyStructuredWorldToLegacyFields(modifiedStructure, {
+    id: world.id,
+    name: world.name,
+    worldType: world.worldType,
+    description: world.description,
+    overviewSummary: world.overviewSummary,
+    axioms: world.axioms,
+    background: world.background,
+    geography: world.geography,
+    cultures: world.cultures,
+    magicSystem: world.magicSystem,
+    politics: world.politics,
+    races: world.races,
+    religions: world.religions,
+    technology: world.technology,
+    conflicts: world.conflicts,
+    history: world.history,
+    economy: world.economy,
+    factions: world.factions,
+    selectedElements: world.selectedElements,
+    structureJson: null,
+    bindingSupportJson: null,
+    structureSchemaVersion: WORLD_STRUCTURE_SCHEMA_VERSION,
+  }, modifiedBindingSupport);
+
+  await prisma.$transaction(async (tx) => {
+    await tx.world.update({
+      where: { id: worldId },
+      data: {
+        structureJson: structuredFields.structureJson as string,
+        bindingSupportJson: structuredFields.bindingSupportJson as string,
+        structureSchemaVersion: WORLD_STRUCTURE_SCHEMA_VERSION,
+      },
+    });
+    await syncWorldEdgeTables(worldId, modifiedStructure, tx);
+    await tx.worldConsistencyIssue.update({
+      where: { id: issueId },
+      data: { status: "resolved" },
+    });
+  });
+
+  await callbacks.createSnapshot(worldId, `fix-consistency-${issue.code}`);
+  callbacks.queueWorldUpsert(worldId);
+
+  return {
+    worldId,
+    issueId,
+    fixed: true,
+    changes: output.changes ?? [],
+    summary: output.summary ?? "已应用修复",
+  };
 }

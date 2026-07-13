@@ -296,4 +296,50 @@ router.post("/recommend-for-profile", validate({
   } catch (err) { next(err); }
 });
 
+// AI 推荐技法 for 小说
+router.post("/recommend-for-novel", validate({
+  body: z.object({
+    novelId: z.string().min(1),
+    novelTitle: z.string().min(1),
+    novelDescription: z.string().optional(),
+  }),
+}), async (req, res, next) => {
+  try {
+    const { novelTitle, novelDescription } = req.body as {
+      novelId: string;
+      novelTitle: string;
+      novelDescription?: string;
+    };
+
+    // 获取所有技法列表
+    const techniques = await service.listTechniques({ enabled: true });
+    const techniqueList = techniques.map((t) => ({
+      key: t.key,
+      name: t.name,
+      description: t.description,
+      category: t.category ?? "",
+    }));
+
+    if (techniqueList.length === 0) {
+      res.json({ success: true, data: [] });
+      return;
+    }
+
+    const result = await runStructuredPrompt({
+      asset: techniqueRecommendPrompt,
+      promptInput: {
+        profileName: novelTitle,
+        profileDescription: novelDescription,
+        techniques: techniqueList,
+      },
+      options: {
+        provider: "deepseek",
+        temperature: 0.5,
+      },
+    });
+
+    res.json({ success: true, data: result.output.recommendations });
+  } catch (err) { next(err); }
+});
+
 export default router;

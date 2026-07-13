@@ -56,6 +56,8 @@ export default function WorldHandbookEditor(props: {
   onOpenLayers: () => void;
   onOpenOverview: () => void;
   onOpenAdvanced: () => void;
+  pendingAIModification?: { structure: WorldStructuredData; bindingSupport: WorldBindingSupport } | null;
+  onAIModificationApplied?: () => void;
 }) {
   const {
     initialPayload,
@@ -69,6 +71,8 @@ export default function WorldHandbookEditor(props: {
     onOpenLayers,
     onOpenOverview,
     onOpenAdvanced,
+    pendingAIModification,
+    onAIModificationApplied,
   } = props;
   const [draftStructure, setDraftStructure] = useState<WorldStructuredData | null>(initialPayload?.structure ?? null);
   const [draftBindingSupport, setDraftBindingSupport] = useState<WorldBindingSupport | null>(
@@ -84,6 +88,14 @@ export default function WorldHandbookEditor(props: {
     setDraftStructure(initialPayload.structure);
     setDraftBindingSupport(initialPayload.bindingSupport);
   }, [initialPayload]);
+
+  useEffect(() => {
+    if (pendingAIModification) {
+      setDraftStructure(pendingAIModification.structure);
+      setDraftBindingSupport(pendingAIModification.bindingSupport);
+      onAIModificationApplied?.();
+    }
+  }, [pendingAIModification, onAIModificationApplied]);
 
   if (!draftStructure || !draftBindingSupport) {
     return (

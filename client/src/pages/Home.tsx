@@ -27,8 +27,7 @@ import { resolveWorkflowContinuationFeedback } from "@/lib/novelWorkflowContinua
 
 const HOME_NOVEL_FETCH_LIMIT = 12;
 const HOME_RECENT_LIMIT = 6;
-const DIRECTOR_CREATE_LINK = "/novels/create?mode=director";
-const MANUAL_CREATE_LINK = "/novels/create";
+const CREATE_LINK = "/novels/create";
 
 type HomeNovelItem = NovelListResponse["items"][number];
 
@@ -352,10 +351,7 @@ export default function Home() {
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <Button asChild size="lg">
-              <Link to={DIRECTOR_CREATE_LINK}>AI 自动导演开书</Link>
-            </Button>
-            <Button asChild size="lg" variant="outline">
-              <Link to={MANUAL_CREATE_LINK}>手动创建小说</Link>
+              <Link to={CREATE_LINK}>创建小说</Link>
             </Button>
             <Button asChild size="lg" variant="outline">
               <Link to="/help">新手上路</Link>
@@ -453,10 +449,7 @@ export default function Home() {
               </div>
               <div className="flex flex-wrap gap-2">
                 <Button asChild>
-                  <Link to={DIRECTOR_CREATE_LINK}>AI 自动导演开书</Link>
-                </Button>
-                <Button asChild variant="outline">
-                  <Link to={MANUAL_CREATE_LINK}>手动创建小说</Link>
+                  <Link to={CREATE_LINK}>创建小说</Link>
                 </Button>
                 <Button asChild variant="outline">
                   <Link to="/help">新手上路</Link>
@@ -474,10 +467,7 @@ export default function Home() {
         </CardHeader>
         <CardContent className="flex flex-wrap gap-2">
           <Button asChild>
-            <Link to={DIRECTOR_CREATE_LINK}>AI 自动导演开书</Link>
-          </Button>
-          <Button asChild variant="outline">
-            <Link to={MANUAL_CREATE_LINK}>手动创建小说</Link>
+            <Link to={CREATE_LINK}>创建小说</Link>
           </Button>
           <Button asChild variant="outline">
             <Link to="/book-analysis">新建拆书</Link>

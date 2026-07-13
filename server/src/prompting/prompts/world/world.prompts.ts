@@ -34,4 +34,5 @@ export {
   novelThemeWorldGenerationPrompt,
   worldStructureSectionPrompt,
   worldAxiomSuggestionPrompt,
+  worldStructureModifyPrompt,
 } from "./world.prompts.generation";

@@ -272,6 +272,7 @@ export function registerNovelBaseRoutes(input: RegisterNovelBaseRoutesInput): vo
           message: "更新小说成功。",
         } satisfies ApiResponse<typeof data>);
       } catch (error) {
+        console.error(`[ERROR] PUT /novels/${req.params.id} failed:`, error);
         next(error);
       }
     },

@@ -106,12 +106,12 @@ export default function ModelRouteFields({
         <label className="flex items-center gap-2 text-xs text-muted-foreground">
           <input
             type="checkbox"
-            checked={(draft.contextWindow ?? 0) <= 262144}
+            checked={draft.contextWindow != null && draft.contextWindow <= 262144}
             onChange={(event) => {
               onPatch({ contextWindow: event.target.checked ? 256000 : null });
             }}
           />
-          <span>使用 256K 上下文窗口（默认 1M）</span>
+          <span>限制为 256K 上下文窗口（默认 1M）</span>
         </label>
       </div>
 

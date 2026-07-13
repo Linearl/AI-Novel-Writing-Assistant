@@ -4,6 +4,15 @@ import { z } from "zod";
 import { llmProviderSchema } from "../../../../llm/providerSchema";
 import { validate } from "../../../../middleware/validate";
 import { StoryMacroPlanService } from "../../../../services/novel/storyMacro/StoryMacroPlanService";
+import { BookContractService } from "../../../../services/novel/BookContractService";
+import { runStructuredPrompt } from "../../../../prompting/core/promptRunner";
+import {
+  buildDirectorBookContractContextBlocks,
+  directorBookContractPrompt,
+} from "../../../../prompting/prompts/novel/directorPlanning.prompts";
+import { normalizeBookContract } from "../../../../services/novel/director/runtime/novelDirectorHelpers";
+import { prisma } from "../../../../db/prisma";
+import { logger } from "../../../../services/logging/LoggerService";
 
 const llmGenerateSchema = z.object({
   provider: llmProviderSchema.optional(),
@@ -124,6 +133,16 @@ export function registerNovelStoryMacroRoutes(input: RegisterNovelStoryMacroRout
         const { id } = req.params as z.infer<typeof idParamsSchema>;
         const body = req.body as z.infer<typeof storyMacroDecomposeSchema>;
         const data = await storyMacroService.decompose(id, body.storyInput, body);
+
+        // Auto-generate book contract if missing
+        const contractService = new BookContractService();
+        const existingContract = await contractService.getByNovelId(id);
+        if (!existingContract) {
+          await generateBookContractFromDecompose(id, data, body).catch((err) => {
+            logger.warn("[StoryMacroRoutes] decompose 后自动生成 Book Contract 失败（非阻断）", { novelId: id, error: err });
+          });
+        }
+
         res.status(200).json({
           success: true,
           data,
@@ -220,4 +239,73 @@ export function registerNovelStoryMacroRoutes(input: RegisterNovelStoryMacroRout
       }
     },
   );
+}
+
+async function generateBookContractFromDecompose(
+  novelId: string,
+  storyMacroPlan: Awaited<ReturnType<StoryMacroPlanService["decompose"]>>,
+  llmOptions: { provider?: string; model?: string; temperature?: number },
+): Promise<void> {
+  const novel = await prisma.novel.findUnique({
+    where: { id: novelId },
+    select: { title: true, description: true, estimatedChapterCount: true },
+  });
+  if (!novel) return;
+
+  const storyInput = storyMacroPlan.storyInput ?? "";
+  const targetChapterCount = novel.estimatedChapterCount ?? 30;
+
+  // Construct minimal DirectorCandidate from story macro plan decomposition
+  const decomposition = storyMacroPlan.decomposition;
+  const candidate = {
+    id: "manual-decompose",
+    workingTitle: novel.title ?? "",
+    logline: storyInput,
+    positioning: decomposition?.selling_point ?? storyInput,
+    sellingPoint: decomposition?.selling_point ?? storyInput,
+    coreConflict: decomposition?.core_conflict ?? storyInput,
+    protagonistPath: decomposition?.growth_path ?? "",
+    endingDirection: decomposition?.ending_flavor ?? "",
+    hookStrategy: decomposition?.main_hook ?? "",
+    progressionLoop: decomposition?.progression_loop ?? "",
+    whyItFits: "",
+    toneKeywords: [] as string[],
+    targetChapterCount,
+  };
+
+  const context = {
+    title: novel.title ?? undefined,
+    description: novel.description ?? undefined,
+    estimatedChapterCount: novel.estimatedChapterCount ?? undefined,
+  };
+
+  const requestedTemperature = llmOptions.temperature ?? 0.4;
+  const temperature = Math.min(requestedTemperature, 0.4);
+
+  const parsed = await runStructuredPrompt({
+    asset: directorBookContractPrompt,
+    promptInput: {
+      idea: storyInput,
+      context,
+      candidate,
+      storyMacroPlan,
+      targetChapterCount,
+    },
+    contextBlocks: buildDirectorBookContractContextBlocks({
+      idea: storyInput,
+      context,
+      candidate,
+      storyMacroPlan,
+      targetChapterCount,
+    }),
+    options: {
+      provider: llmOptions.provider as any,
+      model: llmOptions.model,
+      temperature,
+    },
+  });
+
+  const draft = normalizeBookContract(parsed.output);
+  const contractService = new BookContractService();
+  await contractService.upsert(novelId, draft);
 }
