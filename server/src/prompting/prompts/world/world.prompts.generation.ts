@@ -13,6 +13,7 @@ import {
   type WorldLayerGenerationPromptInput,
   type WorldLayerLocalizationPromptInput,
   type NovelThemeWorldGenerationPromptInput,
+  type NovelThemeWorldValidationPromptInput,
   type WorldStructureBackfillPromptInput,
   type WorldStructureSectionPromptInput,
 } from "./world.promptTypes";
@@ -21,6 +22,7 @@ import {
   worldImportExtractionSchema,
   worldLooseObjectSchema,
   novelThemeWorldGenerationSchema,
+  worldGenerationValidationResultSchema,
 } from "./world.promptSchemas";
 import { worldStructuredDataSchema, worldStructureSectionOutputSchema } from "../../../services/world/worldSchemas";
 import {
@@ -416,9 +418,10 @@ export const novelThemeWorldGenerationPrompt: PromptAsset<
       `主类型：${input.genreName || "未选择"}`,
       `主故事模式：${input.primaryStoryModeName || "未选择"}`,
       `副故事模式：${input.secondaryStoryModeName || "未选择"}`,
+      input.importedMaterial?.trim() ? `用户导入的原始素材：\n${input.importedMaterial.trim()}` : "",
       input.storyMacroContext?.trim() ? `故事宏观规划：\n${input.storyMacroContext.trim()}` : "",
       input.bookContractContext?.trim() ? `书级创作约定：\n${input.bookContractContext.trim()}` : "",
-    ].join("\n")),
+    ].filter(Boolean).join("\n")),
   ],
 };
 
@@ -542,6 +545,65 @@ export const worldAxiomSuggestionPrompt: PromptAsset<
       `世界摘要=${input.description}`,
       "蓝图约束：",
       input.blueprintPromptBlock,
+    ].join("\n")),
+  ],
+};
+
+export const novelThemeWorldValidationPrompt: PromptAsset<
+  NovelThemeWorldValidationPromptInput,
+  z.infer<typeof worldGenerationValidationResultSchema>
+> = {
+  id: "world.novel-theme.validate",
+  version: "v1",
+  taskType: "review",
+  mode: "structured",
+  language: "zh",
+  contextPolicy: {
+    maxTokensBudget: 0,
+  },
+  outputSchema: worldGenerationValidationResultSchema,
+  render: (input) => [
+    new SystemMessage([
+      "你是世界设定验证专家。你的任务是将生成的世界与用户提供的原始素材进行对比检查。",
+      "",
+      "只输出一个合法 JSON，不要输出 Markdown、解释或额外文本。",
+      "输出字段必须包括：overallScore（0-100分）、matches（匹配点列表）、deviations（偏差列表）、summary（总体评价）。",
+      "",
+      "评分标准：",
+      "1. 90-100分：完美匹配原始素材，几乎没有偏差",
+      "2. 70-89分：基本匹配，存在小的偏差但不影响核心设定",
+      "3. 50-69分：部分匹配，存在明显偏差需要调整",
+      "4. 0-49分：严重偏差，与原始素材冲突较大",
+      "",
+      "检查维度：",
+      "1. 世界观类型（如：魔法/科幻/现实/都市等）是否一致",
+      "2. 核心设定（力量体系、社会结构、经济体系等）是否匹配",
+      "3. 主要势力、阵营、组织是否与素材描述相符",
+      "4. 地点、舞台是否与素材中的场景描述对应",
+      "5. 核心冲突、矛盾是否与素材的故事张力一致",
+      "",
+      "偏差严重度：",
+      "- minor：小的细节差异，不影响整体（如名称略有不同）",
+      "- moderate：明显的偏差，需要调整（如某个势力的定位不符）",
+      "- major：严重的冲突，与素材核心设定矛盾（如世界观类型错误）",
+      "",
+      "纠偏建议要求：",
+      "1. 每个偏差都必须给出具体的修改建议",
+      "2. 建议应该具体、可执行（如「将XX势力从正派改为中立」）",
+      "3. 优先纠正major偏差，其次是moderate",
+      "4. 如果original material提供的是模糊描述，生成世界进行合理补全不算偏差",
+    ].join("\n")),
+    new HumanMessage([
+      "【用户导入的原始素材】",
+      input.importedMaterial,
+      "",
+      "【生成的世界设定】",
+      `标题：${input.generatedWorldTitle}`,
+      `概述：${input.generatedWorldSummary}`,
+      `核心规则：${input.generatedWorldRules}`,
+      `势力阵营：${input.generatedWorldFactions}`,
+      `主要势力：${input.generatedWorldForces}`,
+      `故事地点：${input.generatedWorldLocations}`,
     ].join("\n")),
   ],
 };
