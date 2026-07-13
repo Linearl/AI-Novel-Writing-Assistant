@@ -705,6 +705,10 @@ export class NovelWorldInstanceService {
     return this.syncService.getSyncDiff(novelId);
   }
 
+  async getNovelWorldSyncDiff(novelId: string): Promise<NovelWorldSyncDiff> {
+    return this.syncService.getSyncDiff(novelId);
+  }
+
   async syncWithLibrary(novelId: string, input: NovelWorldSyncInput): Promise<NovelWorldSyncDiff> {
     return this.syncService.syncWithLibrary(novelId, input);
   }

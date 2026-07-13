@@ -234,19 +234,10 @@ export class NovelWorldSyncService {
     const novelStructureJson = safeJsonParse<Record<string, unknown> | null>(novelWorld.structuredDataJson, null);
     const compareResult = compareStructures(worldStructureJson, novelStructureJson);
 
-    // 调试日志
-    console.log("[getSyncDiff] NovelWorld ID:", novelWorld.id);
-    console.log("[getSyncDiff] sourceWorldId:", novelWorld.sourceWorldId);
-    console.log("[getSyncDiff] worldStructureJson length:", worldStructureJson ? JSON.stringify(worldStructureJson).length : 0);
-    console.log("[getSyncDiff] novelStructureJson length:", novelStructureJson ? JSON.stringify(novelStructureJson).length : 0);
-    console.log("[getSyncDiff] compareResult:", compareResult);
-
     // 转换为sync diff格式
     const differences = compareResult.hasDifferences
       ? convertToSyncDifferences(compareResult, sourceWorld.name, novelWorld.title ?? "本书世界")
       : [];
-
-    console.log("[getSyncDiff] differences count:", differences.length);
 
     await this.persistPendingChanges(novelWorld.id, buildSyncPendingChangesPayload(differences));
     return {
