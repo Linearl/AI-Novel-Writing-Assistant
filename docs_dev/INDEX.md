@@ -79,17 +79,6 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1\v0.1-r3014-C2-batch-style-polish\REQ-3014-batch-style-polish.md](./1.task\B.todo\v0.1\v0.1-r3014-C2-batch-style-polish\REQ-3014-batch-style-polish.md) | **需求编号**：3014 | - |
 | [1.task\B.todo\v0.1\v0.1-r3014-C2-batch-style-polish\tasks.md](./1.task\B.todo\v0.1\v0.1-r3014-C2-batch-style-polish\tasks.md) | | 阶段 | 任务数 | 预计工作量 | | - |
 
-## 1.task\B.todo\v0.1\v0.1-r7040-C1-world-sync-manual-diff
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r7040-C1-world-sync-manual-diff\decision_log.md](./1.task\B.todo\v0.1\v0.1-r7040-C1-world-sync-manual-diff\decision_log.md) | **问题**：自动对比失效，无法检测到World和NovelWorld的差异 | - |
-| [1.task\B.todo\v0.1\v0.1-r7040-C1-world-sync-manual-diff\design.md](./1.task\B.todo\v0.1\v0.1-r7040-C1-world-sync-manual-diff\design.md) | 1. **自动对比失效**：syncDiffQuery的enabled条件可能不满足，导致syncDiff API没有被调用 | - |
-| [1.task\B.todo\v0.1\v0.1-r7040-C1-world-sync-manual-diff\README.md](./1.task\B.todo\v0.1\v0.1-r7040-C1-world-sync-manual-diff\README.md) | 世界工作台修改世界库后，小说世界的同步功能存在以下问题： | - |
-| [1.task\B.todo\v0.1\v0.1-r7040-C1-world-sync-manual-diff\REQ-7040-world-sync-manual-diff-original.md](./1.task\B.todo\v0.1\v0.1-r7040-C1-world-sync-manual-diff\REQ-7040-world-sync-manual-diff-original.md) | --- | - |
-| [1.task\B.todo\v0.1\v0.1-r7040-C1-world-sync-manual-diff\REQ-7040-world-sync-manual-diff.md](./1.task\B.todo\v0.1\v0.1-r7040-C1-world-sync-manual-diff\REQ-7040-world-sync-manual-diff.md) | --- | - |
-| [1.task\B.todo\v0.1\v0.1-r7040-C1-world-sync-manual-diff\tasks.md](./1.task\B.todo\v0.1\v0.1-r7040-C1-world-sync-manual-diff\tasks.md) | - [x] 创建共享对比函数compareStructures | - |
-
 ## 1.task\B.todo\v0.2
 
 | 文件 | 标题 | 描述 |

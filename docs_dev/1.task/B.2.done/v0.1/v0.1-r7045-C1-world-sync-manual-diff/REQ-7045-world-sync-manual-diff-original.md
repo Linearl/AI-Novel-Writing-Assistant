@@ -1,5 +1,5 @@
 ---
-reqId: 7040
+reqId: 7045
 title: 世界同步手动对比功能
 status: done
 version: v0.1
@@ -8,7 +8,7 @@ created: 2026-07-13
 updated: 2026-07-13
 ---
 
-# REQ-7040 世界同步手动对比功能
+# REQ-7045 世界同步手动对比功能
 
 ## 需求描述
 

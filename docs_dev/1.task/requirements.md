@@ -148,6 +148,7 @@ description: "需求任务总清单（SSOT）"
 | 7042 | 错误分类器 | p1 | 📋 待办 | 2026-07-10 架构诊断报告 + v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.todo/v0.2-r7042-S1-error-classifier/README.md` |  |
 | 7043 | 网络状态监控 | p2 | 📋 待办 | 2026-07-10 架构诊断报告 + v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.todo/v0.2-r7043-S2-network-monitor/README.md` |  |
 | 7044 | checkpoint management | p2 | 📋 待办 | v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.todo/v0.2-r7044-S2-checkpoint-management/README.md` |  |
+| 7045 | World Sync Manual Diff | p8 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r7045-C1-world-sync-manual-diff/README.md` |  |
 | 7046 | batch task queue | p2 | 📋 待办 | v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.todo/v0.2-r7046-C1-batch-task-queue/README.md` |  |
 | 7047 | progress visualization | p2 | 📋 待办 | v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.todo/v0.2-r7047-S1-progress-visualization/README.md` |  |
 | 7048 | 实时质量检查器 | p1 | 📋 待办 | v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.todo/v0.2-r7048-S1-realtime-quality-check/README.md` |  |
@@ -307,6 +308,7 @@ description: "需求任务总清单（SSOT）"
 | 7037 | QUA-022: directorRuntime.ts 渐进拆分（projection/worker/automation 3 域 + barrel index.ts） | `B.2.done/v0.1-r7037-M2-director-runtime-split/README.md` |
 | 7038 | QUA-039: CharacterPreparationService persistCharacterCastOptions 提取辅助函数降嵌套 | `B.2.done/v0.1-r7038-S2-character-prep-extract-helper/README.md` |
 | 7039 | 散点小修复：ARCH-005/009/023/024 + STA-025 + PERF-003 + PERF-007/C + COMPAT-004 | `B.2.done/v0.1-r7039-S2-scattered-small-fixes/README.md` |
+| 7045 | World Sync Manual Diff | `B.2.done/v0.1-r7045-C1-world-sync-manual-diff/README.md` |
 | 7059 | 卷规划服务层拆分重构 | `B.2.done/v0.1-r7059-C2-volume-service-refactor/README.md` |
 | 7060 | 零散客户端与路由修复 | `B.2.done/v0.1-r7060-S4-scattered-client-fixes/README.md` |
 
