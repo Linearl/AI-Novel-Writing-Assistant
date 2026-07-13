@@ -13,13 +13,14 @@ import {
   saveProviderImageModel,
 } from "../../../services/settings/ProviderImageSettingsService";
 import { secretStore } from "../../../services/settings/secretStore";
-
-const MAX_PROVIDER_CONCURRENCY_LIMIT = 100;
-const MAX_PROVIDER_REQUEST_INTERVAL_MS = 3_600_000;
-
-const providerSchema = z.object({
-  provider: llmProviderSchema,
-});
+import {
+  MAX_PROVIDER_CONCURRENCY_LIMIT,
+  MAX_PROVIDER_REQUEST_INTERVAL_MS,
+  type APIKeyRecordLike,
+  normalizeOptionalText,
+  normalizeProviderLimit,
+  providerSchema,
+} from "./sharedTypes";
 
 const createCustomProviderSchema = z.object({
   name: z.string().trim().min(1),
@@ -37,33 +38,6 @@ const customProviderModelsSchema = z.object({
   key: z.string().trim().optional(),
   baseURL: z.string().trim().url("API URL 格式不正确。"),
 });
-
-type APIKeyRecordLike = {
-  provider: string;
-  displayName: string | null;
-  key: string | null;
-  model: string | null;
-  baseURL: string | null;
-  isActive: boolean;
-  reasoningEnabled?: boolean | null;
-  concurrencyLimit?: number | null;
-  requestIntervalMs?: number | null;
-};
-
-function normalizeOptionalText(value: string | null | undefined): string | undefined {
-  if (typeof value !== "string") {
-    return undefined;
-  }
-  const trimmed = value.trim();
-  return trimmed || undefined;
-}
-
-function normalizeProviderLimit(value: number | null | undefined): number {
-  if (typeof value !== "number" || !Number.isFinite(value) || value <= 0) {
-    return 0;
-  }
-  return Math.floor(value);
-}
 
 function buildCustomProviderId(name: string): string {
   const normalized = name

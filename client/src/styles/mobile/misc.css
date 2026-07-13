@@ -1,4 +1,4 @@
-/* Mobile misc routes — genres, story-modes, base-characters, anti-ai-rules, prompt-workbench, help */
+/* Mobile misc routes — genres, story-modes, base-characters, anti-ai-rules, prompt-workbench, help, logs */
 
 @media (max-width: 767px) {
   .mobile-route-base-characters > .flex:first-child .flex {
@@ -8,5 +8,10 @@
   .mobile-route-story-modes .grid.md\:grid-cols-2,
   .mobile-route-story-modes .grid.lg\:grid-cols-2 {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .mobile-route-logs {
+    display: flex;
+    flex-direction: column;
   }
 }

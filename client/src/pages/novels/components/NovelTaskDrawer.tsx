@@ -1,18 +1,13 @@
-﻿import type {
+import type {
   NovelWorkflowMilestone,
-  NovelWorkflowMilestoneType,
 } from "@ai-novel/shared";
 import type { DirectorBookAutomationAction } from "@ai-novel/shared";
-import type { TaskStatus } from "@ai-novel/shared";
-import type { CharacterResourceProposalSummary } from "@ai-novel/shared";
-import type { AutoDirectorAction } from "@ai-novel/shared";
 import React from "react";
 import AICockpit from "@/components/autoDirector/AICockpit";
 import LLMSelector from "@/components/common/LLMSelector";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog,
   DialogContent,
@@ -24,295 +19,17 @@ import { Link } from "react-router-dom";
 import TaskCenterManualEditImpactCard from "@/pages/tasks/components/TaskCenterManualEditImpactCard";
 import TaskCenterRuntimePolicyCard from "@/pages/tasks/components/TaskCenterRuntimePolicyCard";
 import type { NovelTaskDrawerState } from "./NovelEditView.types";
-
-type DrawerTask = NonNullable<NovelTaskDrawerState["task"]>;
-
-function formatStatus(status: TaskStatus): string {
-  if (status === "queued") {
-    return "排队中";
-  }
-  if (status === "running") {
-    return "运行中";
-  }
-  if (status === "waiting_approval") {
-    return "等待审核";
-  }
-  if (status === "succeeded") {
-    return "已完成";
-  }
-  if (status === "failed") {
-    return "失败";
-  }
-  return "已取消";
-}
-
-function formatTaskStatus(task: DrawerTask): string {
-  if (task.pendingManualRecovery) {
-    return "待恢复";
-  }
-  return formatStatus(task.status);
-}
-
-function toStatusVariant(status: TaskStatus): "default" | "outline" | "secondary" | "destructive" {
-  if (status === "running") {
-    return "default";
-  }
-  if (status === "failed") {
-    return "destructive";
-  }
-  if (status === "queued" || status === "waiting_approval") {
-    return "secondary";
-  }
-  return "outline";
-}
-
-function toTaskStatusVariant(task: DrawerTask): "default" | "outline" | "secondary" | "destructive" {
-  if (task.pendingManualRecovery) {
-    return "secondary";
-  }
-  return toStatusVariant(task.status);
-}
-
-function formatCheckpoint(checkpoint: NovelWorkflowMilestoneType | null | undefined, scopeLabel?: string | null): string {
-  const resolvedScopeLabel = scopeLabel?.trim() || "前 10 章";
-  if (checkpoint === "rewrite_snapshot_created") {
-    return "重写前备份已创建";
-  }
-  if (checkpoint === "candidate_selection_required") {
-    return "等待确认书级方向";
-  }
-  if (checkpoint === "book_contract_ready") {
-    return "Book Contract 已就绪";
-  }
-  if (checkpoint === "character_setup_required") {
-    return "角色准备待审核";
-  }
-  if (checkpoint === "volume_strategy_ready") {
-    return "卷战略 / 卷骨架待审核";
-  }
-  if (checkpoint === "chapter_batch_ready") {
-    return `${resolvedScopeLabel}自动执行已暂停`;
-  }
-  if (checkpoint === "workflow_completed") {
-    return "主流程完成";
-  }
-  return "暂无";
-}
-
-function formatDate(value: string | null | undefined): string {
-  if (!value) {
-    return "暂无";
-  }
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) {
-    return "暂无";
-  }
-  return date.toLocaleString();
-}
-
-function formatTokenCount(value: number | null | undefined): string {
-  return new Intl.NumberFormat("zh-CN").format(Math.max(0, Math.round(value ?? 0)));
-}
-
-function formatStepStatus(status: "idle" | "running" | "succeeded" | "failed" | "cancelled"): string {
-  if (status === "running") {
-    return "进行中";
-  }
-  if (status === "succeeded") {
-    return "已完成";
-  }
-  if (status === "failed") {
-    return "失败";
-  }
-  if (status === "cancelled") {
-    return "已取消";
-  }
-  return "待处理";
-}
-
-function formatRiskLevel(riskLevel: CharacterResourceProposalSummary["riskLevel"]): string {
-  if (riskLevel === "high") {
-    return "高风险";
-  }
-  if (riskLevel === "medium") {
-    return "需判断";
-  }
-  return "低风险";
-}
-
-function formatProposalSource(proposal: CharacterResourceProposalSummary): string {
-  return proposal.sourceType === "chapter_background_sync" ? "自动同步发现" : "手动复查发现";
-}
-
-function followUpActionVariant(action: AutoDirectorAction): "default" | "outline" {
-  return action.kind === "mutation" && action.riskLevel !== "high" ? "default" : "outline";
-}
-
-function formatFollowUpPriority(priority: "P0" | "P1" | "P2"): string {
-  if (priority === "P0") {
-    return "P0 立即处理";
-  }
-  if (priority === "P1") {
-    return "P1 尽快处理";
-  }
-  return "P2 稍后处理";
-}
-
-function readProposalPayloadText(
-  proposal: CharacterResourceProposalSummary,
-  key: string,
-): string {
-  const value = proposal.payload[key];
-  return typeof value === "string" ? value.trim() : "";
-}
-
-function RejectIntentDialog(props: {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  resourceName: string;
-  onSubmit: (intent: string) => void;
-  isSubmitting?: boolean;
-}) {
-  const { open, onOpenChange, resourceName, onSubmit, isSubmitting } = props;
-  const [intent, setIntent] = React.useState("");
-
-  const handleSubmit = () => {
-    onSubmit(intent.trim());
-    setIntent("");
-  };
-
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>不接受此风险</DialogTitle>
-          <DialogDescription>
-            你拒绝了「{resourceName}」的高风险变更。请描述你希望 AI 如何修正，以便后续修复参考你的意图。
-          </DialogDescription>
-        </DialogHeader>
-        <Textarea
-          rows={4}
-          placeholder="例如：保留原角色性格不变，不要引入新的身份设定"
-          value={intent}
-          onChange={(e) => setIntent(e.target.value)}
-          disabled={isSubmitting}
-        />
-        <div className="mt-3 flex justify-end gap-2">
-          <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isSubmitting}>
-            取消
-          </Button>
-          <Button type="button" onClick={handleSubmit} disabled={isSubmitting}>
-            {isSubmitting ? "提交中..." : "提交并拒绝"}
-          </Button>
-        </div>
-      </DialogContent>
-    </Dialog>
-  );
-}
-
-function ResourceProposalCard(props: {
-  proposal: CharacterResourceProposalSummary;
-  onOpenSource?: (proposal: CharacterResourceProposalSummary) => void;
-  onConfirm?: (proposalId: string) => void;
-  onReject?: (proposalId: string, intent?: string) => void;
-  confirmingProposalId?: string;
-  rejectingProposalId?: string;
-}) {
-  const {
-    proposal,
-    onOpenSource,
-    onConfirm,
-    onReject,
-    confirmingProposalId = "",
-    rejectingProposalId = "",
-  } = props;
-  const resourceName = readProposalPayloadText(proposal, "resourceName") || "关键资源";
-  const holderName = readProposalPayloadText(proposal, "holderCharacterName");
-  const narrativeImpact = readProposalPayloadText(proposal, "narrativeImpact");
-  const isConfirming = confirmingProposalId === proposal.id;
-  const isRejecting = rejectingProposalId === proposal.id;
-  const [showIntentDialog, setShowIntentDialog] = React.useState(false);
-
-  return (
-    <div className="space-y-3 rounded-xl border bg-background/80 p-3">
-      <div className="flex flex-wrap items-start gap-2">
-        <div className="min-w-0 flex-1">
-          <div className="text-sm font-medium text-foreground">{resourceName}</div>
-          <div className="mt-1 text-xs leading-5 text-muted-foreground">
-            {holderName ? `${holderName}相关资源` : "资源归属需要确认"}
-          </div>
-        </div>
-        <Badge variant={proposal.riskLevel === "high" ? "destructive" : "secondary"}>
-          {formatRiskLevel(proposal.riskLevel)}
-        </Badge>
-      </div>
-      <div className="text-sm leading-6 text-muted-foreground">{proposal.summary}</div>
-      {narrativeImpact ? (
-        <div className="rounded-lg border border-border/70 bg-muted/20 px-3 py-2 text-xs leading-5 text-muted-foreground">
-          确认后影响：{narrativeImpact}
-        </div>
-      ) : null}
-      {proposal.evidence[0] ? (
-        <div className="text-xs leading-5 text-muted-foreground">证据：{proposal.evidence[0]}</div>
-      ) : null}
-      {proposal.validationNotes[0] ? (
-        <div className="text-xs leading-5 text-muted-foreground">判断原因：{proposal.validationNotes[0]}</div>
-      ) : null}
-      <div className="flex flex-wrap items-center gap-2">
-        <Badge variant="outline">{formatProposalSource(proposal)}</Badge>
-        {proposal.chapterId ? <Badge variant="outline">来源章节</Badge> : null}
-      </div>
-      <div className="flex flex-wrap gap-2">
-        {proposal.chapterId ? (
-          <Button type="button" size="sm" variant="outline" asChild>
-            <Link to={`/novels/${proposal.novelId}/chapters/${proposal.chapterId}`}>编辑来源章节</Link>
-          </Button>
-        ) : null}
-        <Button
-          type="button"
-          size="sm"
-          onClick={() => onConfirm?.(proposal.id)}
-          disabled={isConfirming || !onConfirm}
-        >
-          {isConfirming ? "确认中..." : "确认并用于后续写作"}
-        </Button>
-        {proposal.riskLevel === "high" ? (
-          <Button
-            type="button"
-            size="sm"
-            variant="destructive"
-            onClick={() => setShowIntentDialog(true)}
-            disabled={isRejecting || !onReject}
-          >
-            {isRejecting ? "处理中..." : "不接受此风险"}
-          </Button>
-        ) : (
-          <Button
-            type="button"
-            size="sm"
-            variant="outline"
-            onClick={() => onReject?.(proposal.id)}
-            disabled={isRejecting || !onReject}
-          >
-            {isRejecting ? "处理中..." : "忽略这条变化"}
-          </Button>
-        )}
-      </div>
-      {proposal.riskLevel === "high" ? (
-        <RejectIntentDialog
-          open={showIntentDialog}
-          onOpenChange={setShowIntentDialog}
-          resourceName={resourceName}
-          isSubmitting={isRejecting}
-          onSubmit={(intent) => {
-            onReject?.(proposal.id, intent || undefined);
-            setShowIntentDialog(false);
-          }}
-        />
-      ) : null}
-    </div>
-  );
-}
+import {
+  formatTaskStatus,
+  formatCheckpoint,
+  formatDate,
+  formatTokenCount,
+  formatStepStatus,
+  toTaskStatusVariant,
+  followUpActionVariant,
+  formatFollowUpPriority,
+} from "./novelTaskDrawer.utils";
+import { ResourceProposalCard } from "./NovelTaskDrawer.subComponents";
 
 export default function NovelTaskDrawer({
   open,
@@ -696,12 +413,12 @@ export default function NovelTaskDrawer({
                       <div className="text-sm text-foreground">{step.label}</div>
                       <Badge variant="outline">{"isCurrent" in step
                         ? (step.status === "attention"
-                          ? "\u9700\u5904\u7406"
+                          ? "需处理"
                           : step.status === "running"
-                            ? "\u8fdb\u884c\u4e2d"
+                            ? "进行中"
                             : step.status === "completed"
-                              ? "\u5df2\u5b8c\u6210"
-                              : "\u5f85\u63a8\u8fdb")
+                              ? "已完成"
+                              : "待推进")
                         : formatStepStatus(step.status)}</Badge>
                     </div>
                   ))}

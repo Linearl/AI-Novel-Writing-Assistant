@@ -20,6 +20,7 @@ import {
 } from "./novelCoreShared";
 import type { LLMProvider } from "@ai-novel/shared";
 import { NovelCoreCharacterService } from "./novelCoreCharacterService";
+import { NovelCoreChapterService } from "./novelCoreChapterService";
 import { NovelCoreCrudService } from "./novelCoreCrudService";
 import { NovelCoreGenerationService } from "./novelCoreGenerationService";
 import { NovelCorePipelineService } from "./novelCorePipelineService";
@@ -29,6 +30,7 @@ import { NovelCoreStorylineService } from "./novelCoreStorylineService";
 
 export class NovelCoreService {
   private readonly crudService = new NovelCoreCrudService();
+  private readonly chapterService = new NovelCoreChapterService();
   private readonly storylineService = new NovelCoreStorylineService();
   private readonly characterService = new NovelCoreCharacterService();
   private readonly generationService = new NovelCoreGenerationService();
@@ -85,31 +87,31 @@ export class NovelCoreService {
   }
 
   async listChapters(novelId: string) {
-    return this.crudService.listChapters(novelId);
+    return this.chapterService.listChapters(novelId);
   }
 
   async createChapter(novelId: string, input: ChapterInput) {
-    return this.crudService.createChapter(novelId, input);
+    return this.chapterService.createChapter(novelId, input);
   }
 
   async updateChapter(novelId: string, chapterId: string, input: Partial<ChapterInput>) {
-    return this.crudService.updateChapter(novelId, chapterId, input);
+    return this.chapterService.updateChapter(novelId, chapterId, input);
   }
 
   async deleteChapter(novelId: string, chapterId: string) {
-    return this.crudService.deleteChapter(novelId, chapterId);
+    return this.chapterService.deleteChapter(novelId, chapterId);
   }
 
   async softDeleteChapter(novelId: string, chapterId: string) {
-    return this.crudService.softDeleteChapter(novelId, chapterId);
+    return this.chapterService.softDeleteChapter(novelId, chapterId);
   }
 
   async restoreChapter(novelId: string, chapterId: string) {
-    return this.crudService.restoreChapter(novelId, chapterId);
+    return this.chapterService.restoreChapter(novelId, chapterId);
   }
 
   async toggleChapterLock(novelId: string, chapterId: string, locked: boolean) {
-    return this.crudService.toggleChapterLock(novelId, chapterId, locked);
+    return this.chapterService.toggleChapterLock(novelId, chapterId, locked);
   }
 
   async listCharacters(novelId: string) {

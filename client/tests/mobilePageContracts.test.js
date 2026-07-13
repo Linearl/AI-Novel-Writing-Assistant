@@ -7,8 +7,27 @@ import { fileURLToPath } from "node:url";
 const clientRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const readClientFile = (relativePath) => readFileSync(join(clientRoot, relativePath), "utf8");
 
+/** Read a CSS file and resolve @import statements by inlining the imported files. */
+function readCssWithImports(relativePath) {
+  const baseDir = dirname(join(clientRoot, relativePath));
+  let css = readClientFile(relativePath);
+
+  // Resolve @import "./..." statements (CSS standard imports, not url() imports)
+  css = css.replace(/^@import\s+(?:url\()?["']?([^"')]+)["']?\)?\s*;/gm, (_match, importPath) => {
+    if (importPath.startsWith("http")) return "";
+    const resolved = join(baseDir, importPath);
+    try {
+      return readFileSync(resolved, "utf8");
+    } catch {
+      return "";
+    }
+  });
+
+  return css;
+}
+
 const appLayout = readClientFile("src/components/layout/AppLayout.tsx");
-const css = readClientFile("src/index.css");
+const css = readCssWithImports("src/index.css");
 const mobileSiteNavigation = readClientFile("src/components/layout/mobile/mobileSiteNavigation.ts");
 const novelEditView = readClientFile("src/pages/novels/components/NovelEditView.tsx");
 const homePage = readClientFile("src/pages/Home.tsx");
@@ -33,27 +52,35 @@ function getMobileRouteKeys() {
 }
 
 function getMobileMediaCss() {
-  const mediaStart = css.indexOf("@media (max-width: 767px)");
-  assert.notEqual(mediaStart, -1, "mobile media query should exist");
+  // Collect content from ALL @media (max-width: 767px) blocks (one per imported file)
+  const mediaParts = [];
+  let searchFrom = 0;
+  while (true) {
+    const mediaStart = css.indexOf("@media (max-width: 767px)", searchFrom);
+    if (mediaStart === -1) break;
 
-  const blockStart = css.indexOf("{", mediaStart);
-  let depth = 0;
-  for (let index = blockStart; index < css.length; index += 1) {
-    if (css[index] === "{") {
-      depth += 1;
-    } else if (css[index] === "}") {
-      depth -= 1;
-      if (depth === 0) {
-        return css.slice(blockStart + 1, index);
+    const blockStart = css.indexOf("{", mediaStart);
+    let depth = 0;
+    for (let index = blockStart; index < css.length; index += 1) {
+      if (css[index] === "{") {
+        depth += 1;
+      } else if (css[index] === "}") {
+        depth -= 1;
+        if (depth === 0) {
+          mediaParts.push(css.slice(blockStart + 1, index));
+          searchFrom = index + 1;
+          break;
+        }
       }
     }
   }
 
-  throw new Error("mobile media query block should be closed");
+  assert.ok(mediaParts.length > 0, "mobile media query should exist");
+  return mediaParts.join("\n");
 }
 
 function parseMobileGridTemplateRules() {
-  const mobileCss = getMobileMediaCss();
+  const mobileCss = getMobileMediaCss().replace(/\/\*[\s\S]*?\*\//g, "");
   const rules = [];
   const rulePattern = /([^{}]+)\{([^{}]*)\}/g;
   let match;

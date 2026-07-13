@@ -18,7 +18,6 @@ const routedPaths = [
   "/novels/demo/edit",
   "/novels/demo/chapters/chapter-1",
   "/creative-hub",
-  "/chat-legacy",
   "/book-analysis",
   "/tasks",
   "/auto-director/follow-ups",
@@ -29,6 +28,7 @@ const routedPaths = [
   "/prompt-workbench",
   "/settings/model-routes",
   "/settings",
+  "/logs",
   "/worlds",
   "/worlds/generator",
   "/worlds/world-1/workspace",
@@ -69,7 +69,6 @@ test("mobile more menu contains all non-primary registered pages", () => {
       "/help",
       "/book-analysis",
       "/auto-director/follow-ups",
-      "/chat-legacy",
       "/knowledge",
       "/genres",
       "/story-modes",
@@ -82,6 +81,7 @@ test("mobile more menu contains all non-primary registered pages", () => {
       "/prompt-workbench",
       "/settings/model-routes",
       "/settings",
+      "/logs",
     ],
   );
 });

@@ -39,7 +39,7 @@ import novelWorkflowsRouter from "./services/novel/director/http/novelWorkflows"
 import promptWorkbenchRouter from "./modules/promptWorkbench/http/promptWorkbench";
 import ragRouter from "./modules/knowledge/http/rag";
 import settingsAutoDirectorRouter from "./modules/settings/http/settingsAutoDirector";
-import settingsRouter from "./modules/settings/http/settings";
+import settingsRouter from "./modules/settings/http";
 import styleEngineRouter from "./modules/styleEngine/http/styleEngine";
 import styleEngineExtractionRouter from "./modules/styleEngine/http/styleEngineExtraction";
 import writingTechniquesRouter from "./modules/writing/http/writingTechniques";

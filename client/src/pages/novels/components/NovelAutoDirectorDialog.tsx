@@ -1,48 +1,32 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { buildStyleIntentSummary } from "@ai-novel/shared";
-import type { UnifiedTaskDetail } from "@ai-novel/shared";
+import type { DirectorCorrectionPreset, UnifiedTaskDetail } from "@ai-novel/shared";
 import {
   extractDirectorTaskSeedPayloadFromMeta,
   DIRECTOR_RUN_MODES,
-  buildFullBookAutopilotExecutionPlan,
-  mergeDirectorCandidateBatches,
-  type DirectorCandidate,
   type DirectorCandidateBatch,
-  type DirectorAutoExecutionPlan,
-  type DirectorCorrectionPreset,
   type DirectorIdeaInspiration,
   type DirectorRunMode,
   type DirectorWorldSetupMode,
 } from "@ai-novel/shared";
-import { bootstrapNovelWorkflow, continueNovelWorkflow } from "@/api/novelWorkflow";
-import {
-  confirmDirectorCandidate,
-  generateDirectorIdeaInspirations,
-} from "@/api/novelDirector";
-import { queryKeys } from "@/api/queryKeys";
-import { getStyleProfiles } from "@/api/styleEngine";
-import { getTaskDetail, retryTask } from "@/api/tasks";
+import { useLLMStore } from "@/store/llmStore";
 import { Button } from "@/components/ui/button";
 import {
   AppDialogContent,
   Dialog,
 } from "@/components/ui/dialog";
 import { toast } from "@/components/ui/toast";
-import { isChapterTitleDiversitySummary } from "@/lib/directorTaskNotice";
-import { useLLMStore } from "@/store/llmStore";
+import { queryKeys } from "@/api/queryKeys";
 import {
   patchNovelBasicForm,
   type NovelBasicFormState,
 } from "../novelBasicInfo.shared";
 import {
-  buildDirectorAutoExecutionPlanFromDraft,
   createDefaultDirectorAutoExecutionDraftState,
   normalizeDirectorAutoExecutionDraftState,
 } from "./directorAutoExecutionPlan.shared";
 import {
-  buildAutoDirectorRequestPayload,
   buildInitialIdea,
   DEFAULT_VISIBLE_RUN_MODE,
   RUN_MODE_OPTIONS,
@@ -52,20 +36,17 @@ import NovelAutoDirectorCandidateDialog from "./NovelAutoDirectorCandidateDialog
 import {
   NovelAutoDirectorDialogDescription,
   NovelAutoDirectorDialogTitle,
-  type DirectorDialogMode,
 } from "./NovelAutoDirectorDialogHeader";
 import NovelAutoDirectorProgressPanel from "./NovelAutoDirectorProgressPanel";
 import { useDirectorAutoApprovalDraft } from "./useDirectorAutoApprovalDraft";
-import {
-  ACTIVE_DIRECTOR_TASK_STATUSES,
-  DIRECTOR_CANDIDATE_SETUP_STEP_KEYS,
-} from "./NovelAutoDirectorDialog.constants";
 import {
   applyDirectorCandidateTitleOption,
   toggleDirectorCorrectionPreset,
 } from "./directorCandidateSelectionHandlers";
 import { AUTO_DIRECTOR_MOBILE_CLASSES } from "@/mobile/autoDirector";
 import { useNovelAutoDirectorCandidateMutations } from "./useNovelAutoDirectorCandidateMutations";
+import { useDirectorWorkflowMutations } from "./useDirectorWorkflowMutations";
+import { useDirectorTaskQuery } from "./useDirectorTaskQuery";
 
 interface NovelAutoDirectorDialogProps {
   basicForm: NovelBasicFormState;
@@ -105,13 +86,18 @@ export default function NovelAutoDirectorDialog({
   const navigate = useNavigate();
   const llm = useLLMStore();
   const queryClient = useQueryClient();
+
+  // ---------------------------------------------------------------------------
+  // State
+  // ---------------------------------------------------------------------------
+
   const [open, setOpen] = useState(false);
   const [idea, setIdea] = useState("");
   const [feedback, setFeedback] = useState("");
   const [selectedPresets, setSelectedPresets] = useState<DirectorCorrectionPreset[]>([]);
   const [batches, setBatches] = useState<DirectorCandidateBatch[]>([]);
   const [workflowTaskId, setWorkflowTaskId] = useState(workflowTaskIdProp ?? "");
-  const [dialogMode, setDialogMode] = useState<DirectorDialogMode>("candidate_selection");
+  const [dialogMode, setDialogMode] = useState<"candidate_selection" | "execution_progress" | "execution_failed">("candidate_selection");
   const [candidateDialogOpen, setCandidateDialogOpen] = useState(false);
   const [executionRequested, setExecutionRequested] = useState(false);
   const [pendingTitleHint, setPendingTitleHint] = useState("");
@@ -123,10 +109,40 @@ export default function NovelAutoDirectorDialog({
   const [ideaInspirations, setIdeaInspirations] = useState<DirectorIdeaInspiration[]>([]);
   const [candidatePatchFeedbacks, setCandidatePatchFeedbacks] = useState<Record<string, string>>({});
   const [titlePatchFeedbacks, setTitlePatchFeedbacks] = useState<Record<string, string>>({});
+
   const confirmSubmitLockedRef = useRef(false);
   const confirmedTaskHandledRef = useRef<string | null>(null);
   const autoApprovalDraft = useDirectorAutoApprovalDraft(open);
   const { applySnapshot: applyAutoApprovalSnapshot } = autoApprovalDraft;
+
+  // ---------------------------------------------------------------------------
+  // resetDialogState (defined early — used by useDirectorTaskQuery)
+  // ---------------------------------------------------------------------------
+
+  const resetDialogState = () => {
+    setOpen(false);
+    setIdea("");
+    setFeedback("");
+    setSelectedPresets([]);
+    setBatches([]);
+    setWorkflowTaskId("");
+    setDialogMode("candidate_selection");
+    setCandidateDialogOpen(false);
+    setExecutionRequested(false);
+    setPendingTitleHint("");
+    setExecutionError("");
+    setRunMode(DEFAULT_VISIBLE_RUN_MODE);
+    setAutoExecutionDraft(createDefaultDirectorAutoExecutionDraftState());
+    autoApprovalDraft.reset();
+    setSelectedStyleProfileId("");
+    setIdeaInspirations([]);
+    setCandidatePatchFeedbacks({});
+    setTitlePatchFeedbacks({});
+  };
+
+  // ---------------------------------------------------------------------------
+  // Prop sync effects
+  // ---------------------------------------------------------------------------
 
   useEffect(() => {
     if (!workflowTaskIdProp || workflowTaskIdProp === workflowTaskId) {
@@ -178,6 +194,10 @@ export default function NovelAutoDirectorDialog({
     }
   }, [applyAutoApprovalSnapshot, initialOpen, restoredTask, workflowTaskId]);
 
+  // ---------------------------------------------------------------------------
+  // Derived values
+  // ---------------------------------------------------------------------------
+
   const directorBasicForm = useMemo(
     () => patchNovelBasicForm(basicForm, {
       writingMode: "original",
@@ -186,19 +206,7 @@ export default function NovelAutoDirectorDialog({
     [basicForm],
   );
 
-  const buildAutoExecutionPlanForRunMode = (): DirectorAutoExecutionPlan | undefined => {
-    if (runMode === "full_book_autopilot") {
-      return buildFullBookAutopilotExecutionPlan(autoExecutionDraft.highRiskStrategy);
-    }
-    if (runMode === "auto_to_execution") {
-      return buildDirectorAutoExecutionPlanFromDraft(autoExecutionDraft, {
-        usage: "new_book",
-        maxChapterCount: directorBasicForm.estimatedChapterCount,
-      });
-    }
-    return undefined;
-  };
-
+  // Idea seeding on open
   useEffect(() => {
     if (!open || idea.trim()) {
       return;
@@ -211,163 +219,93 @@ export default function NovelAutoDirectorDialog({
     setIdea(buildInitialIdea(directorBasicForm));
   }, [directorBasicForm, idea, initialIdea, onInitialIdeaConsumed, open]);
 
-  const styleProfilesQuery = useQuery({
-    queryKey: queryKeys.styleEngine.profiles,
-    queryFn: getStyleProfiles,
-    enabled: open,
-  });
-  const styleProfiles = styleProfilesQuery.data?.data ?? [];
-  const selectedStyleProfile = useMemo(
-    () => styleProfiles.find((item) => item.id === selectedStyleProfileId) ?? null,
-    [selectedStyleProfileId, styleProfiles],
-  );
-  const selectedStyleSummary = useMemo(
-    () => buildStyleIntentSummary({
-      styleProfile: selectedStyleProfile,
-      styleTone: directorBasicForm.styleTone,
-    }),
-    [directorBasicForm.styleTone, selectedStyleProfile],
-  );
-  const ideaInspirationMutation = useMutation({
-    mutationFn: async () => {
-      const genre = genreOptions.find((item) => item.id === directorBasicForm.genreId);
-      const world = worldOptions.find((item) => item.id === directorBasicForm.worldId);
-      return generateDirectorIdeaInspirations({
-        ...buildAutoDirectorRequestPayload(directorBasicForm, idea || directorBasicForm.description, llm, runMode, undefined, {
-          styleProfileId: selectedStyleProfileId,
-          worldSetupMode,
-        }),
-        currentIdea: idea.trim() || undefined,
-        genreLabel: genre?.path || genre?.label,
-        worldName: world?.name,
-      });
-    },
-    onSuccess: (response) => {
-      setIdeaInspirations(response.data?.ideas ?? []);
-    },
-    onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "生成起始想法失败，请稍后重试。");
-    },
-  });
-  const directorTaskQuery = useQuery({
-    queryKey: queryKeys.tasks.detail("novel_workflow", workflowTaskId || "none"),
-    queryFn: () => getTaskDetail("novel_workflow", workflowTaskId),
-    enabled: Boolean(workflowTaskId),
-    retry: false,
-    refetchInterval: (query) => {
-      const task = query.state.data?.data;
-      return open && task && ACTIVE_DIRECTOR_TASK_STATUSES.has(task.status) ? 2000 : false;
-    },
-  });
+  // ---------------------------------------------------------------------------
+  // Read-side queries & derived state (useDirectorTaskQuery)
+  // ---------------------------------------------------------------------------
 
-  const latestBatch = batches.at(-1) ?? null;
-  const directorTask = useMemo(() => {
-    const loadedTask = directorTaskQuery.data?.data ?? null;
-    if (loadedTask) {
-      return loadedTask;
-    }
-    return restoredTask?.id === workflowTaskId ? restoredTask : null;
-  }, [directorTaskQuery.data?.data, restoredTask, workflowTaskId]);
-
-  useEffect(() => {
-    const seededBatches = extractDirectorTaskSeedPayloadFromMeta(directorTask?.meta)?.batches;
-    if (!Array.isArray(seededBatches) || seededBatches.length === 0) {
-      return;
-    }
-    setBatches((prev) => mergeDirectorCandidateBatches(prev, seededBatches));
-  }, [directorTask]);
-
-  const candidateSetupInProgress = Boolean(
-    directorTask
-    && ACTIVE_DIRECTOR_TASK_STATUSES.has(directorTask.status)
-    && DIRECTOR_CANDIDATE_SETUP_STEP_KEYS.has(directorTask.currentItemKey ?? ""),
-  );
-  const hasActiveDirectorTask = Boolean(directorTask && ACTIVE_DIRECTOR_TASK_STATUSES.has(directorTask.status));
-  const triggerLabel = hasActiveDirectorTask ? "查看导演进度" : "AI 自动导演创建";
-  const isBlockingExecutionView = dialogMode === "execution_progress" && hasActiveDirectorTask && !candidateSetupInProgress;
-
-  useEffect(() => {
-    if (!directorTask) {
-      return;
-    }
-    const hasChapterTitleWarning = isChapterTitleDiversitySummary(
-      directorTask.failureSummary ?? directorTask.lastError ?? null,
-    );
-    if (directorTask.checkpointType === "candidate_selection_required" && !executionRequested) {
-      setDialogMode("candidate_selection");
-      setExecutionError("");
-      return;
-    }
-    if (directorTask.status === "failed" || directorTask.status === "cancelled") {
-      if (hasChapterTitleWarning) {
-        setDialogMode("execution_progress");
-        setExecutionError("");
-        return;
-      }
-      setDialogMode("execution_failed");
-      setExecutionError(directorTask.lastError ?? "");
-      return;
-    }
-    if (ACTIVE_DIRECTOR_TASK_STATUSES.has(directorTask.status)) {
-      setDialogMode("execution_progress");
-      if (directorTask.checkpointType !== "candidate_selection_required") {
-        setExecutionRequested(false);
-      }
-    }
-  }, [directorTask, executionRequested]);
-
-  const ensureWorkflowTask = async () => {
-    if (workflowTaskId) {
-      return workflowTaskId;
-    }
-
-    const autoExecutionPlan = buildAutoExecutionPlanForRunMode();
-    const response = await bootstrapNovelWorkflow({
-      lane: "auto_director",
-      title: directorBasicForm.title.trim() || undefined,
-      seedPayload: {
-        basicForm: directorBasicForm,
-        idea,
-        batches,
-        runMode,
-        worldSetupMode: directorBasicForm.worldId ? undefined : worldSetupMode,
-        autoExecutionPlan,
-        autoApproval: {
-          ...autoApprovalDraft.buildPayload(runMode),
-        },
-        styleProfileId: selectedStyleProfileId || null,
-        styleIntentSummary: selectedStyleSummary ?? null,
-      },
-    });
-    const taskId = response.data?.id ?? "";
-    if (taskId) {
-      setWorkflowTaskId(taskId);
-      onWorkflowTaskChange?.(taskId);
-    }
-    return taskId;
-  };
-
-  const applyUpdatedBatch = (batch: DirectorCandidateBatch, nextWorkflowTaskId?: string) => {
-    setBatches((prev) => (
-      prev.some((item) => item.id === batch.id)
-        ? prev.map((item) => (item.id === batch.id ? batch : item))
-        : [...prev, batch]
-    ));
-    if (nextWorkflowTaskId && nextWorkflowTaskId !== workflowTaskId) {
-      setWorkflowTaskId(nextWorkflowTaskId);
-      onWorkflowTaskChange?.(nextWorkflowTaskId);
-    }
-  };
-
-  const buildCandidateRequestPayload = (currentWorkflowTaskId: string) => buildAutoDirectorRequestPayload(
-    directorBasicForm,
+  const {
+    styleProfiles,
+    selectedStyleSummary,
+    ideaInspirationMutation,
+    directorTask,
+    latestBatch,
+    hasActiveDirectorTask,
+    triggerLabel,
+    isBlockingExecutionView,
+  } = useDirectorTaskQuery({
+    open,
+    workflowTaskId,
     idea,
-    llm,
+    batches,
+    dialogMode,
+    directorBasicForm,
+    genreOptions,
+    worldOptions,
+    selectedStyleProfileId,
     runMode,
-    currentWorkflowTaskId,
-    { styleProfileId: selectedStyleProfileId, worldSetupMode },
-  );
+    worldSetupMode,
+    executionRequested,
+    llm,
+    restoredTask,
+    setIdea,
+    setBatches,
+    setDialogMode,
+    setExecutionError,
+    setExecutionRequested,
+    setIdeaInspirations,
+    setWorkflowTaskId,
+    resetDialogState,
+    onConfirmed,
+    confirmedTaskHandledRef,
+    queryClient,
+  });
 
+  // ---------------------------------------------------------------------------
+  // Write-side mutations (useDirectorWorkflowMutations)
+  // ---------------------------------------------------------------------------
+
+  const {
+    ensureWorkflowTask,
+    applyUpdatedBatch,
+    buildCandidateRequestPayload,
+    confirmMutation,
+    continueMutation,
+    retryMutation,
+    handleConfirmCandidate,
+  } = useDirectorWorkflowMutations({
+    workflowTaskId,
+    batches,
+    selectedPresets,
+    feedback,
+    runMode,
+    worldSetupMode,
+    selectedStyleProfileId,
+    selectedStyleSummary,
+    idea,
+    directorBasicForm,
+    autoExecutionDraft,
+    latestBatch,
+    directorTask,
+    llm,
+    autoApprovalDraft,
+    confirmSubmitLockedRef,
+    onWorkflowTaskChange,
+    setWorkflowTaskId,
+    setBatches,
+    setFeedback,
+    setSelectedPresets,
+    setCandidatePatchFeedbacks,
+    setTitlePatchFeedbacks,
+    setDialogMode,
+    setCandidateDialogOpen,
+    setExecutionRequested,
+    setExecutionError,
+    setPendingTitleHint,
+    setOpen,
+    queryClient,
+  });
+
+  // Candidate mutations (generate / patch / refine)
   const {
     generateMutation,
     patchCandidateMutation,
@@ -393,135 +331,11 @@ export default function NovelAutoDirectorDialog({
     setExecutionError,
   });
 
-  const confirmMutation = useMutation({
-    mutationFn: async (payload: { candidate: DirectorCandidate; workflowTaskId?: string }) => {
-      const currentWorkflowTaskId = payload.workflowTaskId || await ensureWorkflowTask();
-      const autoExecutionPlan = buildAutoExecutionPlanForRunMode();
-      const response = await confirmDirectorCandidate({
-        ...buildAutoDirectorRequestPayload(directorBasicForm, idea, llm, runMode, currentWorkflowTaskId, {
-          styleProfileId: selectedStyleProfileId,
-          worldSetupMode,
-        }),
-        batchId: latestBatch?.id,
-        round: latestBatch?.round,
-        candidate: payload.candidate,
-        autoExecutionPlan,
-        autoApproval: {
-          ...autoApprovalDraft.buildPayload(runMode),
-        },
-      });
-      return {
-        command: response.data ?? null,
-        workflowTaskId: response.data?.taskId ?? currentWorkflowTaskId,
-      };
-    },
-    onSuccess: async ({ command, workflowTaskId: nextWorkflowTaskId }) => {
-      if (!command) {
-        setDialogMode("execution_failed");
-        setExecutionError("确认方案失败，未返回导演命令。");
-        toast.error("确认方案失败，未返回导演命令。");
-        return;
-      }
-      if (nextWorkflowTaskId) {
-        setWorkflowTaskId(nextWorkflowTaskId);
-        onWorkflowTaskChange?.(nextWorkflowTaskId);
-      }
-      setDialogMode("execution_progress");
-      setExecutionRequested(true);
-      setExecutionError("");
-      await queryClient.invalidateQueries({ queryKey: ["tasks"] });
-      if (nextWorkflowTaskId) {
-        await queryClient.invalidateQueries({
-          queryKey: queryKeys.tasks.detail("novel_workflow", nextWorkflowTaskId),
-        });
-      }
-      toast.success("系统收到书级方向，会创建小说项目并继续推进规划。");
-    },
-    onError: async (error, payload) => {
-      setDialogMode("execution_failed");
-      setExecutionError(error instanceof Error ? error.message : "导演任务执行失败。");
-      setExecutionRequested(false);
-      if (payload.workflowTaskId) {
-        await queryClient.invalidateQueries({
-          queryKey: queryKeys.tasks.detail("novel_workflow", payload.workflowTaskId),
-        });
-      }
-    },
-    onSettled: () => {
-      confirmSubmitLockedRef.current = false;
-    },
-  });
+  const canGenerate = idea.trim().length > 0 && !generateMutation.isPending;
 
-  const continueMutation = useMutation({
-    mutationFn: async () => {
-      const taskId = directorTask?.id || workflowTaskId;
-      if (!taskId) {
-        throw new Error("当前没有可继续的自动导演任务。");
-      }
-      return continueNovelWorkflow(taskId, { continuationMode: "resume" });
-    },
-    onSuccess: async (response) => {
-      const nextWorkflowTaskId = response.data?.taskId ?? directorTask?.id ?? workflowTaskId;
-      if (nextWorkflowTaskId && nextWorkflowTaskId !== workflowTaskId) {
-        setWorkflowTaskId(nextWorkflowTaskId);
-        onWorkflowTaskChange?.(nextWorkflowTaskId);
-      }
-      const invalidations = [
-        queryClient.invalidateQueries({ queryKey: ["tasks"] }),
-      ];
-      if (nextWorkflowTaskId) {
-        invalidations.push(
-          queryClient.invalidateQueries({
-            queryKey: queryKeys.tasks.detail("novel_workflow", nextWorkflowTaskId),
-          }),
-          queryClient.invalidateQueries({
-            queryKey: queryKeys.tasks.directorTaskSnapshot(nextWorkflowTaskId),
-          }),
-          queryClient.invalidateQueries({
-            queryKey: queryKeys.tasks.directorRuntime(nextWorkflowTaskId),
-          }),
-        );
-      }
-      await Promise.allSettled(invalidations);
-      setDialogMode("execution_progress");
-      setExecutionError("");
-      toast.success("已确认，AI 会继续推进。");
-    },
-    onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "继续自动导演失败。");
-    },
-  });
-
-  const retryMutation = useMutation({
-    mutationFn: async (resume: boolean) => {
-      const taskId = directorTask?.id || workflowTaskId;
-      if (!taskId) {
-        throw new Error("当前没有可重试的自动导演任务。");
-      }
-      return retryTask("novel_workflow", taskId, { resume });
-    },
-    onSuccess: async (response) => {
-      const nextWorkflowTaskId = response.data?.id ?? directorTask?.id ?? workflowTaskId;
-      if (nextWorkflowTaskId && nextWorkflowTaskId !== workflowTaskId) {
-        setWorkflowTaskId(nextWorkflowTaskId);
-        onWorkflowTaskChange?.(nextWorkflowTaskId);
-      }
-      await Promise.allSettled([
-        queryClient.invalidateQueries({ queryKey: ["tasks"] }),
-        ...(nextWorkflowTaskId ? [
-          queryClient.invalidateQueries({ queryKey: queryKeys.tasks.detail("novel_workflow", nextWorkflowTaskId) }),
-          queryClient.invalidateQueries({ queryKey: queryKeys.tasks.directorTaskSnapshot(nextWorkflowTaskId) }),
-          queryClient.invalidateQueries({ queryKey: queryKeys.tasks.directorRuntime(nextWorkflowTaskId) }),
-        ] : []),
-      ]);
-      setDialogMode("execution_progress");
-      setExecutionError("");
-      toast.success("自动导演任务已重新启动。");
-    },
-    onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "重试自动导演失败。");
-    },
-  });
+  // ---------------------------------------------------------------------------
+  // Small utilities
+  // ---------------------------------------------------------------------------
 
   const togglePreset = (preset: DirectorCorrectionPreset) => {
     setSelectedPresets((prev) => toggleDirectorCorrectionPreset(prev, preset));
@@ -531,87 +345,9 @@ export default function NovelAutoDirectorDialog({
     setBatches((prev) => applyDirectorCandidateTitleOption(prev, batchId, candidateId, option));
   };
 
-  const resetDialogState = () => {
-    setOpen(false);
-    setIdea("");
-    setFeedback("");
-    setSelectedPresets([]);
-    setBatches([]);
-    setWorkflowTaskId("");
-    setDialogMode("candidate_selection");
-    setCandidateDialogOpen(false);
-    setExecutionRequested(false);
-    setPendingTitleHint("");
-    setExecutionError("");
-    setRunMode(DEFAULT_VISIBLE_RUN_MODE);
-    setAutoExecutionDraft(createDefaultDirectorAutoExecutionDraftState());
-    autoApprovalDraft.reset();
-    setSelectedStyleProfileId("");
-    setIdeaInspirations([]);
-    setCandidatePatchFeedbacks({});
-    setTitlePatchFeedbacks({});
-  };
-
-  useEffect(() => {
-    const resumeTarget = directorTask?.resumeTarget ?? null;
-    const confirmedNovelId = resumeTarget?.novelId?.trim() || "";
-    if (!executionRequested || !directorTask || !confirmedNovelId) {
-      return;
-    }
-    if (workflowTaskId && directorTask.id !== workflowTaskId) {
-      return;
-    }
-    if (confirmedTaskHandledRef.current === directorTask.id) {
-      return;
-    }
-    confirmedTaskHandledRef.current = directorTask.id;
-    setExecutionRequested(false);
-    void Promise.all([
-      queryClient.invalidateQueries({ queryKey: queryKeys.novels.all }),
-      queryClient.invalidateQueries({ queryKey: ["tasks"] }),
-    ]);
-    toast.success("自动导演创建小说项目，并继续推进规划。");
-    resetDialogState();
-    onConfirmed({
-      novelId: confirmedNovelId,
-      workflowTaskId: directorTask.id,
-      resumeTarget,
-    });
-  }, [directorTask, executionRequested, onConfirmed, queryClient, resetDialogState, workflowTaskId]);
-
-  const canGenerate = idea.trim().length > 0 && !generateMutation.isPending;
-
-  const handleConfirmCandidate = async (candidate: DirectorCandidate) => {
-    if (confirmSubmitLockedRef.current || confirmMutation.isPending) {
-      return;
-    }
-    confirmSubmitLockedRef.current = true;
-    try {
-      const currentWorkflowTaskId = await ensureWorkflowTask();
-      setPendingTitleHint(candidate.workingTitle);
-      setCandidateDialogOpen(false);
-      setDialogMode("execution_progress");
-      setExecutionRequested(true);
-      setExecutionError("");
-      setOpen(true);
-      if (currentWorkflowTaskId) {
-        await queryClient.invalidateQueries({
-          queryKey: queryKeys.tasks.detail("novel_workflow", currentWorkflowTaskId),
-        });
-      }
-      confirmMutation.mutate({
-        candidate,
-        workflowTaskId: currentWorkflowTaskId,
-      });
-    } catch (error) {
-      confirmSubmitLockedRef.current = false;
-      const message = error instanceof Error ? error.message : "创建导演主任务失败。";
-      setDialogMode("candidate_selection");
-      setExecutionRequested(false);
-      setExecutionError(message);
-      toast.error(message);
-    }
-  };
+  // ---------------------------------------------------------------------------
+  // Dialog handlers
+  // ---------------------------------------------------------------------------
 
   const handleBackgroundContinue = () => {
     setOpen(false);
@@ -639,6 +375,10 @@ export default function NovelAutoDirectorDialog({
   const preventCloseWhileBlocking = (event: Event) => {
     if (isBlockingExecutionView) event.preventDefault();
   };
+
+  // ---------------------------------------------------------------------------
+  // JSX
+  // ---------------------------------------------------------------------------
 
   return (
     <>

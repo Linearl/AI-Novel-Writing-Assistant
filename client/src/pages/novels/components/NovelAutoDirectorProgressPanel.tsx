@@ -1,18 +1,10 @@
-﻿import type {
+import type {
   NovelWorkflowMilestone,
-  NovelWorkflowMilestoneType,
 } from "@ai-novel/shared";
 import type {
   DirectorDashboardAction,
-  DirectorDashboardMode,
-  DirectorDisplayStepStatus,
-} from "@ai-novel/shared";
-import {
-  DIRECTOR_CANDIDATE_SETUP_STEPS,
-  extractDirectorTaskSeedPayloadFromMeta,
 } from "@ai-novel/shared";
 import { Badge } from "@/components/ui/badge";
-import type { UnifiedTaskDetail } from "@ai-novel/shared";
 import { useQuery } from "@tanstack/react-query";
 import {
   getDirectorTaskSnapshot,
@@ -27,290 +19,27 @@ import {
 } from "@/lib/directorTaskNotice";
 import { extractWorkflowActivityTags } from "@/lib/novelWorkflowActivityTags";
 import { useDirectorChapterTitleRepair } from "@/hooks/useDirectorChapterTitleRepair";
-
-type DirectorExecutionViewMode = "execution_progress" | "execution_failed";
-
-interface NovelAutoDirectorProgressPanelProps {
-  mode: DirectorExecutionViewMode;
-  task: UnifiedTaskDetail | null;
-  taskId: string;
-  titleHint?: string;
-  fallbackError?: string | null;
-  onBackgroundContinue: () => void;
-  onConfirmAndContinue?: () => void;
-  isConfirmingAndContinuing?: boolean;
-  onOpenTaskCenter: () => void;
-  onRetry?: () => void;
-  onRetryWithResume?: () => void;
-  retryPending?: boolean;
-}
-
-type DirectorStepVisualStatus = "pending" | "running" | "completed" | "failed";
-type DirectorStepDefinition = {
-  key: string;
-  label: string;
-};
-
-const DIRECTOR_EXECUTION_STEPS: DirectorStepDefinition[] = [
-  { key: "novel_create", label: "创建项目" },
-  { key: "book_contract", label: "Book Contract + 故事宏观规划" },
-  { key: "character_setup", label: "角色准备" },
-  { key: "volume_strategy", label: "卷战略 + 卷骨架" },
-  { key: "beat_sheet", label: "第 1 卷节奏板 + 章节列表" },
-  { key: "chapter_detail_bundle", label: "章节批量细化" },
-];
-
-const DIRECTOR_CANDIDATE_SETUP_STEP_KEYS = new Set<string>(
-  DIRECTOR_CANDIDATE_SETUP_STEPS.map((step) => step.key),
-);
-
-const AUTO_DIRECTOR_PLACEHOLDER_TITLES = new Set([
-  "AI 自动导演小说",
-  "小说流程任务",
-]);
-
-function formatDate(value: string | null | undefined): string {
-  if (!value) {
-    return "暂无";
-  }
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) {
-    return "暂无";
-  }
-  return date.toLocaleString();
-}
-
-function formatTokenCount(value: number | null | undefined): string {
-  return new Intl.NumberFormat("zh-CN").format(Math.max(0, Math.round(value ?? 0)));
-}
-
-function resolveAutoExecutionScopeLabel(task: UnifiedTaskDetail | null): string {
-  const seedPayload = extractDirectorTaskSeedPayloadFromMeta(task?.meta) as {
-    autoExecution?: {
-      scopeLabel?: string | null;
-      totalChapterCount?: number | null;
-    } | null;
-  } | null;
-  const scopeLabel = seedPayload?.autoExecution?.scopeLabel?.trim();
-  if (scopeLabel) {
-    return scopeLabel;
-  }
-  const fallbackCount = Math.max(1, Math.round(seedPayload?.autoExecution?.totalChapterCount ?? 10));
-  return `前 ${fallbackCount} 章`;
-}
-
-function resolveDirectorStyleSeed(task: UnifiedTaskDetail | null): {
-  title: string;
-  summaryLines: string[];
-} | null {
-  const seedPayload = extractDirectorTaskSeedPayloadFromMeta(task?.meta);
-  const styleIntentSummary = seedPayload?.styleIntentSummary;
-  if (styleIntentSummary?.headline?.trim()) {
-    return {
-      title: styleIntentSummary.styleProfileName?.trim() || styleIntentSummary.headline.trim(),
-      summaryLines: styleIntentSummary.stageSummaryLines ?? [],
-    };
-  }
-  const fallbackTone = typeof (seedPayload as { styleTone?: unknown } | null)?.styleTone === "string"
-    ? (((seedPayload as { styleTone?: string }).styleTone ?? "").trim())
-    : "";
-  if (!fallbackTone) {
-    return null;
-  }
-  return {
-    title: fallbackTone,
-    summaryLines: [`文风关键词：${fallbackTone}`],
-  };
-}
-
-function formatCheckpoint(
-  checkpoint: NovelWorkflowMilestoneType | null | undefined,
-  task: UnifiedTaskDetail | null,
-): string {
-  if (checkpoint === "rewrite_snapshot_created") {
-    return "重写前备份已创建";
-  }
-  if (checkpoint === "candidate_selection_required") {
-    return "等待确认书级方向";
-  }
-  if (checkpoint === "book_contract_ready") {
-    return "Book Contract 已就绪";
-  }
-  if (checkpoint === "character_setup_required") {
-    return "角色准备待审核";
-  }
-  if (checkpoint === "volume_strategy_ready") {
-    return "卷战略已就绪";
-  }
-  if (checkpoint === "chapter_batch_ready") {
-    return `${resolveAutoExecutionScopeLabel(task)}自动执行已暂停`;
-  }
-  if (checkpoint === "replan_required") {
-    return "需要重规划";
-  }
-  if (checkpoint === "workflow_completed") {
-    return "主流程完成";
-  }
-  return "暂无";
-}
-
-function isCandidateSetupFlow(task: UnifiedTaskDetail | null): boolean {
-  return DIRECTOR_CANDIDATE_SETUP_STEP_KEYS.has(task?.currentItemKey ?? "");
-}
-
-function resolveDirectorExecutionStepIndex(task: UnifiedTaskDetail | null): number {
-  const itemKey = task?.currentItemKey ?? "";
-  const chapterExecutionKeys = new Set([
-    "chapter_execution",
-    "chapter_execution_node",
-    "chapter.draft.write",
-    "chapter.write",
-  ]);
-  const qualityRepairKeys = new Set([
-    "reviewing",
-    "repairing",
-    "quality_repair",
-    "chapter_quality_review_node",
-    "chapter.quality.review",
-    "chapter_state_commit_node",
-    "chapter.state.commit",
-  ]);
-  if (qualityRepairKeys.has(itemKey)) {
-    return 5;
-  }
-  if (
-    (task?.status === "running" && task?.checkpointType === "chapter_batch_ready")
-    || itemKey === "chapter_detail_bundle"
-    || chapterExecutionKeys.has(itemKey)
-  ) {
-    return 5;
-  }
-  if (itemKey === "beat_sheet" || itemKey === "chapter_list" || itemKey === "chapter_sync") {
-    return 4;
-  }
-  if (
-    task?.checkpointType === "character_setup_required"
-    || itemKey === "character_setup"
-    || itemKey === "character_cast_apply"
-  ) {
-    return 2;
-  }
-  if (
-    task?.checkpointType === "volume_strategy_ready"
-    || itemKey === "volume_strategy"
-    || itemKey === "volume_skeleton"
-  ) {
-    return 3;
-  }
-  if (
-    task?.checkpointType === "book_contract_ready"
-    || itemKey === "book_contract"
-    || itemKey === "story_macro"
-    || itemKey === "constraint_engine"
-  ) {
-    return 1;
-  }
-  return 0;
-}
-
-function resolveCandidateSetupStepIndex(task: UnifiedTaskDetail | null): number {
-  const itemKey = task?.currentItemKey ?? "";
-  const foundIndex = DIRECTOR_CANDIDATE_SETUP_STEPS.findIndex((step) => step.key === itemKey);
-  return foundIndex >= 0 ? foundIndex : 0;
-}
-
-function resolveDirectorStepStatuses(
-  task: UnifiedTaskDetail | null,
-  mode: DirectorExecutionViewMode,
-  steps: ReadonlyArray<DirectorStepDefinition>,
-): DirectorStepVisualStatus[] {
-  if (task?.checkpointType === "chapter_batch_ready" || task?.status === "succeeded") {
-    return steps.map(() => "completed");
-  }
-
-  const currentIndex = isCandidateSetupFlow(task)
-    ? resolveCandidateSetupStepIndex(task)
-    : resolveDirectorExecutionStepIndex(task);
-  return steps.map((_, index) => {
-    if (index < currentIndex) {
-      return "completed";
-    }
-    if (index === currentIndex) {
-      return mode === "execution_failed" || task?.pendingManualRecovery ? "failed" : "running";
-    }
-    return "pending";
-  });
-}
-
-function stepClasses(status: DirectorStepVisualStatus): string {
-  if (status === "completed") {
-    return "border-emerald-500/40 bg-emerald-500/10";
-  }
-  if (status === "running") {
-    return "border-sky-400/60 bg-sky-50";
-  }
-  if (status === "failed") {
-    return "border-destructive/40 bg-destructive/5";
-  }
-  return "border-border/70 bg-background";
-}
-
-function stepBadgeClasses(status: DirectorStepVisualStatus): string {
-  if (status === "completed") {
-    return "bg-success text-white";
-  }
-  if (status === "running") {
-    return "bg-sky-600 text-white";
-  }
-  if (status === "failed") {
-    return "bg-destructive text-destructive-foreground";
-  }
-  return "bg-muted text-muted-foreground";
-}
-
-function stepStatusLabel(status: DirectorStepVisualStatus): string {
-  if (status === "completed") {
-    return "\u5df2\u5b8c\u6210";
-  }
-  if (status === "running") {
-    return "\u8fdb\u884c\u4e2d";
-  }
-  if (status === "failed") {
-    return "\u9700\u5904\u7406";
-  }
-  return "\u5f85\u63a8\u8fdb";
-}
-
-function mapDisplayStepStatus(status: DirectorDisplayStepStatus | null | undefined): DirectorStepVisualStatus {
-  if (status === "completed") {
-    return "completed";
-  }
-  if (status === "running") {
-    return "running";
-  }
-  if (status === "attention") {
-    return "failed";
-  }
-  return "pending";
-}
-
-function mapDashboardModeToContainerMode(mode: DirectorDashboardMode | null | undefined): AITakeoverMode {
-  switch (mode) {
-    case "failed":
-      return "failed";
-    case "recovering":
-      return "action_required";
-    case "waiting_user":
-      return "waiting";
-    case "idle":
-      return "loading";
-    case "queued":
-    case "completed":
-    case "running":
-    default:
-      return "running";
-  }
-}
+import type {
+  DirectorExecutionViewMode,
+  NovelAutoDirectorProgressPanelProps,
+} from "./novelAutoDirectorProgressPanel.types";
+import {
+  DIRECTOR_CANDIDATE_SETUP_STEP_KEYS,
+  AUTO_DIRECTOR_PLACEHOLDER_TITLES,
+  DIRECTOR_EXECUTION_STEPS,
+  formatDate,
+  formatTokenCount,
+  resolveDirectorStyleSeed,
+  formatCheckpoint,
+  isCandidateSetupFlow,
+  resolveDirectorStepStatuses,
+  stepClasses,
+  stepBadgeClasses,
+  stepStatusLabel,
+  mapDisplayStepStatus,
+  mapDashboardModeToContainerMode,
+  resolveAutoExecutionScopeLabel,
+} from "./novelAutoDirectorProgressPanel.utils";
 
 export default function NovelAutoDirectorProgressPanel({
   mode,
@@ -389,7 +118,7 @@ export default function NovelAutoDirectorProgressPanel({
   const candidateSetupFlow = isCandidateSetupFlow(task);
   const displaySteps = dashboardView?.steps ?? displayState?.steps ?? [];
   const stepDefinitions = candidateSetupFlow
-    ? DIRECTOR_CANDIDATE_SETUP_STEPS
+    ? DIRECTOR_EXECUTION_STEPS
     : displaySteps.map((step) => ({ key: step.key, label: step.label }));
   const steps = candidateSetupFlow
     ? resolveDirectorStepStatuses(task, visualMode, stepDefinitions)
@@ -489,12 +218,12 @@ export default function NovelAutoDirectorProgressPanel({
       <AITakeoverContainer
         mode={containerMode}
         title={visualMode === "execution_failed"
-          ? (candidateSetupFlow ? "\u5019\u9009\u65b9\u6848\u751f\u6210\u5931\u8d25" : "\u5bfc\u6f14\u6267\u884c\u5931\u8d25")
+          ? (candidateSetupFlow ? "候选方案生成失败" : "导演执行失败")
           : dashboardView?.mode === "recovering"
-            ? `\u300a${taskTitle}\u300b\u7b49\u5f85\u6062\u590d`
+            ? `《${taskTitle}》等待恢复`
             : candidateSetupFlow
-              ? "\u6b63\u5728\u751f\u6210\u5bfc\u6f14\u5019\u9009\u65b9\u6848"
-              : `\u300a${taskTitle}\u300b\u6b63\u5728\u81ea\u52a8\u5bfc\u6f14`}
+              ? "正在生成导演候选方案"
+              : `《${taskTitle}》正在自动导演`}
         description={description}
         progress={displayProgress}
         currentAction={currentAction}
@@ -520,7 +249,7 @@ export default function NovelAutoDirectorProgressPanel({
 
         {activityTags.length > 0 ? (
           <div className="mt-4 rounded-xl border bg-background/80 p-3">
-            <div className="text-xs font-medium text-muted-foreground">{"\u540e\u53f0\u9644\u5c5e\u5206\u6790"}</div>
+            <div className="text-xs font-medium text-muted-foreground">{"后台附属分析"}</div>
             <div className="mt-2 flex flex-wrap gap-2">
               {activityTags.map((tag) => (
                 <Badge key={tag} variant="secondary">{tag}</Badge>
@@ -532,36 +261,36 @@ export default function NovelAutoDirectorProgressPanel({
         {displayState?.pipelineMode === "pipeline" ? (
           <div className="mt-4 rounded-xl border border-sky-300/60 bg-sky-50/40 p-3 dark:border-sky-700/50 dark:bg-sky-950/15">
             <div className="flex items-center justify-between gap-2">
-              <div className="text-sm font-medium text-foreground">\u6d41\u6c34\u7ebf\u6267\u884c\u6a21\u5f0f</div>
-              <Badge variant="secondary">\u4ea4\u9519\u6267\u884c\u4e2d</Badge>
+              <div className="text-sm font-medium text-foreground">流水线执行模式</div>
+              <Badge variant="secondary">交错执行中</Badge>
             </div>
             {displayState.pipelineState ? (
               <div className="mt-3 grid gap-3 sm:grid-cols-2">
                 <div className="rounded-lg border border-border/70 bg-background/80 p-3">
-                  <div className="text-xs text-muted-foreground">\u7ec6\u5316\u8fdb\u5ea6</div>
+                  <div className="text-xs text-muted-foreground">细化进度</div>
                   <div className="mt-1 text-sm font-medium text-foreground">
                     {displayState.pipelineState.refinementProgress.completed} / {displayState.pipelineState.refinementProgress.total}
                   </div>
                   {displayState.pipelineState.refinementProgress.currentChapterId ? (
-                    <div className="mt-1 text-[11px] text-muted-foreground">\u5f53\u524d\u7ae0\u8282 {displayState.pipelineState.refinementProgress.currentChapterId.slice(0, 8)}</div>
+                    <div className="mt-1 text-[11px] text-muted-foreground">当前章节 {displayState.pipelineState.refinementProgress.currentChapterId.slice(0, 8)}</div>
                   ) : null}
                 </div>
                 <div className="rounded-lg border border-border/70 bg-background/80 p-3">
-                  <div className="text-xs text-muted-foreground">\u5199\u4f5c\u8fdb\u5ea6</div>
+                  <div className="text-xs text-muted-foreground">写作进度</div>
                   <div className="mt-1 text-sm font-medium text-foreground">
                     {displayState.pipelineState.writingProgress.completed} / {displayState.pipelineState.writingProgress.total}
                   </div>
                   {displayState.pipelineState.writingProgress.currentChapterId ? (
-                    <div className="mt-1 text-[11px] text-muted-foreground">\u5f53\u524d\u7ae0\u8282 {displayState.pipelineState.writingProgress.currentChapterId.slice(0, 8)}</div>
+                    <div className="mt-1 text-[11px] text-muted-foreground">当前章节 {displayState.pipelineState.writingProgress.currentChapterId.slice(0, 8)}</div>
                   ) : null}
                 </div>
               </div>
             ) : (
-              <div className="mt-2 text-xs text-muted-foreground">\u7b49\u5f85\u6d41\u6c34\u7ebf\u72b6\u6001\u66f4\u65b0...</div>
+              <div className="mt-2 text-xs text-muted-foreground">等待流水线状态更新...</div>
             )}
             {displayState.pipelineState?.blockedChapterId ? (
               <div className="mt-2 rounded-lg border border-amber-300/40 bg-amber-50/30 px-3 py-2 text-xs text-amber-900 dark:text-amber-200">
-                \u5f53\u524d\u963b\u585e\uff1a{displayState.pipelineState.blockingReason === "quality_review" ? "\u8d28\u91cf\u5ba1\u6838" : "\u7b49\u5f85\u4eba\u5de5\u786e\u8ba4"}
+                当前阻塞：{displayState.pipelineState.blockingReason === "quality_review" ? "质量审核" : "等待人工确认"}
               </div>
             ) : null}
           </div>
@@ -575,16 +304,16 @@ export default function NovelAutoDirectorProgressPanel({
         <div className="mt-4 rounded-xl border bg-background/80 p-4">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
-              <div className="text-sm font-medium text-foreground">{"\u5168\u90e8\u8fdb\u5c55"}</div>
+              <div className="text-sm font-medium text-foreground">{"全部进展"}</div>
               <div className="mt-1 text-xs text-muted-foreground">
-                {historyEvents.length > 0 ? `\u663e\u793a ${historyEvents.length} \u6761\u6700\u8fd1\u8fdb\u5c55` : "\u6b63\u5728\u8bfb\u53d6\u8fdb\u5c55\u8bb0\u5f55"}
+                {historyEvents.length > 0 ? `显示 ${historyEvents.length} 条最近进展` : "正在读取进展记录"}
               </div>
             </div>
           </div>
 
           {snapshotQuery.isLoading ? (
             <div className="mt-3 rounded-lg border bg-muted/15 px-3 py-2 text-sm text-muted-foreground">
-              {"\u6b63\u5728\u8bfb\u53d6\u8fdb\u5c55\u8bb0\u5f55\u3002"}
+              {"正在读取进展记录。"}
             </div>
           ) : historyEvents.length > 0 ? (
             <div className="mt-3 max-h-80 space-y-2 overflow-y-auto pr-1">
@@ -592,16 +321,16 @@ export default function NovelAutoDirectorProgressPanel({
                 <div key={event.eventId} className="rounded-lg border bg-muted/15 p-3 text-sm">
                   <div className="font-medium text-foreground">{event.summary}</div>
                   <div className="mt-2 flex flex-wrap gap-2 text-xs text-muted-foreground">
-                    <span>{"\u8bb0\u5f55\u65f6\u95f4\uff1a"}{formatDate(event.occurredAt)}</span>
-                    {event.nodeKey ? <span>{"\u6b65\u9aa4\uff1a"}{event.nodeKey}</span> : null}
-                    {event.artifactType ? <span>{"\u4ea7\u7269\uff1a"}{event.artifactType}</span> : null}
+                    <span>{"记录时间："}{formatDate(event.occurredAt)}</span>
+                    {event.nodeKey ? <span>{"步骤："}{event.nodeKey}</span> : null}
+                    {event.artifactType ? <span>{"产物："}{event.artifactType}</span> : null}
                   </div>
                 </div>
               ))}
             </div>
           ) : (
             <div className="mt-3 rounded-lg border bg-muted/15 px-3 py-2 text-sm text-muted-foreground">
-              {"\u4efb\u52a1\u8fd0\u884c\u540e\u4f1a\u5728\u8fd9\u91cc\u5199\u5165\u8fdb\u5c55\u8bb0\u5f55\u3002"}
+              {"任务运行后会在这里写入进展记录。"}
             </div>
           )}
         </div>

@@ -3,12 +3,12 @@ const assert = require("node:assert/strict");
 
 require("../../../dist/app.js");
 const { prisma } = require("../../../dist/db/prisma.js");
-const { NovelCoreCrudService } = require("../../../dist/services/novel/novelCoreCrudService.js");
+const { NovelCoreChapterService } = require("../../../dist/services/novel/novelCoreChapterService.js");
 
 describe("Chapter soft delete and restore", () => {
   let novelId;
   let chapterId;
-  const service = new NovelCoreCrudService();
+  const service = new NovelCoreChapterService();
 
   before(async () => {
     // Create a test novel

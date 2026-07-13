@@ -10,6 +10,7 @@ import { WorldContextGateway } from "../worldContext/WorldContextGateway";
 import { characterDynamicsQueryService } from "../dynamics/CharacterDynamicsQueryService";
 import { characterResourceLedgerService } from "../characterResource/CharacterResourceLedgerService";
 import { payoffLedgerSyncService } from "../../payoff/PayoffLedgerSyncService";
+import { buildPayoffReminderContext } from "../../payoff/payoffLedgerReminder";
 import { buildSyntheticPayoffIssues } from "../../payoff/payoffLedgerShared";
 import {
   buildRuntimeLedgerFromCanonical,
@@ -473,7 +474,7 @@ export class GenerationContextAssembler {
 
     // T8: 注入未回收伏笔提醒到生成上下文
     try {
-      const payoffReminder = await payoffLedgerSyncService.buildPayoffReminderContext(novelId, chapter.order);
+      const payoffReminder = await buildPayoffReminderContext(novelId, chapter.order);
       if (payoffReminder) {
         chapterWriteContext.completedMilestones = [
           ...chapterWriteContext.completedMilestones,

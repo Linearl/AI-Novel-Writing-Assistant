@@ -8,6 +8,13 @@ const { createApp } = require("../../dist/app.js");
 const {
   DefaultNovelApplicationServices,
 } = require("../../dist/services/novel/application/NovelApplicationServices.js");
+const {
+  getSharedNovelServices,
+} = require("../../dist/services/novel/application/sharedNovelServices.js");
+
+// novelRouter captures this singleton at module-import time (app.ts line 70),
+// so all route handlers use this exact instance. Mocks must target this object.
+const sharedServices = getSharedNovelServices();
 
 function listen(server) {
   return new Promise((resolve) => {
@@ -21,7 +28,6 @@ function listen(server) {
 test("character routes accept and return gender fields", async () => {
   const originalCreateCharacter = DefaultNovelApplicationServices.prototype.createCharacter;
   const originalUpdateCharacter = DefaultNovelApplicationServices.prototype.updateCharacter;
-  const originalApplySupplementalCharacter = DefaultNovelApplicationServices.prototype.applySupplementalCharacter;
   const captured = {
     createBody: null,
     updateBody: null,
@@ -96,7 +102,15 @@ test("character routes accept and return gender fields", async () => {
       updatedAt: new Date().toISOString(),
     };
   };
-  DefaultNovelApplicationServices.prototype.applySupplementalCharacter = async function applySupplementalCharacterMock(_novelId, body) {
+
+  const app = createApp();
+  const server = http.createServer(app);
+  const port = await listen(server);
+
+  // applySupplementalCharacter is an arrow function (instance property),
+  // so prototype mock doesn't intercept it — mock on the shared instance instead.
+  const originalInstanceApplySupplemental = sharedServices.applySupplementalCharacter;
+  sharedServices.applySupplementalCharacter = async function applySupplementalCharacterMock(_novelId, body) {
     captured.supplementalBody = body;
     return {
       character: {
@@ -133,10 +147,6 @@ test("character routes accept and return gender fields", async () => {
       relationCount: 0,
     };
   };
-
-  const app = createApp();
-  const server = http.createServer(app);
-  const port = await listen(server);
 
   try {
     const createResponse = await fetch(`http://127.0.0.1:${port}/api/novels/novel_gender/characters`, {
@@ -195,16 +205,22 @@ test("character routes accept and return gender fields", async () => {
   } finally {
     DefaultNovelApplicationServices.prototype.createCharacter = originalCreateCharacter;
     DefaultNovelApplicationServices.prototype.updateCharacter = originalUpdateCharacter;
-    DefaultNovelApplicationServices.prototype.applySupplementalCharacter = originalApplySupplementalCharacter;
+    sharedServices.applySupplementalCharacter = originalInstanceApplySupplemental;
     await new Promise((resolve, reject) => server.close((error) => (error ? reject(error) : resolve())));
   }
 });
 
 test("character cast apply route runs post-apply enhancements in background mode", async () => {
-  const originalApplyCharacterCastOption = DefaultNovelApplicationServices.prototype.applyCharacterCastOption;
   let capturedApplyArgs = null;
 
-  DefaultNovelApplicationServices.prototype.applyCharacterCastOption = async function applyCharacterCastOptionMock(...args) {
+  const app = createApp();
+  const server = http.createServer(app);
+  const port = await listen(server);
+
+  // applyCharacterCastOption is an arrow function (instance property),
+  // so mock on the shared instance instead of the prototype.
+  const originalInstanceApplyCast = sharedServices.applyCharacterCastOption;
+  sharedServices.applyCharacterCastOption = async function applyCharacterCastOptionMock(...args) {
     capturedApplyArgs = args;
     return {
       optionId: args[1],
@@ -217,10 +233,6 @@ test("character cast apply route runs post-apply enhancements in background mode
       qualityWarnings: [],
     };
   };
-
-  const app = createApp();
-  const server = http.createServer(app);
-  const port = await listen(server);
 
   try {
     const response = await fetch(`http://127.0.0.1:${port}/api/novels/novel_cast/character-prep/cast-options/option_1/apply`, {
@@ -251,7 +263,7 @@ test("character cast apply route runs post-apply enhancements in background mode
       },
     });
   } finally {
-    DefaultNovelApplicationServices.prototype.applyCharacterCastOption = originalApplyCharacterCastOption;
+    sharedServices.applyCharacterCastOption = originalInstanceApplyCast;
     await new Promise((resolve, reject) => server.close((error) => (error ? reject(error) : resolve())));
   }
 });
