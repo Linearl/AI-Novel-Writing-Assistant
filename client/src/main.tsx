@@ -9,10 +9,15 @@ import { APP_RUNTIME } from "./lib/constants";
 import AppRouter from "./router";
 import { Toaster } from "./components/ui/toast";
 import { setupGlobalErrorHandlers } from "./lib/logger";
+import FeedbackDialog from "@/components/feedback/FeedbackDialog";
+import { installFeedbackCollector } from "@/lib/feedbackContextCollector";
 import "./index.css";
 
 // 初始化全局错误捕获
 setupGlobalErrorHandlers();
+
+// 安装反馈上下文收集器
+installFeedbackCollector();
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -39,6 +44,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           </ServerStartupGate>
         </DesktopBootstrapBoundary>
         <Toaster />
+        <FeedbackDialog />
       </AppRouterProvider>
     </QueryClientProvider>
   </React.StrictMode>,

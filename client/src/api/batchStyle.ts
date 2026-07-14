@@ -31,10 +31,15 @@ export type BatchPolishChapterStatus =
 export interface BatchPolishChapterProgress {
   chapterId: string;
   chapterTitle: string;
+  chapterOrder: number;
   status: BatchPolishChapterStatus;
   violationCount: number;
   riskScore: number | null;
+  originalRiskScore: number | null;
+  newRiskScore: number | null;
+  issuesFixed: number;
   error?: string;
+  skippedReason?: string;
 }
 
 export interface BatchPolishJobProgress {
@@ -42,6 +47,11 @@ export interface BatchPolishJobProgress {
   status: "running" | "done" | "cancelled" | "error";
   totalChapters: number;
   completedChapters: number;
+  rewrittenChapters: number;
+  skippedChapters: number;
+  failedChapters: number;
+  riskThreshold: number;
+  autoApply: boolean;
   percent: number;
   results: BatchPolishChapterProgress[];
   startedAt: string;
@@ -56,6 +66,8 @@ interface BatchStyleBaseParams {
   provider?: string;
   model?: string;
   temperature?: number;
+  riskThreshold?: number;
+  autoApply?: boolean;
 }
 
 // ---------------------------------------------------------------------------

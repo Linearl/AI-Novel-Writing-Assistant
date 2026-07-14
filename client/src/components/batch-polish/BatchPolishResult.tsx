@@ -1,4 +1,4 @@
-import { AlertTriangle, CheckCircle2, AlertCircle, Ban, RotateCcw } from "lucide-react";
+import { AlertTriangle, CheckCircle2, AlertCircle, Ban, RotateCcw, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatusBadge } from "@/components/ui/status-badge";
@@ -102,12 +102,13 @@ interface PolishResultProps {
 }
 
 export function PolishResultDisplay({ progress, onReset }: PolishResultProps) {
-  const doneCount = progress.results.filter((r) => r.status === "done").length;
-  const errorCount = progress.results.filter((r) => r.status === "error").length;
+  const rewrittenCount = progress.rewrittenChapters ?? progress.results.filter((r) => r.status === "done").length;
+  const skippedCount = progress.skippedChapters ?? progress.results.filter((r) => r.status === "skipped").length;
+  const failedCount = progress.failedChapters ?? progress.results.filter((r) => r.status === "error").length;
   const cancelledCount = progress.results.filter((r) => r.status === "cancelled").length;
 
-  const isAllCancelled = cancelledCount === progress.results.length;
-  const isAllError = errorCount === progress.results.length;
+  const isAllCancelled = cancelledCount === progress.results.length && rewrittenCount === 0 && failedCount === 0;
+  const isAllError = failedCount === progress.results.length;
 
   return (
     <Card>
@@ -126,9 +127,9 @@ export function PolishResultDisplay({ progress, onReset }: PolishResultProps) {
       <CardContent className="space-y-4">
         {/* Summary */}
         <div className="grid grid-cols-3 gap-3">
-          <StatCard label="完成" value={doneCount} variant="success" />
-          <StatCard label="失败" value={errorCount} variant={errorCount > 0 ? "error" : "success"} />
-          <StatCard label="取消" value={cancelledCount} variant={cancelledCount > 0 ? "warning" : "success"} />
+          <StatCard label="已修复" value={rewrittenCount} variant="success" />
+          <StatCard label="跳过" value={skippedCount} variant={skippedCount > 0 ? "info" : "success"} />
+          <StatCard label="失败" value={failedCount} variant={failedCount > 0 ? "error" : "success"} />
         </div>
 
         {/* Chapter list */}
@@ -148,23 +149,64 @@ export function PolishResultDisplay({ progress, onReset }: PolishResultProps) {
 }
 
 function PolishChapterRow({ item }: { item: BatchPolishChapterProgress }) {
+  const origRisk = item.originalRiskScore;
+  const newRisk = item.newRiskScore;
+  const showRiskChange = item.status === "done" && origRisk != null && newRisk != null;
+
   return (
     <div className="flex items-center gap-3 py-2 border-b border-border/50 last:border-0">
       {item.status === "done" ? (
         <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" />
       ) : item.status === "error" ? (
         <AlertCircle className="h-4 w-4 text-red-500 shrink-0" />
+      ) : item.status === "skipped" ? (
+        <Ban className="h-4 w-4 text-muted-foreground shrink-0" />
       ) : item.status === "cancelled" ? (
         <Ban className="h-4 w-4 text-muted-foreground shrink-0" />
       ) : (
         <CheckCircle2 className="h-4 w-4 text-muted-foreground shrink-0" />
       )}
-      <span className="flex-1 text-sm font-medium truncate">{item.chapterTitle}</span>
-      {item.error && (
-        <span className="text-xs text-destructive truncate max-w-[200px]">{item.error}</span>
-      )}
-      <StatusBadge variant={item.status === "done" ? "success" : item.status === "error" ? "error" : "info"}>
-        {item.status === "done" ? "已润色" : item.status === "error" ? "失败" : item.status === "cancelled" ? "取消" : "跳过"}
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-medium truncate">{item.chapterTitle}</span>
+        </div>
+        {showRiskChange && (
+          <div className="flex items-center gap-1 text-xs mt-0.5">
+            <span className="text-muted-foreground">风险</span>
+            <span className={(origRisk as number) > 35 ? "text-amber-600" : "text-muted-foreground"}>
+              {origRisk}
+            </span>
+            <ArrowRight className="h-3 w-3 text-muted-foreground" />
+            <span className={(newRisk as number) <= 35 ? "text-emerald-600" : "text-amber-600"}>
+              {newRisk}
+            </span>
+            {item.issuesFixed > 0 && (
+              <span className="text-emerald-600 ml-1">修复 {item.issuesFixed} 处</span>
+            )}
+          </div>
+        )}
+        {item.skippedReason && (
+          <span className="text-xs text-muted-foreground mt-0.5 block truncate">
+            {item.skippedReason}
+          </span>
+        )}
+        {item.error && (
+          <span className="text-xs text-red-500 mt-0.5 block truncate">
+            {item.error}
+          </span>
+        )}
+      </div>
+      <StatusBadge variant={
+        item.status === "done" ? "success"
+          : item.status === "error" ? "error"
+          : item.status === "skipped" ? "info"
+          : "info"
+      }>
+        {item.status === "done" ? "已润色"
+          : item.status === "error" ? "失败"
+          : item.status === "skipped" ? "跳过"
+          : item.status === "cancelled" ? "取消"
+          : "处理中"}
       </StatusBadge>
     </div>
   );

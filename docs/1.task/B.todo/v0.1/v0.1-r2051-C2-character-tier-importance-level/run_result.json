@@ -2,7 +2,7 @@
   "reqId": "2051",
   "title": "角色重要度分级（CharacterTier）",
   "version": "0.1",
-  "status": "pass",
+  "status": "done",
   "route": "req",
   "createdAt": "2026-07-13T00:00:00.000Z",
   "updatedAt": "2026-07-14T00:00:00.000Z",

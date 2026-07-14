@@ -33,6 +33,8 @@ const batchPolishSchema = z.object({
   styleProfileId: z.string().trim().optional(),
   taskStyleProfileId: z.string().trim().optional(),
   previewAntiAiRuleIds: z.array(z.string().trim().min(1)).optional(),
+  riskThreshold: z.number().min(0).max(100).default(35),
+  autoApply: z.boolean().default(true),
   provider: llmProviderSchema.optional(),
   model: z.string().trim().optional(),
   temperature: z.number().min(0).max(2).optional(),
@@ -50,22 +52,34 @@ const jobParamsSchema = z.object({
 interface ChapterJobResult {
   chapterId: string;
   chapterTitle: string;
+  chapterOrder: number;
   status: "pending" | "detecting" | "polishing" | "done" | "error" | "skipped" | "cancelled";
   detection?: StyleDetectionReport;
   rewriteContent?: string;
+  originalRiskScore?: number;
+  newRiskScore?: number;
+  issuesFixed?: number;
   error?: string;
+  skippedReason?: string;
 }
 
 interface BatchPolishJob {
   id: string;
   novelId: string;
+  chapterIds?: string[];
+  riskThreshold: number;
+  autoApply: boolean;
   status: "running" | "done" | "cancelled" | "error";
   totalChapters: number;
   completedChapters: number;
+  rewrittenChapters: number;
+  skippedChapters: number;
+  failedChapters: number;
   results: ChapterJobResult[];
   abortController: AbortController;
   startedAt: string;
   finishedAt?: string;
+  config: Record<string, unknown>;
 }
 
 const batchJobs = new Map<string, BatchPolishJob>();
@@ -83,7 +97,7 @@ function generateJobId(): string {
 async function resolveChapterIds(
   novelId: string,
   chapterIds?: string[],
-): Promise<Array<{ id: string; title: string; content: string }>> {
+): Promise<Array<{ id: string; title: string; content: string; order: number }>> {
   const chapters = await chapterService.listChapters(novelId);
   if (chapters.length === 0) {
     throw new Error("当前小说还没有章节。");
@@ -99,6 +113,7 @@ async function resolveChapterIds(
       id: ch.id,
       title: ch.title,
       content: ch.content ?? "",
+      order: ch.order,
     }));
   }
 
@@ -108,6 +123,7 @@ async function resolveChapterIds(
       id: ch.id,
       title: ch.title,
       content: ch.content ?? "",
+      order: ch.order,
     }));
 }
 
@@ -185,21 +201,50 @@ router.post(
 // ---------------------------------------------------------------------------
 
 async function runBatchPolishJob(job: BatchPolishJob): Promise<void> {
-  const chapters = await resolveChapterIds(job.novelId);
+  // 使用 job 中存储的 chapterIds（透传请求参数）
+  const chapters = await resolveChapterIds(job.novelId, job.chapterIds);
 
-  // Filter to only chapters with content and that aren't cancelled
-  const targetChapters = chapters.filter((ch) => ch.content.trim().length > 0);
-  job.totalChapters = targetChapters.length;
-  job.results = targetChapters.map((ch) => ({
-    chapterId: ch.id,
-    chapterTitle: ch.title,
+  // 先对所有章节做一次检测，获取风险分
+  const detectResults: Array<{
+    chapter: { id: string; title: string; content: string; order: number };
+    detection: StyleDetectionReport;
+  }> = [];
+
+  for (const chapter of chapters) {
+    if (job.abortController.signal.aborted) {
+      job.status = "cancelled";
+      job.finishedAt = new Date().toISOString();
+      return;
+    }
+    try {
+      const detection = await styleDetectionService.check({
+        content: chapter.content,
+        novelId: job.novelId,
+        chapterId: chapter.id,
+        ...(pickOptional(job) as object),
+      } as Parameters<typeof styleDetectionService.check>[0]);
+      detectResults.push({ chapter, detection });
+    } catch {
+      // 检测失败的章节跳过
+    }
+  }
+
+  // 按风险分降序排序：高风险优先处理
+  detectResults.sort((a, b) => b.detection.riskScore - a.detection.riskScore);
+
+  job.totalChapters = detectResults.length;
+  job.results = detectResults.map(({ chapter, detection }) => ({
+    chapterId: chapter.id,
+    chapterTitle: chapter.title,
+    chapterOrder: chapter.order,
     status: "pending" as const,
+    detection,
+    originalRiskScore: detection.riskScore,
   }));
 
-  for (let i = 0; i < targetChapters.length; i++) {
+  for (let i = 0; i < detectResults.length; i++) {
     if (job.abortController.signal.aborted) {
-      // Mark remaining as cancelled
-      for (let j = i; j < targetChapters.length; j++) {
+      for (let j = i; j < detectResults.length; j++) {
         job.results[j].status = "cancelled";
       }
       job.status = "cancelled";
@@ -207,34 +252,20 @@ async function runBatchPolishJob(job: BatchPolishJob): Promise<void> {
       return;
     }
 
-    const chapter = targetChapters[i];
+    const { chapter, detection } = detectResults[i];
     const resultIndex = job.results.findIndex((r) => r.chapterId === chapter.id);
 
     try {
-      // Step 1: Detect
-      job.results[resultIndex].status = "detecting";
-      const detection = await styleDetectionService.check({
-        content: chapter.content,
-        novelId: job.novelId,
-        chapterId: chapter.id,
-        ...pickOptional(job),
-      });
-
-      if (job.abortController.signal.aborted) {
-        job.results[resultIndex].status = "cancelled";
-        continue;
-      }
-
-      job.results[resultIndex].detection = detection;
-
-      // Step 2: Rewrite if there are violations
-      if (detection.violations.length === 0) {
-        job.results[resultIndex].status = "done";
-        job.results[resultIndex].rewriteContent = chapter.content;
+      // 风险分低于阈值 → 跳过润色
+      if (detection.riskScore < job.riskThreshold) {
+        job.results[resultIndex].status = "skipped";
+        job.results[resultIndex].skippedReason = `风险分 ${detection.riskScore} < 阈值 ${job.riskThreshold}`;
         job.completedChapters++;
+        job.skippedChapters++;
         continue;
       }
 
+      // 无可自动修复的问题 → 跳过
       const autoRewriteIssues = detection.violations
         .filter((v) => v.canAutoRewrite)
         .map((v) => ({
@@ -244,9 +275,10 @@ async function runBatchPolishJob(job: BatchPolishJob): Promise<void> {
         }));
 
       if (autoRewriteIssues.length === 0) {
-        job.results[resultIndex].status = "done";
-        job.results[resultIndex].rewriteContent = chapter.content;
+        job.results[resultIndex].status = "skipped";
+        job.results[resultIndex].skippedReason = "无可自动修复的风格问题";
         job.completedChapters++;
+        job.skippedChapters++;
         continue;
       }
 
@@ -255,11 +287,36 @@ async function runBatchPolishJob(job: BatchPolishJob): Promise<void> {
         content: chapter.content,
         novelId: job.novelId,
         chapterId: chapter.id,
-        ...pickOptional(job),
+        ...(pickOptional(job) as object),
         issues: autoRewriteIssues,
-      });
+      } as Parameters<typeof styleRewriteService.rewrite>[0]);
 
       job.results[resultIndex].rewriteContent = rewriteResult.content;
+      job.results[resultIndex].issuesFixed = autoRewriteIssues.length;
+
+      // 持久化：autoApply=true 时直接写回数据库
+      if (job.autoApply && rewriteResult.content !== chapter.content) {
+        await chapterService.updateChapter(job.novelId, chapter.id, {
+          content: rewriteResult.content,
+        });
+
+        // 重新检测新内容，获取 newRiskScore
+        try {
+          const postDetection = await styleDetectionService.check({
+            content: rewriteResult.content,
+            novelId: job.novelId,
+            chapterId: chapter.id,
+            ...(pickOptional(job) as object),
+          } as Parameters<typeof styleDetectionService.check>[0]);
+          job.results[resultIndex].newRiskScore = postDetection.riskScore;
+          job.results[resultIndex].detection = postDetection;
+        } catch {
+          // post-detect 失败不影响主流程
+        }
+
+        job.rewrittenChapters++;
+      }
+
       job.results[resultIndex].status = "done";
       job.completedChapters++;
     } catch (error) {
@@ -268,6 +325,7 @@ async function runBatchPolishJob(job: BatchPolishJob): Promise<void> {
       job.results[resultIndex].status = "error";
       job.results[resultIndex].error = message;
       job.completedChapters++;
+      job.failedChapters++;
     }
   }
 
@@ -275,17 +333,8 @@ async function runBatchPolishJob(job: BatchPolishJob): Promise<void> {
   job.finishedAt = new Date().toISOString();
 }
 
-function pickOptional(job: BatchPolishJob): {
-  styleProfileId?: string;
-  taskStyleProfileId?: string;
-  previewAntiAiRuleIds?: string[];
-  provider?: LLMProvider;
-  model?: string;
-  temperature?: number;
-} {
-  // We store config in the job itself; use the first result's config
-  // Actually we need to pass config through. Let's store it on the job.
-  return (job as BatchPolishJob & { config?: Record<string, unknown> }).config ?? {};
+function pickOptional(job: BatchPolishJob): Record<string, unknown> {
+  return job.config ?? {};
 }
 
 router.post(
@@ -299,12 +348,18 @@ router.post(
       const jobId = generateJobId();
       const abortController = new AbortController();
 
-      const job: BatchPolishJob & { config?: Record<string, unknown> } = {
+      const job: BatchPolishJob = {
         id: jobId,
         novelId: id,
+        chapterIds: body.chapterIds,
+        riskThreshold: body.riskThreshold ?? 35,
+        autoApply: body.autoApply ?? true,
         status: "running",
         totalChapters: 0,
         completedChapters: 0,
+        rewrittenChapters: 0,
+        skippedChapters: 0,
+        failedChapters: 0,
         results: [],
         abortController,
         startedAt: new Date().toISOString(),
@@ -318,13 +373,13 @@ router.post(
         },
       };
 
-      batchJobs.set(jobId, job as BatchPolishJob);
+      batchJobs.set(jobId, job);
 
       // Run in background — do not await
-      void runBatchPolishJob(job as BatchPolishJob).catch((error) => {
+      void runBatchPolishJob(job).catch((error) => {
         logger.error(`[batch-polish] job ${jobId} failed unexpectedly`, error);
-        (job as BatchPolishJob).status = "error";
-        (job as BatchPolishJob).finishedAt = new Date().toISOString();
+        job.status = "error";
+        job.finishedAt = new Date().toISOString();
       });
 
       const data = { jobId };
@@ -364,6 +419,11 @@ router.get(
         status: job.status,
         totalChapters: job.totalChapters,
         completedChapters: job.completedChapters,
+        rewrittenChapters: job.rewrittenChapters,
+        skippedChapters: job.skippedChapters,
+        failedChapters: job.failedChapters,
+        riskThreshold: job.riskThreshold,
+        autoApply: job.autoApply,
         percent:
           job.totalChapters > 0
             ? Math.round((job.completedChapters / job.totalChapters) * 100)
@@ -371,9 +431,14 @@ router.get(
         results: job.results.map((r) => ({
           chapterId: r.chapterId,
           chapterTitle: r.chapterTitle,
+          chapterOrder: r.chapterOrder,
           status: r.status,
           violationCount: r.detection?.violations.length ?? 0,
-          riskScore: r.detection?.riskScore ?? null,
+          riskScore: r.detection?.riskScore ?? r.originalRiskScore ?? null,
+          originalRiskScore: r.originalRiskScore ?? null,
+          newRiskScore: r.newRiskScore ?? null,
+          issuesFixed: r.issuesFixed ?? 0,
+          skippedReason: r.skippedReason,
           error: r.error,
         })),
         startedAt: job.startedAt,

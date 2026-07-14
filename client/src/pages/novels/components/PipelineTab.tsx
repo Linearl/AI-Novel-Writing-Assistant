@@ -13,6 +13,7 @@ import WorldInjectionHint from "./WorldInjectionHint";
 import { getLowScoreChapterRange, getPipelineStageState, PIPELINE_STAGE_ITEMS } from "./pipelineTab.utils";
 import DirectorTakeoverEntryPanel from "./DirectorTakeoverEntryPanel";
 import RiskPanel from "@/components/risk/RiskPanel";
+import { BatchPolishContainer } from "@/components/batch-polish";
 
 interface PipelineTabProps {
   novelId: string;
@@ -260,6 +261,8 @@ export default function PipelineTab(props: PipelineTabProps) {
       </Card>
 
       <RiskPanel novelId={novelId} />
+
+      <BatchPolishContainer novelId={novelId} />
 
       <details className="group rounded-2xl border border-border/70 bg-background/95 p-4">
         <summary className="cursor-pointer list-none">

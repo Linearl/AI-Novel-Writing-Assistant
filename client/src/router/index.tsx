@@ -11,6 +11,7 @@ const NovelCreate = lazy(() => import("@/pages/novels/NovelCreate"));
 const NovelPreview = lazy(() => import("@/pages/novels/NovelPreview"));
 const NovelEdit = lazy(() => import("@/pages/novels/NovelEdit"));
 const NovelChapterEdit = lazy(() => import("@/pages/novels/NovelChapterEdit"));
+const GlobalReviewPage = lazy(() => import("@/pages/novels/GlobalReviewPage"));
 const CreativeHubPage = lazy(() => import("@/pages/creativeHub/CreativeHubPage"));
 const BookAnalysisPage = lazy(() => import("@/pages/bookAnalysis/BookAnalysisPage"));
 const TaskCenterPage = lazy(() => import("@/pages/tasks/TaskCenterPage"));
@@ -46,6 +47,7 @@ const routes: RouteObject[] = [
       { path: "novels/:id/preview", element: <NovelPreview /> },
       { path: "novels/:id/edit", element: <NovelEdit /> },
       { path: "novels/:id/chapters/:chapterId", element: <NovelChapterEdit /> },
+      { path: "novels/:id/global-review", element: <GlobalReviewPage /> },
       { path: "creative-hub", element: <CreativeHubPage /> },
       { path: "book-analysis", element: <BookAnalysisPage /> },
       { path: "tasks", element: <TaskCenterPage /> },

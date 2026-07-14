@@ -5,6 +5,8 @@ description: "REQ-2051 角色重要度分级任务分解"
 # Tasks: 角色重要度分级（CharacterTier）
 
 > REQ-2051 | 复杂度：C2（complex） | 预估工时：5-7 个 dev 循环
+> status: done
+> updated: 2026-07-14
 
 ---
 

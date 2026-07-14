@@ -3,7 +3,7 @@
   "title": "全局审校 + 跨章节问题回灌",
   "priority": "P1",
   "version": "v0.1",
-  "status": "pass",
+  "status": "done",
   "createdAt": "2026-07-12",
   "completedAt": "2026-07-14",
   "tags": ["audit", "global-review", "cross-chapter", "quality"],

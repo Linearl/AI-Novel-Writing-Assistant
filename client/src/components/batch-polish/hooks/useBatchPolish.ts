@@ -18,6 +18,8 @@ export type BatchPolishPhase = "idle" | "detecting" | "polishing" | "done" | "er
 export interface UseBatchPolishOptions {
   novelId: string;
   pollingIntervalMs?: number;
+  riskThreshold?: number;
+  autoApply?: boolean;
 }
 
 export interface UseBatchPolishReturn {
@@ -37,9 +39,16 @@ export interface UseBatchPolishReturn {
 // ---------------------------------------------------------------------------
 
 const DEFAULT_POLL_INTERVAL = 3000;
+const DEFAULT_RISK_THRESHOLD = 35;
+const DEFAULT_AUTO_APPLY = true;
 
 export function useBatchPolish(options: UseBatchPolishOptions): UseBatchPolishReturn {
-  const { novelId, pollingIntervalMs = DEFAULT_POLL_INTERVAL } = options;
+  const {
+    novelId,
+    pollingIntervalMs = DEFAULT_POLL_INTERVAL,
+    riskThreshold = DEFAULT_RISK_THRESHOLD,
+    autoApply = DEFAULT_AUTO_APPLY,
+  } = options;
 
   const [phase, setPhase] = useState<BatchPolishPhase>("idle");
   const [detectionResult, setDetectionResult] = useState<BatchDetectionResult | null>(null);
@@ -107,7 +116,7 @@ export function useBatchPolish(options: UseBatchPolishOptions): UseBatchPolishRe
     setError(null);
     setJobProgress(null);
     try {
-      const result = await batchStylePolish(novelId, { chapterIds });
+      const result = await batchStylePolish(novelId, { chapterIds, riskThreshold, autoApply });
       setJobId(result.jobId);
       pollProgress(result.jobId);
       toast.success("润色任务已启动", { description: "后台正在逐章处理，请关注进度。" });
@@ -117,7 +126,7 @@ export function useBatchPolish(options: UseBatchPolishOptions): UseBatchPolishRe
       setPhase("error");
       toast.error("批量润色启动失败", { description: message });
     }
-  }, [novelId, pollProgress]);
+  }, [novelId, pollProgress, riskThreshold, autoApply]);
 
   const cancelJob = useCallback(async () => {
     if (!jobId) return;

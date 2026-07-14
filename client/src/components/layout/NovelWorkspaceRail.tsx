@@ -4,6 +4,7 @@ import {
   BookOpenText,
   ChevronLeft,
   ChevronRight,
+  ClipboardCheck,
   History,
   LayoutDashboard,
   ListTodo,
@@ -603,6 +604,19 @@ export default function NovelWorkspaceRail(props: NovelWorkspaceRailProps) {
         </nav>
 
         <div className="space-y-2 border-t border-border/70 pt-3">
+          <button
+            type="button"
+            onClick={() => navigate(`/novels/${novelId}/global-review`)}
+            title="全局审校"
+            className={cn(
+              "flex w-full items-center rounded-2xl border border-border/70 transition-colors hover:bg-muted/40",
+              collapsed ? "justify-center px-2 py-3" : "gap-3 px-3 py-3 text-left",
+            )}
+          >
+            <ClipboardCheck className="h-4 w-4 shrink-0" />
+            {!collapsed ? <span className="text-sm font-medium">全局审校</span> : null}
+          </button>
+
           <button
             type="button"
             onClick={() => goToTab("history")}

@@ -4,8 +4,8 @@ description: "REQ-2049 审校上下文增强 — 任务拆解"
 
 # REQ-2049 审校上下文增强 — 任务总表
 
-> status: requirements_ready
-> updated: 2026-07-11
+> status: done
+> updated: 2026-07-14
 
 ## 阶段零：前置确认
 
@@ -52,7 +52,7 @@ description: "REQ-2049 审校上下文增强 — 任务拆解"
   - `buildChapterWriterContextBlocks` 中，review 模式下 `includePayoffDirectives` 始终为 `true`（即使无数据也输出占位）
   - 无空块或 undefined 注入（filter 逻辑不变）
 - 估时：0.5h
-- 状态：todo
+- 状态：done
 
 ### T2.2: chapterLayeredContextBlocks.ts — recent_chapters 扩展到当前卷全部
 

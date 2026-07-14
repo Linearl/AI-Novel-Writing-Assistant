@@ -4,7 +4,8 @@ description: "REQ-2050 任务拆解"
 
 # REQ-2050 任务拆解
 
-> 状态：🆕 激活（完成后改为 ✅ 全部完成）
+> status: done
+> updated: 2026-07-14
 
 ## 任务概述
 
@@ -32,16 +33,16 @@ description: "REQ-2050 任务拆解"
 
 | # | 任务 | 优先级 | 预估 | 状态 |
 | --- | --- | --- | --- | --- |
-| T1.1 | 新增 GlobalReviewIssue Prisma model + migration | P0 | 1h | ⬜ 待开始 |
-| T1.2 | 新增全局审校 prompt（audit.global） | P0 | 1h | ⬜ 待开始 |
-| T1.3 | 新增全局审校 context builder（全局层 + 章节层） | P0 | 1.5h | ⬜ 待开始 |
-| T2.1 | 新增全局审校 API 端点（POST /api/novels/:id/global-review） | P0 | 1h | ⬜ 待开始 |
-| T2.2 | scope 选择 + token budget 自动裁剪逻辑 | P1 | 1h | ⬜ 待开始 |
-| T2.3 | 全局审输出解析 + GlobalReviewIssue 写入 | P0 | 1h | ⬜ 待开始 |
-| T3.1 | 逐章审校时注入 global_review_feedback context block | P0 | 0.5h | ⬜ 待开始 |
-| T3.2 | 卷完成自动触发全局审 | P1 | 0.5h | ⬜ 待开始 |
-| T3.3 | pnpm typecheck 通过 | P0 | 0.5h | ⬜ 待开始 |
-| T3.4 | 端到端验证 | P1 | 0.5h | ⬜ 待开始 |
+| T1.1 | 新增 GlobalReviewIssue Prisma model + migration | P0 | 1h | ✅ 已完成 |
+| T1.2 | 新增全局审校 prompt（audit.global） | P0 | 1h | ✅ 已完成 |
+| T1.3 | 新增全局审校 context builder（全局层 + 章节层） | P0 | 1.5h | ✅ 已完成 |
+| T2.1 | 新增全局审校 API 端点（POST /api/novels/:id/global-review） | P0 | 1h | ✅ 已完成 |
+| T2.2 | scope 选择 + token budget 自动裁剪逻辑 | P1 | 1h | ✅ 已完成 |
+| T2.3 | 全局审输出解析 + GlobalReviewIssue 写入 | P0 | 1h | ✅ 已完成 |
+| T3.1 | 逐章审校时注入 global_review_feedback context block | P0 | 0.5h | ✅ 已完成 |
+| T3.2 | 卷完成自动触发全局审 | P1 | 0.5h | ✅ 已完成 |
+| T3.3 | pnpm typecheck 通过 | P0 | 0.5h | ✅ 已完成 |
+| T3.4 | 端到端验证（含前端UI页面+路由+侧边栏入口） | P1 | 0.5h | ✅ 已完成 |
 
 ---
 
@@ -177,14 +178,14 @@ description: "REQ-2050 任务拆解"
 
 ---
 
-### T3.4: 端到端验证
+### T3.4: 端到端验证（含前端UI页面+路由+侧边栏入口）
 
-**目标**: 在真实环境中验证完整流程。
+**目标**: 在真实环境中验证完整流程，包括前端UI。
 
 **验证步骤**:
 1. 启动 `pnpm dev`
 2. 创建测试小说并写入几章内容
-3. 手动触发全局审校（POST /api/novels/:id/global-review）
+3. 手动触发全局审校（前端入口/POST /api/novels/:id/global-review）
 4. 验证 GlobalReviewIssue 表有数据
 5. 触发逐章审校，验证 global_review_feedback context block 注入
 6. 完成一卷审校，验证自动触发全局审校
@@ -194,3 +195,4 @@ description: "REQ-2050 任务拆解"
 - GlobalReviewIssue 正确写入
 - 逐章审校时注入 global_review_feedback
 - 卷完成自动触发
+- 前端页面+路由+侧边栏入口正常可用
