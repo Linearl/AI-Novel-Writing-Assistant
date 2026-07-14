@@ -46,7 +46,7 @@ v1.0: 正式发布
 
 **参考案例**：《玫瑰窃贼》— 基于柳爽同名歌曲衍生的都市文艺小说（18 万字，30 章）
 
-详见 [v0.1-acceptance-criteria.md](./v0.1-acceptance-criteria.md)
+详见 [v0.1-plan.md](./v0.1-plan.md)
 
 ### 已完成的里程碑
 
