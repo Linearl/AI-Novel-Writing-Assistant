@@ -560,3 +560,11 @@ description: "docs 目录索引（自动生成）"
 | --- | --- | --- |
 | [4.misc\prompts\high-speed-develop.md](./4.misc\prompts\high-speed-develop.md) | 请完成 docs_dev/1.task/B.todo/v0.1 下全部任务包的开发。 | - |
 
+## 7.weekly
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [7.weekly\2026-W26-weekly.md](./7.weekly\2026-W26-weekly.md) | 2026-W26 周报 — 项目初始化与架构诊断 | 2026-W26 周报 — 项目初始化与架构诊断 |
+| [7.weekly\2026-W27-weekly.md](./7.weekly\2026-W27-weekly.md) | 2026-W27 周报 — 功能开发与工程化治理 | 2026-W27 周报 — 功能开发与工程化治理 |
+| [7.weekly\2026-W28-weekly.md](./7.weekly\2026-W28-weekly.md) | 2026-W28 周报 — v0.1.00 定稿与发布 | 2026-W28 周报 — v0.1.00 定稿与发布 |
+
