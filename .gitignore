@@ -56,6 +56,9 @@ server/consistency-reports/
 # ll-workflow-core worktree pool
 worktree/
 
+# git-filter-repo artifacts
+.git-rewrite/
+
 # Tool configs
 .archon/
 .reasonix/
