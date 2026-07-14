@@ -1,7 +1,7 @@
 # 安全规则
 <!-- 父级: (根级，无父级) -->
 <!-- 生成: 2026-06-26 | 更新: 2026-06-28 -->
-<!-- 备份: docs_dev/4.misc/backup/AGENTS.md.backup-2026-06-28 -->
+<!-- 备份: docs/4.misc/backup/AGENTS.md.backup-2026-06-28 -->
 
 ## 项目概况
 

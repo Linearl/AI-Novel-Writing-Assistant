@@ -1,0 +1,224 @@
+{
+  "dimension": "stability",
+  "weight": 0.15,
+  "scanDate": "2026-07-01",
+  "checksPerformed": [
+    "空 catch / swallowed errors",
+    "未处理 Promise rejection",
+    "类型安全 (as any / @ts-ignore)",
+    "空指针防护",
+    "资源泄漏（DB/文件/WebSocket）",
+    "并发安全（共享状态/race condition）",
+    "数据完整性（事务使用）",
+    "优雅关闭（SIGTERM/SIGINT）",
+    "重试机制",
+    "超时处理"
+  ],
+  "findings": [
+    {
+      "id": "STB-001",
+      "severity": "P2",
+      "title": "大量 HTTP 路由层 req.body as any 绕过类型检查",
+      "description": "在 25+ 个 HTTP 路由处理器中，req.body 被直接 as any 转发给 service 层，绕过了 Express 的类型系统和 Zod 验证。如果调用方缺少独立的 Zod validate 中间件，恶意或畸形请求体将直接进入业务逻辑。",
+      "file": "server/src/modules/novel/production/http/novelProductionRoutes.ts",
+      "line": "101-242（8 处），同模式分布在 novelReviewRoutes, novelChapterRoutes, novelVolumeRoutes, novelPlanningRoutes, novelCharacterDynamicsRoutes 等文件",
+      "evidence": "const data = await novelService.generateChapterHook(id, req.body as any); // 无前置 body schema 校验",
+      "impact": "绕过类型检查可能导致运行时传入非法字段，service 层拿到未预期的属性值，引发不可预测的行为。虽然部分路由有 validate() 中间件，但 as any 仍消除了编译期防护。",
+      "remediation": "1. 为所有 POST/PUT/PATCH 路由定义 Zod body schema 并通过 validate() 中间件校验；2. 消除 as any，将校验后的 req.body 显式类型断言为推断类型；3. 优先使用 Zod schema 的 .parse() 返回值代替 raw req.body。"
+    },
+    {
+      "id": "STB-002",
+      "severity": "P3",
+      "title": "LLM 结构化调用层存在 81 处 as any 类型逃逸",
+      "description": "server/src 全局搜索发现 81 处 `as any` 使用，分布在 25 个文件中。除路由层的 req.body 外，还有 agent tools、planner persistence、bookAnalysis sectionWriter、worldReferenceInspiration 等核心业务逻辑中直接使用 as any。",
+      "file": "server/src/agents/tools/novelProductionTools.ts, server/src/services/planner/plannerPersistence.ts, server/src/services/bookAnalysis/bookAnalysis.sectionWriter.ts 等 25 个文件",
+      "line": "多处（详见 evidence count: 81 total occurrences）",
+      "evidence": "provider: context.provider as any (novelProductionTools.ts:51); return enrichStoryPlan(enriched as any) (PlannerService.ts:160); (parsed as any).markdown.trim() (sectionWriter.ts:50)",
+      "impact": "运行时类型不匹配风险，尤其在 LLM 输出解析、planner 数据拼装等路径上，as any 可能隐藏 null/undefined 访问或缺少字段访问。",
+      "remediation": "1. 逐文件引入显式接口或泛型参数替代 as any；2. 对 LLM 输出解析场景使用 Zod schema runtime validation；3. 对 provider 类型不匹配问题，统一 LLMProvider 类型定义。"
+    },
+    {
+      "id": "STB-003",
+      "severity": "P3",
+      "title": "2 处 @ts-ignore 用于 Winston 类型导入",
+      "description": "LoggerService.ts 中因 winston 和 winston-daily-rotate-file 类型未解析而使用 @ts-ignore 压制错误。虽然有注释说明 pnpm install 后可解析，但属于已知技术债。",
+      "file": "server/src/services/logging/LoggerService.ts",
+      "line": "3-7",
+      "evidence": "// @ts-ignore — winston types resolve after pnpm install\nimport winston from \"winston\";\n// @ts-ignore — winston-daily-rotate-file types resolve after pnpm install\nimport DailyRotateFile from \"winston-daily-rotate-file\";",
+      "impact": "如果 winston 版本升级导致 API 变更，@ts-ignore 将掩盖编译错误。目前功能正常，但类型安全保障缺失。",
+      "remediation": "1. 确认 @types/winston 和 winston-daily-rotate-file 类型声明是否已安装；2. 如类型确实缺失，考虑使用 declaration 文件补充而非 @ts-ignore；3. 添加 ESLint ban-ts-comment 规则例外仅限此文件。"
+    },
+    {
+      "id": "STB-004",
+      "severity": "P3",
+      "title": "EventBus 错误被吞没：handler 异常仅 console.error",
+      "description": "EventBus.emit() 中对 handler 异常的处理仅为 console.error 日志，不向调用方传播错误也不进行重试。如果关键事件 handler（如 novel domain 事件）失败，系统将静默丢失事件。",
+      "file": "server/src/events/EventBus.ts",
+      "line": "25-34",
+      "evidence": "async emit(event: NovelEvent): Promise<void> {\n  for (const { handler } of list) {\n    try {\n      await handler(event);\n    } catch (err) {\n      console.error(`[EventBus] handler error for ${event.type}:`, err);\n    }\n  }\n}",
+      "impact": "如果重要事件（如 chapter_completed、task_finished）的 handler 抛出异常，调用方 emit() 不会感知失败，后续逻辑（如 sideEffect 触发）可能被静默跳过。",
+      "remediation": "1. 增加 failedEvents 队列或 dead letter 机制，收集失败事件供后续重放；2. 对关键 handler 事件提供 emitWithConfirmation() 变体，至少收集失败信息返回；3. 考虑引入 handler 优先级隔离，关键 handler 异常不应阻断后续 handler。"
+    },
+    {
+      "id": "STB-005",
+      "severity": "P4",
+      "title": "RAG 索引操作的空 catch 块",
+      "description": "WorldService 中 RAG 索引操作（enqueueUpsert/enqueueDelete）失败时使用 .catch(() => {}) 完全吞没错误。这些是 fire-and-forget 操作，但如果 RAG 服务持续不可用，将导致数据不一致且无告警。",
+      "file": "server/src/services/world/WorldService.ts",
+      "line": "115-119",
+      "evidence": "private queueRagUpsert(ownerType: RagOwnerType, ownerId: string): void {\n  void ragServices.ragIndexService.enqueueUpsert(ownerType, ownerId).catch(() => {});\n}\nprivate queueRagDelete(ownerType: RagOwnerType, ownerId: string): void {\n  void ragServices.ragIndexService.enqueueDelete(ownerType, ownerId).catch(() => {});\n}",
+      "impact": "RAG 索引队列失败时静默丢弃，无法感知 RAG 数据与源数据不一致。",
+      "remediation": "至少添加 console.warn 级别日志记录失败原因，或接入 sideEffect worker 的死信队列进行重试。"
+    },
+    {
+      "id": "STB-006",
+      "severity": "P4",
+      "title": "Heartbeat 触碰失败被完全吞没",
+      "description": "BookAnalysis 心跳机制中 touchAnalysisHeartbeat 失败时使用空 catch(() => {}) 完全忽略。如果数据库短暂不可用，心跳丢失可能导致 analysis 被 watchdog 误判为超时。",
+      "file": "server/src/services/bookAnalysis/bookAnalysis.generation.ts",
+      "line": "431",
+      "evidence": "void this.touchAnalysisHeartbeat(analysisId).catch(() => {});",
+      "impact": "心跳丢失导致正在进行的 analysis 被 watchdog 标记为超时并触发不必要的恢复流程。",
+      "remediation": "添加 .catch((error) => console.warn(`[heartbeat] touch failed for ${analysisId}`, error)) 保留错误信息。"
+    },
+    {
+      "id": "STB-007",
+      "severity": "P4",
+      "title": "文件清理错误被忽略",
+      "description": "ComicPanelImageService 在清理旧格式图片文件时，unlink 失败被完全吞没。",
+      "file": "server/src/services/comic/ComicPanelImageService.ts",
+      "line": "404",
+      "evidence": "await fs.unlink(path.join(dir, f)).catch(() => {});",
+      "impact": "旧格式图片文件无法清理，磁盘空间缓慢泄漏。",
+      "remediation": "添加 warn 级别日志记录 unlink 失败原因。"
+    },
+    {
+      "id": "STB-008",
+      "severity": "P2",
+      "title": "主进程缺少 unhandledRejection / uncaughtException 处理",
+      "description": "server/src 搜索未发现任何 process.on('unhandledRejection') 或 process.on('uncaughtException') 注册。Node.js 15+ 中 unhandledRejection 默认会终止进程，但在某些情况下（如 Promise 被垃圾回收前才 reject）可能导致未预期的崩溃。",
+      "file": "server/src/app.ts",
+      "line": "全局",
+      "evidence": "搜索 process.on('unhandledRejection' / 'uncaughtException') 结果为空。bootstrap() 中只有 void bootstrap().catch()。",
+      "impact": "未捕获的 Promise rejection 可能导致进程突然退出，无日志可追踪根因。",
+      "remediation": "在 app.ts 或独立 startup 模块中添加：\nprocess.on('unhandledRejection', (reason) => { console.error('[FATAL] unhandledRejection', reason); });\nprocess.on('uncaughtException', (error) => { console.error('[FATAL] uncaughtException', error); process.exit(1); });"
+    },
+    {
+      "id": "STB-009",
+      "severity": "P2",
+      "title": "主 Express 服务器无 SIGTERM/SIGINT 处理",
+      "description": "app.ts 中 startServer() 创建的 HTTP server 没有注册 SIGTERM/SIGINT 信号处理器。虽然 DirectorWorker 有独立的信号处理，但 Express 主服务器、sideEffect worker、RAG worker 等其他后台服务的优雅关闭仅通过 close() 方法实现，外部进程信号无法触发。",
+      "file": "server/src/app.ts",
+      "line": "292-335（startServer）",
+      "evidence": "export async function startServer(options?: ServerStartOptions): Promise<StartedServer> {\n  // ... 无 process.on('SIGTERM', ...) 注册\n  return { app, server, close: async () => { await backgroundServices.stop(); ... } };\n}",
+      "impact": "在容器化部署（Docker/K8s）中，SIGTERM 信号到达后进程直接被 kill，后台任务（正在执行的 LLM 调用、sideEffect job）无机会完成，可能导致数据不一致。",
+      "remediation": "1. 在 bootstrap() 或 startServer() 中注册 process.on('SIGTERM'/'SIGINT', ...) 并调用 server.close() + backgroundServices.stop()；2. 添加关闭超时（如 30s）防止无限等待；3. 参考 DirectorWorker 的实现模式统一处理。"
+    },
+    {
+      "id": "STB-010",
+      "severity": "P3",
+      "title": "LLM 调用层无自动重试机制",
+      "description": "Anthropic 客户端 (anthropicClient.ts) 和 LLM 工厂 (factory.ts) 中，HTTP 请求失败直接抛出异常，无内置重试逻辑。只有 SQLite 写入层有 withSqliteRetry 重试机制。LLM 调用（尤其是非结构化调用）在遇到 429/5xx 网络错误时不会自动重试。",
+      "file": "server/src/llm/anthropicClient.ts",
+      "line": "136-174 (postMessages)",
+      "evidence": "async function postMessages(...) {\n  // ... fetch call with AbortController timeout\n  // no retry logic for transient HTTP errors\n  if (!response.ok) {\n    throw new Error(`Anthropic request failed (${response.status}): ...`);\n  }\n}",
+      "impact": "网络抖动或临时 429/503 错误直接导致 LLM 调用失败，用户可感知的请求失败率偏高。LangChain ChatOpenAI 库可能内置部分重试，但自定义 Anthropic 客户端无此能力。",
+      "remediation": "1. 在 Anthropic postMessages 层添加 transient error（429/5xx）的指数退避重试；2. 统一 LLM 调用重试策略配置（maxRetries, retryDelayMs）；3. RAG 层已有 retry 配置，可参考其模式。"
+    },
+    {
+      "id": "STB-011",
+      "severity": "P3",
+      "title": "SSE streaming 心跳 setInterval 未 unref",
+      "description": "LLM streaming 模块中 SSE 心跳 setInterval 未调用 unref()，如果主进程仅通过 server.close() 关闭 HTTP server，该定时器会阻止进程退出。",
+      "file": "server/src/llm/streaming.ts",
+      "line": "67-69",
+      "evidence": "const heartbeat = setInterval(() => {\n  writeSSEFrame(res, { type: \"ping\" });\n}, 15000);",
+      "impact": "长连接 SSE 未断开时，心跳定时器可能阻止 Node.js 进程正常退出。",
+      "remediation": "添加 heartbeat.unref?.() 并在 SSE 连接关闭时 clearInterval(heartbeat)。"
+    },
+    {
+      "id": "STB-012",
+      "severity": "P3",
+      "title": "批量事务串行执行，无批量优化",
+      "description": "timeline.repository.ts 中批量事件插入使用 for 循环逐条 $transaction，每条事件一个独立事务。大量事件时性能较差。",
+      "file": "server/src/modules/timeline/timeline.repository.ts",
+      "line": "434-436",
+      "evidence": "for (const event of events) {\n  const result = await prisma.$transaction(async (tx) => {\n    const row = await tx.storyTimelineEvent.create({...});",
+      "impact": "100 条事件 = 100 次事务提交，写入性能差。SQLite 场景下尤为明显。",
+      "remediation": "1. 使用 prisma.$transaction 批量操作（interactive transaction + batch create）；2. 对大批次进行分组（如每 50 条一批）减少事务开销。"
+    },
+    {
+      "id": "STB-013",
+      "severity": "P4",
+      "title": "DirectorTaskQueue lease renewal 定时器未调用 unref",
+      "description": "DirectorTaskQueue 的 lease renewal setInterval 在 startLeaseRenewal() 中创建但未调用 unref()，依赖调用方通过 returned cleanup function 手动清除。",
+      "file": "server/src/workers/DirectorTaskQueue.ts",
+      "line": "151-152",
+      "evidence": "const timer = setInterval(renew, Math.max(100, Math.floor(this.leaseMs / 3)));\nreturn () => clearInterval(timer);",
+      "impact": "如果 cleanup 函数未被正确调用（异常路径），定时器可能阻止进程退出。",
+      "remediation": "添加 timer.unref?.() 确保定时器不阻止进程退出。"
+    },
+    {
+      "id": "STB-014",
+      "severity": "P3",
+      "title": "NovelSideEffectWorker start 中 tick() 的 Promise 被忽略",
+      "description": "NovelSideEffectWorker.start() 中 void this.tick() 的异常已被 isTicking 标志内部 catch 处理，但 recoverExpiredRunningJobs() 的 .catch() 仅 console.warn。如果恢复逻辑持续失败，不会影响 worker 启动但问题静默。",
+      "file": "server/src/events/sideEffects/NovelSideEffectWorker.ts",
+      "line": "43-49",
+      "evidence": "void this.jobService.recoverExpiredRunningJobs().catch((error) => {\n  console.warn(\"[novel-side-effect-worker] failed to recover expired jobs\", error);\n});\nthis.timer = setInterval(() => { void this.tick(); }, this.pollMs);",
+      "impact": "job 恢复失败不阻断启动但不重试，可能导致 stuck jobs 持续存在直到 watchdog 干预。",
+      "remediation": "在 recoverExpiredRunningJobs 失败后安排延迟重试（如 30s 后重试一次），或在第一次 tick 中再次尝试。"
+    },
+    {
+      "id": "STB-015",
+      "severity": "P4",
+      "title": "ragWorker.start() 返回的 Promise 被 void 忽略",
+      "description": "app.ts 中 void ragServices.ragWorker.start() 不捕获可能的启动失败。如果 RAG worker 启动失败，RAG 后台任务完全不工作且无告警。",
+      "file": "server/src/app.ts",
+      "line": "248",
+      "evidence": "void ragServices.ragWorker.start();",
+      "impact": "RAG worker 静默失败，所有 RAG 索引/查询任务不工作。",
+      "remediation": "添加 .catch() 处理：void ragServices.ragWorker.start().catch((error) => { console.error('[rag.worker] start failed', error); });"
+    },
+    {
+      "id": "STB-016",
+      "severity": "P4",
+      "title": "migrateAddendumsToSlots 使用 prisma as any 访问未声明的表",
+      "description": "Prompt addendum 迁移脚本中通过 (prisma as any).promptAddendum 和 (prisma as any).promptSlotOverride 访问 Prisma schema 中未声明的模型表。",
+      "file": "server/src/prompting/slots/migrateAddendumsToSlots.ts",
+      "line": "59, 116, 148, 155",
+      "evidence": "const addendums: AddendumRow[] = await (prisma as any).promptAddendum.findMany({...});\nconst existing = await (prisma as any).promptSlotOverride.findFirst({...});",
+      "impact": "如果这些表名变更或不存在，运行时才报错。迁移脚本缺少编译期类型保障。",
+      "remediation": "1. 在 Prisma schema 中声明对应 model（即使是临时表）；2. 或将迁移脚本改为 raw SQL 确保不依赖 Prisma 类型系统。"
+    }
+  ],
+  "summary": {
+    "totalFindings": 16,
+    "bySeverity": {
+      "P1": 0,
+      "P2": 3,
+      "P3": 7,
+      "P4": 6
+    },
+    "checksPassed": [
+      "空 catch 块扫描（无完全空的 catch 块）",
+      "空指针防护（主要路径有 nullish check）",
+      "事务使用（核心路径正确使用 prisma.$transaction）",
+      "SQLite 重试机制（withSqliteRetry 存在且有效）",
+      "LLM 超时处理（anthropicClient + invokeTimeout 均有 AbortController 超时）",
+      "并发安全（NovelSideEffectWorker 使用 isTicking 标志防重入；DirectorWorker 使用 lease 机制）"
+    ],
+    "checksFailed": [
+      "req.body as any 绕过类型检查（25+ 处）",
+      "全局 as any 未收敛（81 处 / 25 文件）",
+      "@ts-ignore 残留（2 处）",
+      "EventBus handler 异常被吞没",
+      "RAG/fire-and-forget 空 catch（3+ 处）",
+      "主进程无 unhandledRejection/uncaughtException 处理",
+      "Express 主服务器无 SIGTERM/SIGINT 优雅关闭",
+      "LLM 调用层无自动重试",
+      "SSE heartbeat / lease renewal 定时器未 unref",
+      "批量事务串行无优化"
+    ]
+  }
+}

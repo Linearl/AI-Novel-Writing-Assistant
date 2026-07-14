@@ -1,0 +1,18 @@
+{
+  "reqId": "7042",
+  "title": "错误分类器",
+  "status": "todo",
+  "complexity": "S1",
+  "category": "7xxx",
+  "priority": "P1",
+  "version": "v0.2",
+  "createdAt": "2026-07-11",
+  "source": "2026-07-10 架构诊断报告 + v0.2 流程自动化规划",
+  "estimatedFiles": "2-3",
+  "dependencies": ["REQ-7040"],
+  "verification": {
+    "typecheck": "pending",
+    "tests": "pending",
+    "integration": "pending"
+  }
+}

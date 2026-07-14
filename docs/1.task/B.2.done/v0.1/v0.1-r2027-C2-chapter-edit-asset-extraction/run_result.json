@@ -1,0 +1,43 @@
+{
+  "version": "1.0",
+  "taskId": "REQ-2027",
+  "title": "章节编辑器编辑后资产沉淀",
+  "status": "done",
+  "route": "req",
+  "complexity": "complex",
+  "reqType": "feature",
+  "categoryCode": 2,
+  "skipClarification": true,
+  "skipDesign": false,
+  "createdAt": "2026-06-30T00:00:00.000Z",
+  "updatedAt": "2026-06-30T00:00:00.000Z",
+  "artifacts": {
+    "requirements": "docs_dev/1.task/B.todo/v0.1/v0.1-r2027-complex-chapter-edit-asset-extraction/README.md",
+    "design": "docs_dev/1.task/B.todo/v0.1/v0.1-r2027-complex-chapter-edit-asset-extraction/design.md",
+    "tasks": "docs_dev/1.task/B.todo/v0.1/v0.1-r2027-complex-chapter-edit-asset-extraction/tasks.md",
+    "decisionLog": "docs_dev/1.task/B.todo/v0.1/v0.1-r2027-complex-chapter-edit-asset-extraction/decision_log.md"
+  },
+  "unresolvedItems": [],
+  "assumptions": [
+    "提取在保存前和保存后均可触发，保存时缓存 preEditContent 作为保存后的 diff 基准",
+    "提交给 LLM 的是 diff 视图（修改前后两个版本的完整章节内容），而非仅 diff 片段",
+    "风格 fork 后自动切换绑定，不需要用户手动操作",
+    "反 AI 规则关联到当前风格画像而非全局基线",
+    "版本号按原画像名维度递增，同名前缀最大版本 + 1",
+    "反 AI 和风格 fork 共用一个 prompt 模板，通过 mode 参数区分",
+    "preEditContent 在章节加载时初始化，在 saveMutation.onMutate 时更新，切换章节时清除",
+    "按钮位于主编辑区保存按钮附近，不在侧边栏"
+  ],
+  "blockingReasons": [],
+  "handoffTicket": {
+    "from": "req",
+    "to": "dev",
+    "type": "req_to_dev",
+    "status": "ready"
+  },
+  "stateSync": {
+    "requirementAxis": "approved",
+    "taskAxis": "requirements_ready",
+    "isConsistent": true
+  }
+}

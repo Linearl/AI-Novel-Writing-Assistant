@@ -1,0 +1,43 @@
+{
+  "version": "1.0",
+  "taskId": "REQ-2023",
+  "title": "资源变更风险拒绝意图注入",
+  "status": "done",
+  "route": "req",
+  "complexity": "medium",
+  "reqType": "feature",
+  "categoryCode": 2,
+  "skipClarification": false,
+  "skipDesign": false,
+  "createdAt": "2026-06-28T00:00:00.000Z",
+  "updatedAt": "2026-06-28T00:00:00.000Z",
+  "artifacts": {
+    "requirements": "docs_dev/1.task/B.todo/v0.1/v0.1-r2023-medium-resource-reject-intent-injection/README.md",
+    "design": "docs_dev/1.task/B.todo/v0.1/v0.1-r2023-medium-resource-reject-intent-injection/design.md",
+    "tasks": "docs_dev/1.task/B.todo/v0.1/v0.1-r2023-medium-resource-reject-intent-injection/tasks.md",
+    "decisionLog": "docs_dev/1.task/B.todo/v0.1/v0.1-r2023-medium-resource-reject-intent-injection/decision_log.md"
+  },
+  "unresolvedItems": [],
+  "assumptions": [
+    "用户意图主要指导章节修复，不影响新章节生成",
+    "rejectedIntent 存储在 validationNotesJson 中，无需数据库迁移",
+    "意图输入为可选，降低用户操作门槛"
+  ],
+  "blockingReasons": [],
+  "handoffTicket": {
+    "from": "req",
+    "to": "dev",
+    "type": "req_to_dev",
+    "status": "ready"
+  },
+  "stateSync": {
+    "requirementAxis": "approved",
+    "taskAxis": "requirements_ready",
+    "isConsistent": true
+  },
+  "evidence": {
+    "format": "dual",
+    "markdown": "docs_dev/3.analysis/evidence/v0.1/REQ-2023-evidence.md",
+    "json": "docs_dev/3.analysis/evidence/v0.1/REQ-2023-evidence.json"
+  }
+}

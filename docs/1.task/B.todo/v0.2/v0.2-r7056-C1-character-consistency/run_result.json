@@ -1,0 +1,18 @@
+{
+  "reqId": "7056",
+  "title": "character consistency",
+  "status": "todo",
+  "complexity": "C1",
+  "category": "7xxx",
+  "priority": "P2",
+  "version": "v0.2",
+  "createdAt": "2026-07-11",
+  "source": "v0.2 流程自动化规划",
+  "estimatedFiles": "2-5",
+  "dependencies": [],
+  "verification": {
+    "typecheck": "pending",
+    "tests": "pending",
+    "integration": "pending"
+  }
+}

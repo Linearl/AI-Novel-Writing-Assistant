@@ -1,0 +1,14 @@
+{
+  "reqId": "REQ-7037",
+  "title": "QUA-022: directorRuntime.ts 渐进拆分（projection/worker/automation 3 域 + barrel index.ts）",
+  "priority": "P2",
+  "version": "v0.1",
+  "status": "done",
+  "createdAt": "2026-07-10",
+  "completedAt": "2026-07-10",
+  "tags": ["refactor", "shared-types", "file-size"],
+  "source": "代码审计-full 独占发现复核报告 QUA-022",
+  "decision": "方案 B：渐进拆分，先拆 directorRuntimeProjection.ts(~250行)、directorRuntimeWorker.ts(~350行)、directorRuntimeAutomation.ts(~200行)，加 barrel index.ts 兼容旧 import",
+  "estimatedEffort": "3-4h",
+  "complexity": "medium"
+}

@@ -1,0 +1,83 @@
+{
+  "version": "1.0",
+  "taskId": "REQ-2023",
+  "route": "req",
+  "status": "requirements_ready",
+  "metadata": {
+    "startTime": "2026-06-28T00:00:00.000Z",
+    "endTime": "2026-06-28T00:00:00.000Z",
+    "duration": "0s"
+  },
+  "artifacts": [
+    {
+      "path": "docs_dev/1.task/B.todo/v0.1/v0.1-r2023-medium-resource-reject-intent-injection/README.md",
+      "kind": "document",
+      "status": "present"
+    },
+    {
+      "path": "docs_dev/1.task/B.todo/v0.1/v0.1-r2023-medium-resource-reject-intent-injection/design.md",
+      "kind": "document",
+      "status": "present"
+    },
+    {
+      "path": "docs_dev/1.task/B.todo/v0.1/v0.1-r2023-medium-resource-reject-intent-injection/tasks.md",
+      "kind": "document",
+      "status": "present"
+    },
+    {
+      "path": "docs_dev/1.task/B.todo/v0.1/v0.1-r2023-medium-resource-reject-intent-injection/decision_log.md",
+      "kind": "document",
+      "status": "present"
+    },
+    {
+      "path": "docs_dev/1.task/B.todo/v0.1/v0.1-r2023-medium-resource-reject-intent-injection/run_result.json",
+      "kind": "config",
+      "status": "present"
+    }
+  ],
+  "classification": {
+    "reqType": "feature",
+    "categoryCode": 2,
+    "complexity": "medium",
+    "skipClarification": false,
+    "skipDesign": false
+  },
+  "decisions": [
+    {
+      "id": "decision-1",
+      "point": "rejectedIntent 存储方案",
+      "choice": "复用 validationNotesJson",
+      "reason": "无需数据库迁移，复用现有字段"
+    },
+    {
+      "id": "decision-2",
+      "point": "意图输入是否必填",
+      "choice": "可选",
+      "reason": "降低操作门槛，意图是辅助信息"
+    },
+    {
+      "id": "decision-3",
+      "point": "按钮显示策略",
+      "choice": "仅高风险显示",
+      "reason": "高风险是最需要用户决策的场景"
+    },
+    {
+      "id": "decision-4",
+      "point": "Prompt 注入位置",
+      "choice": "章节修复 prompt",
+      "reason": "用户意图主要是指导修复，不是指导新生成"
+    }
+  ],
+  "stateSync": {
+    "requirementAxis": "approved",
+    "taskAxis": "requirements_ready",
+    "isConsistent": true
+  },
+  "handoffTicket": {
+    "from": "req",
+    "to": "dev",
+    "type": "req_to_dev",
+    "status": "ready",
+    "taskId": "REQ-2023"
+  }
+}

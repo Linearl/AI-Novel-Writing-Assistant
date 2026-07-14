@@ -1,0 +1,26 @@
+{
+  "reqId": "7007",
+  "title": "World.structureJson 关系提取为独立表",
+  "status": "done",
+  "complexity": "medium",
+  "category": "7xxx",
+  "priority": "P1",
+  "version": "v0.1",
+  "created": "2026-06-30",
+  "parentReq": "7004",
+  "artifacts": [
+    "README.md",
+    "REQ-7007.md",
+    "REQ-7007-original.md",
+    "tasks.md",
+    "design.md",
+    "decision_log.md",
+    "run_result.json"
+  ],
+  "unresolved_items": [],
+  "assumptions": [
+    "WorldService 是 structureJson 写入的最终汇聚点",
+    "Force/Location 无独立 Prisma 模型",
+    "前端可视化需要手动验证"
+  ]
+}

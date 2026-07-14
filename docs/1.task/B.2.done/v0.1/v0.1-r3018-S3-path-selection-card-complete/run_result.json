@@ -1,0 +1,13 @@
+{
+  "reqId": "REQ-3018",
+  "title": "创建页面路径选择卡片集成",
+  "tag": "S3",
+  "version": "0.1",
+  "status": "done",
+  "priority": "p4",
+  "complexity": "simple",
+  "createdAt": "2026-07-13",
+  "completedAt": "2026-07-13",
+  "source": "REQ-3017 后续",
+  "note": "PathSelectionCard组件已创建，Home/NovelList已合并创建按钮，待集成到创建页面"
+}

@@ -1,0 +1,65 @@
+{
+  "status": "done",
+  "route": "req",
+  "timestamp": "2026-06-27T14:53:50.377Z",
+  "taskPath": "docs_dev/1.task/B.todo/v0.1-r2001-complex-import-from-export",
+  "reqId": "2001",
+  "title": "从导出文件导入创建新书",
+  "category": "2xxx-核心功能开发",
+  "complexity": "complex",
+  "skipClarification": false,
+  "skipDesign": false,
+  "artifacts": [
+    {
+      "path": "docs_dev/1.task/B.todo/v0.1-r2001-complex-import-from-export/REQ-2001.md",
+      "kind": "requirements"
+    },
+    {
+      "path": "docs_dev/1.task/B.todo/v0.1-r2001-complex-import-from-export/design.md",
+      "kind": "design"
+    },
+    {
+      "path": "docs_dev/1.task/B.todo/v0.1-r2001-complex-import-from-export/tasks.md",
+      "kind": "tasks"
+    }
+  ],
+  "unresolved_items": [],
+  "assumptions": [
+    "导出模块已稳定，NovelExportBundle 结构不会频繁变动",
+    "首版不做跨版本 schema 兼容",
+    "首版仅支持 JSON 格式导入",
+    "首版不做增量合并，仅支持新建 + 导入"
+  ],
+  "blocking_reasons": [],
+  "decisions": [
+    {
+      "id": "D1",
+      "point": "导入格式限定 JSON"
+    },
+    {
+      "id": "D2",
+      "point": "basic scope 客户端回填"
+    },
+    {
+      "id": "D3",
+      "point": "非 basic scope 通过独立 API"
+    },
+    {
+      "id": "D4",
+      "point": "所有导入实体生成新 ID"
+    },
+    {
+      "id": "D5",
+      "point": "worldId 不跨书复用"
+    },
+    {
+      "id": "D6",
+      "point": "pipeline scope 仅导入静态资产"
+    }
+  ],
+  "handoff": {
+    "from": "req",
+    "to": "dev",
+    "ticketPath": "docs_dev/1.task/B.todo/v0.1-r2001-complex-import-from-export/README.md"
+  }
+}

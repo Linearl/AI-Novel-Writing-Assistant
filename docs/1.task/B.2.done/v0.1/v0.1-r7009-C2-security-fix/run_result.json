@@ -1,0 +1,72 @@
+{
+  "taskId": "REQ-7009",
+  "taskName": "P2 问题修复",
+  "status": "done",
+  "completedAt": "2026-07-02T23:00:00+08:00",
+  "createdAt": "2026-07-01T18:23:00.000Z",
+  "updatedAt": "2026-07-02T23:00:00+08:00",
+  "source": "2026-07-01-全量代码审计-full",
+  "summary": {
+    "totalIssues": 41,
+    "toFix": 28,
+    "skipped": 7,
+    "pending": 0,
+    "estimatedHours": 160,
+    "estimatedDays": 22,
+    "completedSummary": "完成 P2 级安全问题修复，包括 ESLint/Prettier 引入、Vitest 测试框架引入、Playwright E2E 框架搭建、文件路径遍历修复、CSRF 保护（不适用，SPA 无状态变更）、错误响应脱敏、Prisma raw query 审计、进程级错误处理、Request ID 中间件、Zod schema 验证、styleEngine Prompt Registry 改造、路由层 Prisma 调用提取、超大文件拆分（两批）、目录结构重组、Zustand 状态管理引入、超大组件重构（两批）、前端测试基础搭建、函数式编程重构、错误码映射表、重复代码提取、错误吞没修复、switch 语句改为查找表、WebSocket LLM 追踪、planner 类型替换、README 文档添加、shared/types JSDoc 注释、export 进度提示、查询并行化、listWorlds 分页优化、better-sqlite3 迁移"
+  },
+  "phases": [
+    {
+      "id": "phase-1",
+      "name": "基础设施",
+      "tasks": ["T1", "T2", "T3"],
+      "status": "done"
+    },
+    {
+      "id": "phase-2",
+      "name": "安全加固",
+      "tasks": ["T4", "T5", "T6", "T7"],
+      "status": "done"
+    },
+    {
+      "id": "phase-3",
+      "name": "稳定性提升",
+      "tasks": ["T8", "T9", "T10"],
+      "status": "done"
+    },
+    {
+      "id": "phase-4",
+      "name": "架构优化",
+      "tasks": ["T11", "T12", "T13", "T14", "T15"],
+      "status": "done"
+    },
+    {
+      "id": "phase-5",
+      "name": "前端优化",
+      "tasks": ["T16", "T17", "T18", "T19"],
+      "status": "done"
+    },
+    {
+      "id": "phase-6",
+      "name": "代码质量",
+      "tasks": ["T20", "T21", "T22", "T23", "T24"],
+      "status": "done"
+    },
+    {
+      "id": "phase-7",
+      "name": "可观测性与文档",
+      "tasks": ["T25", "T26", "T27", "T28"],
+      "status": "done"
+    },
+    {
+      "id": "phase-8",
+      "name": "性能优化与兼容性",
+      "tasks": ["T29", "T30", "T31", "T32"],
+      "status": "done"
+    }
+  ],
+  "verification": {
+    "typecheck": "pass",
+    "tests": "pass"
+  }
+}

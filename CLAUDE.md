@@ -61,7 +61,7 @@ server/          Express 5 + Prisma 7 + LangChain/LangGraph
 shared/          前后端共享类型与 Zod schema（@ai-novel/shared）
 desktop/         Electron 壳（依赖 server）
 scripts/         启动和辅助脚本
-docs/            架构决策、Wiki、Release Notes、Checkpoints
+docs/            编号化文档体系（0.version_plan / 1.task / 2.tech / 3.analysis / 4.misc / ...）
 infra/           Docker Compose（Qdrant 等）
 ```
 
@@ -127,7 +127,7 @@ infra/           Docker Compose（Qdrant 等）
 
 ### 自动生成文件
 
-`docs_dev/1.task/requirements.md` 和 `docs_dev/INDEX.md` 由 git 提交 hooks 自动更新，**禁止手动编辑**。新增任务包或文档后，直接提交即可触发同步。
+`docs/1.task/requirements.md` 和 `docs/INDEX.md` 由 git 提交 hooks 自动更新，**禁止手动编辑**。新增任务包或文档后，直接提交即可触发同步。
 
 ### Auto-Director 质量门
 
@@ -156,7 +156,7 @@ infra/           Docker Compose（Qdrant 等）
 
 ### Issue 文档
 
-当用户说"提 issue"时，针对当前问题编写分析文档，放到 `docs_dev/4.misc/issues/` 目录下。文档应包含：问题描述、根因分析、复现步骤、修复方案、变更文件。面向上游作者，简洁明了。
+当用户说"提 issue"时，针对当前问题编写分析文档，放到 `docs/4.misc/issues/` 目录下。文档应包含：问题描述、根因分析、复现步骤、修复方案、变更文件。面向上游作者，简洁明了。
 
 ## 测试
 
@@ -179,8 +179,8 @@ infra/           Docker Compose（Qdrant 等）
 
 ## 详细文档
 
-- 架构决策与 Wiki：`docs/wiki/`
-- Release Notes：`docs/releases/release-notes.md`
+- 架构决策与 Wiki：`docs/4.misc/wiki/`
+- Release Notes：`docs/6.changelog/releases/release-notes.md`
 - 任务与路线图：`TASK.md`
 - 本地开发指南：`LOCAL_DEV.md`
 - 贡献指南：`CONTRIBUTING.md`

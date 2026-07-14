@@ -1,0 +1,18 @@
+{
+  "reqId": "REQ-3013",
+  "title": "导演跟进任务列表全选与批量清理",
+  "priority": "P2",
+  "version": "v0.1",
+  "status": "done",
+  "createdAt": "2026-07-11",
+  "completedAt": "2026-07-11",
+  "tags": ["ui", "auto-director", "batch-operations"],
+  "source": "用户反馈",
+  "targetFiles": [
+    "client/src/pages/autoDirectorFollowUps/components/AutoDirectorFollowUpList.tsx",
+    "client/src/pages/autoDirectorFollowUps/components/AutoDirectorFollowUpBatchBar.tsx",
+    "client/src/pages/autoDirectorFollowUps/AutoDirectorFollowUpCenterPage.tsx"
+  ],
+  "estimatedEffort": "1-2h",
+  "complexity": "simple"
+}

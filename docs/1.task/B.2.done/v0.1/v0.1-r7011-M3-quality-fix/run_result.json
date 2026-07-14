@@ -1,0 +1,66 @@
+{
+  "taskId": "REQ-7011",
+  "taskName": "P3 代码质量问题修复",
+  "status": "done",
+  "completedAt": "2026-07-02T23:00:00+08:00",
+  "createdAt": "2026-07-01T20:40:00.000Z",
+  "updatedAt": "2026-07-02T23:00:00+08:00",
+  "source": "2026-07-01-全量代码审计-full",
+  "summary": {
+    "totalIssues": 63,
+    "toFix": 22,
+    "optional": 18,
+    "skipped": 23,
+    "estimatedHours": 72,
+    "estimatedDays": 13,
+    "completedSummary": "完成 P3 级代码质量问题修复，包括 EventBus 错误日志、SSE 心跳 unref、SideEffectWorker 错误处理、日志文件访问控制、LLM 模型目录配置化、Agent 工具分类 AI 化、localhost 配置提取、魔数提取为常量、var 声明改为 const/let、前端组件拆分（两批）、查询合并优化、异步文件读取、useEffect 依赖修复、测试 fixtures/helpers 创建、Prisma mock 层创建、纯函数测试补充、测试并发执行、健康检查增强、LLM 调试日志配置化、StructuredOutput 日志结构化、shared/types barrel export、chains/ 死代码清理、URL 配置提取"
+  },
+  "phases": [
+    {
+      "id": "phase-1",
+      "name": "稳定性与安全",
+      "tasks": ["T1", "T2", "T3", "T4"],
+      "status": "done"
+    },
+    {
+      "id": "phase-2",
+      "name": "架构优化",
+      "tasks": ["T5", "T6", "T7"],
+      "status": "done"
+    },
+    {
+      "id": "phase-3",
+      "name": "代码质量",
+      "tasks": ["T8", "T9", "T10", "T11"],
+      "status": "done"
+    },
+    {
+      "id": "phase-4",
+      "name": "性能优化",
+      "tasks": ["T12", "T13", "T14"],
+      "status": "done"
+    },
+    {
+      "id": "phase-5",
+      "name": "测试基础设施",
+      "tasks": ["T15", "T16", "T17", "T18"],
+      "status": "done"
+    },
+    {
+      "id": "phase-6",
+      "name": "可观测性",
+      "tasks": ["T19", "T20", "T21"],
+      "status": "done"
+    },
+    {
+      "id": "phase-7",
+      "name": "可维护性",
+      "tasks": ["T22", "T23", "T24"],
+      "status": "done"
+    }
+  ],
+  "verification": {
+    "typecheck": "pass",
+    "tests": "pass"
+  }
+}

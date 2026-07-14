@@ -1,0 +1,11 @@
+{
+  "reqId": "REQ-2038",
+  "title": "设定一致性前置校验",
+  "priority": "P2",
+  "version": "v0.1",
+  "status": "done",
+  "createdAt": "2026-07-03",
+  "completedAt": "2026-07-05T01:28:56.433Z",
+  "source": "竞品分析-游蜂写作",
+  "note": "先做 LLM 内置校验，后续迭代加变更 diff"
+}

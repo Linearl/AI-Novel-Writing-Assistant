@@ -1,0 +1,119 @@
+{
+  "task_id": "REQ-3011",
+  "title": "小说预览页面增强控制面板",
+  "version": "v0.1",
+  "status": "requirements_ready",
+  "created_at": "2026-07-11T22:30:00+08:00",
+  "updated_at": "2026-07-11T22:45:00+08:00",
+
+  "requirement_status": {
+    "status": "approved",
+    "updated_at": "2026-07-11T22:30:00+08:00"
+  },
+
+  "task_status": {
+    "status": "done",
+    "updated_at": "2026-07-11T23:50:00+08:00"
+  },
+
+  "metadata": {
+    "category": "3xxx",
+    "category_name": "用户界面和体验",
+    "complexity": "medium",
+    "priority": "high",
+    "req_id": 3011,
+    "slug": "novel-preview-controls"
+  },
+
+  "paths": {
+    "task_dir": "docs_dev/1.task/B.todo/v0.1/v0.1-r3011-C2-novel-preview-controls",
+    "requirements": "docs_dev/1.task/B.todo/v0.1/v0.1-r3011-C2-novel-preview-controls/REQ-3011-novel-preview-controls.md",
+    "design": "docs_dev/1.task/B.todo/v0.1/v0.1-r3011-C2-novel-preview-controls/design.md",
+    "tasks": "docs_dev/1.task/B.todo/v0.1/v0.1-r3011-C2-novel-preview-controls/tasks.md",
+    "decision_log": "docs_dev/1.task/B.todo/v0.1/v0.1-r3011-C2-novel-preview-controls/decision_log.md",
+    "handoff_ticket": "docs_dev/1.task/B.todo/v0.1/v0.1-r3011-C2-novel-preview-controls/handoff-ticket.md"
+  },
+
+  "workflow": {
+    "route": "req",
+    "entry_point": "req.workflow.yaml",
+    "completed_phases": [
+      "a_load_project_config",
+      "b_input_intake",
+      "c_clarify_and_resolve_conflicts",
+      "d_write_requirements",
+      "e_write_design",
+      "f_write_tasks",
+      "g_finalize"
+    ],
+    "skipped_phases": [],
+    "total_phases": 7
+  },
+
+  "acceptance": {
+    "total_requirements": 6,
+    "acceptance_criteria": [
+      "REQ-3011-01 字号调节",
+      "REQ-3011-02 字体选择",
+      "REQ-3011-03 加粗控制",
+      "REQ-3011-04 页宽调节",
+      "REQ-3011-05 背景色选择",
+      "REQ-3011-06 控制面板布局"
+    ],
+    "verification_methods": [
+      "单元测试",
+      "集成测试",
+      "E2E测试",
+      "视觉测试"
+    ]
+  },
+
+  "estimates": {
+    "total_tasks": 14,
+    "estimated_hours": "9-13h",
+    "phases": {
+      "phase_1": "2-3h",
+      "phase_2": "3-4h",
+      "phase_3": "2-3h",
+      "phase_4": "2-3h"
+    }
+  },
+
+  "risks": [
+    {
+      "id": "R1",
+      "risk": "字体加载性能",
+      "impact": "medium",
+      "mitigation": "使用系统字体，无加载开销"
+    },
+    {
+      "id": "R2",
+      "risk": "控制面板响应式布局",
+      "impact": "low",
+      "mitigation": "本次不做移动端，先桌面端"
+    }
+  ],
+
+  "dependencies": [
+    "Ant Design 组件库",
+    "React 19",
+    "项目现有的预览页面组件"
+  ],
+
+  "quality_gates": {
+    "typecheck": "pnpm typecheck",
+    "test": "pnpm test:client",
+    "coverage": ">= 80%",
+    "build": "pnpm build"
+  },
+
+  "next_actions": [
+    "阶段一：基础结构搭建",
+    "阶段二：控制项组件实现",
+    "阶段三：样式与集成",
+    "阶段四：测试与验收"
+  ],
+
+  "completed_at": "2026-07-11T23:50:00+08:00",
+  "approved_at": "2026-07-11T22:30:00+08:00"
+}

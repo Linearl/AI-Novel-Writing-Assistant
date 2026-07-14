@@ -1,0 +1,21 @@
+{
+  "status": "requirements_ready",
+  "reqId": "3019",
+  "reqType": "用户界面和体验",
+  "categoryCode": 3,
+  "complexity": "complex",
+  "skipClarification": true,
+  "skipDesign": false,
+  "taskPath": "docs_dev/1.task/B.todo/v0.2/v0.2-r3019-C3-feedback-github-issue-generator",
+  "artifacts": [
+    "docs_dev/1.task/B.todo/v0.2/v0.2-r3019-C3-feedback-github-issue-generator/README.md",
+    "docs_dev/1.task/B.todo/v0.2/v0.2-r3019-C3-feedback-github-issue-generator/REQ-3019-feedback-github-issue-generator.md",
+    "docs_dev/1.task/B.todo/v0.2/v0.2-r3019-C3-feedback-github-issue-generator/REQ-3019-feedback-github-issue-generator-original.md",
+    "docs_dev/1.task/B.todo/v0.2/v0.2-r3019-C3-feedback-github-issue-generator/tasks.md",
+    "docs_dev/1.task/B.todo/v0.2/v0.2-r3019-C3-feedback-github-issue-generator/design.md",
+    "docs_dev/1.task/B.todo/v0.2/v0.2-r3019-C3-feedback-github-issue-generator/decision_log.md"
+  ],
+  "createdAt": "2026-07-13",
+  "source": "docs_dev/3.analysis/diagnosis/2026-07-13-feedback-feature-diagnosis.md",
+  "replaces": "REQ-2036"
+}

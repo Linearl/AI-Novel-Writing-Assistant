@@ -1,0 +1,40 @@
+{
+  "reqId": "7027",
+  "title": "遗留代码清理",
+  "status": "done",
+  "complexity": "S2",
+  "priority": "P0",
+  "phase": "verification",
+  "createdAt": "2026-07-10",
+  "updatedAt": "2026-07-11",
+  "estimatedFiles": "4-6",
+  "actualFiles": 9,
+  "verification": {
+    "typecheck": "pass (pre-existing env issues excluded)",
+    "tests": "pass (no test changes needed)",
+    "build": "pass (pre-existing env issues excluded)"
+  },
+  "summary": {
+    "deleted": [
+      "client/src/store/chatStore.ts",
+      "client/src/pages/chat/ChatPage.tsx",
+      "client/src/pages/chat/CreativeHubPage.tsx",
+      "client/src/pages/chat/components/AssistantChatPanel.tsx",
+      "client/src/pages/chat/components/RuntimeSidebar.tsx",
+      "client/src/api/chat.ts"
+    ],
+    "edited": [
+      "client/src/router/index.tsx",
+      "client/src/components/layout/mobile/mobileSiteNavigation.ts",
+      "client/src/styles/mobile/_shared.css",
+      "client/src/styles/mobile/creative-hub.css",
+      "client/package.json",
+      "client/src/vite-env.d.ts",
+      "pnpm-lock.yaml"
+    ],
+    "skipped": [
+      "server/src/routes/chat.ts (already migrated to modules/chat/)"
+    ],
+    "linesRemoved": 1761
+  }
+}

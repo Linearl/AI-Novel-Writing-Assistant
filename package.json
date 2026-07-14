@@ -49,10 +49,10 @@
     "test:client": "pnpm --filter @ai-novel/client test",
     "test:all": "pnpm --filter @ai-novel/server test:all && pnpm --filter @ai-novel/client test",
     "lint": "pnpm --filter @ai-novel/shared lint && pnpm --filter @ai-novel/server lint && pnpm --filter @ai-novel/client lint",
-    "llwf:sync": "node .claude/skills/ll-workflow-core/templates/scripts/generate-docs-index.js docs_dev --apply",
+    "llwf:sync": "node .claude/skills/ll-workflow-core/templates/scripts/generate-docs-index.js docs --apply",
     "llwf:req-sync": "node .claude/skills/ll-workflow-core/templates/scripts/req-sync.js sync --apply",
     "llwf:req-archive": "node .claude/skills/ll-workflow-core/templates/scripts/req-sync.js archive --apply",
-    "llwf:check": "node .claude/skills/ll-workflow-core/templates/scripts/generate-docs-index.js docs_dev"
+    "llwf:check": "node .claude/skills/ll-workflow-core/templates/scripts/generate-docs-index.js docs"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

@@ -1,0 +1,21 @@
+{
+  "reqId": "REQ-7026",
+  "title": "构建链模块系统统一",
+  "priority": "P2",
+  "version": "0.1",
+  "status": "done",
+  "createdAt": "2026-07-10",
+  "completedAt": "2026-07-10",
+  "source": "架构诊断报告 2026-07-10 第9条发现",
+  "note": "研究型任务包。调研 tsx 运行时可行性 + CJS 互操作兼容性 + Project References 评估 + prisma:generate prebuild + 迁移 ROI 分析。交付评估报告和迁移路线图",
+  "reqType": "research",
+  "categoryCode": 7,
+  "complexity": "high",
+  "skipClarification": true,
+  "skipDesign": false,
+  "tasks": {
+    "total": 7,
+    "completed": 7,
+    "pending": 0
+  }
+}

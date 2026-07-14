@@ -1,0 +1,36 @@
+{
+  "reqId": "2051",
+  "title": "角色重要度分级（CharacterTier）",
+  "version": "0.1",
+  "status": "pass",
+  "route": "req",
+  "createdAt": "2026-07-13T00:00:00.000Z",
+  "updatedAt": "2026-07-14T00:00:00.000Z",
+  "complexity": "complex",
+  "reqType": "feature",
+  "categoryCode": 2,
+  "skipClarification": true,
+  "skipDesign": false,
+  "artifacts": {
+    "requirements": "docs_dev/1.task/B.todo/v0.1-r2051-C2-character-tier-importance-level/REQ-2051-character-tier-importance-level.md",
+    "design": "docs_dev/1.task/B.todo/v0.1-r2051-C2-character-tier-importance-level/design.md",
+    "tasks": "docs_dev/1.task/B.todo/v0.1-r2051-C2-character-tier-importance-level/tasks.md",
+    "decisionLog": "docs_dev/1.task/B.todo/v0.1-r2051-C2-character-tier-importance-level/decision_log.md"
+  },
+  "handoffTicket": {
+    "type": "req_to_dev",
+    "route": "req",
+    "taskPath": "docs_dev/1.task/B.todo/v0.1-r2051-C2-character-tier-importance-level"
+  },
+  "unresolvedItems": [],
+  "assumptions": [
+    "已有角色默认 tier=named，无需数据迁移",
+    "BaseCharacter（角色库级别）暂不加 tier",
+    "Character Dynamics 的 isCore 字段暂不联动"
+  ],
+  "blockingReasons": [],
+  "stateSync": {
+    "requirementAxis": "approved",
+    "taskAxis": "requirements_ready"
+  }
+}

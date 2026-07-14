@@ -1,0 +1,14 @@
+{
+  "reqId": "REQ-7038",
+  "title": "QUA-039: CharacterPreparationService persistCharacterCastOptions 提取辅助函数降嵌套",
+  "priority": "P2",
+  "version": "v0.1",
+  "status": "done",
+  "createdAt": "2026-07-10",
+  "completedAt": "2026-07-10",
+  "tags": ["refactor", "code-quality", "nesting"],
+  "source": "代码审计-full 独占发现复核报告 QUA-039",
+  "decision": "方案 A：提取 buildMemberCreateData() 和 buildRelationCreateData() 两个辅助函数，将嵌套从 8 层降到 ≤4 层。不改接口、不改调用方",
+  "estimatedEffort": "1-2h",
+  "complexity": "simple"
+}

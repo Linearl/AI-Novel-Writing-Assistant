@@ -1,0 +1,52 @@
+{
+  "status": "done",
+  "route": "req",
+  "timestamp": "2026-06-27T14:53:52.671Z",
+  "taskPath": "docs_dev/1.task/B.todo/v0.1/v0.1-r2011-simple-dark-mode",
+  "reqId": "2011",
+  "title": "暗色主题（夜间模式）",
+  "category": "2xxx-核心功能开发",
+  "complexity": "simple",
+  "skipClarification": true,
+  "skipDesign": false,
+  "artifacts": [
+    {
+      "path": "docs_dev/1.task/B.todo/v0.1/v0.1-r2011-simple-dark-mode/REQ-2011.md",
+      "kind": "requirements"
+    },
+    {
+      "path": "docs_dev/1.task/B.todo/v0.1/v0.1-r2011-simple-dark-mode/design.md",
+      "kind": "design"
+    },
+    {
+      "path": "docs_dev/1.task/B.todo/v0.1/v0.1-r2011-simple-dark-mode/tasks.md",
+      "kind": "tasks"
+    }
+  ],
+  "unresolved_items": [],
+  "assumptions": [
+    "shadcn/ui 组件已使用 CSS 变量，暗色主题自动适配",
+    "next-themes 与 React 19 兼容",
+    "Tailwind darkMode: class 配置已就绪"
+  ],
+  "blocking_reasons": [],
+  "decisions": [
+    {
+      "id": "D1",
+      "point": "使用 next-themes 而非手动实现"
+    },
+    {
+      "id": "D2",
+      "point": "默认跟随系统主题"
+    },
+    {
+      "id": "D3",
+      "point": "导航栏快捷切换 + 设置页入口"
+    }
+  ],
+  "handoff": {
+    "from": "req",
+    "to": "dev",
+    "ticketPath": "docs_dev/1.task/B.todo/v0.1/v0.1-r2011-simple-dark-mode/README.md"
+  }
+}

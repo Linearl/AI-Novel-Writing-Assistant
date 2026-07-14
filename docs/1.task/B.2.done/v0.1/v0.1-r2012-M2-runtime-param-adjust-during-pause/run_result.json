@@ -1,0 +1,12 @@
+{
+  "reqId": "REQ-2012",
+  "title": "暂停后调整自动导演高级设置面板",
+  "priority": "P1",
+  "version": "0.1",
+  "status": "done",
+  "createdAt": "2026-06-26",
+  "completedAt": null,
+  "source": "诊断报告 2026-06-26-自动导演全自动模式能力诊断",
+  "note": "任务中心增加编辑高级设置入口，模型档次和artifactSyncMode前端暴露",
+  "timestamp": "2026-06-27T14:53:52.910Z"
+}

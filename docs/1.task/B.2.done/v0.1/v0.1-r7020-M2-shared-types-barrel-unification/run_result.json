@@ -1,0 +1,23 @@
+{
+  "reqId": "7020",
+  "title": "共享类型 Barrel 统一导出",
+  "status": "done",
+  "complexity": "M2",
+  "priority": "P0",
+  "phase": "implementation",
+  "createdAt": "2026-07-10",
+  "updatedAt": "2026-07-10",
+  "estimatedFiles": "805+（import 语句）+ shared 包内文件",
+  "completedAt": "2026-07-10T15:38:48.817Z",
+  "verification": {
+    "typecheck": "pass (9 pre-existing errors in chapterLayeredContextCharacters.ts)",
+    "build": "pass",
+    "tests": "pending (no shared tests in scope)"
+  },
+  "summary": {
+    "phase1_barrel_merge": "23 missing modules added to shared/index.ts barrel",
+    "phase2_chapterRuntime_split": "chapterRuntime.ts (1044 lines) split into chapterCore.ts (383), chapterStyle.ts (207), chapterContext.ts (405), generationPackage.ts (148), chapterRuntime.ts (barrel ~200)",
+    "phase3_import_migration": "805 files, 1350+ import statements replaced from @ai-novel/shared/types/X to @ai-novel/shared",
+    "deep_imports_remaining": 0
+  }
+}

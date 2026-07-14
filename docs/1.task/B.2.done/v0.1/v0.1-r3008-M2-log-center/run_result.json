@@ -1,0 +1,61 @@
+{
+  "status": "done",
+  "route": "req",
+  "timestamp": "2026-06-30T00:00:00.000Z",
+  "taskPath": "docs_dev/1.task/B.todo/v0.1/v0.1-r3008-medium-log-center",
+  "reqId": "3008",
+  "title": "日志中心",
+  "category": "3xxx-用户界面和体验",
+  "complexity": "medium",
+  "skipClarification": true,
+  "skipDesign": false,
+  "artifacts": [
+    {
+      "path": "docs_dev/1.task/B.todo/v0.1/v0.1-r3008-medium-log-center/REQ-3008.md",
+      "kind": "requirements"
+    },
+    {
+      "path": "docs_dev/1.task/B.todo/v0.1/v0.1-r3008-medium-log-center/design.md",
+      "kind": "design"
+    },
+    {
+      "path": "docs_dev/1.task/B.todo/v0.1/v0.1-r3008-medium-log-center/tasks.md",
+      "kind": "tasks"
+    }
+  ],
+  "unresolved_items": [],
+  "assumptions": [
+    "现有 morgan HTTP 日志保持不变，winston 做应用级日志补充",
+    "日志量在可控范围内（单机部署），不需要引入数据库或搜索引擎",
+    "日志查询为低频开发者工具，不需要实时高性能",
+    "项目暂无鉴权中间件，日志 API 暂不加鉴权（后续迭代补充）"
+  ],
+  "blocking_reasons": [],
+  "decisions": [
+    {
+      "id": "D1",
+      "point": "日志库选择 winston + daily-rotate-file"
+    },
+    {
+      "id": "D2",
+      "point": "日志存储为 JSON Lines 文件（非数据库）"
+    },
+    {
+      "id": "D3",
+      "point": "查询 API 直接读文件（非预索引）"
+    },
+    {
+      "id": "D4",
+      "point": "toast 增强在 axios 拦截器层（非全局错误边界）"
+    },
+    {
+      "id": "D5",
+      "point": "日志中心独立路由 /logs（非 Settings 子 tab）"
+    }
+  ],
+  "handoff": {
+    "from": "req",
+    "to": "dev",
+    "ticketPath": "docs_dev/1.task/B.todo/v0.1/v0.1-r3008-medium-log-center/README.md"
+  }
+}
