@@ -344,6 +344,48 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.2\v0.2-r7063-S2-tension-curve\REQ-7063-tension-curve.md](./1.task\B.todo\v0.2\v0.2-r7063-S2-tension-curve\REQ-7063-tension-curve.md) | --- | - |
 | [1.task\B.todo\v0.2\v0.2-r7063-S2-tension-curve\tasks.md](./1.task\B.todo\v0.2\v0.2-r7063-S2-tension-curve\tasks.md) | --- | - |
 
+## 1.task\B.todo\v0.2\v0.2-r7064-C1-di-service-dependency-injection-migration
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.2\v0.2-r7064-C1-di-service-dependency-injection-migration\decision_log.md](./1.task\B.todo\v0.2\v0.2-r7064-C1-di-service-dependency-injection-migration\decision_log.md) | REQ-7064 决策日志 | REQ-7064 决策日志 |
+| [1.task\B.todo\v0.2\v0.2-r7064-C1-di-service-dependency-injection-migration\design.md](./1.task\B.todo\v0.2\v0.2-r7064-C1-di-service-dependency-injection-migration\design.md) | REQ-7064 Service DI 迁移方案设计 | REQ-7064 Service DI 迁移方案设计 |
+| [1.task\B.todo\v0.2\v0.2-r7064-C1-di-service-dependency-injection-migration\README.md](./1.task\B.todo\v0.2\v0.2-r7064-C1-di-service-dependency-injection-migration\README.md) | REQ-7064 Service 层 DI 依赖注入迁移 | REQ-7064 Service 层 DI 依赖注入迁移 |
+| [1.task\B.todo\v0.2\v0.2-r7064-C1-di-service-dependency-injection-migration\REQ-7064-original.md](./1.task\B.todo\v0.2\v0.2-r7064-C1-di-service-dependency-injection-migration\REQ-7064-original.md) | REQ-7064 Service 层 DI 依赖注入迁移 | REQ-7064 Service 层 DI 依赖注入迁移 |
+| [1.task\B.todo\v0.2\v0.2-r7064-C1-di-service-dependency-injection-migration\REQ-7064.md](./1.task\B.todo\v0.2\v0.2-r7064-C1-di-service-dependency-injection-migration\REQ-7064.md) | REQ-7064 Service 层 DI 依赖注入迁移 | REQ-7064 Service 层 DI 依赖注入迁移 |
+| [1.task\B.todo\v0.2\v0.2-r7064-C1-di-service-dependency-injection-migration\tasks.md](./1.task\B.todo\v0.2\v0.2-r7064-C1-di-service-dependency-injection-migration\tasks.md) | REQ-7064 任务拆解 | REQ-7064 任务拆解 |
+
+## 1.task\B.todo\v0.2\v0.2-r7065-C1-director-p0-pipeline-closure
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.2\v0.2-r7065-C1-director-p0-pipeline-closure\decision_log.md](./1.task\B.todo\v0.2\v0.2-r7065-C1-director-p0-pipeline-closure\decision_log.md) | REQ-7065 导演引擎 P0 Pipeline 闭环收口 — 决策日志 | REQ-7065 导演引擎 P0 Pipeline 闭环收口 — 决策日志 |
+| [1.task\B.todo\v0.2\v0.2-r7065-C1-director-p0-pipeline-closure\design.md](./1.task\B.todo\v0.2\v0.2-r7065-C1-director-p0-pipeline-closure\design.md) | REQ-7065 导演引擎 P0 Pipeline 闭环收口 — 技术设计 | REQ-7065 导演引擎 P0 Pipeline 闭环收口 — 技术设计 |
+| [1.task\B.todo\v0.2\v0.2-r7065-C1-director-p0-pipeline-closure\README.md](./1.task\B.todo\v0.2\v0.2-r7065-C1-director-p0-pipeline-closure\README.md) | --- | - |
+| [1.task\B.todo\v0.2\v0.2-r7065-C1-director-p0-pipeline-closure\REQ-7065-director-p0-pipeline-closure-original.md](./1.task\B.todo\v0.2\v0.2-r7065-C1-director-p0-pipeline-closure\REQ-7065-director-p0-pipeline-closure-original.md) | --- | - |
+| [1.task\B.todo\v0.2\v0.2-r7065-C1-director-p0-pipeline-closure\REQ-7065-director-p0-pipeline-closure.md](./1.task\B.todo\v0.2\v0.2-r7065-C1-director-p0-pipeline-closure\REQ-7065-director-p0-pipeline-closure.md) | --- | - |
+| [1.task\B.todo\v0.2\v0.2-r7065-C1-director-p0-pipeline-closure\tasks.md](./1.task\B.todo\v0.2\v0.2-r7065-C1-director-p0-pipeline-closure\tasks.md) | REQ-7065 导演引擎 P0 Pipeline 闭环收口 — 任务清单 | REQ-7065 导演引擎 P0 Pipeline 闭环收口 — 任务清单 |
+
+## 1.task\B.todo\v0.2\v0.2-r7066-S2-artifact-sync-mode-frontend
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.2\v0.2-r7066-S2-artifact-sync-mode-frontend\decision_log.md](./1.task\B.todo\v0.2\v0.2-r7066-S2-artifact-sync-mode-frontend\decision_log.md) | REQ-7066 artifactSyncMode 前端选择器 — 决策日志 | REQ-7066 artifactSyncMode 前端选择器 — 决策日志 |
+| [1.task\B.todo\v0.2\v0.2-r7066-S2-artifact-sync-mode-frontend\README.md](./1.task\B.todo\v0.2\v0.2-r7066-S2-artifact-sync-mode-frontend\README.md) | REQ-7066: artifactSyncMode 前端选择器 — 任务包 README | REQ-7066: artifactSyncMode 前端选择器 — 任务包 README |
+| [1.task\B.todo\v0.2\v0.2-r7066-S2-artifact-sync-mode-frontend\REQ-7066-artifact-sync-mode-frontend-original.md](./1.task\B.todo\v0.2\v0.2-r7066-S2-artifact-sync-mode-frontend\REQ-7066-artifact-sync-mode-frontend-original.md) | --- | - |
+| [1.task\B.todo\v0.2\v0.2-r7066-S2-artifact-sync-mode-frontend\REQ-7066-artifact-sync-mode-frontend.md](./1.task\B.todo\v0.2\v0.2-r7066-S2-artifact-sync-mode-frontend\REQ-7066-artifact-sync-mode-frontend.md) | --- | - |
+| [1.task\B.todo\v0.2\v0.2-r7066-S2-artifact-sync-mode-frontend\tasks.md](./1.task\B.todo\v0.2\v0.2-r7066-S2-artifact-sync-mode-frontend\tasks.md) | REQ-7066 artifactSyncMode 前端选择器 — 任务清单 | REQ-7066 artifactSyncMode 前端选择器 — 任务清单 |
+
+## 1.task\B.todo\v0.2\v0.2-r7067-S2-character-resource-ledger-frontend
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.2\v0.2-r7067-S2-character-resource-ledger-frontend\decision_log.md](./1.task\B.todo\v0.2\v0.2-r7067-S2-character-resource-ledger-frontend\decision_log.md) | --- | - |
+| [1.task\B.todo\v0.2\v0.2-r7067-S2-character-resource-ledger-frontend\README.md](./1.task\B.todo\v0.2\v0.2-r7067-S2-character-resource-ledger-frontend\README.md) | --- | - |
+| [1.task\B.todo\v0.2\v0.2-r7067-S2-character-resource-ledger-frontend\REQ-7067-character-resource-ledger-frontend-original.md](./1.task\B.todo\v0.2\v0.2-r7067-S2-character-resource-ledger-frontend\REQ-7067-character-resource-ledger-frontend-original.md) | --- | - |
+| [1.task\B.todo\v0.2\v0.2-r7067-S2-character-resource-ledger-frontend\REQ-7067-character-resource-ledger-frontend.md](./1.task\B.todo\v0.2\v0.2-r7067-S2-character-resource-ledger-frontend\REQ-7067-character-resource-ledger-frontend.md) | --- | - |
+| [1.task\B.todo\v0.2\v0.2-r7067-S2-character-resource-ledger-frontend\tasks.md](./1.task\B.todo\v0.2\v0.2-r7067-S2-character-resource-ledger-frontend\tasks.md) | --- | - |
+
 ## 1.task\template
 
 | 文件 | 标题 | 描述 |
@@ -440,46 +482,88 @@ description: "docs 目录索引（自动生成）"
 | [2.tech\architecture\llm-tool-calling-mechanism.md](./2.tech\architecture\llm-tool-calling-mechanism.md) | LLM 工具调用机制详解 — 从LLM响应到数据库写入的完整流程 | LLM 工具调用机制详解 — 从LLM响应到数据库写入的完整流程 |
 | [2.tech\architecture\testing.md](./2.tech\architecture\testing.md) | 本仓库的长期业务逻辑主要在 [`server/tests/`](../../server/tests/) 下，使用 **Node 内置 `node:test`* | - |
 
-## 2.tech\design
+## 2.tech\architecture\auto-director
 
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
-| [2.tech\design\ai-vs-manual-comparison.md](./2.tech\design\ai-vs-manual-comparison.md) | | 维度 | 手动创建模式 | AI 自动导演模式 | | - |
-| [2.tech\design\step0-file-import-plan.md](./2.tech\design\step0-file-import-plan.md) | 在 AI 自动导演开书对话框中添加"从文件导入想法"功能，让用户可以快速导入手稿或草稿文件，避免手动打字。 | - |
-| [2.tech\design\step0-material-import-design.md](./2.tech\design\step0-material-import-design.md) | ``` | - |
-| [2.tech\design\step0-mermaid-diagrams.md](./2.tech\design\step0-mermaid-diagrams.md) | ```mermaid | - |
-| [2.tech\design\style-engine-boundary-prd-v2.md](./2.tech\design\style-engine-boundary-prd-v2.md) | 本文档用于收口写法引擎的 **产品职责、模块边界、字段治理、信息架构与自动导演接入方式**。 | - |
-| [2.tech\design\style-engine-prompt-compiler-v1.md](./2.tech\design\style-engine-prompt-compiler-v1.md) | 本文档用于定义 **写法引擎如何把“写法资产”转换成真正可执行的模型约束**。 | - |
-| [2.tech\design\style-engine-v1.md](./2.tech\design\style-engine-v1.md) | **写法引擎** | - |
-| [2.tech\design\world-management-v2.md](./2.tech\design\world-management-v2.md) | 下面是我重新整理后的版本。 | - |
-| [2.tech\design\world-story-interface-v1.md](./2.tech\design\world-story-interface-v1.md) | 可以。那我直接把这部分收成一份： | - |
+| [2.tech\architecture\auto-director\auto-director-execution-plane-isolation-plan.md](./2.tech\architecture\auto-director\auto-director-execution-plane-isolation-plan.md) | 更新日期：2026-04-29 | - |
+| [2.tech\architecture\auto-director\director-mode-module-state-refactor-checklist.md](./2.tech\architecture\auto-director\director-mode-module-state-refactor-checklist.md) | 更新日期：2026-05-05 | - |
+| [2.tech\architecture\auto-director\prompt-workbench-context-and-step-runtime-plan.md](./2.tech\architecture\auto-director\prompt-workbench-context-and-step-runtime-plan.md) | 更新日期：2026-04-28 | - |
 
-## 2.tech\guide
+## 2.tech\architecture\chapter-editor
 
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
-| [2.tech\guide\2026-07-12-material-paste-context-injection.md](./2.tech\guide\2026-07-12-material-paste-context-injection.md) | 在手动创建小说模式中，用户可以通过"粘贴素材"功能将一大段创作素材粘贴进去。AI会自动解析这段素材，并将解析出的信息（世界观、角色、大纲等）保存到小说的基本信息 | - |
-| [2.tech\guide\2026-07-12-novel-technique-ai-recommend.md](./2.tech\guide\2026-07-12-novel-technique-ai-recommend.md) | 在项目设定的文笔技法面板中添加了"AI帮我挑"功能，与写法引擎中的实现类似。该功能会根据小说的标题和描述，自动推荐适合的文笔技法。 | - |
-| [2.tech\guide\prisma-migration-rollback.md](./2.tech\guide\prisma-migration-rollback.md) | Prisma 迁移手动回滚标准操作流程（SOP） | Prisma 迁移手动回滚标准操作流程（SOP） |
-| [2.tech\guide\sync-feature-location.md](./2.tech\guide\sync-feature-location.md) | **只有当小说世界是从世界库导入时，才会显示同步管理部分。** | - |
+| [2.tech\architecture\chapter-editor\chapter-aftermath-consolidation-followup-plan.md](./2.tech\architecture\chapter-editor\chapter-aftermath-consolidation-followup-plan.md) | > 状态：代码跟进已执行；运行时质量对比待 LLM 凭据环境复跑 | - |
+| [2.tech\architecture\chapter-editor\chapter-editor-v2-plan.md](./2.tech\architecture\chapter-editor\chapter-editor-v2-plan.md) | - 已按 `Phase 1 + Phase 2 MVP` 落地共享 `ChapterEditorShell`，并把它收口到独立 `NovelChapterEdi | - |
+| [2.tech\architecture\chapter-editor\chapter-output-pipeline-optimization-plan.md](./2.tech\architecture\chapter-editor\chapter-output-pipeline-optimization-plan.md) | 更新日期：2026-05-13 | - |
 
-## 2.tech\plans
+## 2.tech\architecture\character-system
 
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
-| [2.tech\plans\ai-comic-adaptation-plan.md](./2.tech\plans\ai-comic-adaptation-plan.md) | > 状态：规划中（2026-06-12，含市场调研修正） | - |
-| [2.tech\plans\ai-comic-product-design.md](./2.tech\plans\ai-comic-product-design.md) | > 状态：设计中（2026-06-12） | - |
-| [2.tech\plans\assistant-ui-plan.md](./2.tech\plans\assistant-ui-plan.md) | 本次改造以“直接按 LangGraph 重构、但采用并行迁移”作为固定策略，把当前自定义 `/chat + SSE + IndexedDB 会话` 的聊天工作台 | - |
-| [2.tech\plans\auto-director-execution-plane-isolation-plan.md](./2.tech\plans\auto-director-execution-plane-isolation-plan.md) | 更新日期：2026-04-29 | - |
-| [2.tech\plans\chapter-aftermath-consolidation-followup-plan.md](./2.tech\plans\chapter-aftermath-consolidation-followup-plan.md) | > 状态：代码跟进已执行；运行时质量对比待 LLM 凭据环境复跑 | - |
-| [2.tech\plans\chapter-editor-v2-plan.md](./2.tech\plans\chapter-editor-v2-plan.md) | - 已按 `Phase 1 + Phase 2 MVP` 落地共享 `ChapterEditorShell`，并把它收口到独立 `NovelChapterEdi | - |
-| [2.tech\plans\chapter-output-pipeline-optimization-plan.md](./2.tech\plans\chapter-output-pipeline-optimization-plan.md) | 更新日期：2026-05-13 | - |
-| [2.tech\plans\character-resource-ledger-plan.md](./2.tech\plans\character-resource-ledger-plan.md) | 相关长期角色系统升级方案见：[character-system-upgrade-plan.md](./character-system-upgrade-plan | - |
-| [2.tech\plans\character-system-upgrade-plan.md](./2.tech\plans\character-system-upgrade-plan.md) | 角色系统不应只被设计成“人物资料卡 + 当前状态记录”。在 AI 长篇成书系统里，角色系统的正确定位是： | - |
-| [2.tech\plans\director-mode-module-state-refactor-checklist.md](./2.tech\plans\director-mode-module-state-refactor-checklist.md) | 更新日期：2026-05-05 | - |
-| [2.tech\plans\drama-production-pipeline-v3.md](./2.tech\plans\drama-production-pipeline-v3.md) | > 状态：规划草案 v3（迭代自 novel-to-shortdrama-adaptation-1.md / v2） | - |
-| [2.tech\plans\novel-to-shortdrama-adaptation-plan.md](./2.tech\plans\novel-to-shortdrama-adaptation-plan.md) | 更新日期：2026-06-09 | - |
-| [2.tech\plans\prompt-workbench-context-and-step-runtime-plan.md](./2.tech\plans\prompt-workbench-context-and-step-runtime-plan.md) | 更新日期：2026-04-28 | - |
+| [2.tech\architecture\character-system\character-resource-ledger-plan.md](./2.tech\architecture\character-system\character-resource-ledger-plan.md) | 相关长期角色系统升级方案见：[character-system-upgrade-plan.md](./character-system-upgrade-plan | - |
+| [2.tech\architecture\character-system\character-system-upgrade-plan.md](./2.tech\architecture\character-system\character-system-upgrade-plan.md) | 角色系统不应只被设计成“人物资料卡 + 当前状态记录”。在 AI 长篇成书系统里，角色系统的正确定位是： | - |
+
+## 2.tech\architecture\creation-mode-comparison
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [2.tech\architecture\creation-mode-comparison\ai-vs-manual-comparison.md](./2.tech\architecture\creation-mode-comparison\ai-vs-manual-comparison.md) | | 维度 | 手动创建模式 | AI 自动导演模式 | | - |
+
+## 2.tech\architecture\creative-hub
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [2.tech\architecture\creative-hub\assistant-ui-plan.md](./2.tech\architecture\creative-hub\assistant-ui-plan.md) | 本次改造以“直接按 LangGraph 重构、但采用并行迁移”作为固定策略，把当前自定义 `/chat + SSE + IndexedDB 会话` 的聊天工作台 | - |
+
+## 2.tech\architecture\step0-material-import
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [2.tech\architecture\step0-material-import\step0-file-import-plan.md](./2.tech\architecture\step0-material-import\step0-file-import-plan.md) | 在 AI 自动导演开书对话框中添加"从文件导入想法"功能，让用户可以快速导入手稿或草稿文件，避免手动打字。 | - |
+| [2.tech\architecture\step0-material-import\step0-material-import-design.md](./2.tech\architecture\step0-material-import\step0-material-import-design.md) | ``` | - |
+| [2.tech\architecture\step0-material-import\step0-mermaid-diagrams.md](./2.tech\architecture\step0-material-import\step0-mermaid-diagrams.md) | ```mermaid | - |
+
+## 2.tech\architecture\style-engine
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [2.tech\architecture\style-engine\style-engine-boundary-prd-v2.md](./2.tech\architecture\style-engine\style-engine-boundary-prd-v2.md) | 本文档用于收口写法引擎的 **产品职责、模块边界、字段治理、信息架构与自动导演接入方式**。 | - |
+| [2.tech\architecture\style-engine\style-engine-prompt-compiler-v1.md](./2.tech\architecture\style-engine\style-engine-prompt-compiler-v1.md) | 本文档用于定义 **写法引擎如何把“写法资产”转换成真正可执行的模型约束**。 | - |
+| [2.tech\architecture\style-engine\style-engine-v1.md](./2.tech\architecture\style-engine\style-engine-v1.md) | **写法引擎** | - |
+
+## 2.tech\architecture\world-management
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [2.tech\architecture\world-management\world-management-v2.md](./2.tech\architecture\world-management\world-management-v2.md) | 下面是我重新整理后的版本。 | - |
+| [2.tech\architecture\world-management\world-story-interface-v1.md](./2.tech\architecture\world-management\world-story-interface-v1.md) | 可以。那我直接把这部分收成一份： | - |
+
+## 2.tech\database
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [2.tech\database\backup.md](./2.tech\database\backup.md) | 数据库备份策略 — SQLite 开发环境 + PostgreSQL 生产环境双模式 | 数据库备份策略 — SQLite 开发环境 + PostgreSQL 生产环境双模式 |
+| [2.tech\database\er-relationships.md](./2.tech\database\er-relationships.md) | 核心 ER 关系说明 — 按域列出模型间的主要关系链路，不逐条枚举外键 | 核心 ER 关系说明 — 按域列出模型间的主要关系链路，不逐条枚举外键 |
+| [2.tech\database\indexes-summary.md](./2.tech\database\indexes-summary.md) | 索引设计概览 — 按查询场景归类索引策略，不逐条枚举 285 个索引 | 索引设计概览 — 按查询场景归类索引策略，不逐条枚举 285 个索引 |
+| [2.tech\database\migrations.md](./2.tech\database\migrations.md) | 数据库迁移机制说明 — Prisma 迁移约定、版本管理、运行时迁移 | 数据库迁移机制说明 — Prisma 迁移约定、版本管理、运行时迁移 |
+| [2.tech\database\planned-documents.md](./2.tech\database\planned-documents.md) | 后续文档规划 — 第二批待补充的数据库技术文档 | 后续文档规划 — 第二批待补充的数据库技术文档 |
+| [2.tech\database\schema-overview.md](./2.tech\database\schema-overview.md) | 数据库 Schema 模型总览 — 132 个 Prisma 模型按域分组，每个模型简述与关键字段 | 数据库 Schema 模型总览 — 132 个 Prisma 模型按域分组，每个模型简述与关键字段 |
+
+## 2.tech\developer_guide
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [2.tech\developer_guide\prisma-migration-rollback.md](./2.tech\developer_guide\prisma-migration-rollback.md) | Prisma 迁移手动回滚标准操作流程（SOP） | Prisma 迁移手动回滚标准操作流程（SOP） |
+| [2.tech\developer_guide\sync-feature-location.md](./2.tech\developer_guide\sync-feature-location.md) | **只有当小说世界是从世界库导入时，才会显示同步管理部分。** | - |
+
+## 2.tech\user_guide
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [2.tech\user_guide\2026-07-12-material-paste-context-injection.md](./2.tech\user_guide\2026-07-12-material-paste-context-injection.md) | 在手动创建小说模式中，用户可以通过"粘贴素材"功能将一大段创作素材粘贴进去。AI会自动解析这段素材，并将解析出的信息（世界观、角色、大纲等）保存到小说的基本信息 | - |
+| [2.tech\user_guide\2026-07-12-novel-technique-ai-recommend.md](./2.tech\user_guide\2026-07-12-novel-technique-ai-recommend.md) | 在项目设定的文笔技法面板中添加了"AI帮我挑"功能，与写法引擎中的实现类似。该功能会根据小说的标题和描述，自动推荐适合的文笔技法。 | - |
 
 ## 3.analysis\diagnosis
 
