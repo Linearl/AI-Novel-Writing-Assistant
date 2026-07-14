@@ -237,6 +237,28 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.2\v0.2-r7053-S2-node-notification\REQ-7053.md](./1.task\B.todo\v0.2\v0.2-r7053-S2-node-notification\REQ-7053.md) | REQ-7053: 关键节点通知 — 需求文档（工作副本） | REQ-7053: 关键节点通知 — 需求文档（工作副本） |
 | [1.task\B.todo\v0.2\v0.2-r7053-S2-node-notification\tasks.md](./1.task\B.todo\v0.2\v0.2-r7053-S2-node-notification\tasks.md) | REQ-7053: 关键节点通知 — 任务清单 | REQ-7053: 关键节点通知 — 任务清单 |
 
+## 1.task\B.todo\v0.2\v0.2-r7054-C2-book-analysis
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.2\v0.2-r7054-C2-book-analysis\decision_log.md](./1.task\B.todo\v0.2\v0.2-r7054-C2-book-analysis\decision_log.md) | REQ-7054: Book Analysis 拆书系统 — 决策日志 | REQ-7054: Book Analysis 拆书系统 — 决策日志 |
+| [1.task\B.todo\v0.2\v0.2-r7054-C2-book-analysis\design.md](./1.task\B.todo\v0.2\v0.2-r7054-C2-book-analysis\design.md) | REQ-7054: Book Analysis 拆书系统 — 技术设计 | REQ-7054: Book Analysis 拆书系统 — 技术设计 |
+| [1.task\B.todo\v0.2\v0.2-r7054-C2-book-analysis\README.md](./1.task\B.todo\v0.2\v0.2-r7054-C2-book-analysis\README.md) | --- | - |
+| [1.task\B.todo\v0.2\v0.2-r7054-C2-book-analysis\REQ-7054-original.md](./1.task\B.todo\v0.2\v0.2-r7054-C2-book-analysis\REQ-7054-original.md) | REQ-7054: Book Analysis 拆书系统 — 需求文档（冻结副本） | REQ-7054: Book Analysis 拆书系统 — 需求文档（冻结副本） |
+| [1.task\B.todo\v0.2\v0.2-r7054-C2-book-analysis\REQ-7054.md](./1.task\B.todo\v0.2\v0.2-r7054-C2-book-analysis\REQ-7054.md) | REQ-7054: Book Analysis 拆书系统 — 需求文档（工作副本） | REQ-7054: Book Analysis 拆书系统 — 需求文档（工作副本） |
+| [1.task\B.todo\v0.2\v0.2-r7054-C2-book-analysis\tasks.md](./1.task\B.todo\v0.2\v0.2-r7054-C2-book-analysis\tasks.md) | REQ-7054: Book Analysis 拆书系统 — 任务清单 | REQ-7054: Book Analysis 拆书系统 — 任务清单 |
+
+## 1.task\B.todo\v0.2\v0.2-r7055-C1-rag-quality
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.2\v0.2-r7055-C1-rag-quality\decision_log.md](./1.task\B.todo\v0.2\v0.2-r7055-C1-rag-quality\decision_log.md) | REQ-7055: RAG 质量提升 — 决策日志 | REQ-7055: RAG 质量提升 — 决策日志 |
+| [1.task\B.todo\v0.2\v0.2-r7055-C1-rag-quality\design.md](./1.task\B.todo\v0.2\v0.2-r7055-C1-rag-quality\design.md) | REQ-7055: RAG 质量提升 — 技术设计 | REQ-7055: RAG 质量提升 — 技术设计 |
+| [1.task\B.todo\v0.2\v0.2-r7055-C1-rag-quality\README.md](./1.task\B.todo\v0.2\v0.2-r7055-C1-rag-quality\README.md) | --- | - |
+| [1.task\B.todo\v0.2\v0.2-r7055-C1-rag-quality\REQ-7055-original.md](./1.task\B.todo\v0.2\v0.2-r7055-C1-rag-quality\REQ-7055-original.md) | REQ-7055: RAG 质量提升 — 需求文档（冻结副本） | REQ-7055: RAG 质量提升 — 需求文档（冻结副本） |
+| [1.task\B.todo\v0.2\v0.2-r7055-C1-rag-quality\REQ-7055.md](./1.task\B.todo\v0.2\v0.2-r7055-C1-rag-quality\REQ-7055.md) | REQ-7055: RAG 质量提升 — 需求文档（工作副本） | REQ-7055: RAG 质量提升 — 需求文档（工作副本） |
+| [1.task\B.todo\v0.2\v0.2-r7055-C1-rag-quality\tasks.md](./1.task\B.todo\v0.2\v0.2-r7055-C1-rag-quality\tasks.md) | REQ-7055: RAG 质量提升 — 任务清单 | REQ-7055: RAG 质量提升 — 任务清单 |
+
 ## 1.task\B.todo\v0.2\v0.2-r7056-C1-character-consistency
 
 | 文件 | 标题 | 描述 |
@@ -266,6 +288,61 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.2\v0.2-r7058-S2-env-validation\README.md](./1.task\B.todo\v0.2\v0.2-r7058-S2-env-validation\README.md) | REQ-7058: 环境变量启动校验 | REQ-7058: 环境变量启动校验 |
 | [1.task\B.todo\v0.2\v0.2-r7058-S2-env-validation\REQ-7058.md](./1.task\B.todo\v0.2\v0.2-r7058-S2-env-validation\REQ-7058.md) | REQ-7058: 环境变量启动校验 — 需求文档（工作副本） | REQ-7058: 环境变量启动校验 — 需求文档（工作副本） |
 | [1.task\B.todo\v0.2\v0.2-r7058-S2-env-validation\tasks.md](./1.task\B.todo\v0.2\v0.2-r7058-S2-env-validation\tasks.md) | REQ-7058: 环境变量启动校验 — 任务清单 | REQ-7058: 环境变量启动校验 — 任务清单 |
+
+## 1.task\B.todo\v0.2\v0.2-r7059-C1-prompt-template
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.2\v0.2-r7059-C1-prompt-template\decision_log.md](./1.task\B.todo\v0.2\v0.2-r7059-C1-prompt-template\decision_log.md) | REQ-7059: Prompt 模板系统 — 决策日志 | REQ-7059: Prompt 模板系统 — 决策日志 |
+| [1.task\B.todo\v0.2\v0.2-r7059-C1-prompt-template\design.md](./1.task\B.todo\v0.2\v0.2-r7059-C1-prompt-template\design.md) | REQ-7059: Prompt 模板系统 — 技术设计 | REQ-7059: Prompt 模板系统 — 技术设计 |
+| [1.task\B.todo\v0.2\v0.2-r7059-C1-prompt-template\README.md](./1.task\B.todo\v0.2\v0.2-r7059-C1-prompt-template\README.md) | --- | - |
+| [1.task\B.todo\v0.2\v0.2-r7059-C1-prompt-template\REQ-7059-original.md](./1.task\B.todo\v0.2\v0.2-r7059-C1-prompt-template\REQ-7059-original.md) | REQ-7059: Prompt 模板系统 — 需求文档（冻结副本） | REQ-7059: Prompt 模板系统 — 需求文档（冻结副本） |
+| [1.task\B.todo\v0.2\v0.2-r7059-C1-prompt-template\REQ-7059.md](./1.task\B.todo\v0.2\v0.2-r7059-C1-prompt-template\REQ-7059.md) | REQ-7059: Prompt 模板系统 — 需求文档（工作副本） | REQ-7059: Prompt 模板系统 — 需求文档（工作副本） |
+| [1.task\B.todo\v0.2\v0.2-r7059-C1-prompt-template\tasks.md](./1.task\B.todo\v0.2\v0.2-r7059-C1-prompt-template\tasks.md) | REQ-7059: Prompt 模板系统 — 任务清单 | REQ-7059: Prompt 模板系统 — 任务清单 |
+
+## 1.task\B.todo\v0.2\v0.2-r7060-C1-auto-director-enhance
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.2\v0.2-r7060-C1-auto-director-enhance\decision_log.md](./1.task\B.todo\v0.2\v0.2-r7060-C1-auto-director-enhance\decision_log.md) | --- | - |
+| [1.task\B.todo\v0.2\v0.2-r7060-C1-auto-director-enhance\design.md](./1.task\B.todo\v0.2\v0.2-r7060-C1-auto-director-enhance\design.md) | string; | string; |
+| [1.task\B.todo\v0.2\v0.2-r7060-C1-auto-director-enhance\README.md](./1.task\B.todo\v0.2\v0.2-r7060-C1-auto-director-enhance\README.md) | --- | - |
+| [1.task\B.todo\v0.2\v0.2-r7060-C1-auto-director-enhance\REQ-7060-auto-director-enhance-original.md](./1.task\B.todo\v0.2\v0.2-r7060-C1-auto-director-enhance\REQ-7060-auto-director-enhance-original.md) | --- | - |
+| [1.task\B.todo\v0.2\v0.2-r7060-C1-auto-director-enhance\REQ-7060-auto-director-enhance.md](./1.task\B.todo\v0.2\v0.2-r7060-C1-auto-director-enhance\REQ-7060-auto-director-enhance.md) | --- | - |
+| [1.task\B.todo\v0.2\v0.2-r7060-C1-auto-director-enhance\tasks.md](./1.task\B.todo\v0.2\v0.2-r7060-C1-auto-director-enhance\tasks.md) | --- | - |
+
+## 1.task\B.todo\v0.2\v0.2-r7061-S1-chinese-localization
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.2\v0.2-r7061-S1-chinese-localization\decision_log.md](./1.task\B.todo\v0.2\v0.2-r7061-S1-chinese-localization\decision_log.md) | --- | - |
+| [1.task\B.todo\v0.2\v0.2-r7061-S1-chinese-localization\design.md](./1.task\B.todo\v0.2\v0.2-r7061-S1-chinese-localization\design.md) | --- | - |
+| [1.task\B.todo\v0.2\v0.2-r7061-S1-chinese-localization\README.md](./1.task\B.todo\v0.2\v0.2-r7061-S1-chinese-localization\README.md) | --- | - |
+| [1.task\B.todo\v0.2\v0.2-r7061-S1-chinese-localization\REQ-7061-chinese-localization-original.md](./1.task\B.todo\v0.2\v0.2-r7061-S1-chinese-localization\REQ-7061-chinese-localization-original.md) | --- | - |
+| [1.task\B.todo\v0.2\v0.2-r7061-S1-chinese-localization\REQ-7061-chinese-localization.md](./1.task\B.todo\v0.2\v0.2-r7061-S1-chinese-localization\REQ-7061-chinese-localization.md) | --- | - |
+| [1.task\B.todo\v0.2\v0.2-r7061-S1-chinese-localization\tasks.md](./1.task\B.todo\v0.2\v0.2-r7061-S1-chinese-localization\tasks.md) | --- | - |
+
+## 1.task\B.todo\v0.2\v0.2-r7062-S1-llm-infrastructure
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.2\v0.2-r7062-S1-llm-infrastructure\decision_log.md](./1.task\B.todo\v0.2\v0.2-r7062-S1-llm-infrastructure\decision_log.md) | --- | - |
+| [1.task\B.todo\v0.2\v0.2-r7062-S1-llm-infrastructure\design.md](./1.task\B.todo\v0.2\v0.2-r7062-S1-llm-infrastructure\design.md) | --- | - |
+| [1.task\B.todo\v0.2\v0.2-r7062-S1-llm-infrastructure\README.md](./1.task\B.todo\v0.2\v0.2-r7062-S1-llm-infrastructure\README.md) | --- | - |
+| [1.task\B.todo\v0.2\v0.2-r7062-S1-llm-infrastructure\REQ-7062-llm-infrastructure-original.md](./1.task\B.todo\v0.2\v0.2-r7062-S1-llm-infrastructure\REQ-7062-llm-infrastructure-original.md) | --- | - |
+| [1.task\B.todo\v0.2\v0.2-r7062-S1-llm-infrastructure\REQ-7062-llm-infrastructure.md](./1.task\B.todo\v0.2\v0.2-r7062-S1-llm-infrastructure\REQ-7062-llm-infrastructure.md) | --- | - |
+| [1.task\B.todo\v0.2\v0.2-r7062-S1-llm-infrastructure\tasks.md](./1.task\B.todo\v0.2\v0.2-r7062-S1-llm-infrastructure\tasks.md) | --- | - |
+
+## 1.task\B.todo\v0.2\v0.2-r7063-S2-tension-curve
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.2\v0.2-r7063-S2-tension-curve\decision_log.md](./1.task\B.todo\v0.2\v0.2-r7063-S2-tension-curve\decision_log.md) | --- | - |
+| [1.task\B.todo\v0.2\v0.2-r7063-S2-tension-curve\design.md](./1.task\B.todo\v0.2\v0.2-r7063-S2-tension-curve\design.md) | --- | - |
+| [1.task\B.todo\v0.2\v0.2-r7063-S2-tension-curve\README.md](./1.task\B.todo\v0.2\v0.2-r7063-S2-tension-curve\README.md) | --- | - |
+| [1.task\B.todo\v0.2\v0.2-r7063-S2-tension-curve\REQ-7063-tension-curve-original.md](./1.task\B.todo\v0.2\v0.2-r7063-S2-tension-curve\REQ-7063-tension-curve-original.md) | --- | - |
+| [1.task\B.todo\v0.2\v0.2-r7063-S2-tension-curve\REQ-7063-tension-curve.md](./1.task\B.todo\v0.2\v0.2-r7063-S2-tension-curve\REQ-7063-tension-curve.md) | --- | - |
+| [1.task\B.todo\v0.2\v0.2-r7063-S2-tension-curve\tasks.md](./1.task\B.todo\v0.2\v0.2-r7063-S2-tension-curve\tasks.md) | --- | - |
 
 ## 1.task\template
 

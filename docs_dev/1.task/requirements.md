@@ -157,11 +157,16 @@ description: "需求任务总清单（SSOT）"
 | 7051 | 一致性实时监控 | p1 | 📋 待办 | v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.todo/v0.2-r7051-C1-consistency-monitor/README.md` |  |
 | 7052 | background task manager | p2 | 📋 待办 | v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.todo/v0.2-r7052-S1-background-task-manager/README.md` |  |
 | 7053 | node notification | p2 | 📋 待办 | v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.todo/v0.2-r7053-S2-node-notification/README.md` |  |
+| 7054 | Book Analysis | p2 | 📋 待办 | - | 0.2 | - | - | `B.todo/v0.2-r7054-C2-book-analysis/README.md` |  |
+| 7055 | Rag Quality | p0 | 📋 待办 | - | 0.2 | - | - | `B.todo/v0.2-r7055-C1-rag-quality/README.md` |  |
 | 7056 | character consistency | p2 | 📋 待办 | v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.todo/v0.2-r7056-C1-character-consistency/README.md` |  |
 | 7057 | ai smell trend | p2 | 📋 待办 | v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.todo/v0.2-r7057-S2-ai-smell-trend/README.md` |  |
 | 7058 | env validation | p2 | 📋 待办 | v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.todo/v0.2-r7058-S2-env-validation/README.md` |  |
 | 7059 | 卷规划服务层拆分重构 | p2 | ✅ 已完成 | 重构 | 0.1 | 2026-07-13 | 2026-07-13 | `B.2.done/v0.1-r7059-C2-volume-service-refactor/README.md` |  |
 | 7060 | 零散客户端与路由修复 | p4 | ✅ 已完成 | 修复 | 0.1 | 2026-07-13 | 2026-07-13 | `B.2.done/v0.1-r7060-S4-scattered-client-fixes/README.md` |  |
+| 7061 | 中文本地化 | p0 | 📋 待办 | 上游仓库 AI-Novel-Writing-Assistant-main 参考实现 | 0.2 | 2026-07-14 | - | `B.todo/v0.2-r7061-S1-chinese-localization/README.md` |  |
+| 7062 | LLM 基础设施增强 | p2 | 📋 待办 | 上游仓库 AI-Novel-Writing-Assistant-main 参考实现 | 0.2 | 2026-07-14 | - | `B.todo/v0.2-r7062-S1-llm-infrastructure/README.md` |  |
+| 7063 | Tension Curve 冲突曲线 | p2 | 📋 待办 | 上游仓库 AI-Novel-Writing-Assistant-main 参考实现 | 0.2 | 2026-07-14 | - | `B.todo/v0.2-r7063-S2-tension-curve/README.md` |  |
 | 7029 | Prisma Schema 精简 | p8 | 📋 待办 | - | 0.1 | 2026-07-10 | 2026-07-10 | `B.todo/v0.1-r7029-C2-prisma-schema-sizing/README.md` |  |
 | 7030 | Novel Application Services 门面收缩 | p1 | 📋 待办 | - | 0.1 | 2026-07-10 | 2026-07-10 | `B.todo/v0.1-r7030-M2-novel-application-services-facade-contraction/README.md` |  |
 
@@ -190,9 +195,14 @@ description: "需求任务总清单（SSOT）"
 | 7051 | 一致性实时监控 | `B.todo/v0.2-r7051-C1-consistency-monitor/README.md` |
 | 7052 | background task manager | `B.todo/v0.2-r7052-S1-background-task-manager/README.md` |
 | 7053 | node notification | `B.todo/v0.2-r7053-S2-node-notification/README.md` |
+| 7054 | Book Analysis | `B.todo/v0.2-r7054-C2-book-analysis/README.md` |
+| 7055 | Rag Quality | `B.todo/v0.2-r7055-C1-rag-quality/README.md` |
 | 7056 | character consistency | `B.todo/v0.2-r7056-C1-character-consistency/README.md` |
 | 7057 | ai smell trend | `B.todo/v0.2-r7057-S2-ai-smell-trend/README.md` |
 | 7058 | env validation | `B.todo/v0.2-r7058-S2-env-validation/README.md` |
+| 7061 | 中文本地化 | `B.todo/v0.2-r7061-S1-chinese-localization/README.md` |
+| 7062 | LLM 基础设施增强 | `B.todo/v0.2-r7062-S1-llm-infrastructure/README.md` |
+| 7063 | Tension Curve 冲突曲线 | `B.todo/v0.2-r7063-S2-tension-curve/README.md` |
 | 2013 | Director Failed Retry Entry | `B.todo/v0.1-r2013-medium-director-failed-retry-entry/README.md` |
 | 2014 | Chapter Token Budget Dynamic | `B.todo/v0.1-r2014-medium-chapter-token-budget-dynamic/README.md` |
 | 3004 | Novel Conversation Archive | `B.todo/v0.1-r3004-medium-novel-conversation-archive/README.md` |

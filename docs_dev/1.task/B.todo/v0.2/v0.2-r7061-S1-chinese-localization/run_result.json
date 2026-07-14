@@ -1,0 +1,18 @@
+{
+  "reqId": "7061",
+  "title": "中文本地化",
+  "status": "requirements_ready",
+  "complexity": "S1",
+  "category": "7xxx",
+  "priority": "P0",
+  "version": "v0.2",
+  "createdAt": "2026-07-14",
+  "source": "上游仓库 AI-Novel-Writing-Assistant-main 参考实现",
+  "estimatedFiles": "3-5",
+  "dependencies": [],
+  "verification": {
+    "typecheck": "pending",
+    "tests": "pending",
+    "integration": "pending"
+  }
+}
