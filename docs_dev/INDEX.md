@@ -522,6 +522,16 @@ description: "docs 目录索引（自动生成）"
 | [3.analysis\report\2026-07-14-上游仓库版本对比诊断报告.md](./3.analysis\report\2026-07-14-上游仓库版本对比诊断报告.md) | 上游仓库 v0.32 vs 最新版本的全面对比诊断报告，分析改进点及对我们项目的借鉴价值 | 上游仓库 v0.32 vs 最新版本的全面对比诊断报告，分析改进点及对我们项目的借鉴价值 |
 | [3.analysis\report\2026-07-14-客户端测试覆盖率分析报告.md](./3.analysis\report\2026-07-14-客户端测试覆盖率分析报告.md) | 客户端测试覆盖率分析报告 — 现状评估、差距识别与改进成果 | 客户端测试覆盖率分析报告 — 现状评估、差距识别与改进成果 |
 
+## 3.analysis\report\2026-07-14-上游仓库更新分析
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [3.analysis\report\2026-07-14-上游仓库更新分析\report-client-changes.md](./3.analysis\report\2026-07-14-上游仓库更新分析\report-client-changes.md) | > Report generated 2026-07-14. Compares AI-Novel-Writing-Assistant-main-v0.32/ ( | - |
+| [3.analysis\report\2026-07-14-上游仓库更新分析\report-schema-types.md](./3.analysis\report\2026-07-14-上游仓库更新分析\report-schema-types.md) | > Generated: 2026-07-14 | - |
+| [3.analysis\report\2026-07-14-上游仓库更新分析\verification-final.md](./3.analysis\report\2026-07-14-上游仓库更新分析\verification-final.md) | **Date**: 2026-07-14 | - |
+| [3.analysis\report\2026-07-14-上游仓库更新分析\verification-round1.md](./3.analysis\report\2026-07-14-上游仓库更新分析\verification-round1.md) | 诊断报告事实核查第一轮验证结果 | 诊断报告事实核查第一轮验证结果 |
+| [3.analysis\report\2026-07-14-上游仓库更新分析\verification-round2.md](./3.analysis\report\2026-07-14-上游仓库更新分析\verification-round2.md) | 第二轮事实核查结果 - 上游仓库版本对比诊断报告 | 第二轮事实核查结果 - 上游仓库版本对比诊断报告 |
+
 ## 4.misc
 
 | 文件 | 标题 | 描述 |
