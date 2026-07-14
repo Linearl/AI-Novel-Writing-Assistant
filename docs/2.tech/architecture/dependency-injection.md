@@ -1,11 +1,23 @@
 ---
 description: "DI 依赖注入架构——迁移指南与接口定义"
-update_time: 2026-07-10
+update_time: 2026-07-14
 ---
 
 # Dependency Injection — 架构指南
 
 > REQ-7019 产出物。本文件定义项目的 DI 模式、接口约定与迁移路径。
+
+---
+
+## 迁移状态
+
+| 阶段 | 状态 | 说明 |
+|------|------|------|
+| 接口定义（`platform/di/interfaces.ts`） | ✅ 已完成 | `IDatabase`、`ILlmClient`、`IEventBus` 就绪 |
+| Service 迁移（Phase 3） | 🚧 有承接 | **REQ-7064** `docs/1.task/B.todo/v0.2/v0.2-r7064-C1-di-service-dependency-injection-migration/` |
+| 旧测试迁移 | ⏳ 待启动 | 随 Service 改造顺带进行，不强制一次性迁移 |
+
+**下一步**：执行 `ll-workflow-core dev` 推进 REQ-7064，按 tasks.md 中 T1→T6 顺序逐 Service 改造。
 
 ---
 
