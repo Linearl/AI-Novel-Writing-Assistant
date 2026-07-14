@@ -1,0 +1,45 @@
+{
+  "req_id": "7064",
+  "title": "Service 层 DI 依赖注入迁移",
+  "version": "v0.2",
+  "status": "requirements_ready",
+  "requirement_status": "approved",
+  "priority": "P1",
+  "reqType": "技术债务/重构",
+  "categoryCode": 7,
+  "complexity": "complex",
+  "skipClarification": true,
+  "skipDesign": false,
+  "created_at": "2026-07-14",
+  "artifacts": {
+    "readme": "README.md",
+    "requirements": "REQ-7064.md",
+    "requirements_original": "REQ-7064-original.md",
+    "design": "design.md",
+    "tasks": "tasks.md",
+    "decision_log": "decision_log.md"
+  },
+  "acceptance_criteria": [
+    "5 个 Service 均通过 IDatabase/ILlmClient 接口注入",
+    "pnpm typecheck 通过",
+    "所有现有测试继续通过（pnpm test）",
+    "每个 Service 新增 DI mock 单测，行覆盖率 ≥ 80%",
+    "prismaMock.js 标记 @deprecated"
+  ],
+  "unresolved_items": [],
+  "assumptions": [
+    "IDatabase.$transaction 已覆盖 DirectorService 事务用法",
+    "defaultLlmClient 作为模块级单例导出，测试时可通过构造函数参数覆盖"
+  ],
+  "blocking_reasons": [],
+  "handoff": {
+    "route": "req",
+    "ticket_type": "req_to_dev",
+    "next_action": "dev"
+  },
+  "state_sync": {
+    "requirement_axis": "approved",
+    "task_axis": "requirements_ready",
+    "is_consistent": true
+  }
+}
