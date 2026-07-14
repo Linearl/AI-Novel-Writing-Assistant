@@ -47,13 +47,12 @@ slots:
 
   # 技术文档(2.tech 编号化)
   tech_api_root: "${ target_dev_dir }/docs/2.tech/api"
+  tech_analysis_root: "${ target_dev_dir }/docs/2.tech/analysis"
   tech_architecture_root: "${ target_dev_dir }/docs/2.tech/architecture"
   tech_database_root: "${ target_dev_dir }/docs/2.tech/database"
-  tech_development_root: "${ target_dev_dir }/docs/2.tech/development"
-  tech_guide_root: "${ target_dev_dir }/docs/2.tech/guide"
+  tech_developer_guide_root: "${ target_dev_dir }/docs/2.tech/developer_guide"
   tech_specification_root: "${ target_dev_dir }/docs/2.tech/specification"
   tech_user_guide_root: "${ target_dev_dir }/docs/2.tech/user_guide"
-  guide_root: "${ target_dev_dir }/docs/2.tech/guide"
 
   # 分析 / 诊断
   analysis_diagnosis_root: "${ target_dev_dir }/docs/3.analysis/diagnosis"
