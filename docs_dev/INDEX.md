@@ -519,13 +519,13 @@ description: "docs 目录索引（自动生成）"
 | [3.analysis\report\2026-06-26-ll-workflow-core-init-收口报告.md](./3.analysis\report\2026-06-26-ll-workflow-core-init-收口报告.md) | **执行时间**:2026-06-26 | - |
 | [3.analysis\report\2026-07-02-positive-findings.md](./3.analysis\report\2026-07-02-positive-findings.md) | r7011/r7012 审计正面发现汇总 — 安全、质量、稳定性、可观测性维度的已验证良好实践 | r7011/r7012 审计正面发现汇总 — 安全、质量、稳定性、可观测性维度的已验证良好实践 |
 | [3.analysis\report\2026-07-03-竞品分析-游蜂写作.md](./3.analysis\report\2026-07-03-竞品分析-游蜂写作.md) | 竞品"游蜂写作"产品分析，对比 ai-novel 项目的功能差距与可借鉴的设计思路 | 竞品"游蜂写作"产品分析，对比 ai-novel 项目的功能差距与可借鉴的设计思路 |
-| [3.analysis\report\2026-07-14-上游仓库版本对比诊断报告.md](./3.analysis\report\2026-07-14-上游仓库版本对比诊断报告.md) | 上游仓库 v0.32 vs 最新版本的全面对比诊断报告，分析改进点及对我们项目的借鉴价值 | 上游仓库 v0.32 vs 最新版本的全面对比诊断报告，分析改进点及对我们项目的借鉴价值 |
 | [3.analysis\report\2026-07-14-客户端测试覆盖率分析报告.md](./3.analysis\report\2026-07-14-客户端测试覆盖率分析报告.md) | 客户端测试覆盖率分析报告 — 现状评估、差距识别与改进成果 | 客户端测试覆盖率分析报告 — 现状评估、差距识别与改进成果 |
 
 ## 3.analysis\report\2026-07-14-上游仓库更新分析
 
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
+| [3.analysis\report\2026-07-14-上游仓库更新分析\2026-07-14-上游仓库版本对比诊断报告.md](./3.analysis\report\2026-07-14-上游仓库更新分析\2026-07-14-上游仓库版本对比诊断报告.md) | 上游仓库 v0.32 vs 最新版本的全面对比诊断报告，分析改进点及对我们项目的借鉴价值 | 上游仓库 v0.32 vs 最新版本的全面对比诊断报告，分析改进点及对我们项目的借鉴价值 |
 | [3.analysis\report\2026-07-14-上游仓库更新分析\report-client-changes.md](./3.analysis\report\2026-07-14-上游仓库更新分析\report-client-changes.md) | > Report generated 2026-07-14. Compares AI-Novel-Writing-Assistant-main-v0.32/ ( | - |
 | [3.analysis\report\2026-07-14-上游仓库更新分析\report-schema-types.md](./3.analysis\report\2026-07-14-上游仓库更新分析\report-schema-types.md) | > Generated: 2026-07-14 | - |
 | [3.analysis\report\2026-07-14-上游仓库更新分析\verification-final.md](./3.analysis\report\2026-07-14-上游仓库更新分析\verification-final.md) | **Date**: 2026-07-14 | - |

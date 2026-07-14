@@ -51,6 +51,7 @@ server/.env
 
 # Runtime debug logs
 server/logs/
+server/consistency-reports/
 
 # ll-workflow-core worktree pool
 worktree/
