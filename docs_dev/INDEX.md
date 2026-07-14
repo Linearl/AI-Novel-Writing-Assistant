@@ -19,9 +19,9 @@ description: "docs 目录索引（自动生成）"
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
 | [0.version_plan\README.md](./0.version_plan\README.md) | 项目版本路线图（SSOT）— 定义 v0.1-v0.3 版本目标、里程碑和交付计划 | 项目版本路线图（SSOT）— 定义 v0.1-v0.3 版本目标、里程碑和交付计划 |
-| [0.version_plan\v0.1-acceptance-criteria.md](./0.version_plan\v0.1-acceptance-criteria.md) | v0.1 产品级验收标准 — 用户能否利用系统独立完成一部 AI 味不重的小说 | v0.1 产品级验收标准 — 用户能否利用系统独立完成一部 AI 味不重的小说 |
+| [0.version_plan\v0.1-plan.md](./0.version_plan\v0.1-plan.md) | v0.1 产品级验收标准 — 用户能否利用系统独立完成一部 AI 味不重的小说 | v0.1 产品级验收标准 — 用户能否利用系统独立完成一部 AI 味不重的小说 |
 | [0.version_plan\v0.1-release-notes.md](./0.version_plan\v0.1-release-notes.md) | v0.1.00 版本说明 — 110 个任务包完整交付清单 | v0.1.00 版本说明 — 110 个任务包完整交付清单 |
-| [0.version_plan\v0.2-release-notes.md](./0.version_plan\v0.2-release-notes.md) | v0.2 版本详细说明 — 流程自动化 + 质量控制，解决长篇小说频繁阻塞问题 | v0.2 版本详细说明 — 流程自动化 + 质量控制，解决长篇小说频繁阻塞问题 |
+| [0.version_plan\v0.2-plan.md](./0.version_plan\v0.2-plan.md) | v0.2 版本计划 — 流程自动化 + 质量控制，解决长篇小说频繁阻塞问题 | v0.2 版本计划 — 流程自动化 + 质量控制，解决长篇小说频繁阻塞问题 |
 | [0.version_plan\v0.2-task-breakdown.md](./0.version_plan\v0.2-task-breakdown.md) | v0.2 任务包清单 — 16个任务包详细说明（流程自动化 + 质量控制） | v0.2 任务包清单 — 16个任务包详细说明（流程自动化 + 质量控制） |
 
 ## 1.task
