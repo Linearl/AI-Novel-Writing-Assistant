@@ -12,7 +12,7 @@ description: "docs 目录索引（自动生成）"
 
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
-| [README.md](./README.md) | > 这是 **ll-workflow-core 专用** 的工作目录,与项目业务侧 `docs/` 隔离。 | - |
+| [README.md](./README.md) | > 本目录同时承载 **ll-workflow-core 工作区**（编号化目录）和**业务侧文档**（从上游迁移并收敛到编号体系内）。 | - |
 
 ## 0.version_plan
 
@@ -436,7 +436,23 @@ description: "docs 目录索引（自动生成）"
 
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
+| [2.tech\architecture\dependency-injection.md](./2.tech\architecture\dependency-injection.md) | DI 依赖注入架构——迁移指南与接口定义 | DI 依赖注入架构——迁移指南与接口定义 |
 | [2.tech\architecture\llm-tool-calling-mechanism.md](./2.tech\architecture\llm-tool-calling-mechanism.md) | LLM 工具调用机制详解 — 从LLM响应到数据库写入的完整流程 | LLM 工具调用机制详解 — 从LLM响应到数据库写入的完整流程 |
+| [2.tech\architecture\testing.md](./2.tech\architecture\testing.md) | 本仓库的长期业务逻辑主要在 [`server/tests/`](../../server/tests/) 下，使用 **Node 内置 `node:test`* | - |
+
+## 2.tech\design
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [2.tech\design\ai-vs-manual-comparison.md](./2.tech\design\ai-vs-manual-comparison.md) | | 维度 | 手动创建模式 | AI 自动导演模式 | | - |
+| [2.tech\design\step0-file-import-plan.md](./2.tech\design\step0-file-import-plan.md) | 在 AI 自动导演开书对话框中添加"从文件导入想法"功能，让用户可以快速导入手稿或草稿文件，避免手动打字。 | - |
+| [2.tech\design\step0-material-import-design.md](./2.tech\design\step0-material-import-design.md) | ``` | - |
+| [2.tech\design\step0-mermaid-diagrams.md](./2.tech\design\step0-mermaid-diagrams.md) | ```mermaid | - |
+| [2.tech\design\style-engine-boundary-prd-v2.md](./2.tech\design\style-engine-boundary-prd-v2.md) | 本文档用于收口写法引擎的 **产品职责、模块边界、字段治理、信息架构与自动导演接入方式**。 | - |
+| [2.tech\design\style-engine-prompt-compiler-v1.md](./2.tech\design\style-engine-prompt-compiler-v1.md) | 本文档用于定义 **写法引擎如何把“写法资产”转换成真正可执行的模型约束**。 | - |
+| [2.tech\design\style-engine-v1.md](./2.tech\design\style-engine-v1.md) | **写法引擎** | - |
+| [2.tech\design\world-management-v2.md](./2.tech\design\world-management-v2.md) | 下面是我重新整理后的版本。 | - |
+| [2.tech\design\world-story-interface-v1.md](./2.tech\design\world-story-interface-v1.md) | 可以。那我直接把这部分收成一份： | - |
 
 ## 2.tech\guide
 
@@ -444,6 +460,26 @@ description: "docs 目录索引（自动生成）"
 | --- | --- | --- |
 | [2.tech\guide\2026-07-12-material-paste-context-injection.md](./2.tech\guide\2026-07-12-material-paste-context-injection.md) | 在手动创建小说模式中，用户可以通过"粘贴素材"功能将一大段创作素材粘贴进去。AI会自动解析这段素材，并将解析出的信息（世界观、角色、大纲等）保存到小说的基本信息 | - |
 | [2.tech\guide\2026-07-12-novel-technique-ai-recommend.md](./2.tech\guide\2026-07-12-novel-technique-ai-recommend.md) | 在项目设定的文笔技法面板中添加了"AI帮我挑"功能，与写法引擎中的实现类似。该功能会根据小说的标题和描述，自动推荐适合的文笔技法。 | - |
+| [2.tech\guide\prisma-migration-rollback.md](./2.tech\guide\prisma-migration-rollback.md) | Prisma 迁移手动回滚标准操作流程（SOP） | Prisma 迁移手动回滚标准操作流程（SOP） |
+| [2.tech\guide\sync-feature-location.md](./2.tech\guide\sync-feature-location.md) | **只有当小说世界是从世界库导入时，才会显示同步管理部分。** | - |
+
+## 2.tech\plans
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [2.tech\plans\ai-comic-adaptation-plan.md](./2.tech\plans\ai-comic-adaptation-plan.md) | > 状态：规划中（2026-06-12，含市场调研修正） | - |
+| [2.tech\plans\ai-comic-product-design.md](./2.tech\plans\ai-comic-product-design.md) | > 状态：设计中（2026-06-12） | - |
+| [2.tech\plans\assistant-ui-plan.md](./2.tech\plans\assistant-ui-plan.md) | 本次改造以“直接按 LangGraph 重构、但采用并行迁移”作为固定策略，把当前自定义 `/chat + SSE + IndexedDB 会话` 的聊天工作台 | - |
+| [2.tech\plans\auto-director-execution-plane-isolation-plan.md](./2.tech\plans\auto-director-execution-plane-isolation-plan.md) | 更新日期：2026-04-29 | - |
+| [2.tech\plans\chapter-aftermath-consolidation-followup-plan.md](./2.tech\plans\chapter-aftermath-consolidation-followup-plan.md) | > 状态：代码跟进已执行；运行时质量对比待 LLM 凭据环境复跑 | - |
+| [2.tech\plans\chapter-editor-v2-plan.md](./2.tech\plans\chapter-editor-v2-plan.md) | - 已按 `Phase 1 + Phase 2 MVP` 落地共享 `ChapterEditorShell`，并把它收口到独立 `NovelChapterEdi | - |
+| [2.tech\plans\chapter-output-pipeline-optimization-plan.md](./2.tech\plans\chapter-output-pipeline-optimization-plan.md) | 更新日期：2026-05-13 | - |
+| [2.tech\plans\character-resource-ledger-plan.md](./2.tech\plans\character-resource-ledger-plan.md) | 相关长期角色系统升级方案见：[character-system-upgrade-plan.md](./character-system-upgrade-plan | - |
+| [2.tech\plans\character-system-upgrade-plan.md](./2.tech\plans\character-system-upgrade-plan.md) | 角色系统不应只被设计成“人物资料卡 + 当前状态记录”。在 AI 长篇成书系统里，角色系统的正确定位是： | - |
+| [2.tech\plans\director-mode-module-state-refactor-checklist.md](./2.tech\plans\director-mode-module-state-refactor-checklist.md) | 更新日期：2026-05-05 | - |
+| [2.tech\plans\drama-production-pipeline-v3.md](./2.tech\plans\drama-production-pipeline-v3.md) | > 状态：规划草案 v3（迭代自 novel-to-shortdrama-adaptation-1.md / v2） | - |
+| [2.tech\plans\novel-to-shortdrama-adaptation-plan.md](./2.tech\plans\novel-to-shortdrama-adaptation-plan.md) | 更新日期：2026-06-09 | - |
+| [2.tech\plans\prompt-workbench-context-and-step-runtime-plan.md](./2.tech\plans\prompt-workbench-context-and-step-runtime-plan.md) | 更新日期：2026-04-28 | - |
 
 ## 3.analysis\diagnosis
 
@@ -537,9 +573,20 @@ description: "docs 目录索引（自动生成）"
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
 | [4.misc\2026-07-11-novelService-prototype-methods-lost.md](./4.misc\2026-07-11-novelService-prototype-methods-lost.md) | 2026-07-11 自动导演 novelService 原型方法丢失问题分析与修复 | 2026-07-11 自动导演 novelService 原型方法丢失问题分析与修复 |
+| [4.misc\2026-07-14-docs-migration-plan.md](./4.misc\2026-07-14-docs-migration-plan.md) | docs/ 与 docs_dev/ 合并迁移方案 — 将上游 docs/ 内容合并到 docs_dev/ 编号体系，然后重命名 docs_dev → docs | docs/ 与 docs_dev/ 合并迁移方案 — 将上游 docs/ 内容合并到 docs_dev/ 编号体系，然后重命名 docs_dev → docs |
 | [4.misc\inspiration-rose-thief.md](./4.misc\inspiration-rose-thief.md) | 《玫瑰窃贼》歌曲衍生小说大纲 — 提取自柳爽同名歌曲，用于新小说灵感注入 | 《玫瑰窃贼》歌曲衍生小说大纲 — 提取自柳爽同名歌曲，用于新小说灵感注入 |
 | [4.misc\novel-outline-bug-system.md](./4.misc\novel-outline-bug-system.md) | > 整理时间：2026-06-25 | 用途：创建新书时的设定输入参考 | - |
+| [4.misc\upstream-agents.md](./4.misc\upstream-agents.md) | <!-- Parent: ../AGENTS.md --> | - |
 | [4.misc\新仓库维护规则.md](./4.misc\新仓库维护规则.md) | 本项目基于上游开源项目深度二次魔改，自有代码与上游技术路线已严重分化，**不做全量分支合并**。采用「自有主线分支 + 纯净上游快照分支 + Git Workt | - |
+
+## 4.misc\checkpoints
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [4.misc\checkpoints\chapter-editor-v2-progress.md](./4.misc\checkpoints\chapter-editor-v2-progress.md) | - 完成 `Chapter Editor V2` 的 `Phase 1 + Phase 2 MVP`。 | - |
+| [4.misc\checkpoints\llm-schema-refactor-checkpoint.md](./4.misc\checkpoints\llm-schema-refactor-checkpoint.md) | 日期：2026-03-23 | - |
+| [4.misc\checkpoints\prompt-governance-audit-2026-05-08.md](./4.misc\checkpoints\prompt-governance-audit-2026-05-08.md) | 本检查点记录提示词管理体系第一阶段的治理状态。当前阶段只完善可管理、可预览、可审计和后续安全编辑所需的元数据，不把章节质量 Prompt Contract 强化 | - |
+| [4.misc\checkpoints\windows-desktop-installer-manual-checklist.md](./4.misc\checkpoints\windows-desktop-installer-manual-checklist.md) | 用于全新 `NSIS Setup.exe` 构建后的桌面 Beta 频道验证。目标是确认静默冒烟测试脚本无法覆盖的交互式安装与卸载流程。 | - |
 
 ## 4.misc\issues
 
@@ -559,6 +606,99 @@ description: "docs 目录索引（自动生成）"
 | 文件 | 标题 | 描述 |
 | --- | --- | --- |
 | [4.misc\prompts\high-speed-develop.md](./4.misc\prompts\high-speed-develop.md) | 请完成 docs_dev/1.task/B.todo/v0.1 下全部任务包的开发。 | - |
+
+## 4.misc\superpowers\plans
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [4.misc\superpowers\plans\2026-04-25-lucky-beta-selective-port.md](./4.misc\superpowers\plans\2026-04-25-lucky-beta-selective-port.md) | > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-d | - |
+
+## 4.misc\wiki
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [4.misc\wiki\AGENTS.md](./4.misc\wiki\AGENTS.md) | <!-- Parent: ../AGENTS.md --> | - |
+| [4.misc\wiki\entry-template.md](./4.misc\wiki\entry-template.md) | 说明这个问题为什么重要，历史上为什么反复出现，或者它影响哪条主链路。 | - |
+| [4.misc\wiki\README.md](./4.misc\wiki\README.md) | 本目录用于沉淀长期项目知识，帮助未来开发者和 AI Agent 理解项目为什么这样设计，以及后续应该如何维护。 | - |
+
+## 4.misc\wiki\architecture
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [4.misc\wiki\architecture\AGENTS.md](./4.misc\wiki\architecture\AGENTS.md) | <!-- Parent: ../../AGENTS.md --> | - |
+| [4.misc\wiki\architecture\chapter-identity-and-planning-boundary.md](./4.misc\wiki\architecture\chapter-identity-and-planning-boundary.md) | 节奏拆章和章节执行长期分别维护章节列表。节奏拆章使用卷工作区里的 `VolumeChapterPlan`，章节执行使用正式 `Chapter`。这种模型能保护规 | - |
+| [4.misc\wiki\architecture\drama-forge-module-boundary.md](./4.misc\wiki\architecture\drama-forge-module-boundary.md) | 更新日期：2026-06-09 | - |
+| [4.misc\wiki\architecture\event-side-effect-boundaries.md](./4.misc\wiki\architecture\event-side-effect-boundaries.md) | 小说生产链会在章节定稿、卷规划更新、流水线完成等节点发出领域事件。这些事件用于通知其他模块有事实发生，但事件本身不是可靠任务系统。如果在事件 handler 中 | - |
+| [4.misc\wiki\architecture\image-generation-providers.md](./4.misc\wiki\architecture\image-generation-providers.md) | 角色形象图生成服务面向写作新手，配置入口必须尽量低负担：用户只应理解“哪个厂商负责文本模型、哪个模型负责图片生成”，不应被要求判断内置厂商白名单或手动修复前后端 | - |
+| [4.misc\wiki\architecture\model-selection.md](./4.misc\wiki\architecture\model-selection.md) | 顶部模型选择会影响 Creative Hub、自动导演、章节生产、写法引擎、世界观与角色生成等多条 AI 调用入口。过去如果当前选择只存在浏览器本地存储，项目重 | - |
+| [4.misc\wiki\architecture\read-path-performance-boundaries.md](./4.misc\wiki\architecture\read-path-performance-boundaries.md) | 首页、侧边栏、模型选择初始化、任务恢复提示和小说列表会在用户打开应用时同时加载。如果这些接口在读取时顺手执行远程探测、状态修复、全量详情组装或大列表投影，首屏会 | - |
+| [4.misc\wiki\architecture\server-architecture-migration-plan.md](./4.misc\wiki\architecture\server-architecture-migration-plan.md) | `server/src` 现在同时存在 `routes/`、`services/novel/`、`services/novel/director/`、`modu | - |
+| [4.misc\wiki\architecture\world-context-gateway.md](./4.misc\wiki\architecture\world-context-gateway.md) | 世界观模块过去同时通过外部 `World` 绑定、`StoryWorldSlice`、`Bible.worldRules`、`canonicalState.wo | - |
+| [4.misc\wiki\architecture\world-visualization-assets.md](./4.misc\wiki\architecture\world-visualization-assets.md) | 世界模块需要让写作者直观看到世界的地点、势力、规则和时间变化。地理地图尤其容易被误解为真实 GIS 地图，但小说创作需要的是“可指导叙事的相对空间”，不是精确经 | - |
+
+## 4.misc\wiki\debugging
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [4.misc\wiki\debugging\AGENTS.md](./4.misc\wiki\debugging\AGENTS.md) | <!-- Parent: ../../AGENTS.md --> | - |
+| [4.misc\wiki\debugging\character-continuity-hard-facts.md](./4.misc\wiki\debugging\character-continuity-hard-facts.md) | 章节连贯性问题不全是时间线问题。时间线能约束事件顺序、章节钩子和故事内时间，但人物的身份、阵营、境界、当前位置和可行动状态属于角色事实源。如果这些事实没有在角色 | - |
+| [4.misc\wiki\debugging\log-retention.md](./4.misc\wiki\debugging\log-retention.md) | 项目同时存在桌面主进程日志、服务端开发会话日志、LLM 调试 JSONL 和结构化修复 JSONL。它们主要用于本地排障和开发诊断，不应无限增长，也不应和数据库 | - |
+| [4.misc\wiki\debugging\recurring-failure-modes.md](./4.misc\wiki\debugging\recurring-failure-modes.md) | 项目多次出现的故障往往不是单点 bug，而是边界被绕过：重型任务跑在 API 进程、状态多源推断、Prompt 绕过 registry、章节热路径过长、RAG  | - |
+
+## 4.misc\wiki\product
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [4.misc\wiki\product\AGENTS.md](./4.misc\wiki\product\AGENTS.md) | <!-- Parent: ../../AGENTS.md --> | - |
+| [4.misc\wiki\product\beginner-first-novel-completion.md](./4.misc\wiki\product\beginner-first-novel-completion.md) | 项目的主要用户是完全写作新手。他们通常不知道如何设计结构、节奏、角色弧、伏笔、卷纲或章节任务单。产品不能假设用户能手动修复长篇结构问题，也不能把复杂专业判断抛给 | - |
+| [4.misc\wiki\product\settings-readiness.md](./4.misc\wiki\product\settings-readiness.md) | 系统设置页承载模型厂商、模型路由、知识库、写法引擎、自动导演授权和桌面维护等能力。对于完整写作新手来说，这些配置如果按技术模块平铺，会让用户误以为必须理解所有参 | - |
+| [4.misc\wiki\product\world-skeleton-generation.md](./4.misc\wiki\product\world-skeleton-generation.md) | 世界库的默认创建流程面向写作新手。旧流程以分层字段和表单式补全为主，用户需要理解 `background`、`geography`、`factions` 等字段 | - |
+
+## 4.misc\wiki\prompts
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [4.misc\wiki\prompts\AGENTS.md](./4.misc\wiki\prompts\AGENTS.md) | <!-- Parent: ../../AGENTS.md --> | - |
+| [4.misc\wiki\prompts\novel-generation-quality-guards.md](./4.misc\wiki\prompts\novel-generation-quality-guards.md) | 在小说自动生成过程中，存在四类系统性质量问题，会导致生成内容连续性断裂或大量重复： | - |
+| [4.misc\wiki\prompts\prompt-registry-and-structured-output.md](./4.misc\wiki\prompts\prompt-registry-and-structured-output.md) | 项目是 AI-native 小说生产系统。意图识别、任务分类、规划、路由、工具选择、质量判断和修复建议都应依赖 AI 的结构化理解，而不是关键词和硬编码分支。 | - |
+
+## 4.misc\wiki\rag
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [4.misc\wiki\rag\AGENTS.md](./4.misc\wiki\rag\AGENTS.md) | <!-- Parent: ../../AGENTS.md --> | - |
+| [4.misc\wiki\rag\knowledge-and-context-assembly.md](./4.misc\wiki\rag\knowledge-and-context-assembly.md) | 长篇小说生产需要长期记忆：世界观、角色、拆书结果、知识库文档、写法资产、章节历史和连续性状态都可能影响后续规划与正文。早期如果每个模块各自上传、索引、检索或拼接 | - |
+
+## 4.misc\wiki\workflows
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [4.misc\wiki\workflows\AGENTS.md](./4.misc\wiki\workflows\AGENTS.md) | <!-- Parent: ../../AGENTS.md --> | - |
+| [4.misc\wiki\workflows\auto-director-runtime.md](./4.misc\wiki\workflows\auto-director-runtime.md) | 自动导演承担从灵感、开书、规划、角色准备、卷章规划到章节执行的主链路。历史问题集中在三个方向：Web API 被长任务拖死、继续/恢复/接管入口语义不统一、任务 | - |
+| [4.misc\wiki\workflows\auto-director-world-setup.md](./4.misc\wiki\workflows\auto-director-world-setup.md) | 自动导演的主目标是帮助新手从书级方向进入可开写状态。世界观不是所有题材都必需，但在玄幻、科幻、悬疑、克苏鲁等强设定项目中，角色、势力、地点和冲突需要在同一套世界 | - |
+| [4.misc\wiki\workflows\book-analysis-workflow.md](./4.misc\wiki\workflows\book-analysis-workflow.md) | 拆书模块的目标不是把一本书拆成若干长篇评论，而是帮助写作新手把参考作品转成可复用的创作认知：作品定位、主线结构、人物系统、世界设定、主题表达、写法技法和商业卖点 | - |
+| [4.misc\wiki\workflows\branch-workflow.md](./4.misc\wiki\workflows\branch-workflow.md) | 开发分支工作流 — 功能分支、预发布 Beta 分支、桌面分支的完整流转规则 | 开发分支工作流 — 功能分支、预发布 Beta 分支、桌面分支的完整流转规则 |
+| [4.misc\wiki\workflows\chapter-production-chain.md](./4.misc\wiki\workflows\chapter-production-chain.md) | 章节生产曾经把章节合同、正文生成、AI 检测、修文、轻校验、角色动态、状态快照、角色资源、伏笔账本等能力串进同一条热路径。能力本身有价值，但全部同步执行会导致用 | - |
+| [4.misc\wiki\workflows\comic-character-asset-pipeline.md](./4.misc\wiki\workflows\comic-character-asset-pipeline.md) | 漫画分格图生成需要在“角色一致性”和“情绪表达”之间同时保持稳定。单一三视图只能锁定发型、服装和体型，无法覆盖漫画格子里高频出现的开心、愤怒、悲伤、惊讶、冷漠等 | - |
+| [4.misc\wiki\workflows\comic-panel-production-prompt-governance.md](./4.misc\wiki\workflows\comic-panel-production-prompt-governance.md) | 漫画分格生产同时包含两类提示词：一类是分格脚本 LLM 使用的结构化 PromptAsset，决定格子数量、镜头、对白、角色引用和画面脚本；另一类是图片 pro | - |
+| [4.misc\wiki\workflows\creative-hub-boundary.md](./4.misc\wiki\workflows\creative-hub-boundary.md) | Creative Hub 已经从普通聊天页演进为创作中枢，承载对话、追问、规划、工具调用、执行状态和回合总结。它的价值是帮助新手把模糊创作意图转成可执行的小说生 | - |
+| [4.misc\wiki\workflows\desktop-release-versioning.md](./4.misc\wiki\workflows\desktop-release-versioning.md) | 桌面客户端有三处会暴露版本信息：界面顶部的当前版本、Electron 打包产物的应用版本、GitHub Release 的发布 tag。如果这些信息分别维护，用 | - |
+| [4.misc\wiki\workflows\lazy-chapter-planning.md](./4.misc\wiki\workflows\lazy-chapter-planning.md) | 原有流程要求在执行任何章节前，必须先为所有 N 章预生成 task sheet（`chapter_detail_bundle` 步骤），并将它们全量同步到执行区 | - |
+| [4.misc\wiki\workflows\novel-cover-image-generation.md](./4.misc\wiki\workflows\novel-cover-image-generation.md) | 小说封面生成属于典型的跨域能力：入口在小说编辑页，但任务创建、图片生成、资产存储、失败恢复、任务中心展示和主图切换都天然属于图片域。如果把 provider 选 | - |
+| [4.misc\wiki\workflows\novel-fact-ledger.md](./4.misc\wiki\workflows\novel-fact-ledger.md) | 当前 timeline 模块对写章的介入效果有限（见 [timeline 诊断](../prompts/novel-generation-quality-gua | - |
+| [4.misc\wiki\workflows\novel-snapshot-retention.md](./4.misc\wiki\workflows\novel-snapshot-retention.md) | 小说版本快照用于恢复大纲、拆章、正文和卷工作台状态。自动导演和批量章节生产会在关键节点写入快照，保护生成链路中的可恢复性；但如果每次自动节点都保存整本小说全量内 | - |
+| [4.misc\wiki\workflows\quality-debt-attribution.md](./4.misc\wiki\workflows\quality-debt-attribution.md) | 章节在 `defer_and_continue` 路径结束时（修复一次仍未通过质量门），系统需要知道失败的真正原因，才能有针对性地优化。Phase 0 在此路径 | - |
+| [4.misc\wiki\workflows\release-notes-workflow.md](./4.misc\wiki\workflows\release-notes-workflow.md) | Release Notes 工作流 — 提交/推送/PR 前的用户可见变更记录规则 | Release Notes 工作流 — 提交/推送/PR 前的用户可见变更记录规则 |
+| [4.misc\wiki\workflows\short-drama-workspace.md](./4.misc\wiki\workflows\short-drama-workspace.md) | 短剧模块的目标不是给小说详情页增加一个下游按钮，而是形成独立的竖屏付费短剧创作平台。用户通常不理解短剧赛道、付费卡点、分镜或视频提示词，因此前端工作台必须把后端 | - |
+| [4.misc\wiki\workflows\timeline-constraint-layer.md](./4.misc\wiki\workflows\timeline-constraint-layer.md) | 章节生产链路已有 `StoryStateSnapshot`、`ConsistencyFact` 和 `CharacterTimeline`，但这些资产主要承担章 | - |
+| [4.misc\wiki\workflows\verification-reuse.md](./4.misc\wiki\workflows\verification-reuse.md) | 验证复用规则 — 何时复用近期验证结果、何时必须重新运行 | 验证复用规则 — 何时复用近期验证结果、何时必须重新运行 |
+
+## 6.changelog\releases
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [6.changelog\releases\AGENTS.md](./6.changelog\releases\AGENTS.md) | <!-- Parent: ../AGENTS.md --> | - |
+| [6.changelog\releases\release-notes.md](./6.changelog\releases\release-notes.md) | # 版本更新说明 | - |
 
 ## 7.weekly
 

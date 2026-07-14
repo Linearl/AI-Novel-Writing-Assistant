@@ -1,1 +1,0 @@
-{"status":"done","taskId":"REQ-7006","completedAt":"2026-07-03T10:00:00+08:00","summary":"移除所有 deprecated IdsJson 字段引用，纯边表读取","verification":{"typecheck":"pass","tests":"pass"}}
