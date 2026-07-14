@@ -8,7 +8,7 @@
 | --- | --- | --- |
 | `0.version_plan/` | 版本计划 / 里程碑 | `v0.1-plan.md`、`v0.2-plan.md` 等 |
 | `1.task/` | 任务专题 | 六件套 + 审计包 + `requirements.md` + `README.md` |
-| `2.tech/` | 技术文档 | api / architecture / design / guide / plans |
+| `2.tech/` | 技术文档 | api / analysis / architecture / database / developer_guide / specification / user_guide |
 | `3.analysis/` | 分析诊断 | diagnosis + report + evidence |
 | `4.misc/` | 杂项 | wiki、checkpoints、superpowers、交接工单(handoff)、issues |
 | `5.git-commit/` | git 提交规范与模板 | commit 模板 |
@@ -42,9 +42,9 @@
 | 上游目录 | 迁入位置 | 内容说明 |
 |---------|---------|---------|
 | `architecture/` | `2.tech/architecture/` | 依赖注入、后端测试约定 |
-| `design/` | `2.tech/design/` | 模块设计、领域建模、产品机制 |
-| `plans/` | `2.tech/plans/` | 仍有执行价值的模块计划 |
-| `guides/` | `2.tech/guide/`（合并已有）| 操作指南 |
+| `design/` | `2.tech/architecture/`（按主题归入子文件夹）| 模块设计、领域建模、产品机制 |
+| `plans/` | `2.tech/architecture/`（按主题归入子文件夹）| 模块规划方案（后续收敛为任务包） |
+| `guides/` | `2.tech/developer_guide/`、`2.tech/user_guide/` | 开发者指南 + 用户操作指南 |
 | `wiki/` | `4.misc/wiki/` | 架构/工作流/调试/产品/Prompt/RAG 长期知识沉淀 |
 | `checkpoints/` | `4.misc/checkpoints/` | 阶段检查点、迁移里程碑 |
 | `superpowers/` | `4.misc/superpowers/` | 特殊计划 |
