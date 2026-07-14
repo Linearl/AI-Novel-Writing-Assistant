@@ -5,6 +5,7 @@ import type {
   Character,
   CharacterCastRole,
   CharacterGender,
+  CharacterTier,
   CharacterTimeline,
   CharacterVisibleProfileBatchResult,
   CharacterVisibleProfileSuggestion,
@@ -31,12 +32,14 @@ import TxtIoToolbar from "./TxtIoToolbar";
 interface QuickCharacterFormState {
   name: string;
   role: string;
+  tier: string;
 }
 
 interface CharacterFormState {
   name: string;
   role: string;
   gender: CharacterGender;
+  tier: string;
   personality: string;
   background: string;
   development: string;
@@ -198,6 +201,7 @@ export default function NovelCharacterPanel(props: NovelCharacterPanelProps) {
   const [supplementalMode, setSupplementalMode] = useState<SupplementalCharacterGenerationMode>("auto");
   const [supplementalAnchorIds, setSupplementalAnchorIds] = useState<string[]>([]);
   const [supplementalTargetRole, setSupplementalTargetRole] = useState<CharacterCastRole | "auto">("auto");
+  const [supplementalTargetTier, setSupplementalTargetTier] = useState<CharacterTier | "auto">("auto");
   const [supplementalCount, setSupplementalCount] = useState<"auto" | "1" | "2" | "3">("auto");
   const [supplementalPrompt, setSupplementalPrompt] = useState("");
   const [supplementalUseWorldContext, setSupplementalUseWorldContext] = useState(true);
@@ -407,6 +411,8 @@ export default function NovelCharacterPanel(props: NovelCharacterPanelProps) {
         onToggleSupplementalAnchor={toggleSupplementalAnchor}
         supplementalTargetRole={supplementalTargetRole}
         onSupplementalTargetRoleChange={setSupplementalTargetRole}
+        supplementalTargetTier={supplementalTargetTier}
+        onSupplementalTargetTierChange={setSupplementalTargetTier}
         supplementalCount={supplementalCount}
         onSupplementalCountChange={setSupplementalCount}
         supplementalPrompt={supplementalPrompt}

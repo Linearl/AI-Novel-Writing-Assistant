@@ -1,4 +1,4 @@
-import type { Character, CharacterCastRole, CharacterGender } from "@ai-novel/shared";
+import type { Character, CharacterCastRole, CharacterGender, CharacterTier } from "@ai-novel/shared";
 
 const CAST_ROLE_LABELS: Record<CharacterCastRole, string> = {
   protagonist: "主角",
@@ -41,4 +41,32 @@ export function isProtagonistCharacter(character?: Character | null): boolean {
   }
   const roleText = `${character.role ?? ""} ${character.castRole ?? ""}`;
   return /(?<!女)主角|(?<!公)主人公|^男主/.test(roleText);
+}
+
+const CHARACTER_TIER_LABELS: Record<CharacterTier, string> = {
+  lead: "主角",
+  major: "重要配角",
+  named: "有名角色",
+  extra: "次要角色",
+};
+
+const CHARACTER_TIER_COLORS: Record<CharacterTier, string> = {
+  lead: "#1677ff",
+  major: "#52c41a",
+  named: "#8c8c8c",
+  extra: "#d9d9d9",
+};
+
+export function getCharacterTierLabel(tier?: CharacterTier | null): string {
+  if (!tier) {
+    return "有名角色";
+  }
+  return CHARACTER_TIER_LABELS[tier] ?? tier;
+}
+
+export function getCharacterTierColor(tier?: CharacterTier | null): string {
+  if (!tier) {
+    return CHARACTER_TIER_COLORS.named;
+  }
+  return CHARACTER_TIER_COLORS[tier] ?? CHARACTER_TIER_COLORS.named;
 }

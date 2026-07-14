@@ -11,7 +11,7 @@ description: "REQ-2049 审校上下文增强 — 任务拆解"
 
 - [x] 编号分配：REQ-2049，2xxx simple/P2
 - [x] 任务包骨架已建
-- [ ] 全部 6 个任务完成
+- [x] 全部 6 个任务完成
 
 ## 任务列表
 
@@ -24,7 +24,7 @@ description: "REQ-2049 审校上下文增强 — 任务拆解"
   - `auditChapterLightPrompt.contextPolicy.preferredGroups` 包含 `"book_contract"` 和 `"story_macro"`（位于列表最前）
   - `auditChapterLightPrompt.contextPolicy.dropOrder` 不包含 `"book_contract"` 或 `"story_macro"`
 - 估时：0.25h
-- 状态：todo
+- 状态：done
 
 ### T1.2: audit.prompts.ts — full prompt 增加 book_contract、story_macro、timeline_context、character_dynamics、payoff_directives context requirements
 
@@ -40,7 +40,7 @@ description: "REQ-2049 审校上下文增强 — 任务拆解"
   - `auditChapterPrompt.contextPolicy.preferredGroups` 包含以上 5 个 group
   - `auditChapterPrompt.contextPolicy.dropOrder` 不包含以上 5 个 group
 - 估时：0.25h
-- 状态：todo
+- 状态：done
 
 ### T2.1: chapterLayeredContextBlocks.ts — review 模式下确保 timeline_context、character_dynamics、payoff_directives 注入
 
@@ -62,14 +62,14 @@ description: "REQ-2049 审校上下文增强 — 任务拆解"
   - `includeRecentChapters` 条件变更为 `(mode === "full" || mode === "review") && writeContext.recentChapterSummaries.length > 0`
   - `recent_chapters` 块优先级保持 `86`
 - 估时：0.25h
-- 状态：todo
+- 状态：done
 
 ### T3.1: 类型检查
 
 - 依赖：T1.1, T1.2, T2.1, T2.2
 - DoD：`pnpm typecheck` 通过，无新增类型错误
 - 估时：0.25h
-- 状态：todo
+- 状态：done
 
 ### T3.2: 验证 — 审校时能正确注入新 context
 
@@ -79,9 +79,9 @@ description: "REQ-2049 审校上下文增强 — 任务拆解"
   - `pnpm --filter @ai-novel/server test:routes` 通过（路由测试不回归）
   - 手动验证：启动 dev server → 触发轻审校/完整审校 → 确认日志中包含 `book_contract`、`story_macro`、`recent_chapters` context block
 - 估时：0.5h
-- 状态：todo
+- 状态：done
 
-```
+```text
 T1.1 ──→ T2.1 ──→ T3.1 ──→ T3.2
 T1.2 ──↗   T2.2 ──↗
 ```

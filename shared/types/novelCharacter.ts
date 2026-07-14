@@ -2,6 +2,8 @@ import type { LLMProvider } from "./llm.js";
 
 export type CharacterExitStatus = "active" | "exited" | "dead" | "frozen";
 
+export type CharacterTier = "lead" | "major" | "named" | "extra";
+
 export type CharacterCastRole =
   | "protagonist"
   | "antagonist"
@@ -70,6 +72,7 @@ export interface Character {
   exitStatus?: CharacterExitStatus;
   exitNote?: string | null;
   exitChapterId?: string | null;
+  tier?: CharacterTier | null;
   lastEvolvedAt?: string | null;
   novelId: string;
   baseCharacterId?: string | null;
@@ -163,6 +166,7 @@ export interface CharacterCastOptionMember {
   role: string;
   gender: CharacterGender;
   castRole: CharacterCastRole;
+  tier?: CharacterTier | null;
   relationToProtagonist?: string | null;
   storyFunction: string;
   shortDescription?: string | null;
@@ -304,6 +308,7 @@ export interface SupplementalCharacterCandidate {
   role: string;
   gender: CharacterGender;
   castRole: CharacterCastRole;
+  tier?: CharacterTier | null;
   summary: string;
   storyFunction: string;
   relationToProtagonist?: string | null;

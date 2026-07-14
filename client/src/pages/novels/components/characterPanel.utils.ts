@@ -23,6 +23,7 @@ function countHits(source: string, keywords: string[]): number {
 export interface QuickCharacterCreatePayload {
   name: string;
   role: string;
+  tier?: string;
   relationToProtagonist?: string;
   storyFunction?: string;
   keywords?: string;

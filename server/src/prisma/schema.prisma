@@ -319,6 +319,13 @@ enum CharacterExitStatus {
   frozen
 }
 
+enum CharacterTier {
+  lead
+  major
+  named
+  extra
+}
+
 model Novel {
   id                String      @id @default(cuid())
   title             String
@@ -390,6 +397,7 @@ model Novel {
   storyPlans         StoryPlan[]
   replanRuns         ReplanRun[]
   auditReports       AuditReport[]
+  globalReviewIssues GlobalReviewIssue[]
   workflowTasks      NovelWorkflowTask[]
   autoApprovalRecords AutoDirectorAutoApprovalRecord[]
   directorRuns       DirectorRun[]
@@ -619,6 +627,7 @@ model Character {
   exitStatus      CharacterExitStatus @default(active)
   exitNote        String?
   exitChapterId   String?
+  tier            CharacterTier @default(named)
   lastEvolvedAt   DateTime?
   novelId         String
   novel           Novel    @relation(fields: [novelId], references: [id], onDelete: Cascade)
@@ -3309,4 +3318,29 @@ model WorldLocationConnection {
 
   @@unique([worldId, sourceLocationId, targetLocationId])
   @@index([worldId])
+}
+
+// ---------------------------------------------------------------------------
+// REQ-2050: Global Review (跨章节审校)
+// ---------------------------------------------------------------------------
+
+model GlobalReviewIssue {
+  id                String   @id @default(cuid())
+  novelId           String
+  reviewRunId       String
+  severity          String   // critical | major | minor
+  category          String   // character_consistency | plot_continuity | foreshadowing | pacing | worldbuilding
+  description       String
+  fixDirection      String
+  affectedChapters  String   // JSON array of chapter IDs
+  primaryFixChapter String?  // chapter ID where main fix should happen
+  status            String   @default("pending") // pending | acknowledged | fixed | dismissed
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  novel Novel @relation(fields: [novelId], references: [id], onDelete: Cascade)
+
+  @@index([novelId, reviewRunId])
+  @@index([novelId, status])
+  @@index([primaryFixChapter, status])
 }

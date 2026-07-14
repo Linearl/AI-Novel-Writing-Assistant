@@ -17,13 +17,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { CharacterExitBadge } from "@/components/character/CharacterExitBadge";
 import CharacterAssetSidebar from "./CharacterAssetSidebar";
 import CharacterFocusSummary from "./CharacterFocusSummary";
-import { isProtagonistCharacter } from "./characterAssetWorkspace.helpers";
+import { isProtagonistCharacter, getCharacterTierLabel } from "./characterAssetWorkspace.helpers";
 import { getLastAppearanceChapter } from "./characterPanel.utils";
 
 interface CharacterFormState {
   name: string;
   role: string;
   gender: CharacterGender;
+  tier: string;
   personality: string;
   background: string;
   development: string;
@@ -528,6 +529,16 @@ export default function CharacterAssetWorkspace(props: CharacterAssetWorkspacePr
                     <option value="male">性别：男</option>
                     <option value="female">性别：女</option>
                     <option value="other">性别：其他</option>
+                  </select>
+                  <select
+                    className="w-full rounded-md border bg-background p-2 text-sm"
+                    value={characterForm.tier}
+                    onChange={(event) => onCharacterFormChange("tier", event.target.value)}
+                  >
+                    <option value="named">重要度：{getCharacterTierLabel("named")}</option>
+                    <option value="lead">重要度：{getCharacterTierLabel("lead")}</option>
+                    <option value="major">重要度：{getCharacterTierLabel("major")}</option>
+                    <option value="extra">重要度：{getCharacterTierLabel("extra")}</option>
                   </select>
                 </div>
                 <div className="grid gap-2 md:grid-cols-2">

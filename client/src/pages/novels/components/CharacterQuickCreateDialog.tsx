@@ -10,11 +10,13 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { getCharacterTierLabel } from "./characterAssetWorkspace.helpers";
 import type { QuickCharacterCreatePayload } from "./characterPanel.utils";
 
 interface QuickCharacterFormState {
   name: string;
   role: string;
+  tier: string;
 }
 
 interface CharacterQuickCreateDialogProps {
@@ -70,6 +72,7 @@ export default function CharacterQuickCreateDialog(props: CharacterQuickCreateDi
     onQuickCreate({
       name: quickCharacterForm.name,
       role: quickCharacterForm.role,
+      tier: quickCharacterForm.tier,
       relationToProtagonist,
       storyFunction,
       keywords: wizardKeywords,
@@ -110,6 +113,16 @@ export default function CharacterQuickCreateDialog(props: CharacterQuickCreateDi
               <option value="导师">导师</option>
               <option value="情感线">情感线</option>
               <option value="功能角色">功能角色</option>
+            </select>
+            <select
+              className="w-full rounded-md border bg-background p-2 text-sm"
+              value={quickCharacterForm.tier}
+              onChange={(event) => onQuickCharacterFormChange("tier", event.target.value)}
+            >
+              <option value="named">重要度：{getCharacterTierLabel("named")}</option>
+              <option value="lead">重要度：{getCharacterTierLabel("lead")}</option>
+              <option value="major">重要度：{getCharacterTierLabel("major")}</option>
+              <option value="extra">重要度：{getCharacterTierLabel("extra")}</option>
             </select>
             <Input
               placeholder="与主角关系（如：试探合作）"

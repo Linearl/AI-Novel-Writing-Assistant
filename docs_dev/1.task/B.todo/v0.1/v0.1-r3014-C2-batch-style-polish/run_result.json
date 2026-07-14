@@ -2,9 +2,9 @@
   "task_id": "REQ-3014",
   "title": "批量润色功能",
   "version": "v0.1",
-  "status": "requirements_ready",
+  "status": "pass",
   "created_at": "2026-07-12T10:00:00+08:00",
-  "updated_at": "2026-07-12T10:00:00+08:00",
+  "updated_at": "2026-07-14T10:00:00+08:00",
 
   "requirement_status": {
     "status": "approved",

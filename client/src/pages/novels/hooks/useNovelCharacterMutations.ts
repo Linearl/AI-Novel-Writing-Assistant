@@ -39,6 +39,7 @@ interface CharacterFormState {
   name: string;
   role: string;
   gender: "male" | "female" | "other" | "unknown";
+  tier: string;
   personality: string;
   background: string;
   development: string;
@@ -55,6 +56,7 @@ interface CharacterFormState {
 interface QuickCharacterFormState {
   name: string;
   role: string;
+  tier: string;
 }
 
 interface BaseCharacterOption {
@@ -251,6 +253,7 @@ export function useNovelCharacterMutations(input: UseNovelCharacterMutationsInpu
         name: characterForm.name,
         role: characterForm.role,
         gender: characterForm.gender,
+        tier: characterForm.tier,
         personality: characterForm.personality,
         background: characterForm.background,
         development: characterForm.development,
@@ -300,9 +303,11 @@ export function useNovelCharacterMutations(input: UseNovelCharacterMutationsInpu
       const nextName = payload?.name?.trim() || quickCharacterForm.name.trim();
       const nextRole = payload?.role?.trim() || quickCharacterForm.role.trim() || "主角";
       const generatedProfile = payload ? buildCharacterProfileFromWizard(payload) : {};
+      const nextTier = payload?.tier?.trim() || quickCharacterForm.tier.trim() || "named";
       return createNovelCharacter(id, {
         name: nextName,
         role: nextRole,
+        tier: nextTier,
         relationToProtagonist: payload?.relationToProtagonist?.trim() || undefined,
         storyFunction: payload?.storyFunction?.trim() || undefined,
         ...generatedProfile,

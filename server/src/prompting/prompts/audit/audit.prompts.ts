@@ -81,6 +81,8 @@ export const auditChapterLightPrompt: PromptAsset<AuditChapterPromptInput, z.inf
   contextPolicy: {
     maxTokensBudget: NOVEL_PROMPT_BUDGETS.chapterLightAudit,
     preferredGroups: [
+      "book_contract",
+      "story_macro",
       "chapter_boundary",
       "chapter_mission",
       "structure_obligations",
@@ -96,6 +98,8 @@ export const auditChapterLightPrompt: PromptAsset<AuditChapterPromptInput, z.inf
   contextRequirements: [
     { group: "chapter_mission", priority: 100 },
     { group: "chapter_boundary", required: true, priority: 99 },
+    { group: "book_contract", priority: 104 },
+    { group: "story_macro", priority: 98 },
     { group: "structure_obligations", priority: 94 },
     { group: "local_state", priority: 89 },
     { group: "world_rules", priority: 84 },
@@ -175,11 +179,16 @@ export const auditChapterPrompt: PromptAsset<AuditChapterPromptInput, z.infer<ty
   contextPolicy: {
     maxTokensBudget: NOVEL_PROMPT_BUDGETS.chapterReview,
     preferredGroups: [
+      "book_contract",
+      "story_macro",
+      "timeline_context",
+      "payoff_directives",
       "chapter_boundary",
       "chapter_mission",
       "structure_obligations",
       "world_rules",
       "historical_issues",
+      "character_dynamics",
     ],
     dropOrder: [
       "recent_chapters",
@@ -190,7 +199,12 @@ export const auditChapterPrompt: PromptAsset<AuditChapterPromptInput, z.infer<ty
   contextRequirements: [
     { group: "chapter_mission", priority: 100 },
     { group: "chapter_boundary", required: true, priority: 99 },
+    { group: "book_contract", priority: 104 },
+    { group: "timeline_context", priority: 100 },
+    { group: "story_macro", priority: 98 },
+    { group: "payoff_directives", priority: 98 },
     { group: "structure_obligations", required: true, priority: 94 },
+    { group: "character_dynamics", priority: 91 },
     { group: "local_state", priority: 89 },
     { group: "world_rules", priority: 84 },
     { group: "historical_issues", priority: 82 },

@@ -1,6 +1,7 @@
 import type {
   Character,
   CharacterCastRole,
+  CharacterTier,
   SupplementalCharacterCandidate,
   SupplementalCharacterGenerateInput,
   SupplementalCharacterGenerationMode,
@@ -21,6 +22,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { toast } from "@/components/ui/toast";
+import { getCharacterTierLabel, getCharacterTierColor } from "./characterAssetWorkspace.helpers";
 
 const CAST_ROLE_LABELS: Record<CharacterCastRole, string> = {
   protagonist: "主角",
@@ -84,6 +86,8 @@ interface CharacterSupplementalDialogProps {
   onToggleSupplementalAnchor: (characterId: string) => void;
   supplementalTargetRole: CharacterCastRole | "auto";
   onSupplementalTargetRoleChange: (role: CharacterCastRole | "auto") => void;
+  supplementalTargetTier: CharacterTier | "auto";
+  onSupplementalTargetTierChange: (tier: CharacterTier | "auto") => void;
   supplementalCount: "auto" | "1" | "2" | "3";
   onSupplementalCountChange: (count: "auto" | "1" | "2" | "3") => void;
   supplementalPrompt: string;
@@ -111,6 +115,8 @@ export default function CharacterSupplementalDialog(props: CharacterSupplemental
     onToggleSupplementalAnchor,
     supplementalTargetRole,
     onSupplementalTargetRoleChange,
+    supplementalTargetTier,
+    onSupplementalTargetTierChange,
     supplementalCount,
     onSupplementalCountChange,
     supplementalPrompt,
@@ -204,7 +210,7 @@ export default function CharacterSupplementalDialog(props: CharacterSupplemental
               </div>
             ) : null}
 
-            <div className="grid gap-3 md:grid-cols-2">
+            <div className="grid gap-3 md:grid-cols-3">
               <div className="space-y-2">
                 <div className="font-medium">期望角色功能</div>
                 <select
@@ -221,6 +227,20 @@ export default function CharacterSupplementalDialog(props: CharacterSupplemental
                   <option value="love_interest">情感牵引</option>
                   <option value="pressure_source">压力源</option>
                   <option value="catalyst">催化者</option>
+                </select>
+              </div>
+              <div className="space-y-2">
+                <div className="font-medium">目标重要度</div>
+                <select
+                  className="w-full rounded-md border bg-background p-2 text-sm"
+                  value={supplementalTargetTier}
+                  onChange={(event) => onSupplementalTargetTierChange(event.target.value as CharacterTier | "auto")}
+                >
+                  <option value="auto">AI 判断</option>
+                  <option value="lead">{getCharacterTierLabel("lead")}</option>
+                  <option value="major">{getCharacterTierLabel("major")}</option>
+                  <option value="named">{getCharacterTierLabel("named")}</option>
+                  <option value="extra">{getCharacterTierLabel("extra")}</option>
                 </select>
               </div>
               <div className="space-y-2">
@@ -322,6 +342,14 @@ export default function CharacterSupplementalDialog(props: CharacterSupplemental
                           <Badge variant="outline">{candidate.role}</Badge>
                           <Badge variant="secondary">{getCastRoleLabel(candidate.castRole)}</Badge>
                           <Badge variant="outline">性别：{getCharacterGenderLabel(candidate.gender)}</Badge>
+                          {candidate.tier ? (
+                            <Badge
+                              variant="outline"
+                              style={{ borderColor: getCharacterTierColor(candidate.tier), color: getCharacterTierColor(candidate.tier) }}
+                            >
+                              {getCharacterTierLabel(candidate.tier)}
+                            </Badge>
+                          ) : null}
                           {refinedCandidates[rawCandidate.name] ? <Badge variant="secondary">已调整</Badge> : null}
                         </div>
                         <div className="text-sm text-muted-foreground">{candidate.summary}</div>

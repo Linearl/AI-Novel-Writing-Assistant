@@ -5,6 +5,7 @@ import {
   type AuditChapterPromptInput,
 } from "../../prompting/prompts/audit/audit.prompts";
 import { buildChapterReviewContextBlocks } from "../../prompting/prompts/novel/chapterLayeredContext";
+import { fetchGlobalReviewFeedbackForChapter } from "./auditContextBuilder";
 
 export async function resolveAuditChapterContextBlocks<O, R = O>(input: {
   asset: PromptAsset<AuditChapterPromptInput, O, R>;
@@ -18,6 +19,27 @@ export async function resolveAuditChapterContextBlocks<O, R = O>(input: {
   }
 
   const fallbackContextBlocks = buildChapterReviewContextBlocks(reviewContext);
+
+  // REQ-2050: 注入全局审校反馈（跨章节问题回灌到逐章审校）
+  let globalReviewFeedbackBlocks: PromptContextBlock[] = [];
+  try {
+    const chapterId = input.contextPackage?.chapter.id;
+    if (chapterId) {
+      globalReviewFeedbackBlocks = await fetchGlobalReviewFeedbackForChapter(
+        input.novelId,
+        chapterId,
+        10,
+      );
+    }
+  } catch {
+    // 全局审校反馈获取失败不阻断逐章审校
+  }
+
+  const mergedFallbackBlocks = [
+    ...globalReviewFeedbackBlocks,
+    ...fallbackContextBlocks,
+  ];
+
   const resolvedContext = await resolvePromptContextBlocksForAsset({
     asset: input.asset,
     executionContext: {
@@ -29,7 +51,7 @@ export async function resolveAuditChapterContextBlocks<O, R = O>(input: {
         ragContext: input.ragContext,
       },
     },
-    fallbackBlocks: fallbackContextBlocks,
+    fallbackBlocks: mergedFallbackBlocks,
   });
   return resolvedContext.blocks;
 }

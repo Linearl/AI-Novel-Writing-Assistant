@@ -484,8 +484,8 @@ export interface CharacterTabViewProps {
   llmProvider?: LLMProvider;
   llmModel?: string;
   characterMessage: string;
-  quickCharacterForm: { name: string; role: string };
-  onQuickCharacterFormChange: (field: "name" | "role", value: string) => void;
+  quickCharacterForm: { name: string; role: string; tier: string };
+  onQuickCharacterFormChange: (field: "name" | "role" | "tier", value: string) => void;
   onQuickCreateCharacter: (payload: QuickCharacterCreatePayload) => void;
   isQuickCreating: boolean;
   onGenerateSupplementalCharacters: (payload: SupplementalCharacterGenerateInput) => Promise<{
@@ -538,6 +538,7 @@ export interface CharacterTabViewProps {
     name: string;
     role: string;
     gender: "male" | "female" | "other" | "unknown";
+    tier: string;
     personality: string;
     background: string;
     development: string;
@@ -555,6 +556,7 @@ export interface CharacterTabViewProps {
       | "name"
       | "role"
       | "gender"
+      | "tier"
       | "personality"
       | "background"
       | "development"

@@ -1,6 +1,6 @@
 import type { Character } from "@ai-novel/shared";
 import { Badge } from "@/components/ui/badge";
-import { getCastRoleLabel, getCharacterGenderLabel, isProtagonistCharacter } from "./characterAssetWorkspace.helpers";
+import { getCastRoleLabel, getCharacterGenderLabel, getCharacterTierLabel, getCharacterTierColor, isProtagonistCharacter } from "./characterAssetWorkspace.helpers";
 
 interface CharacterFocusSummaryProps {
   selectedCharacter: Character;
@@ -29,6 +29,12 @@ export default function CharacterFocusSummary(props: CharacterFocusSummaryProps)
               <Badge variant="outline">{getCastRoleLabel(selectedCharacter.castRole)}</Badge>
             )}
             <Badge variant="secondary">{getCharacterGenderLabel(selectedCharacter.gender)}</Badge>
+            <Badge
+              variant="outline"
+              style={{ borderColor: getCharacterTierColor(selectedCharacter.tier), color: getCharacterTierColor(selectedCharacter.tier) }}
+            >
+              {getCharacterTierLabel(selectedCharacter.tier)}
+            </Badge>
           </div>
           <div className="text-sm leading-6 text-muted-foreground">
             {isProtagonist ? `当前目标：${primaryLine}` : `与主角关系：${primaryLine}`}

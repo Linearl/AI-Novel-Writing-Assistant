@@ -64,9 +64,9 @@ description: "需求任务总清单（SSOT）"
 | 2046 | Style Profile Export Import | p3 | ✅ 已完成 | - | 0.1 | 2026-07-08T00:00:00.000Z | 2026-07-08T10:00:00.000Z | `B.2.done/v0.1-r2046-M3-style-profile-export-import/README.md` |  |
 | 2047 | 文笔资料库 | p3 | ✅ 已完成 | - | 0.1 | 2026-07-09T00:00:00.000Z | 2026-07-10T00:00:00.000Z | `B.2.done/v0.1-r2047-C2-writing-technique-library/README.md` |  |
 | 2048 | REQ-2048 氛围写作参考卡 | p3 | ✅ 已完成 | - | 0.1 | 2026-07-10 | 2026-07-10 | `B.2.done/v0.1-r2048-M2-atmosphere-writing-cards/README.md` | T1-T8 全部完成。17 张氛围卡已入库。修复流挂载通过 atmosphereMatch.prompt 实现。 |
-| 2049 | 审校上下文增强 — 补齐审校缺失的全局字段 | p2 | 📋 待办 | 审校质量分析 | 0.1 | 2026-07-11 | - | `B.todo/v0.1-r2049-S2-review-context-enhance/README.md` |  |
-| 2050 | 全局审校 + 跨章节问题回灌 | p1 | 📋 待办 | 审校质量分析 | 0.1 | 2026-07-12 | - | `B.todo/v0.1-r2050-C1-global-review-feedback/README.md` |  |
-| 2051 | 角色重要度分级（CharacterTier） | p3 | 📋 待办 | - | 0.1 | 2026-07-13T00:00:00.000Z | 2026-07-13T00:00:00.000Z | `B.todo/v0.1-r2051-C2-character-tier-importance-level/README.md` |  |
+| 2049 | 审校上下文增强 — 补齐审校缺失的全局字段 | p2 | ✅ 已完成 | 审校质量分析 | 0.1 | 2026-07-11 | 2026-07-14 | `B.todo/v0.1-r2049-S2-review-context-enhance/README.md` |  |
+| 2050 | 全局审校 + 跨章节问题回灌 | p1 | ✅ 已完成 | 审校质量分析 | 0.1 | 2026-07-12 | 2026-07-14 | `B.todo/v0.1-r2050-C1-global-review-feedback/README.md` |  |
+| 2051 | 角色重要度分级（CharacterTier） | p3 | ✅ 已完成 | - | 0.1 | 2026-07-13T00:00:00.000Z | 2026-07-14T00:00:00.000Z | `B.todo/v0.1-r2051-C2-character-tier-importance-level/README.md` |  |
 | 2052 | 世界观 AI 助手与一致性修复功能 | p2 | ✅ 已完成 | 功能开发 | 0.1 | 2026-07-13 | 2026-07-13 | `B.2.done/v0.1-r2052-C2-world-ai-assistant-consistency-fix/README.md` |  |
 | 2053 | 文笔技法 AI 推荐功能 | p3 | ✅ 已完成 | 功能开发 | 0.1 | 2026-07-13 | 2026-07-13 | `B.2.done/v0.1-r2053-M2-writing-technique-ai-recommend/README.md` |  |
 | 2013 | Director Failed Retry Entry | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2013-medium-director-failed-retry-entry/README.md` |  |
@@ -88,7 +88,7 @@ description: "需求任务总清单（SSOT）"
 | 3011 | 小说预览页面增强控制面板 | p4 | 📋 待办 | - | 0.1 | - | - | `B.2.done/v0.1-r3011-C2-novel-preview-controls/README.md` |  |
 | 3012 | 任务中心批量操作功能 | p1 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r3012-C2-task-center-batch-operations/README.md` |  |
 | 3013 | 导演跟进任务列表全选与批量清理 | p2 | ✅ 已完成 | 用户反馈 | 0.1 | 2026-07-11 | 2026-07-11 | `B.2.done/v0.1-r3013-S2-follow-up-batch-cleanup/README.md` |  |
-| 3014 | 批量润色功能 | p4 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r3014-C2-batch-style-polish/README.md` |  |
+| 3014 | 批量润色功能 | p4 | ✅ 已完成 | - | 0.1 | - | - | `B.todo/v0.1-r3014-C2-batch-style-polish/README.md` |  |
 | 3015 | 修复缺失的服务方法 | p0 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r3015-C1-fix-missing-service-methods/README.md` |  |
 | 3016 | 服务器日志系统实现 | p1 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r3016-C2-server-logging-system/README.md` |  |
 | 3017 | 创建页面路径选择卡片 | p3 | ✅ 已完成 | 用户需求讨论 | 0.1 | 2026-07-13 | 2026-07-13 | `B.2.done/v0.1-r3017-M3-create-page-path-selection-card/README.md` | 在创建小说页面顶部新增路径选择卡片，统一 AI 自动导演开书、素材导入、手动填写三种路径 |
@@ -175,11 +175,7 @@ description: "需求任务总清单（SSOT）"
 
 | 编号 | 任务标题 | 文档 |
 | --- | --- | --- |
-| 2049 | 审校上下文增强 — 补齐审校缺失的全局字段 | `B.todo/v0.1-r2049-S2-review-context-enhance/README.md` |
-| 2050 | 全局审校 + 跨章节问题回灌 | `B.todo/v0.1-r2050-C1-global-review-feedback/README.md` |
-| 2051 | 角色重要度分级（CharacterTier） | `B.todo/v0.1-r2051-C2-character-tier-importance-level/README.md` |
 | 3011 | 小说预览页面增强控制面板 | `B.2.done/v0.1-r3011-C2-novel-preview-controls/README.md` |
-| 3014 | 批量润色功能 | `B.todo/v0.1-r3014-C2-batch-style-polish/README.md` |
 | 3019 | Feedback Github Issue Generator | `B.todo/v0.2-r3019-C3-feedback-github-issue-generator/README.md` |
 | 7040 | 卷规划服务层拆分重构 | `B.2.done/v0.1-r7040-C2-volume-service-refactor/README.md` |
 | 7041 | 模型备用切换 | `B.2.done/v0.1-r7041-S4-scattered-client-fixes/README.md` |
@@ -253,6 +249,9 @@ description: "需求任务总清单（SSOT）"
 | 2046 | Style Profile Export Import | `B.2.done/v0.1-r2046-M3-style-profile-export-import/README.md` |
 | 2047 | 文笔资料库 | `B.2.done/v0.1-r2047-C2-writing-technique-library/README.md` |
 | 2048 | REQ-2048 氛围写作参考卡 | `B.2.done/v0.1-r2048-M2-atmosphere-writing-cards/README.md` |
+| 2049 | 审校上下文增强 — 补齐审校缺失的全局字段 | `B.todo/v0.1-r2049-S2-review-context-enhance/README.md` |
+| 2050 | 全局审校 + 跨章节问题回灌 | `B.todo/v0.1-r2050-C1-global-review-feedback/README.md` |
+| 2051 | 角色重要度分级（CharacterTier） | `B.todo/v0.1-r2051-C2-character-tier-importance-level/README.md` |
 | 2052 | 世界观 AI 助手与一致性修复功能 | `B.2.done/v0.1-r2052-C2-world-ai-assistant-consistency-fix/README.md` |
 | 2053 | 文笔技法 AI 推荐功能 | `B.2.done/v0.1-r2053-M2-writing-technique-ai-recommend/README.md` |
 | 3001 | Task Batch Archive | `B.2.done/v0.1-r3001-medium-task-batch-archive/README.md` |
@@ -266,6 +265,7 @@ description: "需求任务总清单（SSOT）"
 | 3010 | Create Page Material Import | `B.2.done/v0.1-r3010-M2-create-page-material-import/README.md` |
 | 3012 | 任务中心批量操作功能 | `B.2.done/v0.1-r3012-C2-task-center-batch-operations/README.md` |
 | 3013 | 导演跟进任务列表全选与批量清理 | `B.2.done/v0.1-r3013-S2-follow-up-batch-cleanup/README.md` |
+| 3014 | 批量润色功能 | `B.todo/v0.1-r3014-C2-batch-style-polish/README.md` |
 | 3015 | 修复缺失的服务方法 | `B.2.done/v0.1-r3015-C1-fix-missing-service-methods/README.md` |
 | 3016 | 服务器日志系统实现 | `B.2.done/v0.1-r3016-C2-server-logging-system/README.md` |
 | 3017 | 创建页面路径选择卡片 | `B.2.done/v0.1-r3017-M3-create-page-path-selection-card/README.md` |

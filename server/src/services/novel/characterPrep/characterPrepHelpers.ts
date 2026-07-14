@@ -1,6 +1,7 @@
 import type {
   CharacterCastOption,
   CharacterCastQualityAssessment,
+  CharacterCastQualityIssue,
   CharacterCastRole,
   CharacterWorldFocusHints,
 } from "@ai-novel/shared";
@@ -39,6 +40,7 @@ export function buildMemberCreateData(member: ParsedMember, index: number) {
     role: member.role,
     gender: member.gender,
     castRole: member.castRole,
+    tier: member.tier ?? "named",
     relationToProtagonist: toOptionalText(member.relationToProtagonist),
     storyFunction: member.storyFunction,
     shortDescription: toOptionalText(member.shortDescription),
@@ -162,6 +164,7 @@ export function serializeCharacterCastOption(row: {
       role: member.role,
       gender: member.gender as CharacterCastOption["members"][number]["gender"],
       castRole: member.castRole as CharacterCastRole,
+      tier: (member as { tier?: string | null }).tier as CharacterCastOption["members"][number]["tier"],
       relationToProtagonist: member.relationToProtagonist,
       storyFunction: member.storyFunction,
       shortDescription: member.shortDescription,
@@ -214,7 +217,7 @@ export function buildCastOptionQualityAssessment(option: CharacterCastOption): C
   return {
     autoApplicable: optionAssessment?.autoApplicable ?? true,
     blockingReasons: assessment.blockingReasons,
-    issues: optionAssessment?.issues ?? [],
+    issues: (optionAssessment?.issues ?? []) as CharacterCastQualityIssue[],
   };
 }
 

@@ -210,6 +210,7 @@ export async function createNovelCharacter(
     name: string;
     role: string;
     gender?: "male" | "female" | "other" | "unknown";
+    tier?: string;
     castRole?: string;
     storyFunction?: string;
     relationToProtagonist?: string;
@@ -250,6 +251,7 @@ export async function updateNovelCharacter(
     name: string;
     role: string;
     gender: "male" | "female" | "other" | "unknown";
+    tier: string;
     castRole: string;
     storyFunction: string;
     relationToProtagonist: string;

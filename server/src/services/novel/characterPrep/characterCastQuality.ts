@@ -44,7 +44,8 @@ interface CharacterCastOptionLike {
 export interface CharacterCastQualityIssue {
   code:
     | "missing_protagonist"
-    | "missing_gender";
+    | "missing_gender"
+    | "invalid_lead_count";
   optionIndex: number;
   optionTitle: string;
   message: string;
@@ -75,6 +76,35 @@ function summarizeBlockingReason(issue: CharacterCastQualityIssue): string {
   return `${issue.optionTitle}: ${issue.message}`;
 }
 
+function checkLeadCount(
+  option: CharacterCastOptionLike,
+  optionIndex: number,
+  optionTitle: string,
+): CharacterCastQualityIssue[] {
+  const issues: CharacterCastQualityIssue[] = [];
+  const membersWithTier = option.members.filter((m) => "tier" in m);
+  if (membersWithTier.length === 0) {
+    return issues;
+  }
+  const leadCount = membersWithTier.filter((m) => (m as { tier?: string }).tier === "lead").length;
+  if (leadCount === 0) {
+    issues.push({
+      code: "invalid_lead_count",
+      optionIndex,
+      optionTitle,
+      message: "这套阵容缺少 lead（主角）层级角色。",
+    });
+  } else if (leadCount > 1) {
+    issues.push({
+      code: "invalid_lead_count",
+      optionIndex,
+      optionTitle,
+      message: `这套阵容有 ${leadCount} 个 lead，应有且仅有1个。`,
+    });
+  }
+  return issues;
+}
+
 function buildOptionAssessment(
   option: CharacterCastOptionLike,
   optionIndex: number,
@@ -103,6 +133,8 @@ function buildOptionAssessment(
       message: "这套阵容没有稳定主角锚点。",
     });
   }
+
+  issues.push(...checkLeadCount(option, optionIndex, optionTitle));
 
   return {
     optionIndex,

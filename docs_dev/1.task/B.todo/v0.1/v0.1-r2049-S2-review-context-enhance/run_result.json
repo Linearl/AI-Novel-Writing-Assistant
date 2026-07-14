@@ -3,9 +3,9 @@
   "title": "审校上下文增强 — 补齐审校缺失的全局字段",
   "priority": "P2",
   "version": "v0.1",
-  "status": "requirements_ready",
+  "status": "pass",
   "createdAt": "2026-07-11",
-  "completedAt": null,
+  "completedAt": "2026-07-14",
   "tags": ["audit", "context", "quality"],
   "source": "审校质量分析",
   "targetFiles": [

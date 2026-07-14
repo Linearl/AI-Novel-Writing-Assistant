@@ -1,10 +1,9 @@
 import { useState } from "react";
-import type { Character } from "@ai-novel/shared";
-import type { CharacterExitStatus } from "@ai-novel/shared";
+import type { Character, CharacterExitStatus, CharacterTier } from "@ai-novel/shared";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CharacterExitBadge } from "@/components/character/CharacterExitBadge";
-import { isProtagonistCharacter } from "./characterAssetWorkspace.helpers";
+import { isProtagonistCharacter, getCharacterTierLabel, getCharacterTierColor } from "./characterAssetWorkspace.helpers";
 
 interface CharacterAssetSidebarProps {
   characters: Character[];
@@ -21,6 +20,13 @@ const EXIT_FILTER_OPTIONS: Array<{ value: CharacterExitStatus | "all"; label: st
   { value: "exited", label: "已退场" },
   { value: "dead", label: "已死亡" },
   { value: "frozen", label: "已冻结" },
+];
+
+const TIER_ORDER: CharacterTier[] = ["lead", "major", "named", "extra"];
+
+const TIER_FILTER_OPTIONS: Array<{ value: CharacterTier | "all"; label: string }> = [
+  { value: "all", label: "全部" },
+  ...TIER_ORDER.map((tier) => ({ value: tier, label: getCharacterTierLabel(tier) })),
 ];
 
 function getCharacterCardClass(isSelected: boolean, isProtagonist: boolean): string {
@@ -112,13 +118,24 @@ export default function CharacterAssetSidebar(props: CharacterAssetSidebarProps)
     deletingCharacterId,
   } = props;
   const [exitFilter, setExitFilter] = useState<CharacterExitStatus | "all">("all");
+  const [tierFilter, setTierFilter] = useState<CharacterTier | "all">("all");
 
   const filteredCharacters = characters.filter((character) => {
-    if (exitFilter === "all") return true;
-    return (character.exitStatus ?? "active") === exitFilter;
+    if (exitFilter !== "all" && (character.exitStatus ?? "active") !== exitFilter) return false;
+    if (tierFilter !== "all" && (character.tier ?? "named") !== tierFilter) return false;
+    return true;
   });
   const protagonist = filteredCharacters.find(isProtagonistCharacter);
   const supportingCharacters = filteredCharacters.filter((character) => !isProtagonistCharacter(character));
+
+  const groupedSupporting = TIER_ORDER
+    .map((tier) => ({
+      tier,
+      label: getCharacterTierLabel(tier),
+      color: getCharacterTierColor(tier),
+      characters: supportingCharacters.filter((c) => (c.tier ?? "named") === tier),
+    }))
+    .filter((group) => group.characters.length > 0);
 
   return (
     <div className="space-y-4">
@@ -134,6 +151,25 @@ export default function CharacterAssetSidebar(props: CharacterAssetSidebarProps)
               variant={exitFilter === option.value ? "default" : "ghost"}
               className="h-7 text-xs"
               onClick={() => setExitFilter(option.value)}
+            >
+              {option.label}({count})
+            </Button>
+          );
+        })}
+      </div>
+
+      <div className="flex flex-wrap gap-1">
+        {TIER_FILTER_OPTIONS.map((option) => {
+          const count = option.value === "all"
+            ? characters.length
+            : characters.filter((c) => (c.tier ?? "named") === option.value).length;
+          return (
+            <Button
+              key={option.value}
+              size="sm"
+              variant={tierFilter === option.value ? "default" : "ghost"}
+              className="h-7 text-xs"
+              onClick={() => setTierFilter(option.value)}
             >
               {option.label}({count})
             </Button>
@@ -172,17 +208,29 @@ export default function CharacterAssetSidebar(props: CharacterAssetSidebarProps)
             当前小说还没有角色，先在上方向导里创建或导入角色。
           </div>
         ) : supportingCharacters.length > 0 ? (
-          <div className="max-h-[460px] space-y-2 overflow-auto pr-1">
-            {supportingCharacters.map((character) => (
-              <CharacterCard
-                key={character.id}
-                character={character}
-                selectedCharacterId={selectedCharacterId}
-                onSelectedCharacterChange={onSelectedCharacterChange}
-                onDeleteCharacter={onDeleteCharacter}
-                isDeletingCharacter={isDeletingCharacter}
-                deletingCharacterId={deletingCharacterId}
-              />
+          <div className="max-h-[460px] space-y-3 overflow-auto pr-1">
+            {groupedSupporting.map((group) => (
+              <div key={group.tier} className="space-y-1.5">
+                <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
+                  <span
+                    className="inline-block h-2 w-2 rounded-full"
+                    style={{ backgroundColor: group.color }}
+                  />
+                  {group.label}
+                  <span className="text-[10px]">({group.characters.length})</span>
+                </div>
+                {group.characters.map((character) => (
+                  <CharacterCard
+                    key={character.id}
+                    character={character}
+                    selectedCharacterId={selectedCharacterId}
+                    onSelectedCharacterChange={onSelectedCharacterChange}
+                    onDeleteCharacter={onDeleteCharacter}
+                    isDeletingCharacter={isDeletingCharacter}
+                    deletingCharacterId={deletingCharacterId}
+                  />
+                ))}
+              </div>
             ))}
           </div>
         ) : (

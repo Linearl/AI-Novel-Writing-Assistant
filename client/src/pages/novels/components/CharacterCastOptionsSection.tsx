@@ -18,6 +18,7 @@ import {
 } from "@/api/novel";
 import { getNovelWorldSlice } from "@/api/novelWorldSlice";
 import { queryKeys } from "@/api/queryKeys";
+import { getCharacterTierLabel, getCharacterTierColor } from "./characterAssetWorkspace.helpers";
 
 interface CharacterCastOptionsSectionProps {
   novelId: string;
@@ -505,6 +506,14 @@ export default function CharacterCastOptionsSection(props: CharacterCastOptionsS
                                   <span className="font-medium">{member.name}</span>
                                   <Badge variant="outline">{getCastRoleLabel(member.castRole)}</Badge>
                                   <Badge variant="secondary">{getCharacterGenderLabel(member.gender)}</Badge>
+                                  {member.tier ? (
+                                    <Badge
+                                      variant="outline"
+                                      style={{ borderColor: getCharacterTierColor(member.tier), color: getCharacterTierColor(member.tier) }}
+                                    >
+                                      {getCharacterTierLabel(member.tier)}
+                                    </Badge>
+                                  ) : null}
                                 </div>
                                 <div className="mt-1 text-xs text-muted-foreground">{member.role}</div>
                                 <div className="mt-2 text-xs text-muted-foreground">作用：{member.storyFunction}</div>

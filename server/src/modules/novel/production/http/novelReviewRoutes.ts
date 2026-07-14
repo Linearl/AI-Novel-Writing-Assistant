@@ -1,5 +1,5 @@
 import type { Router } from "express";
-import type { ApiResponse } from "@ai-novel/shared";
+import type { ApiResponse, LLMProvider } from "@ai-novel/shared";
 import { z } from "zod";
 import { streamToSSE } from "../../../../llm/streaming";
 import { validate } from "../../../../middleware/validate";
@@ -8,6 +8,7 @@ import type { ChapterRuntimeCoordinator } from "../../../../services/novel/runti
 import { stepModuleRunner } from "../../../../services/novel/director/workflowStepRuntime/StepModuleRunner";
 import { DIRECTOR_EXECUTION_STEP_IDS } from "../../../../services/novel/director/workflowStepRuntime/directorWorkflowStepIds";
 import { chapterService } from "../../../../services/novel/ChapterService";
+import { globalReviewService } from "../../../../services/audit/GlobalReviewService";
 
 type RepairStreamResult = Awaited<ReturnType<ChapterRuntimeCoordinator["createRepairStream"]>>;
 
@@ -216,4 +217,126 @@ export function registerNovelReviewRoutes(input: RegisterNovelReviewRoutesInput)
       next(error);
     }
   });
+
+  // ---------------------------------------------------------------------------
+  // REQ-2050: 全局审校（跨章节）
+  // ---------------------------------------------------------------------------
+
+  const globalReviewSchema = z.object({
+    mode: z.enum(["currentVolume", "range"]).default("currentVolume"),
+    startChapterOrder: z.number().int().min(1).optional(),
+    endChapterOrder: z.number().int().min(1).optional(),
+    provider: z.string().optional(),
+    model: z.string().optional(),
+    temperature: z.number().min(0).max(2).optional(),
+  });
+
+  const globalReviewIssueParamsSchema = z.object({ id: z.string().min(1), issueId: z.string().min(1) });
+
+  router.post(
+    "/:id/global-review",
+    validate({ params: idParamsSchema, body: globalReviewSchema }),
+    async (req, res, next) => {
+      try {
+        const { id } = req.params as z.infer<typeof idParamsSchema>;
+        const body = req.body as z.infer<typeof globalReviewSchema>;
+        const data = await globalReviewService.runGlobalReview(
+          id,
+          {
+            mode: body.mode,
+            startChapterOrder: body.startChapterOrder,
+            endChapterOrder: body.endChapterOrder,
+          },
+          {
+            provider: body.provider as LLMProvider | undefined,
+            model: body.model,
+            temperature: body.temperature,
+          },
+        );
+        res.status(200).json({
+          success: true,
+          data,
+          message: "Global review completed.",
+        } satisfies ApiResponse<typeof data>);
+      } catch (error) {
+        next(error);
+      }
+    },
+  );
+
+  router.get(
+    "/:id/global-review-issues",
+    validate({ params: idParamsSchema }),
+    async (req, res, next) => {
+      try {
+        const { id } = req.params as z.infer<typeof idParamsSchema>;
+        const status = typeof req.query.status === "string" ? req.query.status : undefined;
+        const reviewRunId = typeof req.query.reviewRunId === "string" ? req.query.reviewRunId : undefined;
+        const data = await globalReviewService.listGlobalReviewIssues(id, { status, reviewRunId });
+        res.status(200).json({
+          success: true,
+          data,
+          message: "Global review issues loaded.",
+        } satisfies ApiResponse<typeof data>);
+      } catch (error) {
+        next(error);
+      }
+    },
+  );
+
+  router.post(
+    "/:id/global-review-issues/:issueId/status",
+    validate({ params: globalReviewIssueParamsSchema }),
+    async (req, res, next) => {
+      try {
+        const { id, issueId } = req.params as z.infer<typeof globalReviewIssueParamsSchema>;
+        const { status } = req.body as { status: string };
+        await globalReviewService.updateIssueStatus(id, issueId, status);
+        res.status(200).json({
+          success: true,
+          data: null,
+          message: "Global review issue status updated.",
+        } satisfies ApiResponse<null>);
+      } catch (error) {
+        next(error);
+      }
+    },
+  );
+
+  // T3.2: 卷完成自动触发全局审校
+  const autoTriggerSchema = z.object({
+    volumePlanId: z.string().min(1),
+    provider: z.string().optional(),
+    model: z.string().optional(),
+    temperature: z.number().min(0).max(2).optional(),
+  });
+
+  router.post(
+    "/:id/global-review/auto-trigger",
+    validate({ params: idParamsSchema, body: autoTriggerSchema }),
+    async (req, res, next) => {
+      try {
+        const { id } = req.params as z.infer<typeof idParamsSchema>;
+        const body = req.body as z.infer<typeof autoTriggerSchema>;
+        const data = await globalReviewService.autoTriggerOnVolumeCompletion(
+          id,
+          body.volumePlanId,
+          {
+            provider: body.provider as LLMProvider | undefined,
+            model: body.model,
+            temperature: body.temperature,
+          },
+        );
+        res.status(200).json({
+          success: true,
+          data,
+          message: data
+            ? "Auto-triggered global review completed."
+            : "Volume not all chapters reviewed yet, auto-trigger skipped.",
+        } satisfies ApiResponse<typeof data>);
+      } catch (error) {
+        next(error);
+      }
+    },
+  );
 }

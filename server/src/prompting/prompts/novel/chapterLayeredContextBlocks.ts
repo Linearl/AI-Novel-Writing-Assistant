@@ -198,13 +198,13 @@ export function buildChapterWriterContextBlocks(
   const isIncremental = mode === "incremental";
   const includeVolumeWindow = mode === "full" || mode === "review";
   const includePayoffLedger = mode === "full" && hasLedgerPressure(writeContext);
-  const includePayoffDirectives = writeContext.payoffDirectives.length > 0;
-  const includeTimelineContext = Boolean(writeContext.timelineContext);
+  const includePayoffDirectives = writeContext.payoffDirectives.length > 0 || mode === "review";
+  const includeTimelineContext = Boolean(writeContext.timelineContext) || mode === "review";
   const hasObligationContract = Object.values(writeContext.obligationContract).some((items) => items.length > 0);
   const includeCharacterResources = !isIncremental && hasCharacterResourcePressure(writeContext);
-  const includeCharacterDynamics = shouldIncludeCharacterDynamics(writeContext, mode);
+  const includeCharacterDynamics = mode === "review" || shouldIncludeCharacterDynamics(writeContext, mode);
   const includeOpenConflicts = !isIncremental && writeContext.openConflictSummaries.length > 0;
-  const includeRecentChapters = mode === "full" && writeContext.recentChapterSummaries.length > 0;
+  const includeRecentChapters = (mode === "full" || mode === "review") && writeContext.recentChapterSummaries.length > 0;
   const includeStyleContract = mode !== "incremental" && Boolean(writeContext.styleContract);
   const includeContinuationConstraints = mode === "full" && writeContext.continuationConstraints.length > 0;
   const wordRange = resolveTargetWordRange(writeContext.chapterMission.targetWordCount);
@@ -268,56 +268,69 @@ export function buildChapterWriterContextBlocks(
       })
       : null,
     includeTimelineContext
-      ? createContextBlock({
-        id: "timeline_context",
-        group: "timeline_context",
-        priority: 100,
-        required: true,
-        allowSummary: false,
-        content: timelinePromptAdapter.toPromptBlock(writeContext.timelineContext!),
-      })
-      : createContextBlock({
-        id: "timeline_context",
-        group: "timeline_context",
-        priority: 100,
-        required: true,
-        allowSummary: false,
-        content: "【时间线约束】\n当前没有已登记的时间线资产；不得提前发生后续章节事件，必须严格服从本章任务和上一章实际状态。",
-      }),
+      ? writeContext.timelineContext
+        ? createContextBlock({
+          id: "timeline_context",
+          group: "timeline_context",
+          priority: 100,
+          required: true,
+          allowSummary: false,
+          content: timelinePromptAdapter.toPromptBlock(writeContext.timelineContext),
+        })
+        : createContextBlock({
+          id: "timeline_context",
+          group: "timeline_context",
+          priority: 100,
+          required: true,
+          allowSummary: false,
+          content: "【时间线约束】\n当前没有已登记的时间线资产；不得提前发生后续章节事件，必须严格服从本章任务和上一章实际状态。",
+        })
+      : null,
     includeTimelineContext
-      ? createContextBlock({
-        id: "previous_chapter_hook",
-        group: "previous_chapter_hook",
-        priority: 100,
-        required: true,
-        allowSummary: false,
-        content: timelinePromptAdapter.toPreviousHookBlock(writeContext.timelineContext!),
-      })
-      : createContextBlock({
-        id: "previous_chapter_hook",
-        group: "previous_chapter_hook",
-        priority: 100,
-        required: true,
-        allowSummary: false,
-        content: "【上一章必须承接的钩子】\n- 无已登记钩子；如章节任务或最近状态包含上一章悬念，必须优先承接。",
-      }),
+      ? writeContext.timelineContext
+        ? createContextBlock({
+          id: "previous_chapter_hook",
+          group: "previous_chapter_hook",
+          priority: 100,
+          required: true,
+          allowSummary: false,
+          content: timelinePromptAdapter.toPreviousHookBlock(writeContext.timelineContext),
+        })
+        : createContextBlock({
+          id: "previous_chapter_hook",
+          group: "previous_chapter_hook",
+          priority: 100,
+          required: true,
+          allowSummary: false,
+          content: "【上一章必须承接的钩子】\n- 无已登记钩子；如章节任务或最近状态包含上一章悬念，必须优先承接。",
+        })
+      : null,
     includePayoffDirectives
-      ? createContextBlock({
-        id: "payoff_directives",
-        group: "payoff_directives",
-        priority: 98,
-        required: true,
-        allowSummary: false,
-        content: [
-          "Payoff directives:",
-          ...writeContext.payoffDirectives.map((item) => [
-            `- ${item.title} [${item.operation}]`,
-            item.ledgerKey ? `ledger=${item.ledgerKey}` : "",
-            item.reason ? `reason=${item.reason}` : "",
-            item.forbiddenReveal ? `forbiddenReveal=${item.forbiddenReveal}` : "",
-          ].filter(Boolean).join(" | ")),
-        ].join("\n"),
-      })
+      ? writeContext.payoffDirectives.length > 0
+        ? createContextBlock({
+          id: "payoff_directives",
+          group: "payoff_directives",
+          priority: 98,
+          required: true,
+          allowSummary: false,
+          content: [
+            "Payoff directives:",
+            ...writeContext.payoffDirectives.map((item) => [
+              `- ${item.title} [${item.operation}]`,
+              item.ledgerKey ? `ledger=${item.ledgerKey}` : "",
+              item.reason ? `reason=${item.reason}` : "",
+              item.forbiddenReveal ? `forbiddenReveal=${item.forbiddenReveal}` : "",
+            ].filter(Boolean).join(" | ")),
+          ].join("\n"),
+        })
+        : createContextBlock({
+          id: "payoff_directives",
+          group: "payoff_directives",
+          priority: 98,
+          required: true,
+          allowSummary: false,
+          content: "【伏笔兑现指令】\n当前没有已登记的伏笔兑现指令；审校时请检查是否有未兑现的伏笔需要关注。",
+        })
       : null,
     createContextBlock({
       id: "state_goal",
@@ -399,16 +412,21 @@ export function buildChapterWriterContextBlocks(
       content: buildParticipantText(writeContext),
     }),
     includeCharacterDynamics
-      ? createContextBlock({
-        id: "character_dynamics",
-        group: "character_dynamics",
-        priority: 91,
-        content: [
+      ? (() => {
+        const dynamicsContent = [
           buildCharacterGuidanceText(writeContext),
           buildRelationStageText(writeContext),
           buildPendingCandidateGuardText(writeContext),
-        ].join("\n\n"),
-      })
+        ].filter(Boolean).join("\n\n");
+        return createContextBlock({
+          id: "character_dynamics",
+          group: "character_dynamics",
+          priority: 91,
+          content: dynamicsContent.length > 0
+            ? dynamicsContent
+            : "【角色动态】\n当前没有已登记的角色行为指南或关系阶段变化；审校时请关注角色行为是否与此前设定一致。",
+        });
+      })()
       : null,
     includeCharacterResources
       ? createContextBlock({

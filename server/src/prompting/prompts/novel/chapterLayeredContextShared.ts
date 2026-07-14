@@ -5,6 +5,12 @@ import type {
 import { resolveLengthBudgetContract } from "@ai-novel/shared";
 import { buildPlannerStyleContractSummaryText } from "../../../services/styleEngine/styleContractText";
 
+type ParticipantCharacter = ChapterWriteContext["participants"][number];
+
+function getCharacterTier(character: ParticipantCharacter): string {
+  return (character as { tier?: string | null }).tier ?? "named";
+}
+
 export function compactText(value: string | null | undefined, fallback = ""): string {
   return value?.replace(/\s+/g, " ").trim() || fallback;
 }
@@ -228,6 +234,36 @@ export function buildParticipantText(writeContext: ChapterWriteContext): string 
     "Participants:",
     ...writeContext.participants.map((character) => {
       const guide = guideByCharacterId.get(character.id);
+      const tier = getCharacterTier(character);
+
+      if (tier === "extra") {
+        const parts = takeUnique([
+          character.role,
+          guide?.volumeRoleLabel ? `volume role=${guide.volumeRoleLabel}` : "",
+        ].filter(Boolean), 2);
+        return `- ${character.name}: ${parts.join(" | ")}`;
+      }
+
+      if (tier === "named") {
+        const visibleProfile = takeUnique([
+          character.appearance || character.physique
+            ? `look=${compactText([character.appearance, character.physique].filter(Boolean).join("；"))}`
+            : "",
+          character.signatureDetail ? `signature=${compactText(character.signatureDetail)}` : "",
+          character.voiceTexture ? `voice=${compactText(character.voiceTexture)}` : "",
+        ], 3).join(" | ");
+        const parts = takeUnique([
+          character.role,
+          visibleProfile,
+          guide?.volumeRoleLabel ? `volume role=${guide.volumeRoleLabel}` : "",
+          character.personality,
+          character.currentState ? `state=${character.currentState}` : "",
+          character.currentGoal ? `goal=${character.currentGoal}` : "",
+        ], 4);
+        return `- ${character.name}: ${parts.join(" | ")}`;
+      }
+
+      // lead / major: full profile
       const visibleProfile = takeUnique([
         character.appearance || character.physique
           ? `look=${compactText([character.appearance, character.physique].filter(Boolean).join("；"))}`

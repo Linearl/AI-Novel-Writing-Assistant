@@ -701,23 +701,11 @@ export class NovelWorldInstanceService {
     return this.getNovelWorldView(input.novelId, generationValidation);
   }
 
-  async getSyncDiff(novelId: string): Promise<NovelWorldSyncDiff> {
-    return this.syncService.getSyncDiff(novelId);
-  }
-
   async getNovelWorldSyncDiff(novelId: string): Promise<NovelWorldSyncDiff> {
     return this.syncService.getSyncDiff(novelId);
   }
 
-  async syncWithLibrary(novelId: string, input: NovelWorldSyncInput): Promise<NovelWorldSyncDiff> {
-    return this.syncService.syncWithLibrary(novelId, input);
-  }
-
   async syncNovelWorldWithLibrary(novelId: string, input: NovelWorldSyncInput): Promise<NovelWorldSyncDiff> {
-    return this.syncService.syncWithLibrary(novelId, input);
-  }
-
-  async syncWithLibrary(novelId: string, input: NovelWorldSyncInput): Promise<NovelWorldSyncDiff> {
     return this.syncService.syncWithLibrary(novelId, input);
   }
 }

@@ -31,6 +31,7 @@ import { createNovelSettingConsistencyRoutes } from "../setting/http/novelSettin
 import { registerNovelTxtImportExportRoutes } from "./novelTxtImportExportRoutes";
 import { createNovelMaterialParseRoutes } from "./novelMaterialParseRoutes";
 import { createNovelResetRoutes } from "./novelResetRoutes";
+import novelBatchStyleRouter from "./novelBatchStyleRoutes";
 import type { NovelHttpServices } from "./novelHttpServices";
 import {
   aiRevisionPreviewSchema,
@@ -256,4 +257,5 @@ export function registerNovelHttpRoutes(router: Router, services: NovelHttpServi
   registerNovelTxtImportExportRoutes({ router });
   router.use(createNovelMaterialParseRoutes());
   router.use(createNovelResetRoutes());
+  router.use(novelBatchStyleRouter);
 }

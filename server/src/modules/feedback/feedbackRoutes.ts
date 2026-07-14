@@ -24,6 +24,7 @@ import {
   listComments,
   readFeedbackMeta,
 } from "./feedbackStorage";
+import { generateIssue } from "./issueGenerator";
 
 const router = Router();
 
@@ -86,6 +87,51 @@ router.post(
       res.status(201).json(response);
     } catch (error) {
       logger.error("[feedback] attachment upload failed", error);
+      next(error);
+    }
+  },
+);
+
+// ── Generate Issue from feedback ───────────────────────────────
+const generateBodySchema = z.object({
+  description: z.string().trim().min(1, "描述不能为空").max(10000),
+  context: z.string().trim().max(100000).optional().default("{}"),
+  images: z.array(z.object({
+    fileName: z.string().trim().min(1),
+    base64: z.string().trim().min(1),
+  })).max(5).optional(),
+});
+
+router.post(
+  "/generate",
+  validate({ body: generateBodySchema }),
+  async (req, res, next) => {
+    try {
+      const input = req.body as z.infer<typeof generateBodySchema>;
+
+      const result = await generateIssue({
+        description: input.description,
+        contextJson: input.context,
+        images: input.images,
+      });
+
+      const response: ApiResponse<{
+        title: string;
+        body: string;
+        labels: string[];
+        markdown: string;
+      }> = {
+        success: true,
+        data: {
+          title: result.title,
+          body: result.body,
+          labels: result.labels,
+          markdown: `# ${result.title}\n\n${result.body}`,
+        },
+      };
+      res.status(201).json(response);
+    } catch (error) {
+      logger.error("[feedback] generate issue failed", error);
       next(error);
     }
   },

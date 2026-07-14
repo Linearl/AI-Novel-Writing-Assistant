@@ -46,7 +46,7 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1\v0.1-r2049-S2-review-context-enhance\README.md](./1.task\B.todo\v0.1\v0.1-r2049-S2-review-context-enhance\README.md) | REQ-2049 审校上下文增强 — 补齐审校缺失的全局字段 — 任务总线 | REQ-2049 审校上下文增强 — 补齐审校缺失的全局字段 — 任务总线 |
 | [1.task\B.todo\v0.1\v0.1-r2049-S2-review-context-enhance\REQ-2049-review-context-enhance-original.md](./1.task\B.todo\v0.1\v0.1-r2049-S2-review-context-enhance\REQ-2049-review-context-enhance-original.md) | REQ-2049 审校上下文增强 — 补齐审校缺失的全局字段 | REQ-2049 审校上下文增强 — 补齐审校缺失的全局字段 |
 | [1.task\B.todo\v0.1\v0.1-r2049-S2-review-context-enhance\REQ-2049-review-context-enhance.md](./1.task\B.todo\v0.1\v0.1-r2049-S2-review-context-enhance\REQ-2049-review-context-enhance.md) | REQ-2049 审校上下文增强 — 补齐审校缺失的全局字段 | REQ-2049 审校上下文增强 — 补齐审校缺失的全局字段 |
-| [1.task\B.todo\v0.1\v0.1-r2049-S2-review-context-enhance\tasks.md](./1.task\B.todo\v0.1\v0.1-r2049-S2-review-context-enhance\tasks.md) | REQ-2049 审校上下文增强 — 任务拆解 | REQ-2049 审校上下文增强 — 任务拆解 |
+| [1.task\B.todo\v0.1\v0.1-r2049-S2-review-context-enhance\tasks.md](./1.task\B.todo\v0.1\v0.1-r2049-S2-review-context-enhance\tasks.md) | --- | - |
 
 ## 1.task\B.todo\v0.1\v0.1-r2050-C1-global-review-feedback
 
@@ -78,6 +78,17 @@ description: "docs 目录索引（自动生成）"
 | [1.task\B.todo\v0.1\v0.1-r3014-C2-batch-style-polish\README.md](./1.task\B.todo\v0.1\v0.1-r3014-C2-batch-style-polish\README.md) | | 字段 | 值 | | - |
 | [1.task\B.todo\v0.1\v0.1-r3014-C2-batch-style-polish\REQ-3014-batch-style-polish.md](./1.task\B.todo\v0.1\v0.1-r3014-C2-batch-style-polish\REQ-3014-batch-style-polish.md) | **需求编号**：3014 | - |
 | [1.task\B.todo\v0.1\v0.1-r3014-C2-batch-style-polish\tasks.md](./1.task\B.todo\v0.1\v0.1-r3014-C2-batch-style-polish\tasks.md) | | 阶段 | 任务数 | 预计工作量 | | - |
+
+## 1.task\B.todo\v0.1\v0.1-r3019-C3-feedback-github-issue-generator
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [1.task\B.todo\v0.1\v0.1-r3019-C3-feedback-github-issue-generator\decision_log.md](./1.task\B.todo\v0.1\v0.1-r3019-C3-feedback-github-issue-generator\decision_log.md) | REQ-3019 决策留痕 | REQ-3019 决策留痕 |
+| [1.task\B.todo\v0.1\v0.1-r3019-C3-feedback-github-issue-generator\design.md](./1.task\B.todo\v0.1\v0.1-r3019-C3-feedback-github-issue-generator\design.md) | REQ-3019 方案设计 | REQ-3019 方案设计 |
+| [1.task\B.todo\v0.1\v0.1-r3019-C3-feedback-github-issue-generator\README.md](./1.task\B.todo\v0.1\v0.1-r3019-C3-feedback-github-issue-generator\README.md) | REQ-3019 用户反馈→AI 生成 GitHub Issue 任务总线 | REQ-3019 用户反馈→AI 生成 GitHub Issue 任务总线 |
+| [1.task\B.todo\v0.1\v0.1-r3019-C3-feedback-github-issue-generator\REQ-3019-feedback-github-issue-generator-original.md](./1.task\B.todo\v0.1\v0.1-r3019-C3-feedback-github-issue-generator\REQ-3019-feedback-github-issue-generator-original.md) | REQ-3019 用户反馈→AI 生成 GitHub Issue（冻结副本） | REQ-3019 用户反馈→AI 生成 GitHub Issue（冻结副本） |
+| [1.task\B.todo\v0.1\v0.1-r3019-C3-feedback-github-issue-generator\REQ-3019-feedback-github-issue-generator.md](./1.task\B.todo\v0.1\v0.1-r3019-C3-feedback-github-issue-generator\REQ-3019-feedback-github-issue-generator.md) | REQ-3019 用户反馈→AI 生成 GitHub Issue | REQ-3019 用户反馈→AI 生成 GitHub Issue |
+| [1.task\B.todo\v0.1\v0.1-r3019-C3-feedback-github-issue-generator\tasks.md](./1.task\B.todo\v0.1\v0.1-r3019-C3-feedback-github-issue-generator\tasks.md) | REQ-3019 任务拆解 | REQ-3019 任务拆解 |
 
 ## 1.task\B.todo\v0.2
 
@@ -431,6 +442,8 @@ description: "docs 目录索引（自动生成）"
 | [3.analysis\report\2026-06-26-ll-workflow-core-init-收口报告.md](./3.analysis\report\2026-06-26-ll-workflow-core-init-收口报告.md) | **执行时间**:2026-06-26 | - |
 | [3.analysis\report\2026-07-02-positive-findings.md](./3.analysis\report\2026-07-02-positive-findings.md) | r7011/r7012 审计正面发现汇总 — 安全、质量、稳定性、可观测性维度的已验证良好实践 | r7011/r7012 审计正面发现汇总 — 安全、质量、稳定性、可观测性维度的已验证良好实践 |
 | [3.analysis\report\2026-07-03-竞品分析-游蜂写作.md](./3.analysis\report\2026-07-03-竞品分析-游蜂写作.md) | 竞品"游蜂写作"产品分析，对比 ai-novel 项目的功能差距与可借鉴的设计思路 | 竞品"游蜂写作"产品分析，对比 ai-novel 项目的功能差距与可借鉴的设计思路 |
+| [3.analysis\report\2026-07-14-上游仓库版本对比诊断报告.md](./3.analysis\report\2026-07-14-上游仓库版本对比诊断报告.md) | 上游仓库 v0.32 vs 最新版本的全面对比诊断报告，分析改进点及对我们项目的借鉴价值 | 上游仓库 v0.32 vs 最新版本的全面对比诊断报告，分析改进点及对我们项目的借鉴价值 |
+| [3.analysis\report\2026-07-14-客户端测试覆盖率分析报告.md](./3.analysis\report\2026-07-14-客户端测试覆盖率分析报告.md) | 客户端测试覆盖率分析报告 — 现状评估、差距识别与改进成果 | 客户端测试覆盖率分析报告 — 现状评估、差距识别与改进成果 |
 
 ## 4.misc
 
@@ -439,6 +452,7 @@ description: "docs 目录索引（自动生成）"
 | [4.misc\2026-07-11-novelService-prototype-methods-lost.md](./4.misc\2026-07-11-novelService-prototype-methods-lost.md) | 2026-07-11 自动导演 novelService 原型方法丢失问题分析与修复 | 2026-07-11 自动导演 novelService 原型方法丢失问题分析与修复 |
 | [4.misc\inspiration-rose-thief.md](./4.misc\inspiration-rose-thief.md) | 《玫瑰窃贼》歌曲衍生小说大纲 — 提取自柳爽同名歌曲，用于新小说灵感注入 | 《玫瑰窃贼》歌曲衍生小说大纲 — 提取自柳爽同名歌曲，用于新小说灵感注入 |
 | [4.misc\novel-outline-bug-system.md](./4.misc\novel-outline-bug-system.md) | > 整理时间：2026-06-25 | 用途：创建新书时的设定输入参考 | - |
+| [4.misc\新仓库维护规则.md](./4.misc\新仓库维护规则.md) | 本项目基于上游开源项目深度二次魔改，自有代码与上游技术路线已严重分化，**不做全量分支合并**。采用「自有主线分支 + 纯净上游快照分支 + Git Workt | - |
 
 ## 4.misc\issues
 
@@ -452,4 +466,10 @@ description: "docs 目录索引（自动生成）"
 | [4.misc\issues\rag-worker-ui-toggle-ignored.md](./4.misc\issues\rag-worker-ui-toggle-ignored.md) | **状态**: 已修复 (local) | 待提交 upstream | - |
 | [4.misc\issues\sse-buffer-flush-missing-done-frame.md](./4.misc\issues\sse-buffer-flush-missing-done-frame.md) | **状态**: 已修复 | - |
 | [4.misc\issues\useNovelEditWorkflow-bootstrap-loop.md](./4.misc\issues\useNovelEditWorkflow-bootstrap-loop.md) | `useNovelEditWorkflow` hook 中的 `bootstrapMutation` useEffect 依赖 `workflowTaskId` | - |
+
+## 4.misc\prompts
+
+| 文件 | 标题 | 描述 |
+| --- | --- | --- |
+| [4.misc\prompts\high-speed-develop.md](./4.misc\prompts\high-speed-develop.md) | 请完成 docs_dev/1.task/B.todo/v0.1 下全部任务包的开发。 | - |
 

@@ -2,6 +2,7 @@ import { z } from "zod";
 import type {
   CharacterCastRole,
   CharacterGender,
+  CharacterTier,
   SupplementalCharacterGenerationMode,
 } from "@ai-novel/shared";
 import { llmProviderSchema } from "../../../llm/providerSchema";
@@ -35,6 +36,8 @@ const SUPPLEMENTAL_CHARACTER_GENERATION_MODE_VALUES = [
 const characterCastRoleEnum = z.enum(CHARACTER_CAST_ROLE_VALUES);
 const characterGenderEnum = z.enum(CHARACTER_GENDER_VALUES);
 const supplementalCharacterGenerationModeEnum = z.enum(SUPPLEMENTAL_CHARACTER_GENERATION_MODE_VALUES);
+const CHARACTER_TIER_VALUES = ["lead", "major", "named", "extra"] as const satisfies CharacterTier[];
+
 const characterProhibitionsSchema = z.array(z.string().trim().min(1)).max(8).optional().default([]);
 
 function normalizeCharacterCastRole(raw: string): CharacterCastRole {
@@ -124,6 +127,7 @@ export const characterCastOptionMemberSchema = z.object({
   role: nonEmptyString,
   gender: characterGenderSchema,
   castRole: characterCastRoleSchema,
+  tier: z.enum(CHARACTER_TIER_VALUES).optional().default("named"),
   relationToProtagonist: z.string().trim().optional().default(""),
   storyFunction: nonEmptyString,
   shortDescription: z.string().trim().optional().default(""),
@@ -203,6 +207,7 @@ export const supplementalCharacterCandidateSchema = z.object({
   role: nonEmptyString,
   gender: characterGenderSchema,
   castRole: characterCastRoleSchema,
+  tier: z.enum(CHARACTER_TIER_VALUES).optional().default("named"),
   summary: nonEmptyString,
   storyFunction: nonEmptyString,
   relationToProtagonist: z.string().trim().optional().default(""),

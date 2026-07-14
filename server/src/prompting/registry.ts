@@ -46,6 +46,10 @@ const promptAssetLoaderEntries: PromptAssetLoaderEntry[] = [
     load: () => require("./prompts/audit/audit.prompts").auditChapterLightPrompt as UnknownPromptAsset,
   },
   {
+    key: "audit.global.review@v1",
+    load: () => require("./prompts/audit/audit.global.prompts").globalReviewPrompt as UnknownPromptAsset,
+  },
+  {
     key: "bookAnalysis.source.note@v1",
     load: () => require("./prompts/bookAnalysis/bookAnalysis.prompts").bookAnalysisSourceNotePrompt as UnknownPromptAsset,
   },
@@ -560,6 +564,10 @@ const promptAssetLoaderEntries: PromptAssetLoaderEntry[] = [
   {
     key: "atmosphere.match@v1",
     load: () => require("./prompts/atmosphereCard/atmosphereMatch.prompts").atmosphereMatchPrompt as UnknownPromptAsset,
+  },
+  {
+    key: "feedback.issue.generation@v1",
+    load: () => require("./prompts/feedback/issueGeneration.prompts").issueGenerationPrompt as UnknownPromptAsset,
   },
 ];
 

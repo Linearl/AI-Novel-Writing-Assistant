@@ -156,6 +156,10 @@ export const queryKeys = {
     detail: (folderName: string) => ["feedback", "detail", folderName] as const,
     comments: (folderName: string) => ["feedback", "comments", folderName] as const,
   },
+  batchStyle: {
+    detection: (novelId: string) => ["batch-style", "detection", novelId] as const,
+    polishJob: (novelId: string, jobId: string) => ["batch-style", "polish", novelId, jobId] as const,
+  },
   novelsKnowledge: {
     bindings: (id: string) => ["novels", "knowledge-documents", id] as const,
   },

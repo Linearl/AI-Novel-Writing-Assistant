@@ -67,6 +67,25 @@ export async function deleteFeedback(folderName: string) {
   return data;
 }
 
+export interface GenerateIssueResponse {
+  title: string;
+  body: string;
+  labels: string[];
+  markdown: string;
+}
+
+export async function generateIssue(payload: {
+  description: string;
+  context: string;
+  images?: Array<{ fileName: string; base64: string }>;
+}): Promise<ApiResponse<GenerateIssueResponse>> {
+  const { data } = await apiClient.post<ApiResponse<GenerateIssueResponse>>(
+    "/feedback/generate",
+    payload,
+  );
+  return data;
+}
+
 export async function listComments(folderName: string) {
   const { data } = await apiClient.get<ApiResponse<FeedbackComment[]>>(
     `/feedback/${encodeURIComponent(folderName)}/comments`,
