@@ -1,0 +1,43 @@
+{
+  "req_id": "2055",
+  "title": "导演步骤间推理链路传递",
+  "version": "v0.2",
+  "status": "requirements_ready",
+  "requirement_status": "approved",
+  "priority": "P2",
+  "reqType": "核心功能开发",
+  "categoryCode": 2,
+  "complexity": "simple",
+  "skipClarification": true,
+  "skipDesign": true,
+  "created_at": "2026-07-15",
+  "artifacts": {
+    "readme": "README.md",
+    "requirements": "REQ-2055-director-reasoning-trace.md",
+    "requirements_original": "REQ-2055-director-reasoning-trace-original.md",
+    "tasks": "tasks.md"
+  },
+  "acceptance_criteria": [
+    "5 个关键步骤的 structured output 包含 reasoningTrace 字段",
+    "reasoning_trace context group 正确注入后续步骤",
+    "不影响无状态可恢复性",
+    "pnpm typecheck 通过",
+    "现有测试全部通过"
+  ],
+  "unresolved_items": [],
+  "assumptions": [
+    "REQ-2054 material_index 注入管道已就绪",
+    "reasoningTrace 存储在各步骤产出物的 JSON 字段中"
+  ],
+  "blocking_reasons": [],
+  "handoff": {
+    "route": "req",
+    "ticket_type": "req_to_dev",
+    "next_action": "dev"
+  },
+  "state_sync": {
+    "requirement_axis": "approved",
+    "task_axis": "requirements_ready",
+    "is_consistent": true
+  }
+}
