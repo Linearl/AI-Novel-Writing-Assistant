@@ -2,7 +2,7 @@
   "req_id": "2054",
   "title": "多素材导入与按需加载系统",
   "version": "v0.2",
-  "status": "in_progress",
+  "status": "done",
   "requirement_status": "approved",
   "priority": "P1",
   "reqType": "核心功能开发",
