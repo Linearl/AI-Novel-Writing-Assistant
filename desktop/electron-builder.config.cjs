@@ -42,9 +42,7 @@ module.exports = {
     buildResources: "builder",
   },
   files: [
-    "dist/**/*",
-    "package.json",
-    "node_modules/.prisma/**/*",
+    "**/*",
   ],
   extraResources: [
     {

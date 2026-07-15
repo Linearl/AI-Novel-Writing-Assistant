@@ -235,11 +235,41 @@ function startWorkspaceManagedServer(port: number): ManagedDesktopProcess {
 }
 
 function startPackagedManagedServer(port: number): ManagedDesktopProcess {
-  const child = utilityProcess.fork(resolvePackagedServerEntry(), [], {
+  const serverEntry = resolvePackagedServerEntry();
+  const resourcesDir = resolveDesktopResourcesDir();
+  const nodeModulesPath = path.join(resourcesDir, "node_modules");
+
+  // 详细日志：启动前环境检查
+  appendDesktopLog("desktop.server.startup", `Server entry: ${serverEntry}`);
+  appendDesktopLog("desktop.server.startup", `Resources dir: ${resourcesDir}`);
+  appendDesktopLog("desktop.server.startup", `NODE_PATH: ${nodeModulesPath}`);
+  appendDesktopLog("desktop.server.startup", `DATA_DIR: ${resolveDesktopAppDataDir()}`);
+  appendDesktopLog("desktop.server.startup", `DATABASE_URL: ${DESKTOP_SQLITE_DATABASE_URL}`);
+  appendDesktopLog("desktop.server.startup", `PORT: ${port}`);
+
+  // 检查关键文件是否存在
+  const fs = require("fs");
+  const checks = [
+    { path: serverEntry, name: "server entry" },
+    { path: path.join(nodeModulesPath, "express"), name: "express" },
+    { path: path.join(nodeModulesPath, "@prisma/client"), name: "@prisma/client" },
+    { path: path.join(nodeModulesPath, "better-sqlite3"), name: "better-sqlite3" },
+    { path: path.join(nodeModulesPath, "better-sqlite3/build/Release/better_sqlite3.node"), name: "better_sqlite3.node" },
+  ];
+  for (const check of checks) {
+    const exists = fs.existsSync(check.path);
+    appendDesktopLog("desktop.server.startup", `${check.name}: ${exists ? "✅ exists" : "❌ MISSING"}`);
+    if (!exists) {
+      appendDesktopLog("desktop.server.startup", `  → ${check.path}`, "warn");
+    }
+  }
+
+  const child = utilityProcess.fork(serverEntry, [], {
     cwd: resolveDesktopResourcesDir(),
     env: {
       ...process.env,
       NODE_ENV: "production",
+      NODE_PATH: path.join(resolveDesktopResourcesDir(), "node_modules"),
       AI_NOVEL_RUNTIME: "desktop",
       AI_NOVEL_APP_DATA_DIR: resolveDesktopAppDataDir(),
       AI_NOVEL_DATABASE_MODE: "sqlite",

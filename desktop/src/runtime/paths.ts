@@ -117,8 +117,7 @@ export function resolvePackagedServerEntry(): string {
   return path.join(
     resolveDesktopResourcesDir(),
     "app.asar",
-    "node_modules",
-    "@ai-novel",
+    "dist",
     "server",
     "dist",
     "app.js",
