@@ -32,6 +32,11 @@ import { registerNovelTxtImportExportRoutes } from "./novelTxtImportExportRoutes
 import { createNovelMaterialParseRoutes } from "./novelMaterialParseRoutes";
 import { createNovelResetRoutes } from "./novelResetRoutes";
 import novelBatchStyleRouter from "./novelBatchStyleRoutes";
+import { registerNovelProgressRoutes } from "../progress/http/novelProgressRoutes";
+import { createQualityCheckRoutes } from "../quality/http/qualityRoutes";
+import { createNovelQualityRoutes } from "../quality/http/novelQualityRoutes";
+import { createNovelConsistencyRoutes } from "../quality/http/consistencyRoutes";
+import { createNovelCheckpointRoutes } from "../checkpoint/http/checkpointRoutes";
 import type { NovelHttpServices } from "./novelHttpServices";
 import {
   aiRevisionPreviewSchema,
@@ -258,4 +263,9 @@ export function registerNovelHttpRoutes(router: Router, services: NovelHttpServi
   router.use(createNovelMaterialParseRoutes());
   router.use(createNovelResetRoutes());
   router.use(novelBatchStyleRouter);
+  router.use(createQualityCheckRoutes());
+  router.use(createNovelQualityRoutes());
+  router.use(createNovelConsistencyRoutes());
+  router.use(createNovelCheckpointRoutes());
+  registerNovelProgressRoutes({ router });
 }
