@@ -1,7 +1,7 @@
 {
   "reqId": "7050",
   "title": "AI味自动检测",
-  "status": "todo",
+  "status": "in_progress",
   "complexity": "C1",
   "category": "7xxx",
   "priority": "P1",
@@ -14,5 +14,6 @@
     "typecheck": "pending",
     "tests": "pending",
     "integration": "pending"
-  }
+  },
+  "updated": "2026-07-15T09:42:05.326Z"
 }
