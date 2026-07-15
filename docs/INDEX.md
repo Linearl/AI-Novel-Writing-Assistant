@@ -38,58 +38,6 @@ description: "docs 目录索引（自动生成）"
 | --- | --- | --- |
 | [1.task\B.todo\任务包六件套构成-编号分类规则-自动归档机制.md](./1.task\B.todo\任务包六件套构成-编号分类规则-自动归档机制.md) | --- | - |
 
-## 1.task\B.todo\v0.1\v0.1-r2049-S2-review-context-enhance
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r2049-S2-review-context-enhance\design.md](./1.task\B.todo\v0.1\v0.1-r2049-S2-review-context-enhance\design.md) | REQ-2049 审校上下文增强 — 方案设计 | REQ-2049 审校上下文增强 — 方案设计 |
-| [1.task\B.todo\v0.1\v0.1-r2049-S2-review-context-enhance\README.md](./1.task\B.todo\v0.1\v0.1-r2049-S2-review-context-enhance\README.md) | REQ-2049 审校上下文增强 — 补齐审校缺失的全局字段 — 任务总线 | REQ-2049 审校上下文增强 — 补齐审校缺失的全局字段 — 任务总线 |
-| [1.task\B.todo\v0.1\v0.1-r2049-S2-review-context-enhance\REQ-2049-review-context-enhance-original.md](./1.task\B.todo\v0.1\v0.1-r2049-S2-review-context-enhance\REQ-2049-review-context-enhance-original.md) | REQ-2049 审校上下文增强 — 补齐审校缺失的全局字段 | REQ-2049 审校上下文增强 — 补齐审校缺失的全局字段 |
-| [1.task\B.todo\v0.1\v0.1-r2049-S2-review-context-enhance\REQ-2049-review-context-enhance.md](./1.task\B.todo\v0.1\v0.1-r2049-S2-review-context-enhance\REQ-2049-review-context-enhance.md) | REQ-2049 审校上下文增强 — 补齐审校缺失的全局字段 | REQ-2049 审校上下文增强 — 补齐审校缺失的全局字段 |
-| [1.task\B.todo\v0.1\v0.1-r2049-S2-review-context-enhance\tasks.md](./1.task\B.todo\v0.1\v0.1-r2049-S2-review-context-enhance\tasks.md) | --- | - |
-
-## 1.task\B.todo\v0.1\v0.1-r2050-C1-global-review-feedback
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r2050-C1-global-review-feedback\decision_log.md](./1.task\B.todo\v0.1\v0.1-r2050-C1-global-review-feedback\decision_log.md) | REQ-2050 决策留痕 | REQ-2050 决策留痕 |
-| [1.task\B.todo\v0.1\v0.1-r2050-C1-global-review-feedback\design.md](./1.task\B.todo\v0.1\v0.1-r2050-C1-global-review-feedback\design.md) | REQ-2050 方案设计 | REQ-2050 方案设计 |
-| [1.task\B.todo\v0.1\v0.1-r2050-C1-global-review-feedback\README.md](./1.task\B.todo\v0.1\v0.1-r2050-C1-global-review-feedback\README.md) | REQ-2050 全局审校 + 跨章节问题回灌 任务总线 | REQ-2050 全局审校 + 跨章节问题回灌 任务总线 |
-| [1.task\B.todo\v0.1\v0.1-r2050-C1-global-review-feedback\REQ-2050-global-review-feedback-original.md](./1.task\B.todo\v0.1\v0.1-r2050-C1-global-review-feedback\REQ-2050-global-review-feedback-original.md) | REQ-2050 全局审校 + 跨章节问题回灌 | REQ-2050 全局审校 + 跨章节问题回灌 |
-| [1.task\B.todo\v0.1\v0.1-r2050-C1-global-review-feedback\REQ-2050-global-review-feedback.md](./1.task\B.todo\v0.1\v0.1-r2050-C1-global-review-feedback\REQ-2050-global-review-feedback.md) | REQ-2050 全局审校 + 跨章节问题回灌 | REQ-2050 全局审校 + 跨章节问题回灌 |
-| [1.task\B.todo\v0.1\v0.1-r2050-C1-global-review-feedback\tasks.md](./1.task\B.todo\v0.1\v0.1-r2050-C1-global-review-feedback\tasks.md) | REQ-2050 任务拆解 | REQ-2050 任务拆解 |
-
-## 1.task\B.todo\v0.1\v0.1-r2051-C2-character-tier-importance-level
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r2051-C2-character-tier-importance-level\decision_log.md](./1.task\B.todo\v0.1\v0.1-r2051-C2-character-tier-importance-level\decision_log.md) | REQ-2051 决策日志 | REQ-2051 决策日志 |
-| [1.task\B.todo\v0.1\v0.1-r2051-C2-character-tier-importance-level\design.md](./1.task\B.todo\v0.1\v0.1-r2051-C2-character-tier-importance-level\design.md) | REQ-2051 角色重要度分级技术设计文档 | REQ-2051 角色重要度分级技术设计文档 |
-| [1.task\B.todo\v0.1\v0.1-r2051-C2-character-tier-importance-level\README.md](./1.task\B.todo\v0.1\v0.1-r2051-C2-character-tier-importance-level\README.md) | --- | - |
-| [1.task\B.todo\v0.1\v0.1-r2051-C2-character-tier-importance-level\REQ-2051-character-tier-importance-level-original.md](./1.task\B.todo\v0.1\v0.1-r2051-C2-character-tier-importance-level\REQ-2051-character-tier-importance-level-original.md) | REQ-2051 角色重要度分级（CharacterTier）功能需求规格 | REQ-2051 角色重要度分级（CharacterTier）功能需求规格 |
-| [1.task\B.todo\v0.1\v0.1-r2051-C2-character-tier-importance-level\REQ-2051-character-tier-importance-level.md](./1.task\B.todo\v0.1\v0.1-r2051-C2-character-tier-importance-level\REQ-2051-character-tier-importance-level.md) | REQ-2051 角色重要度分级（CharacterTier）功能需求规格 | REQ-2051 角色重要度分级（CharacterTier）功能需求规格 |
-| [1.task\B.todo\v0.1\v0.1-r2051-C2-character-tier-importance-level\tasks.md](./1.task\B.todo\v0.1\v0.1-r2051-C2-character-tier-importance-level\tasks.md) | REQ-2051 角色重要度分级任务分解 | REQ-2051 角色重要度分级任务分解 |
-
-## 1.task\B.todo\v0.1\v0.1-r3014-C2-batch-style-polish
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r3014-C2-batch-style-polish\decision_log.md](./1.task\B.todo\v0.1\v0.1-r3014-C2-batch-style-polish\decision_log.md) | - **时间**：2026-07-12 10:00 | - |
-| [1.task\B.todo\v0.1\v0.1-r3014-C2-batch-style-polish\README.md](./1.task\B.todo\v0.1\v0.1-r3014-C2-batch-style-polish\README.md) | | 字段 | 值 | | - |
-| [1.task\B.todo\v0.1\v0.1-r3014-C2-batch-style-polish\REQ-3014-batch-style-polish.md](./1.task\B.todo\v0.1\v0.1-r3014-C2-batch-style-polish\REQ-3014-batch-style-polish.md) | **需求编号**：3014 | - |
-| [1.task\B.todo\v0.1\v0.1-r3014-C2-batch-style-polish\tasks.md](./1.task\B.todo\v0.1\v0.1-r3014-C2-batch-style-polish\tasks.md) | | 阶段 | 任务数 | 预计工作量 | | - |
-
-## 1.task\B.todo\v0.1\v0.1-r3019-C3-feedback-github-issue-generator
-
-| 文件 | 标题 | 描述 |
-| --- | --- | --- |
-| [1.task\B.todo\v0.1\v0.1-r3019-C3-feedback-github-issue-generator\decision_log.md](./1.task\B.todo\v0.1\v0.1-r3019-C3-feedback-github-issue-generator\decision_log.md) | REQ-3019 决策留痕 | REQ-3019 决策留痕 |
-| [1.task\B.todo\v0.1\v0.1-r3019-C3-feedback-github-issue-generator\design.md](./1.task\B.todo\v0.1\v0.1-r3019-C3-feedback-github-issue-generator\design.md) | REQ-3019 方案设计 | REQ-3019 方案设计 |
-| [1.task\B.todo\v0.1\v0.1-r3019-C3-feedback-github-issue-generator\README.md](./1.task\B.todo\v0.1\v0.1-r3019-C3-feedback-github-issue-generator\README.md) | REQ-3019 用户反馈→AI 生成 GitHub Issue 任务总线 | REQ-3019 用户反馈→AI 生成 GitHub Issue 任务总线 |
-| [1.task\B.todo\v0.1\v0.1-r3019-C3-feedback-github-issue-generator\REQ-3019-feedback-github-issue-generator-original.md](./1.task\B.todo\v0.1\v0.1-r3019-C3-feedback-github-issue-generator\REQ-3019-feedback-github-issue-generator-original.md) | REQ-3019 用户反馈→AI 生成 GitHub Issue（冻结副本） | REQ-3019 用户反馈→AI 生成 GitHub Issue（冻结副本） |
-| [1.task\B.todo\v0.1\v0.1-r3019-C3-feedback-github-issue-generator\REQ-3019-feedback-github-issue-generator.md](./1.task\B.todo\v0.1\v0.1-r3019-C3-feedback-github-issue-generator\REQ-3019-feedback-github-issue-generator.md) | REQ-3019 用户反馈→AI 生成 GitHub Issue | REQ-3019 用户反馈→AI 生成 GitHub Issue |
-| [1.task\B.todo\v0.1\v0.1-r3019-C3-feedback-github-issue-generator\tasks.md](./1.task\B.todo\v0.1\v0.1-r3019-C3-feedback-github-issue-generator\tasks.md) | REQ-3019 任务拆解 | REQ-3019 任务拆解 |
-
 ## 1.task\B.todo\v0.2
 
 | 文件 | 标题 | 描述 |
