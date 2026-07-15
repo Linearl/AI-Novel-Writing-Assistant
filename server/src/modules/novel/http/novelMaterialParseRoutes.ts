@@ -17,7 +17,10 @@ import type { LLMProvider } from "@ai-novel/shared";
 /* ── Zod schemas ───────────────────────────────────────────────────── */
 
 const parseMaterialBodySchema = z.object({
-  material: z.string().min(10, "素材内容至少 10 个字符").max(50000, "素材内容最多 50000 个字符"),
+  materials: z.array(z.object({
+    title: z.string().min(1, "素材标题不能为空"),
+    content: z.string().min(10, "素材内容至少 10 个字符"),
+  })).min(1, "至少需要 1 个素材"),
   provider: z.string().optional(),
   model: z.string().optional(),
 });
@@ -25,7 +28,7 @@ const parseMaterialBodySchema = z.object({
 /* ── Service ────────────────────────────────────────────────────────── */
 
 export async function parseMaterial(
-  material: string,
+  materials: Array<{ title: string; content: string }>,
   options?: { provider?: LLMProvider; model?: string },
 ): Promise<MaterialParseOutput> {
   const promptId = "novel.material.parse";
@@ -36,7 +39,7 @@ export async function parseMaterial(
   }
 
   const messages = asset.render(
-    { material, forceJson: false, retryReason: null },
+    { materials, forceJson: false, retryReason: null },
     { blocks: [], selectedBlockIds: [], droppedBlockIds: [], summarizedBlockIds: [], estimatedInputTokens: 0 },
   );
 
@@ -67,10 +70,10 @@ export function createNovelMaterialParseRoutes(): Router {
     validate({ body: parseMaterialBodySchema }),
     async (req: Request, res: Response, next: NextFunction) => {
       try {
-        const { material, provider, model } = req.body as z.infer<typeof parseMaterialBodySchema>;
-        console.log(`[INFO] POST /parse-material - Provider: ${provider}, Model: ${model}, Material length: ${material.length}`);
+        const { materials, provider, model } = req.body as z.infer<typeof parseMaterialBodySchema>;
+        console.log(`[INFO] POST /parse-material - Provider: ${provider}, Model: ${model}, Material count: ${materials.length}`);
 
-        const parsed = await parseMaterial(material, { provider, model });
+        const parsed = await parseMaterial(materials, { provider, model });
         console.log(`[INFO] POST /parse-material - Parse successful`);
 
         res.status(200).json({

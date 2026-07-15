@@ -1,7 +1,7 @@
 ---
 description: "REQ-7056: 跨章节人物一致性 — 任务清单"
-update_time: "2026-07-11"
-status: todo
+update_time: "2026-07-15"
+status: in_progress
 ---
 
 # REQ-7056: 跨章节人物一致性
@@ -15,15 +15,15 @@ status: todo
 
 ## 阶段一：开发
 
-- [ ] T1: 创建数据库迁移（character_states、contradictions、consistency_scores表）
-- [ ] T2: 实现CharacterState提取（LLM结构化输出）
-- [ ] T3: 实现角色状态存储和查询
-- [ ] T4: 实现规则矛盾检测（硬矛盾）
-- [ ] T5: 实现LLM矛盾检测（语义矛盾）
-- [ ] T6: 实现矛盾报告生成
-- [ ] T7: 实现一致性评分计算
-- [ ] T8: 集成到章节生成流程（后台异步）
-- [ ] T9: 实现REST API端点
+- [x] T1: 创建数据库迁移（character_states、contradictions、consistency_scores表）
+- [x] T2: 实现CharacterState提取（LLM结构化输出）
+- [x] T3: 实现角色状态存储和查询
+- [x] T4: 实现规则矛盾检测（硬矛盾）
+- [x] T5: 实现LLM矛盾检测（语义矛盾）
+- [x] T6: 实现矛盾报告生成
+- [x] T7: 实现一致性评分计算
+- [x] T8: 集成到章节生成流程（后台异步）
+- [x] T9: 实现REST API端点
 
 ## 阶段二：测试
 

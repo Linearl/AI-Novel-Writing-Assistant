@@ -30,9 +30,11 @@ import { createNovelPaceCurveRoutes } from "../pace/http/novelPaceCurveRoutes";
 import { createNovelSettingConsistencyRoutes } from "../setting/http/novelSettingConsistencyRoutes";
 import { registerNovelTxtImportExportRoutes } from "./novelTxtImportExportRoutes";
 import { createNovelMaterialParseRoutes } from "./novelMaterialParseRoutes";
+import { createNovelMaterialRoutes } from "./novelMaterialRoutes";
 import { createNovelResetRoutes } from "./novelResetRoutes";
 import novelBatchStyleRouter from "./novelBatchStyleRoutes";
 import { registerNovelProgressRoutes } from "../progress/http/novelProgressRoutes";
+import { createCharacterConsistencyRoutes } from "../characterConsistency/http/characterConsistencyRoutes";
 import { createQualityCheckRoutes } from "../quality/http/qualityRoutes";
 import { createNovelQualityRoutes } from "../quality/http/novelQualityRoutes";
 import { createNovelConsistencyRoutes } from "../quality/http/consistencyRoutes";
@@ -261,11 +263,13 @@ export function registerNovelHttpRoutes(router: Router, services: NovelHttpServi
   router.use(createPayoffLedgerCrudRoutes());
   registerNovelTxtImportExportRoutes({ router });
   router.use(createNovelMaterialParseRoutes());
+  router.use(createNovelMaterialRoutes());
   router.use(createNovelResetRoutes());
   router.use(novelBatchStyleRouter);
   router.use(createQualityCheckRoutes());
   router.use(createNovelQualityRoutes());
   router.use(createNovelConsistencyRoutes());
   router.use(createNovelCheckpointRoutes());
+  router.use(createCharacterConsistencyRoutes());
   registerNovelProgressRoutes({ router });
 }

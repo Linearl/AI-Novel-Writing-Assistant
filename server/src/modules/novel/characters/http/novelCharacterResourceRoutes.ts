@@ -3,7 +3,11 @@ import type {
   CharacterResourceLedgerResponse,
   CharacterResourceProposalSummary,
 } from "@ai-novel/shared";
-import { characterResourceUpdatePayloadSchema } from "@ai-novel/shared";
+import {
+  characterResourceManualCreateSchema,
+  characterResourceManualUpdateSchema,
+  characterResourceUpdatePayloadSchema,
+} from "@ai-novel/shared";
 import type { ApiResponse } from "@ai-novel/shared";
 import { z } from "zod";
 import { llmProviderSchema } from "../../../../llm/providerSchema";
@@ -33,6 +37,11 @@ const rejectProposalBodySchema = z.object({
   reason: z.string().trim().max(500).optional(),
   intent: z.string().trim().max(1000).optional(),
 }).optional();
+
+const characterResourceDetailParamsSchema = z.object({
+  id: z.string().trim().min(1),
+  resourceId: z.string().trim().min(1),
+});
 
 const resourceLlmOptionsSchema = z.object({
   provider: llmProviderSchema.optional(),
@@ -406,6 +415,128 @@ export function registerNovelCharacterResourceRoutes(
             ? "资源变更已拒绝，修正意图已记录，后续修复会参考。"
             : "资源变更已忽略，不会影响后续写作。",
         } satisfies ApiResponse<typeof data>);
+      } catch (error) {
+        next(error);
+      }
+    },
+  );
+
+  // Manual CRUD for character resources
+  router.post(
+    "/:id/character-resources/manual",
+    validate({ params: idParamsSchema, body: characterResourceManualCreateSchema }),
+    async (req, res, next) => {
+      try {
+        const { id } = req.params as z.infer<typeof idParamsSchema>;
+        const body = characterResourceManualCreateSchema.parse(req.body);
+        const resourceKey = body.resourceKey
+          || body.name.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, "_").replace(/^_+|_+$/g, "").slice(0, 80)
+            + ":" + (body.holderCharacterId ?? body.ownerName ?? "manual").slice(0, 32);
+        await prisma.characterResourceLedgerItem.create({
+          data: {
+            novelId: id,
+            resourceKey,
+            name: body.name,
+            summary: body.summary,
+            resourceType: body.resourceType,
+            narrativeFunction: body.narrativeFunction,
+            ownerType: body.ownerType,
+            ownerId: body.ownerId ?? null,
+            ownerName: body.ownerName ?? null,
+            ownerCharacterId: body.ownerType === "character" ? (body.ownerId ?? body.holderCharacterId ?? null) : null,
+            holderCharacterId: body.holderCharacterId ?? null,
+            holderCharacterName: body.holderCharacterName ?? null,
+            status: body.status,
+            readerKnows: body.readerKnows,
+            holderKnows: body.holderKnows,
+            introducedChapterOrder: body.introducedChapterOrder ?? null,
+            lastTouchedChapterOrder: body.lastTouchedChapterOrder ?? null,
+            expectedUseStartChapterOrder: body.expectedUseStartChapterOrder ?? null,
+            expectedUseEndChapterOrder: body.expectedUseEndChapterOrder ?? null,
+            constraintsJson: JSON.stringify(body.constraints),
+            confidence: body.confidence ?? null,
+            sourceRefsJson: JSON.stringify([{ kind: "manual", refLabel: "手动创建" }]),
+            evidenceJson: "[]",
+            riskSignalsJson: "[]",
+          },
+        });
+        const data: CharacterResourceLedgerResponse = {
+          items: await characterResourceLedgerService.listResources(id),
+          pendingProposals: await listPendingResourceProposals(id),
+        };
+        res.status(201).json({ success: true, data, message: "资源已手动创建。" } satisfies ApiResponse<typeof data>);
+      } catch (error) {
+        next(error);
+      }
+    },
+  );
+
+  router.patch(
+    "/:id/character-resources/:resourceId",
+    validate({ params: characterResourceDetailParamsSchema, body: characterResourceManualUpdateSchema }),
+    async (req, res, next) => {
+      try {
+        const { id, resourceId } = req.params as z.infer<typeof characterResourceDetailParamsSchema>;
+        const body = characterResourceManualUpdateSchema.parse(req.body);
+        const existing = await prisma.characterResourceLedgerItem.findFirst({
+          where: { id: resourceId, novelId: id },
+        });
+        if (!existing) {
+          throw new AppError("资源不存在。", 404);
+        }
+        await prisma.characterResourceLedgerItem.update({
+          where: { id: resourceId },
+          data: {
+            name: body.name,
+            summary: body.summary,
+            resourceType: body.resourceType,
+            narrativeFunction: body.narrativeFunction,
+            status: body.status,
+            ownerType: body.ownerType,
+            readerKnows: body.readerKnows,
+            holderKnows: body.holderKnows,
+            confidence: body.confidence,
+            constraintsJson: body.constraints ? JSON.stringify(body.constraints) : undefined,
+            ...(body.holderCharacterId !== undefined ? { holderCharacterId: body.holderCharacterId } : {}),
+            ...(body.holderCharacterName !== undefined ? { holderCharacterName: body.holderCharacterName } : {}),
+            ...(body.ownerId !== undefined ? { ownerId: body.ownerId } : {}),
+            ...(body.ownerName !== undefined ? { ownerName: body.ownerName } : {}),
+            ...(body.introducedChapterOrder !== undefined ? { introducedChapterOrder: body.introducedChapterOrder } : {}),
+            ...(body.lastTouchedChapterOrder !== undefined ? { lastTouchedChapterOrder: body.lastTouchedChapterOrder } : {}),
+            ...(body.expectedUseStartChapterOrder !== undefined ? { expectedUseStartChapterOrder: body.expectedUseStartChapterOrder } : {}),
+            ...(body.expectedUseEndChapterOrder !== undefined ? { expectedUseEndChapterOrder: body.expectedUseEndChapterOrder } : {}),
+            updatedAt: new Date(),
+          },
+        });
+        const data: CharacterResourceLedgerResponse = {
+          items: await characterResourceLedgerService.listResources(id),
+          pendingProposals: await listPendingResourceProposals(id),
+        };
+        res.status(200).json({ success: true, data, message: "资源已更新。" } satisfies ApiResponse<typeof data>);
+      } catch (error) {
+        next(error);
+      }
+    },
+  );
+
+  router.delete(
+    "/:id/character-resources/:resourceId",
+    validate({ params: characterResourceDetailParamsSchema }),
+    async (req, res, next) => {
+      try {
+        const { id, resourceId } = req.params as z.infer<typeof characterResourceDetailParamsSchema>;
+        const existing = await prisma.characterResourceLedgerItem.findFirst({
+          where: { id: resourceId, novelId: id },
+        });
+        if (!existing) {
+          throw new AppError("资源不存在。", 404);
+        }
+        await prisma.characterResourceLedgerItem.delete({ where: { id: resourceId } });
+        const data: CharacterResourceLedgerResponse = {
+          items: await characterResourceLedgerService.listResources(id),
+          pendingProposals: await listPendingResourceProposals(id),
+        };
+        res.status(200).json({ success: true, data, message: "资源已删除。" } satisfies ApiResponse<typeof data>);
       } catch (error) {
         next(error);
       }

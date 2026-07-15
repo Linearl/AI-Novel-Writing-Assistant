@@ -1,6 +1,11 @@
 import type { ApiResponse } from "@ai-novel/shared";
 import { apiClient } from "../client";
 
+export interface MaterialFileInput {
+  title: string;
+  content: string;
+}
+
 export interface MaterialParseResult {
   title?: string;
   description?: string;
@@ -15,10 +20,11 @@ export interface MaterialParseResult {
   outline?: string;
   genreHint?: string;
   chapterCountHint?: number;
+  storyInput?: string;
 }
 
 export interface ParseMaterialPayload {
-  material: string;
+  materials: MaterialFileInput[];
   provider?: string;
   model?: string;
 }

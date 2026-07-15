@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import type { NovelBasicFormState } from "../novelBasicInfo.shared";
-import { parseMaterial, type MaterialParseResult } from "@/api/novel/materialParse";
+import { parseMaterial, type MaterialParseResult, type MaterialFileInput } from "@/api/novel/materialParse";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -14,12 +14,19 @@ import { useLLMStore } from "@/store/llmStore";
 
 interface MaterialParseDialogProps {
   onApplyParsed: (patch: Partial<NovelBasicFormState>) => void;
+  onMaterialsParsed?: (materials: MaterialFileInput[], storyInput?: string) => void;
 }
 
 interface FieldPreviewRow {
   key: keyof MaterialParseResult;
   label: string;
   value: string;
+}
+
+interface UploadedFile {
+  title: string;
+  content: string;
+  wordCount: number;
 }
 
 const FIELD_LABELS: Record<keyof MaterialParseResult, string> = {
@@ -36,6 +43,7 @@ const FIELD_LABELS: Record<keyof MaterialParseResult, string> = {
   outline: "大纲信息",
   genreHint: "题材倾向",
   chapterCountHint: "预计章节数",
+  storyInput: "故事输入摘要",
 };
 
 function mapParsedToFormPatch(parsed: MaterialParseResult): Partial<NovelBasicFormState> {
@@ -64,20 +72,27 @@ function buildPreviewRows(parsed: MaterialParseResult): FieldPreviewRow[] {
   return rows;
 }
 
-export default function MaterialParseDialog({ onApplyParsed }: MaterialParseDialogProps) {
+export default function MaterialParseDialog({ onApplyParsed, onMaterialsParsed }: MaterialParseDialogProps) {
   const [open, setOpen] = useState(false);
-  const [material, setMaterial] = useState("");
+  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const [editValues, setEditValues] = useState<Record<string, string>>({});
   const [previewRows, setPreviewRows] = useState<FieldPreviewRow[]>([]);
   const llm = useLLMStore();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const folderInputRef = useRef<HTMLInputElement>(null);
 
   const parseMutation = useMutation({
-    mutationFn: () => parseMaterial({
-      material,
-      provider: llm.provider,
-      model: llm.model,
-    }),
+    mutationFn: () => {
+      const materials: MaterialFileInput[] = uploadedFiles.map((f) => ({
+        title: f.title,
+        content: f.content,
+      }));
+      return parseMaterial({
+        materials,
+        provider: llm.provider,
+        model: llm.model,
+      });
+    },
     onSuccess: (response) => {
       const parsed = response.data;
       if (!parsed) {
@@ -96,6 +111,13 @@ export default function MaterialParseDialog({ onApplyParsed }: MaterialParseDial
       setPreviewRows(rows);
       setEditValues(editableMap);
       toast.success(`成功识别 ${rows.length} 个字段，请确认后填入。`);
+
+      if (onMaterialsParsed && parsed.storyInput) {
+        onMaterialsParsed(
+          uploadedFiles.map((f) => ({ title: f.title, content: f.content })),
+          parsed.storyInput,
+        );
+      }
     },
     onError: (error: Error) => {
       toast.error(`素材解析失败：${error.message}`);
@@ -112,6 +134,8 @@ export default function MaterialParseDialog({ onApplyParsed }: MaterialParseDial
           if (Number.isFinite(num) && num > 0) {
             patch.estimatedChapterCount = num;
           }
+        } else if (row.key === "storyInput") {
+          // storyInput is not part of form state, handled via onMaterialsParsed
         } else {
           patch[row.key] = edited.trim();
         }
@@ -124,7 +148,7 @@ export default function MaterialParseDialog({ onApplyParsed }: MaterialParseDial
   }
 
   function resetState() {
-    setMaterial("");
+    setUploadedFiles([]);
     setPreviewRows([]);
     setEditValues({});
   }
@@ -137,21 +161,90 @@ export default function MaterialParseDialog({ onApplyParsed }: MaterialParseDial
     }
   }
 
+  function processFiles(fileList: FileList) {
+    const files = Array.from(fileList).filter(
+      (f) => f.name.endsWith(".txt") || f.name.endsWith(".md") || f.name.endsWith(".text"),
+    );
+    if (files.length === 0) {
+      toast.error("未找到支持的文件（.txt / .md / .text），请重新选择。");
+      return;
+    }
+
+    const readers: Promise<UploadedFile>[] = files.map((file) => {
+      return new Promise<UploadedFile>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const text = e.target?.result;
+          if (typeof text === "string") {
+            const displayTitle = file.name.replace(/\.(txt|md|text)$/i, "");
+            resolve({
+              title: displayTitle,
+              content: text,
+              wordCount: text.length,
+            });
+          } else {
+            reject(new Error(`无法读取 ${file.name}`));
+          }
+        };
+        reader.onerror = () => reject(new Error(`读取 ${file.name} 失败`));
+        reader.readAsText(file, "utf-8");
+      });
+    });
+
+    Promise.all(readers)
+      .then((results) => {
+        setUploadedFiles((prev) => [...prev, ...results]);
+        toast.success(`已导入 ${results.length} 个文件（共 ${results.reduce((sum, f) => sum + f.wordCount, 0).toLocaleString()} 字）`);
+      })
+      .catch((err) => toast.error(err instanceof Error ? err.message : "文件读取失败"));
+  }
+
   function handleFileImport(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const text = e.target?.result;
-      if (typeof text === "string") {
-        setMaterial(text);
-        toast.success(`已导入文件「${file.name}」（${text.length.toLocaleString()} 字）`);
-      }
-    };
-    reader.onerror = () => toast.error("文件读取失败，请重试。");
-    reader.readAsText(file, "utf-8");
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
+    processFiles(files);
     event.target.value = "";
   }
+
+  function handleFolderImport(event: React.ChangeEvent<HTMLInputElement>) {
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
+    processFiles(files);
+    event.target.value = "";
+  }
+
+  function removeFile(index: number) {
+    setUploadedFiles((prev) => prev.filter((_, i) => i !== index));
+  }
+
+  function updateFileTitle(index: number, newTitle: string) {
+    setUploadedFiles((prev) => prev.map((f, i) => (i === index ? { ...f, title: newTitle } : f)));
+  }
+
+  function moveFileUp(index: number) {
+    if (index === 0) return;
+    setUploadedFiles((prev) => {
+      const next = [...prev];
+      const temp = next[index - 1];
+      next[index - 1] = next[index];
+      next[index] = temp;
+      return next;
+    });
+  }
+
+  function moveFileDown(index: number) {
+    if (index >= uploadedFiles.length - 1) return;
+    setUploadedFiles((prev) => {
+      const next = [...prev];
+      const temp = next[index + 1];
+      next[index + 1] = next[index];
+      next[index] = temp;
+      return next;
+    });
+  }
+
+  const totalChars = uploadedFiles.reduce((sum, f) => sum + f.wordCount, 0);
+  const canParse = uploadedFiles.length > 0 && !parseMutation.isPending;
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -162,20 +255,20 @@ export default function MaterialParseDialog({ onApplyParsed }: MaterialParseDial
             <polyline points="10 17 15 12 10 7" />
             <line x1="15" y1="12" x2="3" y2="12" />
           </svg>
-          粘贴素材
+          导入素材
         </Button>
       </DialogTrigger>
 
       <AppDialogContent
-        title="粘贴创作素材"
-        description="粘贴已有的世界观、角色、大纲、灵感等素材，AI 会自动识别内容类型并拆分到对应字段。"
+        title="导入创作素材"
+        description="导入已有的世界观文档、角色设定、大纲等素材文件，AI 会自动识别内容类型并拆分到对应字段。支持 .txt / .md 格式。"
         className="max-w-3xl"
         footer={(
           <>
             {previewRows.length > 0 ? (
               <>
                 <Button variant="outline" onClick={() => { setPreviewRows([]); setEditValues({}); }}>
-                  重新粘贴
+                  重新解析
                 </Button>
                 <Button onClick={handleConfirm} disabled={parseMutation.isPending}>
                   确认填入
@@ -188,7 +281,7 @@ export default function MaterialParseDialog({ onApplyParsed }: MaterialParseDial
                 </Button>
                 <Button
                   onClick={() => parseMutation.mutate()}
-                  disabled={material.trim().length < 10 || parseMutation.isPending}
+                  disabled={!canParse}
                 >
                   {parseMutation.isPending ? "解析中..." : "AI 解析"}
                 </Button>
@@ -199,37 +292,116 @@ export default function MaterialParseDialog({ onApplyParsed }: MaterialParseDial
       >
         {previewRows.length === 0 ? (
           <div className="space-y-3">
-            <Textarea
-              value={material}
-              onChange={(e) => setMaterial(e.target.value)}
-              placeholder={"在此粘贴你的创作素材，例如：\n\n- 世界观设定\n- 角色小传\n- 故事大纲\n- 灵感笔记\n- 任意格式的创作文档\n\nAI 会自动识别内容类型并拆分到对应的表单字段。\n\n也可以点击下方按钮从 .txt / .md 文件导入。"}
-              className="h-[400px] resize-none"
-              disabled={parseMutation.isPending}
-            />
-            <div className="flex items-center justify-between text-xs text-muted-foreground">
-              <div className="flex items-center gap-3">
-                <span>
-                  已输入 {material.length.toLocaleString()} 字
-                  {material.length >= 50000 ? "（已达上限）" : ""}
-                </span>
+            {/* File import area */}
+            <div className="rounded-lg border-2 border-dashed border-border p-6 text-center space-y-3">
+              <div className="text-sm text-muted-foreground">
+                选择包含创作素材的 .txt / .md 文件或文件夹
+              </div>
+
+              <div className="flex items-center justify-center gap-3">
                 <input
                   ref={fileInputRef}
                   type="file"
                   accept=".txt,.md,.text"
+                  multiple
                   className="hidden"
                   onChange={handleFileImport}
                 />
-                <button
-                  type="button"
-                  className="text-primary underline underline-offset-2 hover:text-primary/80"
+                <Button
+                  variant="outline"
+                  size="sm"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={parseMutation.isPending}
                 >
-                  从文件导入
-                </button>
+                  选择文件
+                </Button>
+
+                <input
+                  ref={folderInputRef}
+                  type="file"
+                  // @ts-expect-error webkitdirectory is not in types
+                  webkitdirectory=""
+                  multiple
+                  className="hidden"
+                  onChange={handleFolderImport}
+                />
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => folderInputRef.current?.click()}
+                  disabled={parseMutation.isPending}
+                >
+                  选择文件夹
+                </Button>
               </div>
-              <span>支持任意格式，建议至少 50 字以获得更好的识别效果</span>
+
+              <div className="text-xs text-muted-foreground">
+                支持同时选择多个文件或整个文件夹，仅处理 .txt / .md / .text 文件
+              </div>
             </div>
+
+            {/* Uploaded files list */}
+            {uploadedFiles.length > 0 && (
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="font-medium">已导入 {uploadedFiles.length} 个文件</span>
+                  <span className="text-xs text-muted-foreground">
+                    共 {totalChars.toLocaleString()} 字
+                  </span>
+                </div>
+                <div className="max-h-[300px] overflow-y-auto space-y-1.5 rounded-md border bg-muted/20 p-2">
+                  {uploadedFiles.map((file, idx) => (
+                    <div key={`${file.title}-${idx}`} className="flex items-center gap-2 rounded bg-background px-3 py-2 text-sm">
+                      <input
+                        type="text"
+                        value={file.title}
+                        onChange={(e) => updateFileTitle(idx, e.target.value)}
+                        className="flex-1 bg-transparent text-sm outline-none border-b border-transparent focus:border-primary px-1 py-0.5"
+                        placeholder="素材标题"
+                      />
+                      <span className="text-xs text-muted-foreground whitespace-nowrap">
+                        {file.wordCount.toLocaleString()} 字
+                      </span>
+                      <div className="flex items-center gap-0.5">
+                        <button
+                          type="button"
+                          className="rounded p-0.5 text-muted-foreground hover:text-foreground hover:bg-muted disabled:opacity-30"
+                          disabled={idx === 0}
+                          onClick={() => moveFileUp(idx)}
+                          title="上移"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <polyline points="18 15 12 9 6 15" />
+                          </svg>
+                        </button>
+                        <button
+                          type="button"
+                          className="rounded p-0.5 text-muted-foreground hover:text-foreground hover:bg-muted disabled:opacity-30"
+                          disabled={idx === uploadedFiles.length - 1}
+                          onClick={() => moveFileDown(idx)}
+                          title="下移"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <polyline points="6 9 12 15 18 9" />
+                          </svg>
+                        </button>
+                        <button
+                          type="button"
+                          className="rounded p-0.5 text-muted-foreground hover:text-destructive"
+                          onClick={() => removeFile(idx)}
+                          title="删除"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <line x1="18" y1="6" x2="6" y2="18" />
+                            <line x1="6" y1="6" x2="18" y2="18" />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         ) : (
           <div className="space-y-3">
@@ -242,7 +414,7 @@ export default function MaterialParseDialog({ onApplyParsed }: MaterialParseDial
                   <label className="text-sm font-medium text-foreground">
                     {row.label}
                   </label>
-                  {row.key === "worldSetting" || row.key === "characters" || row.key === "outline" ? (
+                  {row.key === "worldSetting" || row.key === "characters" || row.key === "outline" || row.key === "storyInput" ? (
                     <Textarea
                       value={editValues[row.key] ?? row.value}
                       onChange={(e) => setEditValues((prev) => ({ ...prev, [row.key]: e.target.value }))}

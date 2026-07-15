@@ -1,7 +1,7 @@
 ---
 description: "REQ-7056: 跨章节人物一致性"
-update_time: "2026-07-11"
-status: todo
+update_time: "2026-07-15"
+status: in_progress
 ---
 
 # REQ-7056: 跨章节人物一致性

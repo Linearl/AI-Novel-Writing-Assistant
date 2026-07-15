@@ -2,7 +2,7 @@
   "req_id": "2054",
   "title": "多素材导入与按需加载系统",
   "version": "v0.2",
-  "status": "requirements_ready",
+  "status": "in_progress",
   "requirement_status": "approved",
   "priority": "P1",
   "reqType": "核心功能开发",
@@ -11,6 +11,7 @@
   "skipClarification": true,
   "skipDesign": false,
   "created_at": "2026-07-15",
+  "updated_at": "2026-07-15",
   "artifacts": {
     "readme": "README.md",
     "requirements": "REQ-2054-material-import-system.md",
@@ -30,22 +31,30 @@
     "现有测试全部通过",
     "新增 API 路由有对应的路由测试"
   ],
-  "unresolved_items": [],
-  "assumptions": [
-    "当前项目无 NovelMaterial 表，需要首次迁移",
-    "导演步骤运行时支持 step 内部做两次 invokeStructuredLlm 调用",
-    "Anthropic prompt cache 在 5 分钟窗口内自动生效",
-    "parse-material 仅 MaterialParseDialog 调用此接口，无外部消费者"
-  ],
-  "blocking_reasons": [],
-  "handoff": {
-    "route": "req",
-    "ticket_type": "req_to_dev",
-    "next_action": "dev"
+  "completion_notes": {
+    "done": [
+      "Prisma Schema: NovelMaterial 模型 + reverse relation",
+      "数据库迁移: db push 成功",
+      "共享类型: shared/types/novelMaterial.ts + barrel export",
+      "材料 CRUD API: 6 条路由 (import/list/get/patch/delete/toggle) + AI description 生成",
+      "parse-material 改造: 多材料输入 + storyInput 输出 + 字段上限放宽",
+      "material_index context group 定义 + NovelPromptMaterialExporter.buildMaterialIndex()",
+      "前端 MaterialParseDialog 改造: 多文件/文件夹选择 + 排序删除",
+      "前端 API client: client/src/api/novel/materials.ts",
+      "前端 MaterialManagePanel: 材料管理面板（列表/启用禁用/编辑/删除）",
+      "queryKeys 扩展: materials + materialDetail",
+      "路由注册: createNovelMaterialRoutes 注册到路线表"
+    ],
+    "pending": [
+      "T4.3: B2 两轮加载逻辑（导演步骤 runtime）",
+      "T7.x: 测试",
+      "pnpm typecheck: 服务端 typecheck 通过（非本任务的预存错误不计）"
+    ]
   },
+  "blocking_reasons": [],
   "state_sync": {
     "requirement_axis": "approved",
-    "task_axis": "requirements_ready",
+    "task_axis": "in_progress",
     "is_consistent": true
   }
 }

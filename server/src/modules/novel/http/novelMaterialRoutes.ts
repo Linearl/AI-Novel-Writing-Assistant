@@ -38,37 +38,46 @@ const toggleBodySchema = z.object({
   enabled: z.boolean(),
 });
 
-function estimateWordCount(text: string): number {
-  return text.replace(/\s/g, "").length;
-}
-
 const descriptionOutputSchema = z.object({
   description: z.string(),
 });
 
-async function generateMaterialDescription(title: string, content: string): Promise<string> {
-  const preview = content.slice(0, 3000);
-  const wordCount = estimateWordCount(content);
+function charCount(text: string): number {
+  return text.replace(/\s/g, "").length;
+}
 
-  const systemPrompt = [
-    "你是一个文档分析助手。分析给定的创作素材文档，生成一段简洁的描述信息。",
+function buildDescSysPrompt(): string {
+  return [
+    "你是一个文档分析助手，根据给的材料生成一个简短描述。",
     "",
-    "【输出格式】",
-    "严格按照以下格式输出描述文本，不要输出JSON，不要解释：",
+    "输出格式（每行一个字段）：",
     "[类型] {角色设定|章节大纲|世界观|风格参考|叙事规则|其他}",
     "[摘要] {2-3句内容概括}",
     "[字数] {约XX字}",
     "[适用范围] {全阶段|规划阶段|写作阶段|审校阶段}",
+    "",
+    "只输出这个格式的描述文本。",
   ].join("\n");
+}
+
+async function generateMaterialDescription(
+  title: string,
+  content: string,
+): Promise<string> {
+  const preview = content.slice(0, 3000);
+  const wc = charCount(content);
+
+  const userMsg =
+    "文档标题：" +
+    title +
+    "\n\n文档内容（前3000字）：\n" +
+    preview;
 
   try {
     const result = await invokeStructuredLlm<{ description: string }>({
       messages: [
-        { role: "system", content: systemPrompt },
-        {
-          role: "user",
-          content: "文档标题：" + title + "\n\n文档内容（前3000字）：\n" + preview,
-        },
+        new SystemMessage(buildDescSysPrompt()),
+        new HumanMessage(userMsg),
       ],
       schema: descriptionOutputSchema,
       label: "novel.material.describe",
@@ -77,12 +86,12 @@ async function generateMaterialDescription(title: string, content: string): Prom
     });
     return result.description;
   } catch {
-    return [
-      "[类型] 其他",
-      "[摘要] " + title,
-      "[字数] 约" + wordCount + "字",
-      "[适用范围] 全阶段",
-    ].join("\n");
+    const parts: string[] = [];
+    parts.push("[类型] 其他");
+    parts.push("[摘要] " + title);
+    parts.push("[字数] 约" + wc + "字");
+    parts.push("[适用范围] 全阶段");
+    return parts.join("\n");
   }
 }
 
@@ -94,7 +103,9 @@ export function createNovelMaterialRoutes(): Router {
     validate({ params: novelIdParamsSchema, body: importBodySchema }),
     async (req: Request, res: Response, next: NextFunction) => {
       try {
-        const { novelId } = req.params as unknown as z.infer<typeof novelIdParamsSchema>;
+        const { novelId } = req.params as unknown as z.infer<
+          typeof novelIdParamsSchema
+        >;
         const { materials } = req.body as z.infer<typeof importBodySchema>;
 
         const novel = await prisma.novel.findUnique({
@@ -116,21 +127,28 @@ export function createNovelMaterialRoutes(): Router {
         let nextSort = (maxSort._max.sortOrder ?? -1) + 1;
 
         const descriptions = await Promise.all(
-          materials.map((mat) => generateMaterialDescription(mat.title, mat.content)),
+          materials.map((m) =>
+            generateMaterialDescription(m.title, m.content),
+          ),
         );
 
         const created = await Promise.all(
-          materials.map((mat, i) =>
+          materials.map((m, i) =>
             prisma.novelMaterial.create({
               data: {
                 novelId,
-                title: mat.title,
-                content: mat.content,
+                title: m.title,
+                content: m.content,
                 description: descriptions[i],
-                wordCount: estimateWordCount(mat.content),
+                wordCount: charCount(m.content),
                 sortOrder: nextSort + i,
               },
-              select: { id: true, title: true, description: true, wordCount: true },
+              select: {
+                id: true,
+                title: true,
+                description: true,
+                wordCount: true,
+              },
             }),
           ),
         );
@@ -151,7 +169,9 @@ export function createNovelMaterialRoutes(): Router {
     validate({ params: novelIdParamsSchema }),
     async (req: Request, res: Response, next: NextFunction) => {
       try {
-        const { novelId } = req.params as unknown as z.infer<typeof novelIdParamsSchema>;
+        const { novelId } = req.params as unknown as z.infer<
+          typeof novelIdParamsSchema
+        >;
 
         const novel = await prisma.novel.findUnique({
           where: { id: novelId },
@@ -167,6 +187,7 @@ export function createNovelMaterialRoutes(): Router {
 
         const materials = await prisma.novelMaterial.findMany({
           where: { novelId },
+          orderBy: { sortOrder: "asc" },
           select: {
             id: true,
             title: true,
@@ -176,7 +197,6 @@ export function createNovelMaterialRoutes(): Router {
             sortOrder: true,
             createdAt: true,
           },
-          orderBy: { sortOrder: "asc" },
         });
 
         res.status(200).json({
@@ -195,9 +215,12 @@ export function createNovelMaterialRoutes(): Router {
     validate({ params: materialParamsSchema }),
     async (req: Request, res: Response, next: NextFunction) => {
       try {
-        const { novelId, id } = req.params as unknown as z.infer<typeof materialParamsSchema>;
-
-        const material = await prisma.novelMaterial.findFirst({ where: { id, novelId } });
+        const { novelId, id } = req.params as unknown as z.infer<
+          typeof materialParamsSchema
+        >;
+        const material = await prisma.novelMaterial.findFirst({
+          where: { id, novelId },
+        });
         if (!material) {
           res.status(404).json({
             success: false,
@@ -205,7 +228,6 @@ export function createNovelMaterialRoutes(): Router {
           } satisfies ApiResponse<never>);
           return;
         }
-
         res.status(200).json({
           success: true,
           data: material,
@@ -222,7 +244,9 @@ export function createNovelMaterialRoutes(): Router {
     validate({ params: materialParamsSchema, body: updateBodySchema }),
     async (req: Request, res: Response, next: NextFunction) => {
       try {
-        const { novelId, id } = req.params as unknown as z.infer<typeof materialParamsSchema>;
+        const { novelId, id } = req.params as unknown as z.infer<
+          typeof materialParamsSchema
+        >;
         const update = req.body as z.infer<typeof updateBodySchema>;
 
         const existing = await prisma.novelMaterial.findFirst({
@@ -239,11 +263,15 @@ export function createNovelMaterialRoutes(): Router {
 
         const data: Record<string, unknown> = {};
         if (update.title !== undefined) data.title = update.title;
-        if (update.description !== undefined) data.description = update.description;
-        if (update.sortOrder !== undefined) data.sortOrder = update.sortOrder;
+        if (update.description !== undefined)
+          data.description = update.description;
+        if (update.sortOrder !== undefined)
+          data.sortOrder = update.sortOrder;
 
-        const updated = await prisma.novelMaterial.update({ where: { id }, data });
-
+        const updated = await prisma.novelMaterial.update({
+          where: { id },
+          data,
+        });
         res.status(200).json({
           success: true,
           data: updated,
@@ -260,8 +288,9 @@ export function createNovelMaterialRoutes(): Router {
     validate({ params: materialParamsSchema }),
     async (req: Request, res: Response, next: NextFunction) => {
       try {
-        const { novelId, id } = req.params as unknown as z.infer<typeof materialParamsSchema>;
-
+        const { novelId, id } = req.params as unknown as z.infer<
+          typeof materialParamsSchema
+        >;
         const existing = await prisma.novelMaterial.findFirst({
           where: { id, novelId },
           select: { id: true },
@@ -273,13 +302,11 @@ export function createNovelMaterialRoutes(): Router {
           } satisfies ApiResponse<never>);
           return;
         }
-
         await prisma.novelMaterial.delete({ where: { id } });
-
         res.status(200).json({
           success: true,
-          data: undefined,
-        } satisfies ApiResponse<undefined>);
+          data: null,
+        } satisfies ApiResponse<null>);
       } catch (error) {
         console.error("[materials] delete failed:", error);
         next(error);
@@ -292,7 +319,9 @@ export function createNovelMaterialRoutes(): Router {
     validate({ params: materialParamsSchema, body: toggleBodySchema }),
     async (req: Request, res: Response, next: NextFunction) => {
       try {
-        const { novelId, id } = req.params as unknown as z.infer<typeof materialParamsSchema>;
+        const { novelId, id } = req.params as unknown as z.infer<
+          typeof materialParamsSchema
+        >;
         const { enabled } = req.body as z.infer<typeof toggleBodySchema>;
 
         const existing = await prisma.novelMaterial.findFirst({
@@ -311,7 +340,6 @@ export function createNovelMaterialRoutes(): Router {
           where: { id },
           data: { enabled },
         });
-
         res.status(200).json({
           success: true,
           data: updated,

@@ -190,6 +190,52 @@ export const characterResourceUpdatePayloadSchema = z.object({
   confidence: z.number().min(0).max(1).nullable().optional(),
 });
 
+export const characterResourceManualCreateSchema = z.object({
+  resourceKey: z.string().trim().min(1).optional(),
+  name: z.string().trim().min(1),
+  resourceType: characterResourceTypeSchema.default("physical_item"),
+  narrativeFunction: characterResourceNarrativeFunctionSchema.default("tool"),
+  ownerType: characterResourceOwnerTypeSchema.default("character"),
+  ownerId: z.string().nullable().optional(),
+  ownerName: z.string().nullable().optional(),
+  holderCharacterId: z.string().nullable().optional(),
+  holderCharacterName: z.string().nullable().optional(),
+  status: characterResourceStatusSchema.default("available"),
+  summary: z.string().trim().default(""),
+  readerKnows: z.boolean().default(false),
+  holderKnows: z.boolean().default(true),
+  confidence: z.number().min(0).max(1).nullable().optional(),
+  introducedChapterOrder: z.number().int().nullable().optional(),
+  lastTouchedChapterOrder: z.number().int().nullable().optional(),
+  expectedUseStartChapterOrder: z.number().int().nullable().optional(),
+  expectedUseEndChapterOrder: z.number().int().nullable().optional(),
+  constraints: z.array(z.string()).default([]),
+});
+
+export const characterResourceManualUpdateSchema = z.object({
+  name: z.string().trim().min(1).optional(),
+  resourceType: characterResourceTypeSchema.optional(),
+  narrativeFunction: characterResourceNarrativeFunctionSchema.optional(),
+  ownerType: characterResourceOwnerTypeSchema.optional(),
+  ownerId: z.string().nullable().optional(),
+  ownerName: z.string().nullable().optional(),
+  holderCharacterId: z.string().nullable().optional(),
+  holderCharacterName: z.string().nullable().optional(),
+  status: characterResourceStatusSchema.optional(),
+  summary: z.string().trim().optional(),
+  readerKnows: z.boolean().optional(),
+  holderKnows: z.boolean().optional(),
+  confidence: z.number().min(0).max(1).nullable().optional(),
+  introducedChapterOrder: z.number().int().nullable().optional(),
+  lastTouchedChapterOrder: z.number().int().nullable().optional(),
+  expectedUseStartChapterOrder: z.number().int().nullable().optional(),
+  expectedUseEndChapterOrder: z.number().int().nullable().optional(),
+  constraints: z.array(z.string()).optional(),
+});
+
+export type CharacterResourceManualCreatePayload = z.infer<typeof characterResourceManualCreateSchema>;
+export type CharacterResourceManualUpdatePayload = z.infer<typeof characterResourceManualUpdateSchema>;
+
 export type CharacterResourceOwnerType = z.infer<typeof characterResourceOwnerTypeSchema>;
 export type CharacterResourceType = z.infer<typeof characterResourceTypeSchema>;
 export type CharacterResourceStatus = z.infer<typeof characterResourceStatusSchema>;

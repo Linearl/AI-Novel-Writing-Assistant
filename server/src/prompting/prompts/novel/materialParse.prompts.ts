@@ -5,7 +5,7 @@ import type { MaterialParseOutput } from "./materialParse.promptSchemas";
 import { materialParseOutputSchema } from "./materialParse.promptSchemas";
 
 export interface MaterialParsePromptInput {
-  material: string;
+  materials: Array<{ title: string; content: string }>;
   forceJson: boolean;
   retryReason: string | null;
 }
@@ -43,6 +43,7 @@ function buildMaterialParseMessages(
 9. commercialTagsText：提取或推导 3-6 个适合网文平台的商业标签，逗号分隔。
 10. styleTone：提取或推导 2-4 个风格关键词。
 11. chapterCountHint：如果素材中明确提到总章节数或预计章节数（如"30章"、"共30章"、"约30章"、"预计30章"、"前30章"等），提取该数字。注意区分"前30章承诺"和"全书共30章"——只有明确表示全书总章节数时才提取。
+12. storyInput：基于所有素材，生成一段 200-400 字的概要段落，然后列出参考材料清单（每行格式：- [类型] 标题，约XX字）。概要应概括整个故事的核心设定、世界背景、主要角色和主线走向。参考材料清单按素材原始顺序列出，每行包含该素材的类型标签（如"世界观设定集"、"角色传记"、"剧情大纲"等，从素材内容中自行判断）和标题及字数。概要段落与参考材料清单之间空一行分隔。如果素材只有一篇且标题表明它就代表一个完整故事概要，则不需生成概要段落，直接返回该素材内容本身并标注为参考材料。
 
 【字段映射指南】
 - 标题、书名 → title
@@ -58,6 +59,7 @@ function buildMaterialParseMessages(
 - 标签、分类、类型 → commercialTagsText
 - 题材、类型倾向 → genreHint
 - 总章节数、预计章节数 → chapterCountHint（数字，如30）
+- 所有素材的整体概括 → storyInput（200-400 字概要 + 参考材料清单）
 
 【输出格式】
 只返回一个 JSON 对象，结构固定如下：
@@ -74,15 +76,18 @@ function buildMaterialParseMessages(
   "characters": "字符串或undefined",
   "outline": "字符串或undefined",
   "genreHint": "字符串或undefined",
-  "chapterCountHint": 数字或undefined
+  "chapterCountHint": 数字或undefined,
+  "storyInput": "字符串或undefined"
 }
 
 只返回 JSON，不解释分析过程，不输出 Markdown，不输出代码块。${retryInstruction}${forceJsonInstruction}`),
     new HumanMessage(`请分析以下创作素材并拆分到对应字段：
 
----
-${input.material}
----`),
+${input.materials.map((m, i) => `## ${m.title}
+
+${m.content}
+
+---${i < input.materials.length - 1 ? "\n" : ""}`).join("\n")}`),
   ];
 }
 

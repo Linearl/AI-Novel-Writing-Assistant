@@ -27,7 +27,7 @@ test("POST /api/novels/parse-material 素材少于 10 字返回 400", async () =
         "Content-Type": "application/json",
         Authorization: "Bearer test-token",
       },
-      body: JSON.stringify({ material: "太短了" }),
+      body: JSON.stringify({ materials: [{ title: "测试", content: "太短了" }] }),
     });
     assert.equal(response.status, 400);
     const payload = await response.json();
@@ -37,7 +37,7 @@ test("POST /api/novels/parse-material 素材少于 10 字返回 400", async () =
   }
 });
 
-test("POST /api/novels/parse-material 空素材返回 400", async () => {
+test("POST /api/novels/parse-material 空素材列表返回 400", async () => {
   const app = createApp();
   const server = http.createServer(app);
   const port = await listen(server);
@@ -49,7 +49,7 @@ test("POST /api/novels/parse-material 空素材返回 400", async () => {
         "Content-Type": "application/json",
         Authorization: "Bearer test-token",
       },
-      body: JSON.stringify({ material: "" }),
+      body: JSON.stringify({ materials: [] }),
     });
     assert.equal(response.status, 400);
     const payload = await response.json();
@@ -59,20 +59,19 @@ test("POST /api/novels/parse-material 空素材返回 400", async () => {
   }
 });
 
-test("POST /api/novels/parse-material 素材超过 50000 字返回 400", async () => {
+test("POST /api/novels/parse-material 缺少 title 字段返回 400", async () => {
   const app = createApp();
   const server = http.createServer(app);
   const port = await listen(server);
 
   try {
-    const oversizedMaterial = "这是一段很长的素材内容。".repeat(5001);
     const response = await fetch(`http://127.0.0.1:${port}/api/novels/parse-material`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer test-token",
       },
-      body: JSON.stringify({ material: oversizedMaterial }),
+      body: JSON.stringify({ materials: [{ content: "这是一段足够长的素材内容用于测试验证" }] }),
     });
     assert.equal(response.status, 400);
     const payload = await response.json();
@@ -104,7 +103,7 @@ test("POST /api/novels/parse-material 恰好 10 字边界值返回 200", async (
         "Content-Type": "application/json",
         Authorization: "Bearer test-token",
       },
-      body: JSON.stringify({ material: boundaryMaterial }),
+      body: JSON.stringify({ materials: [{ title: "边界测试", content: boundaryMaterial }] }),
     });
     assert.equal(response.status, 200);
     const payload = await response.json();
@@ -150,7 +149,7 @@ test("POST /api/novels/parse-material 成功返回包含所有字段", async () 
         "Content-Type": "application/json",
         Authorization: "Bearer test-token",
       },
-      body: JSON.stringify({ material }),
+      body: JSON.stringify({ materials: [{ title: "素材", content: material }] }),
     });
     assert.equal(response.status, 200);
     const payload = await response.json();

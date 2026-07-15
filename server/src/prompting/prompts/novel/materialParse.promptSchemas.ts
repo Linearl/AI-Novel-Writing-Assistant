@@ -21,16 +21,18 @@ export const materialParseOutputSchema = z.object({
     .describe("风格关键词，如冷峻、克制、黑色幽默"),
   commercialTagsText: z.string().trim().max(200).optional()
     .describe("商业标签，逗号分隔，如逆袭、强冲突、悬念拉满"),
-  worldSetting: z.string().trim().max(2000).optional()
+  worldSetting: z.string().trim().max(4000).optional()
     .describe("世界观设定摘要：时代背景、力量体系、核心规则等"),
-  characters: z.string().trim().max(2000).optional()
+  characters: z.string().trim().max(4000).optional()
     .describe("角色信息摘要：主要角色名、身份、关系、动机"),
-  outline: z.string().trim().max(2000).optional()
+  outline: z.string().trim().max(4000).optional()
     .describe("大纲信息摘要：主线脉络、关键剧情转折"),
   genreHint: z.string().trim().max(100).optional()
     .describe("从素材中识别的题材倾向关键词，如修仙、都市、悬疑"),
   chapterCountHint: z.number().int().min(1).max(2000).optional()
     .describe("从素材中识别的总章节数或预计章节数。例如素材提到\"30章\"、\"共30章\"、\"约30章\"等，提取数字30"),
+  storyInput: z.string().optional()
+    .describe("基于所有素材生成的概要段落和参考材料清单"),
 });
 
 export type MaterialParseOutput = z.infer<typeof materialParseOutputSchema>;
