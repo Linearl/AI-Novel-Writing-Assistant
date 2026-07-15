@@ -1,7 +1,7 @@
 {
   "reqId": "7041",
   "title": "模型备用切换",
-  "status": "in_progress",
+  "status": "done",
   "complexity": "S1",
   "category": "7xxx",
   "priority": "P1",
@@ -17,5 +17,6 @@
     "tests": "pending",
     "integration": "pending"
   },
-  "updated": "2026-07-15T09:42:04.584Z"
+  "updated": "2026-07-15T10:10:04.488Z",
+  "completed": "2026-07-15T10:10:04.489Z"
 }

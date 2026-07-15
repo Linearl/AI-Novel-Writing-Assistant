@@ -1,7 +1,7 @@
 ---
 description: "REQ-7042: 错误分类器"
 update_time: "2026-07-11"
-status: todo
+status: done
 ---
 
 # REQ-7042: 错误分类器

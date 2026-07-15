@@ -1,7 +1,7 @@
 ---
 description: "REQ-7043: 网络状态监控"
 update_time: "2026-07-11"
-status: todo
+status: done
 ---
 
 # REQ-7043: 网络状态监控

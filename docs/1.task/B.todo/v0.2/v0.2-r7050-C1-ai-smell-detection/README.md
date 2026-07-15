@@ -1,7 +1,7 @@
 ---
 description: "REQ-7050: AI味自动检测 — 任务总线"
 update_time: "2026-07-11"
-status: todo
+status: done
 ---
 
 # REQ-7050: AI味自动检测

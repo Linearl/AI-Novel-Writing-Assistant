@@ -1,10 +1,11 @@
 {
   "reqId": "7065",
   "title": "导演引擎 P0 Pipeline 闭环收口",
-  "status": "in_progress",
+  "status": "done",
   "priority": "P0",
   "complexity": "C1",
   "version": "v0.2",
   "created": "2026-07-14",
-  "updated": "2026-07-15T09:50:59.691Z"
+  "updated": "2026-07-15T10:10:05.924Z",
+  "completed": "2026-07-15T10:10:05.925Z"
 }

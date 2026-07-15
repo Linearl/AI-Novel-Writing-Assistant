@@ -1,7 +1,7 @@
 ---
 description: "REQ-7052: 后台任务管理"
 update_time: "2026-07-11"
-status: todo
+status: done
 ---
 
 # REQ-7052: 后台任务管理

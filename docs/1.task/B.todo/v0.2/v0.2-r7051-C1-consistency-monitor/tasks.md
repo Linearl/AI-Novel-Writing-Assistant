@@ -15,18 +15,18 @@ status: todo
 
 ## 阶段一：开发
 
-- [ ] T1: 创建 consistency 目录结构和核心框架
-- [ ] T2: 实现 TimelineChecker（时间线检测器）
-- [ ] T3: 实现 CharacterBehaviorChecker（人物行为检测器）
-- [ ] T4: 实现 SpatialLogicChecker（空间逻辑检测器）
-- [ ] T5: 实现 ConsistencyMonitor 主类（编排各检测器）
-- [ ] T6: 实现矛盾报告持久化
-- [ ] T7: 实现 HTTP API
-- [ ] T8: 集成到章节生成流程（事件驱动）
+- [x] T1: 创建 consistency 目录结构和核心框架
+- [x] T2: 实现 TimelineChecker（时间线检测器）
+- [x] T3: 实现 CharacterBehaviorChecker（人物行为检测器）
+- [x] T4: 实现 SpatialLogicChecker（空间逻辑检测器）
+- [x] T5: 实现 ConsistencyMonitor 主类（编排各检测器）
+- [x] T6: 实现矛盾报告持久化
+- [x] T7: 实现 HTTP API
+- [x] T8: 集成到章节生成流程（事件驱动）
 
 ## 阶段二：测试
 
-- [ ] T9: 单元测试（时间线检测器）
+- [x] T9: 单元测试（时间线检测器）
 - [ ] T10: 单元测试（人物行为检测器）
 - [ ] T11: 单元测试（空间逻辑检测器）
 - [ ] T12: 集成测试（完整一致性检查流程）

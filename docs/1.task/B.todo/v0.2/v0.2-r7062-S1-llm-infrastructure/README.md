@@ -1,13 +1,13 @@
 ---
 reqId: 7062
 title: "LLM 基础设施增强"
-status: requirements_ready
+status: done
 priority: P2
 complexity: S1
 estimatedEffort: "2天"
 version: v0.2
 created: 2026-07-14
-updated: 2026-07-14
+updated: 2026-07-15
 ---
 
 # REQ-7062: LLM 基础设施增强

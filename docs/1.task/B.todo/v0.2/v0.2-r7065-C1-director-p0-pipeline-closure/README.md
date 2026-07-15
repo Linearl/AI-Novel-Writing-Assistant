@@ -3,13 +3,13 @@
 description: "REQ-7065: 导演引擎 P0 Pipeline 闭环收口"
 reqId: 7065
 title: "导演引擎 P0 Pipeline 闭环收口"
-status: requirements_ready
+status: done
 priority: P0
 complexity: C1
 estimatedEffort: "4-5天"
 version: v0.2
 created: 2026-07-14
-updated: 2026-07-14
+updated: 2026-07-15
 ---
 
 ## 概要

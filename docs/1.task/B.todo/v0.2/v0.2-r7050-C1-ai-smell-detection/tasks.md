@@ -15,15 +15,15 @@ status: todo
 
 ## 阶段一：开发
 
-- [ ] T1: 创建 smell 目录结构和核心框架
-- [ ] T2: 实现 VocabularyDetector（词汇检测器）
-- [ ] T3: 实现 SentenceDetector（句式检测器）
-- [ ] T4: 实现 EmotionDetector（情感检测器）
-- [ ] T5: 实现 AiSmellScorer（综合评分聚合）
-- [ ] T6: 实现 AiSmellDetector 主类
-- [ ] T7: 集成到质量检查器（REQ-7048）
-- [ ] T8: 实现 HTTP API
-- [ ] T9: 创建数据库迁移（AiSmellDictionary 表）
+- [x] T1: 创建 smell 目录结构和核心框架
+- [x] T2: 实现 VocabularyDetector（词汇检测器）
+- [x] T3: 实现 SentenceDetector（句式检测器）
+- [x] T4: 实现 EmotionDetector（情感检测器）
+- [x] T5: 实现 AiSmellScorer（综合评分聚合）
+- [x] T6: 实现 AiSmellDetector 主类
+- [x] T7: 集成到质量检查器（REQ-7048）
+- [x] T8: 实现 HTTP API
+- [x] T9: 创建数据库迁移（AiSmellDictionary 表）
 
 ## 阶段二：测试
 

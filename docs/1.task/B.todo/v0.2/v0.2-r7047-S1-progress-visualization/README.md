@@ -1,7 +1,7 @@
 ---
 description: "REQ-7047: 进度可视化 — 任务总线"
 update_time: "2026-07-11"
-status: todo
+status: done
 ---
 
 # REQ-7047: 进度可视化

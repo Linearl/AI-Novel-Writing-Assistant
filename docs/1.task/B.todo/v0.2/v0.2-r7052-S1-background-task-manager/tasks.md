@@ -15,18 +15,18 @@ status: todo
 
 ## 阶段一：开发
 
-- [ ] T1: 创建数据库迁移（background_tasks、task_checkpoints表）
-- [ ] T2: 实现BackgroundTaskManager核心逻辑（提交、查询、列表）
-- [ ] T3: 实现任务状态机（状态转换规则）
-- [ ] T4: 实现TaskRunner和暂停点机制
-- [ ] T5: 实现SSE状态推送（TaskSSEManager）
-- [ ] T6: 实现REST API端点（提交、查询、暂停、恢复、取消）
+- [x] T1: 创建数据库迁移（background_tasks、task_checkpoints表）
+- [x] T2: 实现BackgroundTaskManager核心逻辑（提交、查询、列表）
+- [x] T3: 实现任务状态机（状态转换规则）
+- [x] T4: 实现TaskRunner和暂停点机制
+- [x] T5: 实现SSE状态推送（TaskSSEManager）
+- [x] T6: 实现REST API端点（提交、查询、暂停、恢复、取消）
 
 ## 阶段二：测试
 
-- [ ] T7: 单元测试（状态机转换）
-- [ ] T8: 单元测试（暂停点保存和恢复）
-- [ ] T9: 集成测试（API端点）
+- [x] T7: 单元测试（状态机转换）
+- [x] T8: 单元测试（暂停点保存和恢复）
+- [x] T9: 集成测试（API端点）
 - [ ] T10: 集成测试（SSE实时推送）
 
 ## 阶段三：验证

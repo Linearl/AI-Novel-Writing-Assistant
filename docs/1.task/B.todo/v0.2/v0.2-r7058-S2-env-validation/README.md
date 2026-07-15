@@ -1,7 +1,7 @@
 ---
 description: "REQ-7058: 环境变量启动校验"
 update_time: "2026-07-11"
-status: todo
+status: done
 ---
 
 # REQ-7058: 环境变量启动校验

@@ -1,7 +1,7 @@
 ---
 description: "REQ-7041: 模型备用切换 — 任务包README"
 update_time: "2026-07-11"
-status: todo
+status: done
 ---
 
 # REQ-7041: 模型备用切换

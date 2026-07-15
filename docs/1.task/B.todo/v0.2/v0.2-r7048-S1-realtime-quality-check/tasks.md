@@ -15,18 +15,18 @@ status: todo
 
 ## 阶段一：开发
 
-- [ ] T1: 创建质量检查目录结构和核心框架
-- [ ] T2: 实现 WordCountChecker（字数检查）
-- [ ] T3: 实现 StructureChecker（结构检查）
-- [ ] T4: 实现 CharacterChecker（人物检查）
-- [ ] T5: 实现 PlotCoherenceChecker（情节连贯性检查）
-- [ ] T6: 实现 ChapterQualityChecker 主类（编排各检查器）
-- [ ] T7: 实现质量检查 HTTP API
-- [ ] T8: 集成到章节生成流程（异步触发）
+- [x] T1: 创建质量检查目录结构和核心框架
+- [x] T2: 实现 WordCountChecker（字数检查）
+- [x] T3: 实现 StructureChecker（结构检查）
+- [x] T4: 实现 CharacterChecker（人物检查）
+- [x] T5: 实现 PlotCoherenceChecker（情节连贯性检查）
+- [x] T6: 实现 ChapterQualityChecker 主类（编排各检查器）
+- [x] T7: 实现质量检查 HTTP API
+- [x] T8: 集成到章节生成流程（异步触发）
 
 ## 阶段二：测试
 
-- [ ] T9: 单元测试（字数检查器）
+- [x] T9: 单元测试（字数检查器）
 - [ ] T10: 单元测试（结构检查器）
 - [ ] T11: 单元测试（人物检查器）
 - [ ] T12: 单元测试（情节检查器）

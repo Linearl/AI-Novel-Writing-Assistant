@@ -15,18 +15,18 @@ status: todo
 
 ## 阶段一：开发
 
-- [ ] T1: 创建 errorClassifier.ts，定义 ErrorCategory / ErrorSeverity / RecommendedAction 类型
-- [ ] T2: 实现 ERROR_HANDLING_MAP 映射表
-- [ ] T3: 实现 classifyError() 入口函数 + 子分类函数
-- [ ] T4: 实现便捷查询函数（isErrorRetryable / getErrorCategory / getErrorSeverity）
+- [x] T1: 创建 errorClassifier.ts，定义 ErrorCategory / ErrorSeverity / RecommendedAction 类型
+- [x] T2: 实现 ERROR_HANDLING_MAP 映射表
+- [x] T3: 实现 classifyError() 入口函数 + 子分类函数
+- [x] T4: 实现便捷查询函数（isErrorRetryable / getErrorCategory / getErrorSeverity）
 
 ## 阶段二：测试
 
-- [ ] T5: 单元测试 — StructuredOutputErrorCategory 映射（6 种分类）
-- [ ] T6: 单元测试 — HTTP 状态码映射（400/401/403/429/502/503/504）
-- [ ] T7: 单元测试 — 网络错误码映射（ECONNRESET / ETIMEDOUT / ENOTFOUND）
-- [ ] T8: 单元测试 — 安全兜底（未知错误 / null / undefined）
-- [ ] T9: 单元测试 — 便捷查询函数
+- [x] T5: 单元测试 — StructuredOutputErrorCategory 映射（6 种分类）
+- [x] T6: 单元测试 — HTTP 状态码映射（400/401/403/429/502/503/504）
+- [x] T7: 单元测试 — 网络错误码映射（ECONNRESET / ETIMEDOUT / ENOTFOUND）
+- [x] T8: 单元测试 — 安全兜底（未知错误 / null / undefined）
+- [x] T9: 单元测试 — 便捷查询函数
 
 ## 阶段三：验证
 

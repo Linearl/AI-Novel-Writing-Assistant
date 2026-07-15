@@ -1,7 +1,7 @@
 ---
 description: "REQ-XXXX: 任务标题"
 update_time: "2026-07-11"
-status: todo
+status: done
 ---
 
 # REQ-XXXX: 任务标题

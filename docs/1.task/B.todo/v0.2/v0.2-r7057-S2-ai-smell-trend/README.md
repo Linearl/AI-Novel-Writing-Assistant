@@ -1,7 +1,7 @@
 ---
 description: "REQ-7057: AI味趋势追踪"
 update_time: "2026-07-11"
-status: todo
+status: done
 ---
 
 # REQ-7057: AI味趋势追踪

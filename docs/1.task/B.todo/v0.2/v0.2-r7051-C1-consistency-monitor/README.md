@@ -1,7 +1,7 @@
 ---
 description: "REQ-7051: 一致性实时监控 — 任务总线"
 update_time: "2026-07-11"
-status: todo
+status: done
 ---
 
 # REQ-7051: 一致性实时监控

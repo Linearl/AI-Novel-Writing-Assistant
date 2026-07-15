@@ -1,7 +1,7 @@
 ---
 description: "REQ-7048: 实时质量检查器 — 任务总线"
 update_time: "2026-07-11"
-status: todo
+status: done
 ---
 
 # REQ-7048: 实时质量检查器

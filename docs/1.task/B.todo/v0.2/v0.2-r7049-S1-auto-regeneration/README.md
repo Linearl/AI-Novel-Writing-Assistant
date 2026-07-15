@@ -1,7 +1,7 @@
 ---
 description: "REQ-7049: 自动重新生成 — 任务总线"
 update_time: "2026-07-11"
-status: todo
+status: done
 ---
 
 # REQ-7049: 自动重新生成
