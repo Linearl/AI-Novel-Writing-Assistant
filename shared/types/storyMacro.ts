@@ -100,6 +100,7 @@ export interface StoryMacroPlan {
   issues: StoryMacroIssue[];
   lockedFields: StoryMacroLocks;
   constraintEngine?: StoryConstraintEngine | null;
+  reasoningTraceJson?: string | null;
   state: StoryMacroState;
   createdAt: string;
   updatedAt: string;

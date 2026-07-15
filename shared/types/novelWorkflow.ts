@@ -53,6 +53,7 @@ export interface BookContract {
   escalationLadder: string;
   relationshipMainline: string;
   absoluteRedLines: string[];
+  reasoningTraceJson?: string | null;
   createdAt: string;
   updatedAt: string;
 }

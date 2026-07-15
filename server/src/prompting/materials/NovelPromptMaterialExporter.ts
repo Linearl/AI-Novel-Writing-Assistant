@@ -10,6 +10,7 @@ import type {
   NovelMaterialImportance,
   NovelMaterialSourceType,
 } from "./types";
+import type { ReasoningTrace } from "@ai-novel/shared";
 
 type MaterialsDb = typeof prisma;
 
@@ -187,6 +188,10 @@ export class NovelPromptMaterialExporter {
         return this.buildOpenIssues(input.requestedGroup, input.definition, input.input.novelId, input.input.chapterId);
       case "director_workspace":
         return this.buildDirectorWorkspace(input.requestedGroup, input.definition, input.input.novelId, input.input.taskId);
+      case "material_index":
+        return this.buildMaterialIndex(input.requestedGroup, input.definition, input.input.novelId);
+      case "reasoning_trace":
+        return this.buildReasoningTrace(input.requestedGroup, input.definition, input.input.novelId);
       default:
         return null;
     }
@@ -571,6 +576,140 @@ export class NovelPromptMaterialExporter {
         task.checkpointSummary ? `检查点：${task.checkpointSummary}` : null,
         task.lastError ? `最近错误：${task.lastError}` : null,
       ]),
+    });
+  }
+
+  /**
+   * Assembles the material_index context group by listing all enabled
+   * NovelMaterial records with their titles, descriptions, and word counts.
+   *
+   * REQ-2054: 用户参考材料索引注入
+   */
+  private async buildMaterialIndex(group: string, definition: NovelMaterialGroupDefinition, novelId: string) {
+    const materials = await this.db.novelMaterial.findMany({
+      where: { novelId, enabled: true },
+      orderBy: { sortOrder: "asc" },
+    });
+    if (materials.length === 0) {
+      return null; // No materials = no block injected (clean)
+    }
+    const lines: string[] = [];
+    lines.push("以下是你可以在写作中参考的材料列表。如需某篇材料的全文，请在输出中声明其 ID。");
+    lines.push("");
+    for (const m of materials) {
+      const desc = m.description || "暂无摘要";
+      const wordInfo = m.wordCount > 0 ? ` | 字数: 约${m.wordCount}字` : "";
+      lines.push(`- [材料ID: ${m.id}] ${m.title}${wordInfo}`);
+      lines.push(`  ${desc}`);
+      lines.push("");
+    }
+    return block({
+      group,
+      title: definition.title,
+      required: definition.required,
+      importance: definition.importance,
+      sourceType: definition.sourceType,
+      sourceId: novelId,
+      content: lines.join("\n"),
+    });
+  }
+
+  /**
+   * Assembles the reasoning_trace context group by collecting reasoningTrace
+   * snapshots from prior director steps (story macro, book contract, character cast,
+   * volume strategy) and formatting them as a compact decision summary for
+   * downstream steps.
+   *
+   * REQ-2055: 导演步骤间推理链路传递
+   */
+  private async buildReasoningTrace(
+    group: string,
+    definition: NovelMaterialGroupDefinition,
+    novelId: string,
+  ) {
+    const novel = await this.db.novel.findUnique({
+      where: { id: novelId },
+      include: {
+        storyMacroPlan: {
+          select: { reasoningTraceJson: true, updatedAt: true },
+        },
+        bookContract: {
+          select: { reasoningTraceJson: true, updatedAt: true },
+        },
+        characterCastOptions: {
+          select: { reasoningTraceJson: true, updatedAt: true },
+          orderBy: { updatedAt: "desc" },
+          take: 1,
+        },
+        volumePlans: {
+          select: { reasoningTraceJson: true, updatedAt: true },
+          orderBy: { updatedAt: "desc" },
+          take: 1,
+        },
+      },
+    });
+
+    if (!novel) {
+      return null;
+    }
+
+    const traces: Array<{ step: string; summary: string; rejectedAlternatives: string; keyAssumptions: string[] }> = [];
+    const parseTrace = (json: string | null | undefined): ReasoningTrace | null => {
+      if (!json?.trim()) return null;
+      try {
+        const parsed = JSON.parse(json) as ReasoningTrace;
+        if (parsed?.step && parsed?.summary?.trim()) return parsed;
+        return null;
+      } catch {
+        return null;
+      }
+    };
+
+    const storyTrace = parseTrace(novel.storyMacroPlan?.reasoningTraceJson ?? null);
+    if (storyTrace) {
+      traces.push(storyTrace);
+    }
+
+    const contractTrace = parseTrace(novel.bookContract?.reasoningTraceJson ?? null);
+    if (contractTrace) {
+      traces.push(contractTrace);
+    }
+
+    const castTrace = parseTrace(novel.characterCastOptions?.[0]?.reasoningTraceJson ?? null);
+    if (castTrace) {
+      traces.push(castTrace);
+    }
+
+    const volumeTrace = parseTrace(novel.volumePlans?.[0]?.reasoningTraceJson ?? null);
+    if (volumeTrace) {
+      traces.push(volumeTrace);
+    }
+
+    if (traces.length === 0) {
+      return null;
+    }
+
+    const content = compactLines([
+      "【前序推理摘要】",
+      ...traces.map((trace) => {
+        const assumptionText = trace.keyAssumptions.length > 0
+          ? `\n  关键假设：${trace.keyAssumptions.map((item) => `· ${item}`).join("；")}`
+          : "";
+        const rejectedText = trace.rejectedAlternatives.trim()
+          ? `\n  被拒绝的方案：${trace.rejectedAlternatives}`
+          : "";
+        return `- [${trace.step}] ${trace.summary}${rejectedText}${assumptionText}`;
+      }),
+    ]);
+
+    return block({
+      group,
+      title: definition.title,
+      required: definition.required,
+      importance: definition.importance,
+      sourceType: definition.sourceType,
+      sourceId: novelId,
+      content,
     });
   }
 

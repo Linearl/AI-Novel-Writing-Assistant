@@ -3,6 +3,7 @@ import {
   DIRECTOR_MAX_TARGET_CHAPTER_COUNT,
   DIRECTOR_MIN_TARGET_CHAPTER_COUNT,
 } from "@ai-novel/shared";
+import { reasoningTraceSchema } from "../../../../prompting/schemas/reasoningTraceSchema";
 
 const nonEmptyString = z.string().trim().min(1);
 
@@ -128,6 +129,7 @@ export const directorBookContractSchema = z.object({
   // Raw structured output tolerates overflow here so model-specific variance
   // can be normalized into the product-facing 6-item cap after parsing.
   absoluteRedLines: z.array(nonEmptyString).min(2),
+  reasoningTrace: reasoningTraceSchema.optional(),
 });
 
 export const directorPlanBlueprintSchema = z.object({

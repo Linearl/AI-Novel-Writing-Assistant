@@ -2,6 +2,7 @@ import { z } from "zod";
 import { chapterSceneCardSchema } from "@ai-novel/shared";
 import type { VolumeCountRange } from "@ai-novel/shared";
 import { MAX_VOLUME_COUNT } from "@ai-novel/shared";
+import { reasoningTraceSchema } from "../../../prompting/schemas/reasoningTraceSchema";
 
 function normalizeObjectAlias(raw: unknown, aliasMap: Record<string, string[]>): unknown {
   if (!raw || typeof raw !== "object" || Array.isArray(raw)) {
@@ -549,6 +550,7 @@ export function createVolumeStrategySchema(config: {
     notes: z.string().trim().min(1),
     volumes: z.array(generatedVolumeStrategyVolumeSchema).min(1).max(maxVolumeCount),
     uncertainties: z.array(generatedVolumeUncertaintySchema).max(maxVolumeCount).default([]),
+    reasoningTrace: reasoningTraceSchema.optional(),
   }).superRefine((value, ctx) => {
     if (fixedRecommendedVolumeCount !== null && value.recommendedVolumeCount !== fixedRecommendedVolumeCount) {
       ctx.addIssue({
@@ -668,6 +670,7 @@ export function createChapterExecutionContractSchema() {
       payoffRefs: z.array(z.string().trim().min(1)).default([]),
       taskSheet: z.string().trim().min(1),
       sceneCards: z.array(z.preprocess(normalizeSceneCardPayload, chapterSceneCardSchema)).min(1),
+      reasoningTrace: reasoningTraceSchema.optional(),
     }),
   );
 }

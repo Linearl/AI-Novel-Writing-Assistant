@@ -8,6 +8,7 @@ import type {
   StoryMacroState,
 } from "@ai-novel/shared";
 import { z } from "zod";
+import { reasoningTraceSchema } from "../../../prompting/schemas/reasoningTraceSchema";
 
 const STORY_MACRO_FIELD_SET = new Set<string>([
   "expanded_premise",
@@ -113,6 +114,7 @@ export const STORY_MACRO_RESPONSE_SCHEMA = z.object({
     field: z.string().trim().min(1).max(60),
     message: z.string().trim().min(1).max(300),
   })).max(8).default([]),
+  reasoningTrace: reasoningTraceSchema.optional(),
 });
 
 function isRecord(value: unknown): value is Record<string, unknown> {

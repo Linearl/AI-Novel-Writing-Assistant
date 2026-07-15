@@ -42,6 +42,7 @@ export * from "./types/novelWorld.js";
 export * from "./types/novelWorkflow.js";
 export * from "./types/pagination.js";
 export * from "./types/payoffLedger.js";
+export * from "./types/reasoningTrace.js";
 export * from "./types/replanWindowDecision.js";
 export * from "./types/settingConsistency.js";
 export * from "./types/stateProposalResolution.js";

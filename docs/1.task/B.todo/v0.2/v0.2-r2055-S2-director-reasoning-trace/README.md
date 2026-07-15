@@ -1,6 +1,6 @@
 # REQ-2055 导演步骤间推理链路传递
 
-> 状态：🚧 待开发 | 更新时间：2026-07-15
+> 状态：已完成 | 更新时间：2026-07-15
 
 ## 概述
 
@@ -21,6 +21,6 @@
 ## 关键里程碑
 
 - [x] 任务包六件套创建（simple 任务，省 design.md + decision_log.md）
-- [ ] Schema 扩展（5 个步骤）
-- [ ] Context Group + Exporter
-- [ ] 验证
+- [x] Schema 扩展（5 个步骤）
+- [x] Context Group + Exporter
+- [x] 验证

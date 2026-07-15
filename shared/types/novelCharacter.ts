@@ -1,4 +1,5 @@
 import type { LLMProvider } from "./llm.js";
+import type { ReasoningTrace } from "./reasoningTrace.js";
 
 export type CharacterExitStatus = "active" | "exited" | "dead" | "frozen";
 
@@ -242,6 +243,7 @@ export interface CharacterCastOption {
   recommendedReason?: string | null;
   status: string;
   sourceStoryInput?: string | null;
+  reasoningTraceJson?: string | null;
   qualityAssessment?: CharacterCastQualityAssessment | null;
   members: CharacterCastOptionMember[];
   relations: CharacterCastOptionRelation[];

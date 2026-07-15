@@ -418,6 +418,10 @@ model Novel {
   backgroundTasks    BackgroundTask[]
   aiSmellScores      AiSmellScore[]
   writingTechniqueBindings WritingTechniqueNovelBinding[]
+  materials         NovelMaterial[]
+  characterConsistencyStates    CharacterConsistencyState[]
+  characterConsistencyContradictions CharacterConsistencyContradiction[]
+  characterConsistencyScores    CharacterConsistencyScore[]
   payoffExpiryThreshold Int       @default(20)
   createdAt          DateTime    @default(now())
   updatedAt         DateTime    @updatedAt
@@ -659,6 +663,7 @@ model Character {
   knownByResourceItems CharacterResourceKnownBy[]
   timelineParticipants TimelineEventParticipant[]
   timelineHookParticipants TimelineHookParticipant[]
+  consistencyStates CharacterConsistencyState[]
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
@@ -704,6 +709,7 @@ model CharacterCastOption {
   recommendedReason String?
   status            String   @default("draft")
   sourceStoryInput  String?
+  reasoningTraceJson String?
   novel             Novel    @relation(fields: [novelId], references: [id], onDelete: Cascade)
   members           CharacterCastOptionMember[]
   relations         CharacterCastOptionRelation[]
@@ -1854,6 +1860,7 @@ model VolumePlanVersion {
   status      VolumePlanVersionStatus @default(draft)
   contentJson String
   diffSummary String?
+  strategyReasoningTraceJson String?
   novel       Novel                   @relation(fields: [novelId], references: [id], onDelete: Cascade)
   volumes     VolumePlan[]
   createdAt   DateTime                @default(now())
@@ -1877,6 +1884,7 @@ model VolumePlan {
   nextVolumeHook    String?
   resetPoint        String?
   openPayoffsJson   String?
+  reasoningTraceJson String?
   status            String             @default("active")
   sourceVersionId   String?
   novel             Novel              @relation(fields: [novelId], references: [id], onDelete: Cascade)
@@ -1949,6 +1957,7 @@ model StoryMacroPlan {
   lockedFieldsJson     String?
   constraintEngineJson String?
   stateJson            String?
+  reasoningTraceJson   String?
   novel                Novel    @relation(fields: [novelId], references: [id], onDelete: Cascade)
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
@@ -1966,6 +1975,7 @@ model BookContract {
   escalationLadder     String
   relationshipMainline String
   absoluteRedLinesJson String
+  reasoningTraceJson   String?
   novel                Novel    @relation(fields: [novelId], references: [id], onDelete: Cascade)
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
@@ -3509,4 +3519,133 @@ model Batch {
 
   @@index([queueId, batchIndex])
   @@index([queueId, status])
+}
+
+// ========================
+// REQ-2054: NovelMaterial - 多素材导入与按需加载
+// ========================
+
+model NovelMaterial {
+  id          String   @id @default(cuid())
+  novelId     String
+  title       String
+  description String?
+  content     String
+  wordCount   Int      @default(0)
+  sortOrder   Int      @default(0)
+  enabled     Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  novel       Novel    @relation(fields: [novelId], references: [id], onDelete: Cascade)
+  @@index([novelId, enabled])
+  @@index([novelId, sortOrder])
+}
+
+// ========================
+// REQ-7068: Prompt Template System
+// ========================
+
+model PromptTemplateOverride {
+  id                String   @id @default(cuid())
+  scope             String
+  novelId           String
+  promptId          String
+  basePromptVersion String
+  mode              String   @default("official")
+  activeVersionId   String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  versions PromptTemplateVersion[]
+
+  @@unique([scope, novelId, promptId])
+  @@index([novelId])
+}
+
+model PromptTemplateVersion {
+  id              String   @id @default(cuid())
+  overrideId      String
+  versionNo       Int
+  templateJson    String
+  contextRefsJson String
+  compiledHash    String
+  notes           String?
+  createdAt       DateTime @default(now())
+
+  override PromptTemplateOverride @relation(fields: [overrideId], references: [id])
+
+  @@index([overrideId, versionNo])
+}
+
+// ========================
+// REQ-7056: Character Consistency
+// ========================
+
+model CharacterConsistencyState {
+  id             String   @id @default(cuid())
+  novelId        String
+  characterId    String
+  chapterNumber  Int
+  appearance     String   @default("{}")
+  personality    String   @default("{}")
+  abilities      String   @default("{}")
+  relationships  String   @default("{}")
+  currentStatus  String?
+  location       String?
+  sourceChapter  Int
+  createdAt      DateTime @default(now())
+
+  novel     Novel     @relation(fields: [novelId], references: [id], onDelete: Cascade)
+  character Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+
+  @@index([novelId, characterId])
+  @@index([novelId, chapterNumber])
+  @@index([characterId, createdAt])
+}
+
+model CharacterConsistencyContradiction {
+  id             String   @id @default(cuid())
+  novelId        String
+  chapterNumber  Int
+  characterId    String
+  characterName  String
+  type           String
+  severity       String
+  description    String
+  existingState  String?
+  newState       String?
+  suggestion     String?
+  confidence     Float    @default(0)
+  resolved       Boolean  @default(false)
+  resolvedNote   String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  novel Novel @relation(fields: [novelId], references: [id], onDelete: Cascade)
+
+  @@index([novelId, chapterNumber])
+  @@index([novelId, severity])
+  @@index([characterId])
+  @@index([type])
+}
+
+model CharacterConsistencyScore {
+  id                String   @id @default(cuid())
+  novelId           String
+  chapterNumber     Int
+  overallScore      Int
+  appearanceScore   Int?
+  personalityScore  Int?
+  abilityScore      Int?
+  relationshipScore Int?
+  contradictionCount Int    @default(0)
+  hardCount         Int     @default(0)
+  softCount         Int     @default(0)
+  createdAt         DateTime @default(now())
+
+  novel Novel @relation(fields: [novelId], references: [id], onDelete: Cascade)
+
+  @@index([novelId, chapterNumber])
+  @@index([novelId, createdAt])
 }

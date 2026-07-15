@@ -6,6 +6,7 @@ import type {
   SupplementalCharacterGenerationMode,
 } from "@ai-novel/shared";
 import { llmProviderSchema } from "../../../llm/providerSchema";
+import { reasoningTraceSchema } from "../../schemas/reasoningTraceSchema";
 
 const nonEmptyString = z.string().trim().min(1);
 
@@ -186,6 +187,8 @@ export const characterCastAutoMembersResponseSchema = characterCastOptionSchema.
   whyItWorks: true,
   recommendedReason: true,
   members: true,
+}).extend({
+  reasoningTrace: reasoningTraceSchema.optional(),
 });
 
 export const characterCastAutoRelationsResponseSchema = z.object({

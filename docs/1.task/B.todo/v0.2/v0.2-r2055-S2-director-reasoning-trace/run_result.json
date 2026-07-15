@@ -2,7 +2,7 @@
   "req_id": "2055",
   "title": "导演步骤间推理链路传递",
   "version": "v0.2",
-  "status": "requirements_ready",
+  "status": "done",
   "requirement_status": "approved",
   "priority": "P2",
   "reqType": "核心功能开发",

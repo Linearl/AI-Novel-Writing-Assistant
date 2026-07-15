@@ -888,6 +888,7 @@ export interface VolumeStrategyPlan {
   notes: string;
   volumes: VolumeStrategyVolume[];
   uncertainties: VolumeUncertaintyMarker[];
+  reasoningTraceJson?: string | null;
 }
 
 export const volumeStrategyPlanSchema = z.object({
@@ -1019,6 +1020,7 @@ export interface VolumePlanVersionSummary {
   version: number;
   status: VolumePlanVersionStatus;
   diffSummary?: string | null;
+  strategyReasoningTraceJson?: string | null;
   createdAt: string;
   updatedAt: string;
 }

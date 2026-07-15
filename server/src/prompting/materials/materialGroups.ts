@@ -90,6 +90,22 @@ export const NOVEL_MATERIAL_GROUPS: NovelMaterialGroupDefinition[] = [
     sourceType: "task",
     aliases: ["workspace_inventory", "manual_edit_inventory"],
   },
+  {
+    group: "material_index",
+    title: "用户参考材料索引",
+    required: true,
+    importance: "must",
+    sourceType: "novel",
+    aliases: ["user_materials", "reference_materials"],
+  },
+  {
+    group: "reasoning_trace",
+    title: "前序推理摘要",
+    required: false,
+    importance: "medium",
+    sourceType: "novel",
+    aliases: ["director_reasoning", "step_reasoning"],
+  },
 ];
 
 export function listNovelMaterialGroupDefinitions(): NovelMaterialGroupDefinition[] {
