@@ -69,6 +69,8 @@ description: "需求任务总清单（SSOT）"
 | 2051 | 角色重要度分级（CharacterTier） | p3 | ✅ 已完成 | - | 0.1 | 2026-07-13T00:00:00.000Z | 2026-07-14T00:00:00.000Z | `B.2.done/v0.1-r2051-C2-character-tier-importance-level/README.md` |  |
 | 2052 | 世界观 AI 助手与一致性修复功能 | p2 | ✅ 已完成 | 功能开发 | 0.1 | 2026-07-13 | 2026-07-13 | `B.2.done/v0.1-r2052-C2-world-ai-assistant-consistency-fix/README.md` |  |
 | 2053 | 文笔技法 AI 推荐功能 | p3 | ✅ 已完成 | 功能开发 | 0.1 | 2026-07-13 | 2026-07-13 | `B.2.done/v0.1-r2053-M2-writing-technique-ai-recommend/README.md` |  |
+| 2054 | 多素材导入与按需加载系统 | p1 | 📋 待办 | - | 0.2 | - | - | `B.todo/v0.2-r2054-C2-material-import-system/README.md` |  |
+| 2055 | 导演步骤间推理链路传递 | p2 | 📋 待办 | - | 0.2 | - | - | `B.todo/v0.2-r2055-S2-director-reasoning-trace/README.md` |  |
 | 2013 | Director Failed Retry Entry | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2013-medium-director-failed-retry-entry/README.md` |  |
 | 2014 | Chapter Token Budget Dynamic | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2014-medium-chapter-token-budget-dynamic/README.md` |  |
 
@@ -94,6 +96,7 @@ description: "需求任务总清单（SSOT）"
 | 3017 | 创建页面路径选择卡片 | p3 | ✅ 已完成 | 用户需求讨论 | 0.1 | 2026-07-13 | 2026-07-13 | `B.2.done/v0.1-r3017-M3-create-page-path-selection-card/README.md` | 在创建小说页面顶部新增路径选择卡片，统一 AI 自动导演开书、素材导入、手动填写三种路径 |
 | 3018 | 创建页面路径选择卡片集成 | p4 | ✅ 已完成 | REQ-3017 后续 | 0.1 | 2026-07-13 | 2026-07-13 | `B.2.done/v0.1-r3018-S3-path-selection-card-complete/README.md` | PathSelectionCard 组件已创建，Home/NovelList 已合并创建按钮，待集成到创建页面 |
 | 3019 | Feedback Github Issue Generator | p4 | ✅ 已完成 | docs_dev/3.analysis/diagnosis/2026-07-13-feedback-feature-diagnosis.md | 0.1 | 2026-07-13 | - | `B.2.done/v0.1-r3019-C3-feedback-github-issue-generator/README.md` |  |
+| 3020 | Feedback Github Issue Generator | p4 | 📋 待办 | docs_dev/3.analysis/diagnosis/2026-07-13-feedback-feature-diagnosis.md | 0.2 | 2026-07-13 | - | `B.todo/v0.2-r3020-C3-feedback-github-issue-generator/README.md` |  |
 | 3004 | Novel Conversation Archive | p4 | 📋 待办 | - | 0.1 | 2026-06-26T00:00:00.000Z | 2026-06-26T00:00:00.000Z | `B.todo/v0.1-r3004-medium-novel-conversation-archive/README.md` |  |
 
 ### 3.4 文档和规范任务（5xxx）
@@ -143,34 +146,36 @@ description: "需求任务总清单（SSOT）"
 | 7037 | QUA-022: directorRuntime.ts 渐进拆分（projection/worker/automation 3 域 + barrel index.ts） | p2 | ✅ 已完成 | 代码审计-full 独占发现复核报告 QUA-022 | 0.1 | 2026-07-10 | 2026-07-10 | `B.2.done/v0.1-r7037-M2-director-runtime-split/README.md` |  |
 | 7038 | QUA-039: CharacterPreparationService persistCharacterCastOptions 提取辅助函数降嵌套 | p2 | ✅ 已完成 | 代码审计-full 独占发现复核报告 QUA-039 | 0.1 | 2026-07-10 | 2026-07-10 | `B.2.done/v0.1-r7038-S2-character-prep-extract-helper/README.md` |  |
 | 7039 | 散点小修复：ARCH-005/009/023/024 + STA-025 + PERF-003 + PERF-007/C + COMPAT-004 | p3 | ✅ 已完成 | 代码审计-full 独占发现复核报告 — 多维度已决策的散点修复 | 0.1 | 2026-07-10 | 2026-07-10T15:38:52.495Z | `B.2.done/v0.1-r7039-S2-scattered-small-fixes/README.md` |  |
-| 7040 | 卷规划服务层拆分重构 | p1 | 📋 待办 | 2026-07-10 架构诊断报告 + v0.2 流程自动化规划 | 0.2 | 2026-07-11 | 2026-07-13 | `B.2.done/v0.1-r7040-C2-volume-service-refactor/README.md` |  |
-| 7041 | 模型备用切换 | p1 | 📋 待办 | 2026-07-10 架构诊断报告 + v0.2 流程自动化规划 | 0.2 | 2026-07-11 | 2026-07-13 | `B.2.done/v0.1-r7041-S4-scattered-client-fixes/README.md` |  |
-| 7042 | 错误分类器 | p1 | 📋 待办 | 2026-07-10 架构诊断报告 + v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.todo/v0.2-r7042-S1-error-classifier/README.md` |  |
-| 7043 | 网络状态监控 | p2 | 📋 待办 | 2026-07-10 架构诊断报告 + v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.todo/v0.2-r7043-S2-network-monitor/README.md` |  |
-| 7044 | checkpoint management | p2 | 📋 待办 | v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.todo/v0.2-r7044-S2-checkpoint-management/README.md` |  |
+| 7040 | 卷规划服务层拆分重构 | p1 | ✅ 已完成 | 2026-07-10 架构诊断报告 + v0.2 流程自动化规划 | 0.2 | 2026-07-11 | 2026-07-13 | `B.2.done/v0.1-r7040-C2-volume-service-refactor/README.md` |  |
+| 7041 | 模型备用切换 | p1 | ✅ 已完成 | 2026-07-10 架构诊断报告 + v0.2 流程自动化规划 | 0.2 | 2026-07-11 | 2026-07-13 | `B.2.done/v0.1-r7041-S4-scattered-client-fixes/README.md` |  |
+| 7042 | 错误分类器 | p1 | ✅ 已完成 | 2026-07-10 架构诊断报告 + v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.2.done/v0.2-r7042-S1-error-classifier/README.md` |  |
+| 7043 | 网络状态监控 | p2 | ✅ 已完成 | 2026-07-10 架构诊断报告 + v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.2.done/v0.2-r7043-S2-network-monitor/README.md` |  |
+| 7044 | checkpoint management | p2 | ✅ 已完成 | v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.2.done/v0.2-r7044-S2-checkpoint-management/README.md` |  |
 | 7045 | World Sync Manual Diff | p8 | ✅ 已完成 | - | 0.1 | - | - | `B.2.done/v0.1-r7045-C1-world-sync-manual-diff/README.md` |  |
-| 7046 | batch task queue | p2 | 📋 待办 | v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.todo/v0.2-r7046-C1-batch-task-queue/README.md` |  |
-| 7047 | progress visualization | p2 | 📋 待办 | v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.todo/v0.2-r7047-S1-progress-visualization/README.md` |  |
-| 7048 | 实时质量检查器 | p1 | 📋 待办 | v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.todo/v0.2-r7048-S1-realtime-quality-check/README.md` |  |
-| 7049 | 自动重新生成 | p1 | 📋 待办 | v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.todo/v0.2-r7049-S1-auto-regeneration/README.md` |  |
-| 7050 | AI 味自动检测 | p1 | 📋 待办 | v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.todo/v0.2-r7050-C1-ai-smell-detection/README.md` |  |
-| 7051 | 一致性实时监控 | p1 | 📋 待办 | v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.todo/v0.2-r7051-C1-consistency-monitor/README.md` |  |
-| 7052 | background task manager | p2 | 📋 待办 | v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.todo/v0.2-r7052-S1-background-task-manager/README.md` |  |
-| 7053 | node notification | p2 | 📋 待办 | v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.todo/v0.2-r7053-S2-node-notification/README.md` |  |
+| 7046 | batch task queue | p2 | ✅ 已完成 | v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.2.done/v0.2-r7046-C1-batch-task-queue/README.md` |  |
+| 7047 | progress visualization | p2 | ✅ 已完成 | v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.2.done/v0.2-r7047-S1-progress-visualization/README.md` |  |
+| 7048 | 实时质量检查器 | p1 | ✅ 已完成 | v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.2.done/v0.2-r7048-S1-realtime-quality-check/README.md` |  |
+| 7049 | 自动重新生成 | p1 | ✅ 已完成 | v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.2.done/v0.2-r7049-S1-auto-regeneration/README.md` |  |
+| 7050 | AI 味自动检测 | p1 | ✅ 已完成 | v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.2.done/v0.2-r7050-C1-ai-smell-detection/README.md` |  |
+| 7051 | 一致性实时监控 | p1 | ✅ 已完成 | v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.2.done/v0.2-r7051-C1-consistency-monitor/README.md` |  |
+| 7052 | background task manager | p2 | ✅ 已完成 | v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.2.done/v0.2-r7052-S1-background-task-manager/README.md` |  |
+| 7053 | node notification | p2 | ✅ 已完成 | v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.2.done/v0.2-r7053-S2-node-notification/README.md` |  |
 | 7054 | Book Analysis | p2 | 📋 待办 | - | 0.2 | - | - | `B.todo/v0.2-r7054-C2-book-analysis/README.md` |  |
 | 7055 | Rag Quality | p0 | 📋 待办 | - | 0.2 | - | - | `B.todo/v0.2-r7055-C1-rag-quality/README.md` |  |
 | 7056 | character consistency | p2 | 📋 待办 | v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.todo/v0.2-r7056-C1-character-consistency/README.md` |  |
-| 7057 | ai smell trend | p2 | 📋 待办 | v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.todo/v0.2-r7057-S2-ai-smell-trend/README.md` |  |
-| 7058 | env validation | p2 | 📋 待办 | v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.todo/v0.2-r7058-S2-env-validation/README.md` |  |
+| 7057 | ai smell trend | p2 | ✅ 已完成 | v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.2.done/v0.2-r7057-S2-ai-smell-trend/README.md` |  |
+| 7058 | env validation | p2 | ✅ 已完成 | v0.2 流程自动化规划 | 0.2 | 2026-07-11 | - | `B.2.done/v0.2-r7058-S2-env-validation/README.md` |  |
 | 7059 | 卷规划服务层拆分重构 | p2 | ✅ 已完成 | 重构 | 0.1 | 2026-07-13 | 2026-07-13 | `B.2.done/v0.1-r7059-C2-volume-service-refactor/README.md` |  |
 | 7060 | 零散客户端与路由修复 | p4 | ✅ 已完成 | 修复 | 0.1 | 2026-07-13 | 2026-07-13 | `B.2.done/v0.1-r7060-S4-scattered-client-fixes/README.md` |  |
 | 7061 | 中文本地化 | p0 | 📋 待办 | 上游仓库 AI-Novel-Writing-Assistant-main 参考实现 | 0.2 | 2026-07-14 | - | `B.todo/v0.2-r7061-S1-chinese-localization/README.md` |  |
-| 7062 | LLM 基础设施增强 | p2 | 📋 待办 | 上游仓库 AI-Novel-Writing-Assistant-main 参考实现 | 0.2 | 2026-07-14 | - | `B.todo/v0.2-r7062-S1-llm-infrastructure/README.md` |  |
+| 7062 | LLM 基础设施增强 | p2 | ✅ 已完成 | 上游仓库 AI-Novel-Writing-Assistant-main 参考实现 | 0.2 | 2026-07-14 | - | `B.2.done/v0.2-r7062-S1-llm-infrastructure/README.md` |  |
 | 7063 | Tension Curve 冲突曲线 | p2 | 📋 待办 | 上游仓库 AI-Novel-Writing-Assistant-main 参考实现 | 0.2 | 2026-07-14 | - | `B.todo/v0.2-r7063-S2-tension-curve/README.md` |  |
 | 7064 | Service 层 DI 依赖注入迁移 | p1 | 📋 待办 | - | 0.2 | - | - | `B.todo/v0.2-r7064-C1-di-service-dependency-injection-migration/README.md` |  |
-| 7065 | 导演引擎 P0 Pipeline 闭环收口 | p0 | 📋 待办 | - | 0.2 | - | - | `B.todo/v0.2-r7065-C1-director-p0-pipeline-closure/README.md` |  |
+| 7065 | 导演引擎 P0 Pipeline 闭环收口 | p0 | ✅ 已完成 | - | 0.2 | - | - | `B.2.done/v0.2-r7065-C1-director-p0-pipeline-closure/README.md` |  |
 | 7066 | artifactSyncMode 前端选择器 | p2 | 📋 待办 | - | 0.2 | - | - | `B.todo/v0.2-r7066-S2-artifact-sync-mode-frontend/README.md` |  |
 | 7067 | 角色资源账本前端可视化管理 | p2 | 📋 待办 | - | 0.2 | - | - | `B.todo/v0.2-r7067-S2-character-resource-ledger-frontend/README.md` |  |
+| 7068 | Prompt Template | p2 | 📋 待办 | - | 0.2 | - | - | `B.todo/v0.2-r7068-C1-prompt-template/README.md` |  |
+| 7069 | Auto-Director 增强 | p1 | 📋 待办 | 上游仓库 AI-Novel-Writing-Assistant-main 参考实现 | 0.2 | 2026-07-14 | - | `B.todo/v0.2-r7069-C1-auto-director-enhance/README.md` |  |
 | 7029 | Prisma Schema 精简 | p8 | 📋 待办 | - | 0.1 | 2026-07-10 | 2026-07-10 | `B.todo/v0.1-r7029-C2-prisma-schema-sizing/README.md` |  |
 | 7030 | Novel Application Services 门面收缩 | p1 | 📋 待办 | - | 0.1 | 2026-07-10 | 2026-07-10 | `B.todo/v0.1-r7030-M2-novel-application-services-facade-contraction/README.md` |  |
 
@@ -184,32 +189,20 @@ description: "需求任务总清单（SSOT）"
 
 | 编号 | 任务标题 | 文档 |
 | --- | --- | --- |
+| 2054 | 多素材导入与按需加载系统 | `B.todo/v0.2-r2054-C2-material-import-system/README.md` |
+| 2055 | 导演步骤间推理链路传递 | `B.todo/v0.2-r2055-S2-director-reasoning-trace/README.md` |
 | 3011 | 小说预览页面增强控制面板 | `B.2.done/v0.1-r3011-C2-novel-preview-controls/README.md` |
-| 7040 | 卷规划服务层拆分重构 | `B.2.done/v0.1-r7040-C2-volume-service-refactor/README.md` |
-| 7041 | 模型备用切换 | `B.2.done/v0.1-r7041-S4-scattered-client-fixes/README.md` |
-| 7042 | 错误分类器 | `B.todo/v0.2-r7042-S1-error-classifier/README.md` |
-| 7043 | 网络状态监控 | `B.todo/v0.2-r7043-S2-network-monitor/README.md` |
-| 7044 | checkpoint management | `B.todo/v0.2-r7044-S2-checkpoint-management/README.md` |
-| 7046 | batch task queue | `B.todo/v0.2-r7046-C1-batch-task-queue/README.md` |
-| 7047 | progress visualization | `B.todo/v0.2-r7047-S1-progress-visualization/README.md` |
-| 7048 | 实时质量检查器 | `B.todo/v0.2-r7048-S1-realtime-quality-check/README.md` |
-| 7049 | 自动重新生成 | `B.todo/v0.2-r7049-S1-auto-regeneration/README.md` |
-| 7050 | AI 味自动检测 | `B.todo/v0.2-r7050-C1-ai-smell-detection/README.md` |
-| 7051 | 一致性实时监控 | `B.todo/v0.2-r7051-C1-consistency-monitor/README.md` |
-| 7052 | background task manager | `B.todo/v0.2-r7052-S1-background-task-manager/README.md` |
-| 7053 | node notification | `B.todo/v0.2-r7053-S2-node-notification/README.md` |
+| 3020 | Feedback Github Issue Generator | `B.todo/v0.2-r3020-C3-feedback-github-issue-generator/README.md` |
 | 7054 | Book Analysis | `B.todo/v0.2-r7054-C2-book-analysis/README.md` |
 | 7055 | Rag Quality | `B.todo/v0.2-r7055-C1-rag-quality/README.md` |
 | 7056 | character consistency | `B.todo/v0.2-r7056-C1-character-consistency/README.md` |
-| 7057 | ai smell trend | `B.todo/v0.2-r7057-S2-ai-smell-trend/README.md` |
-| 7058 | env validation | `B.todo/v0.2-r7058-S2-env-validation/README.md` |
 | 7061 | 中文本地化 | `B.todo/v0.2-r7061-S1-chinese-localization/README.md` |
-| 7062 | LLM 基础设施增强 | `B.todo/v0.2-r7062-S1-llm-infrastructure/README.md` |
 | 7063 | Tension Curve 冲突曲线 | `B.todo/v0.2-r7063-S2-tension-curve/README.md` |
 | 7064 | Service 层 DI 依赖注入迁移 | `B.todo/v0.2-r7064-C1-di-service-dependency-injection-migration/README.md` |
-| 7065 | 导演引擎 P0 Pipeline 闭环收口 | `B.todo/v0.2-r7065-C1-director-p0-pipeline-closure/README.md` |
 | 7066 | artifactSyncMode 前端选择器 | `B.todo/v0.2-r7066-S2-artifact-sync-mode-frontend/README.md` |
 | 7067 | 角色资源账本前端可视化管理 | `B.todo/v0.2-r7067-S2-character-resource-ledger-frontend/README.md` |
+| 7068 | Prompt Template | `B.todo/v0.2-r7068-C1-prompt-template/README.md` |
+| 7069 | Auto-Director 增强 | `B.todo/v0.2-r7069-C1-auto-director-enhance/README.md` |
 | 2013 | Director Failed Retry Entry | `B.todo/v0.1-r2013-medium-director-failed-retry-entry/README.md` |
 | 2014 | Chapter Token Budget Dynamic | `B.todo/v0.1-r2014-medium-chapter-token-budget-dynamic/README.md` |
 | 3004 | Novel Conversation Archive | `B.todo/v0.1-r3004-medium-novel-conversation-archive/README.md` |
@@ -326,8 +319,25 @@ description: "需求任务总清单（SSOT）"
 | 7037 | QUA-022: directorRuntime.ts 渐进拆分（projection/worker/automation 3 域 + barrel index.ts） | `B.2.done/v0.1-r7037-M2-director-runtime-split/README.md` |
 | 7038 | QUA-039: CharacterPreparationService persistCharacterCastOptions 提取辅助函数降嵌套 | `B.2.done/v0.1-r7038-S2-character-prep-extract-helper/README.md` |
 | 7039 | 散点小修复：ARCH-005/009/023/024 + STA-025 + PERF-003 + PERF-007/C + COMPAT-004 | `B.2.done/v0.1-r7039-S2-scattered-small-fixes/README.md` |
+| 7040 | 卷规划服务层拆分重构 | `B.2.done/v0.1-r7040-C2-volume-service-refactor/README.md` |
+| 7041 | 模型备用切换 | `B.2.done/v0.1-r7041-S4-scattered-client-fixes/README.md` |
+| 7042 | 错误分类器 | `B.2.done/v0.2-r7042-S1-error-classifier/README.md` |
+| 7043 | 网络状态监控 | `B.2.done/v0.2-r7043-S2-network-monitor/README.md` |
+| 7044 | checkpoint management | `B.2.done/v0.2-r7044-S2-checkpoint-management/README.md` |
 | 7045 | World Sync Manual Diff | `B.2.done/v0.1-r7045-C1-world-sync-manual-diff/README.md` |
+| 7046 | batch task queue | `B.2.done/v0.2-r7046-C1-batch-task-queue/README.md` |
+| 7047 | progress visualization | `B.2.done/v0.2-r7047-S1-progress-visualization/README.md` |
+| 7048 | 实时质量检查器 | `B.2.done/v0.2-r7048-S1-realtime-quality-check/README.md` |
+| 7049 | 自动重新生成 | `B.2.done/v0.2-r7049-S1-auto-regeneration/README.md` |
+| 7050 | AI 味自动检测 | `B.2.done/v0.2-r7050-C1-ai-smell-detection/README.md` |
+| 7051 | 一致性实时监控 | `B.2.done/v0.2-r7051-C1-consistency-monitor/README.md` |
+| 7052 | background task manager | `B.2.done/v0.2-r7052-S1-background-task-manager/README.md` |
+| 7053 | node notification | `B.2.done/v0.2-r7053-S2-node-notification/README.md` |
+| 7057 | ai smell trend | `B.2.done/v0.2-r7057-S2-ai-smell-trend/README.md` |
+| 7058 | env validation | `B.2.done/v0.2-r7058-S2-env-validation/README.md` |
 | 7059 | 卷规划服务层拆分重构 | `B.2.done/v0.1-r7059-C2-volume-service-refactor/README.md` |
 | 7060 | 零散客户端与路由修复 | `B.2.done/v0.1-r7060-S4-scattered-client-fixes/README.md` |
+| 7062 | LLM 基础设施增强 | `B.2.done/v0.2-r7062-S1-llm-infrastructure/README.md` |
+| 7065 | 导演引擎 P0 Pipeline 闭环收口 | `B.2.done/v0.2-r7065-C1-director-p0-pipeline-closure/README.md` |
 
 ---
