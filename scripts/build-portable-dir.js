@@ -87,6 +87,13 @@ if (reuseStage) {
     process.exit(1);
   }
 } else {
+  // 清理旧的 desktop/build 目录（避免残留文件导致 pnpm deploy EPERM）
+  const buildPath = path.join(DESKTOP_DIR, "build");
+  if (fs.existsSync(buildPath)) {
+    log(`🧹 清理旧构建目录：${buildPath}`);
+    rimraf(buildPath);
+  }
+
   log("🔨 Step 1/4: 完整构建链（shared → prisma → server → client → desktop）");
   run("pnpm run build:desktop:all");
 }
@@ -123,15 +130,23 @@ log("📁 Step 3/4: 调用 electron-builder 打包文件夹版本");
 rimraf(path.join(RELEASE_DIR, DIR_NAME));
 mkdirp(RELEASE_DIR);
 
-const electronBuilderCmd = [
-  "node",
-  "desktop/scripts/run-electron-builder.cjs",
+// 直接调用 electron-builder CLI（绕过 run-electron-builder.cjs 的 patch 导致的崩溃）
+const electronBuilderCli = require.resolve("electron-builder/cli.js", {
+  paths: [path.join(ROOT, "desktop"), ROOT],
+});
+const electronBuilderArgs = [
+  "--config", "electron-builder.config.cjs",
+  "--dir",
   "--win",
-  "--target dir",
   "--x64",
-].join(" ");
-
-run(electronBuilderCmd);
+  "--config.npmRebuild=false",
+];
+log(`exec: ${electronBuilderCli} ${electronBuilderArgs.join(" ")}`);
+execSync(`"${process.execPath}" "${electronBuilderCli}" ${electronBuilderArgs.join(" ")}`, {
+  cwd: path.join(ROOT, "desktop"),
+  stdio: "inherit",
+  env: process.env,
+});
 
 // ---------------------------------------------------------------------------
 // Step 4: 后处理
@@ -149,9 +164,38 @@ if (!fs.existsSync(BUILDER_OUTPUT)) {
   process.exit(1);
 }
 
-// 复制到 release/{DIR_NAME}/
+// 复制到 release/{DIR_NAME}/（用 robocopy 避免 Windows fs.cpSync 崩溃）
 const targetDir = path.join(RELEASE_DIR, DIR_NAME);
-fs.cpSync(BUILDER_OUTPUT, targetDir, { recursive: true });
+rimraf(targetDir);
+try {
+  execSync(`robocopy "${BUILDER_OUTPUT}" "${targetDir}" /E /COPY:DAT /R:1 /W:1 /NFL /NDL /NJH /NJS`, { stdio: "pipe" });
+} catch (err) {
+  if (err.status === undefined || err.status > 7) throw err;
+}
+
+// 将 server 生产依赖复制到 resources/node_modules（asar 外部，供运行时 require）
+const serverNodeModulesSrc = path.join(DESKTOP_DIR, "build", "app", "node_modules");
+const serverNodeModulesDest = path.join(targetDir, "resources", "node_modules");
+if (fs.existsSync(serverNodeModulesSrc)) {
+  // 先在 staging 目录重建 native 模块（有 package.json，rebuild 能正常工作）
+  log("🔨 重建 native 模块（@electron/rebuild）...");
+  try {
+    execSync(
+      `npx @electron/rebuild --version 35.7.5 --arch x64`,
+      { cwd: path.join(DESKTOP_DIR, "build", "app"), stdio: "inherit", env: process.env }
+    );
+  } catch (err) {
+    log(`⚠️  native 模块重建失败（非致命）: ${err.message}`);
+  }
+
+  // 再复制到 release
+  log("📦 复制 server 生产依赖到 resources/node_modules/");
+  try {
+    execSync(`robocopy "${serverNodeModulesSrc}" "${serverNodeModulesDest}" /E /COPY:DAT /R:1 /W:1 /NFL /NDL /NJH /NJS`, { stdio: "pipe" });
+  } catch (err) {
+    if (err.status === undefined || err.status > 7) throw err;
+  }
+}
 
 // 创建 data/ 目录（空，运行时自动使用）
 mkdirp(path.join(targetDir, "data"));
