@@ -117,13 +117,13 @@ export function buildBookContractContext(input: {
 }): BookContractContext {
   return {
     title: compactText(input.title),
-    genre: compactText(input.genre, "unknown"),
-    targetAudience: compactText(input.targetAudience, "unknown"),
-    sellingPoint: compactText(input.sellingPoint, "not specified"),
-    first30ChapterPromise: compactText(input.first30ChapterPromise, "not specified"),
-    narrativePov: compactText(input.narrativePov, "not specified"),
-    pacePreference: compactText(input.pacePreference, "not specified"),
-    emotionIntensity: compactText(input.emotionIntensity, "not specified"),
+    genre: compactText(input.genre, "未知"),
+    targetAudience: compactText(input.targetAudience, "未知"),
+    sellingPoint: compactText(input.sellingPoint, "未指定"),
+    first30ChapterPromise: compactText(input.first30ChapterPromise, "未指定"),
+    narrativePov: compactText(input.narrativePov, "未指定"),
+    pacePreference: compactText(input.pacePreference, "未指定"),
+    emotionIntensity: compactText(input.emotionIntensity, "未指定"),
     toneGuardrails: takeUnique(input.toneGuardrails ?? [], 4),
     hardConstraints: takeUnique(input.hardConstraints ?? [], 6),
   };
@@ -134,12 +134,12 @@ export function buildMacroConstraintContext(storyMacroPlan: StoryMacroPlan | nul
     return null;
   }
   return {
-    sellingPoint: compactText(storyMacroPlan.decomposition?.selling_point, "not specified"),
-    coreConflict: compactText(storyMacroPlan.decomposition?.core_conflict, "not specified"),
-    mainHook: compactText(storyMacroPlan.decomposition?.main_hook, "not specified"),
-    progressionLoop: compactText(storyMacroPlan.decomposition?.progression_loop, "not specified"),
-    growthPath: compactText(storyMacroPlan.decomposition?.growth_path, "not specified"),
-    endingFlavor: compactText(storyMacroPlan.decomposition?.ending_flavor, "not specified"),
+    sellingPoint: compactText(storyMacroPlan.decomposition?.selling_point, "未指定"),
+    coreConflict: compactText(storyMacroPlan.decomposition?.core_conflict, "未指定"),
+    mainHook: compactText(storyMacroPlan.decomposition?.main_hook, "未指定"),
+    progressionLoop: compactText(storyMacroPlan.decomposition?.progression_loop, "未指定"),
+    growthPath: compactText(storyMacroPlan.decomposition?.growth_path, "未指定"),
+    endingFlavor: compactText(storyMacroPlan.decomposition?.ending_flavor, "未指定"),
     hardConstraints: takeUnique([
       ...(storyMacroPlan.constraints ?? []),
       ...(storyMacroPlan.constraintEngine?.hard_constraints ?? []),
@@ -153,17 +153,17 @@ export function buildVolumeWindowContext(seed: RuntimeVolumeSeed): VolumeWindowC
     return null;
   }
   const adjacentSummary = [
-    seed.previousVolume?.title ? `previous: ${compactText(seed.previousVolume.title)} / ${compactText(seed.previousVolume.summary, "no summary")}` : "",
-    seed.nextVolume?.title ? `next: ${compactText(seed.nextVolume.title)} / ${compactText(seed.nextVolume.summary, "no summary")}` : "",
+    seed.previousVolume?.title ? `上一卷: ${compactText(seed.previousVolume.title)} / ${compactText(seed.previousVolume.summary, "无摘要")}` : "",
+    seed.nextVolume?.title ? `下一卷: ${compactText(seed.nextVolume.title)} / ${compactText(seed.nextVolume.summary, "无摘要")}` : "",
   ].filter(Boolean).join("\n");
   return {
     volumeId: current.id ?? null,
     sortOrder: current.sortOrder ?? null,
     title: compactText(current.title),
-    missionSummary: compactText(current.mainPromise || current.summary, "no volume mission"),
-    adjacentSummary: adjacentSummary || "No adjacent volume summary.",
+    missionSummary: compactText(current.mainPromise || current.summary, "无卷任务"),
+    adjacentSummary: adjacentSummary || "无相邻卷摘要。",
     pendingPayoffs: takeUnique(current.openPayoffs ?? [], 5),
-    softFutureSummary: compactText(seed.softFutureSummary, "No future volume summary."),
+    softFutureSummary: compactText(seed.softFutureSummary, "无未来卷摘要。"),
     keyMilestoneGuards: [],
   };
 }
@@ -177,15 +177,15 @@ export function buildChapterMissionContext(contextPackage: GenerationContextPack
     objective:
       compactText(stateGoal?.summary)
       || compactText(contextPackage.plan?.objective)
-      || compactText(contextPackage.chapter.expectation, "Push the current chapter mission forward."),
+      || compactText(contextPackage.chapter.expectation, "推进当前章节任务。"),
     expectation:
       compactText(contextPackage.chapter.expectation)
       || compactText(stateGoal?.summary)
-      || compactText(contextPackage.plan?.title, "Deliver the current chapter mission."),
+      || compactText(contextPackage.plan?.title, "完成当前章节任务。"),
     taskSheet: compactText(contextPackage.chapter.taskSheet) || null,
     targetWordCount: contextPackage.chapter.targetWordCount ?? null,
     planRole: contextPackage.plan?.planRole ?? null,
-    hookTarget: compactText(contextPackage.plan?.hookTarget, "Leave a fresh tension point at the ending."),
+    hookTarget: compactText(contextPackage.plan?.hookTarget, "在结尾留下一个新鲜的悬念。"),
     mustAdvance: sanitizeCreativeMustAdvanceItems(takeUnique([
       ...(stateGoal?.targetConflicts ?? []),
       ...(contextPackage.plan?.mustAdvance ?? []),
@@ -313,7 +313,7 @@ export function buildChapterWriteContext(input: {
     characterResourceContext: input.contextPackage.characterResourceContext ?? null,
     recentChapterSummaries: takeUnique(input.contextPackage.previousChaptersSummary.slice(0, 3), 3),
     previousChapterTail: compactText(input.contextPackage.previousChapterTail) || null,
-    openingAntiRepeatHint: compactText(input.contextPackage.openingHint, "No recent opening guidance."),
+    openingAntiRepeatHint: compactText(input.contextPackage.openingHint, "无最近开头引导。"),
     styleContract: input.contextPackage.styleContext?.compiledBlocks?.contract ?? null,
     styleConstraints: summarizeStyleConstraints(input.contextPackage),
     continuationConstraints: summarizeContinuationConstraints(input.contextPackage),
@@ -414,20 +414,20 @@ export function buildChapterReviewContext(
     structureObligations: takeUnique([
       ...writeContext.chapterMission.mustAdvance,
       ...writeContext.chapterMission.mustPreserve,
-      ...writeContext.obligationContract.mustHitNow.map((item) => `must hit now: ${item}`),
-      ...writeContext.obligationContract.requiredCharacterAppearances.map((item) => `required character appearance: ${item}`),
-      ...writeContext.obligationContract.requiredGoalChanges.map((item) => `required goal change: ${item}`),
-      ...writeContext.payoffDirectives.map((item) => `payoff directive: ${item.operation} ${item.title}${item.forbiddenReveal ? ` / protected: ${item.forbiddenReveal}` : ""}`),
-      ...(writeContext.chapterStateGoal?.targetConflicts ?? []).map((item) => `state conflict: ${item}`),
-      ...(writeContext.chapterBoundary?.doNotCross ?? []).map((item) => `boundary do-not-cross: ${item}`),
-      writeContext.chapterMission.hookTarget ? `hook target: ${writeContext.chapterMission.hookTarget}` : "",
-      writeContext.volumeWindow?.missionSummary ? `volume mission: ${writeContext.volumeWindow.missionSummary}` : "",
-      ...(writeContext.characterResourceContext?.setupNeededItems ?? []).map((item) => `resource setup needed: ${item.name} / ${item.summary}`),
-      ...(writeContext.characterResourceContext?.blockedItems ?? []).map((item) => `resource unavailable: ${item.name} is ${item.status}; do not use it without repair setup`),
-      ...(writeContext.characterResourceContext?.pendingReviewItems ?? []).map((item) => `resource needs confirmation: ${item.name} / ${item.summary}`),
-      ...writeContext.ledgerPendingItems.map((item) => buildLedgerItemLine(item, "pending payoff")),
-      ...writeContext.ledgerUrgentItems.map((item) => buildLedgerItemLine(item, "urgent payoff")),
-      ...writeContext.ledgerOverdueItems.map((item) => buildLedgerItemLine(item, "overdue payoff")),
+      ...writeContext.obligationContract.mustHitNow.map((item) => `必须立即兑现: ${item}`),
+      ...writeContext.obligationContract.requiredCharacterAppearances.map((item) => `要求角色出场: ${item}`),
+      ...writeContext.obligationContract.requiredGoalChanges.map((item) => `要求目标变化: ${item}`),
+      ...writeContext.payoffDirectives.map((item) => `伏笔指令: ${item.operation} ${item.title}${item.forbiddenReveal ? ` / 受保护: ${item.forbiddenReveal}` : ""}`),
+      ...(writeContext.chapterStateGoal?.targetConflicts ?? []).map((item) => `状态冲突: ${item}`),
+      ...(writeContext.chapterBoundary?.doNotCross ?? []).map((item) => `边界不可越界: ${item}`),
+      writeContext.chapterMission.hookTarget ? `钩子目标: ${writeContext.chapterMission.hookTarget}` : "",
+      writeContext.volumeWindow?.missionSummary ? `卷任务: ${writeContext.volumeWindow.missionSummary}` : "",
+      ...(writeContext.characterResourceContext?.setupNeededItems ?? []).map((item) => `资源需初始化: ${item.name} / ${item.summary}`),
+      ...(writeContext.characterResourceContext?.blockedItems ?? []).map((item) => `资源不可用: ${item.name} 状态为 ${item.status}；未经修复初始化不得使用`),
+      ...(writeContext.characterResourceContext?.pendingReviewItems ?? []).map((item) => `资源需确认: ${item.name} / ${item.summary}`),
+      ...writeContext.ledgerPendingItems.map((item) => buildLedgerItemLine(item, "待兑现伏笔")),
+      ...writeContext.ledgerUrgentItems.map((item) => buildLedgerItemLine(item, "紧急伏笔")),
+      ...writeContext.ledgerOverdueItems.map((item) => buildLedgerItemLine(item, "超期伏笔")),
     ], 32),
     worldRules: summarizeWorldRules(contextPackage),
     historicalIssues: summarizeHistoricalIssues(contextPackage),
@@ -451,47 +451,47 @@ export function buildChapterRepairContext(input: {
     structureObligations: takeUnique([
       ...writeContext.chapterMission.mustAdvance,
       ...writeContext.chapterMission.mustPreserve,
-      ...writeContext.obligationContract.mustHitNow.map((item) => `must hit now: ${item}`),
-      ...writeContext.obligationContract.requiredCharacterAppearances.map((item) => `required character appearance: ${item}`),
-      ...writeContext.obligationContract.requiredGoalChanges.map((item) => `required goal change: ${item}`),
-      ...writeContext.payoffDirectives.map((item) => `payoff directive: ${item.operation} ${item.title}${item.forbiddenReveal ? ` / protected: ${item.forbiddenReveal}` : ""}`),
-      ...(writeContext.chapterStateGoal?.targetConflicts ?? []).map((item) => `state conflict: ${item}`),
-      ...(writeContext.chapterBoundary?.doNotCross ?? []).map((item) => `boundary do-not-cross: ${item}`),
+      ...writeContext.obligationContract.mustHitNow.map((item) => `必须立即兑现: ${item}`),
+      ...writeContext.obligationContract.requiredCharacterAppearances.map((item) => `要求角色出场: ${item}`),
+      ...writeContext.obligationContract.requiredGoalChanges.map((item) => `要求目标变化: ${item}`),
+      ...writeContext.payoffDirectives.map((item) => `伏笔指令: ${item.operation} ${item.title}${item.forbiddenReveal ? ` / 受保护: ${item.forbiddenReveal}` : ""}`),
+      ...(writeContext.chapterStateGoal?.targetConflicts ?? []).map((item) => `状态冲突: ${item}`),
+      ...(writeContext.chapterBoundary?.doNotCross ?? []).map((item) => `边界不可越界: ${item}`),
       writeContext.volumeWindow?.missionSummary
-        ? `volume mission: ${writeContext.volumeWindow.missionSummary}`
+        ? `卷任务: ${writeContext.volumeWindow.missionSummary}`
         : "",
-      ...(writeContext.characterResourceContext?.setupNeededItems ?? []).map((item) => `resource setup needed: ${item.name} / ${item.summary}`),
-      ...(writeContext.characterResourceContext?.blockedItems ?? []).map((item) => `resource unavailable: ${item.name} is ${item.status}; patch locally before use`),
-      ...writeContext.ledgerPendingItems.map((item) => buildLedgerItemLine(item, "pending payoff")),
-      ...writeContext.ledgerUrgentItems.map((item) => buildLedgerItemLine(item, "urgent payoff")),
-      ...writeContext.ledgerOverdueItems.map((item) => buildLedgerItemLine(item, "overdue payoff")),
+      ...(writeContext.characterResourceContext?.setupNeededItems ?? []).map((item) => `资源需初始化: ${item.name} / ${item.summary}`),
+      ...(writeContext.characterResourceContext?.blockedItems ?? []).map((item) => `资源不可用: ${item.name} 状态为 ${item.status}；使用前在本地补全`),
+      ...writeContext.ledgerPendingItems.map((item) => buildLedgerItemLine(item, "待兑现伏笔")),
+      ...writeContext.ledgerUrgentItems.map((item) => buildLedgerItemLine(item, "紧急伏笔")),
+      ...writeContext.ledgerOverdueItems.map((item) => buildLedgerItemLine(item, "超期伏笔")),
     ], 32),
     worldRules: summarizeWorldRules(input.contextPackage),
     historicalIssues: summarizeHistoricalIssues(input.contextPackage),
     allowedEditBoundaries: takeUnique([
-      "Keep the chapter's established objective, participants, and major outcome direction intact.",
-      "Do not introduce new core characters, new world rules, or off-outline twists.",
+      "保持当前章节已确立的目标、参与角色和主要结果方向不变。",
+      "不要引入新的核心角色、新的世界规则或偏离大纲的情节转折。",
       writeContext.volumeWindow?.missionSummary
-        ? `Keep the repair aligned with the current volume mission: ${writeContext.volumeWindow.missionSummary}`
+        ? `确保修复与当前卷任务保持一致: ${writeContext.volumeWindow.missionSummary}`
         : "",
-      ...writeContext.ledgerPendingItems.map((item) => `Do not erase pending payoff setup: ${item.title}`),
-      ...writeContext.ledgerUrgentItems.map((item) => `This chapter must visibly touch the urgent payoff thread: ${item.title}`),
-      ...writeContext.ledgerOverdueItems.map((item) => `You must either兑现 or explicitly explain the overdue payoff pressure: ${item.title}`),
-      ...(writeContext.characterResourceContext?.blockedItems ?? []).map((item) => `Patch resource continuity before using ${item.name}; current status is ${item.status}.`),
-      ...(writeContext.characterResourceContext?.pendingReviewItems ?? []).map((item) => `Do not make an uncertain resource fact irreversible: ${item.name}.`),
+      ...writeContext.ledgerPendingItems.map((item) => `不要擦除待兑现伏笔的设置: ${item.title}`),
+      ...writeContext.ledgerUrgentItems.map((item) => `本章必须明显触及紧急伏笔线索: ${item.title}`),
+      ...writeContext.ledgerOverdueItems.map((item) => `必须兑现或明确解释超期伏笔压力: ${item.title}`),
+      ...(writeContext.characterResourceContext?.blockedItems ?? []).map((item) => `使用 ${item.name} 前先补全资源连续性；当前状态为 ${item.status}。`),
+      ...(writeContext.characterResourceContext?.pendingReviewItems ?? []).map((item) => `不要将未确认的资源事实变为不可逆: ${item.name}。`),
       writeContext.chapterMission.hookTarget
-        ? `Preserve or strengthen the ending tension: ${writeContext.chapterMission.hookTarget}`
+        ? `保留或加强结尾悬念: ${writeContext.chapterMission.hookTarget}`
         : "",
       ...writeContext.characterBehaviorGuides
         .filter((guide) => guide.shouldPreferAppearance || guide.isCoreInVolume)
         .slice(0, 4)
-        .map((guide) => `Keep ${guide.name} aligned with current role duty: ${guide.volumeResponsibility ?? guide.volumeRoleLabel ?? guide.role}`),
+        .map((guide) => `保持 ${guide.name} 与当前角色职责一致: ${guide.volumeResponsibility ?? guide.volumeRoleLabel ?? guide.role}`),
       writeContext.pendingCandidateGuards.length > 0
-        ? "Pending character candidates remain read-only unless they are confirmed outside the repair flow."
+        ? "待确认的候选角色保持只读状态，除非在修复流程之外确认。"
         : "",
-      ...(writeContext.protectedSecrets ?? []).map((item) => `do not disclose: ${item}`),
-      ...(writeContext.chapterBoundary?.doNotCross ?? []).map((item) => `do not cross boundary: ${item}`),
-      ...writeContext.chapterMission.mustPreserve.map((item) => `must preserve: ${item}`),
+      ...(writeContext.protectedSecrets ?? []).map((item) => `不得揭露: ${item}`),
+      ...(writeContext.chapterBoundary?.doNotCross ?? []).map((item) => `不得越过边界: ${item}`),
+      ...writeContext.chapterMission.mustPreserve.map((item) => `必须保留: ${item}`),
     ], 12),
   };
 }

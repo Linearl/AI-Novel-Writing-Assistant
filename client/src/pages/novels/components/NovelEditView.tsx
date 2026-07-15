@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { LoadingIndicator } from "@/components/ui/loading-indicator";
 import KnowledgeBindingPanel from "@/components/knowledge/KnowledgeBindingPanel";
+import MaterialManagePanel from "./MaterialManagePanel";
 import AITakeoverContainer from "@/components/workflow/AITakeoverContainer";
 import ChapterManagementTab from "./ChapterManagementTab";
 import DirectorFactDebugDialog from "./DirectorFactDebugDialog";
@@ -314,6 +315,8 @@ function DesktopNovelEditView(props: NovelEditViewProps) {
                   </Card>
                 </div>
                 <KnowledgeBindingPanel targetType="novel" targetId={id} title="参考知识" />
+
+                <MaterialManagePanel novelId={id} />
 
                 {/* 开发工具区 —— 仅在 DEV 环境可见 */}
                 {import.meta.env.DEV ? (

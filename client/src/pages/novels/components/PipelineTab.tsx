@@ -31,9 +31,10 @@ interface PipelineTabProps {
     skipCompleted: boolean;
     qualityThreshold: number;
     repairMode: "detect_only" | "light_repair" | "heavy_repair" | "continuity_only" | "character_only" | "ending_only";
+    artifactSyncMode: "adaptive" | "deferred" | "strict";
   };
   onPipelineFormChange: (
-    field: "startOrder" | "endOrder" | "maxRetries" | "runMode" | "autoReview" | "autoRepair" | "skipCompleted" | "qualityThreshold" | "repairMode",
+    field: "startOrder" | "endOrder" | "maxRetries" | "runMode" | "autoReview" | "autoRepair" | "skipCompleted" | "qualityThreshold" | "repairMode" | "artifactSyncMode",
     value: number | boolean | string,
   ) => void;
   maxOrder: number;
@@ -90,6 +91,15 @@ function repairModeLabel(mode: PipelineTabProps["pipelineForm"]["repairMode"]): 
     continuity_only: "只修连续性",
     character_only: "只修人设",
     ending_only: "只修结尾力度",
+  };
+  return mapping[mode];
+}
+
+function artifactSyncModeLabel(mode: PipelineTabProps["pipelineForm"]["artifactSyncMode"]): string {
+  const mapping: Record<PipelineTabProps["pipelineForm"]["artifactSyncMode"], string> = {
+    adaptive: "智能自适应（推荐）",
+    deferred: "延迟同步（写作优先）",
+    strict: "严格同步（数据优先）",
   };
   return mapping[mode];
 }
@@ -349,6 +359,18 @@ export default function PipelineTab(props: PipelineTabProps) {
                   </select>
                 </div>
               </div>
+              <div className="space-y-1">
+                <div className="text-xs font-medium text-muted-foreground">工件同步模式</div>
+                <select
+                  className="w-full rounded-md border bg-background p-2 text-sm"
+                  value={pipelineForm.artifactSyncMode}
+                  onChange={(event) => onPipelineFormChange("artifactSyncMode", event.target.value)}
+                >
+                  <option value="adaptive">智能自适应（推荐）</option>
+                  <option value="deferred">延迟同步（写作优先）</option>
+                  <option value="strict">严格同步（数据优先）</option>
+                </select>
+              </div>
               <div className="flex flex-wrap gap-4 text-xs text-muted-foreground">
                 <label className="flex items-center gap-1">
                   <input
@@ -376,7 +398,7 @@ export default function PipelineTab(props: PipelineTabProps) {
                 </label>
               </div>
               <div className="rounded-md border bg-muted/20 p-2 text-xs text-muted-foreground">
-                当前设置：{pipelineForm.runMode === "polish" ? "精修" : "快速"} | 阈值 {pipelineForm.qualityThreshold} | {repairModeLabel(pipelineForm.repairMode)}
+                当前设置：{pipelineForm.runMode === "polish" ? "精修" : "快速"} | 阈值 {pipelineForm.qualityThreshold} | {repairModeLabel(pipelineForm.repairMode)} | 工件同步：{artifactSyncModeLabel(pipelineForm.artifactSyncMode)}
               </div>
             </CardContent>
           </Card>

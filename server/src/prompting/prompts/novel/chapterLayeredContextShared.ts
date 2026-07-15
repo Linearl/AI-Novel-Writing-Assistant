@@ -41,7 +41,7 @@ export function splitLines(value: string | null | undefined, limit = 4): string[
   );
 }
 
-export function toListBlock(title: string, values: string[], emptyLabel = "none"): string {
+export function toListBlock(title: string, values: string[], emptyLabel = "无"): string {
   if (values.length === 0) {
     return `${title}: ${emptyLabel}`;
   }
@@ -91,7 +91,7 @@ export function summarizeStateSnapshot(contextPackage: GenerationContextPackage)
         .slice(0, 2)
         .map((fact) => `${fact} (reader)`),
     ], 6);
-    return fragments.join("\n") || "No prior canonical state snapshot.";
+    return fragments.join("\n") || "无先前规范状态快照。";
   }
 
   const fragments = takeUnique([
@@ -113,7 +113,7 @@ export function summarizeStateSnapshot(contextPackage: GenerationContextPackage)
       .slice(0, 2)
       .map((info) => `${info.fact} (${info.status})`) ?? [],
   ], 6);
-  return fragments.join("\n") || "No prior state snapshot.";
+  return fragments.join("\n") || "无先前状态快照。";
 }
 
 export function summarizeOpenConflicts(contextPackage: GenerationContextPackage): string[] {
@@ -225,13 +225,13 @@ export function buildLedgerItemLine(
 
 export function buildParticipantText(writeContext: ChapterWriteContext): string {
   if (writeContext.participants.length === 0) {
-    return "Participants: none";
+    return "参与角色：无";
   }
   const guideByCharacterId = new Map(
     writeContext.characterBehaviorGuides.map((guide) => [guide.characterId, guide]),
   );
   return [
-    "Participants:",
+    "参与角色：",
     ...writeContext.participants.map((character) => {
       const guide = guideByCharacterId.get(character.id);
       const tier = getCharacterTier(character);
@@ -291,10 +291,10 @@ export function buildParticipantText(writeContext: ChapterWriteContext): string 
 
 export function buildCharacterGuidanceText(writeContext: ChapterWriteContext): string {
   if (writeContext.characterBehaviorGuides.length === 0) {
-    return "Character behavior guidance: none";
+    return "角色行为引导：无";
   }
   return [
-    "Character behavior guidance:",
+    "角色行为引导：",
     ...writeContext.characterBehaviorGuides.map((guide) => {
       const parts = takeUnique([
         guide.isCoreInVolume ? "core in current volume" : "supporting in current volume",
@@ -316,10 +316,10 @@ export function buildCharacterGuidanceText(writeContext: ChapterWriteContext): s
 
 export function buildRelationStageText(writeContext: ChapterWriteContext): string {
   if (writeContext.activeRelationStages.length === 0) {
-    return "Active relationship stages: none";
+    return "活跃关系阶段：无";
   }
   return [
-    "Active relationship stages:",
+    "活跃关系阶段：",
     ...writeContext.activeRelationStages.map((relation) => (
       `- ${relation.sourceCharacterName} -> ${relation.targetCharacterName}: ${relation.stageLabel} | ${relation.stageSummary}${relation.nextTurnPoint ? ` | next=${relation.nextTurnPoint}` : ""}`
     )),
@@ -328,10 +328,10 @@ export function buildRelationStageText(writeContext: ChapterWriteContext): strin
 
 export function buildPendingCandidateGuardText(writeContext: ChapterWriteContext): string {
   if (writeContext.pendingCandidateGuards.length === 0) {
-    return "Pending candidate guardrails: none";
+    return "待确认候选角色守卫：无";
   }
   return [
-    "Pending candidate guardrails (read-only, do not inject into generation):",
+    "待确认候选角色守卫（只读，不得注入到正文生成中）：",
     ...writeContext.pendingCandidateGuards.map((candidate) => {
       const parts = takeUnique([
         candidate.proposedRole ? `role=${candidate.proposedRole}` : "",

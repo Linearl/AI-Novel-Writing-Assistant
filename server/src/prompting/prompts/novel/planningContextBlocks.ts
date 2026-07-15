@@ -7,7 +7,7 @@ import type { StoryMacroPlan } from "@ai-novel/shared";
 import { createContextBlock } from "../../core/contextBudget";
 import type { PromptContextBlock } from "../../core/promptTypes";
 
-function compactText(value: string | null | undefined, fallback = "none"): string {
+function compactText(value: string | null | undefined, fallback = "无"): string {
   return value?.replace(/\s+/g, " ").trim() || fallback;
 }
 
@@ -31,13 +31,13 @@ function takeUnique(items: Array<string | null | undefined>, limit = items.lengt
 function readerChannelPreferenceLabel(value: DirectorProjectContextInput["readerChannelPreference"]): string {
   switch (value) {
     case "ai_judge":
-      return "AI judgment";
+      return "AI 判断";
     case "male_oriented":
-      return "male-oriented";
+      return "男性向";
     case "female_oriented":
-      return "female-oriented";
+      return "女性向";
     case "general":
-      return "general / unrestricted";
+      return "通用 / 不限";
     default:
       return "";
   }
@@ -47,76 +47,76 @@ export function formatProjectContext(input: DirectorProjectContextInput): string
   const styleSummaryLines = input.styleIntentSummary?.stageSummaryLines ?? [];
   const readerChannel = readerChannelPreferenceLabel(input.readerChannelPreference);
   const lines = [
-    input.title?.trim() ? `current title: ${input.title.trim()}` : "",
-    input.description?.trim() ? `current description: ${input.description.trim()}` : "",
-    input.targetAudience?.trim() ? `target audience: ${input.targetAudience.trim()}` : "",
-    input.bookSellingPoint?.trim() ? `book selling point: ${input.bookSellingPoint.trim()}` : "",
-    input.competingFeel?.trim() ? `competing feel: ${input.competingFeel.trim()}` : "",
-    input.first30ChapterPromise?.trim() ? `first 30 chapter promise: ${input.first30ChapterPromise.trim()}` : "",
+    input.title?.trim() ? `当前书名: ${input.title.trim()}` : "",
+    input.description?.trim() ? `当前简介: ${input.description.trim()}` : "",
+    input.targetAudience?.trim() ? `目标读者: ${input.targetAudience.trim()}` : "",
+    input.bookSellingPoint?.trim() ? `核心卖点: ${input.bookSellingPoint.trim()}` : "",
+    input.competingFeel?.trim() ? `对标感受: ${input.competingFeel.trim()}` : "",
+    input.first30ChapterPromise?.trim() ? `前30章承诺: ${input.first30ChapterPromise.trim()}` : "",
     input.commercialTags && input.commercialTags.length > 0
-      ? `commercial tags: ${input.commercialTags.join(", ")}`
+      ? `商业标签: ${input.commercialTags.join(", ")}`
       : "",
-    input.genreId?.trim() ? `genre id: ${input.genreId.trim()}` : "",
-    input.primaryStoryModeId?.trim() ? `primary story mode id: ${input.primaryStoryModeId.trim()}` : "",
-    input.secondaryStoryModeId?.trim() ? `secondary story mode id: ${input.secondaryStoryModeId.trim()}` : "",
-    input.worldId?.trim() ? `world id: ${input.worldId.trim()}` : "",
-    input.writingMode ? `writing mode: ${input.writingMode}` : "",
-    input.projectMode ? `project mode: ${input.projectMode}` : "",
-    readerChannel ? `reader channel tendency: ${readerChannel}` : "",
-    input.narrativePov ? `narrative pov: ${input.narrativePov}` : "",
-    input.pacePreference ? `pace: ${input.pacePreference}` : "",
-    input.styleTone?.trim() && !input.styleProfileId?.trim() ? `style tone: ${input.styleTone.trim()}` : "",
-    input.styleProfileId?.trim() ? `style profile id: ${input.styleProfileId.trim()}` : "",
-    input.styleIntentSummary?.headline?.trim() ? `active style hint: ${input.styleIntentSummary.headline.trim()}` : "",
-    styleSummaryLines.length > 0 ? `style intent summary: ${styleSummaryLines.join(" | ")}` : "",
-    input.emotionIntensity ? `emotion intensity: ${input.emotionIntensity}` : "",
-    input.aiFreedom ? `ai freedom: ${input.aiFreedom}` : "",
-    typeof input.defaultChapterLength === "number" ? `default chapter length: ${input.defaultChapterLength}` : "",
-    typeof input.estimatedChapterCount === "number" ? `estimated chapters: ${input.estimatedChapterCount}` : "",
+    input.genreId?.trim() ? `类型 ID: ${input.genreId.trim()}` : "",
+    input.primaryStoryModeId?.trim() ? `主故事模式 ID: ${input.primaryStoryModeId.trim()}` : "",
+    input.secondaryStoryModeId?.trim() ? `副故事模式 ID: ${input.secondaryStoryModeId.trim()}` : "",
+    input.worldId?.trim() ? `世界 ID: ${input.worldId.trim()}` : "",
+    input.writingMode ? `写作模式: ${input.writingMode}` : "",
+    input.projectMode ? `项目模式: ${input.projectMode}` : "",
+    readerChannel ? `读者频道倾向: ${readerChannel}` : "",
+    input.narrativePov ? `叙事视角: ${input.narrativePov}` : "",
+    input.pacePreference ? `节奏偏好: ${input.pacePreference}` : "",
+    input.styleTone?.trim() && !input.styleProfileId?.trim() ? `风格基调: ${input.styleTone.trim()}` : "",
+    input.styleProfileId?.trim() ? `风格配置 ID: ${input.styleProfileId.trim()}` : "",
+    input.styleIntentSummary?.headline?.trim() ? `当前风格提示: ${input.styleIntentSummary.headline.trim()}` : "",
+    styleSummaryLines.length > 0 ? `风格意图摘要: ${styleSummaryLines.join(" | ")}` : "",
+    input.emotionIntensity ? `情绪强度: ${input.emotionIntensity}` : "",
+    input.aiFreedom ? `AI 自由度: ${input.aiFreedom}` : "",
+    typeof input.defaultChapterLength === "number" ? `默认章节长度: ${input.defaultChapterLength}` : "",
+    typeof input.estimatedChapterCount === "number" ? `预估章节数: ${input.estimatedChapterCount}` : "",
   ].filter(Boolean);
   return lines.join("\n");
 }
 
 function formatCandidateDigest(candidate: DirectorCandidate): string {
   return [
-    `title: ${candidate.workingTitle}`,
-    `logline: ${candidate.logline}`,
-    `positioning: ${candidate.positioning}`,
-    `selling point: ${candidate.sellingPoint}`,
-    `core conflict: ${candidate.coreConflict}`,
-    `protagonist path: ${candidate.protagonistPath}`,
-    `hook strategy: ${candidate.hookStrategy}`,
-    `progression loop: ${candidate.progressionLoop}`,
-    `ending direction: ${candidate.endingDirection}`,
+    `书名: ${candidate.workingTitle}`,
+    `一句话梗概: ${candidate.logline}`,
+    `定位: ${candidate.positioning}`,
+    `核心卖点: ${candidate.sellingPoint}`,
+    `核心冲突: ${candidate.coreConflict}`,
+    `主角路径: ${candidate.protagonistPath}`,
+    `钩子策略: ${candidate.hookStrategy}`,
+    `推进循环: ${candidate.progressionLoop}`,
+    `结局方向: ${candidate.endingDirection}`,
   ].join("\n");
 }
 
 function formatLatestBatchDigest(batch: DirectorCandidateBatch | undefined): string {
   if (!batch) {
-    return "No previous batch.";
+    return "无前置批次。";
   }
   return [
-    `${batch.roundLabel}: ${compactText(batch.refinementSummary, "latest candidate round")}`,
+    `${batch.roundLabel}: ${compactText(batch.refinementSummary, "最新候选轮次")}`,
     ...batch.candidates.map((candidate, index) => (
-      [`option ${index + 1}`, formatCandidateDigest(candidate)].join("\n")
+      [`候选 ${index + 1}`, formatCandidateDigest(candidate)].join("\n")
     )),
   ].join("\n\n");
 }
 
 function formatStoryMacroSummary(plan: StoryMacroPlan | null | undefined): string {
   if (!plan) {
-    return "No story macro plan.";
+    return "无宏观故事计划。";
   }
   return [
-    plan.expansion?.expanded_premise ? `expanded premise: ${plan.expansion.expanded_premise}` : "",
-    plan.expansion?.conflict_engine ? `conflict engine: ${plan.expansion.conflict_engine}` : "",
-    plan.expansion?.mystery_box ? `mystery box: ${plan.expansion.mystery_box}` : "",
-    plan.decomposition?.selling_point ? `selling point: ${plan.decomposition.selling_point}` : "",
-    plan.decomposition?.core_conflict ? `core conflict: ${plan.decomposition.core_conflict}` : "",
-    plan.decomposition?.progression_loop ? `progression loop: ${plan.decomposition.progression_loop}` : "",
-    plan.decomposition?.growth_path ? `growth path: ${plan.decomposition.growth_path}` : "",
-    plan.decomposition?.ending_flavor ? `ending flavor: ${plan.decomposition.ending_flavor}` : "",
-    plan.constraints.length > 0 ? `constraints: ${plan.constraints.join(" | ")}` : "",
+    plan.expansion?.expanded_premise ? `展开前提: ${plan.expansion.expanded_premise}` : "",
+    plan.expansion?.conflict_engine ? `冲突引擎: ${plan.expansion.conflict_engine}` : "",
+    plan.expansion?.mystery_box ? `悬念箱: ${plan.expansion.mystery_box}` : "",
+    plan.decomposition?.selling_point ? `核心卖点: ${plan.decomposition.selling_point}` : "",
+    plan.decomposition?.core_conflict ? `核心冲突: ${plan.decomposition.core_conflict}` : "",
+    plan.decomposition?.progression_loop ? `推进循环: ${plan.decomposition.progression_loop}` : "",
+    plan.decomposition?.growth_path ? `成长路径: ${plan.decomposition.growth_path}` : "",
+    plan.decomposition?.ending_flavor ? `结局风味: ${plan.decomposition.ending_flavor}` : "",
+    plan.constraints.length > 0 ? `约束: ${plan.constraints.join(" | ")}` : "",
   ].filter(Boolean).join("\n");
 }
 
@@ -133,31 +133,31 @@ export function buildDirectorCandidateContextBlocks(input: {
       group: "idea_seed",
       priority: 100,
       required: true,
-      content: `Idea seed:\n${compactText(input.idea)}`,
+      content: `创意种子:\n${compactText(input.idea)}`,
     }),
     createContextBlock({
       id: "project_context",
       group: "project_context",
       priority: 90,
-      content: `Project context:\n${formatProjectContext(input.context) || "none"}`,
+      content: `项目上下文:\n${formatProjectContext(input.context) || "无"}`,
     }),
     createContextBlock({
       id: "latest_batch",
       group: "latest_batch",
       priority: 70,
-      content: `Latest batch digest:\n${formatLatestBatchDigest(input.latestBatch)}`,
+      content: `最新批次摘要:\n${formatLatestBatchDigest(input.latestBatch)}`,
     }),
     createContextBlock({
       id: "preset_hints",
       group: "preset_hints",
       priority: 80,
-      content: `Preset correction hints:\n${input.presets.join("\n") || "none"}`,
+      content: `预设修正提示:\n${input.presets.join("\n") || "无"}`,
     }),
     createContextBlock({
       id: "freeform_feedback",
       group: "freeform_feedback",
       priority: 76,
-      content: `Freeform correction hint:\n${compactText(input.feedback) || "none"}`,
+      content: `自由修正提示:\n${compactText(input.feedback) || "无"}`,
     }),
   ].filter((block) => block.content.trim().length > 0);
 }
@@ -176,9 +176,9 @@ export function buildDirectorBlueprintContextBlocks(input: {
       priority: 100,
       required: true,
       content: [
-        "Book contract:",
+        "书籍契约:",
         formatCandidateDigest(input.candidate),
-        `target chapters: ${input.targetChapterCount}`,
+        `目标章节数: ${input.targetChapterCount}`,
       ].join("\n"),
     }),
     createContextBlock({
@@ -186,20 +186,20 @@ export function buildDirectorBlueprintContextBlocks(input: {
       group: "idea_seed",
       priority: 96,
       required: true,
-      content: `Idea seed:\n${compactText(input.idea)}`,
+      content: `创意种子:\n${compactText(input.idea)}`,
     }),
     createContextBlock({
       id: "project_context",
       group: "project_context",
       priority: 86,
-      content: `Project context:\n${formatProjectContext(input.context) || "none"}`,
+      content: `项目上下文:\n${formatProjectContext(input.context) || "无"}`,
     }),
     createContextBlock({
       id: "macro_constraints",
       group: "macro_constraints",
       priority: 92,
       required: true,
-      content: `Story macro summary:\n${formatStoryMacroSummary(input.storyMacroPlan)}`,
+      content: `宏观故事摘要:\n${formatStoryMacroSummary(input.storyMacroPlan)}`,
     }),
   ];
 }
@@ -218,9 +218,9 @@ export function buildDirectorBookContractContextBlocks(input: {
       priority: 100,
       required: true,
       content: [
-        "Director book direction:",
+        "导演书籍方向:",
         formatCandidateDigest(input.candidate),
-        `target chapters: ${input.targetChapterCount}`,
+        `目标章节数: ${input.targetChapterCount}`,
       ].join("\n"),
     }),
     createContextBlock({
@@ -228,19 +228,19 @@ export function buildDirectorBookContractContextBlocks(input: {
       group: "idea_seed",
       priority: 96,
       required: true,
-      content: `Idea seed:\n${compactText(input.idea)}`,
+      content: `创意种子:\n${compactText(input.idea)}`,
     }),
     createContextBlock({
       id: "project_context",
       group: "project_context",
       priority: 88,
-      content: `Project context:\n${formatProjectContext(input.context) || "none"}`,
+      content: `项目上下文:\n${formatProjectContext(input.context) || "无"}`,
     }),
     createContextBlock({
       id: "macro_constraints",
       group: "macro_constraints",
       priority: 92,
-      content: `Story macro summary:\n${formatStoryMacroSummary(input.storyMacroPlan)}`,
+      content: `宏观故事摘要:\n${formatStoryMacroSummary(input.storyMacroPlan)}`,
     }),
   ].filter((block) => block.content.trim().length > 0);
 }
@@ -255,13 +255,13 @@ export function buildStoryMacroDecompositionContextBlocks(input: {
       group: "story_input",
       priority: 100,
       required: true,
-      content: `Story input:\n${compactText(input.storyInput)}`,
+      content: `故事输入:\n${compactText(input.storyInput)}`,
     }),
     createContextBlock({
       id: "project_context",
       group: "project_context",
       priority: 92,
-      content: `Project context:\n${compactText(input.projectContext)}`,
+      content: `项目上下文:\n${compactText(input.projectContext)}`,
     }),
   ];
 }
@@ -281,46 +281,46 @@ export function buildStoryMacroFieldRegenerationContextBlocks(input: {
       group: "story_input",
       priority: 100,
       required: true,
-      content: `Story input:\n${compactText(input.storyInput)}`,
+      content: `故事输入:\n${compactText(input.storyInput)}`,
     }),
     createContextBlock({
       id: "target_field",
       group: "target_field",
       priority: 98,
       required: true,
-      content: `Target field: ${input.field}`,
+      content: `目标字段: ${input.field}`,
     }),
     createContextBlock({
       id: "project_context",
       group: "project_context",
       priority: 90,
-      content: `Project context:\n${compactText(input.projectContext)}`,
+      content: `项目上下文:\n${compactText(input.projectContext)}`,
     }),
     createContextBlock({
       id: "expansion_summary",
       group: "expansion_summary",
       priority: 88,
-      content: `Expansion summary:\n${compactText(input.expansionSummary)}`,
+      content: `展开摘要:\n${compactText(input.expansionSummary)}`,
     }),
     createContextBlock({
       id: "decomposition_summary",
       group: "decomposition_summary",
       priority: 94,
       required: true,
-      content: `Decomposition summary:\n${compactText(input.decompositionSummary)}`,
+      content: `分解摘要:\n${compactText(input.decompositionSummary)}`,
     }),
     createContextBlock({
       id: "constraints",
       group: "constraints",
       priority: 96,
       required: true,
-      content: `Constraints:\n${takeUnique(input.constraints, 8).join("\n") || "none"}`,
+      content: `约束:\n${takeUnique(input.constraints, 8).join("\n") || "无"}`,
     }),
     createContextBlock({
       id: "locked_fields",
       group: "locked_fields",
       priority: 82,
-      content: `Locked fields:\n${takeUnique(input.lockedFields, 12).join("\n") || "none"}`,
+      content: `已锁定字段:\n${takeUnique(input.lockedFields, 12).join("\n") || "无"}`,
     }),
   ].filter((block) => block.content.trim().length > 0);
 }

@@ -429,9 +429,10 @@ export interface PipelineTabViewProps {
     skipCompleted: boolean;
     qualityThreshold: number;
     repairMode: "detect_only" | "light_repair" | "heavy_repair" | "continuity_only" | "character_only" | "ending_only";
+    artifactSyncMode: "adaptive" | "deferred" | "strict";
   };
   onPipelineFormChange: (
-    field: "startOrder" | "endOrder" | "maxRetries" | "runMode" | "autoReview" | "autoRepair" | "skipCompleted" | "qualityThreshold" | "repairMode",
+    field: "startOrder" | "endOrder" | "maxRetries" | "runMode" | "autoReview" | "autoRepair" | "skipCompleted" | "qualityThreshold" | "repairMode" | "artifactSyncMode",
     value: number | boolean | string,
   ) => void;
   maxOrder: number;

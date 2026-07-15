@@ -1,5 +1,5 @@
 import { useMutation, type QueryClient } from "@tanstack/react-query";
-import type { PipelineRepairMode, PipelineRunMode, VolumePlanDocument } from "@ai-novel/shared";
+import type { PipelineRepairMode, PipelineRunMode, ArtifactSyncMode, VolumePlanDocument } from "@ai-novel/shared";
 import type { LLMProvider } from "@ai-novel/shared";
 import {
   createNovelChapter,
@@ -34,6 +34,7 @@ interface PipelineFormState {
   skipCompleted: boolean;
   qualityThreshold: number;
   repairMode: PipelineRepairMode;
+  artifactSyncMode: ArtifactSyncMode;
 }
 
 interface UseNovelEditMutationsArgs {
@@ -238,6 +239,7 @@ export function useNovelEditMutations({
         skipCompleted: override?.skipCompleted ?? pipelineForm.skipCompleted,
         qualityThreshold: override?.qualityThreshold ?? pipelineForm.qualityThreshold,
         repairMode: override?.repairMode ?? pipelineForm.repairMode,
+        artifactSyncMode: override?.artifactSyncMode ?? pipelineForm.artifactSyncMode,
         provider: llm.provider,
         model: llm.model,
         temperature: llm.temperature,

@@ -127,12 +127,12 @@ function buildCharacterResourceContextBlock(writeContext: ChapterWriteContext): 
     return "";
   }
   return [
-    `Resource ledger summary: ${context.summary}`,
-    toListBlock("Available resources", context.availableItems.slice(0, 6).map(buildResourceItemLine)),
-    toListBlock("Needs setup before use", context.setupNeededItems.slice(0, 5).map(buildResourceItemLine)),
-    toListBlock("Unavailable or risky to reuse", context.blockedItems.slice(0, 5).map(buildResourceItemLine)),
-    toListBlock("Pending confirmation", context.pendingReviewItems.slice(0, 4).map(buildResourceItemLine)),
-    toListBlock("Resource risk signals", context.riskSignals.slice(0, 5).map((item) => `${item.severity}: ${item.summary}`)),
+        `资源账本汇总: ${context.summary}`,
+    toListBlock("可用资源", context.availableItems.slice(0, 6).map(buildResourceItemLine)),
+    toListBlock("使用前需初始化", context.setupNeededItems.slice(0, 5).map(buildResourceItemLine)),
+    toListBlock("不可用或风险复用", context.blockedItems.slice(0, 5).map(buildResourceItemLine)),
+    toListBlock("待确认", context.pendingReviewItems.slice(0, 4).map(buildResourceItemLine)),
+    toListBlock("资源风险信号", context.riskSignals.slice(0, 5).map((item) => `${item.severity}: ${item.summary}`)),
   ].filter(Boolean).join("\n");
 }
 
@@ -164,13 +164,13 @@ function buildIncrementalRoundContextBlock(
   }
   const content = [
     incrementalContext.previousRoundSummary?.trim()
-      ? `Previous round summary: ${incrementalContext.previousRoundSummary.trim()}`
+      ? `上一轮摘要: ${incrementalContext.previousRoundSummary.trim()}`
       : "",
     incrementalContext.currentSceneProgress?.trim()
-      ? `Current scene progress: ${incrementalContext.currentSceneProgress.trim()}`
+      ? `当前场景进度: ${incrementalContext.currentSceneProgress.trim()}`
       : "",
     incrementalContext.roundInstruction?.trim()
-      ? `Current round instruction: ${incrementalContext.roundInstruction.trim()}`
+      ? `当前轮次指令: ${incrementalContext.roundInstruction.trim()}`
       : "",
   ].filter(Boolean).join("\n");
   if (!content) {
@@ -215,24 +215,24 @@ export function buildChapterWriterContextBlocks(
       priority: 100,
       required: true,
       content: [
-        `Chapter mission: ${writeContext.chapterMission.title}`,
-        `Objective: ${writeContext.chapterMission.objective}`,
-        `Expectation: ${writeContext.chapterMission.expectation}`,
-        `State-driven next action: ${writeContext.nextAction}`,
-        writeContext.chapterMission.planRole ? `Plan role: ${writeContext.chapterMission.planRole}` : "",
+        `章节任务: ${writeContext.chapterMission.title}`,
+        `任务目标: ${writeContext.chapterMission.objective}`,
+        `期望产出: ${writeContext.chapterMission.expectation}`,
+        `状态驱动的下一步: ${writeContext.nextAction}`,
+        writeContext.chapterMission.planRole ? `计划角色: ${writeContext.chapterMission.planRole}` : "",
         wordRange.targetWordCount != null
-          ? `Target length: around ${wordRange.targetWordCount} Chinese characters (acceptable range ${wordRange.minWordCount}-${wordRange.maxWordCount}; do not end clearly below the minimum).`
+          ? `目标字数: 约 ${wordRange.targetWordCount} 字（可接受范围 ${wordRange.minWordCount}-${wordRange.maxWordCount} 字；不得明显低于下限）`
           : "",
         writeContext.completedMilestones.length > 0
-          ? toListBlock("Already completed — do NOT re-pursue or re-trigger", writeContext.completedMilestones)
+          ? toListBlock("已完成——不得重复追求或触发", writeContext.completedMilestones)
           : "",
-        toListBlock("Must advance", writeContext.chapterMission.mustAdvance),
-        toListBlock("Must preserve", writeContext.chapterMission.mustPreserve),
-        toListBlock("Risk notes", writeContext.chapterMission.riskNotes),
+        toListBlock("必须推进", writeContext.chapterMission.mustAdvance),
+        toListBlock("必须保留", writeContext.chapterMission.mustPreserve),
+        toListBlock("风险备注", writeContext.chapterMission.riskNotes),
         writeContext.chapterMission.taskSheet
-          ? `Original task sheet:\n${writeContext.chapterMission.taskSheet}`
+          ? `原始任务单:\n${writeContext.chapterMission.taskSheet}`
           : "",
-        writeContext.chapterMission.hookTarget ? `Ending hook: ${writeContext.chapterMission.hookTarget}` : "",
+        writeContext.chapterMission.hookTarget ? `结尾钩子: ${writeContext.chapterMission.hookTarget}` : "",
       ].filter(Boolean).join("\n"),
     }),
     writeContext.previousChapterTail
@@ -256,14 +256,14 @@ export function buildChapterWriterContextBlocks(
         required: true,
         allowSummary: false,
         content: [
-          "Chapter execution obligations:",
-          toListBlock("Must hit now", writeContext.obligationContract.mustHitNow),
-          toListBlock("Must preserve", writeContext.obligationContract.mustPreserve),
-          toListBlock("Required payoff touches", writeContext.obligationContract.requiredPayoffTouches),
-          toListBlock("Required character appearances", writeContext.obligationContract.requiredCharacterAppearances),
-          toListBlock("Required goal changes", writeContext.obligationContract.requiredGoalChanges),
-          toListBlock("Can defer", writeContext.obligationContract.canDefer),
-          toListBlock("Forbidden crossings", writeContext.obligationContract.forbiddenCrossings),
+          "章节执行义务:",
+          toListBlock("必须立即兑现", writeContext.obligationContract.mustHitNow),
+          toListBlock("必须保留", writeContext.obligationContract.mustPreserve),
+          toListBlock("伏笔兑现要求", writeContext.obligationContract.requiredPayoffTouches),
+          toListBlock("要求角色出场", writeContext.obligationContract.requiredCharacterAppearances),
+          toListBlock("要求目标变化", writeContext.obligationContract.requiredGoalChanges),
+          toListBlock("可延后", writeContext.obligationContract.canDefer),
+          toListBlock("禁止越界", writeContext.obligationContract.forbiddenCrossings),
         ].filter(Boolean).join("\n"),
       })
       : null,
@@ -314,7 +314,7 @@ export function buildChapterWriterContextBlocks(
           required: true,
           allowSummary: false,
           content: [
-            "Payoff directives:",
+            "伏笔兑现指令:",
             ...writeContext.payoffDirectives.map((item) => [
               `- ${item.title} [${item.operation}]`,
               item.ledgerKey ? `ledger=${item.ledgerKey}` : "",
@@ -339,10 +339,10 @@ export function buildChapterWriterContextBlocks(
       required: Boolean(writeContext.chapterStateGoal),
       content: writeContext.chapterStateGoal
         ? [
-             `State goal: ${writeContext.chapterStateGoal.summary}`,
-             toListBlock("Target conflicts", writeContext.chapterStateGoal.targetConflicts),
-             toListBlock("Target relationships", writeContext.chapterStateGoal.targetRelationships),
-             toListBlock("Protected secrets", writeContext.protectedSecrets),
+             `状态目标: ${writeContext.chapterStateGoal.summary}`,
+             toListBlock("目标冲突", writeContext.chapterStateGoal.targetConflicts),
+             toListBlock("目标关系", writeContext.chapterStateGoal.targetRelationships),
+             toListBlock("受保护秘密", writeContext.protectedSecrets),
            ].filter(Boolean).join("\n")
         : "",
     }),
@@ -354,19 +354,19 @@ export function buildChapterWriterContextBlocks(
         priority: 96,
         content: writeContext.volumeWindow
           ? [
-              `Current volume: ${writeContext.volumeWindow.title}`,
-              `Volume mission: ${writeContext.volumeWindow.missionSummary}`,
-              toListBlock("Current volume pending payoffs", writeContext.volumeWindow.pendingPayoffs.slice(0, 3)),
+              `当前卷: ${writeContext.volumeWindow.title}`,
+              `卷任务: ${writeContext.volumeWindow.missionSummary}`,
+              toListBlock("当前卷待兑现伏笔", writeContext.volumeWindow.pendingPayoffs.slice(0, 3)),
               writeContext.volumeWindow.keyMilestoneGuards.length > 0
                 ? toListBlock(
-                  "Volume key milestone guards — pacing constraints",
+                  "卷关键里程碑守卫——节奏约束",
                   writeContext.volumeWindow.keyMilestoneGuards
                     .filter((guard) => guard.status !== "done")
                     .map((guard) => `[${guard.targetChapterRange}] ${guard.event}: ${guard.note}`),
                 )
                 : "",
             ].filter(Boolean).join("\n")
-          : "Current volume: none",
+          : "当前卷: 无",
       })
       : null,
     writeContext.narrativeProgressHint
@@ -385,12 +385,12 @@ export function buildChapterWriterContextBlocks(
         priority: 95,
         content: [
           writeContext.ledgerSummary
-            ? `Payoff ledger summary: pending=${writeContext.ledgerSummary.pendingCount}, urgent=${writeContext.ledgerSummary.urgentCount}, overdue=${writeContext.ledgerSummary.overdueCount}`
-            : "Payoff ledger summary: none",
-          toListBlock("Urgent payoffs", writeContext.ledgerUrgentItems.map((item) => buildLedgerItemLine(item, "urgent"))),
-          toListBlock("Overdue payoffs", writeContext.ledgerOverdueItems.map((item) => buildLedgerItemLine(item, "overdue"))),
+            ? `伏笔账本汇总: 待兑现=${writeContext.ledgerSummary.pendingCount}, 紧急=${writeContext.ledgerSummary.urgentCount}, 超期=${writeContext.ledgerSummary.overdueCount}`
+            : "伏笔账本汇总: 无",
+          toListBlock("紧急伏笔", writeContext.ledgerUrgentItems.map((item) => buildLedgerItemLine(item, "urgent"))),
+          toListBlock("超期伏笔", writeContext.ledgerOverdueItems.map((item) => buildLedgerItemLine(item, "overdue"))),
           toListBlock(
-            "Active pending payoffs",
+            "活跃待兑现伏笔",
             writeContext.ledgerPendingItems.slice(0, 3).map((item) => buildLedgerItemLine(item, "pending")),
           ),
         ].join("\n"),
@@ -442,14 +442,14 @@ export function buildChapterWriterContextBlocks(
       group: "local_state",
       priority: 89,
       required: true,
-      content: `Local state before writing:\n${writeContext.localStateSummary}`,
+      content: `写作前本地状态:\n${writeContext.localStateSummary}`,
     }),
     includeOpenConflicts
       ? createContextBlock({
         id: "open_conflicts",
         group: "open_conflicts",
         priority: 88,
-        content: toListBlock("Open conflicts", writeContext.openConflictSummaries.slice(0, 6)),
+        content: toListBlock("开放冲突", writeContext.openConflictSummaries.slice(0, 6)),
       })
       : null,
     includeRecentChapters
@@ -457,7 +457,7 @@ export function buildChapterWriterContextBlocks(
         id: "recent_chapters",
         group: "recent_chapters",
         priority: 86,
-        content: toListBlock("Recent chapter summaries", writeContext.recentChapterSummaries),
+        content: toListBlock("最近章节摘要", writeContext.recentChapterSummaries),
       })
       : null,
     mode === "full"
@@ -466,10 +466,10 @@ export function buildChapterWriterContextBlocks(
         group: "opening_constraints",
         priority: 80,
         content: [
-          `Opening anti-repeat hint:\n${writeContext.openingAntiRepeatHint}`,
+          `开头反重复提示:\n${writeContext.openingAntiRepeatHint}`,
           writeContext.recentScenePatterns.length > 0
             ? toListBlock(
-              "Scene pattern blacklist — do NOT repeat these exact time+location+action combinations",
+              "场景模式黑名单——不得重复以下时间+地点+动作组合",
               writeContext.recentScenePatterns.slice(0, 6),
             )
             : "",
@@ -490,7 +490,7 @@ export function buildChapterWriterContextBlocks(
         id: "continuation_constraints",
         group: "continuation_constraints",
         priority: 72,
-        content: toListBlock("Continuation constraints", writeContext.continuationConstraints),
+        content: toListBlock("续写约束", writeContext.continuationConstraints),
       })
       : null,
   ];

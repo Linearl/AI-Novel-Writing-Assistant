@@ -64,19 +64,19 @@ export function buildChapterReviewContextBlocks(
       group: "structure_obligations",
       priority: 94,
       required: true,
-      content: toListBlockForReexport("Structure obligations", reviewContext.structureObligations),
+      content: toListBlockForReexport("结构义务", reviewContext.structureObligations),
     }),
     createContextBlock({
       id: "world_rules",
       group: "world_rules",
       priority: 84,
-      content: toListBlockForReexport("Relevant world rules", reviewContext.worldRules),
+      content: toListBlockForReexport("相关世界规则", reviewContext.worldRules),
     }),
     createContextBlock({
       id: "historical_issues",
       group: "historical_issues",
       priority: 82,
-      content: toListBlockForReexport("Historical unresolved issues", reviewContext.historicalIssues),
+      content: toListBlockForReexport("历史遗留问题", reviewContext.historicalIssues),
     }),
   ].filter((block) => block.content.trim().length > 0);
 }
@@ -91,38 +91,38 @@ export function buildChapterRepairContextBlocks(repairContext: ChapterRepairCont
       required: true,
       content: repairContext.issues.length > 0
         ? [
-            "Repair issues:",
+            "修复问题：",
             ...repairContext.issues.map((issue) => (
               `- ${issue.severity}/${issue.category}: ${issue.evidence} | fix: ${issue.fixSuggestion}`
             )),
           ].join("\n")
-        : "Repair issues: none",
+        : "修复问题：无",
     }),
     createContextBlock({
       id: "structure_obligations",
       group: "structure_obligations",
       priority: 95,
       required: true,
-      content: toListBlockForReexport("Structure obligations", repairContext.structureObligations),
+      content: toListBlockForReexport("结构义务", repairContext.structureObligations),
     }),
     createContextBlock({
       id: "repair_boundaries",
       group: "repair_boundaries",
       priority: 96,
       required: true,
-      content: toListBlockForReexport("Allowed edit boundaries", repairContext.allowedEditBoundaries),
+      content: toListBlockForReexport("允许的编辑边界", repairContext.allowedEditBoundaries),
     }),
     createContextBlock({
       id: "world_rules",
       group: "world_rules",
       priority: 84,
-      content: toListBlockForReexport("Relevant world rules", repairContext.worldRules),
+      content: toListBlockForReexport("相关世界规则", repairContext.worldRules),
     }),
     createContextBlock({
       id: "historical_issues",
       group: "historical_issues",
       priority: 82,
-      content: toListBlockForReexport("Historical unresolved issues", repairContext.historicalIssues),
+      content: toListBlockForReexport("历史遗留问题", repairContext.historicalIssues),
     }),
   ].filter((block) => block.content.trim().length > 0);
 }
@@ -144,16 +144,16 @@ export function getAllContextBlocks(contextPackage: GenerationContextPackage): P
       priority: 100,
       required: true,
       content: [
-        `Title: ${writeContext.bookContract.title}`,
-        `Genre: ${writeContext.bookContract.genre}`,
-        `Target audience: ${writeContext.bookContract.targetAudience}`,
-        `Selling point: ${writeContext.bookContract.sellingPoint}`,
-        `First 30 chapter promise: ${writeContext.bookContract.first30ChapterPromise}`,
-        `Narrative POV: ${writeContext.bookContract.narrativePov}`,
-        `Pace preference: ${writeContext.bookContract.pacePreference}`,
-        `Emotion intensity: ${writeContext.bookContract.emotionIntensity}`,
-        writeContext.bookContract.toneGuardrails.length > 0 ? `Tone guardrails: ${writeContext.bookContract.toneGuardrails.join(" | ")}` : "",
-        writeContext.bookContract.hardConstraints.length > 0 ? `Hard constraints: ${writeContext.bookContract.hardConstraints.join(" | ")}` : "",
+        `书名: ${writeContext.bookContract.title}`,
+        `类型: ${writeContext.bookContract.genre}`,
+        `目标读者: ${writeContext.bookContract.targetAudience}`,
+        `核心卖点: ${writeContext.bookContract.sellingPoint}`,
+        `前30章承诺: ${writeContext.bookContract.first30ChapterPromise}`,
+        `叙事视角: ${writeContext.bookContract.narrativePov}`,
+        `节奏偏好: ${writeContext.bookContract.pacePreference}`,
+        `情绪强度: ${writeContext.bookContract.emotionIntensity}`,
+        writeContext.bookContract.toneGuardrails.length > 0 ? `基调约束: ${writeContext.bookContract.toneGuardrails.join(" | ")}` : "",
+        writeContext.bookContract.hardConstraints.length > 0 ? `硬约束: ${writeContext.bookContract.hardConstraints.join(" | ")}` : "",
       ].filter(Boolean).join("\n"),
     }),
     ...buildChapterWriterContextBlocksForReexport(writeContext),
@@ -164,13 +164,13 @@ export function getAllContextBlocks(contextPackage: GenerationContextPackage): P
       group: "story_macro",
       priority: 98,
       content: [
-        `Selling point: ${writeContext.macroConstraints.sellingPoint}`,
-        `Core conflict: ${writeContext.macroConstraints.coreConflict}`,
-        `Main hook: ${writeContext.macroConstraints.mainHook}`,
-        `Progression loop: ${writeContext.macroConstraints.progressionLoop}`,
-        `Growth path: ${writeContext.macroConstraints.growthPath}`,
-        `Ending flavor: ${writeContext.macroConstraints.endingFlavor}`,
-        writeContext.macroConstraints.hardConstraints.length > 0 ? `Hard constraints: ${writeContext.macroConstraints.hardConstraints.join(" | ")}` : "",
+        `核心卖点: ${writeContext.macroConstraints.sellingPoint}`,
+        `核心冲突: ${writeContext.macroConstraints.coreConflict}`,
+        `主线钩子: ${writeContext.macroConstraints.mainHook}`,
+        `推进循环: ${writeContext.macroConstraints.progressionLoop}`,
+        `成长路径: ${writeContext.macroConstraints.growthPath}`,
+        `结局风味: ${writeContext.macroConstraints.endingFlavor}`,
+        writeContext.macroConstraints.hardConstraints.length > 0 ? `硬约束: ${writeContext.macroConstraints.hardConstraints.join(" | ")}` : "",
       ].filter(Boolean).join("\n"),
     }));
   }

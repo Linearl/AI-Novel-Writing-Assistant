@@ -24,23 +24,23 @@ updated: 2026-07-14
 > 参照上游 `server/src/prompting/context/contextGroupLabels.ts`（38 行）
 
 - [ ] T1: 分析上游 `contextGroupLabels.ts` 映射结构（0.05 天）
-- [ ] T2: 创建 `server/src/prompting/context/contextGroupLabels.ts`，填入 32 个映射（0.1 天）
-- [ ] T3: 实现 `getContextGroupLabel()` 函数 + 空兜底逻辑（0.05 天）
+- [x] T2: 创建 `server/src/prompting/context/contextGroupLabels.ts`，填入 32 个映射（0.1 天）
+- [x] T3: 实现 `getContextGroupLabel()` 函数 + 空兜底逻辑（0.05 天）
 
 ## 阶段二：FR-2 上下文块标签中文化（0.2 天）
 
 > 参照上游 `server/src/prompting/prompts/novel/chapterLayeredContextShared.ts`（420 行）
 
-- [ ] T4: 分析上游 `chapterLayeredContextShared.ts` 中的标签定义（0.05 天）
-- [ ] T5: 替换本项目对应文件中的英文块标签为中文（0.1 天）
-- [ ] T6: 搜索其他 prompt 文件中的硬编码英文标签并替换（0.05 天）
+- [x] T4: 分析上游 `chapterLayeredContextShared.ts` 中的标签定义（0.05 天）
+- [x] T5: 替换本项目对应文件中的英文块标签为中文（0.1 天）
+- [x] T6: 搜索其他 prompt 文件中的硬编码英文标签并替换（0.05 天）
 
 ## 阶段三：FR-3 toListBlock + FR-4 引导文本（0.1 天）
 
-- [ ] T7: 修改 `toListBlock()` 空兜底返回"无"（0.02 天）
-- [ ] T8: 替换角色引导文本为中文（0.03 天）
-- [ ] T9: 替换关系阶段文本为中文（0.02 天）
-- [ ] T10: 搜索其他硬编码英文 UI 文本并替换（0.03 天）
+- [x] T7: 修改 `toListBlock()` 空兜底返回"无"（0.02 天）
+- [x] T8: 替换角色引导文本为中文（0.03 天）
+- [x] T9: 替换关系阶段文本为中文（0.02 天）
+- [x] T10: 搜索其他硬编码英文 UI 文本并替换（0.03 天）
 
 ## 阶段四：验证与测试（0.5 天）
 
