@@ -10,6 +10,8 @@ export type DirectorPlanningStage =
   | "volume_strategy"
   | "structured_outline";
 
+/** @deprecated Use {@link WorkflowStepModuleDescriptor} from `workflowStepRuntime/WorkflowStepModule` instead.
+ * Stage adapters serve only as legacy descriptor metadata; all execution goes through StepModule.execute() */
 export interface DirectorStageNodeAdapter {
   nodeKey: string;
   label: string;
@@ -27,6 +29,7 @@ export interface DirectorStageNodeAdapter {
   };
 }
 
+/** @deprecated Use WorkflowStepModuleDescriptor catalog entries instead. */
 export const DIRECTOR_STAGE_NODE_ADAPTERS: Record<DirectorPlanningStage, DirectorStageNodeAdapter> = {
   story_macro: {
     nodeKey: "story_macro_phase",
@@ -126,6 +129,8 @@ export const DIRECTOR_STAGE_NODE_ADAPTERS: Record<DirectorPlanningStage, Directo
   },
 };
 
+/** @deprecated Use `findWorkflowStepCatalogEntryById(id)` or `createWorkflowStepDescriptorFromCatalogEntry()` instead.
+ * This adapter is only retained as metadata fallback for `createWorkflowStepDescriptorFromDirectorAdapter()`. */
 export function getDirectorStageNodeAdapter(stage: DirectorPlanningStage): DirectorStageNodeAdapter {
   return DIRECTOR_STAGE_NODE_ADAPTERS[stage];
 }

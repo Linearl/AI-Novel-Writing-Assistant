@@ -15,11 +15,11 @@ status: todo
 
 ## 阶段一：开发
 
-- [ ] T1: 实现ProgressService（进度计算）
-- [ ] T2: 实现剩余时间估算逻辑
-- [ ] T3: 创建HTTP路由
-- [ ] T4: 实现ProgressVisualization前端组件
-- [ ] T5: 实现进度条和时间格式化
+- [x] T1: 实现ProgressService（进度计算）
+- [x] T2: 实现剩余时间估算逻辑
+- [x] T3: 创建HTTP路由
+- [x] T4: 实现ProgressVisualization前端组件
+- [x] T5: 实现进度条和时间格式化
 
 ## 阶段二：测试
 
@@ -30,7 +30,7 @@ status: todo
 
 ## 阶段三：验证
 
-- [ ] T10: typecheck通过
+- [x] T10: typecheck通过
 - [ ] T11: 单元测试通过
 - [ ] T12: 集成测试通过
 - [ ] T13: UI测试通过

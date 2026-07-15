@@ -1,7 +1,7 @@
 {
   "reqId": "7044",
   "title": "checkpoint management",
-  "status": "todo",
+  "status": "in_progress",
   "complexity": "S2",
   "category": "7xxx",
   "priority": "P2",
@@ -11,8 +11,9 @@
   "estimatedFiles": "2-5",
   "dependencies": [],
   "verification": {
-    "typecheck": "pending",
-    "tests": "pending",
+    "typecheck": "pass",
+    "tests": "written",
     "integration": "pending"
-  }
+  },
+  "updated": "2026-07-15T08:28:53.362Z"
 }

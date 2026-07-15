@@ -4,6 +4,7 @@ export type {
   CreateQueueParams,
   BatchQueueStatus,
   FailedTaskInfo,
+  BatchQueueFull,
 } from "./BatchQueueService";
 export { TaskScheduler } from "./TaskScheduler";
 export type { TaskSchedulerOptions } from "./TaskScheduler";

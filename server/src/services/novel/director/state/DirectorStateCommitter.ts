@@ -7,6 +7,145 @@ function createEventId(runId?: string | null, type?: string): string {
 }
 
 export class DirectorStateCommitter {
+  // ─── Step lifecycle methods ────────────────────────────────────────────────
+
+  async commitStepStarted(input: {
+    runId?: string | null;
+    taskId: string;
+    novelId?: string | null;
+    stepId: string;
+    nodeKey?: string | null;
+    label?: string | null;
+    input?: unknown;
+  }): Promise<void> {
+    await prisma.directorEvent.create({
+      data: {
+        id: createEventId(input.runId, `step_started.${input.stepId}`),
+        runId: input.runId ?? null,
+        taskId: input.taskId,
+        novelId: input.novelId ?? null,
+        type: "node_started",
+        nodeKey: input.nodeKey ?? null,
+        summary: input.label ?? `Step ${input.stepId} started.`,
+        severity: "low",
+        metadataJson: input.input !== undefined ? JSON.stringify({ stepInput: input.input }) : null,
+        occurredAt: new Date(),
+      },
+    }).catch(() => undefined);
+  }
+
+  async commitStepCompleted(input: {
+    runId?: string | null;
+    taskId: string;
+    novelId?: string | null;
+    stepId: string;
+    nodeKey?: string | null;
+    label?: string | null;
+    output?: unknown;
+    artifacts?: DirectorArtifactRef[];
+  }): Promise<void> {
+    await prisma.directorEvent.create({
+      data: {
+        id: createEventId(input.runId, `step_completed.${input.stepId}`),
+        runId: input.runId ?? null,
+        taskId: input.taskId,
+        novelId: input.novelId ?? null,
+        type: "node_completed",
+        nodeKey: input.nodeKey ?? null,
+        summary: input.label ?? `Step ${input.stepId} completed.`,
+        severity: "low",
+        metadataJson: JSON.stringify({
+          artifactIds: input.artifacts?.map((a) => a.id) ?? [],
+          artifactTypes: input.artifacts?.map((a) => a.artifactType) ?? [],
+        }),
+        occurredAt: new Date(),
+      },
+    }).catch(() => undefined);
+  }
+
+  async commitStepFailed(input: {
+    runId?: string | null;
+    taskId: string;
+    novelId?: string | null;
+    stepId: string;
+    nodeKey?: string | null;
+    label?: string | null;
+    error: string;
+  }): Promise<void> {
+    await prisma.directorEvent.create({
+      data: {
+        id: createEventId(input.runId, `step_failed.${input.stepId}`),
+        runId: input.runId ?? null,
+        taskId: input.taskId,
+        novelId: input.novelId ?? null,
+        type: "node_failed",
+        nodeKey: input.nodeKey ?? null,
+        summary: input.label
+          ? `${input.label}失败：${input.error}`
+          : `Step ${input.stepId} failed: ${input.error}`,
+        severity: "medium",
+        metadataJson: JSON.stringify({ error: input.error }),
+        occurredAt: new Date(),
+      },
+    }).catch(() => undefined);
+  }
+
+  async commitStepBlocked(input: {
+    runId?: string | null;
+    taskId: string;
+    novelId?: string | null;
+    stepId: string;
+    nodeKey?: string | null;
+    label?: string | null;
+    reason: string;
+    code?: string | null;
+  }): Promise<void> {
+    await prisma.directorEvent.create({
+      data: {
+        id: createEventId(input.runId, `step_blocked.${input.stepId}`),
+        runId: input.runId ?? null,
+        taskId: input.taskId,
+        novelId: input.novelId ?? null,
+        type: "approval_required",
+        nodeKey: input.nodeKey ?? null,
+        summary: input.label
+          ? `${input.label}已被阻塞：${input.reason}`
+          : `Step ${input.stepId} blocked: ${input.reason}`,
+        severity: "high",
+        metadataJson: JSON.stringify({ reason: input.reason, code: input.code ?? null }),
+        occurredAt: new Date(),
+      },
+    }).catch(() => undefined);
+  }
+
+  async commitStepCancelled(input: {
+    runId?: string | null;
+    taskId: string;
+    novelId?: string | null;
+    stepId: string;
+    nodeKey?: string | null;
+    label?: string | null;
+    reason?: string | null;
+  }): Promise<void> {
+    await prisma.directorEvent.create({
+      data: {
+        id: createEventId(input.runId, `step_cancelled.${input.stepId}`),
+        runId: input.runId ?? null,
+        taskId: input.taskId,
+        novelId: input.novelId ?? null,
+        type: "run_resumed",
+        nodeKey: input.nodeKey ?? null,
+        summary: input.label
+          ? `${input.label}已被取消${input.reason ? `：${input.reason}` : ""}`
+          : `Step ${input.stepId} cancelled${input.reason ? `: ${input.reason}` : ""}`,
+        severity: "low",
+        metadataJson: JSON.stringify({ reason: input.reason ?? null }),
+        occurredAt: new Date(),
+      },
+    }).catch(() => undefined);
+  }
+
+  // ─── Existing methods ──────────────────────────────────────────────────────
   async recordPipelineDispatch(input: {
     taskId: string;
     novelId?: string | null;

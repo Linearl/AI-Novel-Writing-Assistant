@@ -15,11 +15,11 @@ status: todo
 
 ## 阶段一：开发
 
-- [ ] T1: 创建Prisma Schema（BatchQueue, Batch模型）
-- [ ] T2: 实现BatchQueueService（入队、出队、状态查询）
-- [ ] T3: 实现TaskScheduler（调度执行、失败重试）
-- [ ] T4: 实现批次分解逻辑
-- [ ] T5: 创建HTTP路由
+- [x] T1: 创建Prisma Schema（BatchQueue, Batch模型）
+- [x] T2: 实现BatchQueueService（入队、出队、状态查询）
+- [x] T3: 实现TaskScheduler（调度执行、失败重试）
+- [x] T4: 实现批次分解逻辑
+- [x] T5: 创建HTTP路由
 
 ## 阶段二：测试
 
@@ -31,7 +31,7 @@ status: todo
 
 ## 阶段三：验证
 
-- [ ] T11: typecheck通过
+- [x] T11: typecheck通过
 - [ ] T12: 单元测试通过
 - [ ] T13: 集成测试通过
 - [ ] T14: 压力测试通过

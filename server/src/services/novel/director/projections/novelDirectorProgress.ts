@@ -1,5 +1,10 @@
 import { formatChapterDetailModeLabel } from "../../volume/chapterDetailModeLabel";
 
+/**
+ * Legacy fixed-percentage progress map.
+ * @deprecated Use StepModule.inspectProgress() as the primary progress source.
+ * DIRECTOR_PROGRESS is retained only as a UI compatibility fallback.
+ */
 export const DIRECTOR_PROGRESS = {
   candidateSeedAlignment: 0.03,
   candidateProjectFraming: 0.06,
@@ -43,6 +48,37 @@ export type DirectorProgressItemKey =
   | "chapter_list"
   | "chapter_sync"
   | "chapter_detail_bundle";
+
+/**
+ * Resolve director progress by preferring StepModule.inspectProgress() results
+ * and falling back to the legacy DIRECTOR_PROGRESS fixed-percentage map.
+ *
+ * Usage:
+ *   const progress = resolveProgress({
+ *     stepModuleProgress: await module.inspectProgress(context),
+ *     fallbackKey: "story_macro",
+ *   });
+ */
+export function resolveDirectorProgress(input: {
+  stepModuleProgress?: { ratio?: number; label?: string } | null;
+  fallbackKey?: string;
+  fallbackRatio?: number;
+}): { ratio: number; label: string } {
+  if (input.stepModuleProgress && input.stepModuleProgress.ratio !== undefined) {
+    return {
+      ratio: input.stepModuleProgress.ratio,
+      label: input.stepModuleProgress.label ?? "正在执行...",
+    };
+  }
+  if (input.fallbackKey && input.fallbackKey in DIRECTOR_PROGRESS) {
+    const value = DIRECTOR_PROGRESS[input.fallbackKey as keyof typeof DIRECTOR_PROGRESS];
+    return { ratio: value, label: `步骤进度（旧兼容模式）` };
+  }
+  if (input.fallbackRatio !== undefined) {
+    return { ratio: input.fallbackRatio, label: "步骤进度" };
+  }
+  return { ratio: 0, label: "等待开始" };
+}
 
 export function buildChapterDetailBundleProgress(completedSteps: number, totalSteps: number): number {
   if (totalSteps <= 0) {

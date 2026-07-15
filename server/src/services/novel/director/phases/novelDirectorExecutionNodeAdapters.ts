@@ -20,6 +20,8 @@ export type DirectorExecutionNodeKey =
   | "payoff_ledger_sync_node"
   | "character_resource_sync_node";
 
+/** @deprecated Use {@link WorkflowStepModuleDescriptor} from `workflowStepRuntime/WorkflowStepModule` instead.
+ * Execution adapters serve only as legacy descriptor metadata; all execution goes through StepModule.execute() */
 export interface DirectorExecutionNodeAdapter {
   nodeKey: DirectorExecutionNodeKey;
   label: string;
@@ -52,6 +54,7 @@ const QUALITY_REPAIR_WAITING_STATE: DirectorExecutionNodeAdapter["waitingState"]
   progress: 0.975,
 };
 
+/** @deprecated Use WorkflowStepModuleDescriptor catalog entries instead. */
 export const DIRECTOR_EXECUTION_NODE_ADAPTERS: Record<
   DirectorExecutionStage,
   DirectorExecutionNodeAdapter
@@ -174,12 +177,15 @@ const DIRECTOR_EXECUTION_NODE_SEQUENCES: Record<DirectorExecutionFlow, DirectorE
   ],
 };
 
+/** @deprecated Use `findWorkflowStepCatalogEntryById(id)` or `createWorkflowStepDescriptorFromCatalogEntry()` instead.
+ * This adapter is only retained as metadata fallback for `createWorkflowStepDescriptorFromDirectorAdapter()`. */
 export function getDirectorExecutionNodeAdapter(
   stage: DirectorExecutionStage,
 ): DirectorExecutionNodeAdapter {
   return DIRECTOR_EXECUTION_NODE_ADAPTERS[stage];
 }
 
+/** @deprecated Use `getDirectorExecutionStepModuleSequence(flow)` from `workflowStepRuntime` instead. */
 export function getDirectorExecutionNodeSequence(
   flow: DirectorExecutionFlow,
 ): DirectorExecutionNodeAdapter[] {

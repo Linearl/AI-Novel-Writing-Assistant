@@ -18,6 +18,72 @@ export class DirectorStateStore {
     return this.reader.readByTaskId(taskId);
   }
 
+  // ─── Step lifecycle ────────────────────────────────────────────────────────
+
+  commitStepStarted(input: {
+    runId?: string | null;
+    taskId: string;
+    novelId?: string | null;
+    stepId: string;
+    nodeKey?: string | null;
+    label?: string | null;
+    input?: unknown;
+  }): Promise<void> {
+    return this.committer.commitStepStarted(input);
+  }
+
+  commitStepCompleted(input: {
+    runId?: string | null;
+    taskId: string;
+    novelId?: string | null;
+    stepId: string;
+    nodeKey?: string | null;
+    label?: string | null;
+    output?: unknown;
+    artifacts?: DirectorArtifactRef[];
+  }): Promise<void> {
+    return this.committer.commitStepCompleted(input);
+  }
+
+  commitStepFailed(input: {
+    runId?: string | null;
+    taskId: string;
+    novelId?: string | null;
+    stepId: string;
+    nodeKey?: string | null;
+    label?: string | null;
+    error: string;
+  }): Promise<void> {
+    return this.committer.commitStepFailed(input);
+  }
+
+  commitStepBlocked(input: {
+    runId?: string | null;
+    taskId: string;
+    novelId?: string | null;
+    stepId: string;
+    nodeKey?: string | null;
+    label?: string | null;
+    reason: string;
+    code?: string | null;
+  }): Promise<void> {
+    return this.committer.commitStepBlocked(input);
+  }
+
+  commitStepCancelled(input: {
+    runId?: string | null;
+    taskId: string;
+    novelId?: string | null;
+    stepId: string;
+    nodeKey?: string | null;
+    label?: string | null;
+    reason?: string | null;
+  }): Promise<void> {
+    return this.committer.commitStepCancelled(input);
+  }
+
+  // ─── Existing methods ──────────────────────────────────────────────────────
+
   recordPipelineDispatch(input: {
     taskId: string;
     novelId?: string | null;

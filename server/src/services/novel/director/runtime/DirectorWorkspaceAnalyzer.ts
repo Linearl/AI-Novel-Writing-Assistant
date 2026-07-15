@@ -28,6 +28,10 @@ import {
   computeWorkspaceInterpretation,
   buildManualEditRecommendation,
 } from "./DirectorWorkspaceInterpretation";
+import {
+  analyzeStaleArtifacts,
+  summarizeDirectorArtifactLedger,
+} from "./DirectorArtifactLedger";
 
 export class DirectorWorkspaceAnalyzer {
   constructor(private readonly runtimeStore = new DirectorRuntimeStore()) {}
@@ -124,6 +128,21 @@ export class DirectorWorkspaceAnalyzer {
       comparedAgainstTaskId: taskId,
     });
 
+    // ── Artifact Ledger stale analysis ──────────────────────────────────────
+    // Identify protected (user-edited) artifacts and analyze downstream staleness
+    const protectedArtifactIds = editInventory.changedChapters.flatMap(
+      (chapter) => chapter.relatedArtifactIds,
+    );
+    const staleAnalysis = protectedArtifactIds.length > 0
+      ? analyzeStaleArtifacts(inventory.artifacts, protectedArtifactIds)
+      : null;
+
+    // Ledger summary for evidence
+    const ledgerSummary = summarizeDirectorArtifactLedger(
+      inventory.artifacts,
+      inventory.artifacts.map((a) => a.artifactType),
+    );
+
     let decision = buildManualEditFallbackDecision(editInventory);
     let promptMeta: DirectorManualEditImpact["prompt"] = null;
 
@@ -169,6 +188,7 @@ export class DirectorWorkspaceAnalyzer {
     const affectedArtifactIds = new Set([
       ...decision.affectedArtifactIds,
       ...editInventory.changedChapters.flatMap((chapter) => chapter.relatedArtifactIds),
+      ...(staleAnalysis?.staleArtifacts.map((a) => a.id) ?? []),
     ]);
     const impact: DirectorManualEditImpact = {
       novelId: input.novelId,

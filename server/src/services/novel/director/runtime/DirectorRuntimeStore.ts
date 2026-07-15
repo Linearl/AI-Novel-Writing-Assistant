@@ -597,6 +597,66 @@ export class DirectorRuntimeStore {
     });
   }
 
+  // ─── Delta write methods (append-only) ──────────────────────────────────
+
+  /**
+   * Incremental append of a single step run.
+   * Only writes the delta — no full snapshot reconstruction.
+   */
+  async appendStepRun(delta: DirectorStepRun): Promise<void> {
+    const taskId = this.parseTaskIdFromIdempotencyKey(delta.idempotencyKey);
+    if (!taskId) return;
+
+    await this.mutateSnapshot(taskId, (snapshot) => ({
+      ...snapshot,
+      steps: upsertStep(snapshot.steps, delta),
+    }));
+  }
+
+  /**
+   * Incremental append of a single event.
+   * Only writes the delta — no full snapshot reconstruction.
+   */
+  async appendEvent(delta: DirectorEvent): Promise<void> {
+    const taskId = delta.taskId;
+    if (!taskId) return;
+
+    await this.mutateSnapshot(taskId, (snapshot) => ({
+      ...snapshot,
+      events: [...snapshot.events, delta],
+    }));
+  }
+
+  /**
+   * Incremental append of a single artifact.
+   * Reconciles via the artifact ledger before writing the delta.
+   */
+  async appendArtifact(delta: DirectorArtifactRef): Promise<void> {
+    // Extract taskId from the artifact's structure (best effort)
+    const taskId = delta.runId;
+    if (!taskId) return;
+
+    await this.mutateSnapshot(taskId, (snapshot) => {
+      const reconciled = reconcileDirectorArtifactLedger(
+        snapshot.artifacts,
+        [delta],
+        { runId: snapshot.runId },
+      );
+      return {
+        ...snapshot,
+        artifacts: reconciled.artifacts,
+      };
+    });
+  }
+
+  /**
+   * Parse taskId from idempotencyKey format: `taskId:nodeKey:targetType:targetId`.
+   */
+  private parseTaskIdFromIdempotencyKey(idempotencyKey: string): string | null {
+    const parts = idempotencyKey.split(":");
+    return parts[0]?.trim() || null;
+  }
+
   async updatePolicy(input: {
     taskId: string;
     mode: DirectorPolicyMode;

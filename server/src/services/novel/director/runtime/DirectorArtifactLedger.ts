@@ -286,6 +286,155 @@ export function summarizeDirectorArtifactLedger(
   };
 }
 
+export interface DirectorArtifactStaleAnalysis {
+  /** Artifacts that became stale because they depend on a protected/changed artifact. */
+  staleArtifacts: DirectorArtifactRef[];
+  /** The dependency chain that led to staleness (ordered from root to leaf). */
+  dependencyChain: DirectorArtifactRef[];
+  /** Root artifact IDs that triggered the cascade. */
+  rootArtifactIds: string[];
+}
+
+export interface DirectorArtifactDependencyAnalysis {
+  /** The artifact itself. */
+  artifact: DirectorArtifactRef;
+  /** Direct upstream artifacts this artifact depends on. */
+  directDependencies: DirectorArtifactRef[];
+  /** Direct downstream artifacts that depend on this artifact. */
+  downstreamDependents: DirectorArtifactRef[];
+  /** Full dependency chain (all artifacts in the transitive closure, both upstream and downstream). */
+  dependencyChain: DirectorArtifactRef[];
+}
+
+/**
+ * Analyze which downstream artifacts become stale when protected artifacts are modified.
+ * Traverses the dependency graph to find all artifacts that directly or transitively
+ * depend on the protected artifacts.
+ */
+export function analyzeStaleArtifacts(
+  artifacts: DirectorArtifactRef[],
+  protectedArtifactIds: string[],
+): DirectorArtifactStaleAnalysis {
+  const normalized = artifacts.map((artifact) => normalizeDirectorArtifactRef(artifact));
+  const byId = new Map(normalized.map((a) => [a.id, a]));
+  const protectedSet = new Set(protectedArtifactIds);
+  const visited = new Set<string>();
+  const staleArtifacts: DirectorArtifactRef[] = [];
+  const dependencyChain: DirectorArtifactRef[] = [];
+
+  // Collect protected root artifacts in the chain
+  for (const id of protectedArtifactIds) {
+    const artifact = byId.get(id);
+    if (artifact) {
+      dependencyChain.push(artifact);
+      visited.add(artifact.id);
+    }
+  }
+
+  // BFS to find all downstream artifacts affected by protected artifact changes
+  const queue = [...protectedArtifactIds];
+  while (queue.length > 0) {
+    const currentId = queue.shift()!;
+    for (const artifact of normalized) {
+      if (visited.has(artifact.id)) continue;
+      if (artifact.status === "rejected" || artifact.status === "superseded") continue;
+      const dependsOnCurrent = artifact.dependsOn?.some((d) => d.artifactId === currentId);
+      if (dependsOnCurrent) {
+        staleArtifacts.push(artifact);
+        dependencyChain.push(artifact);
+        visited.add(artifact.id);
+        queue.push(artifact.id);
+      }
+    }
+  }
+
+  return {
+    staleArtifacts,
+    dependencyChain,
+    rootArtifactIds: protectedArtifactIds,
+  };
+}
+
+/**
+ * Analyze the full dependency graph for a specific artifact.
+ * Returns direct upstream dependencies, direct downstream dependents,
+ * and the full dependency chain.
+ */
+export function analyzeDependencies(
+  artifacts: DirectorArtifactRef[],
+  artifactId: string,
+): DirectorArtifactDependencyAnalysis | null {
+  const normalized = artifacts.map((artifact) => normalizeDirectorArtifactRef(artifact));
+  const byId = new Map(normalized.map((a) => [a.id, a]));
+
+  const artifact = byId.get(artifactId);
+  if (!artifact) {
+    return null;
+  }
+
+  // Direct upstream: artifacts that this artifact depends on
+  const directDependencies: DirectorArtifactRef[] = [];
+  const upstreamIds = new Set<string>();
+  if (artifact.dependsOn) {
+    for (const dep of artifact.dependsOn) {
+      const upstream = byId.get(dep.artifactId);
+      if (upstream) {
+        directDependencies.push(upstream);
+        upstreamIds.add(upstream.id);
+      }
+    }
+  }
+
+  // Direct downstream: artifacts that depend on this artifact
+  const directDownstream = normalized.filter((a) =>
+    a.dependsOn?.some((d) => d.artifactId === artifactId)
+    && a.status !== "rejected"
+    && a.status !== "superseded",
+  );
+
+  // Full dependency chain: BFS upstream + BFS downstream
+  const chainById = new Map<string, DirectorArtifactRef>();
+  chainById.set(artifact.id, artifact);
+
+  // BFS upstream
+  const upstreamQueue = [...directDependencies];
+  while (upstreamQueue.length > 0) {
+    const current = upstreamQueue.shift()!;
+    if (chainById.has(current.id)) continue;
+    chainById.set(current.id, current);
+    if (current.dependsOn) {
+      for (const dep of current.dependsOn) {
+        const upstream = byId.get(dep.artifactId);
+        if (upstream && !chainById.has(upstream.id)) {
+          upstreamQueue.push(upstream);
+        }
+      }
+    }
+  }
+
+  // BFS downstream
+  const downstreamQueue = [...directDownstream];
+  while (downstreamQueue.length > 0) {
+    const current = downstreamQueue.shift()!;
+    if (chainById.has(current.id)) continue;
+    chainById.set(current.id, current);
+    const dependents = normalized.filter((a) =>
+      a.dependsOn?.some((d) => d.artifactId === current.id)
+      && a.status !== "rejected"
+      && a.status !== "superseded"
+      && !chainById.has(a.id),
+    );
+    downstreamQueue.push(...dependents);
+  }
+
+  return {
+    artifact,
+    directDependencies,
+    downstreamDependents: directDownstream,
+    dependencyChain: [...chainById.values()],
+  };
+}
+
 export function normalizeDirectorArtifactRef(artifact: DirectorArtifactRef): DirectorArtifactRef {
   const status = ARTIFACT_STATUSES.includes(artifact.status) ? artifact.status : "active";
   const source = ARTIFACT_SOURCES.includes(artifact.source) ? artifact.source : "backfilled";

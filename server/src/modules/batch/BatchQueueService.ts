@@ -58,13 +58,35 @@ function resolveConfig(partial?: Partial<QueueConfig>): QueueConfig {
   };
 }
 
+function parseChapters(raw: string | number[]): number[] {
+  if (Array.isArray(raw)) return raw;
+  try {
+    return JSON.parse(raw) as number[];
+  } catch {
+    return [];
+  }
+}
+
+function parseConfig(raw: string | QueueConfig): QueueConfig {
+  if (typeof raw === "object") return raw;
+  try {
+    return JSON.parse(raw) as QueueConfig;
+  } catch {
+    return DEFAULT_CONFIG;
+  }
+}
+
+export interface BatchQueueFull extends BatchQueue {
+  batches: Batch[];
+}
+
 // ---- Service ----
 
 export class BatchQueueService {
   /**
    * Create a new batch queue and decompose chapters into batches.
    */
-  async createQueue(params: CreateQueueParams): Promise<BatchQueue> {
+  async createQueue(params: CreateQueueParams): Promise<BatchQueueFull> {
     const config = resolveConfig(params.config);
     const chapterBatches = decomposeIntoBatches(params.chapters, config.batchSize);
 
@@ -72,14 +94,14 @@ export class BatchQueueService {
       data: {
         novelId: params.novelId,
         status: "PENDING",
-        config: config as unknown as Record<string, unknown>,
+        config: JSON.stringify(config),
         totalChapters: params.chapters.length,
         completedChapters: 0,
         batches: {
           create: chapterBatches.map((chapters, index) => ({
             batchIndex: index,
-            chapters: chapters as unknown as number[],
-            status: "PENDING",
+            chapters: JSON.stringify(chapters),
+            status: "PENDING" as BatchStatus,
             retryCount: 0,
           })),
         },
@@ -98,7 +120,7 @@ export class BatchQueueService {
   /**
    * Get queue with all batches.
    */
-  async getQueue(queueId: string): Promise<BatchQueue | null> {
+  async getQueue(queueId: string): Promise<BatchQueueFull | null> {
     return prisma.batchQueue.findUnique({
       where: { id: queueId },
       include: {
@@ -106,28 +128,20 @@ export class BatchQueueService {
           orderBy: { batchIndex: "asc" },
         },
       },
-    });
+    }) as Promise<BatchQueueFull | null>;
   }
 
   /**
    * Get queue status summary.
    */
   async getQueueStatus(queueId: string): Promise<BatchQueueStatus | null> {
-    const queue = await prisma.batchQueue.findUnique({
-      where: { id: queueId },
-      include: {
-        batches: {
-          orderBy: { batchIndex: "asc" },
-        },
-      },
-    });
-
+    const queue = await this.getQueue(queueId);
     if (!queue) return null;
 
     const totalBatches = queue.batches.length;
-    const completedBatches = queue.batches.filter((b) => b.status === "COMPLETED").length;
-    const failedBatches = queue.batches.filter((b) => b.status === "FAILED");
-    const currentBatch = queue.batches.find((b) => b.status === "RUNNING");
+    const completedBatches = queue.batches.filter((b: Batch) => b.status === "COMPLETED").length;
+    const failedBatches = queue.batches.filter((b: Batch) => b.status === "FAILED");
+    const currentBatch = queue.batches.find((b: Batch) => b.status === "RUNNING");
 
     const progressPercent = queue.totalChapters > 0
       ? Math.round((queue.completedChapters / queue.totalChapters) * 100)
@@ -137,10 +151,10 @@ export class BatchQueueService {
       ? Math.round(((totalBatches - completedBatches) / completedBatches) * 5)
       : totalBatches * 5;
 
-    const failedTasks: FailedTaskInfo[] = failedBatches.map((b) => ({
+    const failedTasks: FailedTaskInfo[] = failedBatches.map((b: Batch) => ({
       batchId: b.id,
       batchIndex: b.batchIndex,
-      chapters: b.chapters as unknown as number[],
+      chapters: parseChapters(b.chapters),
       error: b.error,
       retryCount: b.retryCount,
     }));
@@ -162,7 +176,7 @@ export class BatchQueueService {
   /**
    * List all queues for a novel.
    */
-  async listQueues(novelId: string): Promise<BatchQueue[]> {
+  async listQueues(novelId: string): Promise<BatchQueueFull[]> {
     return prisma.batchQueue.findMany({
       where: { novelId },
       include: {
@@ -172,7 +186,7 @@ export class BatchQueueService {
         },
       },
       orderBy: { createdAt: "desc" },
-    });
+    }) as Promise<BatchQueueFull[]>;
   }
 
   /**
@@ -275,7 +289,7 @@ export class BatchQueueService {
     });
 
     // Update queue completed chapters count
-    const chapters = batch.chapters as unknown as number[];
+    const chapters = parseChapters(batch.chapters);
     await prisma.batchQueue.update({
       where: { id: batch.queueId },
       data: {

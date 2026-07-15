@@ -1,5 +1,5 @@
-import { prisma } from "../../../../db/prisma";
-import { logger } from "../../../../services/logging/LoggerService";
+import { prisma } from "../../../db/prisma";
+import { logger } from "../../../services/logging/LoggerService";
 
 export interface ListCheckpointsOptions {
   page: number;

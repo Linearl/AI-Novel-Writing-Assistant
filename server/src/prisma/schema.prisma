@@ -413,6 +413,7 @@ model Novel {
   novelWorld         NovelWorld?
   factEntries        NovelFactEntry[]
   risks              NovelRisk[]
+  checkpoints        Checkpoint[]
   writingTechniqueBindings WritingTechniqueNovelBinding[]
   payoffExpiryThreshold Int       @default(20)
   createdAt          DateTime    @default(now())
@@ -3343,4 +3344,22 @@ model GlobalReviewIssue {
   @@index([novelId, reviewRunId])
   @@index([novelId, status])
   @@index([primaryFixChapter, status])
+}
+
+// ========================
+// REQ-7044: Checkpoint Management
+// ========================
+
+model Checkpoint {
+  id           String   @id @default(cuid())
+  novelId      String
+  chapterIndex Int
+  data         Json
+  isPinned     Boolean  @default(false)
+  label        String?
+  createdAt    DateTime @default(now())
+
+  novel        Novel    @relation(fields: [novelId], references: [id], onDelete: Cascade)
+
+  @@index([novelId, createdAt])
 }

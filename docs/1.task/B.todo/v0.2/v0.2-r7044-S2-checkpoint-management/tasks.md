@@ -1,7 +1,7 @@
 ---
 description: "REQ-7044: 检查点管理 — 任务清单"
-update_time: "2026-07-11"
-status: todo
+update_time: "2026-07-15"
+status: in_progress
 ---
 
 # REQ-7044: 检查点管理
@@ -15,22 +15,22 @@ status: todo
 
 ## 阶段一：开发
 
-- [ ] T1: 更新Prisma Schema（新增isPinned, label字段）
-- [ ] T2: 实现CheckpointService（列表查询、删除）
-- [ ] T3: 实现自动清理逻辑
-- [ ] T4: 实现标记保留逻辑
-- [ ] T5: 创建HTTP路由
+- [x] T1: 更新Prisma Schema（新增isPinned, label字段）
+- [x] T2: 实现CheckpointService（列表查询、删除）
+- [x] T3: 实现自动清理逻辑
+- [x] T4: 实现标记保留逻辑
+- [x] T5: 创建HTTP路由
 
 ## 阶段二：测试
 
-- [ ] T6: 单元测试（清理逻辑）
-- [ ] T7: 单元测试（删除逻辑）
-- [ ] T8: 单元测试（标记保留）
+- [x] T6: 单元测试（清理逻辑）
+- [x] T7: 单元测试（删除逻辑）
+- [x] T8: 单元测试（标记保留）
 - [ ] T9: 集成测试（完整API）
 
 ## 阶段三：验证
 
-- [ ] T10: typecheck通过
+- [x] T10: typecheck通过
 - [ ] T11: 单元测试通过
 - [ ] T12: 集成测试通过
 

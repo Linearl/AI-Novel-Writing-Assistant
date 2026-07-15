@@ -1,5 +1,5 @@
 import type { Batch, BatchQueue } from "@prisma/client";
-import { batchQueueService, type QueueConfig } from "./BatchQueueService";
+import { batchQueueService, type BatchQueueFull, type QueueConfig } from "./BatchQueueService";
 import { logger } from "../../services/logging/LoggerService";
 
 export interface TaskSchedulerOptions {
@@ -20,11 +20,11 @@ export class TaskScheduler {
   private runningQueues = new Map<string, RunningQueueEntry>();
   private pollTimer: ReturnType<typeof setInterval> | null = null;
   private readonly pollIntervalMs: number;
-  private readonly onExecuteChapter?: (novelId: string, chapterIndex: number) => Promise<void>;
+  private _onExecuteChapter?: (novelId: string, chapterIndex: number) => Promise<void>;
 
   constructor(options: TaskSchedulerOptions = {}) {
     this.pollIntervalMs = options.pollIntervalMs ?? 1000;
-    this.onExecuteChapter = options.onExecuteChapter;
+    this._onExecuteChapter = options.onExecuteChapter;
   }
 
   /**
@@ -41,7 +41,10 @@ export class TaskScheduler {
 
     await batchQueueService.updateQueueStatus(queueId, "RUNNING");
 
-    const config = queue.config as unknown as QueueConfig;
+    const config = typeof queue.config === "string"
+      ? (JSON.parse(queue.config) as QueueConfig)
+      : (queue.config as unknown as QueueConfig);
+
     const abortController = new AbortController();
 
     this.runningQueues.set(queueId, {
@@ -54,7 +57,7 @@ export class TaskScheduler {
     logger.info(`[TaskScheduler] Started queue ${queueId}`);
 
     // Kick off processing immediately
-    void this.processQueue(queueId).catch((error) => {
+    void this.processQueue(queueId).catch((error: unknown) => {
       logger.error(`[TaskScheduler] Queue ${queueId} processing error`, error);
     });
 
@@ -68,7 +71,7 @@ export class TaskScheduler {
   private ensurePollLoop(): void {
     if (this.pollTimer) return;
     this.pollTimer = setInterval(() => {
-      void this.pollAllQueues().catch((error) => {
+      void this.pollAllQueues().catch((error: unknown) => {
         logger.error("[TaskScheduler] Poll error", error);
       });
     }, this.pollIntervalMs);
@@ -118,9 +121,9 @@ export class TaskScheduler {
         return;
       }
 
-      const hasFailedBatches = freshQueue.batches.some((b) => b.status === "FAILED");
+      const hasFailedBatches = freshQueue.batches.some((b: Batch) => b.status === "FAILED");
       const hasPendingOrRunning = freshQueue.batches.some(
-        (b) => b.status === "PENDING" || b.status === "RUNNING"
+        (b: Batch) => b.status === "PENDING" || b.status === "RUNNING"
       );
 
       if (!hasPendingOrRunning) {
@@ -141,16 +144,17 @@ export class TaskScheduler {
    */
   private async executeBatch(
     batch: Batch,
-    queue: BatchQueue,
+    queue: BatchQueueFull,
     config: QueueConfig,
   ): Promise<void> {
     await batchQueueService.markBatchRunning(batch.id);
 
     try {
-      const chapters = batch.chapters as unknown as number[];
+      const chaptersStr = batch.chapters as unknown as string;
+      const chapters: number[] = JSON.parse(chaptersStr) as number[];
       for (const chapterIndex of chapters) {
-        if (this.onExecuteChapter) {
-          await this.onExecuteChapter(queue.novelId, chapterIndex);
+        if (this._onExecuteChapter) {
+          await this._onExecuteChapter(queue.novelId, chapterIndex);
         }
       }
 
@@ -206,7 +210,7 @@ export class TaskScheduler {
    */
   async shutdown(): Promise<void> {
     this.stopPollLoop();
-    for (const [queueId, entry] of this.runningQueues) {
+    for (const [, entry] of this.runningQueues) {
       entry.abortController.abort();
     }
     this.runningQueues.clear();

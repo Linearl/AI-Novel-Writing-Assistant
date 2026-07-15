@@ -413,6 +413,9 @@ model Novel {
   novelWorld         NovelWorld?
   factEntries        NovelFactEntry[]
   risks              NovelRisk[]
+  batchQueues        BatchQueue[]
+  checkpoints        Checkpoint[]
+  backgroundTasks    BackgroundTask[]
   writingTechniqueBindings WritingTechniqueNovelBinding[]
   payoffExpiryThreshold Int       @default(20)
   createdAt          DateTime    @default(now())
@@ -3343,4 +3346,114 @@ model GlobalReviewIssue {
   @@index([novelId, reviewRunId])
   @@index([novelId, status])
   @@index([primaryFixChapter, status])
+}
+
+// ========================
+// REQ-7044: Checkpoint Management
+// ========================
+
+model Checkpoint {
+  id           String   @id @default(cuid())
+  novelId      String
+  chapterIndex Int
+  data         String   @default("{}")
+  isPinned     Boolean  @default(false)
+  label        String?
+  createdAt    DateTime @default(now())
+
+  novel        Novel    @relation(fields: [novelId], references: [id], onDelete: Cascade)
+
+  @@index([novelId, createdAt])
+}
+
+// ========================
+// REQ-7052: Background Task Manager
+// ========================
+
+model BackgroundTask {
+  id            String   @id @default(cuid())
+  novelId       String
+  type          String
+  status        String   @default("pending")
+  progress      Int      @default(0)
+  params        String   @default("{}")
+  result        String?
+  error         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  startedAt     DateTime?
+  completedAt   DateTime?
+  pausedAt      DateTime?
+  cancelledAt   DateTime?
+
+  novel         Novel    @relation(fields: [novelId], references: [id], onDelete: Cascade)
+  checkpoints   TaskCheckpoint[]
+
+  @@index([novelId, status, updatedAt])
+  @@index([status, updatedAt])
+}
+
+model TaskCheckpoint {
+  id          String   @id @default(cuid())
+  taskId      String
+  stepIndex   Int
+  data        String   @default("{}")
+  createdAt   DateTime @default(now())
+
+  task        BackgroundTask @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@index([taskId, stepIndex])
+}
+
+// ========================
+// REQ-7046: Batch Task Queue
+// ========================
+
+enum QueueStatus {
+  PENDING
+  RUNNING
+  PAUSED
+  COMPLETED
+  FAILED
+}
+
+enum BatchStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+}
+
+model BatchQueue {
+  id                String      @id @default(cuid())
+  novelId           String
+  status            QueueStatus @default(PENDING)
+  config            String      @default("{}")
+  totalChapters     Int
+  completedChapters Int         @default(0)
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  batches Batch[]
+  novel   Novel @relation(fields: [novelId], references: [id], onDelete: Cascade)
+
+  @@index([novelId, status])
+  @@index([status, updatedAt])
+}
+
+model Batch {
+  id          String      @id @default(cuid())
+  queueId     String
+  batchIndex  Int
+  status      BatchStatus @default(PENDING)
+  chapters    String
+  retryCount  Int         @default(0)
+  startedAt   DateTime?
+  completedAt DateTime?
+  error       String?
+
+  queue BatchQueue @relation(fields: [queueId], references: [id], onDelete: Cascade)
+
+  @@index([queueId, batchIndex])
+  @@index([queueId, status])
 }
