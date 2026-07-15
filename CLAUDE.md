@@ -6,6 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 AI 小说创作工作台 — 面向写作新手的 AI 导演式长篇小说生产系统。pnpm workspace monorepo，4 个子包：`client`、`server`、`shared`、`desktop`。
 
+**分支**：本地 `master` → 远端 `origin/main`。无本地 `main` 分支。
+
 ## 常用命令
 
 ```bash
