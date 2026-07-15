@@ -32,6 +32,9 @@ tests/
 server/server/
 server/.tmp/
 desktop/build/
+
+# Release artifacts
+release/
 desktop/runtime-migration-smoke/
 server/prisma-diff-migrations-to-schema.sql
 

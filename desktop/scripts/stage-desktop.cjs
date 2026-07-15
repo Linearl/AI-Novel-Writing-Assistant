@@ -30,6 +30,35 @@ function runPnpm(args, cwd = repoRoot) {
   });
 }
 
+/**
+ * Windows 上 pnpm deploy 的 renameSync 存在 EPERM 问题，
+ * 用 robocopy /MOVE 替代 rename 完成 app_tmp → app 的搬运。
+ */
+function moveDirectoryRobocopy(sourceDir, targetDir) {
+  if (process.platform !== "win32") {
+    fs.renameSync(sourceDir, targetDir);
+    return;
+  }
+  // robocopy /MOVE: 复制后删除源目录，等效于 rename
+  // /E: 包含子目录，/R:1: 失败重试1次，/W:1: 重试间隔1秒，/NFL /NDL /NJH /NJS: 静默输出
+  try {
+    execSync(
+      `robocopy "${sourceDir}" "${targetDir}" /E /MOVE /R:1 /W:1 /NFL /NDL /NJH /NJS`,
+      { stdio: "pipe" }
+    );
+    // robocopy 返回码 0-7 都表示成功（部分/全部复制）
+    if (!fs.existsSync(targetDir)) {
+      throw new Error(`robocopy 完成但目标目录不存在: ${targetDir}`);
+    }
+  } catch (err) {
+    // robocopy 返回码 >7 才是错误
+    if (err.status !== undefined && err.status <= 7 && fs.existsSync(targetDir)) {
+      return; // 成功
+    }
+    throw err;
+  }
+}
+
 function ensureCleanDir(targetDir) {
   fs.rmSync(targetDir, { recursive: true, force: true });
   fs.mkdirSync(targetDir, { recursive: true });
@@ -199,13 +228,58 @@ function main() {
   ensureDir(resourcesDir);
   ensureDir(path.dirname(clientTargetDir));
 
-  runPnpm([
-    "--filter",
-    "@ai-novel/desktop",
-    "deploy",
-    "--prod",
-    appDir,
-  ]);
+  // pnpm deploy 在 Windows 上因 renameSync EPERM 问题经常失败，
+  // 需要 catch 错误后用 robocopy /MOVE 手动完成 app_tmp → app 的搬运。
+  let deploySucceeded = false;
+  try {
+    runPnpm([
+      "--filter",
+      "@ai-novel/desktop",
+      "deploy",
+      "--prod",
+      appDir,
+    ]);
+    deploySucceeded = true;
+  } catch (deployError) {
+    console.warn("[stage:desktop] pnpm deploy failed, attempting robocopy fallback...");
+
+    // 查找残留的 app_tmp_* 目录（最新的）
+    const appTmpDirs = fs
+      .readdirSync(buildDir, { withFileTypes: true })
+      .filter((e) => e.isDirectory() && e.name.startsWith("app_tmp_"))
+      .map((e) => path.join(buildDir, e.name))
+      .sort((a, b) => {
+        const timeA = fs.statSync(a).mtimeMs;
+        const timeB = fs.statSync(b).mtimeMs;
+        return timeB - timeA; // 最新的在前
+      });
+
+    if (appTmpDirs.length === 0) {
+      console.error("[stage:desktop] no app_tmp_* directories found after pnpm deploy failure");
+      throw deployError;
+    }
+
+    const latestTmp = appTmpDirs[0];
+    console.log(`[stage:desktop] robocopy fallback: ${latestTmp} → ${appDir}`);
+
+    // 等待 pnpm 子进程释放文件句柄（Windows 特有：pnpm renameSync 失败后子进程仍持有句柄）
+    // 使用 Node.js 原生 Atomics.wait，不依赖任何 shell 命令
+    Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 5000);
+
+    // 用 robocopy /MOVE 完成搬运（完全绕过 Node.js renameSync）
+    moveDirectoryRobocopy(latestTmp, appDir);
+
+    // 清理其他残留的 app_tmp_* 目录
+    for (const tmpDir of appTmpDirs.slice(1)) {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+
+    deploySucceeded = true;
+  }
+
+  if (!deploySucceeded) {
+    throw new Error("pnpm deploy and robocopy fallback both failed");
+  }
 
   copyDirectory(clientSourceDir, clientTargetDir);
   writeDesktopUpdaterConfig();
