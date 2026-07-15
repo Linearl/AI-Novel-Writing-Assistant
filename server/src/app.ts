@@ -10,6 +10,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 import type { ApiResponse } from "@ai-novel/shared";
 import { BIND_ALL_HOST, DEFAULT_HOST, DEFAULT_SERVER_PORT } from "./config/constants";
+import { validateEnvironment, printValidationReport } from "./config/envValidator";
 import { ensureRuntimeDatabaseReady } from "./db/runtimeMigrations";
 import { errorHandler } from "./middleware/errorHandler";
 import { requestIdMiddleware } from "./middleware/requestId";
@@ -23,6 +24,7 @@ import agentRunsRouter from "./modules/agent/http/agentRuns";
 import autoDirectorChannelCallbacksRouter from "./modules/agent/http/autoDirectorChannelCallbacks";
 import autoDirectorFollowUpsRouter from "./modules/agent/http/autoDirectorFollowUps";
 import bookAnalysisRouter from "./modules/bookAnalysis/http/bookAnalysis";
+import batchRouter from "./modules/batch/http/batchRoutes";
 import characterRouter from "./modules/novel/characters/http/character";
 import chatRouter from "./modules/chat/http/chat";
 import creativeHubRouter from "./modules/creativeHub/http/creativeHub";
@@ -46,6 +48,7 @@ import writingTechniquesRouter from "./modules/writing/http/writingTechniques";
 import atmosphereCardsRouter from "./modules/writing/http/atmosphereCards";
 import storyModeRouter from "./modules/novel/storyMode/http/storyMode";
 import tasksRouter from "./modules/tasks/http/tasks";
+import backgroundTasksRouter from "./modules/tasks/http/backgroundTasks";
 import logsRouter from "./modules/logs/http/logsRoutes";
 import titleLibraryRouter from "./modules/novel/titleLibrary/http/titleLibrary";
 import worldRouter from "./modules/setup/world/http";
@@ -160,6 +163,7 @@ export function createApp() {
   app.use("/api/writing-techniques", writingTechniquesRouter);
   app.use("/api/atmosphere-cards", atmosphereCardsRouter);
   app.use("/api/novels", novelRouter);
+  app.use("/api/novels", batchRouter);
   app.use("/api/novels/director", novelDirectorRouter);
   app.use("/api/novel-workflows", novelWorkflowsRouter);
   app.use("/api/novels", novelExportRouter);
@@ -172,6 +176,7 @@ export function createApp() {
   app.use("/api/prompt-workbench", promptWorkbenchRouter);
   app.use("/api/images", imagesRouter);
   app.use("/api/tasks", tasksRouter);
+  app.use("/api", backgroundTasksRouter);
   app.use("/api/logs", logsRouter);
   app.use("/api/auto-director/follow-ups", autoDirectorFollowUpsRouter);
   app.use("/api/settings/auto-director", settingsAutoDirectorRouter);
@@ -397,6 +402,16 @@ export async function startServer(options?: ServerStartOptions): Promise<Started
 }
 
 async function bootstrap(): Promise<void> {
+  // 启动时校验环境变量
+  const envValidation = validateEnvironment();
+  printValidationReport(envValidation);
+  if (!envValidation.valid) {
+    process.stderr.write(
+      `\x1b[31mEnvironment validation failed with ${envValidation.errors.length} error(s). Server startup blocked.\x1b[0m\n`,
+    );
+    process.exit(1);
+  }
+
   const { server } = await startServer();
 
   // 进程保护：未捕获异常处理

@@ -238,18 +238,75 @@ export class ModuleAiSmellDetector {
   // ─── Private ────────────────────────────────────────────────────────────
 
   /**
-   * 将检测结果持久化到数据库。
-   * 当前版本：AiSmellScore 表尚未创建，返回 false。
-   * 未来：INSERT INTO AiSmellScore ...
+   * 将检测结果持久化到数据库 (REQ-7057)。
+   * 使用 AiSmellScore 表存储每章 AI 味评分，支持趋势追踪。
    */
   private async persistResult(
-    _novelId: string,
-    _chapterId: string,
-    _report: AiSmellReport,
-    _detectedAt: string,
+    novelId: string,
+    chapterId: string,
+    report: AiSmellReport,
+    detectedAt: string,
   ): Promise<boolean> {
-    // 持久化表待建（REQ-7057: AI味趋势追踪），当前暂不持久化
-    return false;
+    try {
+      const dimensionScores: Record<string, number> = {};
+      for (const dim of report.dimensions) {
+        dimensionScores[dim.name] = dim.score;
+      }
+
+      // 动态导入 prisma 避免循环依赖
+      const { prisma } = await import("../../../db/prisma");
+
+      const chapter = await prisma.chapter.findUnique({
+        where: { id: chapterId },
+        select: { order: true },
+      });
+
+      if (!chapter) {
+        logger.info("[AiSmellDetector] 章节不存在，跳过持久化", { chapterId });
+        return false;
+      }
+
+      await prisma.aiSmellScore.upsert({
+        where: {
+          novelId_chapterId: { novelId, chapterId },
+        },
+        create: {
+          novelId,
+          chapterId,
+          chapterOrder: chapter.order,
+          overallScore: report.overallScore,
+          formulaicScore: dimensionScores["词汇模式"] ?? dimensionScores["vocabulary"] ?? null,
+          mechanicalScore: dimensionScores["句式结构"] ?? dimensionScores["sentence"] ?? null,
+          emotionalScore: dimensionScores["情感表达"] ?? dimensionScores["emotion"] ?? null,
+          originalScore: dimensionScores["原创性"] ?? dimensionScores["original"] ?? null,
+          dimensionsJson: JSON.stringify(dimensionScores),
+          detectedAt: new Date(detectedAt),
+        },
+        update: {
+          overallScore: report.overallScore,
+          formulaicScore: dimensionScores["词汇模式"] ?? dimensionScores["vocabulary"] ?? null,
+          mechanicalScore: dimensionScores["句式结构"] ?? dimensionScores["sentence"] ?? null,
+          emotionalScore: dimensionScores["情感表达"] ?? dimensionScores["emotion"] ?? null,
+          originalScore: dimensionScores["原创性"] ?? dimensionScores["original"] ?? null,
+          dimensionsJson: JSON.stringify(dimensionScores),
+          detectedAt: new Date(detectedAt),
+        },
+      });
+
+      logger.info("[AiSmellDetector] AI味评分已持久化", {
+        novelId,
+        chapterId,
+        overallScore: report.overallScore,
+      });
+      return true;
+    } catch (error) {
+      logger.error("[AiSmellDetector] 持久化失败", {
+        error: error instanceof Error ? error.message : String(error),
+        novelId,
+        chapterId,
+      });
+      return false;
+    }
   }
 }
 

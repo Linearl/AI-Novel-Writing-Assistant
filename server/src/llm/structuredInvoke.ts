@@ -33,6 +33,12 @@ import {
 } from "./structuredInvokeParser";
 import { toText } from "../services/novel/novelP0Utils";
 import type { PromptInvocationMeta } from "../prompting/core/promptTypes";
+import {
+  runWithLlmUsageTracking,
+  recordTrackedLlmUsage,
+  extractLlmTokenUsage,
+  type LlmUsageTrackingMeta,
+} from "./usageTracking";
 
 export {
   parseStructuredLlmRawContentDetailed,
@@ -210,6 +216,28 @@ async function invokeStructuredAttempt<T>(input: {
     reasoningForcedOff: resolved.reasoningForcedOff,
   });
   const startedAt = Date.now();
+
+  const promptMeta = input.baseInput.promptMeta;
+  const trackingMeta: LlmUsageTrackingMeta = {
+    provider: resolved.provider,
+    model: resolved.model,
+    taskType: input.baseInput.taskType ?? "planner",
+    promptMeta: promptMeta
+      ? {
+        promptId: promptMeta.promptId,
+        promptVersion: promptMeta.promptVersion,
+        novelId: promptMeta.novelId,
+        taskId: promptMeta.taskId,
+        chapterId: promptMeta.chapterId,
+        volumeId: promptMeta.volumeId,
+        stage: promptMeta.stage,
+        itemKey: promptMeta.itemKey,
+        scope: promptMeta.scope,
+        entrypoint: promptMeta.entrypoint,
+      }
+      : null,
+  };
+
   try {
     const result = await runWithEnforcedTimeout({
       label: input.baseInput.label,
@@ -221,13 +249,38 @@ async function invokeStructuredAttempt<T>(input: {
       ),
     });
     const rawContent = toText(result.content);
+    const latencyMs = Date.now() - startedAt;
+
+    // REQ-7062: 记录 Token 用量（成功路径）
+    const usage = extractLlmTokenUsage(result);
+    if (usage) {
+      const context = promptMeta
+        ? {
+          novelId: promptMeta.novelId ?? null,
+          chapterId: promptMeta.chapterId ?? null,
+          workflowTaskId: null,
+          generationJobId: null,
+          styleExtractionTaskId: null,
+          directorTelemetry: null,
+          directorRunId: null,
+          directorStepIdempotencyKey: null,
+          directorNodeKey: null,
+        }
+        : {};
+      await recordTrackedLlmUsage(usage, {
+        durationMs: latencyMs,
+        status: "succeeded",
+        meta: trackingMeta,
+      });
+    }
+
     logStructuredInvokeEvent({
       event: "invoke_done",
       label: input.baseInput.label,
       provider: resolved.provider,
       model: resolved.model,
       taskType: input.baseInput.taskType,
-      latencyMs: Date.now() - startedAt,
+      latencyMs,
       rawChars: rawContent.length,
       strategy: input.strategy,
       fallbackUsed: input.fallbackUsed,
@@ -259,6 +312,31 @@ async function invokeStructuredAttempt<T>(input: {
     const category = error instanceof StructuredOutputError
       ? error.category
       : classifyStructuredOutputFailure({ error });
+
+    // REQ-7062: 记录 Token 用量（错误路径，至少记录延迟）
+    const latencyMs = Date.now() - startedAt;
+    const errorContext = promptMeta
+      ? {
+        novelId: promptMeta.novelId ?? null,
+        chapterId: promptMeta.chapterId ?? null,
+        workflowTaskId: null,
+        generationJobId: null,
+        styleExtractionTaskId: null,
+        directorTelemetry: null,
+        directorRunId: null,
+        directorStepIdempotencyKey: null,
+        directorNodeKey: null,
+      }
+      : {};
+    await recordTrackedLlmUsage(
+      { promptTokens: 0, completionTokens: 0, totalTokens: 0 },
+      {
+        durationMs: latencyMs,
+        status: "failed",
+        meta: trackingMeta,
+      },
+    );
+
     logStructuredInvokeEvent({
       event: "invoke_error",
       label: input.baseInput.label,

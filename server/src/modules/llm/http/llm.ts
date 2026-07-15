@@ -11,6 +11,7 @@ import { getProviderEnvApiKey, getProviderEnvModel, isBuiltInProvider, PROVIDERS
 import { authMiddleware } from "../../../middleware/auth";
 import { AppError } from "../../../middleware/errorHandler";
 import { validate } from "../../../middleware/validate";
+import { evictSharedLimiters, getSharedLimiterCount } from "../../../llm/requestLimiter";
 
 const router = Router();
 
@@ -224,6 +225,96 @@ router.post(
           structured: result.structured,
         },
         message: "模型连通性与结构化兼容性测试已完成。",
+      };
+      res.status(200).json(response);
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+// ---------------------------------------------------------------------------
+// REQ-7062: FR-2 请求限制器热重载
+// POST /api/llm/limiter/reload
+// ---------------------------------------------------------------------------
+router.post("/limiter/reload", (_req, res, next) => {
+  try {
+    const countBefore = getSharedLimiterCount();
+    evictSharedLimiters();
+    const response: ApiResponse<{ evictedCount: number }> = {
+      success: true,
+      data: { evictedCount: countBefore },
+      message: `已驱逐 ${countBefore} 个共享限制器，下次请求将根据最新配置重新创建。`,
+    };
+    res.status(200).json(response);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// ---------------------------------------------------------------------------
+// REQ-7062: FR-1 Token 用量查询
+// GET /api/llm/token-usage?novelId=xxx&provider=xxx&promptName=xxx&from=xxx&to=xxx
+// ---------------------------------------------------------------------------
+const tokenUsageQuerySchema = z.object({
+  novelId: z.string().trim().optional(),
+  provider: z.string().trim().optional(),
+  promptName: z.string().trim().optional(),
+  from: z.string().datetime({ offset: true }).optional(),
+  to: z.string().datetime({ offset: true }).optional(),
+  limit: z.coerce.number().int().min(1).max(500).optional().default(100),
+});
+
+router.get(
+  "/token-usage",
+  validate({ query: tokenUsageQuerySchema }),
+  async (req, res, next) => {
+    try {
+      const query = req.query as unknown as z.infer<typeof tokenUsageQuerySchema>;
+      const where: Record<string, unknown> = {};
+      if (query.novelId) where.novelId = query.novelId;
+      if (query.provider) where.provider = query.provider;
+      if (query.promptName) where.promptName = query.promptName;
+      if (query.from || query.to) {
+        where.recordedAt = {
+          ...(query.from ? { gte: new Date(query.from) } : {}),
+          ...(query.to ? { lte: new Date(query.to) } : {}),
+        };
+      }
+
+      const [records, totals] = await Promise.all([
+        prisma.llmTokenUsage.findMany({
+          where,
+          orderBy: { recordedAt: "desc" },
+          take: query.limit,
+        }),
+        prisma.llmTokenUsage.aggregate({
+          where,
+          _sum: { inputTokens: true, outputTokens: true, totalTokens: true },
+          _count: true,
+        }),
+      ]);
+
+      const response: ApiResponse<{
+        records: typeof records;
+        summary: {
+          count: number;
+          totalInputTokens: number;
+          totalOutputTokens: number;
+          totalTokens: number;
+        };
+      }> = {
+        success: true,
+        data: {
+          records,
+          summary: {
+            count: totals._count,
+            totalInputTokens: totals._sum.inputTokens ?? 0,
+            totalOutputTokens: totals._sum.outputTokens ?? 0,
+            totalTokens: totals._sum.totalTokens ?? 0,
+          },
+        },
+        message: "Token 用量查询完成。",
       };
       res.status(200).json(response);
     } catch (error) {

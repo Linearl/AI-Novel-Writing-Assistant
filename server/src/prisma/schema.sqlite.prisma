@@ -416,6 +416,7 @@ model Novel {
   batchQueues        BatchQueue[]
   checkpoints        Checkpoint[]
   backgroundTasks    BackgroundTask[]
+  aiSmellScores      AiSmellScore[]
   writingTechniqueBindings WritingTechniqueNovelBinding[]
   payoffExpiryThreshold Int       @default(20)
   createdAt          DateTime    @default(now())
@@ -542,6 +543,7 @@ model Chapter {
   repairVersions    ChapterRepairVersion[]
   volumeChapterPlans VolumeChapterPlan[]
   risks           NovelRisk[]
+  aiSmellScores   AiSmellScore[]
   createdAt       DateTime               @default(now())
   updatedAt       DateTime               @updatedAt
   deletedAt       DateTime?
@@ -3346,6 +3348,57 @@ model GlobalReviewIssue {
   @@index([novelId, reviewRunId])
   @@index([novelId, status])
   @@index([primaryFixChapter, status])
+}
+
+// ========================
+// REQ-7057: AI味趋势追踪
+// ========================
+
+model AiSmellScore {
+  id              String   @id @default(cuid())
+  novelId         String
+  chapterId       String
+  chapterOrder    Int
+  overallScore    Int
+  formulaicScore  Int?
+  mechanicalScore Int?
+  emotionalScore  Int?
+  originalScore   Int?
+  dimensionsJson  String   @default("{}")
+  detectedAt      DateTime @default(now())
+
+  novel           Novel    @relation(fields: [novelId], references: [id], onDelete: Cascade)
+  chapter         Chapter  @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+
+  @@unique([novelId, chapterId])
+  @@index([novelId, chapterOrder])
+  @@index([novelId, detectedAt])
+}
+
+// ========================
+// REQ-7062: LLM 基础设施增强 — LlmTokenUsage 模型
+// ========================
+
+model LlmTokenUsage {
+  id              String   @id @default(cuid())
+  novelId         String
+  chapterId       String?
+  promptName      String
+  provider        String
+  model           String
+  inputTokens     Int
+  outputTokens    Int
+  totalTokens     Int
+  latencyMs       Int
+  status          String   @default("recorded")
+  metadataJson    String?
+  recordedAt      DateTime @default(now())
+  createdAt       DateTime @default(now())
+
+  @@index([novelId, recordedAt])
+  @@index([provider, recordedAt])
+  @@index([promptName, recordedAt])
+  @@index([recordedAt])
 }
 
 // ========================

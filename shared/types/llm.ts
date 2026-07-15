@@ -35,3 +35,18 @@ export interface ProviderConfig {
   models: string[];
   envKey: string;
 }
+
+// ---------------------------------------------------------------------------
+// REQ-7062: 验收状态规范化
+// ---------------------------------------------------------------------------
+
+export const ACCEPTANCE_STATUSES = {
+  PENDING: "pending",
+  AUTO_APPROVED: "auto_approved",
+  USER_APPROVED: "user_approved",
+  REVISION_REQUIRED: "revision_required",
+  REJECTED: "rejected",
+} as const;
+
+export type AcceptanceStatus =
+  (typeof ACCEPTANCE_STATUSES)[keyof typeof ACCEPTANCE_STATUSES];

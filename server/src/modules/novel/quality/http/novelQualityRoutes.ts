@@ -178,5 +178,76 @@ export function createNovelQualityRoutes(): Router {
     },
   );
 
+  // ─── REQ-7057: AI味趋势追踪 ──────────────────────────────────────────
+
+  const trendQuerySchema = z.object({
+    start: z.coerce.number().int().min(1).optional(),
+    end: z.coerce.number().int().min(1).optional(),
+  });
+
+  const compareQuerySchema = z.object({
+    range1Start: z.coerce.number().int().min(1),
+    range1End: z.coerce.number().int().min(1),
+    range2Start: z.coerce.number().int().min(1),
+    range2End: z.coerce.number().int().min(1),
+  });
+
+  // GET /api/novels/:novelId/quality/ai-smell/trend
+  // 查询AI味趋势数据
+  router.get(
+    "/novels/:novelId/quality/ai-smell/trend",
+    validate({ params: novelIdParamsSchema, query: trendQuerySchema }),
+    async (req, res, next) => {
+      try {
+        const { novelId } = req.params as P;
+        const { start, end } = req.query as unknown as z.infer<typeof trendQuerySchema>;
+        const { prisma } = await import("../../../../db/prisma");
+        const { AiSmellTrendService } = await import("../../../../services/novel/quality/smell/AiSmellTrendService");
+        const service = new AiSmellTrendService(prisma);
+        const data = await service.getTrendData(novelId, start, end);
+        const response: ApiResponse<typeof data> = { success: true, data };
+        res.json(response);
+      } catch (error) { next(error); }
+    },
+  );
+
+  // GET /api/novels/:novelId/quality/ai-smell/anomalies
+  // 查询AI味异常点
+  router.get(
+    "/novels/:novelId/quality/ai-smell/anomalies",
+    validate({ params: novelIdParamsSchema, query: trendQuerySchema }),
+    async (req, res, next) => {
+      try {
+        const { novelId } = req.params as P;
+        const { start, end } = req.query as unknown as z.infer<typeof trendQuerySchema>;
+        const { prisma } = await import("../../../../db/prisma");
+        const { AiSmellTrendService } = await import("../../../../services/novel/quality/smell/AiSmellTrendService");
+        const service = new AiSmellTrendService(prisma);
+        const data = await service.getAnomalies(novelId, start, end);
+        const response: ApiResponse<typeof data> = { success: true, data };
+        res.json(response);
+      } catch (error) { next(error); }
+    },
+  );
+
+  // GET /api/novels/:novelId/quality/ai-smell/compare
+  // 对比两个范围的AI味评分
+  router.get(
+    "/novels/:novelId/quality/ai-smell/compare",
+    validate({ params: novelIdParamsSchema, query: compareQuerySchema }),
+    async (req, res, next) => {
+      try {
+        const { novelId } = req.params as P;
+        const { range1Start, range1End, range2Start, range2End } = req.query as unknown as z.infer<typeof compareQuerySchema>;
+        const { prisma } = await import("../../../../db/prisma");
+        const { AiSmellTrendService } = await import("../../../../services/novel/quality/smell/AiSmellTrendService");
+        const service = new AiSmellTrendService(prisma);
+        const data = await service.compareRanges(novelId, [range1Start, range1End], [range2Start, range2End]);
+        const response: ApiResponse<typeof data> = { success: true, data };
+        res.json(response);
+      } catch (error) { next(error); }
+    },
+  );
+
   return router;
 }

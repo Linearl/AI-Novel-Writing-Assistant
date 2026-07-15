@@ -291,6 +291,41 @@ export async function recordTrackedLlmUsage(
     }
   }
   const now = new Date();
+
+  // REQ-7062: 写入通用 LlmTokenUsage 模型（独立于 Director 遥测）
+  const promptMeta = record?.meta?.promptMeta;
+  const novelId = (context.novelId ?? promptMeta?.novelId ?? null) as string | null;
+  if (novelId) {
+    prisma.llmTokenUsage.create({
+      data: {
+        novelId,
+        chapterId: promptMeta?.chapterId ?? null,
+        promptName: promptMeta?.promptId ?? record?.meta?.taskType ?? "unnamed",
+        provider: typeof record?.meta?.provider === "string" ? record.meta.provider : "unknown",
+        model: record?.meta?.model ?? "unknown",
+        inputTokens: usage.promptTokens,
+        outputTokens: usage.completionTokens,
+        totalTokens: usage.totalTokens,
+        latencyMs: typeof record?.durationMs === "number"
+          ? Math.max(0, Math.round(record.durationMs))
+          : 0,
+        status: record?.status ?? "recorded",
+        metadataJson: JSON.stringify({
+          taskType: record?.meta?.taskType ?? null,
+          modelRoute: record?.meta?.modelRoute ?? null,
+          promptVersion: promptMeta?.promptVersion ?? null,
+          stage: promptMeta?.stage ?? null,
+        }),
+        recordedAt: now,
+      },
+    }).catch((err) => {
+      logger.warn("[UsageTracking] LlmTokenUsage 写入失败", {
+        novelId: context.novelId,
+        error: err instanceof Error ? err.message : String(err),
+      });
+    });
+  }
+
   await Promise.all([
     context?.directorTelemetry === true
       ? recordDirectorLlmUsage({

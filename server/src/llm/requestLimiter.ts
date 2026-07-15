@@ -149,3 +149,22 @@ export function attachLLMRequestLimiter(llm: ChatOpenAI, options: ProviderModelL
 
   return llm;
 }
+
+/**
+ * 清除所有缓存的共享限制器实例。
+ * 下次请求时将根据最新配置重新创建限制器，实现热重载。
+ */
+export function evictSharedLimiters(): void {
+  const count = sharedLimiters.size;
+  sharedLimiters.clear();
+  if (count > 0) {
+    console.log(`[RequestLimiter] 已驱逐 ${count} 个共享限制器，下次请求将根据最新配置重新创建。`);
+  }
+}
+
+/**
+ * 获取当前缓存的限制器数量（用于监控和调试）
+ */
+export function getSharedLimiterCount(): number {
+  return sharedLimiters.size;
+}

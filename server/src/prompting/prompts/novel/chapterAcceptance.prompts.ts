@@ -3,6 +3,40 @@ import { z } from "zod";
 import type { PromptAsset } from "../../core/promptTypes";
 import { renderSelectedContextBlocks } from "../../core/renderContextBlocks";
 import { NOVEL_PROMPT_BUDGETS } from "./promptBudgetProfiles";
+import { ACCEPTANCE_STATUSES, type AcceptanceStatus } from "@ai-novel/shared";
+
+export { ACCEPTANCE_STATUSES, type AcceptanceStatus };
+
+/**
+ * 规范化验收状态字符串。
+ * 处理旧数据中可能的非标准值，确保数据一致性。
+ */
+export function normalizeAcceptanceStatus(
+  raw: string | null | undefined,
+): AcceptanceStatus {
+  if (!raw) return "pending";
+
+  const normalized = raw.toLowerCase().trim();
+
+  // 标准值直接返回
+  const statusValues = Object.values(ACCEPTANCE_STATUSES) as readonly string[];
+  if (statusValues.includes(normalized)) {
+    return normalized as AcceptanceStatus;
+  }
+
+  // 旧值映射
+  const LEGACY_MAPPINGS: Record<string, AcceptanceStatus> = {
+    approved: "user_approved",
+    auto_approved: "auto_approved",
+    "needs-revision": "revision_required",
+    needs_revision: "revision_required",
+    pending_review: "pending",
+    draft: "pending",
+    active: "user_approved",
+  };
+
+  return LEGACY_MAPPINGS[normalized] ?? "pending";
+}
 
 export const chapterAcceptanceIssueCategorySchema = z.enum([
   "continuity",
