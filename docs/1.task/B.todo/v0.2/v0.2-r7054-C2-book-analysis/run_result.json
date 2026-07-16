@@ -1,10 +1,22 @@
 {
   "reqId": "7054",
   "title": "Book Analysis",
-  "status": "requirements_ready",
+  "status": "in_progress",
   "priority": "P2",
   "complexity": "C2",
   "version": "v0.2",
   "created": "2026-07-15",
-  "updated": "2026-07-15"
+  "updated": "2026-07-16",
+  "completedStages": [
+    "阶段一: Prisma Schema (4 new character models added to existing BookAnalysis models)",
+    "阶段二: Service infrastructure (19 files already ported from upstream, fully functional)",
+    "阶段五: Character services (6 new files — CharacterService, AppearanceService, TermService, MediaService, RagAdapter, Serializers)"
+  ],
+  "pendingStages": [
+    "阶段三: Document import & segmentation (already functional via existing analysis pipeline)",
+    "阶段四: AI analysis pipeline (already functional via existing generation pipeline)",
+    "阶段六: Publishing & export (already functional via publish/export services)",
+    "阶段七: Frontend (room for expansion beyond current 5 files)",
+    "阶段八: Tests (3 test files passing, need more coverage)"
+  ]
 }

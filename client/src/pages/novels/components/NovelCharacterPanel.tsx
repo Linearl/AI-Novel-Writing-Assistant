@@ -113,6 +113,7 @@ interface NovelCharacterPanelProps {
   isBackfillingCharacterResources?: boolean;
   onSetExitStatus?: (characterId: string, exitStatus: "exited" | "dead", exitNote?: string) => void;
   isSettingExitStatus?: boolean;
+  onOpenFullLedger?: () => void;
   characterForm: CharacterFormState;
   onCharacterFormChange: (field: keyof CharacterFormState, value: string) => void;
   onSaveCharacter: () => void;
@@ -180,6 +181,7 @@ export default function NovelCharacterPanel(props: NovelCharacterPanelProps) {
     isBackfillingCharacterResources = false,
     onSetExitStatus,
     isSettingExitStatus = false,
+    onOpenFullLedger,
     characterForm,
     onCharacterFormChange,
     onSaveCharacter,
@@ -474,6 +476,7 @@ export default function NovelCharacterPanel(props: NovelCharacterPanelProps) {
         isBackfillingCharacterResources={isBackfillingCharacterResources}
         onSetExitStatus={onSetExitStatus}
         isSettingExitStatus={isSettingExitStatus}
+        onOpenFullLedger={onOpenFullLedger}
       />
     </div>
   );

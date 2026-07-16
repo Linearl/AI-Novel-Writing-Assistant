@@ -74,6 +74,7 @@ interface CharacterAssetWorkspaceProps {
   isBackfillingCharacterResources?: boolean;
   onSetExitStatus?: (characterId: string, exitStatus: "exited" | "dead", exitNote?: string) => void;
   isSettingExitStatus?: boolean;
+  onOpenFullLedger?: () => void;
 }
 
 const VISIBLE_PROFILE_FIELDS: Array<{ key: CharacterVisibleProfileField; label: string; placeholder: string }> = [
@@ -210,6 +211,7 @@ export default function CharacterAssetWorkspace(props: CharacterAssetWorkspacePr
     isBackfillingCharacterResources = false,
     onSetExitStatus,
     isSettingExitStatus = false,
+    onOpenFullLedger,
   } = props;
   const [visibleProfileGuidance, setVisibleProfileGuidance] = useState("");
 
@@ -456,6 +458,16 @@ export default function CharacterAssetWorkspace(props: CharacterAssetWorkspacePr
                   <div className="mt-1 text-xs leading-5 text-muted-foreground">{resourceDisplayMode.helper}</div>
                 </div>
                 <div className="flex flex-wrap gap-2">
+                  {onOpenFullLedger ? (
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      onClick={onOpenFullLedger}
+                    >
+                      查看完整账本
+                    </Button>
+                  ) : null}
                   <Button
                     type="button"
                     size="sm"

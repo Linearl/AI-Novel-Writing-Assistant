@@ -1,13 +1,13 @@
 ---
 reqId: 7054
 title: "Book Analysis 拆书系统"
-status: requirements_ready
+status: in_progress
 priority: P2
 complexity: C2
 estimatedEffort: "8-10天"
 version: v0.2
 created: 2026-07-14
-updated: 2026-07-14
+updated: 2026-07-16
 ---
 
 # REQ-7054: Book Analysis 拆书系统
@@ -29,7 +29,7 @@ AI 驱动的书籍分析工作台，导入文档后自动分段分析（情节�
 
 ## 状态
 
-- 当前阶段：需求就绪
+- 当前阶段：开发中（阶段一至六完成，阶段七前端待扩展）
 - 复杂度：C2（最大功能）
 - 优先级：P2（高复杂度，建议后期开发）
 - 预估工时：8-10天

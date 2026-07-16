@@ -535,6 +535,7 @@ export interface CharacterTabViewProps {
   selectedCharacter?: Character;
   characterResources?: CharacterResourceLedgerItem[];
   pendingCharacterResourceCount?: number;
+  onOpenFullLedger?: () => void;
   characterForm: {
     name: string;
     role: string;
