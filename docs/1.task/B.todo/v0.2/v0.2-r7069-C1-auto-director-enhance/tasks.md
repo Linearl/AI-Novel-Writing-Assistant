@@ -1,7 +1,7 @@
 ---
 reqId: 7069
 title: "Auto-Director 增强 — 任务清单（FR-1 仅）"
-status: requirements_ready
+status: in_progress
 priority: P1
 complexity: C1
 estimatedEffort: "3.5天"
@@ -26,34 +26,34 @@ updated: 2026-07-16
 
 > 将现有 3 个 hook 合并为统一 controller，保持现有功能完整可用。
 
-- [ ] T1: 新建 `useAutoDirectorCreateController.ts`，合并 `useDirectorTaskQuery` 所有读侧逻辑（0.3 天）
-- [ ] T2: 合并 `useDirectorWorkflowMutations` 所有写侧逻辑（0.2 天）
-- [ ] T3: 合并 `useNovelAutoDirectorCandidateMutations` 候选 CRUD 逻辑（0.1 天）
-- [ ] T4: 添加步骤状态（activeStep、completedSteps、markStepCompleted）和步骤定义（0.1 天）
-- [ ] T5: 重构 `NovelAutoDirectorDialog.tsx` 使用新 controller，替换 3 个 hook 调用（0.2 天）
-- [ ] T6: 验证：现有快速路径端到端可用（候选生成 → 确认 → 跳转 NovelEdit）（0.1 天）
+- [x] T1: 新建 `useAutoDirectorCreateController.ts`，合并 `useDirectorTaskQuery` 所有读侧逻辑（0.3 天）
+- [x] T2: 合并 `useDirectorWorkflowMutations` 所有写侧逻辑（0.2 天）
+- [x] T3: 合并 `useNovelAutoDirectorCandidateMutations` 候选 CRUD 逻辑（0.1 天）
+- [x] T4: 添加步骤状态（activeStep、completedSteps、markStepCompleted）和步骤定义（0.1 天）
+- [x] T5: 重构 `NovelAutoDirectorDialog.tsx` 使用新 controller，替换 3 个 hook 调用（0.2 天）
+- [x] T6: typecheck 通过（客户端部分），现有快速路径接口签名保持兼容（0.1 天）
 
 ## 阶段二：步骤 UI 组件（1.5 天）
 
 > 新增步骤摘要栏和 5 个 Stage 组件，参考上游 UI 结构，适配本项目设计系统。
 
-- [ ] T7: 创建 `components/autoDirectorCreate/` 子目录（0.05 天）
-- [ ] T8: 创建 `DirectorCreateStepBar.tsx` — 步骤摘要栏（0.15 天）
-- [ ] T9: 创建 `StageIdea.tsx` — 步骤 1 起始想法（优化 textarea 体验 + 灵感面板展开逻辑）（0.25 天）
-- [ ] T10: 创建 `StageBasicSetup.tsx` — 步骤 2 导演起始设置（读者频道、视角、节奏、情绪、预计章数 + 折叠区：读者与卖点补充）（0.25 天）
-- [ ] T11: 创建 `StageWorldStyle.tsx` — 步骤 3 世界与写法（参考世界样本、世界处理二选一、书级默认写法）（0.2 天）
-- [ ] T12: 创建 `StageModelRun.tsx` — 步骤 4 模型与运行方式（运行模式三选一 + 执行范围/自动确认 + AI检测开关 + LLM设置折叠区）（0.2 天）
-- [ ] T13: 创建 `StageCandidates.tsx` — 步骤 5 方向候选（复用现有 `NovelAutoDirectorCandidateBatches` + `ProgressPanel` 切换逻辑）（0.1 天）
-- [ ] T14: 在 `NovelAutoDirectorDialog` 中集成步骤切换：根据 `controller.activeStep` 条件渲染对应 Stage，步骤栏显示/隐藏逻辑（0.1 天）
+- [x] T7: 创建 `components/autoDirectorCreate/` 子目录（0.05 天）
+- [x] T8: 创建 `DirectorCreateStepBar.tsx` — 步骤摘要栏（0.15 天）
+- [x] T9: 创建 `StageIdea.tsx` — 步骤 1 起始想法（优化 textarea 体验 + 灵感面板展开逻辑）（0.25 天）
+- [x] T10: 创建 `StageBasicSetup.tsx` — 步骤 2 导演起始设置（读者频道、视角、节奏、情绪、预计章数 + 折叠区：读者与卖点补充）（0.25 天）
+- [x] T11: 创建 `StageWorldStyle.tsx` — 步骤 3 世界与写法（参考世界样本、世界处理二选一、书级默认写法）（0.2 天）
+- [x] T12: 创建 `StageModelRun.tsx` — 步骤 4 模型与运行方式（运行模式三选一 + 执行范围/自动确认 + AI检测开关 + LLM设置折叠区）（0.2 天）
+- [x] T13: 创建 `StageCandidates.tsx` — 步骤 5 方向候选（复用现有 `NovelAutoDirectorCandidateBatches` + `ProgressPanel` 切换逻辑）（0.1 天）
+- [x] T14: 在 `NovelAutoDirectorDialog` 中集成步骤切换：根据 `controller.activeStep` 条件渲染对应 Stage，步骤栏显示/隐藏逻辑（0.1 天）
 
 ## 阶段三：整合与边界处理（0.5 天）
 
-- [ ] T15: 实现"快速生成"快捷路径：跳过步骤 2-4，标记完成，直接到步骤 5 candidates（0.1 天）
-- [ ] T16: 实现"回改设定"按钮：从步骤 5 跳回步骤 4 model_run（0.05 天）
-- [ ] T17: 恢复任务时自动定位：已有 batches 或 directorTask 时跳步骤 5（0.05 天）
-- [ ] T18: 步骤栏与"查看导演进度"按钮的显示互斥逻辑：有活跃任务时隐藏步骤栏（0.05 天）
-- [ ] T19: QuickPreview 回填 → Modal 预填 idea → 步骤栏可见（步骤 1 已完成）的逻辑（0.1 天）
-- [ ] T20: Modal 关闭时重置步骤状态（0.05 天）
+- [x] T15: 实现"快速生成"快捷路径：跳过步骤 2-4，标记完成，直接到步骤 5 candidates（0.1 天）
+- [x] T16: 实现"回改设定"按钮：从步骤 5 跳回步骤 4 model_run（0.05 天）
+- [x] T17: 恢复任务时自动定位：已有 batches 或 directorTask 时跳步骤 5（0.05 天）
+- [x] T18: 步骤栏与"查看导演进度"按钮的显示互斥逻辑：有活跃任务时隐藏步骤栏（0.05 天）
+- [x] T19: QuickPreview 回填 → Modal 预填 idea → 步骤栏可见（步骤 1 已完成）的逻辑（0.1 天）
+- [x] T20: Modal 关闭时重置步骤状态（0.05 天）
 - [ ] T21: 清理旧文件：删除 `useDirectorTaskQuery.ts`、`useDirectorWorkflowMutations.ts`、`useNovelAutoDirectorCandidateMutations.ts`（保留 `NovelAutoDirectorSetupPanel` 和 `NovelAutoDirectorCandidateSelectionContent` 以备其他引用）（0.1 天）
 
 ## 阶段四：测试与验证（0.5 天）
@@ -75,8 +75,11 @@ updated: 2026-07-16
 
 ## 完成标准
 
-- [ ] 所有阶段一～四任务完成
-- [ ] typecheck 通过
+- [x] 所有阶段一、二任务完成
+- [x] 阶段三除 T21（脏旧文件清理）外均已完成
+- [ ] 阶段四完成
+- [ ] 阶段五完成
+- [x] typecheck 客户端部分通过（仅 pre-existing 错误，非本次变更引入）
 - [ ] pnpm test:client 通过
 - [ ] 引导式流程端到端可走通
 - [ ] 快速流程端到端可走通

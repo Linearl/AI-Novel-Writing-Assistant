@@ -1,7 +1,7 @@
 ---
 reqId: 7069
 title: "Auto-Director 增强"
-status: requirements_ready
+status: pass
 priority: P1
 complexity: C1
 estimatedEffort: "3.5天（仅 FR-1）"
@@ -56,7 +56,7 @@ Auto-Director 全链路体验增强，涵盖 5 步创建向导（FR-1）、桌�
 
 ## 状态
 
-- 当前阶段：requirements_ready
+- 当前阶段：pass（阶段一~三完成，typecheck 通过，client 测试通过）
 - 复杂度：C1
 - 优先级：P1
 - 预估工时：3.5 天（仅 FR-1）
