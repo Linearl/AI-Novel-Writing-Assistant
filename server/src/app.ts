@@ -1,6 +1,9 @@
-import "dotenv/config";
+import dotenv from "dotenv";
 import { writeFileSync, mkdirSync, unlinkSync } from "node:fs";
 import { resolve, join } from "node:path";
+
+// 显式加载 server/.env（CWD 可能是项目根目录，dotenv/config 会加载错误的 .env）
+dotenv.config({ path: resolve(__dirname, "../.env") });
 import type { Server } from "node:http";
 import os from "node:os";
 import cors from "cors";
