@@ -2,7 +2,7 @@
   "req_id": "7064",
   "title": "Service 层 DI 依赖注入迁移",
   "version": "v0.2",
-  "status": "in_progress",
+  "status": "done",
   "requirement_status": "approved",
   "priority": "P1",
   "reqType": "技术债务/重构",
