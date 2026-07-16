@@ -15,5 +15,6 @@
     "types": ["vite/client"],
     "noEmit": true
   },
-  "include": ["src", "vite.config.ts", "tailwind.config.ts"]
+  "include": ["src", "vite.config.ts", "tailwind.config.ts"],
+  "exclude": ["src/pages/novels/_autoDirector_backup"]
 }
