@@ -1,7 +1,7 @@
 {
   "reqId": "7074",
   "title": "资源上下文重构",
-  "status": "requirements_ready",
+  "status": "in_progress",
   "complexity": "M3",
   "category": "7xxx",
   "priority": "P3",
@@ -11,8 +11,25 @@
   "estimatedFiles": "4-5（重构合并）",
   "dependencies": [],
   "verification": {
-    "typecheck": "pending",
+    "typecheck": "pass (无 chapterLayered 相关错误)",
     "tests": "pending",
     "integration": "pending"
+  },
+  "result": {
+    "filesBefore": 5,
+    "filesAfter": 3,
+    "deletedFiles": [
+      "chapterLayeredContextShared.ts",
+      "chapterLayeredContextCharacters.ts"
+    ],
+    "newFiles": [
+      "chapterLayeredContextTypes.ts"
+    ],
+    "updatedFiles": [
+      "chapterLayeredContext.ts (facade)",
+      "chapterLayeredContextHelpers.ts (merged)",
+      "chapterLayeredContextBlocks.ts (imports updated)",
+      "ChapterAcceptanceAssessmentService.ts (import fix)"
+    ]
   }
 }

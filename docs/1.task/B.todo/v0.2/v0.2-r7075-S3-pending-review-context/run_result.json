@@ -1,7 +1,7 @@
 {
   "reqId": "7075",
   "title": "待审上下文注入",
-  "status": "requirements_ready",
+  "status": "in_progress",
   "complexity": "S3",
   "category": "7xxx",
   "priority": "P3",
@@ -11,8 +11,10 @@
   "estimatedFiles": "2",
   "dependencies": ["REQ-7074 (资源上下文重构)"],
   "verification": {
-    "typecheck": "pending",
+    "typecheck": "pass",
     "tests": "pending",
     "integration": "pending"
-  }
+  },
+  "completedTasks": ["T1", "T2", "T3"],
+  "notes": "T1: REQ-7074 未完成，但独立创建 PendingReviewContextService 从已有 GenerationContextPackage 字段读取数据，无需等待。typecheck 通过（新增文件零错误）。"
 }

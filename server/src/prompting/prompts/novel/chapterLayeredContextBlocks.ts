@@ -1,7 +1,8 @@
 /**
  * chapterLayeredContextBlocks.ts
  *
- * Block-building functions and character helpers extracted from chapterLayeredContext.ts.
+ * Block-building functions for chapter writer context assembly.
+ * Imports utilities and types from chapterLayeredContextHelpers / chapterLayeredContextTypes.
  * Pure extraction — no functional changes.
  */
 
@@ -18,14 +19,14 @@ import {
   buildPendingCandidateGuardText,
   buildRelationStageText,
   toListBlock,
-} from "./chapterLayeredContextShared";
+  resolveTargetWordRange,
+} from "./chapterLayeredContextHelpers";
 import {
   normalizeChapterWriteContext,
-  type ChapterWriterBlockMode,
-  type ChapterWriterBlockOptions,
+  selectCharacterHardFactsForWriter,
 } from "./chapterLayeredContextHelpers";
-import { resolveTargetWordRange } from "./chapterLayeredContextShared";
 import { timelinePromptAdapter } from "../../../modules/timeline/timeline-prompt-adapter";
+import type { ChapterWriterBlockMode, ChapterWriterBlockOptions } from "./chapterLayeredContextTypes";
 
 // ---------------------------------------------------------------------------
 // Pressure helpers
@@ -53,27 +54,8 @@ function hasCharacterResourcePressure(writeContext: ChapterWriteContext): boolea
 // Character helpers
 // ---------------------------------------------------------------------------
 
-export function selectCharacterHardFactsForWriter(input: {
-  hardFacts: ChapterWriteContext["characterHardFacts"];
-  participants: ChapterWriteContext["participants"];
-  characterBehaviorGuides: ChapterWriteContext["characterBehaviorGuides"];
-  currentChapterOrder: number;
-}): ChapterWriteContext["characterHardFacts"] {
-  const selectedIds = new Set(input.participants.map((character) => character.id));
-  for (const guide of input.characterBehaviorGuides) {
-    if (
-      guide.shouldPreferAppearance
-      || guide.plannedChapterOrders.includes(input.currentChapterOrder)
-      || guide.absenceRisk === "high"
-      || guide.absenceRisk === "warn"
-      || guide.relationStageLabels.length > 0
-    ) {
-      selectedIds.add(guide.characterId);
-    }
-  }
-  const selected = input.hardFacts.filter((fact) => selectedIds.has(fact.characterId));
-  return selected.length > 0 ? selected.slice(0, 8) : input.hardFacts.slice(0, 4);
-}
+// Re-export from helpers (single definition source)
+export { selectCharacterHardFactsForWriter } from "./chapterLayeredContextHelpers";
 
 function buildCharacterHardFactsText(writeContext: ChapterWriteContext): string {
   const hardFacts = writeContext.characterHardFacts ?? [];

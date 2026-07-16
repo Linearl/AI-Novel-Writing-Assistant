@@ -1,12 +1,13 @@
 /**
  * chapterLayeredContext.ts
  *
- * Public API facade — re-exports from extracted modules.
+ * Public API facade — re-exports from merged modules.
  * The actual implementations live in:
- *   - chapterLayeredContextHelpers.ts  (context builders, types, normalization)
+ *   - chapterLayeredContextHelpers.ts  (context builders, shared utilities, character dynamics)
  *   - chapterLayeredContextBlocks.ts   (prompt context block assembly)
- *   - chapterLayeredContextShared.ts   (shared text utilities)
- *   - chapterLayeredContextCharacters.ts (character guidance helpers)
+ *   - chapterLayeredContextTypes.ts    (pure type definitions)
+ *
+ * Refactored from REQ-7074: 5 files converged to 3.
  */
 
 import type { ReviewIssue } from "@ai-novel/shared";
@@ -222,10 +223,8 @@ import {
 } from "./chapterLayeredContextBlocks";
 import {
   buildChapterRepairContext as _buildChapterRepairContext,
-} from "./chapterLayeredContextHelpers";
-import {
   toListBlock as _toListBlock,
-} from "./chapterLayeredContextShared";
+} from "./chapterLayeredContextHelpers";
 
 const buildChapterWriterContextBlocksForReexport = _buildChapterWriterContextBlocks;
 const buildChapterRepairContextForReexport = _buildChapterRepairContext;

@@ -7,14 +7,14 @@ import type { LLMProvider } from "@ai-novel/shared";
 import { prisma } from "../../../db/prisma";
 import { runStructuredPrompt } from "../../../prompting/core/promptRunner";
 import { resolvePromptContextBlocksForAsset } from "../../../prompting/context/promptContextResolution";
-import { buildChapterReviewContextBlocks } from "../../../prompting/prompts/novel/chapterLayeredContext";
-import { resolveTargetWordRange } from "../../../prompting/prompts/novel/chapterLayeredContextShared";
+import { buildChapterReviewContextBlocks, resolveTargetWordRange } from "../../../prompting/prompts/novel/chapterLayeredContext";
 import {
   chapterAcceptanceAssessmentPrompt,
   type ChapterAcceptanceAssessmentOutput,
 } from "../../../prompting/prompts/novel/chapterAcceptance.prompts";
 import { openConflictService } from "../../state/OpenConflictService";
 import { normalizeScore, ruleScore } from "../novelP0Utils";
+import { pendingReviewContextService } from "../review/PendingReviewContextService";
 
 export interface ChapterAcceptanceAssessmentInput {
   novelId: string;
@@ -293,6 +293,11 @@ export class ChapterAcceptanceAssessmentService {
       },
       fallbackBlocks,
     });
+    // REQ-7075: 注入待审上下文（前文摘要+角色状态+世界变更+主题连贯性）
+    const pendingReviewBlocks = pendingReviewContextService.buildContextBlocks(
+      input.contextPackage,
+    );
+    const allBlocks = [...resolvedContext.blocks, ...pendingReviewBlocks];
     const result = await runStructuredPrompt({
       asset: chapterAcceptanceAssessmentPrompt,
       promptInput: {
@@ -302,7 +307,7 @@ export class ChapterAcceptanceAssessmentService {
         targetWordCount: input.targetWordCount ?? null,
         content: input.content,
       },
-      contextBlocks: resolvedContext.blocks,
+      contextBlocks: allBlocks,
       options: {
         provider: input.provider,
         model: input.model,
