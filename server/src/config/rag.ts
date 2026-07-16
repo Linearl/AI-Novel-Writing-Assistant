@@ -100,4 +100,16 @@ export const ragConfig = {
   workerRetryBaseMs: asInt(process.env.RAG_WORKER_RETRY_BASE_MS, 5000, 1000, 300000),
   httpTimeoutMs: asInt(process.env.RAG_HTTP_TIMEOUT_MS, 30000, 1000, 300000),
   providerPriority: [...LLM_PROVIDERS] as EmbeddingProvider[],
+  /** REQ-7055: 上下文分块版本号 */
+  contextualRetrievalVersion: "v1",
+  /** REQ-7055: 检索追踪保留天数，默认 7 天 */
+  retrievalTraceRetentionDays: asInt(process.env.RAG_TRACE_RETENTION_DAYS, 7, 1, 90),
+  /** REQ-7055: reranker 模型名 */
+  rerankerModel: process.env.RAG_RERANKER_MODEL ?? "",
+  /** REQ-7055: reranker API 超时（毫秒），默认 3000 */
+  rerankerTimeoutMs: asInt(process.env.RAG_RERANKER_TIMEOUT_MS, 3000, 500, 30000),
+  /** REQ-7055: 分面检索默认模式 */
+  facetMode: (process.env.RAG_FACET_MODE ?? "boost") as "strict" | "boost",
+  /** REQ-7055: 上下文分块前缀最大字符数 */
+  contextPrefixMaxChars: 260,
 };

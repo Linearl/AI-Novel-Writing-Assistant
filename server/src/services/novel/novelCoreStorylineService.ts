@@ -1,3 +1,4 @@
+import type { IDatabase } from "../../platform/di";
 import { prisma } from "../../db/prisma";
 import {
   buildStorylineDiffSummary,
@@ -10,15 +11,22 @@ import {
 import { queueRagUpsert } from "./novelCoreSupport";
 
 export class NovelCoreStorylineService {
+  private readonly db: IDatabase;
+
+  constructor(
+    db: IDatabase = prisma,
+  ) {
+    this.db = db;
+  }
   async listStorylineVersions(novelId: string) {
-    return prisma.storylineVersion.findMany({
+    return this.db.storylineVersion.findMany({
       where: { novelId },
       orderBy: [{ version: "desc" }],
     });
   }
 
   async createStorylineDraft(novelId: string, input: StorylineDraftInput) {
-    const novel = await prisma.novel.findUnique({
+    const novel = await this.db.novel.findUnique({
       where: { id: novelId },
       select: { id: true, outline: true },
     });
@@ -26,13 +34,13 @@ export class NovelCoreStorylineService {
       throw new Error("小说不存在");
     }
 
-    const latestVersion = await prisma.storylineVersion.findFirst({
+    const latestVersion = await this.db.storylineVersion.findFirst({
       where: { novelId },
       orderBy: { version: "desc" },
     });
 
     const baseVersion = typeof input.baseVersion === "number"
-      ? await prisma.storylineVersion.findFirst({
+      ? await this.db.storylineVersion.findFirst({
         where: { novelId, version: input.baseVersion },
       })
       : null;
@@ -40,7 +48,7 @@ export class NovelCoreStorylineService {
     const previousContent = baseVersion?.content ?? latestVersion?.content ?? novel.outline ?? "";
     const diffSummary = input.diffSummary?.trim() || buildStorylineDiffSummary(previousContent, input.content);
 
-    return prisma.storylineVersion.create({
+    return this.db.storylineVersion.create({
       data: {
         novelId,
         version: (latestVersion?.version ?? 0) + 1,
@@ -52,23 +60,23 @@ export class NovelCoreStorylineService {
   }
 
   async activateStorylineVersion(novelId: string, versionId: string) {
-    const target = await prisma.storylineVersion.findFirst({
+    const target = await this.db.storylineVersion.findFirst({
       where: { id: versionId, novelId },
     });
     if (!target) {
       throw new Error("主线版本不存在");
     }
 
-    await prisma.$transaction([
-      prisma.storylineVersion.updateMany({
+    await this.db.$transaction([
+      this.db.storylineVersion.updateMany({
         where: { novelId, status: "active" },
         data: { status: "frozen" },
       }),
-      prisma.storylineVersion.update({
+      this.db.storylineVersion.update({
         where: { id: target.id },
         data: { status: "active" },
       }),
-      prisma.novel.update({
+      this.db.novel.update({
         where: { id: novelId },
         data: {
           outline: target.content,
@@ -77,7 +85,7 @@ export class NovelCoreStorylineService {
       }),
     ]);
 
-    const refreshed = await prisma.storylineVersion.findUnique({ where: { id: target.id } });
+    const refreshed = await this.db.storylineVersion.findUnique({ where: { id: target.id } });
     if (!refreshed) {
       throw new Error("主线版本激活失败");
     }
@@ -86,21 +94,21 @@ export class NovelCoreStorylineService {
   }
 
   async freezeStorylineVersion(novelId: string, versionId: string) {
-    const target = await prisma.storylineVersion.findFirst({
+    const target = await this.db.storylineVersion.findFirst({
       where: { id: versionId, novelId },
       select: { id: true },
     });
     if (!target) {
       throw new Error("主线版本不存在");
     }
-    return prisma.storylineVersion.update({
+    return this.db.storylineVersion.update({
       where: { id: target.id },
       data: { status: "frozen" },
     });
   }
 
   async getStorylineDiff(novelId: string, versionId: string, compareVersion?: number) {
-    const target = await prisma.storylineVersion.findFirst({
+    const target = await this.db.storylineVersion.findFirst({
       where: { id: versionId, novelId },
     });
     if (!target) {
@@ -109,12 +117,12 @@ export class NovelCoreStorylineService {
 
     let baseline: { content: string } | null = null;
     if (typeof compareVersion === "number") {
-      baseline = await prisma.storylineVersion.findFirst({
+      baseline = await this.db.storylineVersion.findFirst({
         where: { novelId, version: compareVersion },
         select: { content: true },
       });
     } else {
-      baseline = await prisma.storylineVersion.findFirst({
+      baseline = await this.db.storylineVersion.findFirst({
         where: { novelId, version: { lt: target.version } },
         orderBy: { version: "desc" },
         select: { content: true },
@@ -124,11 +132,11 @@ export class NovelCoreStorylineService {
     const previousContent = baseline?.content ?? "";
     const changedLines = estimateChangedLines(previousContent, target.content);
     const [characters, chapterCount] = await Promise.all([
-      prisma.character.findMany({
+      this.db.character.findMany({
         where: { novelId },
         select: { name: true },
       }),
-      prisma.chapter.count({ where: { novelId } }),
+      this.db.chapter.count({ where: { novelId } }),
     ]);
 
     const affectedCharacters = countCharacterMentions(target.content, characters.map((item) => item.name));
@@ -147,7 +155,7 @@ export class NovelCoreStorylineService {
   }
 
   async analyzeStorylineImpact(novelId: string, input: StorylineImpactInput) {
-    const novel = await prisma.novel.findUnique({
+    const novel = await this.db.novel.findUnique({
       where: { id: novelId },
       select: { id: true, outline: true },
     });
@@ -158,7 +166,7 @@ export class NovelCoreStorylineService {
     let candidateContent = input.content?.trim() ?? "";
     let sourceVersion: number | null = null;
     if (!candidateContent && input.versionId) {
-      const version = await prisma.storylineVersion.findFirst({
+      const version = await this.db.storylineVersion.findFirst({
         where: { id: input.versionId, novelId },
         select: { version: true, content: true },
       });
@@ -176,11 +184,11 @@ export class NovelCoreStorylineService {
     const baseContent = novel.outline ?? "";
     const changedLines = estimateChangedLines(baseContent, candidateContent);
     const [characters, chapterCount] = await Promise.all([
-      prisma.character.findMany({
+      this.db.character.findMany({
         where: { novelId },
         select: { name: true },
       }),
-      prisma.chapter.count({ where: { novelId } }),
+      this.db.chapter.count({ where: { novelId } }),
     ]);
 
     const affectedCharacters = countCharacterMentions(candidateContent, characters.map((item) => item.name));

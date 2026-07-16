@@ -1,4 +1,5 @@
 import type { RagIndexJob } from "@prisma/client";
+import type { IDatabase } from "../../platform/di";
 import { prisma } from "../../db/prisma";
 import { ragConfig } from "../../config/rag";
 import { getRagEmbeddingSettings } from "../settings/RagSettingsService";
@@ -26,14 +27,19 @@ export type { RagJobProgressSnapshot, RagJobSummaryRecord } from "./ragIndexServ
 export type { ReindexScope } from "./ragIndexJobOperations";
 
 export class RagIndexService {
+  private readonly db: IDatabase;
+
   constructor(
     private readonly embeddingService: EmbeddingService,
     private readonly vectorStoreService: VectorStoreService,
-  ) {}
+    db: IDatabase = prisma,
+  ) {
+    this.db = db;
+  }
 
   private buildDeps() {
     return {
-      prisma,
+      prisma: this.db,
       embeddingService: this.embeddingService,
       vectorStoreService: this.vectorStoreService,
       updateJobProgress: this.updateJobProgress.bind(this),
@@ -42,7 +48,7 @@ export class RagIndexService {
   }
 
   private async assertJobNotCancelled(jobId: string): Promise<void> {
-    const job = await prisma.ragIndexJob.findUnique({
+    const job = await this.db.ragIndexJob.findUnique({
       where: { id: jobId },
       select: { status: true },
     });
@@ -55,7 +61,7 @@ export class RagIndexService {
   }
 
   private async updateJobProgress(jobId: string, progress: Omit<RagJobProgressSnapshot, "updatedAt">): Promise<void> {
-    const record = await prisma.ragIndexJob.findUnique({
+    const record = await this.db.ragIndexJob.findUnique({
       where: { id: jobId },
       select: { payloadJson: true },
     });
@@ -64,7 +70,7 @@ export class RagIndexService {
     }
     const payload = parseJobPayload(record.payloadJson);
     payload.progress = createProgressSnapshot(progress);
-    await prisma.ragIndexJob.update({
+    await this.db.ragIndexJob.update({
       where: { id: jobId },
       data: {
         payloadJson: JSON.stringify(payload),
@@ -107,7 +113,7 @@ export class RagIndexService {
     },
   ) {
     const tenantId = options?.tenantId ?? ragConfig.defaultTenantId;
-    const existing = await prisma.ragIndexJob.findFirst({
+    const existing = await this.db.ragIndexJob.findFirst({
       where: {
         tenantId,
         jobType,
@@ -120,7 +126,7 @@ export class RagIndexService {
     if (existing) {
       return existing;
     }
-    const created = await prisma.ragIndexJob.create({
+    const created = await this.db.ragIndexJob.create({
       data: {
         tenantId,
         jobType,
@@ -172,7 +178,7 @@ export class RagIndexService {
   // -------------------------------------------------------------------------
 
   async getNextRunnableJob(): Promise<RagIndexJob | null> {
-    return prisma.ragIndexJob.findFirst({
+    return this.db.ragIndexJob.findFirst({
       where: {
         status: "queued",
         runAfter: { lte: new Date() },
@@ -187,7 +193,7 @@ export class RagIndexService {
     runAfter?: Date;
     lastError?: string | null;
   }) {
-    const current = await prisma.ragIndexJob.findUnique({
+    const current = await this.db.ragIndexJob.findUnique({
       where: { id: jobId },
       select: { status: true, payloadJson: true },
     });
@@ -195,12 +201,12 @@ export class RagIndexService {
       throw new Error("RAG job not found.");
     }
     if (current.status === "cancelled" && payload.status !== "cancelled") {
-      return prisma.ragIndexJob.findUnique({
+      return this.db.ragIndexJob.findUnique({
         where: { id: jobId },
       }) as Promise<RagIndexJob>;
     }
 
-    const job = await prisma.ragIndexJob.update({
+    const job = await this.db.ragIndexJob.update({
       where: { id: jobId },
       data: {
         status: payload.status,
@@ -261,7 +267,7 @@ export class RagIndexService {
   }
 
   async listJobs(limit = 100, status?: RagJobStatus) {
-    return prisma.ragIndexJob.findMany({
+    return this.db.ragIndexJob.findMany({
       where: status ? { status } : {},
       orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
       take: Math.min(Math.max(limit, 1), 500),

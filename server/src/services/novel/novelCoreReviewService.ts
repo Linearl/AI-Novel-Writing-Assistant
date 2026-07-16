@@ -1,5 +1,6 @@
 import type { AuditReport, QualityScore, ReviewIssue } from "@ai-novel/shared";
 import type { GenerationContextPackage } from "@ai-novel/shared";
+import type { IDatabase } from "../../platform/di";
 import { prisma } from "../../db/prisma";
 import { logger } from "../../services/logging/LoggerService";
 import { runStructuredPrompt } from "../../prompting/core/promptRunner";
@@ -55,6 +56,13 @@ export async function createQualityReport(
 }
 
 export class NovelCoreReviewService {
+  private readonly db: IDatabase;
+
+  constructor(
+    db: IDatabase = prisma,
+  ) {
+    this.db = db;
+  }
   private readonly generationContextAssembler = new GenerationContextAssembler();
   private readonly chapterRuntimeCoordinator = new ChapterRuntimeCoordinator({
     reviewChapterAfterRepair: (novelId, chapterId, options) => this.reviewChapter(novelId, chapterId, options),
@@ -62,7 +70,7 @@ export class NovelCoreReviewService {
   });
 
   async reviewChapter(novelId: string, chapterId: string, options: ReviewOptions = {}) {
-    const chapter = await prisma.chapter.findFirst({
+    const chapter = await this.db.chapter.findFirst({
       where: { id: chapterId, novelId },
       include: { novel: true },
     });
@@ -105,7 +113,7 @@ export class NovelCoreReviewService {
     }
 
     const chapterStatePatch = chapterStatePairAfterManualQualityReview(isPass(review.score));
-    await prisma.chapter.update({
+    await this.db.chapter.update({
       where: { id: chapterId },
       data: chapterStatePatch,
     });
@@ -117,7 +125,7 @@ export class NovelCoreReviewService {
       score: review.score,
       issues: review.issues,
       source: options.content ? "repair_recheck" : "manual_review",
-    }).catch((error) => {
+    }).catch((error: unknown) => {
       logPipelineError("Failed to record chapter quality loop assessment.", {
         novelId,
         chapterId,
@@ -233,7 +241,7 @@ export class NovelCoreReviewService {
   }
 
   async getQualityReport(novelId: string) {
-    const reports = await prisma.qualityReport.findMany({
+    const reports = await this.db.qualityReport.findMany({
       where: { novelId },
       orderBy: { createdAt: "desc" },
     });

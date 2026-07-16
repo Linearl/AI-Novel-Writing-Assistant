@@ -1,3 +1,5 @@
+import type { IDatabase } from "../../platform/di";
+import { prisma } from "../../db/prisma";
 import {
   ChapterGenerateOptions,
   ChapterInput,
@@ -29,14 +31,29 @@ import { NovelCoreSnapshotService } from "./novelCoreSnapshotService";
 import { NovelCoreStorylineService } from "./novelCoreStorylineService";
 
 export class NovelCoreService {
-  private readonly crudService = new NovelCoreCrudService();
-  private readonly chapterService = new NovelCoreChapterService();
-  private readonly storylineService = new NovelCoreStorylineService();
-  private readonly characterService = new NovelCoreCharacterService();
-  private readonly generationService = new NovelCoreGenerationService();
-  private readonly reviewService = new NovelCoreReviewService();
-  private readonly pipelineService = new NovelCorePipelineService();
-  private readonly snapshotService = new NovelCoreSnapshotService();
+  private readonly db: IDatabase;
+  private readonly crudService: NovelCoreCrudService;
+  private readonly chapterService: NovelCoreChapterService;
+  private readonly storylineService: NovelCoreStorylineService;
+  private readonly characterService: NovelCoreCharacterService;
+  private readonly generationService: NovelCoreGenerationService;
+  private readonly reviewService: NovelCoreReviewService;
+  private readonly pipelineService: NovelCorePipelineService;
+  private readonly snapshotService: NovelCoreSnapshotService;
+
+  constructor(
+    db: IDatabase = prisma,
+  ) {
+    this.db = db;
+    this.crudService = new NovelCoreCrudService(db);
+    this.chapterService = new NovelCoreChapterService(db);
+    this.storylineService = new NovelCoreStorylineService(db);
+    this.characterService = new NovelCoreCharacterService(db);
+    this.generationService = new NovelCoreGenerationService(db);
+    this.reviewService = new NovelCoreReviewService(db);
+    this.pipelineService = new NovelCorePipelineService(db);
+    this.snapshotService = new NovelCoreSnapshotService(db);
+  }
 
   async listNovels(input: PaginationInput) {
     return this.crudService.listNovels(input);

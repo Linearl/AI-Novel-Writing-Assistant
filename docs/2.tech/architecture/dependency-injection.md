@@ -14,10 +14,12 @@ update_time: 2026-07-14
 | 阶段 | 状态 | 说明 |
 |------|------|------|
 | 接口定义（`platform/di/interfaces.ts`） | ✅ 已完成 | `IDatabase`、`ILlmClient`、`IEventBus` 就绪 |
-| Service 迁移（Phase 3） | 🚧 有承接 | **REQ-7064** `docs/1.task/B.todo/v0.2/v0.2-r7064-C1-di-service-dependency-injection-migration/` |
-| 旧测试迁移 | ⏳ 待启动 | 随 Service 改造顺带进行，不强制一次性迁移 |
+| Service 迁移（Phase 3） | ✅ 已完成 | **REQ-7064** 7 个 Service 已迁移为构造函数注入模式 |
+| 旧测试迁移 | 🚧 进行中 | 新测试使用 DI mock，旧 prismaMock 标记 @deprecated |
 
-**下一步**：执行 `ll-workflow-core dev` 推进 REQ-7064，按 tasks.md 中 T1→T6 顺序逐 Service 改造。
+**已迁移 Service**：ChapterService, NovelContextService, NovelCoreService（及 8 个子服务）, NovelWorkflowService, CharacterDynamicsService（及 2 个子服务）, NovelDirectorService, RagIndexService
+
+**下一步**：run_result.json 已更新为 in_progress，任务包状态同步待提交。
 
 ---
 

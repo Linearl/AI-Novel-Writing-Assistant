@@ -2961,6 +2961,22 @@ model KnowledgeChunk {
   @@index([chunkHash])
 }
 
+model RagRetrievalTrace {
+  id          String   @id @default(cuid())
+  queryHash   String   // SHA-256 摘要（取前 24 位 hex）
+  tenantId    String
+  novelId     String?
+  worldId     String?
+  timingJson  String   // TraceTimingSnapshot JSON
+  countsJson  String   // TraceCandidateCounts JSON
+  hitsJson    String?  // 命中结果 JSON
+  optionsJson String?  // 检索选项 JSON
+  createdAt   DateTime @default(now())
+
+  @@index([tenantId, createdAt])
+  @@index([queryHash])
+}
+
 model RagIndexJob {
   id          String       @id @default(cuid())
   tenantId    String       @default("default")

@@ -1,10 +1,10 @@
 {
   "reqId": "7055",
   "title": "RAG Quality",
-  "status": "requirements_ready",
+  "status": "in_progress",
   "priority": "P0",
   "complexity": "C1",
   "version": "v0.2",
   "created": "2026-07-15",
-  "updated": "2026-07-15"
+  "updated": "2026-07-16"
 }

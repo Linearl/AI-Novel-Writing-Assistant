@@ -5,6 +5,7 @@ import { EmbeddingService } from "./EmbeddingService";
 import { VectorStoreService } from "./VectorStoreService";
 import { resolveKnowledgeDocumentIds } from "../knowledge/common";
 import { RAG_OWNER_TYPES, type RagOwnerType, type RagSearchOptions, type RetrievedChunk } from "./types";
+import { matchRagFacets, computeFacetBoostScore, normalizeRagFacets, type RagChunkFacets } from "./chunkFacets";
 
 const RRF_K = 60;
 const NON_KNOWLEDGE_OWNER_TYPES = RAG_OWNER_TYPES.filter((item) => item !== "knowledge_document");
@@ -176,6 +177,11 @@ export class HybridRetrievalService {
     }
     const tenantId = options.tenantId ?? ragConfig.defaultTenantId;
     const finalTopK = options.finalTopK ?? ragConfig.finalTopK;
+
+    const mergedFacets = normalizeRagFacets(options.facets);
+    const facetMode = options.facetMode ?? ragConfig.facetMode;
+    const hasFacetFilters = Object.keys(mergedFacets).length > 0;
+
     const filteredBaseOwnerTypes = (options.ownerTypes ?? NON_KNOWLEDGE_OWNER_TYPES)
       .filter((item) => item !== "knowledge_document");
     const baseOwnerTypes = options.ownerTypes
@@ -212,23 +218,64 @@ export class HybridRetrievalService {
       }
       : null;
 
+    // 分面过滤时扩大候选集，以保证 facet 过滤后有足够结果
+    const facetBoostMultiplier = hasFacetFilters ? 2 : 1;
+    const effectiveVectorCandidates = (options.vectorCandidates ?? ragConfig.vectorCandidates) * facetBoostMultiplier;
+    const effectiveKeywordCandidates = (options.keywordCandidates ?? ragConfig.keywordCandidates) * facetBoostMultiplier;
+
     const [
       baseVectorRows,
       baseKeywordRows,
       knowledgeVectorRows,
       knowledgeKeywordRows,
     ] = await Promise.all([
-      baseScope ? this.vectorSearch(normalizedQuery, baseScope) : Promise.resolve([] as RetrievedChunk[]),
-      baseScope ? this.keywordSearch(normalizedQuery, baseScope) : Promise.resolve([] as RetrievedChunk[]),
-      knowledgeScope ? this.vectorSearch(normalizedQuery, knowledgeScope) : Promise.resolve([] as RetrievedChunk[]),
-      knowledgeScope ? this.keywordSearch(normalizedQuery, knowledgeScope) : Promise.resolve([] as RetrievedChunk[]),
+      baseScope ? this.vectorSearch(normalizedQuery, { ...baseScope, vectorCandidates: effectiveVectorCandidates, keywordCandidates: effectiveKeywordCandidates }) : Promise.resolve([] as RetrievedChunk[]),
+      baseScope ? this.keywordSearch(normalizedQuery, { ...baseScope, vectorCandidates: effectiveVectorCandidates, keywordCandidates: effectiveKeywordCandidates }) : Promise.resolve([] as RetrievedChunk[]),
+      knowledgeScope ? this.vectorSearch(normalizedQuery, { ...knowledgeScope, vectorCandidates: effectiveVectorCandidates, keywordCandidates: effectiveKeywordCandidates }) : Promise.resolve([] as RetrievedChunk[]),
+      knowledgeScope ? this.keywordSearch(normalizedQuery, { ...knowledgeScope, vectorCandidates: effectiveVectorCandidates, keywordCandidates: effectiveKeywordCandidates }) : Promise.resolve([] as RetrievedChunk[]),
     ]);
 
     let fused = this.fuseRrf(
       [...baseVectorRows, ...knowledgeVectorRows],
       [...baseKeywordRows, ...knowledgeKeywordRows],
-      finalTopK,
+      finalTopK * (hasFacetFilters ? 2 : 1),
     );
+
+    // REQ-7055: 分面过滤/加权
+    if (hasFacetFilters) {
+      if (facetMode === "strict") {
+        fused = fused.filter((chunk) => {
+          let chunkFacets: RagChunkFacets | undefined;
+          if (chunk.metadataJson) {
+            try {
+              const meta = JSON.parse(chunk.metadataJson) as Record<string, unknown>;
+              chunkFacets = normalizeRagFacets(meta.facets);
+            } catch {
+              // ignore
+            }
+          }
+          return matchRagFacets(chunkFacets, mergedFacets);
+        });
+      } else {
+        // boost mode
+        fused = fused.map((chunk) => {
+          let chunkFacets: RagChunkFacets | undefined;
+          if (chunk.metadataJson) {
+            try {
+              const meta = JSON.parse(chunk.metadataJson) as Record<string, unknown>;
+              chunkFacets = normalizeRagFacets(meta.facets);
+            } catch {
+              // ignore
+            }
+          }
+          const boostScore = computeFacetBoostScore(chunkFacets, mergedFacets);
+          const boostFactor = 1 + boostScore * 0.3; // 最多提升 30%
+          return { ...chunk, score: chunk.score * boostFactor };
+        });
+        fused.sort((a, b) => b.score - a.score || a.chunkOrder - b.chunkOrder);
+      }
+      fused = fused.slice(0, finalTopK);
+    }
 
     const currentChapterOrder = options.currentChapterOrder;
     const decayRate = options.narrativeDecayRate ?? 0.05;

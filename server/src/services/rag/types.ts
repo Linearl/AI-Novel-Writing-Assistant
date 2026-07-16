@@ -1,3 +1,5 @@
+import type { RagChunkFacets, FacetMode } from "./chunkFacets";
+
 export const RAG_OWNER_TYPES = [
   "novel",
   "chapter",
@@ -48,6 +50,8 @@ export interface RagChunkCandidate {
   embedVersion: number;
   novelId?: string;
   worldId?: string;
+  /** REQ-7055: 7 维 facet 元数据（JSON 序列化） */
+  facetsJson?: string;
 }
 
 export interface RetrievedChunk {
@@ -77,4 +81,8 @@ export interface RagSearchOptions {
   currentChapterOrder?: number;
   /** 距离衰减系数，默认 0.05，越大衰减越快 */
   narrativeDecayRate?: number;
+  /** REQ-7055: 分面检索 — facet 过滤条件 */
+  facets?: RagChunkFacets;
+  /** REQ-7055: facet 模式 — strict（严格过滤）还是 boost（加权提升） */
+  facetMode?: FacetMode;
 }

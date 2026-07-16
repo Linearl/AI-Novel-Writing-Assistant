@@ -1,13 +1,19 @@
+import type { IDatabase } from "../../../platform/di";
+import { prisma } from "../../../db/prisma";
 import { NovelWorkflowStoreService } from "./NovelWorkflowStoreService";
 import { NovelWorkflowHealingService } from "./NovelWorkflowHealingService";
 import { NovelWorkflowApplicationService } from "./NovelWorkflowApplicationService";
 
 export class NovelWorkflowService extends NovelWorkflowStoreService {
-  private readonly healingService = new NovelWorkflowHealingService(this);
-  private readonly applicationService = new NovelWorkflowApplicationService(this);
+  private readonly healingService: NovelWorkflowHealingService;
+  private readonly applicationService: NovelWorkflowApplicationService;
 
-  constructor() {
-    super();
+  constructor(
+    db: IDatabase = prisma,
+  ) {
+    super(db);
+    this.healingService = new NovelWorkflowHealingService(this);
+    this.applicationService = new NovelWorkflowApplicationService(this);
     this.setHealingPort(this.healingService);
   }
 

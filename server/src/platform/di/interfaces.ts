@@ -38,7 +38,7 @@ export interface IDatabase {
 
   readonly chapter: Pick<
     PrismaClient["chapter"],
-    "findUnique" | "findFirst" | "findMany" | "create" | "update" | "updateMany" | "delete" | "deleteMany" | "count"
+    "findUnique" | "findFirst" | "findMany" | "create" | "update" | "updateMany" | "delete" | "deleteMany" | "count" | "aggregate"
   >;
 
   readonly character: Pick<
@@ -58,7 +58,7 @@ export interface IDatabase {
 
   readonly generationJob: Pick<
     PrismaClient["generationJob"],
-    "findUnique" | "findMany" | "create" | "update"
+    "findUnique" | "findFirst" | "findMany" | "create" | "update" | "updateMany"
   >;
 
   readonly directorRun: Pick<
@@ -78,14 +78,101 @@ export interface IDatabase {
 
   readonly chapterSummary: Pick<
     PrismaClient["chapterSummary"],
+    "findUnique" | "findFirst" | "findMany" | "create" | "update" | "delete" | "upsert"
+  >;
+
+  readonly chapterRepairVersion: Pick<
+    PrismaClient["chapterRepairVersion"],
     "findUnique" | "findFirst" | "findMany" | "create" | "update" | "delete"
   >;
 
+  readonly characterCandidate: Pick<
+    PrismaClient["characterCandidate"],
+    "findUnique" | "findFirst" | "findMany" | "create" | "update" | "updateMany" | "delete" | "deleteMany"
+  >;
+
+  readonly characterRelation: Pick<
+    PrismaClient["characterRelation"],
+    "findUnique" | "findFirst" | "findMany" | "create" | "update" | "delete" | "upsert"
+  >;
+
+  readonly characterRelationStage: Pick<
+    PrismaClient["characterRelationStage"],
+    "findUnique" | "findFirst" | "findMany" | "create" | "update" | "delete" | "deleteMany"
+  >;
+
+  readonly characterVolumeAssignment: Pick<
+    PrismaClient["characterVolumeAssignment"],
+    "findUnique" | "findFirst" | "findMany" | "create" | "update" | "delete" | "deleteMany"
+  >;
+
+  readonly characterFactionTrack: Pick<
+    PrismaClient["characterFactionTrack"],
+    "findUnique" | "findFirst" | "findMany" | "create" | "update" | "delete"
+  >;
+
+  readonly characterTimeline: Pick<
+    PrismaClient["characterTimeline"],
+    "findUnique" | "findFirst" | "findMany" | "create" | "update" | "delete" | "deleteMany" | "count"
+  >;
+
+  readonly chapterArtifactSyncCheckpoint: Pick<
+    PrismaClient["chapterArtifactSyncCheckpoint"],
+    "findUnique" | "findFirst" | "findMany" | "create" | "update" | "delete"
+  >;
+
+  readonly ragIndexJob: Pick<
+    PrismaClient["ragIndexJob"],
+    "findUnique" | "findFirst" | "findMany" | "create" | "update" | "updateMany" | "delete" | "count"
+  >;
+
+  readonly worldPropertyLibrary: Pick<
+    PrismaClient["worldPropertyLibrary"],
+    "findUnique" | "findFirst" | "findMany" | "create" | "update" | "delete" | "upsert"
+  >;
+
+  readonly knowledgeDocument: Pick<
+    PrismaClient["knowledgeDocument"],
+    "findUnique" | "findFirst" | "findMany" | "create" | "update" | "delete"
+  >;
+
+  readonly knowledgeChunk: Pick<
+    PrismaClient["knowledgeChunk"],
+    "findUnique" | "findFirst" | "findMany" | "create" | "update" | "delete" | "deleteMany" | "count"
+  >;
+
+  readonly consistencyFact: Pick<
+    PrismaClient["consistencyFact"],
+    "findUnique" | "findFirst" | "findMany" | "create" | "update" | "delete"
+  >;
+
+  readonly storylineVersion: Pick<
+    PrismaClient["storylineVersion"],
+    "findUnique" | "findFirst" | "findMany" | "create" | "update" | "updateMany"
+  >;
+
+  readonly novelWorld: Pick<
+    PrismaClient["novelWorld"],
+    "findUnique" | "findFirst" | "findMany" | "create" | "update" | "delete" | "deleteMany"
+  >;
+
+  readonly qualityReport: Pick<
+    PrismaClient["qualityReport"],
+    "findUnique" | "findFirst" | "findMany" | "create" | "update" | "delete"
+  >;
+
+  readonly baseCharacter: Pick<
+    PrismaClient["baseCharacter"],
+    "findUnique" | "findFirst" | "findMany" | "create" | "update" | "delete"
+  >;
+
+  readonly novelSnapshot: Pick<
+    PrismaClient["novelSnapshot"],
+    "findUnique" | "findFirst" | "findMany" | "create" | "update" | "delete" | "deleteMany" | "count"
+  >;
+
   /** Raw Prisma transaction helper — delegates to $transaction. */
-  $transaction<R>(
-    fn: (tx: PrismaClient) => Promise<R>,
-    options?: { maxWait?: number; timeout?: number },
-  ): Promise<R>;
+  $transaction: Pick<PrismaClient, "$transaction">["$transaction"];
 }
 
 // ---------------------------------------------------------------------------

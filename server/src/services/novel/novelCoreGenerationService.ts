@@ -1,4 +1,5 @@
 import type { BaseMessageChunk } from "@langchain/core/messages";
+import type { IDatabase } from "../../platform/di";
 import { prisma } from "../../db/prisma";
 import {
   runStructuredPrompt,
@@ -57,11 +58,15 @@ const sharedChapterStreamProductionPort: ChapterStreamProductionPort = {
 };
 
 export class NovelCoreGenerationService {
+  private readonly db: IDatabase;
   private readonly worldContextGateway = new WorldContextGateway();
 
   constructor(
+    db: IDatabase = prisma,
     private readonly chapterProduction: ChapterStreamProductionPort = sharedChapterStreamProductionPort,
-  ) {}
+  ) {
+    this.db = db;
+  }
 
   private async getWorldContextText(
     novelId: string,
@@ -84,7 +89,7 @@ export class NovelCoreGenerationService {
   }
 
   async createOutlineStream(novelId: string, options: OutlineGenerateOptions = {}) {
-    const novel = await prisma.novel.findUnique({
+    const novel = await this.db.novel.findUnique({
       where: { id: novelId },
       include: { world: true, characters: true },
     });
@@ -130,7 +135,7 @@ export class NovelCoreGenerationService {
       stream: streamed.stream as AsyncIterable<BaseMessageChunk>,
       onDone: async (fullContent: string) => {
         const completed = await streamed.complete;
-        await prisma.novel.update({
+        await this.db.novel.update({
           where: { id: novelId },
           data: { outline: completed.output.trim() || fullContent },
         });
@@ -140,7 +145,7 @@ export class NovelCoreGenerationService {
   }
 
   async createStructuredOutlineStream(novelId: string, options: StructuredOutlineGenerateOptions = {}) {
-    const novel = await prisma.novel.findUnique({
+    const novel = await this.db.novel.findUnique({
       where: { id: novelId },
       include: { world: true, characters: true },
     });
@@ -207,7 +212,7 @@ export class NovelCoreGenerationService {
           normalized = parseStrictStructuredOutline(repaired, totalChapters);
         }
         const structuredOutline = stringifyStructuredOutline(normalized);
-        await prisma.novel.update({ where: { id: novelId }, data: { structuredOutline } });
+        await this.db.novel.update({ where: { id: novelId }, data: { structuredOutline } });
 
         const chapters = toOutlineChapterRows(normalized);
         if (chapters.length > 0) {
@@ -244,7 +249,7 @@ export class NovelCoreGenerationService {
     novelId: string,
     chapters: Array<{ order: number; title: string; summary: string }>,
   ) {
-    const existing = await prisma.chapter.findMany({
+    const existing = await this.db.chapter.findMany({
       where: { novelId },
       select: { id: true, order: true },
     });
@@ -254,12 +259,12 @@ export class NovelCoreGenerationService {
       chapters.map((chapter) => {
         const existingId = existingByOrder.get(chapter.order);
         if (existingId) {
-          return prisma.chapter.update({
+          return this.db.chapter.update({
             where: { id: existingId },
             data: { title: chapter.title, expectation: chapter.summary },
           });
         }
-        return prisma.chapter.create({
+        return this.db.chapter.create({
           data: {
             novelId,
             title: chapter.title,
@@ -282,7 +287,7 @@ export class NovelCoreGenerationService {
   }
 
   async createBibleStream(novelId: string, options: LLMGenerateOptions = {}) {
-    const novel = await prisma.novel.findUnique({
+    const novel = await this.db.novel.findUnique({
       where: { id: novelId },
       include: { characters: true, genre: true, world: true },
     });
@@ -324,7 +329,7 @@ export class NovelCoreGenerationService {
       onDone: async (_fullContent: string) => {
         const completed = await streamed.complete;
         const persisted = normalizeNovelBiblePayload(completed.output as Record<string, unknown>, novel.title);
-        await prisma.novelBible.upsert({
+        await this.db.novelBible.upsert({
           where: { novelId },
           update: {
             coreSetting: persisted.coreSetting,
@@ -350,7 +355,7 @@ export class NovelCoreGenerationService {
   }
 
   async createBeatStream(novelId: string, options: GenerateBeatOptions = {}) {
-    const novel = await prisma.novel.findUnique({
+    const novel = await this.db.novel.findUnique({
       where: { id: novelId },
       include: { bible: true, chapters: true, world: true },
     });
@@ -407,7 +412,7 @@ export class NovelCoreGenerationService {
           status: normalizeBeatStatus(item.status),
         }));
 
-        await prisma.$transaction(async (tx) => {
+        await this.db.$transaction(async (tx) => {
           await tx.plotBeat.deleteMany({ where: { novelId } });
           if (normalizedBeats.length > 0) {
             await tx.plotBeat.createMany({ data: normalizedBeats });
@@ -419,8 +424,8 @@ export class NovelCoreGenerationService {
 
   async generateChapterHook(novelId: string, options: HookGenerateOptions = {}) {
     const chapter = options.chapterId
-      ? await prisma.chapter.findFirst({ where: { id: options.chapterId, novelId } })
-      : await prisma.chapter.findFirst({ where: { novelId }, orderBy: { order: "desc" } });
+      ? await this.db.chapter.findFirst({ where: { id: options.chapterId, novelId } })
+      : await this.db.chapter.findFirst({ where: { novelId }, orderBy: { order: "desc" } });
     if (!chapter) {
       throw new Error("未找到可生成钩子的章节");
     }
@@ -442,11 +447,11 @@ export class NovelCoreGenerationService {
     const expectation = payload.nextExpectation ?? "";
 
     await Promise.all([
-      prisma.chapter.update({
+      this.db.chapter.update({
         where: { id: chapter.id },
         data: { hook, expectation },
       }),
-      prisma.chapterSummary.upsert({
+      this.db.chapterSummary.upsert({
         where: { chapterId: chapter.id },
         update: { hook },
         create: { novelId, chapterId: chapter.id, summary: briefSummary(chapter.content ?? ""), hook },

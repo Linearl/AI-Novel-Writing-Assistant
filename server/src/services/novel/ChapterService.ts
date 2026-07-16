@@ -1,3 +1,4 @@
+import type { IDatabase } from "../../platform/di";
 import { prisma } from "../../db/prisma";
 
 interface ChapterWriteInput {
@@ -7,8 +8,12 @@ interface ChapterWriteInput {
 }
 
 export class ChapterService {
+  constructor(
+    private readonly db: IDatabase = prisma,
+  ) {}
+
   async listChapters(novelId: string, opts?: { includeDeleted?: boolean }) {
-    return prisma.chapter.findMany({
+    return this.db.chapter.findMany({
       where: {
         novelId,
         ...(opts?.includeDeleted ? {} : { deletedAt: null }),
@@ -18,7 +23,7 @@ export class ChapterService {
   }
 
   async createChapter(novelId: string, input: Required<Pick<ChapterWriteInput, "title" | "order">> & ChapterWriteInput) {
-    return prisma.chapter.create({
+    return this.db.chapter.create({
       data: {
         novelId,
         title: input.title,
@@ -29,14 +34,14 @@ export class ChapterService {
   }
 
   async updateChapter(novelId: string, chapterId: string, input: ChapterWriteInput) {
-    const exists = await prisma.chapter.findFirst({
+    const exists = await this.db.chapter.findFirst({
       where: { id: chapterId, novelId, deletedAt: null },
       select: { id: true },
     });
     if (!exists) {
       throw new Error("章节不存在。");
     }
-    return prisma.chapter.update({
+    return this.db.chapter.update({
       where: { id: chapterId },
       data: input,
     });
@@ -44,14 +49,14 @@ export class ChapterService {
 
   /** 软删除：设置 deletedAt 时间戳 */
   async softDeleteChapter(novelId: string, chapterId: string) {
-    const chapter = await prisma.chapter.findFirst({
+    const chapter = await this.db.chapter.findFirst({
       where: { id: chapterId, novelId, deletedAt: null },
       select: { id: true, title: true, order: true, content: true },
     });
     if (!chapter) {
       throw new Error("章节不存在或已被删除。");
     }
-    const updated = await prisma.chapter.update({
+    const updated = await this.db.chapter.update({
       where: { id: chapterId },
       data: { deletedAt: new Date() },
     });
@@ -60,14 +65,14 @@ export class ChapterService {
 
   /** 恢复已软删除的章节 */
   async restoreChapter(novelId: string, chapterId: string) {
-    const chapter = await prisma.chapter.findFirst({
+    const chapter = await this.db.chapter.findFirst({
       where: { id: chapterId, novelId, deletedAt: { not: null } },
       select: { id: true, deletedAt: true },
     });
     if (!chapter) {
       throw new Error("未找到已删除的章节。");
     }
-    return prisma.chapter.update({
+    return this.db.chapter.update({
       where: { id: chapterId },
       data: { deletedAt: null },
     });
@@ -75,7 +80,7 @@ export class ChapterService {
 
   /** 物理删除（保留原有行为，用于清理等场景） */
   async deleteChapter(novelId: string, chapterId: string) {
-    const deleted = await prisma.chapter.deleteMany({
+    const deleted = await this.db.chapter.deleteMany({
       where: { id: chapterId, novelId },
     });
     if (deleted.count === 0) {
@@ -84,14 +89,14 @@ export class ChapterService {
   }
 
   async findById(novelId: string, chapterId: string) {
-    return prisma.chapter.findFirst({
+    return this.db.chapter.findFirst({
       where: { id: chapterId, novelId },
       select: { order: true },
     });
   }
 
   async listRepairVersions(novelId: string, chapterId: string) {
-    const versions = await prisma.chapterRepairVersion.findMany({
+    const versions = await this.db.chapterRepairVersion.findMany({
       where: { novelId, chapterId },
       orderBy: { versionIndex: "asc" },
       select: {

@@ -2,6 +2,7 @@ import type {
   CharacterRelationStage,
   DynamicCharacterOverview,
 } from "@ai-novel/shared";
+import type { IDatabase } from "../../../platform/di";
 import { prisma } from "../../../db/prisma";
 import type {
   ConfirmCandidateInput,
@@ -21,18 +22,23 @@ import { rebuildDynamics, syncChapterDraftDynamics } from "./characterDynamicsRe
 type NovelContextCharacterPort = Pick<NovelContextService, "createCharacter">;
 type NovelContextServiceFactory = () => NovelContextCharacterPort;
 
-function createNovelContextService(): NovelContextCharacterPort {
-  return new NovelContextService();
+function createNovelContextService(db?: IDatabase): NovelContextCharacterPort {
+  return new NovelContextService(db);
 }
 
 export class CharacterDynamicsMutationService {
+  private readonly db: IDatabase;
+
   constructor(
     private readonly queryService: CharacterDynamicsQueryService,
-    private readonly novelContextServiceFactory: NovelContextServiceFactory = createNovelContextService,
-  ) {}
+    db?: IDatabase,
+    private readonly novelContextServiceFactory: NovelContextServiceFactory = () => createNovelContextService(db),
+  ) {
+    this.db = db ?? prisma;
+  }
 
   async confirmCandidate(novelId: string, candidateId: string, input: ConfirmCandidateInput) {
-    const candidate = await prisma.characterCandidate.findFirst({
+    const candidate = await this.db.characterCandidate.findFirst({
       where: { id: candidateId, novelId },
       include: {
         sourceChapter: {
@@ -54,7 +60,7 @@ export class CharacterDynamicsMutationService {
       background: input.summary?.trim() || candidate.summary?.trim() || undefined,
     });
 
-    await prisma.$transaction(async (tx) => {
+    await this.db.$transaction(async (tx) => {
       await tx.characterCandidate.update({
         where: { id: candidate.id },
         data: {
@@ -85,7 +91,7 @@ export class CharacterDynamicsMutationService {
 
   async mergeCandidate(novelId: string, candidateId: string, input: MergeCandidateInput) {
     const [candidate, character] = await Promise.all([
-      prisma.characterCandidate.findFirst({
+      this.db.characterCandidate.findFirst({
         where: { id: candidateId, novelId },
         include: {
           sourceChapter: {
@@ -93,7 +99,7 @@ export class CharacterDynamicsMutationService {
           },
         },
       }),
-      prisma.character.findFirst({
+      this.db.character.findFirst({
         where: { id: input.characterId, novelId },
         select: { id: true, name: true },
       }),
@@ -105,7 +111,7 @@ export class CharacterDynamicsMutationService {
       throw new Error("要合并到的角色不存在。");
     }
 
-    await prisma.$transaction(async (tx) => {
+    await this.db.$transaction(async (tx) => {
       await tx.characterCandidate.update({
         where: { id: candidate.id },
         data: {
@@ -135,7 +141,7 @@ export class CharacterDynamicsMutationService {
   }
 
   async updateCharacterDynamicState(novelId: string, characterId: string, input: UpdateCharacterDynamicStateInput): Promise<DynamicCharacterOverview> {
-    const character = await prisma.character.findFirst({
+    const character = await this.db.character.findFirst({
       where: { id: characterId, novelId },
       select: { id: true, name: true },
     });
@@ -148,7 +154,7 @@ export class CharacterDynamicsMutationService {
     });
     const volumeId = input.volumeId || overview.currentVolume?.id || null;
 
-    await prisma.$transaction(async (tx) => {
+    await this.db.$transaction(async (tx) => {
       if (typeof input.currentState === "string" || typeof input.currentGoal === "string") {
         await tx.character.update({
           where: { id: characterId },
@@ -247,7 +253,7 @@ export class CharacterDynamicsMutationService {
   }
 
   async updateRelationStage(novelId: string, relationId: string, input: UpdateRelationStageInput): Promise<CharacterRelationStage> {
-    const relation = await prisma.characterRelation.findFirst({
+    const relation = await this.db.characterRelation.findFirst({
       where: { id: relationId, novelId },
       include: {
         sourceCharacter: { select: { name: true } },
@@ -258,7 +264,7 @@ export class CharacterDynamicsMutationService {
       throw new Error("角色关系不存在。");
     }
 
-    const created = await prisma.$transaction(async (tx) => {
+    const created = await this.db.$transaction(async (tx) => {
       await tx.characterRelationStage.updateMany({
         where: {
           novelId,

@@ -1,9 +1,18 @@
+import type { IDatabase } from "../../../platform/di";
+import { prisma } from "../../../db/prisma";
 import { CharacterDynamicsMutationService } from "./CharacterDynamicsMutationService";
 import { CharacterDynamicsQueryService } from "./CharacterDynamicsQueryService";
 
 export class CharacterDynamicsService {
-  private readonly queryService = new CharacterDynamicsQueryService();
-  private readonly mutationService = new CharacterDynamicsMutationService(this.queryService);
+  private readonly queryService: CharacterDynamicsQueryService;
+  private readonly mutationService: CharacterDynamicsMutationService;
+
+  constructor(
+    db: IDatabase = prisma,
+  ) {
+    this.queryService = new CharacterDynamicsQueryService(db);
+    this.mutationService = new CharacterDynamicsMutationService(this.queryService, db);
+  }
 
   getOverview(...args: Parameters<CharacterDynamicsQueryService["getOverview"]>) {
     return this.queryService.getOverview(...args);

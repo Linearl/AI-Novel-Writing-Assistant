@@ -1,4 +1,5 @@
-import { prisma } from "../../../db/prisma";
+import type { IDatabase } from "../../../platform/di";
+import { prisma as defaultPrisma } from "../../../db/prisma";
 import { withSqliteRetry } from "../../../db/sqliteRetry";
 import { getArchivedTaskIdSet, isTaskArchived } from "../../task/taskArchive";
 import type { TaskStatus } from "@ai-novel/shared";
@@ -30,17 +31,24 @@ export interface NovelWorkflowHealingPort {
   healAutoDirectorTaskState(taskId: string, row?: unknown): Promise<boolean>;
 }
 
-type NovelWorkflowTaskUpdateArgs = Parameters<typeof prisma.novelWorkflowTask.update>[0];
-type NovelWorkflowTaskUpdateManyArgs = Parameters<typeof prisma.novelWorkflowTask.updateMany>[0];
+type NovelWorkflowTaskUpdateArgs = Parameters<typeof defaultPrisma.novelWorkflowTask.update>[0];
+type NovelWorkflowTaskUpdateManyArgs = Parameters<typeof defaultPrisma.novelWorkflowTask.updateMany>[0];
 
 const ACTIVE_STATUSES = ["queued", "running", "waiting_approval"] as const;
 
 export class NovelWorkflowStoreService {
+  protected readonly db: IDatabase;
   public readonly volumeService = new NovelVolumeService();
 
   public readonly autoDirectorFollowUpNotificationService = new AutoDirectorFollowUpNotificationService();
 
   private healingPort: NovelWorkflowHealingPort | null = null;
+
+  constructor(
+    db: IDatabase = defaultPrisma,
+  ) {
+    this.db = db;
+  }
 
   setHealingPort(port: NovelWorkflowHealingPort): void {
     this.healingPort = port;
@@ -48,14 +56,14 @@ export class NovelWorkflowStoreService {
 
   public updateTaskWithRetry(args: NovelWorkflowTaskUpdateArgs) {
     return withSqliteRetry(
-      () => prisma.novelWorkflowTask.update(args),
+      () => this.db.novelWorkflowTask.update(args),
       { label: "novelWorkflowTask.update" },
     );
   }
 
   public updateTaskManyWithRetry(args: NovelWorkflowTaskUpdateManyArgs) {
     return withSqliteRetry(
-      () => prisma.novelWorkflowTask.updateMany(args),
+      () => this.db.novelWorkflowTask.updateMany(args),
       { label: "novelWorkflowTask.updateMany" },
     );
   }
@@ -156,7 +164,7 @@ export class NovelWorkflowStoreService {
     data: NovelWorkflowTaskUpdateArgs["data"];
   }): Promise<T> {
     const next = await withSqliteRetry(
-      () => prisma.novelWorkflowTask.update({
+      () => this.db.novelWorkflowTask.update({
         where: { id: input.before.id },
         data: input.data,
         include: {
@@ -177,7 +185,7 @@ export class NovelWorkflowStoreService {
   }
 
   public async getVisibleRowsByNovelIdRaw(novelId: string, lane?: NovelWorkflowLane) {
-    const rows = await prisma.novelWorkflowTask.findMany({
+    const rows = await this.db.novelWorkflowTask.findMany({
       where: {
         novelId,
         ...(lane ? { lane } : {}),
@@ -204,7 +212,7 @@ export class NovelWorkflowStoreService {
     if (await isTaskArchived("novel_workflow", taskId)) {
       return null;
     }
-    return prisma.novelWorkflowTask.findUnique({
+    return this.db.novelWorkflowTask.findUnique({
       where: { id: taskId },
     });
   }
@@ -243,7 +251,7 @@ export class NovelWorkflowStoreService {
   public async listRecoverableAutoDirectorTasks(options: {
     includeStaleRunningFlag?: boolean;
   } = {}) {
-    const rows = await prisma.novelWorkflowTask.findMany({
+    const rows = await this.db.novelWorkflowTask.findMany({
       where: {
         lane: "auto_director",
         status: {
@@ -284,7 +292,7 @@ export class NovelWorkflowStoreService {
   }
 
   public async getNovelTitle(novelId: string): Promise<string | null> {
-    const novel = await prisma.novel.findUnique({
+    const novel = await this.db.novel.findUnique({
       where: { id: novelId },
       select: { title: true },
     });
@@ -338,7 +346,7 @@ export class NovelWorkflowStoreService {
       ?? (input.lane === "auto_director" ? "等待生成候选方向" : "等待创建项目");
     const initialProgress = initialState?.progress
       ?? (input.novelId ? defaultProgressForStage(initialStage) : 0);
-    const created = await prisma.novelWorkflowTask.create({
+    const created = await this.db.novelWorkflowTask.create({
       data: {
         novelId: input.novelId ?? null,
         lane: input.lane,

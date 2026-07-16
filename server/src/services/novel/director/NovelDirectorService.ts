@@ -68,6 +68,7 @@ import { NovelDirectorPipelineRuntime } from "./novelDirectorPipelineRuntime";
 import { NovelDirectorConfirmRuntime } from "./runtime/novelDirectorConfirmRuntime";
 import { NovelDirectorChapterTitleRepairRuntime } from "./phases/novelDirectorChapterTitleRepairRuntime";
 import { NovelDirectorContinueRuntime } from "./runtime/novelDirectorContinueRuntime";
+import type { IDatabase } from "../../../platform/di";
 import { prisma } from "../../../db/prisma";
 import { loadPersistentDirectorRuntimeProjection } from "./projections/novelDirectorRuntimeProjection";
 import { logger } from "../../logging/LoggerService";
@@ -92,6 +93,7 @@ function isWorkflowTaskCancelledError(error: unknown): boolean {
 }
 
 export class NovelDirectorService {
+  private readonly db: IDatabase;
   private readonly novelContextService = new NovelContextService();
   private readonly characterPreparationService = new CharacterPreparationService();
   private readonly storyMacroService = new StoryMacroPlanService();
@@ -205,7 +207,12 @@ export class NovelDirectorService {
     scheduleBackgroundRun: (taskId, runner) => this.scheduleBackgroundRun(taskId, runner),
   });
 
-  constructor(_options?: Record<string, never>) {}
+  constructor(
+    db: IDatabase = prisma,
+    _options?: Record<string, never>,
+  ) {
+    this.db = db;
+  }
 
   private async assertHighMemoryDirectorStartAllowed(input: {
     taskId: string;
@@ -256,7 +263,7 @@ export class NovelDirectorService {
   private async buildDirectorUsageContext(taskId: string): Promise<LlmUsageTrackingContext> {
     const normalizedTaskId = taskId.trim();
     const task = normalizedTaskId
-      ? await prisma.novelWorkflowTask.findUnique({
+      ? await this.db.novelWorkflowTask.findUnique({
         where: { id: normalizedTaskId },
         select: {
           novelId: true,
@@ -325,7 +332,7 @@ export class NovelDirectorService {
       this.novelContextService.listCharacters(novelId),
       this.novelContextService.listChapters(novelId),
       this.volumeService.getVolumes(novelId).catch(() => null),
-      prisma.novel.findUnique({
+      this.db.novel.findUnique({
         where: { id: novelId },
         select: { estimatedChapterCount: true },
       }),

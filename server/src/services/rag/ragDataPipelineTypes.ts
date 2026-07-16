@@ -2,12 +2,13 @@
  * Shared types for RAG data pipeline functions.
  */
 import type { PrismaClient } from "@prisma/client";
+import type { IDatabase } from "../../platform/di";
 import { EmbeddingService } from "./EmbeddingService";
 import { VectorStoreService } from "./VectorStoreService";
 import type { RagJobProgressSnapshot } from "./ragIndexServiceHelpers";
 
 export interface RagPipelineDeps {
-  prisma: PrismaClient;
+  prisma: PrismaClient | IDatabase;
   embeddingService: EmbeddingService;
   vectorStoreService: VectorStoreService;
   /** Callback the class provides so pipeline functions can update job progress. */

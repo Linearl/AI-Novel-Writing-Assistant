@@ -1,4 +1,5 @@
 import type { Prisma } from "@prisma/client";
+import type { IDatabase } from "../../platform/di";
 import { prisma } from "../../db/prisma";
 import { logger } from "../../services/logging/LoggerService";
 import { novelEventBus } from "../../events";
@@ -38,6 +39,13 @@ const START_LOCK_TIMEOUT_MS = 30_000;
 const START_LOCK_BACKOFF_SEQUENCE_MS = [50, 100, 200] as const;
 
 export class NovelCorePipelineService {
+  private readonly db: IDatabase;
+
+  constructor(
+    db: IDatabase = prisma,
+  ) {
+    this.db = db;
+  }
   private static readonly activeJobIds = new Set<string>();
   private static readonly startLocks = new Set<string>();
   private readonly chapterRuntimeCoordinator = new ChapterRuntimeCoordinator();
@@ -94,7 +102,7 @@ export class NovelCorePipelineService {
   // ---------------------------------------------------------------------------
 
   private async listActivePipelineJobsForRange(novelId: string, startOrder: number, endOrder: number) {
-    return prisma.generationJob.findMany({
+    return this.db.generationJob.findMany({
       where: {
         novelId,
         startOrder,
@@ -127,7 +135,7 @@ export class NovelCorePipelineService {
 
     if (duplicateJobs.length > 0) {
       const cancelledAt = new Date();
-      await prisma.generationJob.updateMany({
+      await this.db.generationJob.updateMany({
         where: {
           id: { in: duplicateJobs.map((job) => job.id) },
           status: { in: ["queued", "running"] },
@@ -170,7 +178,7 @@ export class NovelCorePipelineService {
   // ---------------------------------------------------------------------------
 
   async listRecoverablePipelineJobs(): Promise<Array<{ id: string; status: string }>> {
-    const rows = await prisma.generationJob.findMany({
+    const rows = await this.db.generationJob.findMany({
       where: {
         status: { in: ["queued", "running"] },
         pendingManualRecovery: false,
@@ -184,7 +192,7 @@ export class NovelCorePipelineService {
   }
 
   async listPendingCancellationPipelineJobs(): Promise<Array<{ id: string; status: string }>> {
-    const rows = await prisma.generationJob.findMany({
+    const rows = await this.db.generationJob.findMany({
       where: { finishedAt: null, cancelRequestedAt: { not: null } },
       select: { id: true, status: true },
       orderBy: [{ updatedAt: "asc" }, { createdAt: "asc" }],
@@ -193,7 +201,7 @@ export class NovelCorePipelineService {
   }
 
   async listStaleRecoverablePipelineJobs(cutoff: Date): Promise<Array<{ id: string; status: string }>> {
-    const rows = await prisma.generationJob.findMany({
+    const rows = await this.db.generationJob.findMany({
       where: {
         status: { in: ["queued", "running"] },
         pendingManualRecovery: false,
@@ -211,12 +219,12 @@ export class NovelCorePipelineService {
   }
 
   async getPipelineJob(novelId: string, jobId: string) {
-    const job = await prisma.generationJob.findFirst({ where: { id: jobId, novelId } });
+    const job = await this.db.generationJob.findFirst({ where: { id: jobId, novelId } });
     return job ? this.decoratePipelineJob(job) : null;
   }
 
   async getPipelineJobById(jobId: string) {
-    const job = await prisma.generationJob.findUnique({ where: { id: jobId } });
+    const job = await this.db.generationJob.findUnique({ where: { id: jobId } });
     return job ? this.decoratePipelineJob(job) : null;
   }
 
@@ -264,7 +272,7 @@ export class NovelCorePipelineService {
   }
 
   async resumePipelineJob(jobId: string): Promise<void> {
-    const job = await prisma.generationJob.findUnique({
+    const job = await this.db.generationJob.findUnique({
       where: { id: jobId },
       select: {
         id: true, novelId: true, status: true,
@@ -307,7 +315,7 @@ export class NovelCorePipelineService {
   }
 
   async cancelPipelineJob(jobId: string) {
-    const job = await prisma.generationJob.findUnique({ where: { id: jobId } });
+    const job = await this.db.generationJob.findUnique({ where: { id: jobId } });
     if (!job) {
       throw new Error("任务不存在。");
     }
@@ -315,7 +323,7 @@ export class NovelCorePipelineService {
       throw new Error("仅排队中或运行中的任务可取消。");
     }
     if (job.status === "queued") {
-      return prisma.generationJob.update({
+      return this.db.generationJob.update({
         where: { id: jobId },
         data: {
           status: "cancelled",
@@ -329,7 +337,7 @@ export class NovelCorePipelineService {
         },
       });
     }
-    return prisma.generationJob.update({
+    return this.db.generationJob.update({
       where: { id: jobId },
       data: {
         status: "cancelled",
@@ -341,7 +349,7 @@ export class NovelCorePipelineService {
   }
 
   async retryPipelineJob(jobId: string) {
-    const job = await prisma.generationJob.findUnique({ where: { id: jobId } });
+    const job = await this.db.generationJob.findUnique({ where: { id: jobId } });
     if (!job) {
       throw new Error("任务不存在。");
     }
@@ -398,7 +406,7 @@ export class NovelCorePipelineService {
         return this.decoratePipelineJob(existingActiveJob);
       }
 
-      const chapterStats = await prisma.chapter.aggregate({
+      const chapterStats = await this.db.chapter.aggregate({
         where: { novelId },
         _min: { order: true },
         _max: { order: true },
@@ -408,7 +416,7 @@ export class NovelCorePipelineService {
         throw new Error("当前小说还没有章节，请先创建章节后再启动流水线。");
       }
 
-      const chapters = await prisma.chapter.findMany({
+      const chapters = await this.db.chapter.findMany({
         where: {
           novelId,
           order: { gte: options.startOrder, lte: options.endOrder },
@@ -433,7 +441,7 @@ export class NovelCorePipelineService {
         model: options.model ?? "",
       });
 
-      const job = await prisma.generationJob.create({
+      const job = await this.db.generationJob.create({
         data: {
           novelId,
           startOrder: options.startOrder,
@@ -492,7 +500,7 @@ export class NovelCorePipelineService {
   }
 
   private async ensurePipelineNotCancelled(jobId: string): Promise<void> {
-    const job = await prisma.generationJob.findUnique({
+    const job = await this.db.generationJob.findUnique({
       where: { id: jobId },
       select: { status: true, cancelRequestedAt: true },
     });
@@ -518,7 +526,7 @@ export class NovelCorePipelineService {
     payload?: string | null;
   }) {
     try {
-      await prisma.generationJob.update({ where: { id: jobId }, data });
+      await this.db.generationJob.update({ where: { id: jobId }, data });
     } catch {
       // 后台任务状态更新失败不应影响主服务稳定
     }

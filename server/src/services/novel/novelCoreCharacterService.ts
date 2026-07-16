@@ -1,3 +1,4 @@
+import type { IDatabase } from "../../platform/di";
 import { prisma } from "../../db/prisma";
 import { runStructuredPrompt } from "../../prompting/core/promptRunner";
 import { invokeStructuredLlm } from "../../llm/structuredInvoke";
@@ -21,16 +22,23 @@ import type { LLMProvider } from "@ai-novel/shared";
 import { serializeCharacterProhibitions } from "./characters/characterHardFacts";
 
 export class NovelCoreCharacterService {
+  private readonly db: IDatabase;
   private readonly worldContextGateway = new WorldContextGateway();
 
+  constructor(
+    db: IDatabase = prisma,
+  ) {
+    this.db = db;
+  }
+
   async listCharacters(novelId: string) {
-    return prisma.character.findMany({ where: { novelId }, orderBy: { createdAt: "asc" } });
+    return this.db.character.findMany({ where: { novelId }, orderBy: { createdAt: "asc" } });
   }
 
   async createCharacter(novelId: string, input: CharacterInput) {
     let payload: CharacterInput = { ...input };
     if (input.baseCharacterId) {
-      const baseCharacter = await prisma.baseCharacter.findUnique({
+      const baseCharacter = await this.db.baseCharacter.findUnique({
         where: { id: input.baseCharacterId },
       });
       if (!baseCharacter) {
@@ -46,7 +54,7 @@ export class NovelCoreCharacterService {
     }
 
     const { prohibitions, ...data } = payload;
-    const created = await prisma.character.create({
+    const created = await this.db.character.create({
       data: {
         novelId,
         ...data,
@@ -58,7 +66,7 @@ export class NovelCoreCharacterService {
   }
 
   async updateCharacter(novelId: string, characterId: string, input: Partial<CharacterInput>) {
-    const exists = await prisma.character.findFirst({
+    const exists = await this.db.character.findFirst({
       where: { id: characterId, novelId },
       select: { id: true, currentState: true, currentGoal: true },
     });
@@ -69,7 +77,7 @@ export class NovelCoreCharacterService {
     const hasStateChanged = typeof input.currentState === "string" && input.currentState !== exists.currentState;
     const hasGoalChanged = typeof input.currentGoal === "string" && input.currentGoal !== exists.currentGoal;
     const { prohibitions, ...data } = input;
-    const updated = await prisma.character.update({
+    const updated = await this.db.character.update({
       where: { id: characterId },
       data: {
         ...data,
@@ -84,14 +92,14 @@ export class NovelCoreCharacterService {
 
   async deleteCharacter(novelId: string, characterId: string) {
     queueRagDelete("character", characterId);
-    const deleted = await prisma.character.deleteMany({ where: { id: characterId, novelId } });
+    const deleted = await this.db.character.deleteMany({ where: { id: characterId, novelId } });
     if (deleted.count === 0) {
       throw new Error("角色不存在");
     }
   }
 
   async listCharacterTimeline(novelId: string, characterId: string) {
-    return prisma.characterTimeline.findMany({
+    return this.db.characterTimeline.findMany({
       where: { novelId, characterId },
       orderBy: [{ chapterOrder: "asc" }, { createdAt: "asc" }],
     });
@@ -102,14 +110,14 @@ export class NovelCoreCharacterService {
     characterId: string,
     options: CharacterTimelineSyncOptions = {},
   ) {
-    const character = await prisma.character.findFirst({
+    const character = await this.db.character.findFirst({
       where: { id: characterId, novelId },
     });
     if (!character) {
       throw new Error("角色不存在");
     }
 
-    const chapters = await prisma.chapter.findMany({
+    const chapters = await this.db.chapter.findMany({
       where: {
         novelId,
         ...(typeof options.startOrder === "number" || typeof options.endOrder === "number"
@@ -159,7 +167,7 @@ export class NovelCoreCharacterService {
       }
     }
 
-    await prisma.$transaction(async (tx) => {
+    await this.db.$transaction(async (tx) => {
       await tx.characterTimeline.deleteMany({
         where: {
           novelId,
@@ -182,7 +190,7 @@ export class NovelCoreCharacterService {
       }
     });
 
-    const total = await prisma.characterTimeline.count({
+    const total = await this.db.characterTimeline.count({
       where: { novelId, characterId },
     });
 
@@ -194,7 +202,7 @@ export class NovelCoreCharacterService {
   }
 
   async syncAllCharacterTimeline(novelId: string, options: CharacterTimelineSyncOptions = {}) {
-    const characters = await prisma.character.findMany({
+    const characters = await this.db.character.findMany({
       where: { novelId },
       select: { id: true },
       orderBy: { createdAt: "asc" },
@@ -225,14 +233,14 @@ export class NovelCoreCharacterService {
     options: LLMGenerateOptions = {},
   ) {
     const [novel, character, timelines] = await Promise.all([
-      prisma.novel.findUnique({
+      this.db.novel.findUnique({
         where: { id: novelId },
         include: { bible: true },
       }),
-      prisma.character.findFirst({
+      this.db.character.findFirst({
         where: { id: characterId, novelId },
       }),
-      prisma.characterTimeline.findMany({
+      this.db.characterTimeline.findMany({
         where: { novelId, characterId },
         orderBy: [{ chapterOrder: "desc" }, { createdAt: "desc" }],
         take: 20,
@@ -286,7 +294,7 @@ export class NovelCoreCharacterService {
     });
     const parsed = result.output;
 
-    const updated = await prisma.character.update({
+    const updated = await this.db.character.update({
       where: { id: characterId },
       data: {
         personality: parsed.personality ?? character.personality,
@@ -298,7 +306,7 @@ export class NovelCoreCharacterService {
       },
     });
 
-    await prisma.characterTimeline.create({
+    await this.db.characterTimeline.create({
       data: {
         novelId,
         characterId,
@@ -317,11 +325,11 @@ export class NovelCoreCharacterService {
     options: LLMGenerateOptions = {},
   ) {
     const [novel, character] = await Promise.all([
-      prisma.novel.findUnique({
+      this.db.novel.findUnique({
         where: { id: novelId },
         select: { id: true },
       }),
-      prisma.character.findFirst({
+      this.db.character.findFirst({
         where: { id: characterId, novelId },
       }),
     ]);
@@ -402,7 +410,7 @@ export class NovelCoreCharacterService {
     const nameToId = new Map<string, string>();
 
     // 查找已有角色，避免重复创建
-    const existingCharacters = await prisma.character.findMany({
+    const existingCharacters = await this.db.character.findMany({
       where: { novelId },
       select: { id: true, name: true },
     });
@@ -412,7 +420,7 @@ export class NovelCoreCharacterService {
       const existingId = existingNameMap.get(char.name);
       if (existingId) {
         // 已有同名角色：仅补全空字段，不覆盖已有数据
-        await prisma.character.update({
+        await this.db.character.update({
           where: { id: existingId },
           data: {
             ...(char.role && char.role !== "未指定" ? { role: char.role } : {}),
@@ -446,7 +454,7 @@ export class NovelCoreCharacterService {
         const sourceId = nameToId.get(rel.sourceName);
         const targetId = nameToId.get(rel.targetName);
         if (sourceId && targetId) {
-          await prisma.characterRelation.upsert({
+          await this.db.characterRelation.upsert({
             where: {
               novelId_sourceCharacterId_targetCharacterId: {
                 novelId,

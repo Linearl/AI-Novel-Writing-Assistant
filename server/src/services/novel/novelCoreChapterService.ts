@@ -1,3 +1,4 @@
+import type { IDatabase } from "../../platform/di";
 import { prisma } from "../../db/prisma";
 import { logger } from "../logging/LoggerService";
 import { NovelVolumeService } from "./volume/NovelVolumeService";
@@ -7,11 +8,18 @@ import type { ChapterInput } from "./novelCoreShared";
 import { queueRagDelete, queueRagUpsert } from "./novelCoreSupport";
 
 export class NovelCoreChapterService {
+  private readonly db: IDatabase;
   private readonly volumeService = new NovelVolumeService();
   private readonly chapterEditDiffService = new ChapterEditDiffService();
 
+  constructor(
+    db: IDatabase = prisma,
+  ) {
+    this.db = db;
+  }
+
   async listChapters(novelId: string) {
-    return prisma.chapter.findMany({
+    return this.db.chapter.findMany({
       where: { novelId },
       orderBy: { order: "asc" },
       include: { chapterSummary: true },
@@ -19,7 +27,7 @@ export class NovelCoreChapterService {
   }
 
   async createChapter(novelId: string, input: ChapterInput) {
-    const chapter = await prisma.chapter.create({
+    const chapter = await this.db.chapter.create({
       data: {
         novelId,
         title: input.title,
@@ -65,7 +73,7 @@ export class NovelCoreChapterService {
   }
 
   async updateChapter(novelId: string, chapterId: string, input: Partial<ChapterInput>) {
-    const exists = await prisma.chapter.findFirst({ where: { id: chapterId, novelId }, select: { id: true } });
+    const exists = await this.db.chapter.findFirst({ where: { id: chapterId, novelId }, select: { id: true } });
     if (!exists) {
       throw new Error("章节不存在");
     }
@@ -73,14 +81,14 @@ export class NovelCoreChapterService {
     // 捕获更新前的内容，用于判断是否有实质变更
     let beforeContent: string | null = null;
     if (typeof input.content === "string") {
-      const beforeChapter = await prisma.chapter.findUnique({
+      const beforeChapter = await this.db.chapter.findUnique({
         where: { id: chapterId },
         select: { content: true },
       });
       beforeContent = beforeChapter?.content ?? null;
     }
 
-    const chapter = await prisma.chapter.update({
+    const chapter = await this.db.chapter.update({
       where: { id: chapterId },
       data: {
         title: input.title,
@@ -178,7 +186,7 @@ export class NovelCoreChapterService {
   async deleteChapter(novelId: string, chapterId: string) {
     queueRagDelete("chapter", chapterId);
     queueRagDelete("chapter_summary", chapterId);
-    const deleted = await prisma.chapter.deleteMany({ where: { id: chapterId, novelId } });
+    const deleted = await this.db.chapter.deleteMany({ where: { id: chapterId, novelId } });
     if (deleted.count === 0) {
       throw new Error("章节不存在");
     }
@@ -186,14 +194,14 @@ export class NovelCoreChapterService {
 
   /** 软删除：设置 deletedAt 时间戳 */
   async softDeleteChapter(novelId: string, chapterId: string) {
-    const chapter = await prisma.chapter.findFirst({
+    const chapter = await this.db.chapter.findFirst({
       where: { id: chapterId, novelId, deletedAt: null },
       select: { id: true, title: true, order: true, content: true },
     });
     if (!chapter) {
       throw new Error("章节不存在或已被删除。");
     }
-    const updated = await prisma.chapter.update({
+    const updated = await this.db.chapter.update({
       where: { id: chapterId },
       data: { deletedAt: new Date() },
       select: { deletedAt: true },
@@ -203,28 +211,28 @@ export class NovelCoreChapterService {
 
   /** 恢复已软删除的章节 */
   async restoreChapter(novelId: string, chapterId: string) {
-    const found = await prisma.chapter.findFirst({
+    const found = await this.db.chapter.findFirst({
       where: { id: chapterId, novelId, deletedAt: { not: null } },
       select: { id: true },
     });
     if (!found) {
       throw new Error("未找到已删除的章节。");
     }
-    return prisma.chapter.update({
+    return this.db.chapter.update({
       where: { id: chapterId },
       data: { deletedAt: null },
     });
   }
 
   async toggleChapterLock(novelId: string, chapterId: string, locked: boolean) {
-    const found = await prisma.chapter.findFirst({
+    const found = await this.db.chapter.findFirst({
       where: { id: chapterId, novelId },
       select: { id: true },
     });
     if (!found) {
       throw new Error("章节不存在。");
     }
-    return prisma.chapter.update({
+    return this.db.chapter.update({
       where: { id: chapterId },
       data: { locked },
       select: { id: true, locked: true },

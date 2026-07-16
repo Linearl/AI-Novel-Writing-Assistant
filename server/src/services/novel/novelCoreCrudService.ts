@@ -1,4 +1,5 @@
 import { serializeCommercialTagsJson } from "@ai-novel/shared";
+import type { IDatabase } from "../../platform/di";
 import { prisma } from "../../db/prisma";
 import { AppError } from "../../middleware/errorHandler";
 import { NovelContinuationService } from "./NovelContinuationService";
@@ -21,7 +22,14 @@ import {
 import { queueRagDelete, queueRagUpsert } from "./novelCoreSupport";
 
 export class NovelCoreCrudService {
+  private readonly db: IDatabase;
   private readonly novelContinuationService = new NovelContinuationService();
+
+  constructor(
+    db: IDatabase = prisma,
+  ) {
+    this.db = db;
+  }
 
   private validateStoryModeSelection(primaryStoryModeId?: string | null, secondaryStoryModeId?: string | null): void {
     if (primaryStoryModeId && secondaryStoryModeId && primaryStoryModeId === secondaryStoryModeId) {
@@ -31,7 +39,7 @@ export class NovelCoreCrudService {
 
   async listNovels({ page, limit }: PaginationInput) {
     const [items, total] = await Promise.all([
-      prisma.novel.findMany({
+      this.db.novel.findMany({
         skip: (page - 1) * limit,
         take: limit,
         orderBy: { updatedAt: "desc" },
@@ -68,7 +76,7 @@ export class NovelCoreCrudService {
           _count: { select: { chapters: true, characters: true, plotBeats: true } },
         },
       }),
-      prisma.novel.count(),
+      this.db.novel.count(),
     ]);
 
     const latestAutoDirectorTaskByNovelId = await listLatestVisibleAutoDirectorTasksByNovelIds(
@@ -110,7 +118,7 @@ export class NovelCoreCrudService {
       continuationBookAnalysisId: normalizedContinuationBookAnalysisId,
     });
 
-    const created = await prisma.novel.create({
+    const created = await this.db.novel.create({
       data: {
         title: input.title,
         description: input.description,
@@ -164,7 +172,7 @@ export class NovelCoreCrudService {
   }
 
   async getNovelById(id: string) {
-    const row = await prisma.novel.findUnique({
+    const row = await this.db.novel.findUnique({
       where: { id },
       include: {
         genre: true,
@@ -227,7 +235,7 @@ export class NovelCoreCrudService {
   }
 
   async getNovelStructuredOutline(id: string): Promise<string | null> {
-    const row = await prisma.novel.findUnique({
+    const row = await this.db.novel.findUnique({
       where: { id },
       select: { structuredOutline: true },
     });
@@ -235,7 +243,7 @@ export class NovelCoreCrudService {
   }
 
   async updateNovel(id: string, input: UpdateNovelInput) {
-    const existing = await prisma.novel.findUnique({
+    const existing = await this.db.novel.findUnique({
       where: { id },
       select: {
         id: true,
@@ -311,7 +319,7 @@ export class NovelCoreCrudService {
     const nextWorldId = input.worldId !== undefined ? input.worldId : existing.worldId;
     const shouldResetWorldSlice = nextWorldId !== existing.worldId;
 
-    const updated = await prisma.novel.update({
+    const updated = await this.db.novel.update({
       where: { id },
       data: {
         ...restInput,
@@ -354,7 +362,7 @@ export class NovelCoreCrudService {
     });
 
     if (shouldResetWorldSlice) {
-      await prisma.novelWorld.deleteMany({ where: { novelId: id } });
+      await this.db.novelWorld.deleteMany({ where: { novelId: id } });
     }
 
     queueRagUpsert("novel", id);
@@ -367,6 +375,6 @@ export class NovelCoreCrudService {
   async deleteNovel(id: string) {
     queueRagDelete("novel", id);
     queueRagDelete("bible", id);
-    await prisma.novel.delete({ where: { id } });
+    await this.db.novel.delete({ where: { id } });
   }
 }

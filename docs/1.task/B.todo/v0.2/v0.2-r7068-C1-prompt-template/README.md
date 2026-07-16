@@ -1,13 +1,13 @@
 ---
 reqId: 7068
 title: "Prompt 模板系统"
-status: requirements_ready
+status: in_progress
 priority: P2
 complexity: C1
 estimatedEffort: "4-5天"
 version: v0.2
 created: 2026-07-14
-updated: 2026-07-14
+updated: 2026-07-16
 ---
 
 # REQ-7068: Prompt 模板系统

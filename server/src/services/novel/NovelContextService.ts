@@ -1,7 +1,15 @@
+import type { IDatabase } from "../../platform/di";
+import { prisma } from "../../db/prisma";
 import { NovelCoreService } from "./NovelCoreService";
 
 export class NovelContextService {
-  protected readonly core = new NovelCoreService();
+  protected readonly core: NovelCoreService;
+
+  constructor(
+    db: IDatabase = prisma,
+  ) {
+    this.core = new NovelCoreService(db);
+  }
 
   listNovels(...args: Parameters<NovelCoreService["listNovels"]>) {
     return this.core.listNovels(...args);

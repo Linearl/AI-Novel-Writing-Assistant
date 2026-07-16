@@ -2,6 +2,7 @@ import type {
   CharacterCandidate,
   DynamicCharacterOverview,
 } from "@ai-novel/shared";
+import type { IDatabase } from "../../../platform/di";
 import { prisma } from "../../../db/prisma";
 import { compareDynamicRows, PROJECTION_SOURCE_TYPES } from "./characterDynamicsShared";
 import {
@@ -16,11 +17,19 @@ import {
 } from "./characterDynamicsUtils";
 
 export class CharacterDynamicsQueryService {
+  private readonly db: IDatabase;
+
+  constructor(
+    db: IDatabase = prisma,
+  ) {
+    this.db = db;
+  }
+
   async getOverview(
     novelId: string,
     options: { chapterOrder?: number } = {},
   ): Promise<DynamicCharacterOverview> {
-    const novel = await prisma.novel.findUnique({
+    const novel = await this.db.novel.findUnique({
       where: { id: novelId },
       select: {
         id: true,
@@ -72,7 +81,7 @@ export class CharacterDynamicsQueryService {
     );
 
     const [candidateRows, assignmentRows, factionRows, relationStageRows, timelineRows] = await Promise.all([
-      prisma.characterCandidate.findMany({
+      this.db.characterCandidate.findMany({
         where: { novelId, status: "pending" },
         include: {
           sourceChapter: {
@@ -82,7 +91,7 @@ export class CharacterDynamicsQueryService {
         orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
       }),
       currentVolume?.id
-        ? prisma.characterVolumeAssignment.findMany({
+        ? this.db.characterVolumeAssignment.findMany({
             where: { novelId, volumeId: currentVolume.id },
             include: {
               volume: {
@@ -92,7 +101,7 @@ export class CharacterDynamicsQueryService {
             orderBy: [{ isCore: "desc" }, { updatedAt: "desc" }],
           })
         : Promise.resolve([]),
-      prisma.characterFactionTrack.findMany({
+      this.db.characterFactionTrack.findMany({
         where: {
           novelId,
           OR: [
@@ -109,7 +118,7 @@ export class CharacterDynamicsQueryService {
         },
         orderBy: [{ chapterOrder: "desc" }, { updatedAt: "desc" }],
       }),
-      prisma.characterRelationStage.findMany({
+      this.db.characterRelationStage.findMany({
         where: {
           novelId,
           isCurrent: true,
@@ -128,7 +137,7 @@ export class CharacterDynamicsQueryService {
         orderBy: [{ chapterOrder: "desc" }, { updatedAt: "desc" }],
       }),
       currentVolumeChapterOrders.size > 0
-        ? prisma.characterTimeline.findMany({
+        ? this.db.characterTimeline.findMany({
             where: {
               novelId,
               chapterOrder: { in: Array.from(currentVolumeChapterOrders) },
@@ -243,7 +252,7 @@ export class CharacterDynamicsQueryService {
   }
 
   async listCandidates(novelId: string): Promise<CharacterCandidate[]> {
-    const rows = await prisma.characterCandidate.findMany({
+    const rows = await this.db.characterCandidate.findMany({
       where: { novelId },
       include: {
         sourceChapter: {

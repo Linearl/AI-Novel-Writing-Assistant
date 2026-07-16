@@ -2963,6 +2963,22 @@ model KnowledgeChunk {
   @@index([chunkHash])
 }
 
+model RagRetrievalTrace {
+  id          String   @id @default(cuid())
+  queryHash   String
+  tenantId    String
+  novelId     String?
+  worldId     String?
+  timingJson  String
+  countsJson  String
+  hitsJson    String?
+  optionsJson String?
+  createdAt   DateTime @default(now())
+
+  @@index([tenantId, createdAt])
+  @@index([queryHash])
+}
+
 model RagIndexJob {
   id          String       @id @default(cuid())
   tenantId    String       @default("default")

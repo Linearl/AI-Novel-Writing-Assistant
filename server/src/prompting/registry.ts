@@ -74,6 +74,14 @@ const promptAssetLoaderEntries: PromptAssetLoaderEntry[] = [
     load: () => require("./prompts/character/characterSync.prompts").characterSyncClassificationPrompt as UnknownPromptAsset,
   },
   {
+    key: "character.consistency.state.extract@v1",
+    load: () => require("./prompts/character/characterConsistency.prompts").characterStateExtractPrompt as UnknownPromptAsset,
+  },
+  {
+    key: "character.consistency.contradiction.detect@v1",
+    load: () => require("./prompts/character/characterConsistency.prompts").contradictionDetectPrompt as UnknownPromptAsset,
+  },
+  {
     key: "image.character.prompt_optimize@v1",
     load: () => require("./prompts/image/image.prompts").imageCharacterPromptOptimizePrompt as UnknownPromptAsset,
   },
@@ -568,6 +576,10 @@ const promptAssetLoaderEntries: PromptAssetLoaderEntry[] = [
   {
     key: "feedback.issue.generation@v1",
     load: () => require("./prompts/feedback/issueGeneration.prompts").issueGenerationPrompt as UnknownPromptAsset,
+  },
+  {
+    key: "rag.contextual_chunk.prefix@v1",
+    load: () => require("./prompts/rag/contextualChunk.prompts").ragContextualChunkPrefixPrompt as UnknownPromptAsset,
   },
 ];
 

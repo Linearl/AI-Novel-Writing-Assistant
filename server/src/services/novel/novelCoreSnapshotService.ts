@@ -1,3 +1,4 @@
+import type { IDatabase } from "../../platform/di";
 import { prisma } from "../../db/prisma";
 import { normalizeNovelOutput } from "./novelCoreShared";
 import { logger } from "../logging/LoggerService";
@@ -60,9 +61,16 @@ export function selectPrunableAutoSnapshotIds(
 }
 
 export class NovelCoreSnapshotService {
+  private readonly db: IDatabase;
+
+  constructor(
+    db: IDatabase = prisma,
+  ) {
+    this.db = db;
+  }
   private async pruneAutomaticSnapshots(novelId: string): Promise<void> {
     const retentionCount = resolveNovelSnapshotRetentionCount();
-    const automaticSnapshots = await prisma.novelSnapshot.findMany({
+    const automaticSnapshots = await this.db.novelSnapshot.findMany({
       where: {
         novelId,
         triggerType: { in: [...AUTOMATIC_SNAPSHOT_TRIGGERS] },
@@ -79,7 +87,7 @@ export class NovelCoreSnapshotService {
       return;
     }
 
-    await prisma.novelSnapshot.deleteMany({
+    await this.db.novelSnapshot.deleteMany({
       where: {
         novelId,
         id: { in: prunableIds },
@@ -92,7 +100,7 @@ export class NovelCoreSnapshotService {
     triggerType: "manual" | "auto_milestone" | "before_pipeline",
     label?: string,
   ) {
-    const novel = await prisma.novel.findUnique({
+    const novel = await this.db.novel.findUnique({
       where: { id: novelId },
       include: {
         chapters: { orderBy: { order: "asc" }, select: { id: true, title: true, order: true, content: true } },
@@ -113,7 +121,7 @@ export class NovelCoreSnapshotService {
       })),
     });
 
-    const snapshot = await prisma.novelSnapshot.create({
+    const snapshot = await this.db.novelSnapshot.create({
       data: { novelId, label: label ?? null, snapshotData, triggerType },
     });
 
@@ -133,7 +141,7 @@ export class NovelCoreSnapshotService {
   }
 
   async listNovelSnapshots(novelId: string) {
-    return prisma.novelSnapshot.findMany({
+    return this.db.novelSnapshot.findMany({
       where: { novelId },
       select: {
         id: true,
@@ -148,7 +156,7 @@ export class NovelCoreSnapshotService {
   }
 
   async restoreFromSnapshot(novelId: string, snapshotId: string) {
-    const snapshot = await prisma.novelSnapshot.findFirst({
+    const snapshot = await this.db.novelSnapshot.findFirst({
       where: { id: snapshotId, novelId },
     });
     if (!snapshot) {
@@ -162,7 +170,7 @@ export class NovelCoreSnapshotService {
     };
 
     await this.createNovelSnapshot(novelId, "manual", `before-restore-${snapshotId.slice(0, 8)}`);
-    await prisma.novel.update({
+    await this.db.novel.update({
       where: { id: novelId },
       data: {
         outline: data.outline ?? undefined,
@@ -173,7 +181,7 @@ export class NovelCoreSnapshotService {
     if (Array.isArray(data.chapters) && data.chapters.length > 0) {
       for (const chapter of data.chapters) {
         if (chapter.id) {
-          await prisma.chapter.updateMany({
+          await this.db.chapter.updateMany({
             where: { id: chapter.id, novelId },
             data: {
               ...(chapter.title != null && { title: chapter.title }),
@@ -185,7 +193,7 @@ export class NovelCoreSnapshotService {
       }
     }
 
-    const restored = await prisma.novel.findUnique({ where: { id: novelId } });
+    const restored = await this.db.novel.findUnique({ where: { id: novelId } });
     return restored ? normalizeNovelOutput(restored) : null;
   }
 }
