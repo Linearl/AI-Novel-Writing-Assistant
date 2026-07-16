@@ -54,7 +54,22 @@ updated: 2026-07-16
 - [x] T18: 步骤栏与"查看导演进度"按钮的显示互斥逻辑：有活跃任务时隐藏步骤栏（0.05 天）
 - [x] T19: QuickPreview 回填 → Modal 预填 idea → 步骤栏可见（步骤 1 已完成）的逻辑（0.1 天）
 - [x] T20: Modal 关闭时重置步骤状态（0.05 天）
-- [ ] T21: 清理旧文件：删除 `useDirectorTaskQuery.ts`、`useDirectorWorkflowMutations.ts`、`useNovelAutoDirectorCandidateMutations.ts`（保留 `NovelAutoDirectorSetupPanel` 和 `NovelAutoDirectorCandidateSelectionContent` 以备其他引用）（0.1 天）
+- [x] T21: 清理旧文件：删除 `useDirectorTaskQuery.ts`、`useDirectorWorkflowMutations.ts`、`useNovelAutoDirectorCandidateMutations.ts`（保留 `NovelAutoDirectorSetupPanel` 和 `NovelAutoDirectorCandidateSelectionContent` 以备其他引用）（0.1 天）
+
+## 阶段三附：独立页面版本（pages/novels/autoDirector/）
+
+> 从上游复制并适配 9 个文件为独立全页面版本，作为 Modal 版本的补充入口。
+
+- [x] T21a: 复制 `directorCreateStages.ts` — 阶段定义与摘要工具函数（0.05 天）
+- [x] T21b: 复制 `StageSummaryCard.tsx` — 步骤摘要卡片（0.05 天）
+- [x] T21c: 复制 `StageIdea.tsx` — 步骤 1 起始想法（0.1 天）
+- [x] T21d: 复制 `StageBasicSetup.tsx` — 步骤 2 导演起始设置（适配：SelectControl → 原生 select）（0.1 天）
+- [x] T21e: 复制 `StageWorldStyle.tsx` — 步骤 3 世界与写法（适配：SelectControl → 原生 select）（0.1 天）
+- [x] T21f: 复制 `StageModelRun.tsx` — 步骤 4 模型与运行方式（0.1 天）
+- [x] T21g: 复制 `StageCandidates.tsx` — 步骤 5 方向候选（0.1 天）
+- [x] T21h: 复制 `AutoDirectorCreatePage.tsx` — 页面容器（0.15 天）
+- [x] T21i: 复制 `useAutoDirectorCreateController.ts` — 控制器（适配：DirectorExecutionViewMode → DirectorDialogMode）（0.15 天）
+- [x] T21j: typecheck 通过（0.1 天）
 
 ## 阶段四：测试与验证（0.5 天）
 
