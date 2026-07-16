@@ -12,7 +12,9 @@ export type NovelEvent =
   | { type: "volume:updated"; payload: { novelId: string; reason: VolumeUpdateReason } }
   | { type: "world:updated"; payload: { worldId: string } }
   | { type: "outline:revised"; payload: { novelId: string; stage: "outline" | "structured_outline" } }
-  | { type: "pipeline:completed"; payload: { novelId: string; jobId: string; status: string } };
+  | { type: "pipeline:completed"; payload: { novelId: string; jobId: string; status: string } }
+  | { type: "network:online"; payload: { timestamp: string; reason: string; lastSuccessAt?: string; probeLatency?: number | null } }
+  | { type: "network:offline"; payload: { timestamp: string; reason: string; lastSuccessAt?: string } };
 
 export type NovelEventType = NovelEvent["type"];
 

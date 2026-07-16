@@ -16,6 +16,7 @@ export * from "./chapterPatchRepair.js";
 export * from "./chapterQualityLoop.js";
 export * from "./chapterRuntime.js";
 export * from "./chapterTaskSheetQuality.js";
+export * from "./consistencyMonitor.js";
 export * from "./characterArc.js";
 export * from "./characterDynamics.js";
 export * from "./characterResource.js";

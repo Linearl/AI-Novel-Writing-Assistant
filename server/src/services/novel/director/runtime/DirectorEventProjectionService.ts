@@ -67,10 +67,10 @@ function isAutomaticPolicy(snapshot: DirectorRuntimeSnapshot): boolean {
 }
 
 function buildVisibleRiskBadges(input: {
-  status: import("@ai-novel/shared/types/directorRuntime").DirectorRuntimeProjectionStatus;
+  status: DirectorRuntimeProjection["status"];
   blockedReason: string | null;
   inventory: DirectorWorkspaceInventory | null | undefined;
-  events: import("@ai-novel/shared/types/directorRuntime").DirectorEvent[];
+  events: DirectorRuntimeSnapshot["events"];
 }): DirectorRuntimeVisibleRiskBadge[] {
   const badges: DirectorRuntimeVisibleRiskBadge[] = [];
   const push = (badge: DirectorRuntimeVisibleRiskBadge) => {

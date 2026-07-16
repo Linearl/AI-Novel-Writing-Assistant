@@ -354,7 +354,7 @@ export async function executePipeline(
             terminalAction: chapterResult.pass ? null : "defer_and_continue",
             taskId: runtimePayload.workflowTaskId,
             qualityDebtAttribution: chapterResult.qualityDebtAttribution ?? null,
-          }).catch((error) => {
+          }).catch((error: unknown) => {
             logPipelineError("记录章节质量闭环状态失败", {
               jobId,
               novelId,

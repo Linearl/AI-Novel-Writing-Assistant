@@ -64,8 +64,8 @@ export function generateCurvePath(points: CurvePoint[]): string {
   if (points.length === 0) return "";
 
   const lineGenerator = line<CurvePoint>()
-    .x((d) => d.x)
-    .y((d) => d.y)
+    .x((d: CurvePoint) => d.x)
+    .y((d: CurvePoint) => d.y)
     .curve(curveMonotoneX);
 
   return lineGenerator(points) ?? "";

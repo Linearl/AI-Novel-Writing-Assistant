@@ -1,148 +1,136 @@
 /**
- * REQ-7051: Consistency monitor shared types for cross-novel consistency checking.
+ * Consistency monitoring shared type stubs.
+ *
+ * REQ-7051 一致性监控框架的共享类型定义。
+ * 这些类型被 services/novel/quality/ConsistencyMonitor 和 modules/novel/quality/consistencyMonitor 使用。
  */
 
-// ── Configuration ──────────────────────────────────────────────────────
+/* ── Core types ─────────────────────────────────────────────────────── */
 
-export interface ConsistencyConfig {
-  enabled: boolean;
-  lookbackChapters: number;
-  thresholds: {
-    timeline: number;
-    character: number;
-    spatial: number;
-  };
-  autoReport: boolean;
-  async: boolean;
-}
-
-export const DEFAULT_CONSISTENCY_CONFIG: ConsistencyConfig = {
-  enabled: true,
-  lookbackChapters: 3,
-  thresholds: {
-    timeline: 0.5,
-    character: 0.5,
-    spatial: 0.5,
-  },
-  autoReport: true,
-  async: true,
-};
-
-// ── Violation ──────────────────────────────────────────────────────────
-
-export type ConsistencyViolationType = "timeline" | "character" | "spatial" | "setting";
-export type ConsistencyViolationSeverity = "error" | "warning" | "info";
-export type ConsistencyViolationStatus = "open" | "resolved" | "ignored";
-
-export interface ConsistencyLocation {
+export interface ChapterContent {
   chapterId: string;
-  paragraph?: number;
-  sentence?: number;
+  novelId: string;
+  order: number;
+  title: string;
+  content: string;
+  summary?: string | null;
+  characters?: string[];
+  locations?: string[];
+  timeReferences?: string[];
 }
+
+export interface TimeReference {
+  text: string;
+  chapterId: string;
+  paragraph: number;
+  absoluteTime?: string | null;
+  relativeTime?: string | null;
+}
+
+export interface LocationReference {
+  name: string;
+  chapterId: string;
+  paragraph: number;
+  description?: string | null;
+}
+
+export interface CharacterBehavior {
+  characterId: string;
+  characterName: string;
+  chapterId: string;
+  action: string;
+  paragraph: number;
+  consistencyNotes?: string | null;
+}
+
+/* ── Violation types ────────────────────────────────────────────────── */
+
+export type ConsistencyViolationType =
+  | "timeline_conflict"
+  | "character_behavior"
+  | "spatial_logic"
+  | "setting_contradiction"
+  | "setting";
 
 export interface ConsistencyViolation {
-  type: ConsistencyViolationType;
-  severity: ConsistencyViolationSeverity;
+  id?: string;
+  type: ConsistencyViolationType | string;
+  severity: "critical" | "warning" | "info" | "error";
   description: string;
+  chapterId?: string;
   chapterIds: string[];
-  locations: ConsistencyLocation[];
-  suggestion: string;
-  evidence: string;
+  locations: unknown[];
+  relatedChapterId?: string | null;
+  evidence?: string;
+  suggestion?: string | null;
 }
 
 export interface ConsistencyViolationRecord extends ConsistencyViolation {
   id: string;
   novelId: string;
-  chapterId: string;
-  status: ConsistencyViolationStatus;
+  status: "open" | "resolved" | "ignored";
+  resolvedAt?: string | null;
+  resolvedBy?: string | null;
+  resolution?: string | null;
+  ignoreReason?: string | null;
   createdAt: string;
-  updatedAt: string;
-  resolvedAt: string | null;
-  resolution: string | null;
+  updatedAt?: string;
 }
 
-// ── Report ─────────────────────────────────────────────────────────────
+/* ── Checker interface ──────────────────────────────────────────────── */
 
-export interface TimelineEvent {
+export interface ConsistencyCheckContext {
+  novelId: string;
   chapterId: string;
-  description: string;
-  timeReference: string;
-  order: number;
+  lookbackChapters: number;
+  recentChapters: ChapterContent[];
+  config: ConsistencyConfig;
 }
 
-export interface TimelineData {
-  events: TimelineEvent[];
+export interface ConsistencyChecker {
+  name: string;
+  check(context: ConsistencyCheckContext): Promise<ConsistencyViolation[]>;
 }
+
+/* ── Config ─────────────────────────────────────────────────────────── */
+
+export interface ConsistencyConfig {
+  enabled: boolean;
+  lookbackChapters: number;
+  timeline: { enabled: boolean; tolerance: number };
+  characterBehavior: { enabled: boolean };
+  spatialLogic: { enabled: boolean };
+}
+
+export const DEFAULT_CONSISTENCY_CONFIG: ConsistencyConfig = {
+  enabled: true,
+  lookbackChapters: 5,
+  timeline: { enabled: true, tolerance: 1 },
+  characterBehavior: { enabled: true },
+  spatialLogic: { enabled: true },
+};
+
+/* ── Reports ────────────────────────────────────────────────────────── */
 
 export interface ConsistencyReport {
   chapterId: string;
   checkedAt: string;
   violations: ConsistencyViolation[];
+  passed: boolean;
   overallPassed: boolean;
   summary: string;
-  timelineData?: TimelineData;
 }
 
 export interface NovelConsistencyReport {
   novelId: string;
+  generatedAt?: string;
+  chapterReports?: ConsistencyReport[];
   totalViolations: number;
   openViolations: number;
+  criticalCount?: number;
+  warningCount?: number;
   typeBreakdown: Record<string, number>;
   severityBreakdown: Record<string, number>;
-  recentViolations: ConsistencyViolationRecord[];
-}
-
-// ── Checker Interface ──────────────────────────────────────────────────
-
-export interface ChapterContent {
-  id: string;
-  title: string;
-  content: string;
-  order: number;
-}
-
-export interface ConsistencyChecker {
-  readonly type: ConsistencyViolationType;
-  check(
-    currentChapter: ChapterContent,
-    previousChapters: ChapterContent[],
-    context?: ConsistencyCheckContext,
-  ): Promise<ConsistencyViolation[]>;
-}
-
-export interface ConsistencyCheckContext {
-  novelId?: string;
-  characters?: Array<{ id: string; name: string; personality?: string; background?: string }>;
-  config?: Partial<ConsistencyConfig>;
-}
-
-// ── Time reference parsing ─────────────────────────────────────────────
-
-export interface TimeReference {
-  type: string;
-  text: string;
-  position: number;
-  normalizedTime: number;
-}
-
-export interface LocationReference {
-  characterName?: string;
-  place: string;
-  paragraph: number;
-  sceneTransition: boolean;
-}
-
-export interface CharacterBehavior {
-  characterName: string;
-  actions: string[];
-  emotion: string | null;
-  description: string;
-  paragraph: number;
-}
-
-export interface PersonalityShift {
-  description: string;
-  prevChapterId: string;
-  prevBehavior: string;
-  paragraph: number;
+  recentViolations?: ConsistencyViolationRecord[];
+  summary?: string;
 }

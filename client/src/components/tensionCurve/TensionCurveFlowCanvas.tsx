@@ -133,7 +133,7 @@ export default function TensionCurveFlowCanvas({
   );
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges] = useEdgesState([]);
+  const [edges, setEdges] = useEdgesState<Edge>([]);
 
   // 同步外部 chapter 数据到节点
   useEffect(() => {
@@ -164,7 +164,7 @@ export default function TensionCurveFlowCanvas({
   // 节点点击
   const handleNodeClick = useCallback(
     (_event: React.MouseEvent, node: Node) => {
-      const chapter = (node.data as TensionNodeData).chapter;
+      const chapter = (node.data as unknown as TensionNodeData).chapter;
       onNodeClick?.(chapter);
     },
     [onNodeClick],
@@ -252,7 +252,7 @@ export default function TensionCurveFlowCanvas({
         <Controls showInteractive={!readOnly} />
         <MiniMap
           nodeColor={(node) => {
-            const value = (node.data as TensionNodeData)?.value ?? 50;
+            const value = (node.data as unknown as TensionNodeData)?.value ?? 50;
             if (value >= 75) return "#f97316";
             if (value <= 30) return "#06b6d4";
             return "#6366f1";

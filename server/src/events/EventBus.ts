@@ -23,6 +23,10 @@ function summarizePayload(event: NovelEvent): string {
       return `novelId=${event.payload.novelId} stage=${event.payload.stage}`;
     case "pipeline:completed":
       return `novelId=${event.payload.novelId} jobId=${event.payload.jobId} status=${event.payload.status}`;
+    case "network:online":
+      return `reason=${event.payload.reason} latency=${event.payload.probeLatency ?? "n/a"}`;
+    case "network:offline":
+      return `reason=${event.payload.reason}`;
     default:
       return JSON.stringify(event);
   }

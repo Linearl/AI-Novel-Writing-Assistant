@@ -214,6 +214,7 @@ export class ModuleConsistencyMonitor {
         chapterId,
         checkedAt,
         violations: [],
+        passed: false,
         overallPassed: false,
         summary: `规则检测异常: ${error instanceof Error ? error.message : String(error)}`,
       };
@@ -389,32 +390,8 @@ export class ModuleConsistencyMonitor {
     if (contradictions.length === 0) return;
 
     try {
-      // 删除该章旧的 setting 类型违规
-      await prisma.consistencyViolation.deleteMany({
-        where: { chapterId, type: "setting" },
-      });
-
-      const rows = contradictions.map((c) => ({
-        novelId,
-        chapterId,
-        type: "setting",
-        severity: (
-          c.severity === "critical" ? "error" :
-          c.severity === "warning" ? "warning" :
-          "info"
-        ),
-        description: c.description,
-        chapterIds: JSON.stringify([]),
-        locations: JSON.stringify([]),
-        suggestion: c.suggestion ?? null,
-        evidence: `${c.fieldA}: "${c.valueA}" ≠ ${c.fieldB}: "${c.valueB}"`,
-      }));
-
-      for (const row of rows) {
-        await prisma.consistencyViolation.create({ data: row });
-      }
-
-      logger.info("[ConsistencyMonitor] 设定矛盾已持久化", {
+      // TODO: Requires Prisma ConsistencyViolation model to be added to schema
+      logger.info("[ConsistencyMonitor] 设定矛盾已记录（持久化待实现）", {
         novelId,
         chapterId,
         count: contradictions.length,
