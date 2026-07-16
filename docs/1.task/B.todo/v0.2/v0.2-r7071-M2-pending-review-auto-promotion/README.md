@@ -1,7 +1,7 @@
 ---
 reqId: 7071
 title: "待审自动提升"
-status: requirements_ready
+status: in_progress
 priority: P2
 complexity: M2
 estimatedEffort: "0.7天"

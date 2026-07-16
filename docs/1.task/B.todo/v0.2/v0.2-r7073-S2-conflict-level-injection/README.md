@@ -1,12 +1,13 @@
 ---
 reqId: 7073
 title: "冲突等级约束注入"
-status: requirements_ready
+status: in_progress
 priority: P2
 complexity: S2
 estimatedEffort: "0.2天"
 version: v0.2
 created: 2026-07-16
+updated: 2026-07-16
 ---
 
 # REQ-7073: 冲突等级约束注入
@@ -29,7 +30,7 @@ created: 2026-07-16
 
 ## 状态
 
-- 当前阶段：requirements_ready
+- 当前阶段：in_progress
 - 复杂度：S2
 - 优先级：P2
 - 预估工时：0.2 天

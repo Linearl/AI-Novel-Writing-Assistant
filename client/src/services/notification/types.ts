@@ -12,6 +12,8 @@ export interface NotificationConfig {
     taskFailed: boolean;
     taskNeedsReview: boolean;
     qualityCheckResult: boolean;
+    directorPaused: boolean;
+    directorResumed: boolean;
   };
 
   /**
@@ -29,7 +31,9 @@ export type NotificationEventType =
   | "taskCompleted"
   | "taskFailed"
   | "taskNeedsReview"
-  | "qualityCheckResult";
+  | "qualityCheckResult"
+  | "directorPaused"
+  | "directorResumed";
 
 /** Structured payload carried through the notification pipeline. */
 export interface NotificationEvent {

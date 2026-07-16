@@ -7,6 +7,8 @@ const LABELS: Record<keyof NotificationConfig["events"], string> = {
   taskFailed: "任务失败",
   taskNeedsReview: "需要人工审核",
   qualityCheckResult: "质量检查结果",
+  directorPaused: "导演暂停",
+  directorResumed: "导演恢复",
 };
 
 export function NotificationConfigPanel() {

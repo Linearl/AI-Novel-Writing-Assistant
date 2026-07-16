@@ -9,6 +9,8 @@ const DEFAULT_CONFIG: NotificationConfig = {
     taskFailed: true,
     taskNeedsReview: false,
     qualityCheckResult: false,
+    directorPaused: true,
+    directorResumed: true,
   },
 };
 
@@ -24,6 +26,8 @@ function loadConfig(): NotificationConfig {
         taskFailed: parsed.events?.taskFailed ?? DEFAULT_CONFIG.events.taskFailed,
         taskNeedsReview: parsed.events?.taskNeedsReview ?? DEFAULT_CONFIG.events.taskNeedsReview,
         qualityCheckResult: parsed.events?.qualityCheckResult ?? DEFAULT_CONFIG.events.qualityCheckResult,
+        directorPaused: parsed.events?.directorPaused ?? DEFAULT_CONFIG.events.directorPaused,
+        directorResumed: parsed.events?.directorResumed ?? DEFAULT_CONFIG.events.directorResumed,
       },
       quietHours: parsed.quietHours ?? undefined,
     };

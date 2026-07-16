@@ -18,8 +18,8 @@ created: 2026-07-16
 
 ## 阶段一：实现
 
-- [ ] T1: 修改 `chapterLayeredContextHelpers.ts` 的 `buildChapterWriteContext()`，新增 `conflictLevel` 字段读取（0.05 天）
-- [ ] T2: 修改 `chapterWriter.prompts.ts`，渲染 "本章冲突强度: {conflictLevel}/100" 约束行（0.05 天）
+- [x] T1: 修改 `chapterLayeredContextHelpers.ts` 的 `buildChapterWriteContext()`，新增 `conflictLevel` 字段读取（0.05 天）
+- [x] T2: 修改 `chapterWriter.prompts.ts`，渲染 "本章冲突强度: {conflictLevel}/100" 约束行（0.05 天）
 
 ## 阶段二：验证
 

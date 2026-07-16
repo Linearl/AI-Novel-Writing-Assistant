@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import type { ChapterRuntimePackage, GenerationContextPackage } from "@ai-novel/shared";
+import type { ChapterRuntimePackage, GenerationContextPackage, RuntimeAuditReport } from "@ai-novel/shared";
 import { prisma } from "../../../db/prisma";
 import { openConflictService } from "../../state/OpenConflictService";
 import { directorAutomationLedgerEventService } from "../director/runtime/DirectorAutomationLedgerEventService";
@@ -15,6 +15,7 @@ import {
   type ChapterRuntimePlannerPort,
   type OpenConflictRuntimeRow,
 } from "./chapterRuntimePackageBuilders";
+import { detectProseQuality } from "./proseQuality/ProseQualityDetector";
 
 export interface ChapterContentFinalizationAgentRuntime {
   finishChapterGenRun: (runId: string, summary: string, durationMs: number) => Promise<void>;
@@ -74,6 +75,36 @@ export class ChapterContentFinalizationService {
       issues: acceptance.issues,
       auditReports: acceptance.auditReports,
     };
+
+    // REQ-7072: 散文质量检测（runAcceptanceGateOnly 之后、buildRuntimePackage 之前）
+    const proseQualityReport = detectProseQuality(finalContent);
+    if (proseQualityReport.findings.length > 0) {
+      const proseAuditReport: RuntimeAuditReport = {
+        id: `prose-quality:${input.novelId}:${input.chapterId}`,
+        novelId: input.novelId,
+        chapterId: input.chapterId,
+        auditType: "mode_fit",
+        overallScore: null,
+        summary: `散文质量检测发现 ${proseQualityReport.findings.length} 个问题`,
+        legacyScoreJson: null,
+        issues: proseQualityReport.findings.map((f, i) => ({
+          id: `prose-quality:${input.novelId}:${input.chapterId}:${i + 1}:${f.code}`,
+          reportId: `prose-quality:${input.novelId}:${input.chapterId}`,
+          auditType: "mode_fit" as const,
+          severity: f.severity,
+          code: f.code,
+          description: f.message,
+          evidence: `第 ${f.line} 行：${f.excerpt}`,
+          fixSuggestion: f.fixSuggestion,
+          status: "open" as const,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        })),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+      auditResult.auditReports = [...auditResult.auditReports, proseAuditReport];
+    }
     const styleReview: StyleReviewResult = {
       report: null,
       autoRewritten: false,

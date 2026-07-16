@@ -44,6 +44,7 @@ export interface ChapterWriterPromptInput {
   chapterTitle: string;
   mode?: "draft" | "continue";
   tensionLevel?: string | null;
+  conflictLevel?: number | null;
   targetWordCount?: number | null;
   minWordCount?: number | null;
   maxWordCount?: number | null;
@@ -203,6 +204,21 @@ export const chapterWriterPrompt: PromptAsset<ChapterWriterPromptInput, string, 
 
     const tensionGuide = buildTensionGuide(input.tensionLevel);
 
+    // Build conflict level constraint (0-100 scale)
+    const hasConflictLevel = typeof input.conflictLevel === "number" && input.conflictLevel >= 0 && input.conflictLevel <= 100;
+    const conflictLevelBlock = hasConflictLevel
+      ? (() => {
+          const level = input.conflictLevel!;
+          if (level <= 20) {
+            return `本章冲突强度约 ${level}/100，处于低冲突阶段。\n此阶段以铺垫和情绪积蓄为主，冲突应以暗流、伏笔、人物摩擦的形式出现，避免正面激烈对抗。`;
+          }
+          if (level <= 50) {
+            return `本章冲突强度约 ${level}/100，处于中等冲突阶段。\n冲突应逐步升温，可安排一次中等强度的对抗、分歧或压力事件，但需为后续升级留出空间。`;
+          }
+          return `本章冲突强度约 ${level}/100，处于高冲突阶段。\n冲突应密集展开，安排至少一次高强度对抗或重大信息揭示，推动局面发生明显变化，节奏紧凑。`;
+        })()
+      : null;
+
     const hasTarget = typeof input.targetWordCount === "number" && input.targetWordCount > 0;
     const lengthBlock = hasTarget
       ? [
@@ -256,6 +272,7 @@ export const chapterWriterPrompt: PromptAsset<ChapterWriterPromptInput, string, 
         "4. " + endingHook,
         "",
         ...(tensionGuide ? ["【节奏张力】", tensionGuide, ""] : []),
+        ...(conflictLevelBlock ? ["【冲突强度】", conflictLevelBlock, ""] : []),
         "【篇幅要求】",
         lengthBlock,
         "",

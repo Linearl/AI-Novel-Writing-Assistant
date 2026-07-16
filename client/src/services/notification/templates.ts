@@ -36,4 +36,14 @@ export const NOTIFICATION_TEMPLATES: Record<NotificationEventType, NotificationT
     title: `${event.novelTitle} 质量检查完成`,
     body: event.message,
   }),
+
+  directorPaused: (event: NotificationEvent) => ({
+    title: `${event.novelTitle} 自动导演已暂停`,
+    body: event.message || "自动导演任务已暂停，需要手动处理",
+  }),
+
+  directorResumed: (event: NotificationEvent) => ({
+    title: `${event.novelTitle} 自动导演已恢复`,
+    body: event.message || "自动导演任务已恢复执行",
+  }),
 };

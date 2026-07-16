@@ -1,7 +1,7 @@
 {
   "reqId": "7071",
   "title": "待审自动提升",
-  "status": "requirements_ready",
+  "status": "in_progress",
   "complexity": "M2",
   "category": "7xxx",
   "priority": "P2",
@@ -11,8 +11,8 @@
   "estimatedFiles": "3",
   "dependencies": ["StateChangeProposal (已就绪)", "OpenConflict (已就绪)", "StateCommitService (已就绪)"],
   "verification": {
-    "typecheck": "pending",
-    "tests": "pending",
+    "typecheck": "passed",
+    "tests": "passed",
     "integration": "pending"
   }
 }
