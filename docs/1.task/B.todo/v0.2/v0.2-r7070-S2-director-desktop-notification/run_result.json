@@ -1,0 +1,18 @@
+{
+  "reqId": "7070",
+  "title": "桌面通知系统",
+  "status": "requirements_ready",
+  "complexity": "S2",
+  "category": "7xxx",
+  "priority": "P2",
+  "version": "v0.2",
+  "createdAt": "2026-07-16",
+  "source": "上游仓库 AI-Novel-Writing-Assistant-main 参考实现",
+  "estimatedFiles": "1-2",
+  "dependencies": [],
+  "verification": {
+    "typecheck": "pending",
+    "tests": "pending",
+    "integration": "pending"
+  }
+}

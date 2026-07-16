@@ -1,0 +1,18 @@
+{
+  "reqId": "7075",
+  "title": "待审上下文注入",
+  "status": "requirements_ready",
+  "complexity": "S3",
+  "category": "7xxx",
+  "priority": "P3",
+  "version": "v0.2",
+  "createdAt": "2026-07-16",
+  "source": "REQ-7069 的 FR-6",
+  "estimatedFiles": "2",
+  "dependencies": ["REQ-7074 (资源上下文重构)"],
+  "verification": {
+    "typecheck": "pending",
+    "tests": "pending",
+    "integration": "pending"
+  }
+}

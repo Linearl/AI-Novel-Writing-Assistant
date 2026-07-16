@@ -1,0 +1,18 @@
+{
+  "reqId": "7073",
+  "title": "冲突等级约束注入",
+  "status": "requirements_ready",
+  "complexity": "S2",
+  "category": "7xxx",
+  "priority": "P2",
+  "version": "v0.2",
+  "createdAt": "2026-07-16",
+  "source": "REQ-7069 的 FR-5 后端部分",
+  "estimatedFiles": "2",
+  "dependencies": [],
+  "verification": {
+    "typecheck": "pending",
+    "tests": "pending",
+    "integration": "pending"
+  }
+}
