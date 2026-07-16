@@ -42,6 +42,8 @@ export const queryKeys = {
     snapshots: (id: string) => ["novels", "snapshots", id] as const,
     paceCurve: (id: string) => ["novels", "pace-curve", id] as const,
     globalReviewIssues: (id: string, status?: string) => ["novels", "global-review-issues", id, status ?? "all"] as const,
+    materials: (id: string) => ["novels", "materials", id] as const,
+    materialDetail: (id: string, materialId: string) => ["novels", "materials", id, materialId] as const,
   },
   worlds: {
     all: ["worlds"] as const,

@@ -8,6 +8,8 @@ import type {
   CharacterResourceContext,
   CharacterResourceLedgerItem,
   CharacterResourceLedgerResponse,
+  CharacterResourceManualCreatePayload,
+  CharacterResourceManualUpdatePayload,
 } from "@ai-novel/shared";
 import type { StateCommitResult } from "@ai-novel/shared";
 import type {
@@ -110,6 +112,34 @@ export async function rejectCharacterResourceProposal(
   const { data } = await apiClient.post<ApiResponse<CharacterResourceLedgerResponse>>(
     `/novels/${id}/character-resource-proposals/${proposalId}/reject`,
     body,
+  );
+  return data;
+}
+
+// Manual CRUD for character resources
+export async function createCharacterResource(id: string, payload: CharacterResourceManualCreatePayload) {
+  const { data } = await apiClient.post<ApiResponse<CharacterResourceLedgerResponse>>(
+    `/novels/${id}/character-resources/manual`,
+    payload,
+  );
+  return data;
+}
+
+export async function updateCharacterResource(
+  id: string,
+  resourceId: string,
+  payload: CharacterResourceManualUpdatePayload,
+) {
+  const { data } = await apiClient.patch<ApiResponse<CharacterResourceLedgerResponse>>(
+    `/novels/${id}/character-resources/${resourceId}`,
+    payload,
+  );
+  return data;
+}
+
+export async function deleteCharacterResource(id: string, resourceId: string) {
+  const { data } = await apiClient.delete<ApiResponse<CharacterResourceLedgerResponse>>(
+    `/novels/${id}/character-resources/${resourceId}`,
   );
   return data;
 }

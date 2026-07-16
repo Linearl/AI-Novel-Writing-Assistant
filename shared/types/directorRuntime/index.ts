@@ -300,7 +300,8 @@ export type DirectorEventType =
   | "replan_run_created"
   | "circuit_breaker_opened"
   | "circuit_breaker_reset"
-  | "continue_with_risk";
+  | "continue_with_risk"
+  | "pending_review_auto_promotion";
 
 export interface DirectorEvent {
   eventId: string;
