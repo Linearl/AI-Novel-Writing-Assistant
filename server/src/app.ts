@@ -24,6 +24,7 @@ import agentRunsRouter from "./modules/agent/http/agentRuns";
 import autoDirectorChannelCallbacksRouter from "./modules/agent/http/autoDirectorChannelCallbacks";
 import autoDirectorFollowUpsRouter from "./modules/agent/http/autoDirectorFollowUps";
 import bookAnalysisRouter from "./modules/bookAnalysis/http/bookAnalysis";
+import bookAnalysisCharacterRouter from "./services/bookAnalysis/bookAnalysisCharacter/bookAnalysisCharacterRoutes";
 import batchRouter from "./modules/batch/http/batchRoutes";
 import characterRouter from "./modules/novel/characters/http/character";
 import chatRouter from "./modules/chat/http/chat";
@@ -152,6 +153,7 @@ export function createApp() {
   app.use("/api/agent-catalog", agentCatalogRouter);
   app.use("/api/agent-runs", agentRunsRouter);
   app.use("/api/book-analysis", bookAnalysisRouter);
+  app.use("/api/book-analysis", bookAnalysisCharacterRouter);
   app.use("/api/genres", genreRouter);
   app.use("/api/story-modes", storyModeRouter);
   app.use("/api/knowledge", knowledgeRouter);

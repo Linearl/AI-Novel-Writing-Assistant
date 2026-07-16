@@ -1,6 +1,16 @@
 "use strict";
 
 /**
+ * @deprecated Since REQ-7064. New tests should use DI mock pattern instead:
+ *
+ *   ```typescript
+ *   const mockDb = { novel: { findMany: async () => [] } } as unknown as IDatabase;
+ *   const service = new SomeService(mockDb);
+ *   ```
+ *
+ *   This file is kept for backward compatibility with existing tests.
+ *   When modifying legacy tests, prefer migrating to DI mock.
+ *
  * Prisma mock helper for unit tests.
  *
  * Provides a structured way to mock Prisma model methods with automatic

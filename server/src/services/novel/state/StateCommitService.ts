@@ -61,6 +61,16 @@ export interface StateCommitServiceInput extends ChapterFactExtractorInput {
   skipFactExtraction?: boolean;
 }
 
+export interface CommitExistingProposalsInput {
+  novelId: string;
+  proposalIds: string[];
+  chapterId?: string | null;
+  chapterOrder?: number | null;
+  sourceType?: string;
+  sourceStage?: string | null;
+  reason: string;
+}
+
 interface PersistedProposalRow {
   id: string;
   novelId: string;
@@ -119,6 +129,76 @@ export class StateCommitService {
       committed: persisted.committed,
       pendingReview: persisted.pendingReview,
       rejected: persisted.rejected,
+    };
+  }
+
+  /** REQ-7071: 将已通过人工审核的待审提案批量提交 */
+  async commitExistingProposals(input: CommitExistingProposalsInput): Promise<StateCommitResult> {
+    const proposalIds = Array.from(new Set(input.proposalIds.map((id) => compactText(id)).filter(Boolean)));
+    if (proposalIds.length === 0) {
+      return { versionRecord: null, committed: [], pendingReview: [], rejected: [] };
+    }
+
+    const rows = await prisma.stateChangeProposal.findMany({
+      where: {
+        novelId: input.novelId,
+        id: { in: proposalIds },
+        status: "pending_review" as const,
+      },
+    });
+    if (rows.length === 0) {
+      return { versionRecord: null, committed: [], pendingReview: [], rejected: [] };
+    }
+
+    const committed = rows.map((row) => {
+      const proposal = this.toProposal(row);
+      return {
+        ...proposal,
+        status: "committed" as const,
+        validationNotes: proposal.validationNotes.concat(`proposal_commit:${input.reason}`),
+      };
+    });
+
+    await prisma.$transaction(async (tx) => {
+      for (const proposal of committed) {
+        await this.applyCommittedProposal(tx, proposal);
+        if (!proposal.id) continue;
+        await tx.stateChangeProposal.update({
+          where: { id: proposal.id },
+          data: {
+            status: "committed",
+            validationNotesJson: JSON.stringify(proposal.validationNotes),
+          },
+        });
+      }
+    });
+
+    const snapshot = await canonicalStateService.getSnapshot(input.novelId, {
+      chapterId: input.chapterId ?? committed[0]?.chapterId ?? undefined,
+      chapterOrder: input.chapterOrder ?? undefined,
+      includeCurrentChapterState: true,
+    });
+    const versionRecord = await stateVersionLog.createVersion({
+      novelId: input.novelId,
+      chapterId: input.chapterId ?? committed[0]?.chapterId ?? null,
+      sourceType: input.sourceType ?? "manual_state_commit",
+      sourceStage: input.sourceStage ?? "proposal_confirmation",
+      summary: buildVersionSummary(input.chapterOrder ?? undefined, committed),
+      acceptedProposalIds: committed.map((p) => p.id).filter((id): id is string => Boolean(id)),
+      snapshot,
+    });
+    await prisma.stateChangeProposal.updateMany({
+      where: {
+        id: { in: committed.map((p) => p.id).filter((id): id is string => Boolean(id)) },
+      },
+      data: { committedVersionId: versionRecord.id },
+    });
+
+    return {
+      versionRecord,
+      committed,
+      pendingReview: [],
+      rejected: [],
     };
   }
 
