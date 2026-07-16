@@ -35,6 +35,7 @@ desktop/build/
 
 # Release artifacts
 release/
+release-*.log
 desktop/runtime-migration-smoke/
 server/prisma-diff-migrations-to-schema.sql
 
