@@ -3,7 +3,8 @@ import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { resolve } from "node:path";
 
 const TOKEN_LENGTH = 32;
-const ENV_FILE_PATH = resolve(process.cwd(), ".env");
+// 指向 server/.env 文件（__dirname 是 server/src/services/auth/）
+const ENV_FILE_PATH = resolve(__dirname, "../../../.env");
 
 export class TokenService {
   private token: string | null = null;
