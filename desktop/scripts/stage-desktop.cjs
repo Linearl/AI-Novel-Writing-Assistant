@@ -47,10 +47,12 @@ function deployManually() {
 
   // 2. 创建 app/package.json（去掉 workspace 依赖和 scripts）
   const desktopPkg = JSON.parse(fs.readFileSync(path.join(desktopDir, "package.json"), "utf8"));
+  const serverSourceDir = path.join(repoRoot, "server");
   const appPkg = {
     name: desktopPkg.name,
     version: desktopPkg.version,
     private: true,
+    main: "dist/main.js",
     dependencies: {
       "better-sqlite3": desktopPkg.dependencies["better-sqlite3"],
       "electron-updater": desktopPkg.dependencies["electron-updater"],
@@ -64,7 +66,6 @@ function deployManually() {
 
   // 3. 手动复制 @ai-novel/server 到 app/node_modules/@ai-novel/server/
   const serverTargetDir = path.join(appDir, "node_modules", "@ai-novel", "server");
-  const serverSourceDir = path.join(repoRoot, "server");
   console.log(`[stage:desktop] manual deploy: copying @ai-novel/server → ${serverTargetDir}`);
 
   fs.mkdirSync(serverTargetDir, { recursive: true });
@@ -94,12 +95,12 @@ function deployManually() {
   });
 
   // 5. 为 @ai-novel/server 生成干净的 package.json（移除 workspace 协议依赖）
-  const serverPkg = JSON.parse(fs.readFileSync(path.join(serverSourceDir, "package.json"), "utf8"));
+  const serverPkgRaw = JSON.parse(fs.readFileSync(path.join(serverSourceDir, "package.json"), "utf8"));
   const serverAppPkg = {
-    name: serverPkg.name,
-    version: serverPkg.version,
+    name: serverPkgRaw.name,
+    version: serverPkgRaw.version,
     private: true,
-    dependencies: serverPkg.dependencies || {},
+    dependencies: serverPkgRaw.dependencies || {},
   };
   // 移除 workspace 协议的依赖
   for (const [dep, ver] of Object.entries(serverAppPkg.dependencies)) {
@@ -123,6 +124,14 @@ function deployManually() {
       env: process.env,
     });
   }
+
+  // 7. 最后将 @ai-novel/server 加入 package.json dependencies
+  //    electron-builder 根据 dependencies 决定包含哪些 node_modules 到最终包中
+  const stagedPkgPath = path.join(appDir, "package.json");
+  const stagedPkg = JSON.parse(fs.readFileSync(stagedPkgPath, "utf8"));
+  stagedPkg.dependencies["@ai-novel/server"] = serverPkgRaw.version || "0.1.0";
+  fs.writeFileSync(stagedPkgPath, JSON.stringify(stagedPkg, null, 2));
+  console.log("[stage:desktop] added @ai-novel/server to staging package.json for electron-builder");
 
   console.log("[stage:desktop] manual deploy completed successfully");
 }

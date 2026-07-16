@@ -170,7 +170,7 @@ rimraf(targetDir);
 try {
   execSync(`robocopy "${BUILDER_OUTPUT}" "${targetDir}" /E /COPY:DAT /R:1 /W:1 /NFL /NDL /NJH /NJS`, { stdio: "pipe" });
 } catch (err) {
-  if (err.status === undefined || err.status > 7) throw err;
+  if (err.status === undefined || err.status >= 16) throw err;
 }
 
 // 将 server 生产依赖复制到 resources/node_modules（asar 外部，供运行时 require）
@@ -193,7 +193,32 @@ if (fs.existsSync(serverNodeModulesSrc)) {
   try {
     execSync(`robocopy "${serverNodeModulesSrc}" "${serverNodeModulesDest}" /E /COPY:DAT /R:1 /W:1 /NFL /NDL /NJH /NJS`, { stdio: "pipe" });
   } catch (err) {
-    if (err.status === undefined || err.status > 7) throw err;
+    if (err.status === undefined || err.status >= 16) throw err;
+  }
+
+  // 将重建后的 native 模块（.node 文件）复制回 resources/app/node_modules/
+  // electron-builder 打包时移除了 .node 文件，需要从重建后的 resources/node_modules/ 补回
+  const appNodeModulesDest = path.join(targetDir, "resources", "app", "node_modules");
+  if (fs.existsSync(appNodeModulesDest)) {
+    log("📦 补充 native 模块到 resources/app/node_modules/...");
+    // 只复制 .node 文件和 prebuilds 目录
+    try {
+      execSync(
+        `robocopy "${serverNodeModulesDest}" "${appNodeModulesDest}" *.node /S /COPY:DAT /R:1 /W:1 /NFL /NDL /NJH /NJS`,
+        { stdio: "pipe" }
+      );
+    } catch (err) {
+      if (err.status === undefined || err.status >= 16) throw err;
+    }
+    // 也复制 prebuilds 目录
+    try {
+      execSync(
+        `robocopy "${serverNodeModulesDest}" "${appNodeModulesDest}" prebuilds /S /COPY:DAT /R:1 /W:1 /NFL /NDL /NJH /NJS`,
+        { stdio: "pipe" }
+      );
+    } catch (err) {
+      if (err.status === undefined || err.status >= 16) throw err;
+    }
   }
 }
 

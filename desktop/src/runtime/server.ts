@@ -265,11 +265,14 @@ function startPackagedManagedServer(port: number): ManagedDesktopProcess {
   }
 
   const child = utilityProcess.fork(serverEntry, [], {
-    cwd: resolveDesktopResourcesDir(),
+    cwd: resourcesDir,
     env: {
       ...process.env,
       NODE_ENV: "production",
-      NODE_PATH: path.join(resolveDesktopResourcesDir(), "node_modules"),
+      NODE_PATH: [
+        path.join(resourcesDir, "app", "node_modules"),
+        path.join(resourcesDir, "node_modules"),
+      ].join(path.delimiter),
       AI_NOVEL_RUNTIME: "desktop",
       AI_NOVEL_APP_DATA_DIR: resolveDesktopAppDataDir(),
       AI_NOVEL_DATABASE_MODE: "sqlite",

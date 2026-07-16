@@ -43,6 +43,7 @@ module.exports = {
   },
   files: [
     "**/*",
+    "!**/node_modules/@ai-novel/server/prisma/schema.sqlite.prisma",
   ],
   extraResources: [
     {
@@ -59,7 +60,7 @@ module.exports = {
       filter: ["**/*"],
     },
   ],
-  asar: true,
+  asar: false,
   asarUnpack: [
     "node_modules/**/*.node",
   ],

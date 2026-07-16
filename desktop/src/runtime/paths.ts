@@ -114,14 +114,18 @@ export function resolveDesktopWindowIcon(): string {
 }
 
 export function resolvePackagedServerEntry(): string {
-  return path.join(
-    resolveDesktopResourcesDir(),
-    "app.asar",
-    "dist",
-    "server",
-    "dist",
-    "app.js",
-  );
+  // electron-builder 将 app 代码放在 resources/app/ 下
+  // server 作为 node_modules/@ai-novel/server 存在
+  const resourcesDir = resolveDesktopResourcesDir();
+
+  // 尝试 resources/app/ 路径（electron-builder 标准结构）
+  const appPath = path.join(resourcesDir, "app", "node_modules", "@ai-novel", "server", "dist", "app.js");
+  if (fs.existsSync(appPath)) {
+    return appPath;
+  }
+
+  // 回退：resources/node_modules/（后处理脚本复制的位置）
+  return path.join(resourcesDir, "node_modules", "@ai-novel", "server", "dist", "app.js");
 }
 
 export function resolveWorkspaceRoot(): string {
