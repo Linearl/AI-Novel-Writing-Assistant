@@ -70,6 +70,7 @@ import { DirectorWorker } from "./workers/directorWorker";
 import { cleanupLogDirectory, resolveLogRetentionConfig } from "./platform/logging/logRetention";
 import { resolveLogsRoot } from "./runtime/appPaths";
 import { logger } from "./services/logging/LoggerService";
+import { tokenService } from "./services/auth/TokenService";
 
 getSharedNovelServices();
 registerNovelEventHandlers(novelEventBus);
@@ -341,6 +342,9 @@ function initializeBackgroundServices(): BackgroundServicesHandle {
 export async function startServer(options?: ServerStartOptions): Promise<StartedServer> {
   scheduleLogRetentionCleanup();
   await ensureRuntimeDatabaseReady();
+
+  // 初始化 API Token（首次启动生成并写入 .env）
+  tokenService.getToken();
 
   const ragCompatibilityReport = await initializeRagSettingsCompatibility();
   if (
