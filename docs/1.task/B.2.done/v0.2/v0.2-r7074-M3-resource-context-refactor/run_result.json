@@ -1,7 +1,7 @@
 {
   "reqId": "7074",
   "title": "资源上下文重构",
-  "status": "in_progress",
+  "status": "done",
   "complexity": "M3",
   "category": "7xxx",
   "priority": "P3",

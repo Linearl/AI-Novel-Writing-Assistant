@@ -1,7 +1,7 @@
 {
   "reqId": "7073",
   "title": "冲突等级约束注入",
-  "status": "in_progress",
+  "status": "done",
   "complexity": "S2",
   "category": "7xxx",
   "priority": "P2",
