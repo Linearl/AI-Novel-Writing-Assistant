@@ -237,6 +237,7 @@ test("runDirectorStructuredOutlinePhase persists chapter detail after each compl
   const dependencies = {
     workflowService: {
       bootstrapTask: async () => undefined,
+      getTaskById: async () => ({ status: "running", checkpointType: null }),
       markTaskRunning: async () => undefined,
       recordCheckpoint: async () => undefined,
     },
@@ -446,6 +447,7 @@ test("runDirectorStructuredOutlinePhase resumes from the next incomplete chapter
   const dependencies = {
     workflowService: {
       bootstrapTask: async () => undefined,
+      getTaskById: async () => ({ status: "running", checkpointType: null }),
       markTaskRunning: async () => undefined,
       recordCheckpoint: async () => undefined,
     },
