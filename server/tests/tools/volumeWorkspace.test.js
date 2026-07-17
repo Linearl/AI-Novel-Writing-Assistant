@@ -150,7 +150,7 @@ test("volume workspace document supports an empty cleared outline state", () => 
   assert.equal(document.readiness.canGenerateChapterList, false);
 });
 
-test("mergeVolumeWorkspaceInput keeps strategy data but clears downstream assets after volume-level edits", () => {
+test("mergeVolumeWorkspaceInput keeps strategy data and beat sheets but clears rebalance advice after volume-level edits", () => {
   const current = buildVolumeWorkspaceDocument({
     novelId: "novel-1",
     volumes: [createBaseVolume()],
@@ -194,7 +194,7 @@ test("mergeVolumeWorkspaceInput keeps strategy data but clears downstream assets
 
   assert.equal(merged.volumes[0].title, "第一卷（更新）");
   assert.equal(merged.strategyPlan?.recommendedVolumeCount, 2);
-  assert.deepEqual(merged.beatSheets, []);
+  assert.deepEqual(merged.beatSheets, current.beatSheets);
   assert.deepEqual(merged.rebalanceDecisions, []);
 });
 
@@ -296,7 +296,7 @@ test("buildVolumeWorkspaceDocument filters beat sheets and rebalance results tha
   assert.equal(document.readiness.canGenerateChapterList, false);
 });
 
-test("mergeVolumeWorkspaceInput clears beat sheets and rebalance advice after skeleton-level edits", () => {
+test("mergeVolumeWorkspaceInput preserves beat sheets but clears rebalance advice after skeleton-level edits", () => {
   const current = buildVolumeWorkspaceDocument({
     novelId: "novel-1",
     volumes: [createBaseVolume()],
@@ -348,7 +348,7 @@ test("mergeVolumeWorkspaceInput clears beat sheets and rebalance advice after sk
     rebalanceDecisions: current.rebalanceDecisions,
   });
 
-  assert.deepEqual(merged.beatSheets, []);
+  assert.deepEqual(merged.beatSheets, current.beatSheets);
   assert.deepEqual(merged.rebalanceDecisions, []);
 });
 
