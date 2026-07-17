@@ -22,6 +22,26 @@ function createPromptAssetLoaderRegistry(entries: PromptAssetLoaderEntry[]): Map
 
 const promptAssetLoaderEntries: PromptAssetLoaderEntry[] = [
   {
+    key: "llm.json-repair@v1",
+    load: () => require("./prompts/llm/llmJsonRepair.prompts").llmJsonRepairPrompt as UnknownPromptAsset,
+  },
+  {
+    key: "character.refine@v1",
+    load: () => require("./prompts/character/characterRefine.prompts").characterRefinePrompt as UnknownPromptAsset,
+  },
+  {
+    key: "character.prepNameExtraction@v1",
+    load: () => require("./prompts/character/characterPrepNameExtraction.prompts").characterPrepNameExtractionPrompt as UnknownPromptAsset,
+  },
+  {
+    key: "character.prepNameRepair@v1",
+    load: () => require("./prompts/character/characterPrepNameRepair.prompts").characterPrepNameRepairPrompt as UnknownPromptAsset,
+  },
+  {
+    key: "novel.character-extraction@v1",
+    load: () => require("./prompts/novel/novelCharacterExtraction.prompts").novelCharacterExtractionPrompt as UnknownPromptAsset,
+  },
+  {
     key: "planner.intent.parse@v1",
     load: () => require("./prompts/agent/plannerIntent.prompt").plannerIntentPrompt as UnknownPromptAsset,
   },

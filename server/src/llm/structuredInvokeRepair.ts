@@ -9,7 +9,7 @@ import type { TaskType } from "./modelRouter";
 import type { StructuredOutputStrategy } from "./structuredOutput";
 import { toText } from "../services/novel/novelP0Utils";
 import type { PromptInvocationMeta } from "../prompting/core/promptTypes";
-import { loadPrompt } from "../data/prompts";
+import { llmJsonRepairSystemPrompt } from "../prompting/prompts/llm/llmJsonRepair.prompts";
 
 export interface StructuredRepairInput<T> {
   provider?: LLMProvider;
@@ -160,7 +160,7 @@ export async function repairWithLlm<T>(
     structuredStrategy: "prompt_json",
   });
 
-  const repairSystem = loadPrompt("llm.json-repair").system;
+  const repairSystem = llmJsonRepairSystemPrompt;
 
   const validationPaths = extractValidationPaths(validationError);
   const arrayLengthHints = extractArrayLengthRepairHints(validationError);

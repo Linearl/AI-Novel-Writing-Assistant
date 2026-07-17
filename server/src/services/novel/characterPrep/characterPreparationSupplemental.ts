@@ -15,7 +15,9 @@ import {
 } from "../../../prompting/prompts/novel/characterPreparation.prompts";
 import { NovelContextService } from "../NovelContextService";
 import { CharacterDynamicsService } from "../dynamics/CharacterDynamicsService";
-import { loadPrompt } from "../../../data/prompts";
+import { characterRefineSystemPrompt, characterRefinePrompt } from "../../../prompting/prompts/character/characterRefine.prompts";
+import { characterPrepNameExtractionSystemPrompt } from "../../../prompting/prompts/character/characterPrepNameExtraction.prompts";
+import { characterPrepNameRepairPrompt } from "../../../prompting/prompts/character/characterPrepNameRepair.prompts";
 import {
   supplementalCharacterCandidateSchema,
   supplementalCharacterGenerationResponseSchema,
@@ -409,7 +411,7 @@ export class CharacterPreparationSupplementalService {
 
       // 用 LLM 从描述文本中提取人名并一起校验
       const textNamesResult = await invokeStructuredLlm<{ names: string[] }>({
-        systemPrompt: "从以下角色候选文本中提取所有人名（不含候选角色自身的名字）。只输出 JSON：{\"names\": [\"人名1\", \"人名2\"]}",
+        systemPrompt: characterPrepNameExtractionSystemPrompt,
         userPrompt: normalizedCandidates.map((c) => [
           `角色名：${c.name}`,
           `摘要：${c.summary}`,
@@ -431,22 +433,16 @@ export class CharacterPreparationSupplementalService {
       if (allInvalid.length === 0) break;
 
       // 发送修正请求
+      const repairMessages = characterPrepNameRepairPrompt.render({
+        candidatesJson: JSON.stringify({ candidates: normalizedCandidates }, null, 2),
+        validNamesText: [...validNames].join("、"),
+        invalidNamesText: allInvalid.join("、"),
+      }, { blocks: [], selectedBlockIds: [], droppedBlockIds: [], summarizedBlockIds: [], estimatedInputTokens: 0 });
+      const repairSystemPrompt = repairMessages.find((m) => m._getType() === "system")?.content ?? "";
+      const repairUserPrompt = repairMessages.find((m) => m._getType() === "human")?.content ?? "";
       const repairResult = await invokeStructuredLlm<SupplementalCharacterGenerationResponseParsed>({
-        systemPrompt: [
-          "你是角色修正编辑。以下角色候选中引用了不存在的人名，需要修正。",
-          "",
-          `合法角色名列表：${[...validNames].join("、")}`,
-          "",
-          `非法人名（必须替换为合法角色名或删除对应描述）：${allInvalid.join("、")}`,
-          "",
-          "修正要求：",
-          "1. 将非法人名替换为最合理的合法角色名",
-          "2. 如果某个关系的 sourceName 或 targetName 是非法人名，替换为最匹配的合法角色名",
-          "3. 如果候选角色的描述中提到了非法人名，替换为合法角色名",
-          "4. 不得引入新的非法人名",
-          "5. 输出严格 JSON，保持原有结构",
-        ].join("\n"),
-        userPrompt: JSON.stringify({ candidates: normalizedCandidates }, null, 2),
+        systemPrompt: typeof repairSystemPrompt === "string" ? repairSystemPrompt : String(repairSystemPrompt),
+        userPrompt: typeof repairUserPrompt === "string" ? repairUserPrompt : String(repairUserPrompt),
         schema: supplementalCharacterGenerationResponseSchema,
         label: "novel.character.supplemental.repair",
         taskType: "planner",
@@ -634,21 +630,16 @@ export class CharacterPreparationSupplementalService {
     adjustment: string,
     options?: { provider?: LLMProvider; model?: string },
   ): Promise<SupplementalCharacterCandidate> {
-    const systemPrompt = loadPrompt("character.refine").system;
-
-    const userPrompt = [
-      "当前角色候选：",
-      JSON.stringify(candidate, null, 2),
-      "",
-      "用户调整要求：",
+    const refineMessages = characterRefinePrompt.render({
+      candidateJson: JSON.stringify(candidate, null, 2),
       adjustment,
-      "",
-      "请输出调整后的完整角色 JSON（保持与输入相同的结构）。",
-    ].join("\n");
+    }, { blocks: [], selectedBlockIds: [], droppedBlockIds: [], summarizedBlockIds: [], estimatedInputTokens: 0 });
+    const systemPrompt = refineMessages.find((m) => m._getType() === "system")?.content ?? characterRefineSystemPrompt;
+    const userPrompt = refineMessages.find((m) => m._getType() === "human")?.content ?? "";
 
     const result = await invokeStructuredLlm<SupplementalCharacterCandidate>({
-      systemPrompt,
-      userPrompt,
+      systemPrompt: typeof systemPrompt === "string" ? systemPrompt : String(systemPrompt),
+      userPrompt: typeof userPrompt === "string" ? userPrompt : String(userPrompt),
       schema: supplementalCharacterCandidateSchema,
       label: "novel.character.supplemental.refine",
       taskType: "planner",

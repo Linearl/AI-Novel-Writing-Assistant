@@ -2,7 +2,9 @@ import type { IDatabase } from "../../platform/di";
 import { prisma } from "../../db/prisma";
 import { runStructuredPrompt } from "../../prompting/core/promptRunner";
 import { invokeStructuredLlm } from "../../llm/structuredInvoke";
-import { loadPrompt, renderPrompt } from "../../data/prompts";
+import {
+  novelCharacterExtractionSystemPrompt,
+} from "../../prompting/prompts/novel/novelCharacterExtraction.prompts";
 import { z } from "zod";
 import {
   characterEvolutionPrompt,
@@ -391,9 +393,8 @@ export class NovelCoreCharacterService {
     outlineText: string,
     options?: { provider?: LLMProvider; model?: string },
   ): Promise<z.infer<typeof zodCharacterImportResult>[]> {
-    const { system: systemPrompt, user: userTemplate } = loadPrompt("novel.character-extraction");
-
-    const userPrompt = renderPrompt(userTemplate!, { outlineText: outlineText.slice(0, 8000) });
+    const systemPrompt = novelCharacterExtractionSystemPrompt;
+    const userPrompt = `请从以下素材中提取所有角色和关系信息：\n\n---\n${outlineText.slice(0, 8000)}\n---`;
 
     const result = await invokeStructuredLlm<z.infer<typeof zodImportCharactersWithRelationsSchema>>({
       systemPrompt,
