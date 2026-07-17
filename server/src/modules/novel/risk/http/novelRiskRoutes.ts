@@ -39,7 +39,7 @@ export function createNovelRiskRoutes(): Router {
 
   // List risks
   router.get(
-    "/novels/:novelId/risks",
+    "/:novelId/risks",
     validate({ params: novelIdParamsSchema, query: listQuerySchema }),
     async (req, res, next) => {
       try {
@@ -58,7 +58,7 @@ export function createNovelRiskRoutes(): Router {
 
   // Get assessment
   router.get(
-    "/novels/:novelId/risks/assessment",
+    "/:novelId/risks/assessment",
     validate({ params: novelIdParamsSchema }),
     async (req, res, next) => {
       try {
@@ -72,7 +72,7 @@ export function createNovelRiskRoutes(): Router {
 
   // Get reopen impact (must be before /:riskId to avoid param capture)
   router.get(
-    "/novels/:novelId/risks/:riskId/reopen-impact",
+    "/:novelId/risks/:riskId/reopen-impact",
     validate({ params: riskIdParamsSchema }),
     async (req, res, next) => {
       try {
@@ -90,7 +90,7 @@ export function createNovelRiskRoutes(): Router {
 
   // Get single risk
   router.get(
-    "/novels/:novelId/risks/:riskId",
+    "/:novelId/risks/:riskId",
     validate({ params: riskIdParamsSchema }),
     async (req, res, next) => {
       try {
@@ -108,7 +108,7 @@ export function createNovelRiskRoutes(): Router {
 
   // Create risk
   router.post(
-    "/novels/:novelId/risks",
+    "/:novelId/risks",
     validate({ params: novelIdParamsSchema, body: createRiskBodySchema }),
     async (req, res, next) => {
       try {
@@ -122,7 +122,7 @@ export function createNovelRiskRoutes(): Router {
 
   // Update risk status
   router.patch(
-    "/novels/:novelId/risks/:riskId/status",
+    "/:novelId/risks/:riskId/status",
     validate({ params: riskIdParamsSchema, body: updateStatusBodySchema }),
     async (req, res, next) => {
       try {
@@ -141,7 +141,7 @@ export function createNovelRiskRoutes(): Router {
 
   // Export risks
   router.post(
-    "/novels/:novelId/risks/export",
+    "/:novelId/risks/export",
     validate({ params: novelIdParamsSchema }),
     async (req, res, next) => {
       try {
@@ -160,7 +160,7 @@ export function createNovelRiskRoutes(): Router {
 
   // Reopen risk
   router.post(
-    "/novels/:novelId/risks/:riskId/reopen",
+    "/:novelId/risks/:riskId/reopen",
     validate({ params: riskIdParamsSchema }),
     async (req, res, next) => {
       try {
