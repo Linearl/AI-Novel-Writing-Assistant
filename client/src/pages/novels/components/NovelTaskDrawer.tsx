@@ -49,6 +49,7 @@ export default function NovelTaskDrawer({
   rejectingResourceProposalId = "",
   followUp,
   onFollowUpAction,
+  onPause,
   executingFollowUpAction = false,
   runtimeHardBlocked = false,
   runtimeBlockedReason = null,
@@ -259,6 +260,17 @@ export default function NovelTaskDrawer({
                         {action.label}
                       </Button>
                     ))}
+                    {!runtimeHardBlocked && task?.status === "running" ? (
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        onClick={() => onPause?.()}
+                        disabled={executingFollowUpAction}
+                      >
+                        暂停
+                      </Button>
+                    ) : null}
                   </div>
                 </section>
               ) : null}

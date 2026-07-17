@@ -617,6 +617,7 @@ export interface NovelTaskDrawerState {
   rejectingResourceProposalId?: string;
   followUp?: AutoDirectorFollowUpDetail | null;
   onFollowUpAction?: (action: AutoDirectorAction) => void;
+  onPause?: () => void;
   executingFollowUpAction?: boolean;
   runtimeHardBlocked?: boolean;
   runtimeBlockedReason?: string | null;
