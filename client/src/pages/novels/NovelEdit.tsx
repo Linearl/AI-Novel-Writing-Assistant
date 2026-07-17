@@ -287,7 +287,7 @@ export default function NovelEdit() {
   const activeDirectorRuntimeSnapshot = activeDirectorSnapshot?.runtime ?? null;
   const activeDirectorRuntimeProjection = activeDirectorSnapshot?.projection ?? null;
   const activeDirectorDashboardView = activeDirectorSnapshot?.dashboardView ?? null;
-  const activeDirectorRuntimeHardBlocked = activeDirectorDashboardView?.mode === "failed" || activeDirectorDashboardView?.mode === "recovering" || (activeDirectorDashboardView?.mode !== "running" && activeDirectorRuntimeProjection?.status === "blocked");
+  const activeDirectorRuntimeHardBlocked = activeDirectorDashboardView?.mode === "recovering" || (activeDirectorDashboardView?.mode !== "running" && activeDirectorDashboardView?.mode !== "failed" && activeDirectorRuntimeProjection?.status === "blocked");
   const activeDirectorRuntimeBlockedReason = activeDirectorDashboardView?.userActionReason?.trim() || activeDirectorRuntimeProjection?.blockedReason?.trim() || activeDirectorRuntimeProjection?.detail?.trim() || null;
   const activeAutoDirectorFollowUpQuery = useQuery({ queryKey: queryKeys.autoDirectorFollowUps.detail(selectedDirectorTaskId || "none"), queryFn: () => getAutoDirectorFollowUpDetail(selectedDirectorTaskId), enabled: Boolean(selectedDirectorTaskId), retry: false, gcTime: 0, refetchOnWindowFocus: false, refetchInterval: () => displayAutoDirectorTask && (displayAutoDirectorTask.status === "queued" || displayAutoDirectorTask.status === "running" || displayAutoDirectorTask.status === "waiting_approval") ? 4000 : false });
   const activeAutoDirectorFollowUp = activeAutoDirectorFollowUpQuery.data?.data ?? null;

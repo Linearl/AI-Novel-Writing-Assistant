@@ -450,11 +450,11 @@ export default function TaskCenterPage() {
   const selectedDirectorRuntimeProjectionForDisplay = staleActionProjection
     ? null
     : selectedDirectorRuntimeProjection;
-  const runtimeHardBlocked = selectedDirectorDashboardView?.mode === "failed"
-    || selectedDirectorDashboardView?.mode === "recovering"
+  const runtimeHardBlocked = selectedDirectorDashboardView?.mode === "recovering"
     || (
       selectedDirectorDashboardView?.mode !== "running"
       && selectedDirectorDashboardView?.mode !== "queued"
+      && selectedDirectorDashboardView?.mode !== "failed"
       && selectedDirectorRuntimeProjection?.status === "blocked"
     );
 
