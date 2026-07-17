@@ -138,10 +138,9 @@ function patchLangchainCoreExports(appDir) {
 /**
  * 给打包的 server/app.js 末尾注入 desktop bootstrap 调用。
  *
- * 问题：utilityProcess.fork("serverEntry.cjs") → require("app.js") 时，
- * require.main === module 为 false，导致 bootstrap() 从未执行。
- *
- * 解决：在 app.js 末尾追加代码，检测 desktop 运行环境并直接调用 bootstrap。
+ * 1. utilityProcess.fork("serverEntry.cjs") → require("app.js") 时 require.main !== module，
+ *    原有的 if (require.main === module) bootstrap() 不会执行，这里直接调用。
+ * 2. 首次启动时检测 data/dev.db 是否存在，不存在则从 asar 中复制种子数据库。
  */
 function injectDesktopBootstrap(appDir) {
   const serverAppJs = path.join(appDir, "node_modules", "@ai-novel", "server", "dist", "app.js");
@@ -160,13 +159,27 @@ function injectDesktopBootstrap(appDir) {
 
   const injection = `
 // __desktop_bootstrap_injected__ — injected by stage-desktop.cjs
-// utilityProcess.fork("serverEntry.cjs") → require("app.js") 时 require.main !== module，
-// 原有的 if (require.main === module) bootstrap() 不会执行，这里直接调用。
-if (process.env.AI_NOVEL_RUNTIME === "desktop" && typeof bootstrap === "function") {
-  void bootstrap().catch(function(err) {
-    console.error("[server] desktop bootstrap failed.", err);
-    process.exit(1);
-  });
+// 1. utilityProcess.fork("serverEntry.cjs") → require("app.js") 时 require.main !== module，
+//    原有的 if (require.main === module) bootstrap() 不会执行，这里直接调用。
+// 2. 首次启动时从 asar 复制种子数据库到 data 目录。
+if (process.env.AI_NOVEL_RUNTIME === "desktop") {
+  var fs = require("fs");
+  var path = require("path");
+  var cwd = process.cwd();
+  var dbPath = path.resolve(cwd, "dev.db");
+  if (!fs.existsSync(dbPath)) {
+    var seedDb = path.join(__dirname, "seed-dev.db");
+    if (fs.existsSync(seedDb)) {
+      fs.copyFileSync(seedDb, dbPath);
+      console.log("[desktop-bootstrap] copied seed database to", dbPath);
+    }
+  }
+  if (typeof bootstrap === "function") {
+    void bootstrap().catch(function(err) {
+      console.error("[server] desktop bootstrap failed.", err);
+      process.exit(1);
+    });
+  }
 }
 `;
 
@@ -175,9 +188,12 @@ if (process.env.AI_NOVEL_RUNTIME === "desktop" && typeof bootstrap === "function
 }
 
 /**
- * 修补迁移 SQL 文件 — 让 DROP TABLE 在首次启动的空数据库上不报错。
- * Prisma 生成的迁移包含 DROP TABLE "Xxx"，但首次启动时表不存在，导致 SQLITE_ERROR。
- * 替换为 DROP TABLE IF EXISTS "Xxx" 即可安全运行。
+ * 修补迁移 SQL 文件 — 让不安全语句在首次启动的空数据库上不报错。
+ * Prisma 生成的 "init" 迁移包含 DROP TABLE / ALTER TABLE 等语句，
+ * 在空库上 DROP TABLE 的表不存在、ALTER TABLE 的表也不存在。
+ * 修补方式：
+ * - DROP TABLE → DROP TABLE IF EXISTS（保留但不报错）
+ * - ALTER TABLE ... ADD COLUMN → 注释掉（CREATE TABLE 已包含这些列）
  */
 function patchMigrationSqlForFreshDb(appDir) {
   const migrationsDir = path.join(appDir, "node_modules", "@ai-novel", "server", "src", "prisma", "migrations.sqlite");
@@ -193,18 +209,128 @@ function patchMigrationSqlForFreshDb(appDir) {
     if (!fs.existsSync(sqlPath)) continue;
 
     let sql = fs.readFileSync(sqlPath, "utf8");
-    // 只修补不带 IF EXISTS 的 DROP TABLE
     const original = sql;
+
+    // DROP TABLE → DROP TABLE IF EXISTS
     sql = sql.replace(/DROP TABLE\s+(?!IF\s+EXISTS)/gi, "DROP TABLE IF EXISTS ");
-    // DROP INDEX 也可能在空库上失败
+    // DROP INDEX → DROP INDEX IF EXISTS
     sql = sql.replace(/DROP INDEX\s+(?!IF\s+EXISTS)/gi, "DROP INDEX IF EXISTS ");
+    // ALTER TABLE ... ADD COLUMN → 注释掉（空库上表不存在会报错，且 CREATE TABLE 已包含列定义）
+    sql = sql.replace(/^(\s*ALTER TABLE\s+"[^"]+"\s+ADD COLUMN\s+.+)$/gm, "-- [patched] $1");
 
     if (sql !== original) {
       fs.writeFileSync(sqlPath, sql, "utf8");
       patchCount++;
     }
   }
-  console.log(`[stage:desktop] patched ${patchCount} migration SQL files (DROP TABLE → DROP TABLE IF EXISTS)`);
+  console.log(`[stage:desktop] patched ${patchCount} migration SQL files for fresh DB safety`);
+}
+
+/**
+ * 创建种子数据库 — 用 better-sqlite3 在 staging 阶段运行迁移，生成已初始化的空数据库。
+ * 打包到 asar 的 dist/seed-dev.db 中，首次启动时复制到 data/dev.db。
+ */
+function createSeedDatabase(appDir) {
+  const migrationsDir = path.join(appDir, "node_modules", "@ai-novel", "server", "src", "prisma", "migrations.sqlite");
+  if (!fs.existsSync(migrationsDir)) {
+    console.log("[stage:desktop] migrations.sqlite dir not found, skipping seed database creation");
+    return;
+  }
+
+  // 找到 better-sqlite3（pnpm 虚拟存储中的实际路径）
+  const candidates = [
+    path.join(repoRoot, "node_modules", ".pnpm", "better-sqlite3@12.6.2", "node_modules", "better-sqlite3"),
+    path.join(repoRoot, "node_modules", "better-sqlite3"),
+    path.join(appDir, "node_modules", "better-sqlite3"),
+  ];
+  let betterSqlite3Path = null;
+  for (const c of candidates) {
+    if (fs.existsSync(c)) { betterSqlite3Path = c; break; }
+  }
+  if (!betterSqlite3Path) {
+    console.log("[stage:desktop] better-sqlite3 not found, skipping seed database creation");
+    return;
+  }
+
+  let Database;
+  try {
+    Database = require(betterSqlite3Path);
+  } catch (err) {
+    console.log("[stage:desktop] cannot load better-sqlite3:", err.message);
+    return;
+  }
+
+  const seedDbPath = path.join(appDir, "dist", "seed-dev.db");
+  fs.rmSync(seedDbPath, { force: true });
+
+  const db = new Database(seedDbPath);
+  try {
+    // 创建迁移跟踪表
+    db.exec(`CREATE TABLE IF NOT EXISTS "_prisma_migrations" (
+      "id" TEXT NOT NULL PRIMARY KEY,
+      "checksum" TEXT NOT NULL,
+      "finished_at" DATETIME,
+      "migration_name" TEXT,
+      "started_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      "applied_steps_count" INTEGER UNSIGNED NOT NULL DEFAULT 0,
+      "logs" TEXT
+    )`);
+
+    const migrationDirs = fs.readdirSync(migrationsDir)
+      .filter(d => fs.statSync(path.join(migrationsDir, d)).isDirectory())
+      .sort();
+
+    let applied = 0, skipped = 0;
+    for (const name of migrationDirs) {
+      const sqlPath = path.join(migrationsDir, name, "migration.sql");
+      if (!fs.existsSync(sqlPath)) continue;
+
+      let sql = fs.readFileSync(sqlPath, "utf8");
+
+      // 对 "init" 类迁移做安全修补（DROP TABLE IF EXISTS、注释掉 ALTER TABLE）
+      if (name.includes("init")) {
+        sql = sql.replace(/DROP TABLE\s+(?!IF\s+EXISTS)/gi, "DROP TABLE IF EXISTS ");
+        sql = sql.replace(/DROP INDEX\s+(?!IF\s+EXISTS)/gi, "DROP INDEX IF EXISTS ");
+        sql = sql.replace(/^(\s*ALTER TABLE\s+"[^"]+"\s+ADD COLUMN\s+.+)$/gm, "-- [seed-patched] $1");
+      }
+
+      try {
+        db.exec(sql);
+        // 记录迁移已应用
+        db.prepare(
+          `INSERT INTO "_prisma_migrations" (id, checksum, finished_at, migration_name, started_at, applied_steps_count)
+           VALUES (?, ?, ?, ?, ?, 1)`
+        ).run(
+          require("crypto").randomUUID(),
+          require("crypto").createHash("sha256").update(sql).digest("hex"),
+          new Date().toISOString(),
+          name,
+          new Date().toISOString()
+        );
+        applied++;
+      } catch (err) {
+        skipped++;
+        // 记录迁移失败但继续
+        db.prepare(
+          `INSERT INTO "_prisma_migrations" (id, checksum, migration_name, started_at, applied_steps_count, logs)
+           VALUES (?, ?, ?, ?, 0, ?)`
+        ).run(
+          require("crypto").randomUUID(),
+          require("crypto").createHash("sha256").update(sql).digest("hex"),
+          name,
+          new Date().toISOString(),
+          err.message
+        );
+      }
+    }
+
+    db.close();
+    console.log(`[stage:desktop] seed database created: ${applied} applied, ${skipped} skipped, saved to dist/seed-dev.db`);
+  } catch (err) {
+    db.close();
+    fs.rmSync(seedDbPath, { force: true });
+    console.warn("[stage:desktop] seed database creation failed:", err.message);
+  }
 }
 
 function deployManually() {
@@ -619,13 +745,12 @@ function main() {
   patchLangchainCoreExports(appDir);
 
   // 注入 desktop bootstrap — 修复 require.main !== module 导致 bootstrap() 未调用的问题。
-  // utilityProcess.fork() 以 serverEntry.cjs 为入口，require.main 指向 wrapper 而非 app.js，
-  // 导致 app.js 的 `if (require.main === module) bootstrap()` 条件为 false。
+  // 同时处理首次启动的种子数据库复制。
   injectDesktopBootstrap(appDir);
 
-  // 修补迁移 SQL — Prisma 生成的 DROP TABLE 在首次启动的空数据库上会失败，
-  // 统一替换为 DROP TABLE IF EXISTS。
-  patchMigrationSqlForFreshDb(appDir);
+  // 创建种子数据库 — 在 staging 阶段运行所有迁移，生成完全初始化的空数据库。
+  // 首次启动时从 asar 复制到 data/dev.db，跳过有问题的运行时迁移。
+  createSeedDatabase(appDir);
 
   copyDirectory(clientSourceDir, clientTargetDir);
   writeDesktopUpdaterConfig();
