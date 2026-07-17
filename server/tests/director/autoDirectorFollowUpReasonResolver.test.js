@@ -92,3 +92,18 @@ test("follow-up resolver exposes retry metadata for failed tasks", () => {
   assert.deepEqual(result.batchActionCodes, ["retry_with_task_model"]);
   assert.equal(result.supportsBatch, true);
 });
+
+test("follow-up resolver exposes user_paused metadata for manual pause", () => {
+  const result = resolveAutoDirectorFollowUpReason({
+    status: "waiting_approval",
+    checkpointType: "user_paused",
+  });
+
+  assert.ok(result);
+  assert.equal(result.reason, "user_paused");
+  assert.equal(result.priority, "P2");
+  assert.deepEqual(actionCodes(result), ["continue_generic", "open_detail"]);
+  assert.equal(result.availableActions[0].kind, "mutation");
+  assert.equal(result.availableActions[0].riskLevel, "low");
+  assert.equal(result.availableActions[0].requiresConfirm, false);
+});

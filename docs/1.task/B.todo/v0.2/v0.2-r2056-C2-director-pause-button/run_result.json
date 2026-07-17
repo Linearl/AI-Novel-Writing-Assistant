@@ -1,7 +1,7 @@
 {
   "taskId": "REQ-2056",
   "title": "自动导演暂停按钮",
-  "status": "requirements_ready",
+  "status": "done",
   "version": "0.2",
   "priority": "C2",
   "created": "2026-07-17T00:00:00.000Z",
