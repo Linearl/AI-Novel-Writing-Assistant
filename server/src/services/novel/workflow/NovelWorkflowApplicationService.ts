@@ -13,7 +13,7 @@ import {
   stageLabel,
 } from "./novelWorkflow.helpers";
 import { buildRestoreTaskToCheckpointResult } from "./novelWorkflowCheckpoint";
-import { applyDirectorLlmOverride, type DirectorWorkflowSeedPayload } from "../director/runtime/novelDirectorHelpers";
+import { applyDirectorLlmOverride, type DirectorWorkflowSeedPayload } from "../director/runtime/core/novelDirectorHelpers";
 import type { DirectorLLMOptions } from "@ai-novel/shared";
 import { NovelWorkflowStoreService } from "./NovelWorkflowStoreService";
 

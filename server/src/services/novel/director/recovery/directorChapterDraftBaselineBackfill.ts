@@ -1,7 +1,7 @@
 import {
   buildDirectorArtifactId,
   stableDirectorContentHash,
-} from "../runtime/DirectorArtifactLedger";
+} from "../runtime/utils/DirectorArtifactLedger";
 
 export interface DirectorChapterDraftBaselineChapterRow {
   id: string;

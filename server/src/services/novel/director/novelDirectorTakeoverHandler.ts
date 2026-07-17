@@ -4,26 +4,26 @@ import { isFullBookAutopilotRunMode } from "@ai-novel/shared";
 import {
   buildDirectorWorkflowSeedPayload,
   applyDirectorRunModeContract,
-} from "./runtime/novelDirectorHelpers";
+} from "./runtime/core/novelDirectorHelpers";
 import {
   buildDirectorTakeoverInput,
   isTakeoverStructuredOutlineReadyForValidation,
-} from "./runtime/novelDirectorTakeover";
-import { loadDirectorTakeoverState } from "./runtime/novelDirectorTakeoverRuntime";
-import { startDirectorTakeoverExecution } from "./runtime/novelDirectorTakeoverExecution";
+} from "./runtime/takeover/novelDirectorTakeover";
+import { loadDirectorTakeoverState } from "./runtime/takeover/novelDirectorTakeoverRuntime";
+import { startDirectorTakeoverExecution } from "./runtime/takeover/novelDirectorTakeoverExecution";
 import {
   resetDirectorTakeoverCurrentStep,
   resetDirectorTakeoverDownstreamState,
-} from "./runtime/novelDirectorTakeoverReset";
-import { cancelContinueExistingReplacedRuns } from "./runtime/novelDirectorTakeoverContinue";
+} from "./runtime/takeover/novelDirectorTakeoverReset";
+import { cancelContinueExistingReplacedRuns } from "./runtime/takeover/novelDirectorTakeoverContinue";
 import {
   validateAutoDirectorTakeoverRequest,
-} from "./runtime/autoDirectorValidationService";
-import { assertHighMemoryDirectorStartAllowed } from "./runtime/autoDirectorMemorySafety";
-import type { DirectorRuntimeService } from "./runtime/DirectorRuntimeService";
+} from "./runtime/utils/autoDirectorValidationService";
+import { assertHighMemoryDirectorStartAllowed } from "./runtime/utils/autoDirectorMemorySafety";
+import type { DirectorRuntimeService } from "./runtime/core/DirectorRuntimeService";
 import type { NovelDirectorPipelineRuntime } from "./novelDirectorPipelineRuntime";
 import type { NovelDirectorAutoExecutionRuntime } from "./automation/novelDirectorAutoExecutionRuntime";
-import type { NovelDirectorRuntimeOrchestrator } from "./runtime/novelDirectorRuntimeOrchestrator";
+import type { NovelDirectorRuntimeOrchestrator } from "./runtime/core/novelDirectorRuntimeOrchestrator";
 import type { NovelWorkflowService } from "../workflow/NovelWorkflowService";
 import type { NovelVolumeService } from "../volume/NovelVolumeService";
 import type { StoryMacroPlanService } from "../storyMacro/StoryMacroPlanService";

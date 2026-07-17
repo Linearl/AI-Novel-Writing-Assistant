@@ -10,8 +10,8 @@ import type {
 import { getDirectorNodeDisplayLabel } from "@ai-novel/shared";
 import { prisma } from "../../../../db/prisma";
 import { loadPersistentDirectorRuntimeProjection } from "./novelDirectorRuntimeProjection";
-import { directorArtifactLedgerQueryService } from "../runtime/DirectorArtifactLedgerQueryService";
-import { directorUsageTelemetryQueryService } from "../runtime/DirectorUsageTelemetryQueryService";
+import { directorArtifactLedgerQueryService } from "../runtime/utils/DirectorArtifactLedgerQueryService";
+import { directorUsageTelemetryQueryService } from "../runtime/utils/DirectorUsageTelemetryQueryService";
 import {
   buildAutomationSummary,
   buildDetail,

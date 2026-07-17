@@ -17,7 +17,7 @@ import {
   type DirectorAutoExecutionChapterRef,
   type DirectorAutoExecutionRange,
 } from "./novelDirectorAutoExecution";
-import { buildDirectorSessionState } from "../runtime/novelDirectorHelpers";
+import { buildDirectorSessionState } from "../runtime/core/novelDirectorHelpers";
 import { PIPELINE_REPLAN_NOTICE_CODE, parsePipelinePayload } from "../../pipelineJobState";
 import { buildDirectorQualityRepairRisk } from "../phases/novelDirectorQualityRepairRisk";
 import { novelRiskService } from "../../risk/NovelRiskService";

@@ -30,7 +30,7 @@ import {
   enhanceCandidateTitles,
   normalizeCandidate,
   type CandidateGenerationContext,
-} from "../runtime/novelDirectorHelpers";
+} from "../runtime/core/novelDirectorHelpers";
 import { DIRECTOR_PROGRESS } from "../projections/novelDirectorProgress";
 
 type WorkflowDependency = Pick<NovelWorkflowService, "bootstrapTask" | "markTaskRunning" | "recordCandidateSelectionRequired">;

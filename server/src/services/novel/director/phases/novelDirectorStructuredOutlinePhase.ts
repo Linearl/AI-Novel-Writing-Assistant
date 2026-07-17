@@ -14,7 +14,7 @@ import { logMemoryUsage } from "../../../../runtime/memoryTelemetry";
 import {
   buildDirectorSessionState,
   normalizeDirectorRunMode,
-} from "../runtime/novelDirectorHelpers";
+} from "../runtime/core/novelDirectorHelpers";
 import {
   buildChapterDetailBundleLabel,
   buildChapterDetailBundleProgress,

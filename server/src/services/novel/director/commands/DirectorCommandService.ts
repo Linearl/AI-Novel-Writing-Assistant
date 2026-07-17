@@ -21,7 +21,7 @@ import {
   applyDirectorRunModeContract,
   buildDirectorSessionState,
   buildDirectorWorkflowSeedPayload,
-} from "../runtime/novelDirectorHelpers";
+} from "../runtime/core/novelDirectorHelpers";
 import { parseSeedPayload } from "../../workflow/novelWorkflow.shared";
 import {
   buildAcceptedTaskState,

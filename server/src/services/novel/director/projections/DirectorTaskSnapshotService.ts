@@ -4,8 +4,8 @@ import type {
   DirectorTaskSnapshot,
   DirectorTaskSnapshotResponse,
 } from "@ai-novel/shared";
-import { DirectorEventProjectionService } from "../runtime/DirectorEventProjectionService";
-import { DirectorRuntimeStore } from "../runtime/DirectorRuntimeStore";
+import { DirectorEventProjectionService } from "../runtime/projection/DirectorEventProjectionService";
+import { DirectorRuntimeStore } from "../runtime/persistence/DirectorRuntimeStore";
 import { DirectorStateReader } from "../state/DirectorStateReader";
 import { DirectorFactSummaryService } from "./DirectorFactSummaryService";
 import {

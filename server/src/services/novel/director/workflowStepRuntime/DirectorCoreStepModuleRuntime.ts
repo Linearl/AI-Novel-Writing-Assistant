@@ -13,15 +13,15 @@ import type { ChapterRuntimeRequestInput } from "../../runtime/chapterRuntimeSch
 import { StoryMacroPlanService } from "../../storyMacro/StoryMacroPlanService";
 import { NovelVolumeService } from "../../volume/NovelVolumeService";
 import { NovelWorkflowService } from "../../workflow/NovelWorkflowService";
-import { buildDirectorWorkflowSeedPayload } from "../runtime/novelDirectorHelpers";
+import { buildDirectorWorkflowSeedPayload } from "../runtime/core/novelDirectorHelpers";
 import { NovelDirectorAutoExecutionRuntime } from "../automation/novelDirectorAutoExecutionRuntime";
 import { NovelDirectorPipelineRuntime } from "../novelDirectorPipelineRuntime";
-import { NovelDirectorRuntimeOrchestrator } from "../runtime/novelDirectorRuntimeOrchestrator";
-import { DirectorRuntimeService } from "../runtime/DirectorRuntimeService";
-import { ChapterExecutionProgressInspector } from "../runtime/ChapterExecutionProgressInspector";
+import { NovelDirectorRuntimeOrchestrator } from "../runtime/core/novelDirectorRuntimeOrchestrator";
+import { DirectorRuntimeService } from "../runtime/core/DirectorRuntimeService";
+import { ChapterExecutionProgressInspector } from "../runtime/utils/ChapterExecutionProgressInspector";
 import type { DirectorCharacterSetupPhaseResult } from "../phases/novelDirectorPipelinePhases";
 import { normalizeDirectorAutoExecutionPlan } from "../automation/novelDirectorAutoExecution";
-import { assertHighMemoryDirectorStartAllowed } from "../runtime/autoDirectorMemorySafety";
+import { assertHighMemoryDirectorStartAllowed } from "../runtime/utils/autoDirectorMemorySafety";
 import {
   resolveStructuredOutlineRecoveryCursor,
   type StructuredOutlineRecoveryCursor,

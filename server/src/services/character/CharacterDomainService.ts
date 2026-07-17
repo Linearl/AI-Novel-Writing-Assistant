@@ -17,7 +17,6 @@
 // ── Preparation ──────────────────────────────────────────────────────
 export {
   CharacterPreparationService,
-  characterPreparationService,
 } from "./preparation/CharacterPreparationService";
 
 export type {
@@ -47,7 +46,8 @@ export {
 } from "./arc/CharacterArcService";
 
 export {
-  characterHardFacts,
+  normalizeCharacterProhibitions,
+  parseCharacterProhibitionsJson,
 } from "./arc/characterHardFacts";
 
 // ── Profile ──────────────────────────────────────────────────────────
@@ -57,7 +57,7 @@ export {
 
 // ── Exit ─────────────────────────────────────────────────────────────
 export {
-  inferCharacterExit,
+  CharacterExitInferenceService,
 } from "./exit/characterExitInferenceService";
 
 // ── Consistency ──────────────────────────────────────────────────────

@@ -37,14 +37,14 @@ import {
 } from "./novelDirectorAutoExecutionRuntimeUtils";
 import { prepareRequestedAutoExecution as prepareRequestedAutoExecutionState, resolveAutoExecutionRuntimeRangeAndState, shouldStopAutoExecution } from "./novelDirectorAutoExecutionRuntimePreparation";
 import type { NovelDirectorAutoExecutionRuntimeDeps, PipelineJobSnapshot } from "./novelDirectorAutoExecutionRuntimePorts";
-import { directorAutomationLedgerEventService } from "../runtime/DirectorAutomationLedgerEventService";
+import { directorAutomationLedgerEventService } from "../runtime/utils/DirectorAutomationLedgerEventService";
 import {
   buildDirectorQualityLoopBudgetWindow,
   buildDirectorQualityLoopIssueSignature,
   findDirectorQualityLoopBudgetEntry,
   recordDirectorQualityLoopBudgetAttempt,
   resolveDirectorQualityLoopBudgetNextAction,
-} from "../runtime/DirectorQualityLoopBudgetLedgerService";
+} from "../runtime/utils/DirectorQualityLoopBudgetLedgerService";
 
 /** 管道轮询间隔（毫秒） */
 const PIPELINE_POLL_INTERVAL_MS = 1500;

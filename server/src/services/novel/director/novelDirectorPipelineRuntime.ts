@@ -19,11 +19,11 @@ import type { StoryMacroPlanService } from "../storyMacro/StoryMacroPlanService"
 import type { NovelVolumeService } from "../volume/NovelVolumeService";
 import type { NovelWorkflowService } from "../workflow/NovelWorkflowService";
 import { recordAutoDirectorAutoApprovalFromTask } from "../../task/autoDirectorFollowUps/autoDirectorAutoApprovalAudit";
-import { normalizeDirectorMemoryScope } from "./runtime/autoDirectorMemorySafety";
+import { normalizeDirectorMemoryScope } from "./runtime/utils/autoDirectorMemorySafety";
 import {
   buildWorkflowSeedPayload,
   normalizeDirectorRunMode,
-} from "./runtime/novelDirectorHelpers";
+} from "./runtime/core/novelDirectorHelpers";
 import {
   type DirectorCharacterSetupPhaseResult,
   runDirectorCharacterSetupPhase,
@@ -35,7 +35,7 @@ import {
   runDirectorBookContractPhase,
   runDirectorStoryMacroAssetPhase,
 } from "./phases/novelDirectorStoryMacroPhase";
-import type { NovelDirectorRuntimeOrchestrator } from "./runtime/novelDirectorRuntimeOrchestrator";
+import type { NovelDirectorRuntimeOrchestrator } from "./runtime/core/novelDirectorRuntimeOrchestrator";
 import {
   getDirectorPlanningStepModule,
   getDirectorExecutionContractSyncStepModule,

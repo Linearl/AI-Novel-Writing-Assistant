@@ -37,7 +37,7 @@ import { NovelContextService } from "../NovelContextService";
 import {
   applyDirectorRunModeContract,
   buildDirectorWorkflowSeedPayload,
-} from "./runtime/novelDirectorHelpers";
+} from "./runtime/core/novelDirectorHelpers";
 import { getSharedNovelServices } from "../application/sharedNovelServices";
 import { NovelCoreService } from "../NovelCoreService";
 import { StoryMacroPlanService } from "../storyMacro/StoryMacroPlanService";
@@ -50,35 +50,35 @@ import { StyleProfileService } from "../../styleEngine/StyleProfileService";
 import {
   assertHighMemoryDirectorStartAllowed,
   releaseHighMemoryDirectorReservations,
-} from "./runtime/autoDirectorMemorySafety";
+} from "./runtime/utils/autoDirectorMemorySafety";
 import {
   normalizeDirectorAutoApprovalConfig,
   shouldAutoApproveDirectorApprovalPoint,
 } from "@ai-novel/shared";
 import { recordAutoDirectorAutoApprovalFromTask } from "../../task/autoDirectorFollowUps/autoDirectorAutoApprovalAudit";
 import { flattenPreparedOutlineChapters } from "./recovery/novelDirectorStructuredOutlineRecovery";
-import { DirectorRuntimeService } from "./runtime/DirectorRuntimeService";
-import { DirectorEventProjectionService } from "./runtime/DirectorEventProjectionService";
-import { directorStateProposalResolutionService } from "./runtime/DirectorStateProposalResolutionService";
+import { DirectorRuntimeService } from "./runtime/core/DirectorRuntimeService";
+import { DirectorEventProjectionService } from "./runtime/projection/DirectorEventProjectionService";
+import { directorStateProposalResolutionService } from "./runtime/workspace/DirectorStateProposalResolutionService";
 import {
   isDirectorRuntimeGateError,
   NovelDirectorRuntimeOrchestrator,
-} from "./runtime/novelDirectorRuntimeOrchestrator";
-import { NovelDirectorCandidateRuntime } from "./runtime/novelDirectorCandidateRuntime";
+} from "./runtime/core/novelDirectorRuntimeOrchestrator";
+import { NovelDirectorCandidateRuntime } from "./runtime/takeover/novelDirectorCandidateRuntime";
 import { NovelDirectorPipelineRuntime } from "./novelDirectorPipelineRuntime";
-import { NovelDirectorConfirmRuntime } from "./runtime/novelDirectorConfirmRuntime";
+import { NovelDirectorConfirmRuntime } from "./runtime/takeover/novelDirectorConfirmRuntime";
 import { NovelDirectorChapterTitleRepairRuntime } from "./phases/novelDirectorChapterTitleRepairRuntime";
-import { NovelDirectorContinueRuntime } from "./runtime/novelDirectorContinueRuntime";
+import { NovelDirectorContinueRuntime } from "./runtime/takeover/novelDirectorContinueRuntime";
 import type { IDatabase } from "../../../platform/di";
 import { prisma } from "../../../db/prisma";
 import { loadPersistentDirectorRuntimeProjection } from "./projections/novelDirectorRuntimeProjection";
 import { logger } from "../../logging/LoggerService";
 import {
   loadDirectorTakeoverState,
-} from "./runtime/novelDirectorTakeoverRuntime";
+} from "./runtime/takeover/novelDirectorTakeoverRuntime";
 import {
   buildDirectorTakeoverReadiness,
-} from "./runtime/novelDirectorTakeover";
+} from "./runtime/takeover/novelDirectorTakeover";
 import { executeStartTakeover } from "./novelDirectorTakeoverHandler";
 
 function isWorkflowTaskCancelledError(error: unknown): boolean {

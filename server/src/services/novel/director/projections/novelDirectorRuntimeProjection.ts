@@ -7,10 +7,10 @@ import type {
   DirectorRuntimeSnapshot,
 } from "@ai-novel/shared";
 import { prisma } from "../../../../db/prisma";
-import { buildDefaultDirectorPolicy } from "../runtime/directorRuntimeDefaults";
-import { DirectorEventProjectionService } from "../runtime/DirectorEventProjectionService";
-import { directorUsageTelemetryQueryService } from "../runtime/DirectorUsageTelemetryQueryService";
-import { ChapterExecutionProgressInspector } from "../runtime/ChapterExecutionProgressInspector";
+import { buildDefaultDirectorPolicy } from "../runtime/core/directorRuntimeDefaults";
+import { DirectorEventProjectionService } from "../runtime/projection/DirectorEventProjectionService";
+import { directorUsageTelemetryQueryService } from "../runtime/utils/DirectorUsageTelemetryQueryService";
+import { ChapterExecutionProgressInspector } from "../runtime/utils/ChapterExecutionProgressInspector";
 
 function parseJsonOrNull<T>(value: string | null | undefined): T | null {
   if (!value?.trim()) {

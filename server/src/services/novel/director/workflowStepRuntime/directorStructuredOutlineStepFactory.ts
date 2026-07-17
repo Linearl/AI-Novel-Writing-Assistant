@@ -1,6 +1,6 @@
 import type { DirectorConfirmRequest } from "@ai-novel/shared";
 import { isFullBookAutopilotRunMode } from "@ai-novel/shared";
-import { getDirectorInputFromSeedPayload } from "../runtime/novelDirectorHelpers";
+import { getDirectorInputFromSeedPayload } from "../runtime/core/novelDirectorHelpers";
 import { getWorkflowStepCatalogEntry } from "@ai-novel/shared";
 import {
   createWorkflowStepDescriptorFromCatalogEntry,

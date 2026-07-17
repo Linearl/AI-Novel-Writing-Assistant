@@ -11,7 +11,7 @@ import type {
   DirectorAutoExecutionState,
 } from "@ai-novel/shared";
 import { parseChapterScenePlan } from "@ai-novel/shared";
-import { resolveDirectorQualityLoopBudgetNextAction } from "../runtime/DirectorQualityLoopBudgetLedgerService";
+import { resolveDirectorQualityLoopBudgetNextAction } from "../runtime/utils/DirectorQualityLoopBudgetLedgerService";
 import {
   buildPipelineBackgroundActivityLabels,
   parsePipelinePayload,

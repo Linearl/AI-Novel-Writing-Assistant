@@ -4,7 +4,7 @@ import { buildNovelEditResumeTarget } from "../../workflow/novelWorkflow.shared"
 import { getChapterTitleDiversityIssue } from "../../volume/chapterTitleDiversity";
 import type { NovelVolumeService } from "../../volume/NovelVolumeService";
 import type { NovelWorkflowService } from "../../workflow/NovelWorkflowService";
-import { buildDirectorSessionState } from "../runtime/novelDirectorHelpers";
+import { buildDirectorSessionState } from "../runtime/core/novelDirectorHelpers";
 import { DIRECTOR_PROGRESS } from "../projections/novelDirectorProgress";
 import { buildChapterTitleDiversityTaskNotice } from "../projections/novelDirectorTaskNotice";
 
