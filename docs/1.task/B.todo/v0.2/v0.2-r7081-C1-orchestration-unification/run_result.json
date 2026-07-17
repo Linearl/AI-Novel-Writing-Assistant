@@ -1,0 +1,46 @@
+{
+  "taskPackage": "v1.0-r7081-C1-orchestration-unification",
+  "status": "requirements_ready",
+  "reqId": 7081,
+  "slug": "orchestration-unification",
+  "categoryCode": 7,
+  "complexity": "high",
+  "priority": "high",
+  "version": "0.2",
+  "created": "2026-07-17T00:00:00.000Z",
+  "updated": "2026-07-17T00:00:00.000Z",
+  "artifacts": {
+    "readme": "README.md",
+    "requirements": "REQ-7081-orchestration-unification.md",
+    "requirementsOriginal": "REQ-7081-orchestration-unification-original.md",
+    "design": "design.md",
+    "tasks": "tasks.md",
+    "decisionLog": "decision_log.md"
+  },
+  "unresolved_items": [
+    "R7080 Director系统拆分需至少阶段1完成后才能启动 pipeline 迁移（阶段5）",
+    "tsconfig paths 别名需要与新 orchestration/ 目录结构同步调整"
+  ],
+  "assumptions": [
+    "R7080 将在本任务包 pipeline 迁移阶段（阶段5）之前完成至少阶段1",
+    "各子系统的内部实现逻辑不需要修改，仅迁移位置",
+    "graph 和 creativeHub 可以合并到一个 orchestration/graph/ 目录下",
+    "services/novel/runtime/ 和 runtime/ 可以合并到一个 orchestration/runtime/ 目录下"
+  ],
+  "blocking_reasons": [
+    "R7080 Director系统拆分未完成 — 阻塞 pipeline 子系统（阶段5）迁移"
+  ],
+  "handoff": {
+    "from": "req",
+    "to": "dev",
+    "ticketType": "req_to_dev",
+    "generated": "2026-07-17T00:00:00.000Z"
+  },
+  "classification": {
+    "reqType": "refactor",
+    "categoryCode": 7,
+    "complexity": "complex",
+    "skipClarification": false,
+    "skipDesign": false
+  }
+}

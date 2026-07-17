@@ -1,0 +1,37 @@
+{
+  "taskId": "REQ-7079",
+  "title": "Prompts YAML 清理 — 遗留 prompt 迁移到 prompting/ 体系",
+  "status": "requirements_ready",
+  "version": "0.2",
+  "priority": "S3",
+  "created": "2026-07-17T00:00:00.000Z",
+  "updated": "2026-07-17T00:00:00.000Z",
+  "artifacts": {
+    "readme": "README.md",
+    "requirements": "REQ-7079-prompts-yaml-cleanup.md",
+    "requirementsOriginal": "REQ-7079-prompts-yaml-cleanup-original.md",
+    "design": "design.md",
+    "tasks": "tasks.md",
+    "decisionLog": "decision_log.md"
+  },
+  "unresolved_items": [],
+  "assumptions": [
+    "data/prompts/ 仅用于加载这 3 个 YAML prompt，无其他用途",
+    "PromptAsset 接口与 YAML prompt 内容兼容"
+  ],
+  "blocking_reasons": [],
+  "handoff": {
+    "from": "req",
+    "to": "dev",
+    "ticketType": "req_to_dev",
+    "generated": "2026-07-17T00:00:00.000Z"
+  },
+  "classification": {
+    "reqType": "refactor",
+    "categoryCode": 7,
+    "complexity": "low",
+    "priority": "medium",
+    "skipClarification": false,
+    "skipDesign": false
+  }
+}

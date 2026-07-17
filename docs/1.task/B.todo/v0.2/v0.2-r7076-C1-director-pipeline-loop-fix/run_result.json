@@ -1,0 +1,36 @@
+{
+  "taskId": "REQ-7076",
+  "title": "Auto-Director Structured Outline Pipeline 死循环修复",
+  "status": "pass",
+  "version": "0.2",
+  "priority": "C1",
+  "created": "2026-07-16T00:00:00.000Z",
+  "updated": "2026-07-17T00:00:00.000Z",
+  "artifacts": {
+    "readme": "README.md",
+    "requirements": "REQ-7076-director-pipeline-loop-fix.md",
+    "requirementsOriginal": "REQ-7076-director-pipeline-loop-fix-original.md",
+    "design": "design.md",
+    "tasks": "tasks.md",
+    "decisionLog": "decision_log.md"
+  },
+  "unresolved_items": [],
+  "assumptions": [
+    "beat sheet 生成逻辑本身无 bug，问题在持久化和路由层",
+    "现有单元测试覆盖了相关代码路径"
+  ],
+  "blocking_reasons": [],
+  "handoff": {
+    "from": "req",
+    "to": "dev",
+    "ticketType": "req_to_dev",
+    "generated": "2026-07-16T00:00:00.000Z"
+  },
+  "classification": {
+    "reqType": "bug_fix",
+    "categoryCode": 7,
+    "complexity": "complex",
+    "skipClarification": true,
+    "skipDesign": false
+  }
+}

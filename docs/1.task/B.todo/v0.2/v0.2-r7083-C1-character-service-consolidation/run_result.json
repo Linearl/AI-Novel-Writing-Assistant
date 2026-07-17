@@ -1,0 +1,41 @@
+{
+  "taskId": "REQ-7083",
+  "title": "Character Service Consolidation",
+  "status": "requirements_ready",
+  "version": "0.2",
+  "priority": "C1",
+  "created": "2026-07-17T00:00:00.000Z",
+  "updated": "2026-07-17T00:00:00.000Z",
+  "artifacts": {
+    "readme": "README.md",
+    "requirements": "REQ-7083-character-service-consolidation.md",
+    "requirementsOriginal": "REQ-7083-character-service-consolidation-original.md",
+    "design": "design.md",
+    "tasks": "tasks.md",
+    "decisionLog": "decision_log.md"
+  },
+  "unresolved_items": [
+    "内联 prompt 是否在本任务中一并处理，还是单独另开任务包",
+    "CharacterMapper 是新建独立文件还是合并到 CharacterDomainService",
+    "原有 services/character/ 目录下 5 个文件如何融入新结构"
+  ],
+  "assumptions": [
+    "迁移不改变角色功能的对外行为，仅重组代码结构",
+    "现有测试覆盖了角色相关核心路径",
+    "方案 A（角色领域服务）已获用户确认"
+  ],
+  "blocking_reasons": [],
+  "handoff": {
+    "from": "req",
+    "to": "dev",
+    "ticketType": "req_to_dev",
+    "generated": "2026-07-17T00:00:00.000Z"
+  },
+  "classification": {
+    "reqType": "refactor",
+    "categoryCode": 7,
+    "complexity": "complex",
+    "skipClarification": false,
+    "skipDesign": false
+  }
+}

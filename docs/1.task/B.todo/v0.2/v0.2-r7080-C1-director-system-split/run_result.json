@@ -1,0 +1,38 @@
+{
+  "taskId": "REQ-7080",
+  "title": "Director 子系统模块化拆分",
+  "status": "requirements_ready",
+  "version": "0.2",
+  "priority": "C1",
+  "created": "2026-07-17T00:00:00.000Z",
+  "updated": "2026-07-17T00:00:00.000Z",
+  "artifacts": {
+    "readme": "README.md",
+    "requirements": "REQ-7080-director-system-split.md",
+    "requirementsOriginal": "REQ-7080-director-system-split-original.md",
+    "design": "design.md",
+    "tasks": "tasks.md",
+    "decisionLog": "decision_log.md"
+  },
+  "unresolved_items": [],
+  "assumptions": [
+    "Director 子系统当前 101 个文件的职责分析准确",
+    "5 个超大文件可拆分为 ≤400 行的模块且不破坏业务逻辑",
+    "现有测试覆盖了 director 核心路径，拆分后不会引入隐性回归",
+    "外部对 director 的引用集中在少数入口文件"
+  ],
+  "blocking_reasons": [],
+  "handoff": {
+    "from": "req",
+    "to": "dev",
+    "ticketType": "req_to_dev",
+    "generated": "2026-07-17T00:00:00.000Z"
+  },
+  "classification": {
+    "reqType": "refactor",
+    "categoryCode": 7,
+    "complexity": "complex",
+    "skipClarification": false,
+    "skipDesign": false
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "taskId": "REQ-2056",
+  "title": "自动导演暂停按钮",
+  "status": "requirements_ready",
+  "version": "0.2",
+  "priority": "C2",
+  "created": "2026-07-17T00:00:00.000Z",
+  "updated": "2026-07-17T00:00:00.000Z",
+  "artifacts": {
+    "readme": "README.md",
+    "requirements": "REQ-2056-director-pause.md",
+    "requirementsOriginal": "REQ-2056-director-pause-original.md",
+    "design": "design.md",
+    "tasks": "tasks.md",
+    "decisionLog": "decision_log.md"
+  },
+  "unresolved_items": [],
+  "assumptions": [
+    "existing waiting_approval + continueTask 流程可直接复用",
+    "while 循环每轮检查状态，延迟可控"
+  ],
+  "blocking_reasons": [],
+  "handoff": {
+    "from": "req",
+    "to": "dev",
+    "ticketType": "req_to_dev",
+    "generated": "2026-07-17T00:00:00.000Z"
+  },
+  "classification": {
+    "reqType": "feature",
+    "categoryCode": 2,
+    "complexity": "medium",
+    "skipClarification": true,
+    "skipDesign": false
+  }
+}

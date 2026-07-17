@@ -1,0 +1,38 @@
+{
+  "taskId": "REQ-3021",
+  "title": "window.confirm/window.prompt 迁移到 useConfirm — 26 个文件分批迁移",
+  "status": "requirements_ready",
+  "version": "0.2",
+  "priority": "C1",
+  "created": "2026-07-17T00:00:00.000Z",
+  "updated": "2026-07-17T00:00:00.000Z",
+  "artifacts": {
+    "readme": "README.md",
+    "requirements": "REQ-3021-useconfirm-migration.md",
+    "requirementsOriginal": "REQ-3021-useconfirm-migration-original.md",
+    "design": "design.md",
+    "tasks": "tasks.md",
+    "decisionLog": "decision_log.md"
+  },
+  "unresolved_items": [],
+  "assumptions": [
+    "useConfirm hook API 已稳定，无需修改",
+    "26 个文件均可在组件内使用 useConfirm hook",
+    "同步改异步不影响现有业务流程"
+  ],
+  "blocking_reasons": [],
+  "handoff": {
+    "from": "req",
+    "to": "dev",
+    "ticketType": "req_to_dev",
+    "generated": "2026-07-17T00:00:00.000Z"
+  },
+  "classification": {
+    "reqType": "refactor",
+    "categoryCode": 3,
+    "complexity": "high",
+    "priority": "high",
+    "skipClarification": false,
+    "skipDesign": false
+  }
+}
