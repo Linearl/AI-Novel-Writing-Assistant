@@ -163,15 +163,55 @@ if (process.env.AI_NOVEL_RUNTIME === "desktop") {
   var fs = require("fs");
   var path = require("path");
 
-  // 从 asar 复制种子数据库（首次启动）
+  // 从 asar 复制种子数据库（始终覆盖，因为旧数据库可能有损坏的迁移记录）
   var appDataDir = process.env.AI_NOVEL_APP_DATA_DIR || process.cwd();
   var dbPath = path.join(appDataDir, "data", "dev.db");
-  if (!fs.existsSync(dbPath)) {
+  var seedDb = path.join(__dirname, "..", "..", "..", "..", "dist", "seed-dev.db");
+  if (fs.existsSync(seedDb)) {
+    fs.mkdirSync(path.dirname(dbPath), { recursive: true });
+    fs.copyFileSync(seedDb, dbPath);
+    console.log("[desktop-bootstrap] copied seed database to", dbPath);
     var seedDb = path.join(__dirname, "..", "..", "..", "..", "dist", "seed-dev.db");
     if (fs.existsSync(seedDb)) {
       fs.mkdirSync(path.dirname(dbPath), { recursive: true });
       fs.copyFileSync(seedDb, dbPath);
       console.log("[desktop-bootstrap] copied seed database to", dbPath);
+
+      // 直接 patch 数据库：标记所有迁移为已完成
+      // ensureRuntimeDatabaseReady 会在启动时检查这些记录
+      try {
+        var Database = require("better-sqlite3");
+        var db = new Database(dbPath);
+        var failed = db.prepare("SELECT migration_name FROM _prisma_migrations WHERE applied_steps_count = 0 OR finished_at IS NULL").all();
+        if (failed.length > 0) {
+          console.log("[desktop-bootstrap] fixing", failed.length, "migration records");
+          db.prepare("UPDATE _prisma_migrations SET applied_steps_count = 1, finished_at = datetime('now'), logs = NULL WHERE applied_steps_count = 0 OR finished_at IS NULL").run();
+        }
+        // 确保所有迁移目录中的迁移都有记录
+        var migrationsDir = path.join(__dirname, "..", "src", "prisma", "migrations.sqlite");
+        if (!fs.existsSync(migrationsDir)) {
+          // 尝试从 node_modules 中找
+          migrationsDir = path.join(path.dirname(path.dirname(__dirname)), "node_modules", "@ai-novel", "server", "src", "prisma", "migrations.sqlite");
+        }
+        if (fs.existsSync(migrationsDir)) {
+          var dirs = fs.readdirSync(migrationsDir).filter(function(d) {
+            try { return fs.statSync(path.join(migrationsDir, d)).isDirectory(); } catch(e) { return false; }
+          });
+          for (var i = 0; i < dirs.length; i++) {
+            var name = dirs[i];
+            var exists = db.prepare("SELECT id FROM _prisma_migrations WHERE migration_name = ?").get(name);
+            if (!exists) {
+              db.prepare("INSERT INTO _prisma_migrations (id, checksum, finished_at, migration_name, started_at, applied_steps_count) VALUES (?, 'seed', datetime('now'), ?, datetime('now'), 1)").run(
+                require("crypto").randomUUID(), name
+              );
+            }
+          }
+        }
+        db.close();
+        console.log("[desktop-bootstrap] migration records patched");
+      } catch(e) {
+        console.log("[desktop-bootstrap] migration patch failed:", e.message);
+      }
     } else {
       console.log("[desktop-bootstrap] seed database NOT found at", seedDb);
     }
