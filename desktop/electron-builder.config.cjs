@@ -43,7 +43,8 @@ module.exports = {
   },
   files: [
     "**/*",
-    "!**/node_modules/@ai-novel/server/prisma/schema.sqlite.prisma",
+    "!**/node_modules/better-sqlite3/**",
+    "!**/node_modules/@img/**",
   ],
   extraResources: [
     {
@@ -60,9 +61,10 @@ module.exports = {
       filter: ["**/*"],
     },
   ],
-  asar: false,
+  asar: true,
   asarUnpack: [
     "node_modules/**/*.node",
+    "node_modules/better-sqlite3/**/*",
   ],
   npmRebuild: true,
   nativeRebuilder: "sequential",

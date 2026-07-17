@@ -166,6 +166,42 @@ if (!fs.existsSync(BUILDER_OUTPUT)) {
 
 // 复制到 release/{DIR_NAME}/（用 robocopy 避免 Windows fs.cpSync 崩溃）
 const targetDir = path.join(RELEASE_DIR, DIR_NAME);
+
+// ── asar 补丁：修复 @langchain/core exports 兼容性 ──────────────────────
+{
+  const asarPath = path.join(BUILDER_OUTPUT, "resources", "app.asar");
+  const asarCli = path.join(ROOT, "node_modules", ".pnpm", "@electron+asar@3.4.1", "node_modules", "@electron", "asar", "bin", "asar.js");
+  const patchTarget = "node_modules/@langchain/core/package.json";
+  const tmpExtractDir = path.join(BUILDER_OUTPUT, "resources", "_asar_tmp");
+
+  try {
+    fs.rmSync(tmpExtractDir, { recursive: true, force: true });
+    mkdirp(tmpExtractDir);
+    execSync(`"${process.execPath}" "${asarCli}" e "${asarPath}" "${tmpExtractDir}"`, { stdio: "pipe" });
+
+    const pkgFile = path.join(tmpExtractDir, patchTarget);
+    if (fs.existsSync(pkgFile)) {
+      const pkgJson = JSON.parse(fs.readFileSync(pkgFile, "utf8"));
+      if (pkgJson.exports && !pkgJson.exports["./utils/*"]) {
+        pkgJson.exports["./utils/*"] = {
+          types: "./dist/utils/*.d.ts",
+          default: "./dist/utils/*.cjs",
+        };
+        fs.writeFileSync(pkgFile, JSON.stringify(pkgJson, null, 2));
+        fs.rmSync(asarPath, { force: true });
+        execSync(`"${process.execPath}" "${asarCli}" p "${tmpExtractDir}" "${asarPath}"`, { stdio: "pipe" });
+        log("🩹 Patched @langchain/core exports in asar");
+      } else {
+        log("🩹 @langchain/core exports already patched or no exports field");
+      }
+    }
+    fs.rmSync(tmpExtractDir, { recursive: true, force: true });
+  } catch (err) {
+    log(`⚠️ asar patch failed: ${err.message}`);
+    fs.rmSync(tmpExtractDir, { recursive: true, force: true });
+  }
+}
+
 rimraf(targetDir);
 try {
   execSync(`robocopy "${BUILDER_OUTPUT}" "${targetDir}" /E /COPY:DAT /R:1 /W:1 /NFL /NDL /NJH /NJS`, { stdio: "pipe" });

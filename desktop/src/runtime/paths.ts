@@ -17,12 +17,24 @@ export interface DesktopRuntimeConfig {
 
 function resolvePortableDesktopAppDataDir(): string | null {
   const portableExecutableDir = process.env.PORTABLE_EXECUTABLE_DIR?.trim();
-  if (!portableExecutableDir) {
-    return null;
+  if (portableExecutableDir) {
+    const portableAppName = process.env.PORTABLE_EXECUTABLE_APP_FILENAME?.trim() || APP_NAME;
+    return path.join(portableExecutableDir, `${portableAppName}${PORTABLE_DATA_SUFFIX}`);
   }
 
-  const portableAppName = process.env.PORTABLE_EXECUTABLE_APP_FILENAME?.trim() || APP_NAME;
-  return path.join(portableExecutableDir, `${portableAppName}${PORTABLE_DATA_SUFFIX}`);
+  // 自研便携模式：exe 所在目录下存在 data/ 文件夹时，视为便携版
+  // 与已安装版的数据目录（%LOCALAPPDATA%）隔离，避免单实例锁冲突
+  try {
+    const exeDir = path.dirname(process.execPath);
+    const portableDataDir = path.join(exeDir, "data");
+    if (fs.existsSync(portableDataDir) || fs.existsSync(path.join(exeDir, "start.bat"))) {
+      return portableDataDir;
+    }
+  } catch {
+    // ignore
+  }
+
+  return null;
 }
 
 export function isPortableDesktopRuntime(): boolean {
@@ -114,11 +126,15 @@ export function resolveDesktopWindowIcon(): string {
 }
 
 export function resolvePackagedServerEntry(): string {
-  // electron-builder 将 app 代码放在 resources/app/ 下
-  // server 作为 node_modules/@ai-novel/server 存在
   const resourcesDir = resolveDesktopResourcesDir();
 
-  // 尝试 resources/app/ 路径（electron-builder 标准结构）
+  // asar 模式：app.asar/node_modules/@ai-novel/server/dist/app.js
+  const asarPath = path.join(resourcesDir, "app.asar", "node_modules", "@ai-novel", "server", "dist", "app.js");
+  if (fs.existsSync(asarPath)) {
+    return asarPath;
+  }
+
+  // 无 asar 模式：resources/app/node_modules/@ai-novel/server/dist/app.js
   const appPath = path.join(resourcesDir, "app", "node_modules", "@ai-novel", "server", "dist", "app.js");
   if (fs.existsSync(appPath)) {
     return appPath;

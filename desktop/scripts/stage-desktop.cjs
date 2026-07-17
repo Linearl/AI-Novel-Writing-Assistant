@@ -38,6 +38,53 @@ function runPnpm(args, cwd = repoRoot) {
  * 且失败后子进程仍持有文件句柄，robocopy 也无法访问。
  * 本函数完全绕过 pnpm deploy，手动构建 staging 目录。
  */
+/**
+ * 修复 @langchain/core 的 package.json exports 字段。
+ * Electron 35 (Node.js 22) 强制执行 exports 检查，但 @langchain/core 内部
+ * 代码引用了未在 exports 中声明的子路径（如 ./utils/uuid），
+ * 导致 ERR_PACKAGE_PATH_NOT_EXPORTED 错误。
+ * 解决方案：添加通配符导出规则。
+ */
+function patchLangchainCoreExports(appDir) {
+  const pkgPath = path.join(appDir, "node_modules", "@langchain", "core", "package.json");
+  if (!fs.existsSync(pkgPath)) {
+    console.log("[stage:desktop] @langchain/core not found, skipping exports patch");
+    return;
+  }
+  try {
+    const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf8"));
+    if (!pkg.exports) return;
+
+    // 补充缺失的子路径导出（Electron 35 Node.js 22 严格 exports 检查）
+    const missingSubpaths = {
+      "./utils/*": { types: "./dist/utils/*.d.ts", default: "./dist/utils/*.cjs" },
+      "./errors": { types: "./dist/errors.d.ts", default: "./dist/errors.cjs" },
+    };
+    let patched = false;
+    for (const [subpath, target] of Object.entries(missingSubpaths)) {
+      if (!pkg.exports[subpath]) {
+        pkg.exports[subpath] = target;
+        patched = true;
+      }
+    }
+    if (patched) {
+      fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2));
+      console.log("[stage:desktop] patched @langchain/core: added missing subpath exports");
+    }
+
+    // 创建缺失的 utils/uuid.cjs shim（@langchain/openai 引用了此文件但 @langchain/core 未提供）
+    const uuidShimPath = path.join(path.dirname(pkgPath), "dist", "utils", "uuid.cjs");
+    if (!fs.existsSync(uuidShimPath)) {
+      const shimContent = `// Shim: re-export uuid package for @langchain/openai compatibility\nmodule.exports = require("uuid");\n`;
+      fs.mkdirSync(path.dirname(uuidShimPath), { recursive: true });
+      fs.writeFileSync(uuidShimPath, shimContent);
+      console.log("[stage:desktop] created @langchain/core/dist/utils/uuid.cjs shim");
+    }
+  } catch (err) {
+    console.warn("[stage:desktop] warning: failed to patch @langchain/core exports:", err.message);
+  }
+}
+
 function deployManually() {
   console.log("[stage:desktop] manual deploy: creating staging directory...");
 
@@ -48,6 +95,8 @@ function deployManually() {
   // 2. 创建 app/package.json（去掉 workspace 依赖和 scripts）
   const desktopPkg = JSON.parse(fs.readFileSync(path.join(desktopDir, "package.json"), "utf8"));
   const serverSourceDir = path.join(repoRoot, "server");
+  const sharedSourceDir = path.join(repoRoot, "shared");
+  const sharedPkg = JSON.parse(fs.readFileSync(path.join(sharedSourceDir, "package.json"), "utf8"));
   const appPkg = {
     name: desktopPkg.name,
     version: desktopPkg.version,
@@ -64,11 +113,33 @@ function deployManually() {
   fs.writeFileSync(path.join(appDir, ".npmrc"), "workspaces=false\n");
   fs.writeFileSync(path.join(appDir, "package-lock.json"), JSON.stringify({ lockfileVersion: 3, packages: {} }));
 
-  // 3. 手动复制 @ai-novel/server 到 app/node_modules/@ai-novel/server/
+  // 3. 手动复制 @ai-novel/server 和 @ai-novel/shared 到 app/node_modules/@ai-novel/
   const serverTargetDir = path.join(appDir, "node_modules", "@ai-novel", "server");
+  const sharedTargetDir = path.join(appDir, "node_modules", "@ai-novel", "shared");
   console.log(`[stage:desktop] manual deploy: copying @ai-novel/server → ${serverTargetDir}`);
+  console.log(`[stage:desktop] manual deploy: copying @ai-novel/shared → ${sharedTargetDir}`);
 
   fs.mkdirSync(serverTargetDir, { recursive: true });
+  fs.mkdirSync(sharedTargetDir, { recursive: true });
+
+  // 复制 shared 产物（仅 dist + package.json，不需要源码）
+  for (const entry of ["dist"]) {
+    const src = path.join(sharedSourceDir, entry);
+    const dest = path.join(sharedTargetDir, entry);
+    if (fs.existsSync(src)) {
+      copyDirectory(src, dest);
+    }
+  }
+  const sharedAppPkg = {
+    name: sharedPkg.name,
+    version: sharedPkg.version,
+    private: true,
+    main: sharedPkg.main,
+    types: sharedPkg.types,
+    exports: sharedPkg.exports,
+    dependencies: sharedPkg.dependencies || {},
+  };
+  fs.writeFileSync(path.join(sharedTargetDir, "package.json"), JSON.stringify(sharedAppPkg, null, 2));
 
   // 复制 server 核心文件（排除 package.json，后面会单独生成）
   const serverEntriesToCopy = ["dist", "prisma"];
@@ -132,6 +203,9 @@ function deployManually() {
   stagedPkg.dependencies["@ai-novel/server"] = serverPkgRaw.version || "0.1.0";
   fs.writeFileSync(stagedPkgPath, JSON.stringify(stagedPkg, null, 2));
   console.log("[stage:desktop] added @ai-novel/server to staging package.json for electron-builder");
+
+  // 8. 修复 @langchain/core exports 缺失的子路径（Electron 35 严格 exports 检查）
+  patchLangchainCoreExports(appDir);
 
   console.log("[stage:desktop] manual deploy completed successfully");
 }
