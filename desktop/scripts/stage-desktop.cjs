@@ -135,6 +135,45 @@ function patchLangchainCoreExports(appDir) {
   }
 }
 
+/**
+ * 给打包的 server/app.js 末尾注入 desktop bootstrap 调用。
+ *
+ * 问题：utilityProcess.fork("serverEntry.cjs") → require("app.js") 时，
+ * require.main === module 为 false，导致 bootstrap() 从未执行。
+ *
+ * 解决：在 app.js 末尾追加代码，检测 desktop 运行环境并直接调用 bootstrap。
+ */
+function injectDesktopBootstrap(appDir) {
+  const serverAppJs = path.join(appDir, "node_modules", "@ai-novel", "server", "dist", "app.js");
+  if (!fs.existsSync(serverAppJs)) {
+    console.log("[stage:desktop] @ai-novel/server/dist/app.js not found, skipping bootstrap injection");
+    return;
+  }
+
+  const content = fs.readFileSync(serverAppJs, "utf8");
+
+  // 避免重复注入
+  if (content.includes("__desktop_bootstrap_injected__")) {
+    console.log("[stage:desktop] desktop bootstrap already injected");
+    return;
+  }
+
+  const injection = `
+// __desktop_bootstrap_injected__ — injected by stage-desktop.cjs
+// utilityProcess.fork("serverEntry.cjs") → require("app.js") 时 require.main !== module，
+// 原有的 if (require.main === module) bootstrap() 不会执行，这里直接调用。
+if (process.env.AI_NOVEL_RUNTIME === "desktop" && typeof bootstrap === "function") {
+  void bootstrap().catch(function(err) {
+    console.error("[server] desktop bootstrap failed.", err);
+    process.exit(1);
+  });
+}
+`;
+
+  fs.writeFileSync(serverAppJs, content + injection, "utf8");
+  console.log("[stage:desktop] injected desktop bootstrap into server/dist/app.js");
+}
+
 function deployManually() {
   console.log("[stage:desktop] manual deploy: creating staging directory...");
 
@@ -545,6 +584,11 @@ function main() {
 
   // 修复 @langchain/core exports 缺失的子路径（Electron 35 严格 exports 检查）
   patchLangchainCoreExports(appDir);
+
+  // 注入 desktop bootstrap — 修复 require.main !== module 导致 bootstrap() 未调用的问题。
+  // utilityProcess.fork() 以 serverEntry.cjs 为入口，require.main 指向 wrapper 而非 app.js，
+  // 导致 app.js 的 `if (require.main === module) bootstrap()` 条件为 false。
+  injectDesktopBootstrap(appDir);
 
   copyDirectory(clientSourceDir, clientTargetDir);
   writeDesktopUpdaterConfig();
