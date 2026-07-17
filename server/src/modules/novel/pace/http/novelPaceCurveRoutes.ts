@@ -13,7 +13,7 @@ export function createNovelPaceCurveRoutes(): Router {
   type P = Record<string, string>;
 
   router.get(
-    "/novels/:novelId/pace-curve",
+    "/:novelId/pace-curve",
     validate({ params: novelIdParamsSchema }),
     async (req: Request, res: Response, next: NextFunction) => {
       try {
