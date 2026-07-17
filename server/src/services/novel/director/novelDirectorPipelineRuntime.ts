@@ -48,7 +48,7 @@ import {
 } from "./workflowStepRuntime/WorkflowStepModule";
 import type { DirectorPipelinePhase } from "./recovery/novelDirectorRecovery";
 import { WorldContextGateway } from "../worldContext/WorldContextGateway";
-import { settingConsistencyService } from "../../setting/settingConsistencyService";
+import { settingConsistencyService } from "../../settings/consistency/settingConsistencyService";
 import { logger } from "../../logging/LoggerService";
 
 export interface DirectorPipelineRunInput {

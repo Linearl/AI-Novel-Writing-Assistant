@@ -11,7 +11,7 @@
  *
  * 与 services 层的关系：
  * - services/novel/quality/ConsistencyMonitor.ts — 规则引擎（时间线/角色/空间）
- * - services/setting/settingConsistencyService.ts — LLM 设定一致性
+ * - services/settings/consistency/settingConsistencyService.ts — LLM 设定一致性
  * - 本文件作为 module 层 facade，聚合下层能力并统一对外接口
  *
  * @module consistencyMonitor
@@ -28,7 +28,7 @@ import type {
 import { DEFAULT_CONSISTENCY_CONFIG } from "@ai-novel/shared";
 import type { SettingConsistencyReport, Contradiction } from "@ai-novel/shared";
 import { consistencyMonitor as servicesMonitor } from "../../../services/novel/quality/ConsistencyMonitor";
-import { settingConsistencyService } from "../../../services/setting/settingConsistencyService";
+import { settingConsistencyService } from "../../../services/settings/consistency/settingConsistencyService";
 import { prisma } from "../../../db/prisma";
 import { logger } from "../../../services/logging/LoggerService";
 

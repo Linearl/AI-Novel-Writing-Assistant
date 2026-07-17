@@ -3,9 +3,9 @@
  *
  * Orchestrates: prompt loading -> LLM invocation -> report storage -> ignore filtering.
  */
-import { getRegisteredPromptAsset } from "../../prompting/registry";
-import { runStructuredPrompt } from "../../prompting/core/promptRunner";
-import { resolveDataRoot } from "../../runtime/appPaths";
+import { getRegisteredPromptAsset } from "../../../prompting/registry";
+import { runStructuredPrompt } from "../../../prompting/core/promptRunner";
+import { resolveDataRoot } from "../../../runtime/appPaths";
 import { settingConsistencyStorage } from "./settingConsistencyStorage";
 import type {
   SettingConsistencyReport,

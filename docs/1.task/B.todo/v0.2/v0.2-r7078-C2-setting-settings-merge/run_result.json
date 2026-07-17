@@ -1,7 +1,7 @@
 {
   "taskId": "REQ-7078",
   "title": "setting/ 与 settings/ 目录合并",
-  "status": "requirements_ready",
+  "status": "done",
   "version": "0.2",
   "priority": "C2",
   "created": "2026-07-17T00:00:00.000Z",
