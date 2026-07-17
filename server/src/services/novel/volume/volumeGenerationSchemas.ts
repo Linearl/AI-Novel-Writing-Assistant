@@ -646,7 +646,7 @@ export function createChapterBoundarySchema() {
 export function createChapterTaskSheetSchema() {
   return z.preprocess(normalizeScenePlanPayload, z.object({
     taskSheet: z.string().trim().min(1),
-    sceneCards: z.array(z.preprocess(normalizeSceneCardPayload, chapterSceneCardSchema)).min(1),
+    sceneCards: z.array(z.preprocess(normalizeSceneCardPayload, chapterSceneCardSchema)).min(3),
   }));
 }
 
@@ -669,7 +669,7 @@ export function createChapterExecutionContractSchema() {
       mustAvoid: z.string().trim().min(1),
       payoffRefs: z.array(z.string().trim().min(1)).default([]),
       taskSheet: z.string().trim().min(1),
-      sceneCards: z.array(z.preprocess(normalizeSceneCardPayload, chapterSceneCardSchema)).min(1),
+      sceneCards: z.array(z.preprocess(normalizeSceneCardPayload, chapterSceneCardSchema)).min(3),
       reasoningTrace: reasoningTraceSchema.optional(),
     }),
   );
