@@ -260,17 +260,22 @@ export default function NovelTaskDrawer({
                         {action.label}
                       </Button>
                     ))}
-                    {!runtimeHardBlocked && task?.status === "running" ? (
-                      <Button
-                        type="button"
-                        size="sm"
-                        variant="outline"
-                        onClick={() => onPause?.()}
-                        disabled={executingFollowUpAction}
-                      >
-                        暂停
-                      </Button>
-                    ) : null}
+                  </div>
+                </section>
+              ) : null}
+
+              {!runtimeHardBlocked && task?.status === "running" ? (
+                <section className="space-y-3">
+                  <div className="flex flex-wrap gap-2">
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      onClick={() => onPause?.()}
+                      disabled={executingFollowUpAction}
+                    >
+                      暂停
+                    </Button>
                   </div>
                 </section>
               ) : null}
