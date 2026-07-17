@@ -69,6 +69,7 @@ export interface BuildTakeoverParams {
   continueAutoDirectorMutation: MutationLike;
   continueAutoExecutionMutation: MutationLike;
   cancelAutoDirectorMutation: MutationLike;
+  pauseAutoDirectorMutation: MutationLike;
   archiveCompletedAutoDirectorMutation: MutationLike;
   isDirectorExitActionExpanded: boolean;
   setIsDirectorExitActionExpanded: (expanded: boolean) => void;
@@ -100,6 +101,7 @@ export function buildTakeoverState(params: BuildTakeoverParams): NovelEditTakeov
     continueAutoDirectorMutation,
     continueAutoExecutionMutation,
     cancelAutoDirectorMutation,
+    pauseAutoDirectorMutation,
     archiveCompletedAutoDirectorMutation,
     isDirectorExitActionExpanded,
     setIsDirectorExitActionExpanded,
@@ -270,6 +272,14 @@ export function buildTakeoverState(params: BuildTakeoverParams): NovelEditTakeov
     });
   }
   const canCancelTask = canCancelDirectorTask(task);
+  if (canCancelTask && task.status === "running") {
+    actions.push({
+      label: pauseAutoDirectorMutation.isPending ? "暂停中..." : "暂停",
+      onClick: () => pauseAutoDirectorMutation.mutate(task.id),
+      variant: "outline",
+      disabled: pauseAutoDirectorMutation.isPending,
+    });
+  }
   if (canCancelTask) {
     if (task.status === "failed") {
       actions.push({
