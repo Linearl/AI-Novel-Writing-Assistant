@@ -725,6 +725,7 @@ model CharacterCastOptionMember {
   role                  String
   gender                CharacterGender @default(unknown)
   castRole              String
+  tier                  String?
   relationToProtagonist String?
   storyFunction         String
   shortDescription      String?
