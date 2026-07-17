@@ -51,33 +51,24 @@ function pnpmDeployWithRetry(targetDir) {
     console.log("[stage:desktop] pnpm deploy direct failed:", err.message?.slice(0, 120));
   }
 
-  // 直接 deploy 失败 — 检测 _tmp_ 目录
+  // 直接 deploy 失败 — 清理旧的 _tmp_ 残留目录，再尝试 deploy 到已知临时路径
   const parentDir = path.dirname(targetDir);
   const targetBase = path.basename(targetDir);
-  const tmpPattern = `${targetBase}.*_tmp_*`;
-  let foundTmpDir = null;
 
+  // 清理所有旧的 _tmp_ 残留目录
   try {
     const entries = fs.readdirSync(parentDir, { withFileTypes: true });
     for (const entry of entries) {
       if (entry.isDirectory() && entry.name.includes("_tmp_") && entry.name.startsWith(targetBase)) {
-        foundTmpDir = path.join(parentDir, entry.name);
-        break;
+        const oldTmpDir = path.join(parentDir, entry.name);
+        console.log(`[stage:desktop] cleaning old temp dir: ${oldTmpDir}`);
+        fs.rmSync(oldTmpDir, { recursive: true, force: true });
       }
     }
   } catch { /* ignore */ }
 
-  if (foundTmpDir && fs.existsSync(foundTmpDir)) {
-    console.log(`[stage:desktop] found pnpm temp dir: ${foundTmpDir}`);
-    // 用 robocopy 移动（比 renameSync 更健壮）
-    copyDirectory(foundTmpDir, targetDir);
-    fs.rmSync(foundTmpDir, { recursive: true, force: true });
-    console.log("[stage:desktop] moved pnpm temp dir to target via robocopy");
-    return;
-  }
-
-  // 没找到 _tmp_ 目录，尝试 deploy 到临时路径再移动
-  console.log("[stage:desktop] no _tmp_ dir found, trying deploy-to-tmp + copy...");
+  // 尝试 deploy 到已知临时路径再 robocopy 移动
+  console.log("[stage:desktop] trying deploy-to-tmp + copy...");
   try {
     runPnpm(["--filter", "@ai-novel/desktop", "deploy", "--prod", tmpDir]);
     copyDirectory(tmpDir, targetDir);
