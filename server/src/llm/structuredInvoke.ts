@@ -375,6 +375,8 @@ async function tryStructuredStrategies<T>(input: {
     ]
     : sequence;
   let lastError: StructuredOutputError | null = null;
+  let schemaMismatchRetries = 0;
+  const maxSchemaMismatchRetries = 1;
   for (let index = 0; index < preferredSequence.length; index += 1) {
     const strategy = preferredSequence[index]!;
     try {
@@ -399,6 +401,11 @@ async function tryStructuredStrategies<T>(input: {
         break;
       }
       if (lastError.category === "schema_mismatch" && strategy === "prompt_json") {
+        if (schemaMismatchRetries < maxSchemaMismatchRetries) {
+          schemaMismatchRetries += 1;
+          index -= 1; // 重试当前策略
+          continue;
+        }
         break;
       }
     }
