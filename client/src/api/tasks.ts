@@ -87,6 +87,11 @@ export async function cancelTask(kind: TaskKind, id: string) {
   return data;
 }
 
+export async function pauseTask(kind: TaskKind, id: string) {
+  const { data } = await apiClient.post<ApiResponse<UnifiedTaskDetail | null>>(`/tasks/${kind}/${id}/pause`, {});
+  return data;
+}
+
 export async function archiveTask(kind: TaskKind, id: string) {
   const { data } = await apiClient.post<ApiResponse<UnifiedTaskDetail | null>>(`/tasks/${kind}/${id}/archive`, {});
   return data;

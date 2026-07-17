@@ -19,6 +19,7 @@ export const AUTO_DIRECTOR_FOLLOW_UP_REASONS = [
   "auto_approval_completed",
   "runtime_replaced",
   "validation_required",
+  "user_paused",
 ] as const;
 
 export type AutoDirectorFollowUpReason = (typeof AUTO_DIRECTOR_FOLLOW_UP_REASONS)[number];

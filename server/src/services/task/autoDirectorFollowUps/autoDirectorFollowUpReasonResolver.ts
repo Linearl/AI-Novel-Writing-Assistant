@@ -27,6 +27,7 @@ const REASON_LABELS: Record<AutoDirectorFollowUpReason, string> = {
   auto_approval_completed: "最近自动通过",
   runtime_replaced: "任务已替代",
   validation_required: "需要重新校验",
+  user_paused: "用户手动暂停",
 };
 
 function mutationAction(input: {
