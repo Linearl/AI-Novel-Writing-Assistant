@@ -9,12 +9,14 @@ import { queryKeys } from "@/api/queryKeys";
 import { toast } from "@/components/ui/toast";
 import { LoadingIndicator } from "@/components/ui/loading-indicator";
 import { getClickRateBadgeClass, truncateText } from "../titleStudio.shared";
+import { useConfirm } from "@/components/useConfirm";
 
 interface TitleLibraryPanelProps {
   genreOptions: Array<{ id: string; label: string; path: string }>;
 }
 
 export default function TitleLibraryPanel({ genreOptions }: TitleLibraryPanelProps) {
+  const { confirm, ConfirmDialog } = useConfirm();
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
   const [genreId, setGenreId] = useState("");
@@ -68,6 +70,7 @@ export default function TitleLibraryPanel({ genreOptions }: TitleLibraryPanelPro
 
   return (
     <div className="space-y-4">
+      <ConfirmDialog />
       <div className="grid gap-3 rounded-xl border bg-muted/20 p-4 md:grid-cols-[minmax(0,1fr)_220px_180px]">
         <label className="space-y-2 text-sm">
           <span className="font-medium text-foreground">搜索</span>
@@ -163,8 +166,8 @@ export default function TitleLibraryPanel({ genreOptions }: TitleLibraryPanelPro
                   size="sm"
                   variant="outline"
                   disabled={deleteMutation.isPending && deleteMutation.variables === entry.id}
-                  onClick={() => {
-                    const confirmed = window.confirm(`确认删除标题「${entry.title}」？`);
+                  onClick={async () => {
+                    const confirmed = await confirm(`确认删除标题「${entry.title}」？`);
                     if (confirmed) {
                       deleteMutation.mutate(entry.id);
                     }

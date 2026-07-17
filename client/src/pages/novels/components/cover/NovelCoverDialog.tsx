@@ -33,6 +33,7 @@ import {
   buildNovelCoverDraftSourcePrompt,
   type BuildNovelCoverDraftInput,
 } from "./novelCoverDraft";
+import { useConfirm } from "@/components/useConfirm";
 
 const IMAGE_STATUS_TEXT: Record<string, string> = {
   queued: "排队中",
@@ -79,6 +80,7 @@ function getErrorMessage(error: unknown, fallback: string): string {
 }
 
 export function NovelCoverDialog(props: NovelCoverDialogProps) {
+  const { confirm, ConfirmDialog } = useConfirm();
   const queryClient = useQueryClient();
   const [activeTaskId, setActiveTaskId] = useState<string | null>(null);
   const [sourcePrompt, setSourcePrompt] = useState("");
@@ -310,7 +312,7 @@ export function NovelCoverDialog(props: NovelCoverDialogProps) {
   const activeTask = activeTaskQuery.data?.data;
 
   const handleDeleteAsset = async (asset: ImageAsset) => {
-    const confirmed = window.confirm("确认删除这张封面图？如果它是当前主封面，系统会自动补一张新的主图。");
+    const confirmed = await confirm("确认删除这张封面图？如果它是当前主封面，系统会自动补一张新的主图。");
     if (!confirmed) {
       return;
     }
@@ -328,6 +330,7 @@ export function NovelCoverDialog(props: NovelCoverDialogProps) {
       }}
     >
       <DialogContent className="flex max-h-[92vh] w-[96vw] max-w-[1120px] flex-col overflow-hidden rounded-2xl border border-border bg-white p-0">
+        <ConfirmDialog />
         <DialogHeader className="shrink-0 border-b border-border px-6 pb-4 pt-5">
           <DialogTitle className="text-[22px] font-semibold tracking-tight text-foreground">
             生成小说封面主画面

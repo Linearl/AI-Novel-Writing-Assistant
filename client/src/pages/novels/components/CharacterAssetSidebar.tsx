@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CharacterExitBadge } from "@/components/character/CharacterExitBadge";
 import { isProtagonistCharacter, getCharacterTierLabel, getCharacterTierColor } from "./characterAssetWorkspace.helpers";
+import { useConfirm } from "@/components/useConfirm";
 
 interface CharacterAssetSidebarProps {
   characters: Character[];
@@ -41,8 +42,8 @@ function getCharacterCardClass(isSelected: boolean, isProtagonist: boolean): str
   }`;
 }
 
-function confirmDeleteCharacter(character: Character, onDeleteCharacter: (characterId: string) => void) {
-  const confirmed = window.confirm(`确认删除角色“${character.name}”？此操作不可恢复。`);
+async function confirmDeleteCharacter(character: Character, confirmFn: (message: string) => Promise<boolean>, onDeleteCharacter: (characterId: string) => void) {
+  const confirmed = await confirmFn(`确认删除角色“${character.name}”？此操作不可恢复。`);
   if (!confirmed) {
     return;
   }
@@ -69,6 +70,7 @@ function CharacterCard(props: {
   } = props;
   const isSelected = selectedCharacterId === character.id;
   const isDeletingThis = isDeletingCharacter && deletingCharacterId === character.id;
+  const { confirm, ConfirmDialog } = useConfirm();
   const supportingLine = isProtagonist
     ? character.currentGoal || character.storyFunction || character.role || "待补全主角目标"
     : character.relationToProtagonist || character.role || "待补全角色定位";
@@ -76,6 +78,7 @@ function CharacterCard(props: {
 
   return (
     <div className={getCharacterCardClass(isSelected, isProtagonist)}>
+      <ConfirmDialog />
       <button
         type="button"
         onClick={() => onSelectedCharacterChange(character.id)}
@@ -99,7 +102,7 @@ function CharacterCard(props: {
         size="sm"
         variant="destructive"
         disabled={isDeletingThis}
-        onClick={() => confirmDeleteCharacter(character, onDeleteCharacter)}
+        onClick={() => confirmDeleteCharacter(character, confirm, onDeleteCharacter)}
         className="shrink-0 self-center"
       >
         {isDeletingThis ? "删除中..." : "删除"}

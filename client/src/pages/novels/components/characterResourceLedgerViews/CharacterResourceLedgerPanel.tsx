@@ -24,6 +24,7 @@ import {
   getRiskLevelLabel,
   isBlockedStatus,
 } from "./characterResourceLabels";
+import { useConfirm } from "@/components/useConfirm";
 
 interface CharacterResourceLedgerPanelProps {
   novelId: string;
@@ -38,6 +39,7 @@ interface CharacterResourceLedgerPanelProps {
 }
 
 export default function CharacterResourceLedgerPanel(props: CharacterResourceLedgerPanelProps) {
+  const { confirm, ConfirmDialog } = useConfirm();
   const { novelId, items, characters, onBackfill, isBackfilling = false, toolbarExtra, onNavigateToCharacter } = props;
   const queryClient = useQueryClient();
 
@@ -162,6 +164,7 @@ export default function CharacterResourceLedgerPanel(props: CharacterResourceLed
 
   return (
     <div className="space-y-3">
+      <ConfirmDialog />
       {/* Toolbar */}
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-wrap items-center gap-2">
@@ -344,8 +347,8 @@ export default function CharacterResourceLedgerPanel(props: CharacterResourceLed
                           size="sm"
                           variant="ghost"
                           className="h-7 w-7 p-0 text-destructive hover:text-destructive"
-                          onClick={() => {
-                            if (window.confirm(`确认删除「${item.name}」？此操作不可撤销。`)) {
+                          onClick={async () => {
+                            if (await confirm(`确认删除「${item.name}」？此操作不可撤销。`)) {
                               deleteMutation.mutate(item.id);
                             }
                           }}

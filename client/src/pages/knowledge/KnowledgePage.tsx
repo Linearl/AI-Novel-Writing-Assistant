@@ -28,6 +28,7 @@ import KnowledgeDocumentDetailDialog from "./components/KnowledgeDocumentDetailD
 import KnowledgeDocumentsTab from "./components/KnowledgeDocumentsTab";
 import KnowledgeEmbeddingSettingsCard, { type KnowledgeEmbeddingSettingsFormState } from "./components/KnowledgeEmbeddingSettingsCard";
 import KnowledgeOpsTab from "./components/KnowledgeOpsTab";
+import { useConfirm } from "@/components/useConfirm";
 
 const TAB_VALUES = new Set(["documents", "ops", "settings"]);
 
@@ -39,6 +40,7 @@ function normalizeTab(raw: string | null): "documents" | "ops" | "settings" {
 }
 
 export default function KnowledgePage() {
+  const { confirm, ConfirmDialog } = useConfirm();
   const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
   const [keyword, setKeyword] = useState("");
@@ -448,15 +450,15 @@ export default function KnowledgePage() {
     });
   };
 
-  const handleClearFinishedRagJobs = () => {
-    if (!window.confirm("清理已结束任务记录？排队中和执行中的任务会保留。")) {
+  const handleClearFinishedRagJobs = async () => {
+    if (!await confirm("清理已结束任务记录？排队中和执行中的任务会保留。")) {
       return;
     }
     clearFinishedRagJobsMutation.mutate();
   };
 
-  const handleDeleteRagJob = (jobId: string) => {
-    if (!window.confirm("删除这条任务记录？排队中和执行中的任务不能删除。")) {
+  const handleDeleteRagJob = async (jobId: string) => {
+    if (!await confirm("删除这条任务记录？排队中和执行中的任务不能删除。")) {
       return;
     }
     deleteRagJobMutation.mutate(jobId);
@@ -464,6 +466,7 @@ export default function KnowledgePage() {
 
   return (
     <div className="space-y-4">
+      <ConfirmDialog />
       <div className="flex justify-end">
         <OpenInCreativeHubButton
           bindings={{ knowledgeDocumentIds: selectedDocumentId ? [selectedDocumentId] : [] }}

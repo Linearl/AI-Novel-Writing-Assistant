@@ -30,6 +30,7 @@ import SettingsSectionGroup from "./components/SettingsSectionGroup";
 import StyleEngineRuntimeSettingsCard from "./components/StyleEngineRuntimeSettingsCard";
 import SettingsActionResult from "./SettingsActionResult";
 import { AUTO_DIRECTOR_MOBILE_CLASSES } from "@/mobile/autoDirector";
+import { useConfirm } from "@/components/useConfirm";
 
 function formatConnectionTestResult(response: Awaited<ReturnType<typeof testLLMConnection>>): string {
   const latency = response.data?.latency ?? 0;
@@ -49,6 +50,7 @@ function formatConnectionTestResult(response: Awaited<ReturnType<typeof testLLMC
 }
 
 export default function SettingsPage() {
+  const { confirm, ConfirmDialog } = useConfirm();
   const queryClient = useQueryClient();
   const [editingProvider, setEditingProvider] = useState("");
   const [isCreatingCustomProvider, setIsCreatingCustomProvider] = useState(false);
@@ -461,11 +463,11 @@ export default function SettingsPage() {
     );
   };
 
-  const handleDeleteCustomProvider = () => {
+  const handleDeleteCustomProvider = async () => {
     if (!editingProvider || !editingConfig) {
       return;
     }
-    if (!window.confirm(`确认删除自定义厂商 ${editingConfig.name} 吗？`)) {
+    if (!await confirm(`确认删除自定义厂商 ${editingConfig.name} 吗？`)) {
       return;
     }
     deleteCustomProviderMutation.mutate(editingProvider);
@@ -482,6 +484,7 @@ export default function SettingsPage() {
 
   return (
     <div className={AUTO_DIRECTOR_MOBILE_CLASSES.settingsPageRoot}>
+      <ConfirmDialog />
       <SettingsSectionGroup
         title="开始创作必需"
         description="先让模型和任务路由可用，新手就能进入自动导演、开书和章节生产。"

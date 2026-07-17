@@ -14,6 +14,7 @@ import {
   getRagJobProgressPercent,
   getRagJobProgressWidth,
 } from "./knowledgeRagUi";
+import { useConfirm } from "@/components/useConfirm";
 
 interface KnowledgeDocumentsTabProps {
   uploadTitle: string;
@@ -46,6 +47,7 @@ export default function KnowledgeDocumentsTab({
   onReindexDocument,
   onUpdateStatus,
 }: KnowledgeDocumentsTabProps) {
+  const { confirm, ConfirmDialog } = useConfirm();
   const statusOptions = [
     { value: "", label: "全部未归档" },
     { value: "enabled", label: "仅启用" },
@@ -53,8 +55,8 @@ export default function KnowledgeDocumentsTab({
     { value: "archived", label: "仅归档" },
   ] as const;
 
-  const confirmArchiveDocument = (document: KnowledgeDocumentSummary) => {
-    const confirmed = window.confirm(
+  const confirmArchiveDocument = async (document: KnowledgeDocumentSummary) => {
+    const confirmed = await confirm(
       `确认归档“${document.title}”吗？归档会移出默认检索和资料选择，原文与版本会保留，可在“仅归档”中恢复启用。`,
     );
     if (!confirmed) {
@@ -164,6 +166,7 @@ export default function KnowledgeDocumentsTab({
 
   return (
     <div className="grid gap-4 lg:grid-cols-[360px_1fr]">
+      <ConfirmDialog />
       <Card>
         <CardHeader>
           <CardTitle>上传文档</CardTitle>

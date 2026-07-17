@@ -49,6 +49,7 @@ const CHARACTER_GENDER_LABELS: Record<CharacterGender, string> = {
 };
 
 function getCastRoleLabel(castRole?: CharacterCastRole | null): string {
+  const { confirm, ConfirmDialog } = useConfirm();
   if (!castRole) {
     return "未分类";
   }
@@ -150,8 +151,8 @@ export default function CharacterCastOptionsSection(props: CharacterCastOptionsS
     ]);
   }
 
-  function handleDeleteOption(option: CharacterCastOption) {
-    const confirmed = window.confirm(
+  async function handleDeleteOption(option: CharacterCastOption) {
+    const confirmed = await confirm(
       option.status === "applied"
         ? `确认删除方案「${option.title}」？这只会删除方案记录，不会回滚已同步的角色与关系。`
         : `确认删除方案「${option.title}」？`,
@@ -162,8 +163,8 @@ export default function CharacterCastOptionsSection(props: CharacterCastOptionsS
     deleteMutation.mutate(option.id);
   }
 
-  function handleRejectAll() {
-    const confirmed = window.confirm(
+  async function handleRejectAll() {
+    const confirmed = await confirm(
       appliedOption
         ? "确认清空当前所有阵容方案记录？已同步的角色与关系不会自动回滚。"
         : `确认清空当前 ${castOptions.length} 套阵容方案？`,

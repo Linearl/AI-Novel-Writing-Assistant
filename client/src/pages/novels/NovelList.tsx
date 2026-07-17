@@ -23,6 +23,7 @@ import {
 import { resolveWorkflowContinuationFeedback } from "@/lib/novelWorkflowContinuation";
 import { useTaskRecovery } from "@/components/layout/TaskRecoveryContext";
 import NovelListItem, { NovelListCockpitDialog } from "./components/NovelListItem";
+import { useConfirm } from "@/components/useConfirm";
 
 type StatusFilter = "all" | "draft" | "published";
 type WritingModeFilter = "all" | "original" | "continuation";
@@ -41,6 +42,7 @@ function createDownload(blob: Blob, fileName: string): void {
 }
 
 export default function NovelList() {
+  const { confirm, ConfirmDialog } = useConfirm();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [status, setStatus] = useState<StatusFilter>("all");
@@ -163,8 +165,8 @@ export default function NovelList() {
     }
   }, [page, totalPages]);
 
-  const handleDelete = (novelId: string, title: string) => {
-    const confirmed = window.confirm(`确认删除《${title}》吗？该操作会直接删除当前小说。`);
+  const handleDelete = async (novelId: string, title: string) => {
+    const confirmed = await confirm(`确认删除《${title}》吗？该操作会直接删除当前小说。`);
     if (!confirmed) {
       return;
     }
@@ -193,6 +195,7 @@ export default function NovelList() {
 
   return (
     <div className="space-y-4">
+      <ConfirmDialog />
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="space-y-2">
           <div className="flex items-center gap-2">

@@ -16,6 +16,7 @@ import { getLinkedNovels, unlinkNovelFromWorld, type LinkedNovel } from "@/api/w
 import { queryKeys } from "@/api/queryKeys";
 import { toast } from "@/components/ui/toast";
 import { LoadingIndicator } from "@/components/ui/loading-indicator";
+import { useConfirm } from "@/components/useConfirm";
 
 interface WorldUnlinkDialogProps {
   worldId: string;
@@ -23,6 +24,7 @@ interface WorldUnlinkDialogProps {
 }
 
 export default function WorldUnlinkDialog({ worldId, worldName }: WorldUnlinkDialogProps) {
+  const { confirm, ConfirmDialog } = useConfirm();
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
 
@@ -63,6 +65,7 @@ export default function WorldUnlinkDialog({ worldId, worldName }: WorldUnlinkDia
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
+      <ConfirmDialog />
       <DialogTrigger asChild>
         <Button size="sm" variant="outline">
           <Link2Off className="mr-1 h-4 w-4" aria-hidden="true" />
@@ -116,8 +119,8 @@ export default function WorldUnlinkDialog({ worldId, worldName }: WorldUnlinkDia
                     size="sm"
                     variant="destructive"
                     disabled={unlinkAllMutation.isPending}
-                    onClick={() => {
-                      if (window.confirm(`确认解除全部 ${novels.length} 个项目的关联？项目世界数据会被清空。`)) {
+                    onClick={async () => {
+                      if (await confirm(`确认解除全部 ${novels.length} 个项目的关联？项目世界数据会被清空。`)) {
                         unlinkAllMutation.mutate();
                       }
                     }}

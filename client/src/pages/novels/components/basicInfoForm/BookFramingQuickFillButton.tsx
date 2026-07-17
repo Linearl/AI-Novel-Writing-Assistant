@@ -5,6 +5,7 @@ import { suggestBookFraming } from "@/api/novelFraming";
 import AiButton from "@/components/common/AiButton";
 import { toast } from "@/components/ui/toast";
 import { useLLMStore } from "@/store/llmStore";
+import { useConfirm } from "@/components/useConfirm";
 
 interface GenreOption {
   id: string;
@@ -31,6 +32,7 @@ function hasExistingFramingContent(basicForm: NovelBasicFormState): boolean {
 
 export function BookFramingQuickFillButton(props: BookFramingQuickFillButtonProps) {
   const { basicForm, genreOptions, onApplySuggestion, descriptionOverride } = props;
+  const { confirm, ConfirmDialog } = useConfirm();
   const llm = useLLMStore();
   const effectiveDescription = basicForm.description.trim() || descriptionOverride?.trim() || "";
   const selectedGenreLabel = useMemo(
@@ -70,13 +72,13 @@ export function BookFramingQuickFillButton(props: BookFramingQuickFillButtonProp
     },
   });
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
     if (!basicForm.title.trim() && !effectiveDescription) {
       toast.error("请先填写书名或一句话概述，再让 AI 帮你填写。");
       return;
     }
     if (hasExistingFramingContent(basicForm)) {
-      const confirmed = window.confirm("将用 AI 建议覆盖当前书级 framing 填写，是否继续？");
+      const confirmed = await confirm("将用 AI 建议覆盖当前书级 framing 填写，是否继续？");
       if (!confirmed) {
         return;
       }
@@ -85,14 +87,17 @@ export function BookFramingQuickFillButton(props: BookFramingQuickFillButtonProp
   };
 
   return (
-    <AiButton
-      type="button"
-      variant="outline"
-      size="sm"
-      onClick={handleGenerate}
-      disabled={suggestionMutation.isPending}
-    >
-      {suggestionMutation.isPending ? "填写中..." : "帮我填写"}
-    </AiButton>
+    <>
+      <AiButton
+        type="button"
+        variant="outline"
+        size="sm"
+        onClick={handleGenerate}
+        disabled={suggestionMutation.isPending}
+      >
+        {suggestionMutation.isPending ? "填写中..." : "帮我填写"}
+      </AiButton>
+      <ConfirmDialog />
+    </>
   );
 }

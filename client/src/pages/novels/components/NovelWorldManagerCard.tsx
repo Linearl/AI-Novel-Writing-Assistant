@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import NovelWorldSourcePanel, { type WorldOption } from "./novelWorld/NovelWorldSourcePanel";
 import TxtIoToolbar from "./TxtIoToolbar";
+import { useConfirm } from "@/components/useConfirm";
 
 interface NovelWorldManagerCardProps {
   novelId: string;
@@ -169,6 +170,7 @@ function formatSyncHistoryTime(value: string): string {
 }
 
 export default function NovelWorldManagerCard(props: NovelWorldManagerCardProps) {
+  const { confirm, ConfirmDialog } = useConfirm();
   const [selectedSyncSections, setSelectedSyncSections] = useState<NovelWorldSyncInput["sections"]>([]);
   const novelWorld = props.view?.novelWorld ?? null;
   const handbook = props.view?.handbook ?? null;
@@ -205,6 +207,7 @@ export default function NovelWorldManagerCard(props: NovelWorldManagerCardProps)
 
   return (
     <Card>
+      <ConfirmDialog />
       <CardHeader className="space-y-2">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
           <div>
@@ -665,8 +668,8 @@ export default function NovelWorldManagerCard(props: NovelWorldManagerCardProps)
                 size="sm"
                 variant="destructive"
                 disabled={props.isDeleting}
-                onClick={() => {
-                  if (window.confirm("确认清空本书世界？此操作不可恢复。")) {
+                onClick={async () => {
+                  if (await confirm("确认清空本书世界？此操作不可恢复。")) {
                     props.onDelete?.();
                   }
                 }}

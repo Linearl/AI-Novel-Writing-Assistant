@@ -11,8 +11,10 @@ import GenreCreateDialog from "./components/GenreCreateDialog";
 import GenreEditDialog from "./components/GenreEditDialog";
 import GenreTreeItem from "./components/GenreTreeItem";
 import { collectDescendantIds, countGenres, findGenreNode } from "./genreManagement.shared";
+import { useConfirm } from "@/components/useConfirm";
 
 export default function GenreManagementPage() {
+  const { confirm, ConfirmDialog } = useConfirm();
   const queryClient = useQueryClient();
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [defaultParentId, setDefaultParentId] = useState("");
@@ -53,12 +55,12 @@ export default function GenreManagementPage() {
     setCreateDialogOpen(true);
   };
 
-  const handleDelete = (genre: GenreTreeNode) => {
+  const handleDelete = async (genre: GenreTreeNode) => {
     const descendantCount = collectDescendantIds(genre).length;
     const message = descendantCount > 0
       ? `确认删除题材基底「${genre.name}」？这会同时删除其下 ${descendantCount} 个子分类，此操作不可恢复。`
       : `确认删除题材基底「${genre.name}」？此操作不可恢复。`;
-    const confirmed = window.confirm(message);
+    const confirmed = await confirm(message);
     if (!confirmed) {
       return;
     }
@@ -67,6 +69,7 @@ export default function GenreManagementPage() {
 
   return (
     <div className="space-y-4">
+      <ConfirmDialog />
       <GenreCreateDialog
         open={createDialogOpen}
         onOpenChange={setCreateDialogOpen}

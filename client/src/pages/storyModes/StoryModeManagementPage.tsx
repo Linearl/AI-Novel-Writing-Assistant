@@ -33,6 +33,7 @@ import { LoadingIndicator } from "@/components/ui/loading-indicator";
 import { useLLMStore } from "@/store/llmStore";
 import StoryModeProfileFields from "./components/StoryModeProfileFields";
 import StoryModeTreeCard from "./components/StoryModeTreeCard";
+import { useConfirm } from "@/components/useConfirm";
 
 type StoryModeProfileDraft = StoryModeProfile;
 
@@ -126,6 +127,7 @@ function toDialogState(node?: StoryModeTreeNode | null): StoryModeDialogState {
 }
 
 export default function StoryModeManagementPage() {
+  const { confirm, ConfirmDialog } = useConfirm();
   const llm = useLLMStore();
   const queryClient = useQueryClient();
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
@@ -353,12 +355,12 @@ export default function StoryModeManagementPage() {
     ));
   };
 
-  const handleDelete = (node: StoryModeTreeNode) => {
+  const handleDelete = async (node: StoryModeTreeNode) => {
     const descendantCount = collectDescendantIds(node).length;
     const message = descendantCount > 0
       ? `确认删除推进模式「${node.name}」吗？这会同时删除其下 ${descendantCount} 个子类，此操作不可恢复。`
       : `确认删除推进模式「${node.name}」吗？此操作不可恢复。`;
-    const confirmed = window.confirm(message);
+    const confirmed = await confirm(message);
     if (!confirmed) {
       return;
     }
@@ -379,6 +381,7 @@ export default function StoryModeManagementPage() {
 
   return (
     <div className="space-y-4">
+      <ConfirmDialog />
       <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
         <DialogContent className="max-h-[90vh] max-w-5xl overflow-auto">
           <DialogHeader>

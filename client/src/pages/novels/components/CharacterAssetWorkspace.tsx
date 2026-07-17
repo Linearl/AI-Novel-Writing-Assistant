@@ -19,6 +19,7 @@ import CharacterAssetSidebar from "./CharacterAssetSidebar";
 import CharacterFocusSummary from "./CharacterFocusSummary";
 import { isProtagonistCharacter, getCharacterTierLabel } from "./characterAssetWorkspace.helpers";
 import { getLastAppearanceChapter } from "./characterPanel.utils";
+import { useConfirm } from "@/components/useConfirm";
 
 interface CharacterFormState {
   name: string;
@@ -175,6 +176,7 @@ function getResourceFunctionLabel(value: CharacterResourceLedgerItem["narrativeF
 }
 
 export default function CharacterAssetWorkspace(props: CharacterAssetWorkspaceProps) {
+  const { confirm, ConfirmDialog } = useConfirm();
   const {
     characters,
     selectedCharacterId,
@@ -245,6 +247,7 @@ export default function CharacterAssetWorkspace(props: CharacterAssetWorkspacePr
 
   return (
     <Card>
+      <ConfirmDialog />
       <CardHeader className="gap-3">
         <div className="flex flex-col gap-2 lg:flex-row lg:items-end lg:justify-between">
           <div className="space-y-1">
@@ -616,8 +619,8 @@ export default function CharacterAssetWorkspace(props: CharacterAssetWorkspacePr
                       size="sm"
                       variant="outline"
                       disabled={isSettingExitStatus}
-                      onClick={() => {
-                        const confirmed = window.confirm(
+                      onClick={async () => {
+                        const confirmed = await confirm(
                           `确认将「${selectedCharacter.name}」标记为已退场？退场后该角色不再参与后续章节生成上下文。`,
                         );
                         if (confirmed) {
@@ -631,8 +634,8 @@ export default function CharacterAssetWorkspace(props: CharacterAssetWorkspacePr
                       size="sm"
                       variant="destructive"
                       disabled={isSettingExitStatus}
-                      onClick={() => {
-                        const confirmed = window.confirm(
+                      onClick={async () => {
+                        const confirmed = await confirm(
                           `确认将「${selectedCharacter.name}」标记为已死亡？死亡后该角色不再参与后续章节生成上下文。`,
                         );
                         if (confirmed) {

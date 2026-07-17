@@ -5,6 +5,7 @@ import type { BaseCharacter } from "@ai-novel/shared";
 import { Button } from "@/components/ui/button";
 import { AppDialogContent, Dialog } from "@/components/ui/dialog";
 import { LoadingIndicator } from "@/components/ui/loading-indicator";
+import { useConfirm } from "@/components/useConfirm";
 
 interface CharacterCardProps {
   character: BaseCharacter;
@@ -35,10 +36,11 @@ export function CharacterCard({
   deleting,
   extraActions,
 }: CharacterCardProps) {
+  const { confirm, ConfirmDialog } = useConfirm();
   const [previewAsset, setPreviewAsset] = useState<ImageAsset | null>(null);
 
   const handleDeleteAsset = async (asset: ImageAsset) => {
-    const confirmed = window.confirm("确认删除这张形象图？此操作不可恢复。");
+    const confirmed = await confirm("确认删除这张形象图？此操作不可恢复。");
     if (!confirmed) {
       return;
     }
@@ -52,6 +54,7 @@ export function CharacterCard({
 
   return (
     <div className="space-y-3 rounded-md border p-3">
+      <ConfirmDialog />
       <div className="flex items-start justify-between gap-2">
         <div>
           <div className="font-medium">{character.name}</div>

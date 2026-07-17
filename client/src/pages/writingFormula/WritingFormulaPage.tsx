@@ -32,10 +32,12 @@ import { useWritingFormulaMutations } from "./useWritingFormulaMutations";
 import { buildLandingProfileItems } from "./writingFormulaLandingItems";
 import { buildRuleSetFromExtractedFeatures, prettyJson } from "./writingFormula.utils";
 import { normalizeWritingFormulaMode } from "./writingFormulaV2.shared";
+import { useConfirm } from "@/components/useConfirm";
 
 type WorkspaceDialog = null | "editor" | "workbench" | "clean";
 
 export default function WritingFormulaPage() {
+  const { confirm, ConfirmDialog } = useConfirm();
   const llm = useLLMStore();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -363,6 +365,7 @@ export default function WritingFormulaPage() {
 
   return (
     <div className="flex h-full min-h-0 flex-col gap-4">
+      <ConfirmDialog />
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="space-y-1">
           <div className="text-sm font-medium uppercase tracking-[0.18em] text-slate-500">Style Engine V2</div>
@@ -396,10 +399,10 @@ export default function WritingFormulaPage() {
         onEditProfile={(profileId) => openWorkspaceDialog("editor", profileId)}
         onOpenWorkbench={(profileId) => openWorkspaceDialog("workbench", profileId)}
         onUseProfileForClean={(profileId) => openWorkspaceDialog("clean", profileId)}
-        onDeleteProfile={(profileId) => {
+        onDeleteProfile={async (profileId) => {
           const profile = profiles.find((item) => item.id === profileId);
           const profileName = profile?.name ?? "这套写法";
-          const confirmed = window.confirm(`确认删除“${profileName}”吗？删除后无法恢复。`);
+          const confirmed = await confirm(`确认删除“${profileName}”吗？删除后无法恢复。`);
           if (!confirmed) {
             return;
           }

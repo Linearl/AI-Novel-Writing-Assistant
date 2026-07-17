@@ -12,10 +12,12 @@ import { CharacterCard } from "./components/CharacterCard";
 import { CharacterCreateDialog } from "./components/CharacterCreateDialog";
 import { CharacterEditDialog } from "./components/CharacterEditDialog";
 import { CharacterImageDialog } from "./components/CharacterImageDialog";
+import { useConfirm } from "@/components/useConfirm";
 
 type EditableBaseCharacter = Omit<BaseCharacter, "id" | "createdAt" | "updatedAt">;
 
 export default function CharacterLibrary() {
+  const { confirm, ConfirmDialog } = useConfirm();
   const queryClient = useQueryClient();
   const [imageDialogOpen, setImageDialogOpen] = useState(false);
   const [selectedImageCharacter, setSelectedImageCharacter] = useState<BaseCharacter | null>(null);
@@ -127,8 +129,8 @@ export default function CharacterLibrary() {
     setEditDialogOpen(true);
   };
 
-  const handleDeleteCharacter = (character: BaseCharacter) => {
-    const confirmed = window.confirm(`确认删除角色「${character.name}」？此操作不可恢复。`);
+  const handleDeleteCharacter = async (character: BaseCharacter) => {
+    const confirmed = await confirm(`确认删除角色「${character.name}」？此操作不可恢复。`);
     if (!confirmed) {
       return;
     }
@@ -137,6 +139,7 @@ export default function CharacterLibrary() {
 
   return (
     <div className="space-y-4">
+      <ConfirmDialog />
       <div className="flex items-center justify-between gap-2">
         <div className="text-sm text-muted-foreground">已创建角色：{characters.length}</div>
         <div className="flex flex-wrap gap-2">

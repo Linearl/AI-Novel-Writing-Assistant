@@ -15,6 +15,7 @@ import {
   getBeatExpectedChapterCount,
 } from "./structuredOutlineWorkspace.shared";
 import type { StructuredTabViewProps } from "./NovelEditView.types";
+import { useConfirm } from "@/components/useConfirm";
 
 type StructuredVolume = StructuredTabViewProps["volumes"][number];
 type StructuredChapter = StructuredVolume["chapters"][number];
@@ -74,6 +75,7 @@ function renderTensionLevelBadge(chapter: StructuredChapter) {
 }
 
 export default function StructuredChapterListCard(props: StructuredChapterListCardProps) {
+  const { confirm, ConfirmDialog } = useConfirm();
   const {
     selectedVolume,
     selectedBeat,
@@ -134,6 +136,7 @@ export default function StructuredChapterListCard(props: StructuredChapterListCa
 
   return (
     <Card className="border-border/70 bg-background/90">
+      <ConfirmDialog />
       <CardHeader className="pb-3">
         <div className="space-y-3">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
@@ -297,8 +300,8 @@ export default function StructuredChapterListCard(props: StructuredChapterListCa
                             className="h-8 w-8 shrink-0 text-muted-foreground hover:text-destructive"
                             disabled={locked || selectedVolume.chapters.length <= 1}
                             title="删除这个未归入节奏段的章节"
-                            onClick={() => {
-                              const confirmed = window.confirm(`确认删除「${title}」？这只会从当前卷的章节拆分中移除该章节。`);
+                            onClick={async () => {
+                              const confirmed = await confirm(`确认删除「${title}」？这只会从当前卷的章节拆分中移除该章节。`);
                               if (!confirmed) {
                                 return;
                               }

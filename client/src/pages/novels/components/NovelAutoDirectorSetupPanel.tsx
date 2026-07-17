@@ -32,6 +32,7 @@ import {
   findOptionSummary,
 } from "./basicInfoForm/BasicInfoFormPrimitives";
 import { AUTO_DIRECTOR_MOBILE_CLASSES } from "@/mobile/autoDirector";
+import { useConfirm } from "@/components/useConfirm";
 
 interface RunModeOption {
   value: DirectorRunMode;
@@ -88,6 +89,7 @@ interface NovelAutoDirectorSetupPanelProps {
 }
 
 export default function NovelAutoDirectorSetupPanel(props: NovelAutoDirectorSetupPanelProps) {
+  const { confirm, ConfirmDialog } = useConfirm();
   const {
     basicForm,
     genreOptions,
@@ -126,9 +128,9 @@ export default function NovelAutoDirectorSetupPanel(props: NovelAutoDirectorSetu
   const hasEditableBasicForm = typeof onBasicFormChange === "function";
   const hasLargeChapterPlan = basicForm.estimatedChapterCount > 200;
   const selectedWorld = worldOptions.find((world) => world.id === basicForm.worldId) ?? null;
-  const useIdeaInspiration = (text: string) => {
+  const useIdeaInspiration = async (text: string) => {
     if (idea.trim()) {
-      const confirmed = window.confirm("上方起始想法已有内容。确认使用这条灵感并覆盖原内容吗？");
+      const confirmed = await confirm("上方起始想法已有内容。确认使用这条灵感并覆盖原内容吗？");
       if (!confirmed) {
         return;
       }
@@ -138,6 +140,7 @@ export default function NovelAutoDirectorSetupPanel(props: NovelAutoDirectorSetu
 
   return (
     <div className="min-w-0 overflow-hidden rounded-lg border bg-background/80 p-3 sm:p-4">
+      <ConfirmDialog />
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div className="text-sm font-medium text-foreground">你的起始想法</div>
         <Button

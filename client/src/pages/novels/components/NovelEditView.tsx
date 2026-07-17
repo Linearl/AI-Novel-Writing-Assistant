@@ -39,6 +39,7 @@ import {
   normalizeNovelWorkspaceTab,
   tabFromDirectorDisplayStage,
 } from "../novelWorkspaceNavigation";
+import { useConfirm } from "@/components/useConfirm";
 
 export default function NovelEditView(props: NovelEditViewProps) {
   const isMobileViewport = useIsMobileViewport();
@@ -51,6 +52,7 @@ export default function NovelEditView(props: NovelEditViewProps) {
 }
 
 function DesktopNovelEditView(props: NovelEditViewProps) {
+  const { confirm, ConfirmDialog } = useConfirm();
   const {
     id,
     activeTab,
@@ -178,6 +180,7 @@ function DesktopNovelEditView(props: NovelEditViewProps) {
 
   return (
     <div className="space-y-6 lg:space-y-7">
+      <ConfirmDialog />
       {id ? (
         <div className="space-y-3 pb-1">
           <div className="flex min-w-0 flex-wrap items-center gap-3 text-sm">
@@ -333,8 +336,8 @@ function DesktopNovelEditView(props: NovelEditViewProps) {
                         size="sm"
                         className="border-yellow-500/60 text-yellow-700 hover:bg-yellow-100 dark:text-yellow-400 dark:hover:bg-yellow-900/30"
                         disabled={resetChaptersMutation.isPending}
-                        onClick={() => {
-                          if (window.confirm(`确认重置本小说所有 ${totalChapters} 个章节的正文？此操作不可撤销（但快照数据保留）。`)) {
+                        onClick={async () => {
+                          if (await confirm(`确认重置本小说所有 ${totalChapters} 个章节的正文？此操作不可撤销（但快照数据保留）。`)) {
                             resetChaptersMutation.mutate();
                           }
                         }}

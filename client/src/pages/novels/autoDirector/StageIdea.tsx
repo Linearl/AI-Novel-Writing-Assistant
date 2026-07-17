@@ -4,6 +4,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import NovelAutoDirectorIdeaInspirationPanel from "../components/NovelAutoDirectorIdeaInspirationPanel";
+import { useConfirm } from "@/components/useConfirm";
 
 interface StageIdeaProps {
   idea: string;
@@ -28,6 +29,7 @@ export default function StageIdea({
   canContinue,
   isGenerating,
 }: StageIdeaProps) {
+  const { confirm, ConfirmDialog } = useConfirm();
   const reducedMotion = useReducedMotion();
   const [showInspirations, setShowInspirations] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -46,9 +48,9 @@ export default function StageIdea({
     textarea.style.height = `${Math.max(180, textarea.scrollHeight)}px`;
   }, [idea]);
 
-  const useIdeaInspiration = (text: string) => {
+  const useIdeaInspiration = async (text: string) => {
     if (idea.trim()) {
-      const confirmed = window.confirm("上方起始想法已有内容。确认使用这条灵感并覆盖原内容吗？");
+      const confirmed = await confirm("上方起始想法已有内容。确认使用这条灵感并覆盖原内容吗？");
       if (!confirmed) {
         return;
       }
@@ -80,6 +82,7 @@ export default function StageIdea({
 
   return (
     <section className="mx-auto flex min-h-[calc(100vh-180px)] w-full max-w-4xl flex-col items-center justify-center px-1 py-10 sm:py-16">
+      <ConfirmDialog />
       <motion.div
         initial={reducedMotion ? { opacity: 0 } : { opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}

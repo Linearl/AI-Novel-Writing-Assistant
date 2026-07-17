@@ -4,6 +4,7 @@ import { queryKeys } from "@/api/queryKeys";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
+import { useConfirm } from "@/components/useConfirm";
 
 interface VersionHistoryTabProps {
   novelId: string;
@@ -23,6 +24,7 @@ function formatSnapshotTrigger(triggerType: string): string {
 }
 
 export default function VersionHistoryTab({ novelId }: VersionHistoryTabProps) {
+  const { confirm, ConfirmDialog } = useConfirm();
   const queryClient = useQueryClient();
   const snapshotsQuery = useQuery({
     queryKey: queryKeys.novels.snapshots(novelId),
@@ -52,6 +54,7 @@ export default function VersionHistoryTab({ novelId }: VersionHistoryTabProps) {
 
   return (
     <div className="space-y-4">
+      <ConfirmDialog />
       <div className="flex flex-col gap-3 rounded-2xl border border-border/70 bg-muted/15 p-4 md:flex-row md:items-center md:justify-between">
         <div>
           <div className="font-medium">版本历史</div>
@@ -94,8 +97,8 @@ export default function VersionHistoryTab({ novelId }: VersionHistoryTabProps) {
                 <Button
                   variant="secondary"
                   size="sm"
-                  onClick={() => {
-                    const confirmed = window.confirm("恢复前会自动备份当前状态。确认恢复这个版本吗？");
+                  onClick={async () => {
+                    const confirmed = await confirm("恢复前会自动备份当前状态。确认恢复这个版本吗？");
                     if (confirmed) {
                       restoreMutation.mutate(snapshot.id);
                     }

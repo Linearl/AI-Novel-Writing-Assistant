@@ -35,6 +35,7 @@ import { reconcileSelectedTaskIds } from "./selectionState";
 import { toast } from "@/components/ui/toast";
 import { resolveInternalNavigationTarget } from "@/lib/internalNavigation";
 import { AUTO_DIRECTOR_MOBILE_CLASSES } from "@/mobile/autoDirector";
+import { useConfirm } from "@/components/useConfirm";
 
 const TASK_STATUSES: readonly TaskStatus[] = [
   "queued",
@@ -89,11 +90,11 @@ function getSelectedSection(items: AutoDirectorFollowUpItem[]): AutoDirectorFoll
   return sections.length === 1 ? sections[0] : null;
 }
 
-function shouldConfirmAction(action: AutoDirectorAction): boolean {
+async function shouldConfirmAction(action: AutoDirectorAction): Promise<boolean> {
   if (!action.requiresConfirm) {
     return false;
   }
-  return window.confirm(`确认执行“${action.label}”？`);
+  return await confirm(`确认执行“${action.label}”？`);
 }
 
 function formatActionFeedbackMessage(message: string, fallback: string): string {
@@ -110,6 +111,7 @@ function parseEnumParam<T extends string>(value: string | null, candidates: read
 }
 
 export default function AutoDirectorFollowUpCenterPage() {
+  const { confirm, ConfirmDialog } = useConfirm();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -373,7 +375,7 @@ export default function AutoDirectorFollowUpCenterPage() {
       }
       return;
     }
-    if (shouldConfirmAction(action) === false && action.requiresConfirm) {
+    if ((await shouldConfirmAction(action)) === false && action.requiresConfirm) {
       return;
     }
     const actionCode = action.code as AutoDirectorMutationActionCode;
@@ -412,6 +414,7 @@ export default function AutoDirectorFollowUpCenterPage() {
 
   return (
     <div className={AUTO_DIRECTOR_MOBILE_CLASSES.followUpPageRoot}>
+      <ConfirmDialog />
       <AutoDirectorFollowUpOverviewCards
         overview={overviewQuery.data?.data ?? null}
         list={listQuery.data?.data ?? null}

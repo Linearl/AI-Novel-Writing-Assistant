@@ -59,8 +59,10 @@ import {
   type LayerKey,
   type RefineAttribute,
 } from "./components/workspace/worldWorkspaceShared";
+import { useConfirm } from "@/components/useConfirm";
 
 export default function WorldWorkspace() {
+  const { confirm, ConfirmDialog } = useConfirm();
   const navigate = useNavigate();
   const { id = "" } = useParams();
   const llm = useLLMStore();
@@ -320,11 +322,11 @@ export default function WorldWorkspace() {
     }
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (!id || !world) {
       return;
     }
-    const confirmed = window.confirm(`确认删除世界样本「${world.name}」？此操作不可恢复。`);
+    const confirmed = await confirm(`确认删除世界样本「${world.name}」？此操作不可恢复。`);
     if (!confirmed) {
       return;
     }
@@ -333,6 +335,7 @@ export default function WorldWorkspace() {
 
   return (
     <div className="space-y-4">
+      <ConfirmDialog />
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>世界工作台：{world?.name ?? "加载中..."} {world?.version ? `(v${world.version})` : ""}</CardTitle>

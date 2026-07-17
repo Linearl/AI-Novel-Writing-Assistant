@@ -1,7 +1,7 @@
 {
   "taskId": "REQ-3021",
   "title": "window.confirm/window.prompt 迁移到 useConfirm — 26 个文件分批迁移",
-  "status": "requirements_ready",
+  "status": "done",
   "version": "0.2",
   "priority": "C1",
   "created": "2026-07-17T00:00:00.000Z",

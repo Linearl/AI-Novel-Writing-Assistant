@@ -10,6 +10,7 @@ import { queryKeys } from "@/api/queryKeys";
 import { featureFlags } from "@/config/featureFlags";
 import { toast } from "@/components/ui/toast";
 import WorldUnlinkDialog from "./WorldUnlinkDialog";
+import { useConfirm } from "@/components/useConfirm";
 
 interface WorldLibraryCardProjection {
   summary: string;
@@ -215,6 +216,7 @@ function WorldSampleLine({
 }
 
 export default function WorldList() {
+  const { confirm, ConfirmDialog } = useConfirm();
   const queryClient = useQueryClient();
   const worldListQuery = useQuery({
     queryKey: queryKeys.worlds.all,
@@ -234,8 +236,8 @@ export default function WorldList() {
 
   const worlds = worldListQuery.data?.data ?? [];
 
-  const handleDelete = (worldId: string, worldName: string) => {
-    const confirmed = window.confirm(`确认删除世界样本「${worldName}」？此操作不可恢复。`);
+  const handleDelete = async (worldId: string, worldName: string) => {
+    const confirmed = await confirm(`确认删除世界样本「${worldName}」？此操作不可恢复。`);
     if (!confirmed) {
       return;
     }
@@ -244,6 +246,7 @@ export default function WorldList() {
 
   return (
     <div className="space-y-4">
+      <ConfirmDialog />
       <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
         <div>
           <h1 className="text-xl font-semibold tracking-normal">世界样本库</h1>
