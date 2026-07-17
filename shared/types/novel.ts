@@ -4,6 +4,8 @@ import type { BookContract } from "./novelWorkflow.js";
 import type { NovelWorkflowCheckpoint } from "./novelWorkflow.js";
 import type { NovelStoryMode } from "./storyMode.js";
 import type { TaskStatus, TaskTokenUsageSummary } from "./task.js";
+import type { ChapterRole, ChapterPlanScene } from "./novel-chapter.js";
+import type { VolumePlan } from "./novel-volume.js";
 export type {
   BaseCharacter,
   Character,
@@ -45,93 +47,69 @@ export type {
   ChapterScenePlan,
   LengthBudgetContract,
 } from "./chapterLengthControl.js";
+
 export type NovelStatus = "draft" | "published";
+
 export type NovelWritingMode = "original" | "continuation";
+
 export type ProjectMode = "ai_led" | "co_pilot" | "draft_mode" | "auto_pipeline";
+
 export type NarrativePov = "first_person" | "third_person" | "mixed";
+
 export type PacePreference = "slow" | "balanced" | "fast";
+
 export type EmotionIntensity = "low" | "medium" | "high";
+
 export type AIFreedom = "low" | "medium" | "high";
+
 export type ProjectProgressStatus = "not_started" | "in_progress" | "completed" | "rework" | "blocked";
 
-// ── Zod enum schemas (shared across server & client) ──────────────────
 export const novelStatusSchema = z.enum(["draft", "published"]);
+
 export const novelWritingModeSchema = z.enum(["original", "continuation"]);
+
 export const projectModeSchema = z.enum(["ai_led", "co_pilot", "draft_mode", "auto_pipeline"]);
+
 export const narrativePovSchema = z.enum(["first_person", "third_person", "mixed"]);
+
 export const pacePreferenceSchema = z.enum(["slow", "balanced", "fast"]);
+
 export const emotionIntensitySchema = z.enum(["low", "medium", "high"]);
+
 export const aiFreedomSchema = z.enum(["low", "medium", "high"]);
+
 export const projectProgressStatusSchema = z.enum(["not_started", "in_progress", "completed", "rework", "blocked"]);
+
 export const chapterRoleSchema = z.enum(["normal", "transition", "climax", "turning_point"]);
+
 export const tensionLevelSchema = z.enum(["low", "medium", "high", "climax"]);
+
 export const chapterStatusSchema = z.enum(["unplanned", "pending_generation", "generating", "pending_review", "needs_repair", "completed"]);
+
 export const storyPlanLevelSchema = z.enum(["book", "arc", "chapter"]);
+
 export const volumeGenerationScopeSchema = z.enum(["strategy", "strategy_critique", "skeleton", "beat_sheet", "chapter_list", "chapter_detail", "rebalance"]);
+
 export const volumeGenerationScopeInputSchema = z.enum(["strategy", "strategy_critique", "skeleton", "beat_sheet", "chapter_list", "chapter_detail", "rebalance", "book", "volume"]);
+
 export const storylineVersionStatusSchema = z.enum(["draft", "active", "frozen"]);
+
 export const volumePlanVersionStatusSchema = z.enum(["draft", "active", "frozen"]);
+
 export const pipelineRunModeSchema = z.enum(["fast", "polish"]);
+
 export const artifactSyncModeSchema = z.enum(["adaptive", "deferred", "strict"]);
+
 export const pipelineRepairModeSchema = z.enum(["detect_only", "light_repair", "heavy_repair", "continuity_only", "character_only", "ending_only"]);
 
 export type StorylineVersionStatus = "draft" | "active" | "frozen";
-export type VolumePlanVersionStatus = "draft" | "active" | "frozen";
-export type VolumeGenerationScope =
-  | "strategy"
-  | "strategy_critique"
-  | "skeleton"
-  | "beat_sheet"
-  | "chapter_list"
-  | "chapter_detail"
-  | "rebalance";
-export type VolumeGenerationScopeInput = VolumeGenerationScope | "book" | "volume";
-export type VolumeChapterListGenerationMode = "full_volume" | "single_beat";
+
 export type StoryPlanLevel = "book" | "arc" | "chapter";
+
 export type StoryPlanRole = "setup" | "progress" | "pressure" | "turn" | "payoff" | "cooldown";
-export type AuditType = "continuity" | "character" | "plot" | "mode_fit" | "vocabulary";
-export type AuditIssueStatus = "open" | "resolved" | "ignored";
-export type {
-  CharacterResourceContext,
-  CharacterResourceEvent,
-  CharacterResourceEventType,
-  CharacterResourceLedgerItem,
-  CharacterResourceLedgerResponse,
-  CharacterResourceNarrativeFunction,
-  CharacterResourceOwnerType,
-  CharacterResourceProposalSummary,
-  CharacterResourceRiskSignal,
-  CharacterResourceStatus,
-  CharacterResourceType,
-  CharacterResourceUpdatePayload,
-} from "./characterResource.js";
 
-export type {
-  PayoffLedgerItem,
-  PayoffLedgerListResponse,
-  PayoffLedgerNormalizedStatus,
-  PayoffLedgerResponse,
-  PayoffLedgerScopeType,
-  PayoffLedgerSourceRef,
-  PayoffLedgerStatus,
-  PayoffLedgerSummary,
-} from "./payoffLedger.js";
-
-export type ChapterStatus =
-  | "unplanned"
-  | "pending_generation"
-  | "generating"
-  | "pending_review"
-  | "needs_repair"
-  | "completed";
-
-/** Chapter narrative role — determines word count coefficient and generation hints. */
-export type ChapterRole = "normal" | "transition" | "climax" | "turning_point";
-
-/** Chapter tension level — determines quality review strictness. */
 export type TensionLevel = "low" | "medium" | "high" | "climax";
 
-/** Human-readable labels for tension levels. */
 export const TENSION_LEVEL_LABELS: Record<TensionLevel, string> = {
   low: "低张力",
   medium: "中张力",
@@ -139,7 +117,6 @@ export const TENSION_LEVEL_LABELS: Record<TensionLevel, string> = {
   climax: "高潮",
 };
 
-/** Human-readable labels for chapter roles. */
 export const CHAPTER_ROLE_LABELS: Record<ChapterRole, string> = {
   normal: "普通章",
   transition: "过渡章",
@@ -147,31 +124,20 @@ export const CHAPTER_ROLE_LABELS: Record<ChapterRole, string> = {
   turning_point: "转折章",
 };
 
-/** Adaptive word count target range for a chapter, computed from base settings and role. */
 export interface WordCountTarget {
   min: number;
   max: number;
   role: ChapterRole;
 }
 
-/** Water content detection result for a chapter. */
 export interface WaterContentAnalysis {
   score: number;
   flagged: boolean;
   analyzedAt?: string;
 }
 
-export type PipelineRunMode = "fast" | "polish";
 export type ArtifactSyncMode = "adaptive" | "deferred" | "strict";
-export type PipelineRepairMode =
-  | "detect_only"
-  | "light_repair"
-  | "heavy_repair"
-  | "continuity_only"
-  | "character_only"
-  | "ending_only";
 
-/** Auto-director task summary — top-level status of a director run including progress, stage, checkpoint, and blocking info. */
 export interface NovelAutoDirectorTaskSummary {
   id: string;
   status: TaskStatus;
@@ -203,7 +169,6 @@ export type ModelRouteTaskType =
   | "fact_extraction"
   | "chat";
 
-/** Core novel entity — represents a single book project with all book-level settings, progress tracking, and resource bindings. */
 export interface Novel {
   id: string;
   title: string;
@@ -250,201 +215,6 @@ export interface Novel {
   updatedAt: string;
 }
 
-/** A single chapter within a novel — holds content, generation state, quality scores, and task/review metadata. */
-export interface Chapter {
-  id: string;
-  title: string;
-  content?: string | null;
-  order: number;
-  generationState?: ChapterGenerationState;
-  chapterStatus?: ChapterStatus | null;
-  targetWordCount?: number | null;
-  wordCountTarget?: WordCountTarget | null;
-  waterContentAnalysis?: WaterContentAnalysis | null;
-  conflictLevel?: number | null;
-  revealLevel?: number | null;
-  mustAvoid?: string | null;
-  taskSheet?: string | null;
-  sceneCards?: string | null;
-  styleContract?: string | null;
-  repairHistory?: string | null;
-  qualityScore?: number | null;
-  continuityScore?: number | null;
-  characterScore?: number | null;
-  pacingScore?: number | null;
-  riskFlags?: string | null;
-  hook?: string | null;
-  expectation?: string | null;
-  tensionLevel?: TensionLevel | null;
-  locked: boolean;
-  novelId: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export type ChapterEditorOperation =
-  | "polish"
-  | "expand"
-  | "compress"
-  | "emotion"
-  | "conflict"
-  | "custom";
-export type ChapterEditorRevisionSource = "preset" | "freeform";
-export type ChapterEditorRevisionScope = "selection" | "chapter";
-
-export interface ChapterEditorTargetRange {
-  from: number;
-  to: number;
-  text: string;
-}
-
-export interface ChapterEditorContextWindow {
-  beforeParagraphs: string[];
-  afterParagraphs: string[];
-}
-
-export interface ChapterEditorContextSummary {
-  goalSummary?: string | null;
-  chapterSummary?: string | null;
-  styleSummary?: string | null;
-  characterStateSummary?: string | null;
-  worldConstraintSummary?: string | null;
-}
-
-export interface ChapterEditorRewriteConstraints {
-  keepFacts: boolean;
-  keepPov: boolean;
-  noUnauthorizedSetting: boolean;
-  preserveCoreInfo: boolean;
-}
-
-export interface ChapterEditorDiffChunk {
-  id: string;
-  type: "equal" | "insert" | "delete";
-  text: string;
-}
-
-export interface ChapterEditorCandidate {
-  id: string;
-  label: string;
-  content: string;
-  summary?: string | null;
-  rationale?: string | null;
-  riskNotes?: string[];
-  diffChunks: ChapterEditorDiffChunk[];
-  semanticTags?: string[];
-}
-
-export interface ChapterEditorMacroContext {
-  chapterRoleInVolume: string;
-  volumeTitle: string;
-  volumePositionLabel: string;
-  volumePhaseLabel: string;
-  paceDirective: string;
-  chapterMission: string;
-  previousChapterBridge: string;
-  nextChapterBridge: string;
-  activePlotThreads: string[];
-  characterStateSummary: string;
-  worldConstraintSummary: string;
-  mustKeepConstraints: string[];
-}
-
-export interface ChapterEditorDiagnosticCard {
-  id: string;
-  title: string;
-  problemSummary: string;
-  whyItMatters: string;
-  recommendedAction: ChapterEditorOperation;
-  recommendedScope: ChapterEditorRevisionScope;
-  anchorRange?: Pick<ChapterEditorTargetRange, "from" | "to"> | null;
-  paragraphLabel?: string | null;
-  severity: "low" | "medium" | "high" | "critical";
-  sourceTags: string[];
-}
-
-export interface ChapterEditorRecommendedTask {
-  title: string;
-  summary: string;
-  recommendedAction: ChapterEditorOperation;
-  recommendedScope: ChapterEditorRevisionScope;
-  anchorRange?: Pick<ChapterEditorTargetRange, "from" | "to"> | null;
-  paragraphLabel?: string | null;
-}
-
-export interface ChapterEditorWorkspaceResponse {
-  chapterMeta: {
-    chapterId: string;
-    order: number;
-    title: string;
-    wordCount: number;
-    openIssueCount: number;
-    styleSummary?: string | null;
-    updatedAt: string;
-  };
-  macroContext: ChapterEditorMacroContext;
-  diagnosticCards: ChapterEditorDiagnosticCard[];
-  recommendedTask: ChapterEditorRecommendedTask | null;
-  refreshReason: string;
-}
-
-export interface ChapterEditorAiRevisionIntent {
-  editGoal: string;
-  toneShift: string;
-  paceAdjustment: string;
-  conflictAdjustment: string;
-  emotionAdjustment: string;
-  mustPreserve: string[];
-  mustAvoid: string[];
-  strength: "light" | "medium" | "strong";
-  reasoningSummary: string;
-}
-
-export interface ChapterEditorAiRevisionRequest {
-  source: ChapterEditorRevisionSource;
-  scope: ChapterEditorRevisionScope;
-  presetOperation?: ChapterEditorOperation;
-  instruction?: string;
-  contentSnapshot: string;
-  selection?: ChapterEditorTargetRange;
-  context?: ChapterEditorContextWindow;
-  constraints: ChapterEditorRewriteConstraints;
-  provider?: import("./llm.js").LLMProvider;
-  model?: string;
-  temperature?: number;
-}
-
-export interface ChapterEditorAiRevisionResponse {
-  sessionId: string;
-  scope: ChapterEditorRevisionScope;
-  resolvedIntent: ChapterEditorAiRevisionIntent;
-  targetRange: ChapterEditorTargetRange;
-  macroAlignmentNote?: string | null;
-  candidates: ChapterEditorCandidate[];
-  activeCandidateId: string | null;
-}
-
-export interface ChapterEditorRewritePreviewRequest {
-  operation: ChapterEditorOperation;
-  customInstruction?: string;
-  contentSnapshot: string;
-  targetRange: ChapterEditorTargetRange;
-  context: ChapterEditorContextWindow;
-  chapterContext: ChapterEditorContextSummary;
-  constraints: ChapterEditorRewriteConstraints;
-  provider?: import("./llm.js").LLMProvider;
-  model?: string;
-  temperature?: number;
-}
-
-export interface ChapterEditorRewritePreviewResponse {
-  sessionId: string;
-  operation: ChapterEditorOperation;
-  targetRange: ChapterEditorTargetRange;
-  candidates: ChapterEditorCandidate[];
-  activeCandidateId: string | null;
-}
-
 export interface NovelGenre {
   id: string;
   name: string;
@@ -469,21 +239,6 @@ export interface StructuredOutlineVolume {
     summary: string;
   }>;
 }
-
-export type ChapterGenerationState =
-  | "planned"
-  | "drafted"
-  | "reviewed"
-  | "repaired"
-  | "approved"
-  | "published";
-
-export type PipelineJobStatus =
-  | "queued"
-  | "running"
-  | "succeeded"
-  | "failed"
-  | "cancelled";
 
 export interface QualityScore {
   coherence: number;
@@ -621,18 +376,6 @@ export interface PlotBeat {
   updatedAt: string;
 }
 
-export interface ChapterSummary {
-  id: string;
-  novelId: string;
-  chapterId: string;
-  summary: string;
-  keyEvents?: string | null;
-  characterStates?: string | null;
-  hook?: string | null;
-  createdAt: string;
-  updatedAt: string;
-}
-
 export interface ConsistencyFact {
   id: string;
   novelId: string;
@@ -640,42 +383,6 @@ export interface ConsistencyFact {
   category: "world" | "character" | "timeline" | "plot" | "rule";
   content: string;
   source?: string | null;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface PipelineJob {
-  id: string;
-  novelId: string;
-  startOrder: number;
-  endOrder: number;
-  runMode?: PipelineRunMode | null;
-  autoReview?: boolean | null;
-  autoRepair?: boolean | null;
-  skipCompleted?: boolean | null;
-  qualityThreshold?: number | null;
-  repairMode?: PipelineRepairMode | null;
-  artifactSyncMode?: ArtifactSyncMode | null;
-  status: PipelineJobStatus;
-  progress: number;
-  completedCount: number;
-  totalCount: number;
-  retryCount: number;
-  maxRetries: number;
-  heartbeatAt?: string | null;
-  currentStage?: string | null;
-  currentItemKey?: string | null;
-  currentItemLabel?: string | null;
-  cancelRequestedAt?: string | null;
-  displayStatus?: string | null;
-  noticeCode?: string | null;
-  noticeSummary?: string | null;
-  qualityAlertDetails?: string[];
-  error?: string | null;
-  lastErrorType?: string | null;
-  payload?: string | null;
-  startedAt?: string | null;
-  finishedAt?: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -727,19 +434,6 @@ export interface NovelSnapshot {
 
 export type NovelSnapshotListItem = Omit<NovelSnapshot, "snapshotData">;
 
-export interface ChapterPlanScene {
-  id: string;
-  planId: string;
-  sortOrder: number;
-  title: string;
-  objective?: string | null;
-  conflict?: string | null;
-  reveal?: string | null;
-  emotionBeat?: string | null;
-  createdAt: string;
-  updatedAt: string;
-}
-
 export interface StoryPlan {
   id: string;
   novelId: string;
@@ -787,75 +481,6 @@ export interface ReplanResult {
   } | null;
 }
 
-export interface VolumeChapterPlan {
-  id: string;
-  volumeId: string;
-  chapterId?: string | null;
-  chapterOrder: number;
-  beatKey?: string | null;
-  title: string;
-  summary: string;
-  purpose?: string | null;
-  tensionLevel?: TensionLevel | null;
-  exclusiveEvent?: string | null;
-  endingState?: string | null;
-  nextChapterEntryState?: string | null;
-  conflictLevel?: number | null;
-  revealLevel?: number | null;
-  targetWordCount?: number | null;
-  mustAvoid?: string | null;
-  taskSheet?: string | null;
-  sceneCards?: string | null;
-  styleContract?: string | null;
-  payoffRefs: string[];
-  createdAt: string;
-  updatedAt: string;
-}
-
-export type VolumeStrategyPlanningMode = "hard" | "soft";
-export type VolumeUncertaintyLevel = "low" | "medium" | "high";
-export type VolumeBeatSheetStatus = "not_started" | "generated" | "revised";
-export type VolumeCritiqueRiskLevel = "low" | "medium" | "high";
-export type VolumeRebalanceSeverity = "low" | "medium" | "high";
-export type VolumeRebalanceDirection =
-  | "pull_forward"
-  | "push_back"
-  | "tighten_current"
-  | "expand_adjacent"
-  | "hold";
-export type VolumeUncertaintyTargetType = "book" | "volume" | "beat_sheet" | "chapter_list";
-
-export interface VolumeCountRange {
-  min: number;
-  max: number;
-}
-
-export interface VolumeChapterTargetRange {
-  min: number;
-  ideal: number;
-  max: number;
-}
-
-export interface VolumeCountGuidance {
-  chapterBudget: number;
-  targetChapterRange: VolumeChapterTargetRange;
-  allowedVolumeCountRange: VolumeCountRange;
-  recommendedVolumeCount: number;
-  systemRecommendedVolumeCount: number;
-  hardPlannedVolumeRange: VolumeCountRange;
-  userPreferredVolumeCount?: number | null;
-  respectedExistingVolumeCount?: number | null;
-}
-
-export interface VolumeStrategyVolume {
-  sortOrder: number;
-  planningMode: VolumeStrategyPlanningMode;
-  roleLabel: string;
-  coreReward: string;
-  escalationFocus: string;
-  uncertaintyLevel: VolumeUncertaintyLevel;
-}
-
 export const volumeStrategyVolumeSchema = z.object({
   sortOrder: z.number().int(),
   planningMode: z.enum(["hard", "soft"]),
@@ -865,31 +490,12 @@ export const volumeStrategyVolumeSchema = z.object({
   uncertaintyLevel: z.enum(["low", "medium", "high"]),
 });
 
-export interface VolumeUncertaintyMarker {
-  targetType: VolumeUncertaintyTargetType;
-  targetRef: string;
-  level: VolumeUncertaintyLevel;
-  reason: string;
-}
-
 export const volumeUncertaintyMarkerSchema = z.object({
   targetType: z.enum(["book", "volume", "beat_sheet", "chapter_list"]),
   targetRef: z.string(),
   level: z.enum(["low", "medium", "high"]),
   reason: z.string(),
 });
-
-export interface VolumeStrategyPlan {
-  recommendedVolumeCount: number;
-  hardPlannedVolumeCount: number;
-  readerRewardLadder: string;
-  escalationLadder: string;
-  midpointShift: string;
-  notes: string;
-  volumes: VolumeStrategyVolume[];
-  uncertainties: VolumeUncertaintyMarker[];
-  reasoningTraceJson?: string | null;
-}
 
 export const volumeStrategyPlanSchema = z.object({
   recommendedVolumeCount: z.number().int(),
@@ -902,15 +508,6 @@ export const volumeStrategyPlanSchema = z.object({
   uncertainties: z.array(volumeUncertaintyMarkerSchema),
 });
 
-export interface VolumeBeat {
-  key: string;
-  label: string;
-  summary: string;
-  chapterSpanHint: string;
-  mustDeliver: string[];
-  tensionLevel?: TensionLevel;
-}
-
 export const volumeBeatSchema = z.object({
   key: z.string(),
   label: z.string(),
@@ -920,26 +517,12 @@ export const volumeBeatSchema = z.object({
   tensionLevel: tensionLevelSchema.optional(),
 });
 
-export interface VolumeBeatSheet {
-  volumeId: string;
-  volumeSortOrder: number;
-  status: VolumeBeatSheetStatus;
-  beats: VolumeBeat[];
-}
-
 export const volumeBeatSheetSchema = z.object({
   volumeId: z.string(),
   volumeSortOrder: z.number().int(),
   status: z.enum(["not_started", "generated", "revised"]),
   beats: z.array(volumeBeatSchema),
 });
-
-export interface VolumeCritiqueIssue {
-  targetRef: string;
-  severity: VolumeCritiqueRiskLevel;
-  title: string;
-  detail: string;
-}
 
 export const volumeCritiqueIssueSchema = z.object({
   targetRef: z.string(),
@@ -948,36 +531,12 @@ export const volumeCritiqueIssueSchema = z.object({
   detail: z.string(),
 });
 
-export interface VolumeCritiqueReport {
-  overallRisk: VolumeCritiqueRiskLevel;
-  summary: string;
-  issues: VolumeCritiqueIssue[];
-  recommendedActions: string[];
-}
-
 export const volumeCritiqueReportSchema = z.object({
   overallRisk: z.enum(["low", "medium", "high"]),
   summary: z.string(),
   issues: z.array(volumeCritiqueIssueSchema),
   recommendedActions: z.array(z.string()),
 });
-
-export interface VolumePlanningReadiness {
-  canGenerateStrategy: boolean;
-  canGenerateSkeleton: boolean;
-  canGenerateBeatSheet: boolean;
-  canGenerateChapterList: boolean;
-  blockingReasons: string[];
-}
-
-export interface VolumeRebalanceDecision {
-  anchorVolumeId: string;
-  affectedVolumeId: string;
-  direction: VolumeRebalanceDirection;
-  severity: VolumeRebalanceSeverity;
-  summary: string;
-  actions: string[];
-}
 
 export const volumeRebalanceDecisionSchema = z.object({
   anchorVolumeId: z.string(),
@@ -987,47 +546,6 @@ export const volumeRebalanceDecisionSchema = z.object({
   summary: z.string(),
   actions: z.array(z.string()),
 });
-
-export interface VolumePlan {
-  id: string;
-  novelId: string;
-  sortOrder: number;
-  title: string;
-  summary?: string | null;
-  openingHook?: string | null;
-  mainPromise?: string | null;
-  primaryPressureSource?: string | null;
-  coreSellingPoint?: string | null;
-  escalationMode?: string | null;
-  protagonistChange?: string | null;
-  midVolumeRisk?: string | null;
-  climax?: string | null;
-  payoffType?: string | null;
-  nextVolumeHook?: string | null;
-  resetPoint?: string | null;
-  openPayoffs: string[];
-  status: string;
-  sourceVersionId?: string | null;
-  chapters: VolumeChapterPlan[];
-  targetChapterCount?: number | null;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface VolumePlanVersionSummary {
-  id: string;
-  novelId: string;
-  version: number;
-  status: VolumePlanVersionStatus;
-  diffSummary?: string | null;
-  strategyReasoningTraceJson?: string | null;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface VolumePlanVersion extends VolumePlanVersionSummary {
-  contentJson: string;
-}
 
 export interface PaceCurveChapter {
   chapterOrder: number;
@@ -1051,76 +569,6 @@ export interface PaceCurveData {
   volumes: PaceCurveVolume[];
 }
 
-export interface VolumePlanDocument {
-  novelId: string;
-  workspaceVersion: "v2";
-  volumes: VolumePlan[];
-  strategyPlan: VolumeStrategyPlan | null;
-  critiqueReport: VolumeCritiqueReport | null;
-  beatSheets: VolumeBeatSheet[];
-  rebalanceDecisions: VolumeRebalanceDecision[];
-  readiness: VolumePlanningReadiness;
-  derivedOutline: string;
-  derivedStructuredOutline: string;
-  source: "volume" | "legacy" | "empty";
-  activeVersionId: string | null;
-}
-
-export interface VolumePlanDiffVolume {
-  sortOrder: number;
-  title: string;
-  changedFields: string[];
-  chapterOrders: number[];
-}
-
-export interface VolumePlanDiff {
-  id: string;
-  novelId: string;
-  version: number;
-  status: VolumePlanVersionStatus;
-  diffSummary?: string | null;
-  changedLines: number;
-  changedVolumeCount: number;
-  changedChapterCount: number;
-  changedVolumes: VolumePlanDiffVolume[];
-  affectedChapterOrders: number[];
-}
-
-export interface VolumeImpactResult {
-  novelId: string;
-  sourceVersion: number | null;
-  changedLines: number;
-  affectedVolumeCount: number;
-  affectedChapterCount: number;
-  affectedVolumes: VolumePlanDiffVolume[];
-  requiresChapterSync: boolean;
-  requiresCharacterReview: boolean;
-  recommendedActions: string[];
-}
-
-export interface VolumeSyncPreviewItem {
-  action: "create" | "update" | "keep" | "delete" | "delete_candidate" | "move";
-  volumeTitle: string;
-  chapterOrder: number;
-  nextTitle: string;
-  previousTitle?: string | null;
-  hasContent: boolean;
-  changedFields: string[];
-}
-
-export interface VolumeSyncPreview {
-  createCount: number;
-  updateCount: number;
-  keepCount: number;
-  moveCount: number;
-  deleteCount: number;
-  deleteCandidateCount: number;
-  affectedGeneratedCount: number;
-  clearContentCount: number;
-  affectedVolumeCount: number;
-  items: VolumeSyncPreviewItem[];
-}
-
 export interface ReplanRecommendation {
   recommended: boolean;
   action?: "continue_with_warning" | "local_patch_plan" | "stop_for_replan";
@@ -1132,33 +580,6 @@ export interface ReplanRecommendation {
   triggerReason?: string;
   windowReason?: string;
   whyTheseChapters?: string;
-}
-
-export interface AuditIssue {
-  id: string;
-  reportId: string;
-  auditType: AuditType;
-  severity: "low" | "medium" | "high" | "critical";
-  code: string;
-  description: string;
-  evidence: string;
-  fixSuggestion: string;
-  status: AuditIssueStatus;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface AuditReport {
-  id: string;
-  novelId: string;
-  chapterId: string;
-  auditType: AuditType;
-  overallScore?: number | null;
-  summary?: string | null;
-  legacyScoreJson?: string | null;
-  issues: AuditIssue[];
-  createdAt: string;
-  updatedAt: string;
 }
 
 export interface ModelRouteConfig {
@@ -1189,20 +610,8 @@ export const MODEL_ROUTE_STRUCTURED_RESPONSE_FORMATS = [
 
 export type ModelRouteStructuredResponseFormat = typeof MODEL_ROUTE_STRUCTURED_RESPONSE_FORMATS[number];
 
-export type {
-  ChapterRuntimePackage,
-  ChapterRuntimeRequest,
-  GenerationContextPackage,
-} from "./chapterRuntime.js";
-export type {
-  StoryWorldSlice,
-  StoryWorldSliceBuilderMode,
-  StoryWorldSliceElement,
-  StoryWorldSliceForce,
-  StoryWorldSliceLocation,
-  StoryWorldSliceMeta,
-  StoryWorldSliceOptionItem,
-  StoryWorldSliceOverrides,
-  StoryWorldSliceRule,
-  StoryWorldSliceView,
-} from "./storyWorldSlice.js";
+
+export type * from "./novel-chapter.js";
+export type * from "./novel-volume.js";
+export type * from "./novel-pipeline.js";
+export type * from "./novel-audit.js";

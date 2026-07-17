@@ -18,6 +18,8 @@ import type { BookContract, BookContractDraft } from "./novelWorkflow.js";
 import type { TitleFactorySuggestion } from "./title.js";
 import type { StyleIntentSummary } from "./styleEngine.js";
 import type { DirectorAutoApprovalConfig } from "./autoDirectorApproval.js";
+import type { DirectorTakeoverCheckpointSnapshot, DirectorTakeoverExecutableRangeSnapshot, DirectorTaskSeedPayloadSnapshot } from "./novelDirector-snapshot.js";
+import type { DirectorTakeoverPipelineJobSnapshot } from "./novelDirector-pipeline.js";
 
 export const DIRECTOR_CORRECTION_PRESETS = [
   {
@@ -119,11 +121,6 @@ export const DIRECTOR_CIRCUIT_BREAKER_REASONS = [
 
 export type DirectorCircuitBreakerReason = typeof DIRECTOR_CIRCUIT_BREAKER_REASONS[number];
 
-/**
- * Circuit breaker state for the auto-director pipeline.
- * When `status` is `"open"`, the pipeline pauses and surfaces a `recoveryAction`
- * (retry, switch model, manual repair, etc.) to prevent runaway failure loops.
- */
 export interface DirectorCircuitBreakerState {
   status: "closed" | "open";
   reason?: DirectorCircuitBreakerReason | null;
@@ -184,6 +181,7 @@ export interface DirectorQualityLoopBudgetLedger {
 }
 
 export const DIRECTOR_MIN_TARGET_CHAPTER_COUNT = 12;
+
 export const DIRECTOR_MAX_TARGET_CHAPTER_COUNT = 2000;
 
 export const DIRECTOR_AUTO_EXECUTION_MODES = [
@@ -429,21 +427,6 @@ export interface DirectorTaskNotice {
   action?: DirectorTaskNoticeAction | null;
 }
 
-export interface DirectorTaskSeedPayloadSnapshot {
-  idea?: string;
-  batches?: DirectorCandidateBatch[];
-  directorCommandResults?: Record<string, unknown>;
-  worldId?: string | null;
-  worldSetupMode?: "auto_generate" | "skip" | null;
-  runMode?: DirectorRunMode;
-  autoExecutionPlan?: DirectorAutoExecutionPlan;
-  autoApproval?: DirectorAutoApprovalConfig | null;
-  styleProfileId?: string | null;
-  styleIntentSummary?: StyleIntentSummary | null;
-  postGenerationStyleReviewEnabled?: boolean | null;
-  taskNotice?: DirectorTaskNotice | null;
-}
-
 export interface DirectorLLMOptions {
   provider?: LLMProvider;
   model?: string;
@@ -482,33 +465,6 @@ export interface DirectorTakeoverEntryReadiness {
   status: "missing" | "partial" | "ready" | "complete" | "blocked";
   reason: string;
   previews: DirectorTakeoverPreview[];
-}
-
-export interface DirectorTakeoverPipelineJobSnapshot {
-  id: string;
-  status: PipelineJobStatus;
-  currentStage?: string | null;
-  currentItemLabel?: string | null;
-  completedCount: number;
-  totalCount: number;
-  startOrder: number;
-  endOrder: number;
-}
-
-export interface DirectorTakeoverCheckpointSnapshot {
-  checkpointType: "chapter_batch_ready" | "replan_required" | null;
-  checkpointSummary?: string | null;
-  chapterId?: string | null;
-  chapterOrder?: number | null;
-  volumeId?: string | null;
-}
-
-export interface DirectorTakeoverExecutableRangeSnapshot {
-  startOrder: number;
-  endOrder: number;
-  totalChapterCount: number;
-  nextChapterId?: string | null;
-  nextChapterOrder?: number | null;
 }
 
 export interface DirectorTakeoverReadinessResponse {
@@ -808,3 +764,10 @@ export function mergeDirectorCandidateBatches(
     ? [...currentBatches, ...missingBatches]
     : currentBatches;
 }
+
+export type * from "./novelDirector-snapshot.js";
+export type * from "./novelDirector-pipeline.js";
+
+
+export type * from "./novelDirector-snapshot.js";
+export type * from "./novelDirector-pipeline.js";
