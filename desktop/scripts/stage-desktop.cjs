@@ -174,6 +174,39 @@ if (process.env.AI_NOVEL_RUNTIME === "desktop" && typeof bootstrap === "function
   console.log("[stage:desktop] injected desktop bootstrap into server/dist/app.js");
 }
 
+/**
+ * 修补迁移 SQL 文件 — 让 DROP TABLE 在首次启动的空数据库上不报错。
+ * Prisma 生成的迁移包含 DROP TABLE "Xxx"，但首次启动时表不存在，导致 SQLITE_ERROR。
+ * 替换为 DROP TABLE IF EXISTS "Xxx" 即可安全运行。
+ */
+function patchMigrationSqlForFreshDb(appDir) {
+  const migrationsDir = path.join(appDir, "node_modules", "@ai-novel", "server", "src", "prisma", "migrations.sqlite");
+  if (!fs.existsSync(migrationsDir)) {
+    console.log("[stage:desktop] migrations.sqlite dir not found, skipping SQL patch");
+    return;
+  }
+
+  let patchCount = 0;
+  for (const entry of fs.readdirSync(migrationsDir, { withFileTypes: true })) {
+    if (!entry.isDirectory()) continue;
+    const sqlPath = path.join(migrationsDir, entry.name, "migration.sql");
+    if (!fs.existsSync(sqlPath)) continue;
+
+    let sql = fs.readFileSync(sqlPath, "utf8");
+    // 只修补不带 IF EXISTS 的 DROP TABLE
+    const original = sql;
+    sql = sql.replace(/DROP TABLE\s+(?!IF\s+EXISTS)/gi, "DROP TABLE IF EXISTS ");
+    // DROP INDEX 也可能在空库上失败
+    sql = sql.replace(/DROP INDEX\s+(?!IF\s+EXISTS)/gi, "DROP INDEX IF EXISTS ");
+
+    if (sql !== original) {
+      fs.writeFileSync(sqlPath, sql, "utf8");
+      patchCount++;
+    }
+  }
+  console.log(`[stage:desktop] patched ${patchCount} migration SQL files (DROP TABLE → DROP TABLE IF EXISTS)`);
+}
+
 function deployManually() {
   console.log("[stage:desktop] manual deploy: creating staging directory...");
 
@@ -589,6 +622,10 @@ function main() {
   // utilityProcess.fork() 以 serverEntry.cjs 为入口，require.main 指向 wrapper 而非 app.js，
   // 导致 app.js 的 `if (require.main === module) bootstrap()` 条件为 false。
   injectDesktopBootstrap(appDir);
+
+  // 修补迁移 SQL — Prisma 生成的 DROP TABLE 在首次启动的空数据库上会失败，
+  // 统一替换为 DROP TABLE IF EXISTS。
+  patchMigrationSqlForFreshDb(appDir);
 
   copyDirectory(clientSourceDir, clientTargetDir);
   writeDesktopUpdaterConfig();

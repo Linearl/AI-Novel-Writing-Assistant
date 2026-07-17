@@ -126,8 +126,9 @@ if (reuseStage) {
 
 log("📁 Step 3/4: 调用 electron-builder 打包文件夹版本");
 
-// 清理旧产物
+// 清理旧产物（避免 electron-builder 复用旧的 win-unpacked/ 缓存）
 rimraf(path.join(RELEASE_DIR, DIR_NAME));
+rimraf(path.join(DESKTOP_DIR, "build", "dist"));
 mkdirp(RELEASE_DIR);
 
 // 直接调用 electron-builder CLI（绕过 run-electron-builder.cjs 的 patch 导致的崩溃）
