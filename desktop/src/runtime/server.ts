@@ -264,8 +264,11 @@ function startPackagedManagedServer(port: number): ManagedDesktopProcess {
     }
   }
 
+  const dataDir = path.join(resolveDesktopAppDataDir(), "data");
+  require("fs").mkdirSync(dataDir, { recursive: true });
   const child = utilityProcess.fork(serverEntry, [], {
-    cwd: resourcesDir,
+    cwd: dataDir,
+    execArgv: [],
     env: {
       ...process.env,
       NODE_ENV: "production",

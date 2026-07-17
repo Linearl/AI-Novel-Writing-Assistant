@@ -31,13 +31,72 @@ function runPnpm(args, cwd = repoRoot) {
 }
 
 /**
- * Windows 上 pnpm deploy 因 renameSync EPERM 问题 100% 失败，
- * 且失败后子进程仍持有文件句柄，robocopy 也无法访问。
-/**
- * Windows 上 pnpm deploy 因 renameSync EPERM 问题 100% 失败，
- * 且失败后子进程仍持有文件句柄，robocopy 也无法访问。
- * 本函数完全绕过 pnpm deploy，手动构建 staging 目录。
+ * pnpm deploy wrapper — 解决 Windows EPERM 重命名问题。
+ * 策略：先 deploy 到临时目录（pnpm 内部会 rename），如果 rename 失败，
+ * 检测 pnpm 创建的 _tmp_ 目录并用 robocopy 移动到目标。
  */
+function pnpmDeployWithRetry(targetDir) {
+  const tmpDir = `${targetDir}.__pnpm_tmp__`;
+
+  // 清理残留
+  fs.rmSync(targetDir, { recursive: true, force: true });
+  fs.rmSync(tmpDir, { recursive: true, force: true });
+
+  // 尝试直接 deploy
+  try {
+    runPnpm(["--filter", "@ai-novel/desktop", "deploy", "--prod", targetDir]);
+    console.log("[stage:desktop] pnpm deploy succeeded directly");
+    return;
+  } catch (err) {
+    console.log("[stage:desktop] pnpm deploy direct failed:", err.message?.slice(0, 120));
+  }
+
+  // 直接 deploy 失败 — 检测 _tmp_ 目录
+  const parentDir = path.dirname(targetDir);
+  const targetBase = path.basename(targetDir);
+  const tmpPattern = `${targetBase}.*_tmp_*`;
+  let foundTmpDir = null;
+
+  try {
+    const entries = fs.readdirSync(parentDir, { withFileTypes: true });
+    for (const entry of entries) {
+      if (entry.isDirectory() && entry.name.includes("_tmp_") && entry.name.startsWith(targetBase)) {
+        foundTmpDir = path.join(parentDir, entry.name);
+        break;
+      }
+    }
+  } catch { /* ignore */ }
+
+  if (foundTmpDir && fs.existsSync(foundTmpDir)) {
+    console.log(`[stage:desktop] found pnpm temp dir: ${foundTmpDir}`);
+    // 用 robocopy 移动（比 renameSync 更健壮）
+    copyDirectory(foundTmpDir, targetDir);
+    fs.rmSync(foundTmpDir, { recursive: true, force: true });
+    console.log("[stage:desktop] moved pnpm temp dir to target via robocopy");
+    return;
+  }
+
+  // 没找到 _tmp_ 目录，尝试 deploy 到临时路径再移动
+  console.log("[stage:desktop] no _tmp_ dir found, trying deploy-to-tmp + copy...");
+  try {
+    runPnpm(["--filter", "@ai-novel/desktop", "deploy", "--prod", tmpDir]);
+    copyDirectory(tmpDir, targetDir);
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+    console.log("[stage:desktop] deploy-to-tmp + copy succeeded");
+    return;
+  } catch (err2) {
+    console.log("[stage:desktop] deploy-to-tmp also failed:", err2.message?.slice(0, 120));
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  }
+
+  // 所有 pnpm deploy 尝试失败，回退到手动方案
+  console.log("[stage:desktop] all pnpm deploy attempts failed, falling back to manual deploy");
+  // 清理 pnpm deploy 可能残留的文件
+  fs.rmSync(targetDir, { recursive: true, force: true });
+  fs.rmSync(tmpDir, { recursive: true, force: true });
+  deployManually();
+}
+
 /**
  * 修复 @langchain/core 的 package.json exports 字段。
  * Electron 35 (Node.js 22) 强制执行 exports 检查，但 @langchain/core 内部
@@ -142,7 +201,7 @@ function deployManually() {
   fs.writeFileSync(path.join(sharedTargetDir, "package.json"), JSON.stringify(sharedAppPkg, null, 2));
 
   // 复制 server 核心文件（排除 package.json，后面会单独生成）
-  const serverEntriesToCopy = ["dist", "prisma"];
+  const serverEntriesToCopy = ["dist", "src/prisma"];
   for (const entry of serverEntriesToCopy) {
     const src = path.join(serverSourceDir, entry);
     const dest = path.join(serverTargetDir, entry);
@@ -203,9 +262,6 @@ function deployManually() {
   stagedPkg.dependencies["@ai-novel/server"] = serverPkgRaw.version || "0.1.0";
   fs.writeFileSync(stagedPkgPath, JSON.stringify(stagedPkg, null, 2));
   console.log("[stage:desktop] added @ai-novel/server to staging package.json for electron-builder");
-
-  // 8. 修复 @langchain/core exports 缺失的子路径（Electron 35 严格 exports 检查）
-  patchLangchainCoreExports(appDir);
 
   console.log("[stage:desktop] manual deploy completed successfully");
 }
@@ -476,20 +532,28 @@ function main() {
   ensureDir(resourcesDir);
   ensureDir(path.dirname(clientTargetDir));
 
-  // Windows 上 pnpm deploy 因 renameSync EPERM 问题 100% 失败，
-  // 直接使用手动部署方案绕过 pnpm deploy。
-  if (process.platform === "win32") {
-    console.log("[stage:desktop] detected Windows, using manual deploy (bypass pnpm deploy EPERM)");
-    deployManually();
-  } else {
-    runPnpm([
-      "--filter",
-      "@ai-novel/desktop",
-      "deploy",
-      "--prod",
-      appDir,
-    ]);
+  // pnpm deploy 在 Windows 上常因 renameSync EPERM 失败，
+  // 使用 wrapper 自动检测临时目录并用 robocopy 移动。
+  // 所有尝试失败时回退到手动部署方案。
+  pnpmDeployWithRetry(appDir);
+
+  // 无论哪种 deploy 方式，都需要复制路径别名 shim + server 入口包装脚本。
+  // pnpm deploy 不处理 TypeScript @/ 路径别名，deployManually() 也不处理。
+  // 这些文件在 Node.js 运行时拦截 require("@/...") 并解析到正确路径。
+  {
+    const shimSrc = path.join(desktopDir, "src", "runtime", "pathAliasShim.js");
+    const wrapperSrc = path.join(desktopDir, "src", "runtime", "serverEntry.cjs");
+    const destDist = path.join(appDir, "dist");
+    for (const [src, name] of [[shimSrc, "pathAliasShim.js"], [wrapperSrc, "serverEntry.cjs"]]) {
+      if (fs.existsSync(src)) {
+        fs.copyFileSync(src, path.join(destDist, name));
+        console.log(`[stage:desktop] copied ${name} to staging`);
+      }
+    }
   }
+
+  // 修复 @langchain/core exports 缺失的子路径（Electron 35 严格 exports 检查）
+  patchLangchainCoreExports(appDir);
 
   copyDirectory(clientSourceDir, clientTargetDir);
   writeDesktopUpdaterConfig();

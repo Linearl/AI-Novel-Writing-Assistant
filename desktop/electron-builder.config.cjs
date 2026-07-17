@@ -65,6 +65,7 @@ module.exports = {
   asarUnpack: [
     "node_modules/**/*.node",
     "node_modules/better-sqlite3/**/*",
+    "node_modules/@ai-novel/server/src/prisma/**/*",
   ],
   npmRebuild: true,
   nativeRebuilder: "sequential",

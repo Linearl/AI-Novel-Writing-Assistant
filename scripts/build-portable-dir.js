@@ -106,11 +106,11 @@ log("📦 Step 2/4: 组装构建产物到 desktop/build/");
 if (reuseStage) {
   log("⏭️  跳过 staging（复用现有产物）");
 } else {
-  // 清理 staging 残留目录（Windows pnpm deploy rename 失败时会留下 app_tmp_*）
+  // 清理 staging 残留目录（Windows pnpm deploy rename 失败时会留下 app_tmp_* 或 app.__pnpm_tmp__）
   const buildDir = path.join(DESKTOP_DIR, "build");
   if (fs.existsSync(buildDir)) {
     for (const entry of fs.readdirSync(buildDir)) {
-      if (entry === "app" || entry.startsWith("app_tmp_")) {
+      if (entry === "app" || entry.includes("_tmp_") || entry.includes("__pnpm_tmp__")) {
         const target = path.join(buildDir, entry);
         log(`🧹 清理残留：${target}`);
         fs.rmSync(target, { recursive: true, force: true });

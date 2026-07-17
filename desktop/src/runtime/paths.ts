@@ -128,7 +128,17 @@ export function resolveDesktopWindowIcon(): string {
 export function resolvePackagedServerEntry(): string {
   const resourcesDir = resolveDesktopResourcesDir();
 
-  // asar 模式：app.asar/node_modules/@ai-novel/server/dist/app.js
+  // 优先使用包装脚本（加载路径别名 shim 后再启动 server）
+  const wrapperAsar = path.join(resourcesDir, "app.asar", "dist", "serverEntry.cjs");
+  if (fs.existsSync(wrapperAsar)) {
+    return wrapperAsar;
+  }
+  const wrapperApp = path.join(resourcesDir, "app", "dist", "serverEntry.cjs");
+  if (fs.existsSync(wrapperApp)) {
+    return wrapperApp;
+  }
+
+  // 回退：直接使用 server 入口
   const asarPath = path.join(resourcesDir, "app.asar", "node_modules", "@ai-novel", "server", "dist", "app.js");
   if (fs.existsSync(asarPath)) {
     return asarPath;
