@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo, useEffect } from "react";
 import type { SSEFrame } from "@ai-novel/shared";
 import type { ChapterRuntimePackage } from "@ai-novel/shared";
 import type { AuditReport, Chapter, StoryStateSnapshot } from "@ai-novel/shared";
@@ -15,6 +15,8 @@ import {
   chapterStatusLabel,
   chapterSuggestedActionLabel,
   PrimaryActionButton,
+  resolveBatchWriteRange,
+  type BatchWriteMode,
   type PrimaryAction,
   type ChapterExecutionBackgroundActivity,
   resolveDisplayedChapterStatus,
@@ -81,6 +83,18 @@ interface ChapterExecutionActionPanelProps {
   backgroundSyncActivities?: ChapterExecutionBackgroundActivity[];
   chapterRunStatus?: Extract<SSEFrame, { type: "run_status" }> | null;
   repairRunStatus?: Extract<SSEFrame, { type: "run_status" }> | null;
+  chapters?: Chapter[];
+  onBatchWrite?: (startOrder: number, endOrder: number) => void;
+  batchWriteJob?: {
+    status: string;
+    progress: number;
+    completedCount: number;
+    totalCount: number;
+    currentStage?: string | null;
+    currentItemLabel?: string | null;
+  } | null;
+  isBatchWriting?: boolean;
+  hasActiveDirectorTask?: boolean;
 }
 
 function resolvePrimaryAction(params: {
@@ -238,6 +252,135 @@ function GuidedRepairButton({
   );
 }
 
+function BatchWriteCard(props: {
+  selectedChapter: Chapter | undefined;
+  chapters: Chapter[];
+  onBatchWrite: (startOrder: number, endOrder: number) => void;
+  batchWriteJob: ChapterExecutionActionPanelProps["batchWriteJob"];
+  isBatchWriting: boolean;
+  hasActiveDirectorTask: boolean;
+}) {
+  const { selectedChapter, chapters, onBatchWrite, batchWriteJob, isBatchWriting, hasActiveDirectorTask } = props;
+  const [batchMode, setBatchMode] = useState<BatchWriteMode>("count");
+  const [batchCount, setBatchCount] = useState(3);
+
+  const allChapters = chapters ?? [];
+  const sortedChapters = useMemo(() => [...allChapters].sort((a, b) => a.order - b.order), [allChapters]);
+  const selectedIndex = useMemo(
+    () => (selectedChapter ? sortedChapters.findIndex((ch) => ch.id === selectedChapter.id) : -1),
+    [selectedChapter, sortedChapters],
+  );
+  const remainingCount = selectedIndex >= 0 ? sortedChapters.length - selectedIndex : 0;
+  const hasCountBatch = remainingCount > 1;
+  const hasVisibleBatch = sortedChapters.length > 1;
+  const hasVolumeBatch = sortedChapters.length > 1;
+
+  useEffect(() => {
+    if (hasCountBatch) {
+      setBatchCount((current) => Math.min(Math.max(current, 2), remainingCount));
+      return;
+    }
+    setBatchCount(1);
+  }, [hasCountBatch, remainingCount]);
+
+  useEffect(() => {
+    if (batchMode === "count" && !hasCountBatch) {
+      if (hasVisibleBatch) {
+        setBatchMode("visible_all");
+        return;
+      }
+      if (hasVolumeBatch) {
+        setBatchMode("volume_all");
+      }
+      return;
+    }
+    if (batchMode === "visible_all" && !hasVisibleBatch) {
+      setBatchMode(hasCountBatch ? "count" : "volume_all");
+      return;
+    }
+    if (batchMode === "volume_all" && !hasVolumeBatch) {
+      setBatchMode("count");
+    }
+  }, [batchMode, hasCountBatch, hasVisibleBatch, hasVolumeBatch]);
+
+  const batchPlan = useMemo(
+    () => resolveBatchWriteRange({ selectedChapter, chapters: allChapters, batchMode, batchCount }),
+    [selectedChapter, allChapters, batchMode, batchCount],
+  );
+
+  if (!selectedChapter || allChapters.length === 0 || !onBatchWrite) {
+    return null;
+  }
+
+  const directorBlocking = Boolean(hasActiveDirectorTask);
+  const pipelineRunning = Boolean(isBatchWriting || batchWriteJob?.status === "queued" || batchWriteJob?.status === "running");
+  const buttonDisabled = directorBlocking || pipelineRunning || !batchPlan;
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-base">批量写作</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-3">
+        <p className="text-xs text-muted-foreground">从当前章起连续写作，每章自动完成审核+修复循环。</p>
+        <div className="flex flex-wrap items-center gap-2">
+          <select
+            className="rounded-lg border bg-background p-2 text-sm text-foreground"
+            value={batchMode}
+            onChange={(e) => setBatchMode(e.target.value as BatchWriteMode)}
+          >
+            {hasCountBatch && <option value="count">从当前章起连续写作</option>}
+            {hasVisibleBatch && <option value="visible_all">当前可见章节</option>}
+            {hasVolumeBatch && <option value="volume_all">本卷全部章节</option>}
+          </select>
+          {batchMode === "count" && (
+            <label className="flex items-center gap-1 text-xs text-muted-foreground">
+              章节数
+              <input
+                type="number"
+                min={2}
+                max={remainingCount}
+                className="w-16 rounded-lg border bg-background p-1 text-sm text-foreground"
+                value={batchCount}
+                onChange={(e) => setBatchCount(Number(e.target.value) || 2)}
+              />
+            </label>
+          )}
+        </div>
+        <AiButton
+          className="w-full"
+          onClick={() => batchPlan && onBatchWrite(batchPlan.startOrder, batchPlan.endOrder)}
+          disabled={buttonDisabled}
+        >
+          {pipelineRunning ? "批量写作进行中..." : batchPlan ? `批量写作 ${batchPlan.count} 章` : "暂无可批量写作的章节"}
+        </AiButton>
+        {batchPlan && (
+          <p className="text-xs text-muted-foreground">{batchPlan.hint}</p>
+        )}
+        {directorBlocking && (
+          <p className="text-xs text-amber-600">自动导演运行中，批量写作暂不可用。</p>
+        )}
+        {pipelineRunning && batchWriteJob && (
+          <div className="space-y-1 rounded-lg border bg-background p-2 text-xs">
+            <div className="flex items-center justify-between">
+              <span className="font-medium text-muted-foreground">
+                {batchWriteJob.currentItemLabel ?? batchWriteJob.currentStage ?? "运行中"}
+              </span>
+              <span>{batchWriteJob.completedCount}/{batchWriteJob.totalCount}</span>
+            </div>
+            <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
+              <div
+                className="h-full bg-primary transition-all"
+                style={{ width: `${Math.min(Math.max(batchWriteJob.progress, 0), 100)}%` }}
+              />
+            </div>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
 export default function ChapterExecutionActionPanel(props: ChapterExecutionActionPanelProps) {
   const {
     novelId,
@@ -249,8 +392,7 @@ export default function ChapterExecutionActionPanel(props: ChapterExecutionActio
     isApplyingStrategy,
     onGenerateSelectedChapter,
     onRewriteChapter,
-    onExpandChapter,
-    onCompressChapter,
+    onExpandChapter,    onCompressChapter,
     onSummarizeChapter,
     onGenerateTaskSheet,
     onGenerateSceneCards,
@@ -290,6 +432,11 @@ export default function ChapterExecutionActionPanel(props: ChapterExecutionActio
     backgroundSyncActivities,
     chapterRunStatus,
     repairRunStatus,
+    chapters,
+    onBatchWrite,
+    batchWriteJob,
+    isBatchWriting,
+    hasActiveDirectorTask,
   } = props;
 
   const isSelectedChapterStreaming = Boolean(selectedChapter && isStreaming && streamingChapterId === selectedChapter.id);
@@ -555,6 +702,14 @@ export default function ChapterExecutionActionPanel(props: ChapterExecutionActio
         </details>
       </CardContent>
     </Card>
+    <BatchWriteCard
+      selectedChapter={selectedChapter}
+      chapters={chapters ?? []}
+      onBatchWrite={onBatchWrite ?? (() => undefined)}
+      batchWriteJob={batchWriteJob ?? null}
+      isBatchWriting={isBatchWriting ?? false}
+      hasActiveDirectorTask={hasActiveDirectorTask ?? false}
+    />
     <RepairProgressDialog
       open={repairProgressOpen}
       onOpenChange={setRepairProgressOpen}

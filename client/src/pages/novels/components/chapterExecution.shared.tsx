@@ -632,3 +632,8 @@ export function PrimaryActionButton(props: { action: PrimaryAction | null; class
     )
   );
 }
+
+/* ── Batch write range resolution (REQ-3023) ───────────────────────── */
+/* Pure logic extracted to batchWriteRange.ts for testability. */
+export type { BatchWriteMode, BatchWriteRange } from "./batchWriteRange";
+export { resolveBatchWriteRange } from "./batchWriteRange";

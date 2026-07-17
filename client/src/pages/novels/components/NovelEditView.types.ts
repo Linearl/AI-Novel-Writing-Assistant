@@ -412,6 +412,17 @@ export interface ChapterTabViewProps {
   onToggleLockChapter?: (chapterId: string, locked: boolean) => void;
   togglingLockChapterId?: string | null;
   directorTakeoverEntry?: ReactNode;
+  onBatchWrite?: (startOrder: number, endOrder: number) => void;
+  batchWriteJob?: {
+    status: string;
+    progress: number;
+    completedCount: number;
+    totalCount: number;
+    currentStage?: string | null;
+    currentItemLabel?: string | null;
+  } | null;
+  isBatchWriting?: boolean;
+  hasActiveDirectorTask?: boolean;
 }
 
 export interface PipelineTabViewProps {
