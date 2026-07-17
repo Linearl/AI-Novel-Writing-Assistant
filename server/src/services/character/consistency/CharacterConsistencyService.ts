@@ -42,8 +42,8 @@ import type {
   ContradictionFilter,
   ContradictionReport,
 } from "./types";
-import { prisma } from "../../db/prisma";
-import { logger } from "../logging/LoggerService";
+import { prisma } from "../../../db/prisma";
+import { logger } from "../../logging/LoggerService";
 
 export interface ChapterConsistencyResult {
   novelId: string;

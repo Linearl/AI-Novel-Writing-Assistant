@@ -2,7 +2,7 @@ import type { Router } from "express";
 import type { ApiResponse } from "@ai-novel/shared";
 import { z } from "zod";
 import { validate } from "../../../../middleware/validate";
-import { characterArcService } from "../../../../services/novel/characters/CharacterArcService";
+import { characterArcService } from "../../../../services/character/arc/CharacterArcService";
 
 const characterArcParamsSchema = z.object({
   id: z.string().trim().min(1),

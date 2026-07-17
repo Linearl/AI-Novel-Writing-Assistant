@@ -1,6 +1,6 @@
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 import { z } from "zod";
-import type { PromptAsset } from "../../prompting/core/promptTypes";
+import type { PromptAsset } from "../../../prompting/core/promptTypes";
 import {
   characterStateExtractionOutputSchema,
   contradictionDetectionOutputSchema,
@@ -8,7 +8,7 @@ import {
   type CharacterStateExtractionOutput,
   type ContradictionDetectionInput,
   type ContradictionDetectionOutput,
-} from "../../services/characterConsistency/schemas";
+} from "./schemas";
 
 // ─── Character State Extraction Prompt ────────────────────────────────────
 

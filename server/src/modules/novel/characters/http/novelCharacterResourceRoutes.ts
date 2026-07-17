@@ -14,8 +14,8 @@ import { llmProviderSchema } from "../../../../llm/providerSchema";
 import { prisma } from "../../../../db/prisma";
 import { AppError } from "../../../../middleware/errorHandler";
 import { validate } from "../../../../middleware/validate";
-import { characterResourceExtractionService } from "../../../../services/novel/characterResource/CharacterResourceExtractionService";
-import { characterResourceLedgerService } from "../../../../services/novel/characterResource/CharacterResourceLedgerService";
+import { characterResourceExtractionService } from "../../../../services/character/resource/CharacterResourceExtractionService";
+import { characterResourceLedgerService } from "../../../../services/character/resource/CharacterResourceLedgerService";
 import { stateCommitService } from "../../../../services/novel/state/StateCommitService";
 
 const characterResourceCharacterParamsSchema = z.object({

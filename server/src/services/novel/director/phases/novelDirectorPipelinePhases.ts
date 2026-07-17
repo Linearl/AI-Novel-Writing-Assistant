@@ -1,6 +1,6 @@
 import type { VolumePlanDocument } from "@ai-novel/shared";
 import type { DirectorConfirmRequest } from "@ai-novel/shared";
-import { buildCharacterCastBlockedMessage } from "../../characterPrep/characterCastQuality";
+import { buildCharacterCastBlockedMessage } from "../../../character/preparation/characterCastQuality";
 import type { VolumeGenerationPhaseEvent } from "../../volume/volumeModels";
 import { buildNovelEditResumeTarget } from "../../workflow/novelWorkflow.shared";
 import {

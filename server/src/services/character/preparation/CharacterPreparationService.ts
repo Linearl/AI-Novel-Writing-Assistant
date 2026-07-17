@@ -21,14 +21,14 @@ import {
 } from "../../../prompting/prompts/novel/characterPreparation.prompts";
 import type { CharacterCastOptionResponseParsed } from "../../../prompting/prompts/novel/characterPreparation.promptSchemas";
 import { buildStoryModePromptBlock, normalizeStoryModeOutput } from "../../storyMode/storyModeProfile";
-import { NovelContextService } from "../NovelContextService";
-import { CharacterDynamicsService } from "../dynamics/CharacterDynamicsService";
+import { NovelContextService } from "../../novel/NovelContextService";
+import { CharacterDynamicsService } from "../../novel/dynamics/CharacterDynamicsService";
 import { CharacterPreparationSupplementalService } from "./characterPreparationSupplemental";
 import {
   assessCharacterCastBatch,
   buildCharacterCastRepairReasons,
 } from "./characterCastQuality";
-import { WorldContextGateway } from "../worldContext/WorldContextGateway";
+import { WorldContextGateway } from "../../novel/worldContext/WorldContextGateway";
 import {
   toOptionalText,
   buildMemberCreateData,

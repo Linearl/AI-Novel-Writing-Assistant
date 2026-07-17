@@ -10,7 +10,7 @@ import { prisma } from "../../../../db/prisma";
 import { withSqliteRetry } from "../../../../db/sqliteRetry";
 import { runStructuredPrompt } from "../../../../prompting/core/promptRunner";
 import { directorStateProposalResolutionPrompt } from "../../../../prompting/prompts/novel/directorStateProposalResolution.prompts";
-import { characterResourceLedgerService } from "../../characterResource/CharacterResourceLedgerService";
+import { characterResourceLedgerService } from "../../../character/resource/CharacterResourceLedgerService";
 import { canonicalStateService } from "../../state/CanonicalStateService";
 import { stateVersionLog } from "../../state/StateVersionLog";
 import { directorAutomationLedgerEventService } from "./DirectorAutomationLedgerEventService";

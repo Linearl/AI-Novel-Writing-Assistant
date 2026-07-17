@@ -4,7 +4,7 @@ import type {
 } from "@ai-novel/shared";
 import type { GenerationContextPackage } from "@ai-novel/shared";
 import { prisma } from "../../../db/prisma";
-import { characterResourceLedgerService } from "../characterResource/CharacterResourceLedgerService";
+import { characterResourceLedgerService } from "../../character/resource/CharacterResourceLedgerService";
 import { parseBookFramingJson } from "../novelCoreShared";
 
 function compactText(value: string | null | undefined, fallback = ""): string {

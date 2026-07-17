@@ -8,7 +8,7 @@ import { NovelContinuationService } from "../NovelContinuationService";
 import { StyleBindingService } from "../../styleEngine/StyleBindingService";
 import { WorldContextGateway } from "../worldContext/WorldContextGateway";
 import { characterDynamicsQueryService } from "../dynamics/CharacterDynamicsQueryService";
-import { characterResourceLedgerService } from "../characterResource/CharacterResourceLedgerService";
+import { characterResourceLedgerService } from "../../character/resource/CharacterResourceLedgerService";
 import { payoffLedgerSyncService } from "../../payoff/PayoffLedgerSyncService";
 import { buildPayoffReminderContext } from "../../payoff/payoffLedgerReminder";
 import { buildSyntheticPayoffIssues } from "../../payoff/payoffLedgerShared";
@@ -40,7 +40,7 @@ import { batchContextCache } from "./BatchContextCache";
 import {
   buildRuntimeCharacterHardFactsList,
   parseCharacterProhibitionsJson,
-} from "../characters/characterHardFacts";
+} from "../../character/arc/characterHardFacts";
 import { NovelVolumeService } from "../volume/NovelVolumeService";
 import { ChapterPlanJITService } from "../planning/ChapterPlanJITService";
 import { logger } from "../../logging/LoggerService";

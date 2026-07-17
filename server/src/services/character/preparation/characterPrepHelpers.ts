@@ -6,7 +6,7 @@ import type {
   CharacterWorldFocusHints,
 } from "@ai-novel/shared";
 import type { LLMProvider } from "@ai-novel/shared";
-import { parseCharacterProhibitionsJson, serializeCharacterProhibitions } from "../characters/characterHardFacts";
+import { parseCharacterProhibitionsJson, serializeCharacterProhibitions } from "../arc/characterHardFacts";
 import { assessCharacterCastBatch } from "./characterCastQuality";
 import type { CharacterCastOptionResponseParsed } from "../../../prompting/prompts/novel/characterPreparation.promptSchemas";
 
@@ -21,7 +21,7 @@ export interface CharacterPrepOptions {
 
 export interface CharacterCastApplyOptions {
   overrideQualityGate?: boolean;
-  visibleProfileGeneration?: import("../characterProfile/CharacterVisibleProfileService").CharacterVisibleProfileGenerateOptions;
+  visibleProfileGeneration?: import("../profile/CharacterVisibleProfileService").CharacterVisibleProfileGenerateOptions;
   postApplyMode?: "sync" | "background";
 }
 

@@ -1,4 +1,4 @@
-import { prisma } from "../../db/prisma";
+import { prisma } from "../../../db/prisma";
 import type { CharacterConsistencyContradiction, ContradictionFilter } from "./types";
 
 function mapContradiction(row: {

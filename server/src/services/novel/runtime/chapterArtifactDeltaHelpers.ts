@@ -6,11 +6,11 @@ import {
 } from "../../../prompting/prompts/novel/chapterArtifactDelta.prompts";
 import type { SnapshotExtractionOutput } from "../../state/stateSnapshotExtraction";
 import { stateService } from "../../state/StateService";
-import { characterResourceLedgerService } from "../characterResource/CharacterResourceLedgerService";
+import { characterResourceLedgerService } from "../../character/resource/CharacterResourceLedgerService";
 import {
   compactText,
   normalizeResourceKey,
-} from "../characterResource/characterResourceShared";
+} from "../../character/resource/characterResourceShared";
 
 const ARTIFACT_DELTA_SOURCE_TYPE = "chapter_artifact_delta";
 const ARTIFACT_DELTA_SOURCE_STAGE = "chapter_execution";

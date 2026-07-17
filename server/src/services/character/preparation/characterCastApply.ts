@@ -5,20 +5,20 @@ import type {
   SupplementalCharacterCandidate,
 } from "@ai-novel/shared";
 import { prisma } from "../../../db/prisma";
-import { NovelContextService } from "../NovelContextService";
+import { NovelContextService } from "../../novel/NovelContextService";
 import {
   CharacterVisibleProfileService,
   type CharacterVisibleProfileGenerateOptions,
-} from "../characterProfile/CharacterVisibleProfileService";
-import { CharacterDynamicsService } from "../dynamics/CharacterDynamicsService";
+} from "../profile/CharacterVisibleProfileService";
+import { CharacterDynamicsService } from "../../novel/dynamics/CharacterDynamicsService";
 import {
   parseCharacterProhibitionsJson,
-} from "../characters/characterHardFacts";
+} from "../arc/characterHardFacts";
 import {
   assessCharacterCastBatch,
   buildCharacterCastBlockedMessage,
 } from "./characterCastQuality";
-import { WorldContextGateway } from "../worldContext/WorldContextGateway";
+import { WorldContextGateway } from "../../novel/worldContext/WorldContextGateway";
 import { logger } from "../../logging/LoggerService";
 import {
   fillIfMissing,

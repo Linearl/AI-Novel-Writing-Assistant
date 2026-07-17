@@ -1,9 +1,9 @@
-import { invokeStructuredLlm } from "../../llm/structuredInvoke";
+import { invokeStructuredLlm } from "../../../llm/structuredInvoke";
 import { contradictionDetectPrompt } from "./prompts";
 import type { CharacterConsistencyContradiction, ContradictionType, CharacterConsistencyStateRecord } from "./types";
 import type { ContradictionDetectionOutput } from "./schemas";
 import { buildStateDescription, type ExtractedState } from "./extractor";
-import { logger } from "../../services/logging/LoggerService";
+import { logger } from "../../logging/LoggerService";
 
 /**
  * Rule-based contradiction detection (fast, deterministic).

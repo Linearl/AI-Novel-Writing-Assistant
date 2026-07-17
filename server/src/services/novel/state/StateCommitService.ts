@@ -6,8 +6,8 @@ import type {
 import { characterResourceUpdatePayloadSchema } from "@ai-novel/shared";
 import type { Prisma } from "@prisma/client";
 import { prisma } from "../../../db/prisma";
-import { characterResourceLedgerService } from "../characterResource/CharacterResourceLedgerService";
-import { characterResourceValidationService } from "../characterResource/CharacterResourceValidationService";
+import { characterResourceLedgerService } from "../../character/resource/CharacterResourceLedgerService";
+import { characterResourceValidationService } from "../../character/resource/CharacterResourceValidationService";
 import { canonicalStateService } from "./CanonicalStateService";
 import { chapterFactExtractor, type ChapterFactExtractorInput } from "./ChapterFactExtractor";
 import { stateVersionLog } from "./StateVersionLog";

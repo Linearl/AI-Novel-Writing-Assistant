@@ -9,7 +9,7 @@ import {
   ChapterPatchRepairService,
   type PatchRepairMode,
 } from "../../chapterPatchRepairService";
-import { characterResourceLedgerService } from "../../characterResource/CharacterResourceLedgerService";
+import { characterResourceLedgerService } from "../../../character/resource/CharacterResourceLedgerService";
 
 export interface ChapterRepairExecutionOptions {
   provider?: LLMProvider;

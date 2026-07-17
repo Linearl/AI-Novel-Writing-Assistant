@@ -5,7 +5,7 @@
  * checks after chapter generation completes. This is designed to be called
  * as a side-effect, not blocking the main generation pipeline.
  */
-import { characterConsistencyService } from "../../../services/characterConsistency/CharacterConsistencyService";
+import { characterConsistencyService } from "../../../services/character/consistency/CharacterConsistencyService";
 import { logger } from "../../../services/logging/LoggerService";
 
 export interface ConsistencyBackgroundJob {

@@ -1,8 +1,8 @@
-import { invokeStructuredLlm } from "../../llm/structuredInvoke";
+import { invokeStructuredLlm } from "../../../llm/structuredInvoke";
 import { characterStateExtractPrompt } from "./prompts";
 import type { AppearanceState, PersonalityState, AbilityState, RelationshipState } from "./types";
 import type { CharacterStateExtractionInput, CharacterStateExtractionOutput } from "./schemas";
-import { logger } from "../../services/logging/LoggerService";
+import { logger } from "../../logging/LoggerService";
 
 export interface ExtractedState {
   appearance: AppearanceState;

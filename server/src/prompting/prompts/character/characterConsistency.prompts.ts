@@ -14,13 +14,13 @@ import type { PromptAsset } from "../../core/promptTypes";
 import {
   characterStateExtractionOutputSchema,
   contradictionDetectionOutputSchema,
-} from "../../../services/characterConsistency/schemas";
+} from "../../../services/character/consistency/schemas";
 import type {
   CharacterStateExtractionInput,
   CharacterStateExtractionOutput,
   ContradictionDetectionInput,
   ContradictionDetectionOutput,
-} from "../../../services/characterConsistency/schemas";
+} from "../../../services/character/consistency/schemas";
 
 // ─── State Extraction Prompt ────────────────────────────────────────────
 

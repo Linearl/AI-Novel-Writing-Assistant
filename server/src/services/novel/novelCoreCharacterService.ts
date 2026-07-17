@@ -21,7 +21,7 @@ import {
 } from "./novelCoreShared";
 import { zodCharacterImportResult, zodImportCharactersWithRelationsSchema } from "./novelCoreCharacterShared";
 import type { LLMProvider } from "@ai-novel/shared";
-import { serializeCharacterProhibitions } from "./characters/characterHardFacts";
+import { serializeCharacterProhibitions } from "../character/arc/characterHardFacts";
 
 export class NovelCoreCharacterService {
   private readonly db: IDatabase;

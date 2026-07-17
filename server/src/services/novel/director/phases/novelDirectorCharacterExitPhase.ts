@@ -1,5 +1,5 @@
 import { prisma } from "../../../../db/prisma";
-import { characterExitInferenceService } from "../../characterExit/characterExitInferenceService";
+import { characterExitInferenceService } from "../../../character/exit/characterExitInferenceService";
 
 /**
  * Character Exit Phase — runs after chapter confirmation in the auto-director.

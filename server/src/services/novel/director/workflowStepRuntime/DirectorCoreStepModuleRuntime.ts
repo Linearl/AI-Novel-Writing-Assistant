@@ -2,7 +2,7 @@ import type { DirectorChapterExecutionProgressSummary, DirectorArtifactRef, Dire
 import type { DirectorAutoExecutionState, DirectorConfirmRequest } from "@ai-novel/shared";
 import type { VolumePlanDocument } from "@ai-novel/shared";
 import { BookContractService } from "../../BookContractService";
-import { CharacterPreparationService } from "../../characterPrep/CharacterPreparationService";
+import { CharacterPreparationService } from "../../../character/preparation/CharacterPreparationService";
 import { CharacterDynamicsService } from "../../dynamics/CharacterDynamicsService";
 import { NovelContextService } from "../../NovelContextService";
 import type { NovelApplicationServices } from "../../application/NovelApplicationContracts";

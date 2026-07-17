@@ -4,9 +4,9 @@ import { NovelWorldSliceService } from "../storyWorldSlice/NovelWorldSliceServic
 import { NovelWorldInstanceService } from "../worldContext/NovelWorldInstanceService";
 import { NovelWorldLibrarySaveService } from "../worldContext/NovelWorldLibrarySaveService";
 import { NovelWorldManualService } from "../worldContext/NovelWorldManualService";
-import { CharacterPreparationService } from "../characterPrep/CharacterPreparationService";
+import { CharacterPreparationService } from "../../character/preparation/CharacterPreparationService";
 import { CharacterDynamicsService } from "../dynamics/CharacterDynamicsService";
-import { CharacterVisibleProfileService } from "../characterProfile/CharacterVisibleProfileService";
+import { CharacterVisibleProfileService } from "../../character/profile/CharacterVisibleProfileService";
 import {
   buildManualChapterControlPolicy,
   registerChapterExecutionStageRunner,

@@ -13,8 +13,8 @@ import { buildSupplementalCharacterContextBlocks } from "../../../prompting/prom
 import {
   supplementalCharacterPrompt,
 } from "../../../prompting/prompts/novel/characterPreparation.prompts";
-import { NovelContextService } from "../NovelContextService";
-import { CharacterDynamicsService } from "../dynamics/CharacterDynamicsService";
+import { NovelContextService } from "../../novel/NovelContextService";
+import { CharacterDynamicsService } from "../../novel/dynamics/CharacterDynamicsService";
 import { characterRefineSystemPrompt, characterRefinePrompt } from "../../../prompting/prompts/character/characterRefine.prompts";
 import { characterPrepNameExtractionSystemPrompt } from "../../../prompting/prompts/character/characterPrepNameExtraction.prompts";
 import { characterPrepNameRepairPrompt } from "../../../prompting/prompts/character/characterPrepNameRepair.prompts";
@@ -24,8 +24,8 @@ import {
   type SupplementalCharacterGenerationResponseParsed,
 } from "../../../prompting/prompts/novel/characterPreparation.promptSchemas";
 import { buildStoryModePromptBlock, normalizeStoryModeOutput } from "../../storyMode/storyModeProfile";
-import { parseCharacterProhibitionsJson } from "../characters/characterHardFacts";
-import { WorldContextGateway } from "../worldContext/WorldContextGateway";
+import { parseCharacterProhibitionsJson } from "../arc/characterHardFacts";
+import { WorldContextGateway } from "../../novel/worldContext/WorldContextGateway";
 import { invokeStructuredLlm } from "../../../llm/structuredInvoke";
 import type { LLMProvider } from "@ai-novel/shared";
 import { z } from "zod";

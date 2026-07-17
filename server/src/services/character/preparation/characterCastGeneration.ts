@@ -22,13 +22,13 @@ import type {
   CharacterCastOptionResponseParsed,
 } from "../../../prompting/prompts/novel/characterPreparation.promptSchemas";
 import { buildStoryModePromptBlock, normalizeStoryModeOutput } from "../../storyMode/storyModeProfile";
-import { serializeCharacterProhibitions } from "../characters/characterHardFacts";
+import { serializeCharacterProhibitions } from "../arc/characterHardFacts";
 import {
   assessCharacterCastBatch,
   buildCharacterCastRepairReasons,
   type CharacterCastBatchAssessment,
 } from "./characterCastQuality";
-import { WorldContextGateway } from "../worldContext/WorldContextGateway";
+import { WorldContextGateway } from "../../novel/worldContext/WorldContextGateway";
 import { logger } from "../../logging/LoggerService";
 
 export interface CharacterPrepOptions {

@@ -8,8 +8,8 @@ import {
 import { ragServices } from "../../rag";
 import type { RagOwnerType } from "../../rag/types";
 import { stateService } from "../../state/StateService";
-import { characterResourceLedgerService } from "../characterResource/CharacterResourceLedgerService";
-import { compactText } from "../characterResource/characterResourceShared";
+import { characterResourceLedgerService } from "../../character/resource/CharacterResourceLedgerService";
+import { compactText } from "../../character/resource/characterResourceShared";
 import { novelFactService, type NovelFactWriteItem } from "../fact/NovelFactService";
 import { extractFacts } from "../novelP0Utils";
 import { stateCommitService } from "../state/StateCommitService";

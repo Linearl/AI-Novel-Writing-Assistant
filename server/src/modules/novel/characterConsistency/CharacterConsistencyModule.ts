@@ -4,14 +4,14 @@
  * Wraps CharacterConsistencyService and provides the public API
  * to be consumed by HTTP routes and pipeline integration.
  */
-import { characterConsistencyService } from "../../../services/characterConsistency/CharacterConsistencyService";
+import { characterConsistencyService } from "../../../services/character/consistency/CharacterConsistencyService";
 import type {
   CharacterConsistencyStateRecord,
   CharacterConsistencyContradiction,
   ConsistencyScoreBreakdown,
   ContradictionFilter,
   ContradictionReport,
-} from "../../../services/characterConsistency/types";
+} from "../../../services/character/consistency/types";
 import { logger } from "../../../services/logging/LoggerService";
 
 export class CharacterConsistencyModule {

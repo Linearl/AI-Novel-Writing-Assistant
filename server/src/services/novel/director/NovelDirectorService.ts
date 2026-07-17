@@ -31,7 +31,7 @@ import type {
   DirectorTakeoverResponse,
 } from "@ai-novel/shared";
 import { BookContractService } from "../BookContractService";
-import { CharacterPreparationService } from "../characterPrep/CharacterPreparationService";
+import { CharacterPreparationService } from "../../character/preparation/CharacterPreparationService";
 import { CharacterDynamicsService } from "../dynamics/CharacterDynamicsService";
 import { NovelContextService } from "../NovelContextService";
 import {

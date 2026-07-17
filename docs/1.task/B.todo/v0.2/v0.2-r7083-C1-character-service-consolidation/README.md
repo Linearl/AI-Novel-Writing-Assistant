@@ -4,7 +4,7 @@
 - **标题**: Character Service Consolidation — 角色服务统一收敛
 - **优先级**: C1
 - **版本**: 0.2
-- **状态**: requirements_ready
+- **状态**: done
 - **创建日期**: 2026-07-17
 - **更新日期**: 2026-07-17
 

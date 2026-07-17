@@ -4,7 +4,7 @@ import { AppError } from "../../middleware/errorHandler";
 import { getSharedNovelServices } from "../../services/novel/application/sharedNovelServices";
 import { NovelCoreService } from "../../services/novel/NovelCoreService";
 import { NovelWorldSliceService } from "../../services/novel/storyWorldSlice/NovelWorldSliceService";
-import { CharacterPreparationService } from "../../services/novel/characterPrep/CharacterPreparationService";
+import { CharacterPreparationService } from "../../services/character/preparation/CharacterPreparationService";
 import { NovelVolumeService } from "../../services/novel/volume/NovelVolumeService";
 import { StoryMacroPlanService } from "../../services/novel/storyMacro/StoryMacroPlanService";
 import {

@@ -1,4 +1,4 @@
-import { prisma } from "../../db/prisma";
+import { prisma } from "../../../db/prisma";
 import type { ConsistencyScoreRecord, ConsistencyScoreBreakdown } from "./types";
 
 function mapScore(row: {

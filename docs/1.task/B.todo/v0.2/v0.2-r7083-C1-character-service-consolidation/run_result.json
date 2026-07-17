@@ -1,7 +1,7 @@
 {
   "taskId": "REQ-7083",
   "title": "Character Service Consolidation",
-  "status": "requirements_ready",
+  "status": "done",
   "version": "0.2",
   "priority": "C1",
   "created": "2026-07-17T00:00:00.000Z",
