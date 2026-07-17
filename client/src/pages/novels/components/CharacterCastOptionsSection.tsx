@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LoadingIndicator } from "@/components/ui/loading-indicator";
+import { useConfirm } from "@/components/useConfirm";
 import {
   applyCharacterCastOption,
   clearCharacterCastOptions,
@@ -90,6 +91,7 @@ function buildCharacterCastApplyConfirmMessage(option: CharacterCastOption, warn
 export default function CharacterCastOptionsSection(props: CharacterCastOptionsSectionProps) {
   const { novelId, characters, selectedCharacter, onSelectedCharacterChange, llmProvider, llmModel } = props;
   const queryClient = useQueryClient();
+  const { confirm, ConfirmDialog } = useConfirm();
   const [storyInput, setStoryInput] = useState("");
   const [statusMessage, setStatusMessage] = useState("");
   const [isPlannerExpanded, setIsPlannerExpanded] = useState(true);
@@ -236,10 +238,13 @@ export default function CharacterCastOptionsSection(props: CharacterCastOptionsS
     },
   });
 
-  function handleApplyOption(option: CharacterCastOption) {
+  async function handleApplyOption(option: CharacterCastOption) {
     const qualityWarnings = getCharacterCastQualityWarnings(option);
     if (qualityWarnings.length > 0) {
-      const confirmed = window.confirm(buildCharacterCastApplyConfirmMessage(option, qualityWarnings));
+      const confirmed = await confirm(buildCharacterCastApplyConfirmMessage(option, qualityWarnings), {
+        title: "角色阵容应用确认",
+        confirmLabel: "仍然应用",
+      });
       if (!confirmed) {
         return;
       }
@@ -291,6 +296,7 @@ export default function CharacterCastOptionsSection(props: CharacterCastOptionsS
 
   return (
     <div className="space-y-4">
+      <ConfirmDialog />
       <Card className={appliedOption && !isPlannerExpanded ? "border-border/60 bg-muted/15" : ""}>
         <CardHeader className="gap-3">
           <div className="flex flex-col gap-2 lg:flex-row lg:items-end lg:justify-between">
