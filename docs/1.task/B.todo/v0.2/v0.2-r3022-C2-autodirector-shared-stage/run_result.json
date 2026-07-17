@@ -1,7 +1,7 @@
 {
   "taskId": "REQ-3022",
   "title": "AutoDirector 共享 Stage 组件提取",
-  "status": "requirements_ready",
+  "status": "done",
   "version": "0.2",
   "priority": "C2",
   "created": "2026-07-17T00:00:00.000Z",

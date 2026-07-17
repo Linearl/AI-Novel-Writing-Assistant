@@ -1,7 +1,7 @@
 import type { AutoDirectorCreateController } from "../useAutoDirectorCreateController";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import NovelAutoDirectorIdeaInspirationPanel from "../NovelAutoDirectorIdeaInspirationPanel";
+import { IDEA_PLACEHOLDER, renderIdeaInspirationPanel } from "./shared/StageIdeaCore";
 
 interface StageIdeaProps {
   controller: Pick<
@@ -51,16 +51,22 @@ export default function StageIdea({ controller }: StageIdeaProps) {
           className="mt-2 min-h-[160px]"
           value={idea}
           onChange={(event) => setIdea(event.target.value)}
-          placeholder="例如：普通女大学生误入异能组织，一边上学打工，一边调查父亲失踪真相。"
+          placeholder={IDEA_PLACEHOLDER}
         />
       </div>
 
-      <NovelAutoDirectorIdeaInspirationPanel
-        ideas={ideaInspirations}
-        isGenerating={isGeneratingIdeaInspirations}
-        onGenerate={generateIdeaInspirations}
-        onUseIdea={(text) => setIdea(text)}
-      />
+      {renderIdeaInspirationPanel({
+        idea,
+        onIdeaChange: setIdea,
+        ideaInspirations,
+        isGeneratingIdeaInspirations,
+        onGenerateIdeaInspirations: generateIdeaInspirations,
+        onUseIdea: (text) => setIdea(text),
+        canContinue: canProceed,
+        isGenerating: false,
+        onContinue: handleContinueToBasic,
+        onQuickGenerate: handleQuickGenerate,
+      })}
 
       <div className="flex items-center justify-between gap-3 border-t pt-4">
         <Button

@@ -5,6 +5,7 @@ import { ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import NovelAutoDirectorIdeaInspirationPanel from "../components/NovelAutoDirectorIdeaInspirationPanel";
 import { useConfirm } from "@/components/useConfirm";
+import { IDEA_PLACEHOLDER } from "../components/autoDirectorCreate/shared/StageIdeaCore";
 
 interface StageIdeaProps {
   idea: string;
@@ -108,7 +109,7 @@ export default function StageIdea({
           className="min-h-[180px] w-full resize-none bg-transparent px-1 py-1 text-base leading-7 text-foreground outline-none placeholder:text-muted-foreground/60 sm:text-lg sm:leading-8"
           value={idea}
           onChange={(event) => onIdeaChange(event.target.value)}
-          placeholder="例如：普通女大学生误入异能组织，一边上学打工，一边调查父亲失踪真相。"
+          placeholder={IDEA_PLACEHOLDER}
         />
         <div className="flex flex-col gap-2 pt-3 sm:flex-row sm:items-center sm:justify-between">
           <button
