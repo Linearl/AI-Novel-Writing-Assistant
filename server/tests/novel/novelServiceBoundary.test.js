@@ -36,7 +36,6 @@ test("NovelService compatibility facade does not inherit the legacy service chai
     "NovelArtifactService.ts",
     "NovelGenerationService.ts",
     "NovelReviewService.ts",
-    "NovelPipelineService.ts",
   ]) {
     const source = readSource("services", "novel", fileName);
     assert.equal(source.includes("extends Novel"), false, `${fileName} must not extend another Novel service`);
@@ -75,7 +74,6 @@ test("production code gets application capabilities through the shared singleton
     path.join("services", "novel", "NovelService.ts"),
     path.join("services", "novel", "NovelArtifactService.ts"),
     path.join("services", "novel", "NovelGenerationService.ts"),
-    path.join("services", "novel", "NovelPipelineService.ts"),
     path.join("services", "novel", "NovelReviewService.ts"),
   ]);
   const offenders = walkTsFiles(srcRoot)
