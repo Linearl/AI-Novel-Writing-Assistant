@@ -299,15 +299,16 @@ export default function StructuredOutlineWorkspace(props: StructuredTabViewProps
                       });
                     }}
                     className={cn(
-                      "w-full min-w-0 rounded-xl border p-3 text-left transition-colors md:min-w-[120px] md:shrink-0 md:rounded-2xl",
+                      "w-full min-w-0 rounded-xl border p-3 text-left transition-colors md:min-w-[220px] md:shrink-0 md:rounded-2xl",
                       isSelected ? "border-primary/50 bg-primary/5" : "border-border/70 hover:border-primary/30",
                     )}
                   >
                     <div className="flex items-center justify-between gap-2">
                       <Badge variant={isSelected ? "default" : "outline"}>第{volume.sortOrder}卷</Badge>
+                      {volumeBeatSheet ? <Badge variant="secondary">有节奏板</Badge> : <Badge variant="outline">未做节奏板</Badge>}
                     </div>
-                    <div className="mt-2 text-sm font-medium leading-snug break-words">{volume.title || `第${volume.sortOrder}卷`}</div>
-                    <div className="mt-1 text-xs text-muted-foreground leading-snug break-words">
+                    <div className="mt-2 line-clamp-1 text-sm font-medium">{volume.title || `第${volume.sortOrder}卷`}</div>
+                    <div className="mt-1 line-clamp-2 text-xs text-muted-foreground">
                       {volume.mainPromise || volume.summary || "先补这卷的核心承诺。"}
                     </div>
                     <div className="mt-2 text-[11px] text-muted-foreground">{volume.chapters.length}章 · {doneCount}章已细化</div>
