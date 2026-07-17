@@ -13,6 +13,7 @@ const CHANNEL_ACTION_CODES = new Set<AutoDirectorActionCode>([
   "retry_with_task_model",
   "open_detail",
   "open_follow_up_center",
+  "continue_generic",
 ]);
 
 const REASON_LABELS: Record<AutoDirectorFollowUpReason, string> = {
@@ -232,6 +233,25 @@ export function resolveAutoDirectorFollowUpReason(
 
   if (input.status !== "waiting_approval") {
     return null;
+  }
+
+  if (input.checkpointType === "user_paused") {
+    return finalizeResolvedReason({
+      reason: "user_paused",
+      priority: "P2",
+      availableActions: [
+        mutationAction({
+          code: "continue_generic",
+          label: "继续执行",
+          riskLevel: "low",
+          requiresConfirm: false,
+        }),
+        navigationAction({
+          code: "open_detail",
+          label: "查看详情",
+        }),
+      ],
+    });
   }
 
   if (input.checkpointType === "candidate_selection_required") {

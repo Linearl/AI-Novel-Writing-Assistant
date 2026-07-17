@@ -480,6 +480,13 @@ export async function runDirectorStructuredOutlinePhase(input: {
   let workspace = baseWorkspace;
   let previousCursorKey: string | null = null;
   while (true) {
+    // Check for user-requested pause
+    const latestTask = await dependencies.workflowService.getTaskById(taskId);
+    if (latestTask?.status === "waiting_approval" && latestTask?.checkpointType === "user_paused") {
+      logger.info(`[structured-outline] task paused by user taskId=${taskId}`);
+      return;
+    }
+
     const recoveryCursor = resolveStructuredOutlineRecoveryCursor({
       workspace,
       plan: detailPlan,

@@ -8,6 +8,7 @@ import type {
   DirectorPolicyMode,
   DirectorRuntimeProjection,
   DirectorRuntimePolicySnapshot,
+  NovelWorkflowStage,
   DirectorRuntimeSnapshot,
   DirectorManualEditImpact,
   DirectorWorkspaceAnalysis,
@@ -506,6 +507,20 @@ export class NovelDirectorService {
       taskId,
       mode: input.mode,
       patch: input.patch,
+    });
+  }
+
+  async requestPause(taskId: string): Promise<void> {
+    const row = await this.workflowService.getTaskById(taskId);
+    if (!row || row.status !== "running") {
+      throw new AppError("只能暂停运行中的自动导演任务。", 400);
+    }
+    await this.workflowService.recordCheckpoint(taskId, {
+      stage: (row.currentStage ?? "structured_outline") as NovelWorkflowStage,
+      checkpointType: "user_paused",
+      checkpointSummary: "用户手动暂停",
+      itemLabel: "用户手动暂停",
+      progress: row.progress ?? 0,
     });
   }
 

@@ -335,6 +335,13 @@ export class TaskCenterService {
     throw new AppError(`Unsupported task kind: ${kind}`, 400);
   }
 
+  async pauseTask(kind: TaskKind, id: string): Promise<UnifiedTaskDetail | null> {
+    if (kind === "novel_workflow") {
+      return this.workflowAdapter.pause(id);
+    }
+    throw new AppError(`该类型任务不支持暂停: ${kind}`, 400);
+  }
+
   async archiveTask(kind: TaskKind, id: string): Promise<UnifiedTaskDetail | null> {
     if (kind === "book_analysis") {
       return this.bookAdapter.archive(id);

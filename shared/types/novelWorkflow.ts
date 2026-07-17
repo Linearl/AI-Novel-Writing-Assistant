@@ -17,7 +17,8 @@ export type NovelWorkflowCheckpoint =
   | "volume_strategy_ready"
   | "chapter_batch_ready"
   | "replan_required"
-  | "workflow_completed";
+  | "workflow_completed"
+  | "user_paused";
 
 export type NovelWorkflowMilestoneType =
   | NovelWorkflowCheckpoint

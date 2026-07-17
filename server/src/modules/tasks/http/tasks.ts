@@ -241,6 +241,20 @@ router.post("/:kind/:id/cancel", validate({ params: taskParamsSchema }), async (
   }
 });
 
+router.post("/:kind/:id/pause", validate({ params: taskParamsSchema }), async (req, res, next) => {
+  try {
+    const { kind, id } = req.params as z.infer<typeof taskParamsSchema>;
+    const data = await taskCenterService.pauseTask(kind, id);
+    res.status(200).json({
+      success: true,
+      data,
+      message: "Task pause requested.",
+    } satisfies ApiResponse<typeof data>);
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.post("/:kind/:id/archive", validate({ params: taskParamsSchema }), async (req, res, next) => {
   try {
     const { kind, id } = req.params as z.infer<typeof taskParamsSchema>;

@@ -56,6 +56,7 @@ const CHECKPOINT_DISPLAY_STATUS: Record<NovelWorkflowCheckpoint, string> = {
   chapter_batch_ready: "已准备章节可进入执行",
   replan_required: "等待处理重规划",
   workflow_completed: "自动导演已完成",
+  user_paused: "用户手动暂停",
 };
 
 const CHECKPOINT_BLOCKING_REASON: Record<NovelWorkflowCheckpoint, string> = {
@@ -66,6 +67,7 @@ const CHECKPOINT_BLOCKING_REASON: Record<NovelWorkflowCheckpoint, string> = {
   chapter_batch_ready: "章节范围的拆章与执行资源已经准备好，可以进入章节执行或继续自动执行当前范围。",
   replan_required: "审计结果要求先处理重规划，后续章节才能继续推进。",
   workflow_completed: "默认主流程已跑通，你可以直接进入章节执行继续写作。",
+  user_paused: "用户手动暂停了自动导演，可以继续执行或取消任务。",
 };
 
 const CHECKPOINT_LAST_HEALTHY_STAGE: Record<NovelWorkflowCheckpoint, NovelWorkflowStage> = {
@@ -76,6 +78,7 @@ const CHECKPOINT_LAST_HEALTHY_STAGE: Record<NovelWorkflowCheckpoint, NovelWorkfl
   chapter_batch_ready: "structured_outline",
   replan_required: "quality_repair",
   workflow_completed: "quality_repair",
+  user_paused: "structured_outline",
 };
 
 function getExecutionScopeLabel(input: WorkflowExplainabilityInput, fallback = "第 1-10 章"): string {

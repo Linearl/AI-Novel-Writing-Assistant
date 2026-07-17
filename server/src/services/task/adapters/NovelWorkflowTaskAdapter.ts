@@ -1,5 +1,6 @@
 import type {
   NovelWorkflowCheckpoint,
+  NovelWorkflowStage,
 } from "@ai-novel/shared";
 import type {
   DirectorAutoExecutionState,
@@ -11,6 +12,7 @@ import type { TaskStatus, UnifiedTaskDetail, UnifiedTaskSummary } from "@ai-nove
 import { prisma } from "../../../db/prisma";
 import { AppError } from "../../../middleware/errorHandler";
 import { DirectorCommandService } from "../../novel/director/commands/DirectorCommandService";
+import { NovelDirectorService } from "../../novel/director/NovelDirectorService";
 import {
   buildSkippableAutoExecutionReviewBlockingReason,
   buildSkippableAutoExecutionReviewCheckpointSummary,
@@ -404,6 +406,7 @@ function mapSummary(row: {
 export class NovelWorkflowTaskAdapter {
   private readonly workflowService = new NovelWorkflowService();
   private readonly directorCommandService = new DirectorCommandService(this.workflowService);
+  private readonly directorService = new NovelDirectorService();
   readonly novelDirectorService = {
     continueTask: (taskId: string, input?: Parameters<DirectorCommandService["enqueueContinueCommand"]>[1]) =>
       this.directorCommandService.enqueueContinueCommand(taskId, input).then(() => undefined),
@@ -653,6 +656,35 @@ export class NovelWorkflowTaskAdapter {
     const detail = await this.detail(id);
     if (!detail) {
       throw new AppError("Task not found after cancellation.", 404);
+    }
+    return detail;
+  }
+
+  async pause(id: string): Promise<UnifiedTaskDetail | null> {
+    if (await isTaskArchived("novel_workflow", id)) {
+      throw new AppError("Task not found.", 404);
+    }
+    const row = await this.workflowService.getTaskById(id);
+    if (!row) {
+      throw new AppError("Task not found.", 404);
+    }
+    if (row.status !== "running") {
+      throw new AppError("只能暂停运行中的任务。", 400);
+    }
+    if (row.lane === "auto_director") {
+      await this.directorService.requestPause(id);
+    } else {
+      await this.workflowService.recordCheckpoint(id, {
+        stage: (row.currentStage ?? "structured_outline") as NovelWorkflowStage,
+        checkpointType: "user_paused",
+        checkpointSummary: "用户手动暂停",
+        itemLabel: "用户手动暂停",
+        progress: row.progress ?? 0,
+      });
+    }
+    const detail = await this.detail(id);
+    if (!detail) {
+      throw new AppError("Task not found after pause.", 404);
     }
     return detail;
   }
