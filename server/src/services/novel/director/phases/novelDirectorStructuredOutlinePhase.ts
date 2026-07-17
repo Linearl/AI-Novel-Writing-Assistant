@@ -215,6 +215,16 @@ async function runBeatSheetStep(params: {
     volumeId: targetVolume.id,
     dependencies,
   });
+
+  // Verify beat sheet was persisted correctly
+  const { getBeatSheet } = await import("../../volume/volumeGenerationHelpers");
+  const verificationBeatSheet = getBeatSheet(result, targetVolume.id);
+  if (!verificationBeatSheet || verificationBeatSheet.beats.length === 0) {
+    logger.warn(
+      `[structured-outline] beat sheet persistence verification failed for volume ${targetVolume.id}`,
+    );
+  }
+
   return result;
 }
 

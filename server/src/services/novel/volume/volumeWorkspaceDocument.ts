@@ -480,7 +480,7 @@ export function mergeVolumeWorkspaceInput(
     && hasVolumeLevelStructureChanged(currentDocument.volumes, nextVolumes);
   const chapterListChanged = Array.isArray(record.volumes)
     && hasChapterListChanged(currentDocument.volumes, nextVolumes);
-  const beatSheets = strategyChanged || volumeLevelStructureChanged
+  const beatSheets = strategyChanged
     ? []
     : record.beatSheets !== undefined
       ? record.beatSheets

@@ -160,6 +160,10 @@ export function resolveAssetFirstRecoveryFromSnapshot(input: {
   }
 
   if (input.hasVolumeStrategyPlan && (input.structuredOutlineRecoveryStep || input.volumeCount > 0)) {
+    // If structured outline is already complete, don't re-enter it
+    if (input.structuredOutlineRecoveryStep === "completed" || input.structuredOutlineRecoveryStep === "chapter_sync") {
+      return null;
+    }
     return {
       type: "phase",
       phase: "structured_outline",
