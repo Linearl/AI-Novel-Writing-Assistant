@@ -299,7 +299,7 @@ export default function StructuredOutlineWorkspace(props: StructuredTabViewProps
                       });
                     }}
                     className={cn(
-                      "w-full min-w-0 rounded-xl border p-3 text-left transition-colors md:min-w-[120px] md:shrink-0 md:rounded-2xl",
+                      "w-full min-w-0 max-w-[160px] rounded-xl border p-3 text-left transition-colors md:shrink-0 md:rounded-2xl",
                       isSelected ? "border-primary/50 bg-primary/5" : "border-border/70 hover:border-primary/30",
                     )}
                   >
