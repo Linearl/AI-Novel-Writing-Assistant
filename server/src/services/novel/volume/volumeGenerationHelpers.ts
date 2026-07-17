@@ -178,10 +178,11 @@ export async function generateChapterTaskSheetDetail(params: {
     && existingChapter.taskSheet?.trim()
     && existingChapter.sceneCards?.trim()
   ) {
-    const scenePlan = normalizeChapterScenePlan(
-      existingChapter.sceneCards,
-      existingChapter.targetWordCount,
-    );
+    try {
+      const scenePlan = normalizeChapterScenePlan(
+        existingChapter.sceneCards,
+        existingChapter.targetWordCount,
+      );
     return {
       purpose: existingChapter.purpose?.trim() || existingChapter.summary.trim(),
       exclusiveEvent: existingChapter.exclusiveEvent?.trim() || existingChapter.summary.trim(),
@@ -195,6 +196,9 @@ export async function generateChapterTaskSheetDetail(params: {
       taskSheet: existingChapter.taskSheet.trim(),
       sceneCards: serializeChapterScenePlan(scenePlan),
     };
+    } catch {
+      // Existing sceneCards invalid (e.g. < 3 scenes from failed attempt), fall through to regeneration
+    }
   }
 
   let lastError: Error | null = null;
