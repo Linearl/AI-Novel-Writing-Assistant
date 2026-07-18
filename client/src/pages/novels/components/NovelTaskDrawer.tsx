@@ -216,11 +216,11 @@ export default function NovelTaskDrawer({
                   </div>
                 ) : null}
                 {task.lastError ? (
-                  <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive">
+                  <div className="overflow-hidden rounded-xl border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive">
                     <div className="font-medium">最近错误</div>
-                    <div className="mt-1">{task.lastError}</div>
+                    <div className="mt-1 break-all">{task.lastError}</div>
                     {task.recoveryHint ? (
-                      <div className="mt-2 text-xs text-destructive/80">恢复建议：{task.recoveryHint}</div>
+                      <div className="mt-2 break-all text-xs text-destructive/80">恢复建议：{task.recoveryHint}</div>
                     ) : null}
                   </div>
                 ) : null}
@@ -240,7 +240,7 @@ export default function NovelTaskDrawer({
                     <div className="text-sm text-muted-foreground">阻止动作的原因：{followUp.blockingReason}</div>
                   ) : null}
                   {followUp.currentModel ? (
-                    <div className="text-sm text-muted-foreground">当前任务模型：{followUp.currentModel}</div>
+                    <div className="text-sm text-muted-foreground">配置模型：{followUp.currentModel}</div>
                   ) : null}
                   {runtimeHardBlocked && runtimeBlockedReason ? (
                     <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive">

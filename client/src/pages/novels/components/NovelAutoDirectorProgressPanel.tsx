@@ -403,11 +403,11 @@ export default function NovelAutoDirectorProgressPanel({
             </div>
           </div>
         ) : visualMode === "execution_failed" ? (
-          <div className="mt-4 rounded-xl border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
+          <div className="mt-4 overflow-hidden rounded-xl border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
             <div className="font-medium">失败摘要</div>
-            <div className="mt-1">{failureMessage}</div>
+            <div className="mt-1 break-all">{failureMessage}</div>
             {task?.recoveryHint ? (
-              <div className="mt-2 text-xs text-destructive/80">恢复建议：{task.recoveryHint}</div>
+              <div className="mt-2 break-all text-xs text-destructive/80">恢复建议：{task.recoveryHint}</div>
             ) : null}
           </div>
         ) : null}

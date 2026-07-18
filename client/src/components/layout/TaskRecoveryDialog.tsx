@@ -86,7 +86,7 @@ export default function TaskRecoveryDialog() {
                   {item.currentStage ? <div>当前阶段：{item.currentStage}</div> : null}
                   {item.currentItemLabel ? <div>中断位置：{item.currentItemLabel}</div> : null}
                   {item.resumeAction ? <div>建议动作：{item.resumeAction}</div> : null}
-                  {item.recoveryHint ? <div>恢复建议：{item.recoveryHint}</div> : null}
+                  {item.recoveryHint ? <div className="break-all">恢复建议：{item.recoveryHint}</div> : null}
                 </div>
               </CardContent>
             </Card>

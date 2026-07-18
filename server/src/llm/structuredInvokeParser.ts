@@ -280,9 +280,16 @@ export function buildStructuredError(input: {
   reasoningForcedOff?: boolean;
   fallbackAvailable?: boolean;
   fallbackUsed?: boolean;
+  provider?: string;
+  model?: string;
 }): StructuredOutputError {
+  const providerTag = input.provider && input.model
+    ? ` (${input.provider}/${input.model})`
+    : input.provider
+      ? ` (${input.provider})`
+      : "";
   return new StructuredOutputError({
-    message: input.message,
+    message: `${input.message}${providerTag}`,
     category: input.category,
     diagnostics: buildDiagnostics({
       strategy: input.strategy,
@@ -304,6 +311,8 @@ export function wrapStructuredInvokeError(input: {
   reasoningForcedOff?: boolean;
   fallbackAvailable?: boolean;
   fallbackUsed?: boolean;
+  provider?: string;
+  model?: string;
 }): StructuredOutputError {
   if (input.error instanceof StructuredOutputError) {
     return input.error;
@@ -325,6 +334,8 @@ export function wrapStructuredInvokeError(input: {
     reasoningForcedOff: input.reasoningForcedOff,
     fallbackAvailable: input.fallbackAvailable,
     fallbackUsed: input.fallbackUsed,
+    provider: input.provider,
+    model: input.model,
   });
 }
 

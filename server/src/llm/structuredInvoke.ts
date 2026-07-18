@@ -357,6 +357,8 @@ async function invokeStructuredAttempt<T>(input: {
       reasoningForcedOff: resolved.reasoningForcedOff,
       fallbackAvailable: input.fallbackAvailable,
       fallbackUsed: input.fallbackUsed,
+      provider: resolved.provider,
+      model: resolved.model,
     });
   }
 }
@@ -417,6 +419,8 @@ async function tryStructuredStrategies<T>(input: {
     profile: input.target.profile,
     fallbackAvailable: input.fallbackAvailable,
     fallbackUsed: input.fallbackUsed,
+    provider: input.target.provider,
+    model: input.target.model,
   });
 }
 
