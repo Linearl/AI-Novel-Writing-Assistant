@@ -4,12 +4,12 @@ const {
   directorCandidateResponseSchema,
   directorBookContractSchema,
   normalizeDirectorTitleSuggestionStyle,
-} = require("../../dist/services/novel/director/runtime/novelDirectorSchemas.js");
+} = require("../../dist/orchestration/pipeline/runtime/core/novelDirectorSchemas.js");
 const {
   normalizeCandidate,
   normalizeBookContract,
   toBookSpec,
-} = require("../../dist/services/novel/director/runtime/novelDirectorHelpers.js");
+} = require("../../dist/orchestration/pipeline/runtime/core/novelDirectorHelpers.js");
 
 test("normalizeDirectorTitleSuggestionStyle handles common variants", () => {
   assert.equal(normalizeDirectorTitleSuggestionStyle("high-concept"), "high_concept");

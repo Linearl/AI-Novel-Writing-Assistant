@@ -1,8 +1,8 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const { compileIntentToPlan } = require("../../dist/agents/planner/compiler.js");
-const { normalizeIntentPayload } = require("../../dist/agents/planner/utils.js");
-const { summarizeIntentValidationFailure } = require("../../dist/agents/planner/parser.js");
+const { compileIntentToPlan } = require("../../dist/orchestration/agent/planner/compiler.js");
+const { normalizeIntentPayload } = require("../../dist/orchestration/agent/planner/utils.js");
+const { summarizeIntentValidationFailure } = require("../../dist/orchestration/agent/planner/parser.js");
 
 test("compileIntentToPlan uses chapter order tools for chapter content", () => {
   const plan = compileIntentToPlan({

@@ -5,7 +5,7 @@ const { prisma } = require("../../dist/db/prisma.js");
 const { novelEventBus } = require("../../dist/events/index.js");
 const reviewService = require("../../dist/services/novel/novelCoreReviewService.js");
 const { NovelCorePipelineService } = require("../../dist/services/novel/novelCorePipelineService.js");
-const { ChapterEmptyContentError } = require("../../dist/services/novel/runtime/chapterEmptyContentError.js");
+const { ChapterEmptyContentError } = require("../../dist/orchestration/runtime/chapterEmptyContentError.js");
 const { decoratePipelineJob } = require("../../dist/services/novel/pipelineJobState.js");
 
 test("listRecoverablePipelineJobs excludes cancellation-pending jobs", async () => {

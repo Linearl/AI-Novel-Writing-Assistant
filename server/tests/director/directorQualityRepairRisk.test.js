@@ -3,7 +3,7 @@ const assert = require("node:assert/strict");
 
 const {
   buildDirectorQualityRepairRisk,
-} = require("../../dist/services/novel/director/phases/novelDirectorQualityRepairRisk.js");
+} = require("../../dist/orchestration/pipeline/phases/novelDirectorQualityRepairRisk.js");
 
 test("buildDirectorQualityRepairRisk treats deferred quality debt as continuable regardless of count", () => {
   const risk = buildDirectorQualityRepairRisk({

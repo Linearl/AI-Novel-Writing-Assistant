@@ -2,7 +2,7 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
-const { listAgentToolDefinitions } = require("../../dist/agents/toolRegistry.js");
+const { listAgentToolDefinitions } = require("../../dist/orchestration/agent/toolRegistry.js");
 
 test("tool registry exposes chapter range and cross-domain tools", () => {
   const tools = listAgentToolDefinitions().map((item) => item.name);
@@ -77,7 +77,7 @@ test("character arc query tools have correct metadata (REQ-2031)", () => {
 });
 
 test("agent tool definitions keep zod declarations in dedicated schema modules", () => {
-  const toolsDir = path.join(__dirname, "..", "..", "src", "agents", "tools");
+  const toolsDir = path.join(__dirname, "..", "..", "src", "orchestration", "agent", "tools");
   const violations = [];
   const allowlist = new Set(["bookAnalysisTools.ts"]);
 

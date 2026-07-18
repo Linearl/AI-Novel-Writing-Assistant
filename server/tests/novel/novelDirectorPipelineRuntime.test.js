@@ -3,7 +3,7 @@ const assert = require("node:assert/strict");
 
 const {
   NovelDirectorPipelineRuntime,
-} = require("../../dist/services/novel/director/novelDirectorPipelineRuntime.js");
+} = require("../../dist/orchestration/pipeline/novelDirectorPipelineRuntime.js");
 
 function buildDirectorInput(overrides = {}) {
   return {

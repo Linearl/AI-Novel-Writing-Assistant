@@ -3,10 +3,10 @@ const assert = require("node:assert/strict");
 
 const {
   DirectorLangGraphPilot,
-} = require("../../dist/services/novel/director/langgraphPilot/DirectorLangGraphPilot.js");
+} = require("../../dist/orchestration/pipeline/langgraphPilot/DirectorLangGraphPilot.js");
 const {
   buildDirectorPlanningWorkflowPlan,
-} = require("../../dist/services/novel/director/workflowStepRuntime/directorWorkflowPlans.js");
+} = require("../../dist/orchestration/pipeline/workflowStepRuntime/directorWorkflowPlans.js");
 
 function buildAnalysis() {
   return {

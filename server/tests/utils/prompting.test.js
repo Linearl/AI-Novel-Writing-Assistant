@@ -75,7 +75,7 @@ const {
 } = require("../../dist/prompting/prompts/novel/chapterLayeredContext.js");
 const {
   directorPlanBlueprintSchema,
-} = require("../../dist/services/novel/director/runtime/novelDirectorSchemas.js");
+} = require("../../dist/orchestration/pipeline/runtime/core/novelDirectorSchemas.js");
 
 const promptKey = (asset) => `${asset.id}@${asset.version}`;
 

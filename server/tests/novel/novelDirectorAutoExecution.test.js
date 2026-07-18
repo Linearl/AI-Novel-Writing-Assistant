@@ -10,7 +10,7 @@ const {
   resolveDirectorAutoExecutionRange,
   resolveDirectorAutoExecutionRepairMode,
   resolveDirectorAutoExecutionWorkflowState,
-} = require("../../dist/services/novel/director/automation/novelDirectorAutoExecution.js");
+} = require("../../dist/orchestration/pipeline/automation/novelDirectorAutoExecution.js");
 
 test("chapter_range normalizes to the explicit chapter range 1-10", () => {
   assert.deepEqual(normalizeDirectorAutoExecutionPlan({ mode: "chapter_range", endOrder: 10 }), {

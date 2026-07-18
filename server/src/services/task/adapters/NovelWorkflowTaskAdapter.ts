@@ -24,7 +24,7 @@ import { NovelWorkflowService } from "../../novel/workflow/NovelWorkflowService"
 import {
   getDirectorLlmOptionsFromSeedPayload,
   type DirectorWorkflowSeedPayload,
-} from "../../novel/director/runtime/novelDirectorHelpers";
+} from "../../../orchestration/pipeline/runtime/core/novelDirectorHelpers";
 import { isAutoDirectorRecoveryInProgress } from "../../novel/workflow/novelWorkflowRecoveryHeuristics";
 import {
   buildNovelCreateResumeTarget,

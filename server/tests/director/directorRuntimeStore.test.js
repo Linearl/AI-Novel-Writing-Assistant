@@ -4,7 +4,7 @@ const { prisma } = require("../../dist/db/prisma.js");
 
 const {
   DirectorRuntimeStore,
-} = require("../../dist/services/novel/director/runtime/DirectorRuntimeStore.js");
+} = require("../../dist/orchestration/pipeline/runtime/persistence/DirectorRuntimeStore.js");
 
 function buildSnapshot() {
   return {

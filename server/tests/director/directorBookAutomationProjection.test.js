@@ -4,13 +4,13 @@ const assert = require("node:assert/strict");
 const { prisma } = require("../../dist/db/prisma.js");
 const {
   DirectorBookAutomationProjectionService,
-} = require("../../dist/services/novel/director/projections/DirectorBookAutomationProjectionService.js");
+} = require("../../dist/orchestration/pipeline/projections/DirectorBookAutomationProjectionService.js");
 const {
   directorArtifactLedgerQueryService,
-} = require("../../dist/services/novel/director/runtime/DirectorArtifactLedgerQueryService.js");
+} = require("../../dist/orchestration/pipeline/runtime/utils/DirectorArtifactLedgerQueryService.js");
 const {
   directorUsageTelemetryQueryService,
-} = require("../../dist/services/novel/director/runtime/DirectorUsageTelemetryQueryService.js");
+} = require("../../dist/orchestration/pipeline/runtime/utils/DirectorUsageTelemetryQueryService.js");
 
 function createHarness(overrides = {}) {
   const latestTask = {

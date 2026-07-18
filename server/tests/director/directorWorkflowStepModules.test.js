@@ -7,19 +7,19 @@ const {
   createWorkflowStepModule,
   isExecutableWorkflowStepModule,
   workflowStepModuleToDirectorNodeContract,
-} = require("../../dist/services/novel/director/workflowStepRuntime/WorkflowStepModule.js");
+} = require("../../dist/orchestration/pipeline/workflowStepRuntime/WorkflowStepModule.js");
 const { prisma } = require("../../dist/db/prisma.js");
 const { DefaultNovelApplicationServices } = require("../../dist/services/novel/application/NovelApplicationServices.js");
 const {
   stepModuleRunner,
-} = require("../../dist/services/novel/director/workflowStepRuntime/StepModuleRunner.js");
+} = require("../../dist/orchestration/pipeline/workflowStepRuntime/StepModuleRunner.js");
 const {
   DIRECTOR_EXECUTION_STEP_IDS,
-} = require("../../dist/services/novel/director/workflowStepRuntime/directorWorkflowStepIds.js");
+} = require("../../dist/orchestration/pipeline/workflowStepRuntime/directorWorkflowStepIds.js");
 const {
   buildChapterPipelineWorkflowTemplate,
   buildDirectorPlanningWorkflowPlan,
-} = require("../../dist/services/novel/director/workflowStepRuntime/directorWorkflowPlans.js");
+} = require("../../dist/orchestration/pipeline/workflowStepRuntime/directorWorkflowPlans.js");
 const {
   directorWorkflowStepModuleRegistry,
   getDirectorCandidateStepModule,
@@ -29,7 +29,7 @@ const {
   getDirectorPlanningStepModule,
   getDirectorTakeoverStepModule,
   validateDirectorWorkflowStepWriteContracts,
-} = require("../../dist/services/novel/director/workflowStepRuntime/directorWorkflowStepModules.js");
+} = require("../../dist/orchestration/pipeline/workflowStepRuntime/directorWorkflowStepModules.js");
 
 test("director workflow step registry exposes unified step modules", () => {
   const ids = directorWorkflowStepModuleRegistry.list().map((module) => module.id);

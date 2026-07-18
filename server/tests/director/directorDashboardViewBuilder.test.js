@@ -3,7 +3,7 @@ const assert = require("node:assert/strict");
 
 const {
   buildDirectorDashboardView,
-} = require("../../dist/services/novel/director/projections/DirectorDashboardViewBuilder.js");
+} = require("../../dist/orchestration/pipeline/projections/DirectorDashboardViewBuilder.js");
 
 const baseDisplayState = {
   stageKey: "structured_outline",

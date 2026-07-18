@@ -3,10 +3,10 @@ const assert = require("node:assert/strict");
 
 const {
   DirectorRuntimeService,
-} = require("../../dist/services/novel/director/runtime/DirectorRuntimeService.js");
+} = require("../../dist/orchestration/pipeline/runtime/core/DirectorRuntimeService.js");
 const {
   buildDirectorPlanningWorkflowPlan,
-} = require("../../dist/services/novel/director/workflowStepRuntime/directorWorkflowPlans.js");
+} = require("../../dist/orchestration/pipeline/workflowStepRuntime/directorWorkflowPlans.js");
 
 function buildService() {
   const analysisCalls = [];

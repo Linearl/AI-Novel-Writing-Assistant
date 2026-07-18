@@ -1,8 +1,8 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 
-const { canAgentUseTool, evaluateApprovalRequirement } = require("../../dist/agents/approvalPolicy.js");
-const { compileIntentToPlan } = require("../../dist/agents/planner/compiler.js");
+const { canAgentUseTool, evaluateApprovalRequirement } = require("../../dist/orchestration/agent/approvalPolicy.js");
+const { compileIntentToPlan } = require("../../dist/orchestration/agent/planner/compiler.js");
 
 function buildIntent(patch) {
   return {

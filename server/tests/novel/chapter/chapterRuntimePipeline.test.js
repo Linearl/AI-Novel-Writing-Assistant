@@ -4,10 +4,10 @@ const promptRunner = require("../../../dist/prompting/core/promptRunner.js");
 
 const {
   runPipelineChapterWithRuntime,
-} = require("../../../dist/services/novel/runtime/chapterRuntimePipeline.js");
+} = require("../../../dist/orchestration/runtime/chapterRuntimePipeline.js");
 const {
   ChapterEmptyContentError,
-} = require("../../../dist/services/novel/runtime/chapterEmptyContentError.js");
+} = require("../../../dist/orchestration/runtime/chapterEmptyContentError.js");
 
 function createRuntimePackage(overallScore, options = {}) {
   return {

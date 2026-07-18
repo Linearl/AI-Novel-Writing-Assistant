@@ -4,10 +4,10 @@ const assert = require("node:assert/strict");
 const { prisma } = require("../../dist/db/prisma");
 const {
   loadPersistentDirectorRuntimeProjection,
-} = require("../../dist/services/novel/director/projections/novelDirectorRuntimeProjection.js");
+} = require("../../dist/orchestration/pipeline/projections/novelDirectorRuntimeProjection.js");
 const {
   directorUsageTelemetryQueryService,
-} = require("../../dist/services/novel/director/runtime/DirectorUsageTelemetryQueryService.js");
+} = require("../../dist/orchestration/pipeline/runtime/utils/DirectorUsageTelemetryQueryService.js");
 
 function buildRun() {
   return {

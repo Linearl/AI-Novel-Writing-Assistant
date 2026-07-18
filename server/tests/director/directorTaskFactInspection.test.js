@@ -1,8 +1,8 @@
 const assert = require("node:assert/strict");
 const { test } = require("node:test");
 
-const { DirectorTaskSnapshotService } = require("../../dist/services/novel/director/projections/DirectorTaskSnapshotService.js");
-const { DirectorFactSummaryService } = require("../../dist/services/novel/director/projections/DirectorFactSummaryService.js");
+const { DirectorTaskSnapshotService } = require("../../dist/orchestration/pipeline/projections/DirectorTaskSnapshotService.js");
+const { DirectorFactSummaryService } = require("../../dist/orchestration/pipeline/projections/DirectorFactSummaryService.js");
 
 function buildState(input) {
   return {

@@ -3,17 +3,17 @@ const assert = require("node:assert/strict");
 
 const {
   NovelDirectorRuntimeOrchestrator,
-} = require("../../dist/services/novel/director/runtime/novelDirectorRuntimeOrchestrator.js");
+} = require("../../dist/orchestration/pipeline/runtime/core/novelDirectorRuntimeOrchestrator.js");
 const {
   createWorkflowStepModule,
-} = require("../../dist/services/novel/director/workflowStepRuntime/WorkflowStepModule.js");
+} = require("../../dist/orchestration/pipeline/workflowStepRuntime/WorkflowStepModule.js");
 const {
   getDirectorPlanningStepModule,
   directorWorkflowStepModuleRegistry,
-} = require("../../dist/services/novel/director/workflowStepRuntime/directorWorkflowStepModules.js");
+} = require("../../dist/orchestration/pipeline/workflowStepRuntime/directorWorkflowStepModules.js");
 const {
   DIRECTOR_INITIALIZATION_PLACEHOLDER_VOLUME_STRATEGY_HASH,
-} = require("../../dist/services/novel/director/runtime/DirectorWorkspaceArtifactInventory.js");
+} = require("../../dist/orchestration/pipeline/runtime/workspace/DirectorWorkspaceArtifactInventory.js");
 
 function buildArtifact(type, patch = {}) {
   return {

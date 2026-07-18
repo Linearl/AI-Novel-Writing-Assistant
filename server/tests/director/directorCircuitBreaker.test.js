@@ -6,7 +6,7 @@ const {
   recordPatchFailureSignal,
   recordReplanLoopSignal,
   recordUsageAnomalySignal,
-} = require("../../dist/services/novel/director/runtime/DirectorCircuitBreakerService.js");
+} = require("../../dist/orchestration/pipeline/runtime/utils/DirectorCircuitBreakerService.js");
 
 test("director circuit breaker opens after repeated patch failures on the same chapter", () => {
   let state = null;

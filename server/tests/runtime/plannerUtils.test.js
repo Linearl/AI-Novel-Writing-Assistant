@@ -9,7 +9,7 @@ const {
   extractRange,
   extractExplicitChapterOrders,
   slug,
-} = require("../../dist/agents/planner/utils.js");
+} = require("../../dist/orchestration/agent/planner/utils.js");
 
 // ---------------------------------------------------------------------------
 // parseChapterNumber

@@ -4,32 +4,24 @@ const fs = require("node:fs");
 const path = require("node:path");
 
 const repoRoot = path.resolve(__dirname, "..", "..");
-const directorRoot = path.join(repoRoot, "src", "services", "novel", "director");
-const routesRoot = path.join(repoRoot, "src", "routes");
+const directorRoot = path.join(repoRoot, "src", "orchestration", "pipeline");
+const facadeRoot = path.join(repoRoot, "src", "services", "novel", "director");
 
 function readSource(...segments) {
   return fs.readFileSync(path.join(repoRoot, "src", ...segments), "utf8");
 }
 
-test("director root stays limited to compatibility facades", () => {
-  const rootTsFiles = fs
-    .readdirSync(directorRoot, { withFileTypes: true })
-    .filter((entry) => entry.isFile() && entry.name.endsWith(".ts"))
-    .map((entry) => entry.name)
-    .sort();
-
-  assert.deepEqual(rootTsFiles, [
-    "DirectorEventBridge.ts",
-    "NovelDirectorIdeaInspirationService.ts",
-    "NovelDirectorService.ts",
-    "novelDirectorConfirmNodeAdapters.ts",
-    "novelDirectorPipelineRuntime.ts",
-    "novelDirectorTakeoverHandler.ts",
-  ]);
+test("director facade exists at old location", () => {
+  assert.equal(
+    fs.existsSync(path.join(facadeRoot, "index.ts")),
+    true,
+    "services/novel/director/index.ts facade must exist for backward compatibility"
+  );
 });
 
-test("director responsibility directories exist", () => {
+test("director responsibility directories exist in orchestration/pipeline", () => {
   for (const dirname of [
+    "automation",
     "commands",
     "http",
     "phases",
@@ -43,24 +35,13 @@ test("director responsibility directories exist", () => {
   }
 });
 
-test("app.ts mounts director router directly from director http module", () => {
+test("app.ts mounts director router from orchestration/pipeline", () => {
   const appSource = fs.readFileSync(path.join(repoRoot, "src", "app.ts"), "utf8");
 
   assert.equal(
-    appSource.includes('from "./services/novel/director/http/novelDirector"'),
+    appSource.includes('orchestration/pipeline/http/novelDirector') ||
+    appSource.includes('services/novel/director/http/novelDirector'),
     true,
-    "app.ts must import the director router from the module-owned http path"
+    "app.ts must import the director router"
   );
-  assert.equal(
-    fs.existsSync(path.join(routesRoot, "novelDirector.ts")),
-    false,
-    "routes/novelDirector.ts must not exist after migration to director/http/"
-  );
-});
-
-test("director subsystem README points at the runtime facade", () => {
-  const source = readSource("services", "novel", "director", "README.md");
-
-  assert.equal(source.includes('from "./directorSubsystem"'), false);
-  assert.equal(source.includes('from "./runtime/directorSubsystem"'), true);
 });

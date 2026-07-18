@@ -7,7 +7,7 @@ const {
   findDirectorQualityLoopBudgetEntry,
   recordDirectorQualityLoopBudgetAttempt,
   resolveDirectorQualityLoopBudgetNextAction,
-} = require("../../dist/services/novel/director/runtime/DirectorQualityLoopBudgetLedgerService.js");
+} = require("../../dist/orchestration/pipeline/runtime/utils/DirectorQualityLoopBudgetLedgerService.js");
 
 function buildState(overrides = {}) {
   return {

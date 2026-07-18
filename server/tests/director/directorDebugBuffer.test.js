@@ -3,7 +3,7 @@ const test = require("node:test");
 
 const {
   directorDebugBuffer,
-} = require("../../dist/services/novel/director/debug/directorDebugBuffer.js");
+} = require("../../dist/orchestration/pipeline/debug/directorDebugBuffer.js");
 
 /** Helper: 构造一条 LLM 调用记录 */
 function makeLlmCall(overrides = {}) {

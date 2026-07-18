@@ -5,8 +5,8 @@ const http = require("node:http");
 process.env.API_TOKEN = "test-token";
 
 const { createApp } = require("../../dist/app.js");
-const { DirectorCommandService } = require("../../dist/services/novel/director/commands/DirectorCommandService.js");
-const { DirectorTaskSnapshotService } = require("../../dist/services/novel/director/projections/DirectorTaskSnapshotService.js");
+const { DirectorCommandService } = require("../../dist/orchestration/pipeline/commands/DirectorCommandService.js");
+const { DirectorTaskSnapshotService } = require("../../dist/orchestration/pipeline/projections/DirectorTaskSnapshotService.js");
 
 function listen(server) {
   return new Promise((resolve) => {

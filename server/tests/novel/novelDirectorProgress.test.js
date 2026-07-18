@@ -3,7 +3,7 @@ const assert = require("node:assert/strict");
 
 const {
   buildChapterDetailBundleLabel,
-} = require("../../dist/services/novel/director/projections/novelDirectorProgress.js");
+} = require("../../dist/orchestration/pipeline/projections/novelDirectorProgress.js");
 const {
   formatChapterDetailModeLabel,
 } = require("../../dist/services/novel/volume/chapterDetailModeLabel.js");

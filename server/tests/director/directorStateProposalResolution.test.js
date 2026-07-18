@@ -3,7 +3,7 @@ const test = require("node:test");
 
 const {
   normalizeDirectorStateProposalResolutionForSafety,
-} = require("../../dist/services/novel/director/runtime/DirectorStateProposalResolutionService.js");
+} = require("../../dist/orchestration/pipeline/runtime/workspace/DirectorStateProposalResolutionService.js");
 
 function proposal(overrides = {}) {
   return {

@@ -11,13 +11,13 @@ import { prisma } from "../../../db/prisma";
 import { AppError } from "../../../middleware/errorHandler";
 import { resolveModel, type TaskType } from "../../../llm/modelRouter";
 import { DirectorCommandService } from "../../novel/director/commands/DirectorCommandService";
-import { AutoDirectorValidationService } from "../../novel/director/runtime/autoDirectorValidationService";
-import type { DirectorWorkflowSeedPayload } from "../../novel/director/runtime/novelDirectorHelpers";
+import { AutoDirectorValidationService } from "../../../orchestration/pipeline/runtime/utils/autoDirectorValidationService";
+import type { DirectorWorkflowSeedPayload } from "../../../orchestration/pipeline/runtime/core/novelDirectorHelpers";
 import { NovelWorkflowService } from "../../novel/workflow/NovelWorkflowService";
 import { parseSeedPayload } from "../../novel/workflow/novelWorkflow.shared";
 import { NovelWorkflowTaskAdapter } from "../adapters/NovelWorkflowTaskAdapter";
 import { resolveAutoDirectorFollowUpReason } from "./autoDirectorFollowUpReasonResolver";
-import { resolveAutoDirectorFollowUpSection } from "../../novel/director/runtime/autoDirectorValidationService";
+import { resolveAutoDirectorFollowUpSection } from "../../../orchestration/pipeline/runtime/utils/autoDirectorValidationService";
 import { extractBlockedAutoDirectorValidationResult } from "./autoDirectorFollowUpValidationResult";
 import {
   applyAutoDirectorSafeFix,

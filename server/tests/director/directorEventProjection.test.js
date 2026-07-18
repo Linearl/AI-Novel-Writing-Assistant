@@ -3,7 +3,7 @@ const assert = require("node:assert/strict");
 
 const {
   DirectorEventProjectionService,
-} = require("../../dist/services/novel/director/runtime/DirectorEventProjectionService.js");
+} = require("../../dist/orchestration/pipeline/runtime/projection/DirectorEventProjectionService.js");
 
 function buildSnapshot(overrides = {}) {
   return {

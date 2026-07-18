@@ -86,7 +86,7 @@ test("stableStringify produces different output for different values", () => {
 // stub is sufficient. We also mock db/prisma to cover any other import paths.
 const path = require("node:path");
 
-const toolRegistryPath = path.resolve(__dirname, "../../dist/agents/toolRegistry.js");
+const toolRegistryPath = path.resolve(__dirname, "../../dist/orchestration/agent/toolRegistry.js");
 require.cache[toolRegistryPath] = {
   id: toolRegistryPath,
   filename: toolRegistryPath,
@@ -106,7 +106,7 @@ require.cache[prismaPath] = {
   exports: { prisma: {} },
 };
 
-const { RunExecutionService } = require("../../dist/agents/runtime/RunExecutionService.js");
+const { RunExecutionService } = require("../../dist/orchestration/agent/runtime/RunExecutionService.js");
 
 function createMockStore(overrides = {}) {
   const steps = [];

@@ -1,5 +1,2 @@
-export * from "./types";
-export * from "./orchestrator";
-export * from "./toolRegistry";
-export * from "./approvalPolicy";
-export * from "./runtime/AgentRuntime";
+// REQ-7081: backward compatibility facade
+export * from "../orchestration/agent/index.js";

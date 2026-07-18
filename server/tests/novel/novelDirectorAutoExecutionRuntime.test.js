@@ -3,15 +3,15 @@ const assert = require("node:assert/strict");
 
 const {
   NovelDirectorAutoExecutionRuntime,
-} = require("../../dist/services/novel/director/automation/novelDirectorAutoExecutionRuntime.js");
+} = require("../../dist/orchestration/pipeline/automation/novelDirectorAutoExecutionRuntime.js");
 const {
   buildDirectorAutoExecutionState,
-} = require("../../dist/services/novel/director/automation/novelDirectorAutoExecution.js");
+} = require("../../dist/orchestration/pipeline/automation/novelDirectorAutoExecution.js");
 const {
   buildDirectorQualityLoopBudgetWindow,
   buildDirectorQualityLoopIssueSignature,
   recordDirectorQualityLoopBudgetAttempt,
-} = require("../../dist/services/novel/director/runtime/DirectorQualityLoopBudgetLedgerService.js");
+} = require("../../dist/orchestration/pipeline/runtime/utils/DirectorQualityLoopBudgetLedgerService.js");
 
 function buildRequest(overrides = {}) {
   return {

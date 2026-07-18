@@ -4,7 +4,7 @@ const assert = require("node:assert/strict");
 const { prisma } = require("../../dist/db/prisma");
 const {
   DirectorStateReader,
-} = require("../../dist/services/novel/director/state/DirectorStateReader.js");
+} = require("../../dist/orchestration/pipeline/state/DirectorStateReader.js");
 
 test("DirectorStateReader suppresses stale active step while task is waiting at checkpoint", async () => {
   const originals = {

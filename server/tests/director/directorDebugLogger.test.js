@@ -10,7 +10,7 @@ const {
   saveDirectorDebugBrief,
   saveDirectorDebugDetail,
   enforceRetention,
-} = require("../../dist/services/novel/director/debug/directorDebugLogger.js");
+} = require("../../dist/orchestration/pipeline/debug/directorDebugLogger.js");
 
 const {
   isDirectorDebugLogEnabled,

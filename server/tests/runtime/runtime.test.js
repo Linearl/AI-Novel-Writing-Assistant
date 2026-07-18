@@ -3,16 +3,16 @@ const assert = require("node:assert/strict");
 const {
   buildAlternativePathFromRejectedApproval,
   summarizeOutput,
-} = require("../../dist/agents/runtime/runtimeHelpers.js");
-const { composeAssistantMessage } = require("../../dist/agents/runtime/answerComposer.js");
-const { setNovelSetupGuidanceLLMFactoryForTests } = require("../../dist/agents/runtime/novelSetupGuidanceComposer.js");
-const { setNovelSetupIdeationLLMFactoryForTests } = require("../../dist/agents/runtime/novelSetupIdeationComposer.js");
-const { buildCreativeHubTurnSummary } = require("../../dist/creativeHub/creativeHubTurnSummary.js");
+} = require("../../dist/orchestration/agent/runtime/runtimeHelpers.js");
+const { composeAssistantMessage } = require("../../dist/orchestration/agent/runtime/answerComposer.js");
+const { setNovelSetupGuidanceLLMFactoryForTests } = require("../../dist/orchestration/agent/runtime/novelSetupGuidanceComposer.js");
+const { setNovelSetupIdeationLLMFactoryForTests } = require("../../dist/orchestration/agent/runtime/novelSetupIdeationComposer.js");
+const { buildCreativeHubTurnSummary } = require("../../dist/orchestration/graph/creativeHubTurnSummary.js");
 const {
   deriveNextBindingsFromRunSteps,
   describeBindings,
   toBindings,
-} = require("../../dist/creativeHub/creativeHubRuntimeHelpers.js");
+} = require("../../dist/orchestration/graph/creativeHubRuntimeHelpers.js");
 
 test("rejected pipeline approval falls back to preview only", () => {
   const result = buildAlternativePathFromRejectedApproval({

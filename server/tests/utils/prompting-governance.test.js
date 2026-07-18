@@ -35,8 +35,8 @@ const DIRECT_GET_LLM_ALLOWED_FILES = new Set([
 
 const SYSTEM_PROMPT_BUILDER_ALLOWED_FILES = new Set([
   "src/modules/chat/http/chat.ts",
-  "src/agents/planner/intentPromptSupport.ts",
-  "src/services/novel/director/novelDirectorPrompts.ts",
+  "src/orchestration/agent/planner/intentPromptSupport.ts",
+  "src/orchestration/pipeline/novelDirectorPrompts.ts",
 ]);
 
 const DIRECT_STRUCTURED_INVOKE_ALLOWED_FILES = new Set([

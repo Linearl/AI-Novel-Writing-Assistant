@@ -5,10 +5,10 @@ const http = require("node:http");
 process.env.API_TOKEN = "test-token";
 
 const { createApp } = require("../../dist/app.js");
-const { AgentTraceStore } = require("../../dist/agents/traceStore.js");
-const { creativeHubLangGraph } = require("../../dist/creativeHub/CreativeHubLangGraph.js");
-const { creativeHubInterruptLangGraph } = require("../../dist/creativeHub/CreativeHubInterruptLangGraph.js");
-const { creativeHubService } = require("../../dist/creativeHub/CreativeHubService.js");
+const { AgentTraceStore } = require("../../dist/orchestration/agent/traceStore.js");
+const { creativeHubLangGraph } = require("../../dist/orchestration/graph/CreativeHubLangGraph.js");
+const { creativeHubInterruptLangGraph } = require("../../dist/orchestration/graph/CreativeHubInterruptLangGraph.js");
+const { creativeHubService } = require("../../dist/orchestration/graph/CreativeHubService.js");
 const { llmConnectivityService } = require("../../dist/llm/connectivity.js");
 const structuredFallbackSettings = require("../../dist/llm/structuredFallbackSettings.js");
 const {

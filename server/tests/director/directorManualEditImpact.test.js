@@ -5,7 +5,7 @@ const {
   DirectorWorkspaceAnalyzer,
   buildManualEditFallbackDecision,
   buildManualEditInventoryFromArtifacts,
-} = require("../../dist/services/novel/director/runtime/DirectorWorkspaceAnalyzer.js");
+} = require("../../dist/orchestration/pipeline/runtime/workspace/DirectorWorkspaceAnalyzer.js");
 const { prisma } = require("../../dist/db/prisma.js");
 const promptRunner = require("../../dist/prompting/core/promptRunner.js");
 const promptContextResolution = require("../../dist/prompting/context/promptContextResolution.js");

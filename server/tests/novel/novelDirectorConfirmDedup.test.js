@@ -1,8 +1,8 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 require("../../dist/app.js");
-const { NovelDirectorService } = require("../../dist/services/novel/director/NovelDirectorService.js");
-const { NovelDirectorConfirmRuntime } = require("../../dist/services/novel/director/runtime/novelDirectorConfirmRuntime.js");
+const { NovelDirectorService } = require("../../dist/orchestration/pipeline/NovelDirectorService.js");
+const { NovelDirectorConfirmRuntime } = require("../../dist/orchestration/pipeline/runtime/novelDirectorConfirmRuntime.js");
 
 function buildDirectorInput(overrides = {}) {
   return {

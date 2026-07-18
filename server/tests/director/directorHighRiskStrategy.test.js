@@ -3,11 +3,11 @@ const test = require("node:test");
 
 const {
   resolveDirectorQualityLoopBudgetNextAction,
-} = require("../../dist/services/novel/director/runtime/DirectorQualityLoopBudgetLedgerService.js");
+} = require("../../dist/orchestration/pipeline/runtime/utils/DirectorQualityLoopBudgetLedgerService.js");
 
 const {
   normalizeDirectorAutoExecutionPlan,
-} = require("../../dist/services/novel/director/automation/novelDirectorAutoExecution.js");
+} = require("../../dist/orchestration/pipeline/automation/novelDirectorAutoExecution.js");
 
 const {
   buildFullBookAutopilotExecutionPlan,

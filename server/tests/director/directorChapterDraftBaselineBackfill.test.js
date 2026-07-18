@@ -3,7 +3,7 @@ const assert = require("node:assert/strict");
 
 const {
   buildDirectorChapterDraftBaselineBackfillPlan,
-} = require("../../dist/services/novel/director/recovery/directorChapterDraftBaselineBackfill.js");
+} = require("../../dist/orchestration/pipeline/recovery/directorChapterDraftBaselineBackfill.js");
 
 test("director chapter draft baseline backfill creates only missing chapter draft baselines", () => {
   const plan = buildDirectorChapterDraftBaselineBackfillPlan({

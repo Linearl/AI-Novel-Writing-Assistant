@@ -3,7 +3,7 @@ const assert = require("node:assert/strict");
 
 const {
   resolveStructuredOutlineRecoveryCursor,
-} = require("../../dist/services/novel/director/recovery/novelDirectorStructuredOutlineRecovery.js");
+} = require("../../dist/orchestration/pipeline/recovery/novelDirectorStructuredOutlineRecovery.js");
 const {
   buildVolumeWorkspaceDocument,
 } = require("../../dist/services/novel/volume/volumeWorkspaceDocument.js");

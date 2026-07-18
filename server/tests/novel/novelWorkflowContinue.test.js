@@ -5,7 +5,7 @@ const http = require("node:http");
 process.env.API_TOKEN = "test-token";
 
 const { createApp } = require("../../dist/app.js");
-const { DirectorCommandService } = require("../../dist/services/novel/director/commands/DirectorCommandService.js");
+const { DirectorCommandService } = require("../../dist/orchestration/pipeline/commands/DirectorCommandService.js");
 const { NovelWorkflowService } = require("../../dist/services/novel/workflow/NovelWorkflowService.js");
 const { NovelWorkflowTaskAdapter } = require("../../dist/services/task/adapters/NovelWorkflowTaskAdapter.js");
 

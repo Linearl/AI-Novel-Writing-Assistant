@@ -3,7 +3,7 @@ const assert = require("node:assert/strict");
 
 const {
   DirectorUsageTelemetryQueryService,
-} = require("../../dist/services/novel/director/runtime/DirectorUsageTelemetryQueryService.js");
+} = require("../../dist/orchestration/pipeline/runtime/utils/DirectorUsageTelemetryQueryService.js");
 const {
   getDirectorNodeDisplayLabel,
 } = require("../../../shared/dist/types/directorRuntime.js");

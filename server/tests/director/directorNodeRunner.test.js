@@ -3,10 +3,10 @@ const assert = require("node:assert/strict");
 
 const {
   DirectorNodeRunner,
-} = require("../../dist/services/novel/director/runtime/DirectorNodeRunner.js");
+} = require("../../dist/orchestration/pipeline/runtime/core/DirectorNodeRunner.js");
 const {
   DirectorPolicyEngine,
-} = require("../../dist/services/novel/director/runtime/DirectorPolicyEngine.js");
+} = require("../../dist/orchestration/pipeline/runtime/core/DirectorPolicyEngine.js");
 
 function buildSnapshot(policy) {
   return {

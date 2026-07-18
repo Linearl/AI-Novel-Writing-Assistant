@@ -4,11 +4,11 @@ const assert = require("node:assert/strict");
 const {
   normalizeDirectorAutoExecutionPlan,
   buildDirectorAutoExecutionPipelineOptions,
-} = require("../../dist/services/novel/director/automation/novelDirectorAutoExecution.js");
+} = require("../../dist/orchestration/pipeline/automation/novelDirectorAutoExecution.js");
 
 const {
   buildDirectorDisplayState,
-} = require("../../dist/services/novel/director/projections/DirectorDisplayStateBuilder.js");
+} = require("../../dist/orchestration/pipeline/projections/DirectorDisplayStateBuilder.js");
 
 // --- T.2 + T.3: pipelineMode 配置传递 ---
 

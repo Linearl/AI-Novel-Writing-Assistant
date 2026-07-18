@@ -3,10 +3,10 @@ const assert = require("node:assert/strict");
 const {
   isTakeoverStructuredOutlineReadyForValidation,
   resolveDirectorTakeoverPlan,
-} = require("../../dist/services/novel/director/runtime/novelDirectorTakeover.js");
+} = require("../../dist/orchestration/pipeline/runtime/novelDirectorTakeover.js");
 const {
   loadDirectorTakeoverState,
-} = require("../../dist/services/novel/director/runtime/novelDirectorTakeoverRuntime.js");
+} = require("../../dist/orchestration/pipeline/runtime/novelDirectorTakeoverRuntime.js");
 const { prisma } = require("../../dist/db/prisma.js");
 
 function buildSnapshot(overrides = {}) {
