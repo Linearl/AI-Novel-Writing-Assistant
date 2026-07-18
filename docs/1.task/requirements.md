@@ -190,10 +190,10 @@ description: "需求任务总清单（SSOT）"
 | 7077 | 超大文件拆分 — 14 个超 700 行文件的模块化重构 | c1 | ✅ 已完成 | - | 0.2 | - | - | `B.2.done/v0.2-r7077-C1-large-file-split/README.md` |  |
 | 7078 | setting/ 与 settings/ 目录合并 | c2 | ✅ 已完成 | - | 0.2 | - | - | `B.2.done/v0.2-r7078-C2-setting-settings-merge/README.md` |  |
 | 7079 | Prompts YAML 清理 — 遗留 prompt 迁移到 prompting/ 体系 | s3 | ✅ 已完成 | - | 0.2 | - | - | `B.2.done/v0.2-r7079-S3-prompts-yaml-cleanup/README.md` |  |
-| 7080 | Director 子系统模块化拆分 | c1 | 📋 待办 | - | 0.2 | - | - | `B.todo/v0.2-r7080-C1-director-system-split/README.md` |  |
-| 7081 | Orchestration Unification | high | 📋 待办 | - | 0.2 | - | - | `B.todo/v0.2-r7081-C1-orchestration-unification/README.md` |  |
+| 7080 | Director 子系统模块化拆分 | c1 | ✅ 已完成 | - | 0.2 | - | - | `B.2.done/v0.2-r7080-C1-director-system-split/README.md` |  |
+| 7081 | Orchestration Unification | high | ✅ 已完成 | - | 0.2 | - | - | `B.todo/v0.2-r7081-C1-orchestration-unification/README.md` |  |
 | 7082 | Pipeline 服务清理与合并 | c2 | ✅ 已完成 | - | 0.2 | - | - | `B.2.done/v0.2-r7082-C2-pipeline-cleanup/README.md` |  |
-| 7083 | Character Service Consolidation | c1 | 📋 待办 | - | 0.2 | - | - | `B.todo/v0.2-r7083-C1-character-service-consolidation/README.md` |  |
+| 7083 | Character Service Consolidation | c1 | ✅ 已完成 | - | 0.2 | - | - | `B.2.done/v0.2-r7083-C1-character-service-consolidation/README.md` |  |
 | 7029 | Prisma Schema 精简 | p8 | 📋 待办 | - | 0.1 | 2026-07-10 | 2026-07-10 | `B.todo/v0.1-r7029-C2-prisma-schema-sizing/README.md` |  |
 | 7030 | Novel Application Services 门面收缩 | p1 | 📋 待办 | - | 0.1 | 2026-07-10 | 2026-07-10 | `B.todo/v0.1-r7030-M2-novel-application-services-facade-contraction/README.md` |  |
 
@@ -214,9 +214,6 @@ description: "需求任务总清单（SSOT）"
 | 编号 | 任务标题 | 文档 |
 | --- | --- | --- |
 | 3011 | 小说预览页面增强控制面板 | `B.2.done/v0.1-r3011-C2-novel-preview-controls/README.md` |
-| 7080 | Director 子系统模块化拆分 | `B.todo/v0.2-r7080-C1-director-system-split/README.md` |
-| 7081 | Orchestration Unification | `B.todo/v0.2-r7081-C1-orchestration-unification/README.md` |
-| 7083 | Character Service Consolidation | `B.todo/v0.2-r7083-C1-character-service-consolidation/README.md` |
 | 2013 | Director Failed Retry Entry | `B.todo/v0.1-r2013-medium-director-failed-retry-entry/README.md` |
 | 2014 | Chapter Token Budget Dynamic | `B.todo/v0.1-r2014-medium-chapter-token-budget-dynamic/README.md` |
 | 3004 | Novel Conversation Archive | `B.todo/v0.1-r3004-medium-novel-conversation-archive/README.md` |
@@ -379,6 +376,9 @@ description: "需求任务总清单（SSOT）"
 | 7077 | 超大文件拆分 — 14 个超 700 行文件的模块化重构 | `B.2.done/v0.2-r7077-C1-large-file-split/README.md` |
 | 7078 | setting/ 与 settings/ 目录合并 | `B.2.done/v0.2-r7078-C2-setting-settings-merge/README.md` |
 | 7079 | Prompts YAML 清理 — 遗留 prompt 迁移到 prompting/ 体系 | `B.2.done/v0.2-r7079-S3-prompts-yaml-cleanup/README.md` |
+| 7080 | Director 子系统模块化拆分 | `B.2.done/v0.2-r7080-C1-director-system-split/README.md` |
+| 7081 | Orchestration Unification | `B.todo/v0.2-r7081-C1-orchestration-unification/README.md` |
 | 7082 | Pipeline 服务清理与合并 | `B.2.done/v0.2-r7082-C2-pipeline-cleanup/README.md` |
+| 7083 | Character Service Consolidation | `B.2.done/v0.2-r7083-C1-character-service-consolidation/README.md` |
 
 ---
