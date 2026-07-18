@@ -1,6 +1,6 @@
 import { prisma } from "../../../db/prisma";
 import type { SecretStore, SecretStoreListOptions, SecretStoreRecord, SecretStoreWriteInput } from "./SecretStore";
-import { deriveMachineKey } from "../../../platform/deriveMachineKey";
+import { deriveMachineKey, legacyDeriveMachineKey } from "../../../platform/deriveMachineKey";
 import { encryptValue, decryptValue, isEncrypted } from "../../../platform/encryptKey";
 import { logger } from "../../logging/LoggerService";
 
@@ -47,58 +47,148 @@ async function encryptForStorage(plainKey: string | null | undefined): Promise<s
  * Decrypt a key value read from storage.
  *
  * Returns null/undefined inputs unchanged.
- * Returns ciphertext unchanged when machine key is unavailable
- * (callers that need plaintext will receive the encrypted string —
- * this is the graceful degradation path).
+ * Returns plaintext values unchanged.
+ *
+ * When decryption fails (e.g. key source changed), returns `null` instead
+ * of the ciphertext. This prevents callers from sending encrypted blobs
+ * to LLM providers as "API keys".
  */
 async function decryptFromStorage(storedKey: string | null | undefined): Promise<string | null> {
   if (!storedKey) return storedKey ?? null;
-  if (!isEncrypted(storedKey)) return storedKey; // plaintext — nothing to decrypt
+  if (!isEncrypted(storedKey)) return storedKey; // plaintext - nothing to decrypt
   const key = await resolveMachineKey();
-  if (!key) return storedKey; // cannot decrypt; caller sees ciphertext
+  if (!key) {
+    logger.warn(
+      "[secretStore] Cannot decrypt API key — machine key unavailable. " +
+      "The key needs to be re-configured via the settings page.",
+    );
+    return null;
+  }
   try {
     return decryptValue(storedKey, key);
   } catch (error) {
-    logger.warn("[secretStore] Failed to decrypt API key — returning ciphertext. Error:", error);
-    return storedKey;
+    logger.warn(
+      "[secretStore] Failed to decrypt API key — the encryption key source may have changed. " +
+      "The key needs to be re-configured via the settings page. Error:",
+      error,
+    );
+    return null;
   }
 }
 
 /**
- * One-time migration: encrypt any existing plaintext API keys.
+ * Try to decrypt a value with the legacy MAC-based key, then re-encrypt
+ * with the current (stable) key.
  *
- * Runs lazily on first store access and silently skips records that are
- * already encrypted or when the machine key is unavailable.
+ * Returns the re-encrypted value on success, or `null` if the legacy
+ * key is also unavailable or decryption fails.
+ */
+async function tryMigrateWithLegacyKey(ciphertext: string): Promise<string | null> {
+  const currentKey = await resolveMachineKey();
+  if (!currentKey) return null;
+
+  const legacyKey = await legacyDeriveMachineKey();
+  if (!legacyKey) return null;
+
+  try {
+    const plaintext = decryptValue(ciphertext, legacyKey);
+    // Re-encrypt with the current stable key
+    const reEncrypted = encryptValue(plaintext, currentKey);
+    return reEncrypted;
+  } catch {
+    // Legacy key also cannot decrypt - give up
+    return null;
+  }
+}
+
+/**
+ * One-time migration: encrypt any existing plaintext API keys and
+ * re-encrypt keys that were encrypted with the old MAC-based fingerprint.
+ *
+ * Runs lazily on first store access. For each record:
+ * 1. Already encrypted with current key -> skip
+ * 2. Plaintext -> encrypt with current key
+ * 3. Encrypted with old key (current key fails) -> try legacy key -> re-encrypt
+ * 4. Neither key works -> clear the key (user must re-configure)
  */
 async function migrateExistingKeys(): Promise<void> {
   if (migrated) return;
   migrated = true;
 
   const key = await resolveMachineKey();
-  if (!key) return; // cannot encrypt — nothing to migrate
+  if (!key) return; // cannot encrypt - nothing to migrate
 
   const records = await prisma.aPIKey.findMany();
   let encryptedCount = 0;
+  let migratedFromLegacyCount = 0;
+  let clearedCount = 0;
 
   for (const record of records) {
-    if (!record.key || isEncrypted(record.key)) continue;
+    if (!record.key) continue;
+
+    // Case 1: plaintext - encrypt with current key
+    if (!isEncrypted(record.key)) {
+      try {
+        const encrypted = encryptValue(record.key, key);
+        await prisma.aPIKey.update({
+          where: { provider: record.provider },
+          data: { key: encrypted } as never,
+        });
+        encryptedCount += 1;
+      } catch (error) {
+        logger.warn(
+          `[secretStore] Failed to encrypt key for provider "${record.provider}" — leaving as plaintext.`,
+          error,
+        );
+      }
+      continue;
+    }
+
+    // Case 2: already encrypted - verify it decrypts with current key
     try {
-      const encrypted = encryptValue(record.key, key);
+      decryptValue(record.key, key);
+      continue; // current key works - nothing to do
+    } catch {
+      // Current key cannot decrypt - try legacy migration
+    }
+
+    // Case 3: try legacy MAC-based key
+    const reEncrypted = await tryMigrateWithLegacyKey(record.key);
+    if (reEncrypted) {
       await prisma.aPIKey.update({
         where: { provider: record.provider },
-        data: { key: encrypted } as never,
+        data: { key: reEncrypted } as never,
       });
-      encryptedCount += 1;
-    } catch (error) {
-      logger.warn(
-        `[secretStore] Failed to encrypt key for provider "${record.provider}" — leaving as plaintext.`,
-        error,
+      migratedFromLegacyCount += 1;
+      logger.info(
+        `[secretStore] Migrated key for provider "${record.provider}" from legacy MAC-based encryption.`,
       );
+      continue;
     }
+
+    // Case 4: neither key works - clear the unusable key
+    await prisma.aPIKey.update({
+      where: { provider: record.provider },
+      data: { key: null } as never,
+    });
+    clearedCount += 1;
+    logger.warn(
+      `[secretStore] Could not decrypt key for provider "${record.provider}" with either current or legacy key. ` +
+      `Cleared the stored key — please re-configure via the settings page.`,
+    );
   }
 
   if (encryptedCount > 0) {
     logger.info(`[secretStore] Migrated ${encryptedCount} plaintext API key(s) to encrypted storage.`);
+  }
+  if (migratedFromLegacyCount > 0) {
+    logger.info(`[secretStore] Re-encrypted ${migratedFromLegacyCount} API key(s) from legacy MAC-based fingerprint.`);
+  }
+  if (clearedCount > 0) {
+    logger.warn(
+      `[secretStore] Cleared ${clearedCount} API key(s) that could not be decrypted. ` +
+      `Please re-configure them via the settings page.`,
+    );
   }
 }
 
