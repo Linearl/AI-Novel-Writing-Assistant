@@ -46,6 +46,8 @@ server/prisma-diff-migrations-to-schema.sql
 .mimocode/
 .spec-workflow/
 .codex-backups/
+.codex/
+.agents/
 .cursor/
 
 # Local staging / restore artifacts
