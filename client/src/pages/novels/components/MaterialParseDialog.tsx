@@ -56,6 +56,9 @@ function mapParsedToFormPatch(parsed: MaterialParseResult): Partial<NovelBasicFo
   if (parsed.first30ChapterPromise) patch.first30ChapterPromise = parsed.first30ChapterPromise;
   if (parsed.styleTone) patch.styleTone = parsed.styleTone;
   if (parsed.commercialTagsText) patch.commercialTagsText = parsed.commercialTagsText;
+  if (parsed.worldSetting) patch.worldSetting = parsed.worldSetting;
+  if (parsed.characters) patch.characters = parsed.characters;
+  if (parsed.outline) patch.outline = parsed.outline;
   return patch;
 }
 
