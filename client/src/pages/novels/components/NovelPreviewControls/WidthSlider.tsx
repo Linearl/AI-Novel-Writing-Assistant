@@ -5,7 +5,7 @@ interface WidthSliderProps {
   onChange: (width: number) => void;
 }
 
-const PRESETS = [800, 1200, 1800];
+const PRESETS = [800, 1200, 1600];
 
 export const WidthSlider = React.memo<WidthSliderProps>(
   ({ value, onChange }) => {
@@ -15,7 +15,7 @@ export const WidthSlider = React.memo<WidthSliderProps>(
         <input
           type="range"
           min={500}
-          max={1800}
+          max={2000}
           step={50}
           value={value}
           onChange={(e) => onChange(Number(e.target.value))}

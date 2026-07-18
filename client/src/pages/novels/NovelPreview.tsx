@@ -370,8 +370,8 @@ export default function NovelPreview() {
             </CardContent>
           </Card>
 
-          <Card className="min-h-0 lg:h-[calc(100vh-13rem)]">
-            <CardHeader className="border-b">
+          <Card className="flex min-h-0 flex-col overflow-hidden lg:h-[calc(100vh-13rem)]">
+            <CardHeader className="shrink-0 border-b">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="min-w-0">
                   <CardTitle className="flex items-center gap-2 text-xl">
@@ -413,7 +413,7 @@ export default function NovelPreview() {
               </div>
               <ControlPanel settings={settings} onUpdate={onUpdate} className="mt-3" />
             </CardHeader>
-            <CardContent className="min-h-0 overflow-y-auto p-0 lg:max-h-[calc(100vh-21rem)]">
+            <CardContent className="flex min-h-0 flex-1 flex-col overflow-y-auto p-0">
               {activeContent ? (
                 <article
                   className="mx-auto whitespace-pre-wrap px-5 py-6 leading-8 md:px-8"

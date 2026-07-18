@@ -73,7 +73,7 @@ export function usePreviewSettings() {
   }, []);
 
   const updatePageWidth = useCallback((width: number) => {
-    const clamped = Math.max(500, Math.min(1800, width));
+    const clamped = Math.max(500, Math.min(2000, width));
     setSettings((prev) => {
       const next = { ...prev, pageWidth: clamped };
       saveSettings(next);
