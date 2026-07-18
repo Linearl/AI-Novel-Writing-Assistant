@@ -82,17 +82,13 @@ function checkLeadCount(
   optionTitle: string,
 ): CharacterCastQualityIssue[] {
   const issues: CharacterCastQualityIssue[] = [];
-  const membersWithTier = option.members.filter((m) => "tier" in m);
-  if (membersWithTier.length === 0) {
-    return issues;
-  }
-  const leadCount = membersWithTier.filter((m) => (m as { tier?: string }).tier === "lead").length;
+  const leadCount = option.members.filter((m) => (m as { tier?: string }).tier === "lead").length;
   if (leadCount === 0) {
     issues.push({
       code: "invalid_lead_count",
       optionIndex,
       optionTitle,
-      message: "这套阵容缺少 lead（主角）层级角色。",
+      message: "这套阵容缺少 lead（主角）层级角色，主角的 tier 必须为 lead。",
     });
   } else if (leadCount > 1) {
     issues.push({

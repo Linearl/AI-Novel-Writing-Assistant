@@ -63,6 +63,8 @@ export const characterCastAutoMembersPrompt: PromptAsset<
       "6. 如果故事存在隐藏身份、历史真名、伪装身份或终局身份反转，成员信息里必须显式承接这条线。",
       "7. 每个角色必须输出 personality、background、development 和角色硬事实字段：identityLabel、factionLabel、stanceLabel、powerLevel、realm、currentLocation、availability、prohibitions。",
       "8. 不要输出 relations，也不要在字段里假装塞关系数组。",
+      "9. 每个角色必须标注 tier 字段，允许值：lead（主角/核心人物）、major（重要配角）、named（有名有姓的配角）、extra（路人/龙套）。",
+      "10. protagonist 的 tier 必须为 lead，有且仅有 1 个 lead；major 控制在 2-4 个，其余为 named 或 extra。",
       "",
       "表达要求：",
       "1. 所有字段值使用简体中文。",
@@ -87,6 +89,11 @@ export const characterCastAutoMembersPrompt: PromptAsset<
     const protagonistCount = output.members.filter((member) => member.castRole === "protagonist").length;
     if (protagonistCount !== 1) {
       throw new Error(`成员骨架必须且只能包含 1 个 protagonist，当前为 ${protagonistCount} 个。`);
+    }
+
+    const leadCount = output.members.filter((member) => member.tier === "lead").length;
+    if (leadCount !== 1) {
+      throw new Error(`成员骨架必须有且仅有 1 个 tier=lead 角色，当前为 ${leadCount} 个。`);
     }
 
     const seenNames = new Set<string>();
