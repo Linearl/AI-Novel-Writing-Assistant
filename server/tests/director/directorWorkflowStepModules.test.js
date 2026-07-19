@@ -15,6 +15,7 @@ const {
 } = require("../../dist/orchestration/pipeline/workflowStepRuntime/StepModuleRunner.js");
 const {
   DIRECTOR_EXECUTION_STEP_IDS,
+  DIRECTOR_STRUCTURED_OUTLINE_STEP_IDS,
 } = require("../../dist/orchestration/pipeline/workflowStepRuntime/directorWorkflowStepIds.js");
 const {
   buildChapterPipelineWorkflowTemplate,
@@ -931,4 +932,161 @@ test("workflow step module can be converted back to DirectorNodeRunner contract"
   assert.deepEqual(await contract.run({ chapterId: "chapter-1" }), {
     reviewed: "chapter-1",
   });
+});
+
+// ---------------------------------------------------------------------------
+// REQ-7085: chapter_detail_bundle 缺失 execution contracts 时走可恢复 phase
+// ---------------------------------------------------------------------------
+
+test("REQ-7085: chapter_detail_bundle module exposes acceptablePauseCriteria for partial completion", () => {
+  // chapter_detail_bundle 在多章批量细化场景下可能只完成部分章节。
+  // 必须暴露 acceptablePauseCriteria 以允许部分完成时优雅暂停，
+  // 而不是抛出 "did not produce the expected structured outline facts" 硬错误。
+  const chapterDetailBundleModule = directorWorkflowStepModuleRegistry.get(
+    DIRECTOR_STRUCTURED_OUTLINE_STEP_IDS.chapter_detail_bundle,
+  );
+
+  assert.equal(
+    typeof chapterDetailBundleModule.acceptablePauseCriteria,
+    "function",
+    "chapter_detail_bundle must expose acceptablePauseCriteria to allow partial completion",
+  );
+});
+
+test("REQ-7085: chapter_detail_bundle validateOutput does not hard-fail when step has partial progress", async () => {
+  // 场景：chapter_detail_bundle 已细化部分章节（completedDetailSteps > 0），
+  // 但尚未全部细化（completed = false）。
+  // validateOutput 不应返回 valid:false 导致硬错误，
+  // 应返回 valid:true 交由 completeCriteria + acceptablePauseCriteria 处理。
+  const chapterDetailBundleModule = directorWorkflowStepModuleRegistry.get(
+    DIRECTOR_STRUCTURED_OUTLINE_STEP_IDS.chapter_detail_bundle,
+  );
+
+  const context = {
+    taskId: "task-req-7085-partial",
+    novelId: "novel-req-7085-partial",
+    projectionHints: {
+      directorCanonicalState: {
+        task: {
+          id: "task-req-7085-partial", novelId: "novel-req-7085-partial",
+          lane: "auto_director", status: "running",
+          currentStage: null, currentItemKey: null, currentItemLabel: null,
+          progress: null, checkpointType: null, checkpointSummary: null,
+          lastError: null, pendingManualRecovery: false, cancelRequestedAt: null,
+        },
+        run: null, runtime: null, latestCommand: null, activeStep: null,
+        seedPayload: {}, chapterProgress: null,
+      },
+      directorFactBaseSummary: {
+        hasNovelProject: true,
+        candidate: { batchCount: 0, candidateCount: 0, mode: null, checkpointReady: false },
+        book: {
+          hasStoryMacro: true,
+          hasBookContract: true,
+          characterCount: 5,
+        },
+        outline: {
+          hasVolumeStrategy: true,
+          volumeCount: 1,
+          plannedChapterCount: 30,
+          beatSheetReady: true,
+          chapterListReady: true,
+          chapterDetailReady: false,
+          selectedChapterCount: 30,
+          completedDetailSteps: 10,
+          totalDetailSteps: 30,
+          syncedChapterCount: 10,
+          cursorStep: "chapter_detail_bundle",
+        },
+        chapterExecution: null,
+        repair: {
+          draftedChapterCount: 0,
+          reviewedChapterCount: 0,
+          committedChapterCount: 0,
+          needsRepairChapterCount: 0,
+          hasReviewableDrafts: false,
+        },
+        artifactSync: {
+          payoffArtifactCount: 0,
+          characterResourceArtifactCount: 0,
+        },
+      },
+    },
+  };
+
+  const validation = await chapterDetailBundleModule.validateOutput(undefined, context);
+
+  assert.equal(
+    validation.valid,
+    true,
+    "chapter_detail_bundle with partial progress (10/30 chapters refined) must not hard-fail validation",
+  );
+});
+
+test("REQ-7085: chapter_detail_bundle acceptablePauseCriteria returns true when step has partial progress", async () => {
+  // 部分章节已细化时，acceptablePauseCriteria 应返回 true，
+  // 允许 pipeline 优雅暂停并在下一次 continueTask 时恢复。
+  const chapterDetailBundleModule = directorWorkflowStepModuleRegistry.get(
+    DIRECTOR_STRUCTURED_OUTLINE_STEP_IDS.chapter_detail_bundle,
+  );
+
+  const context = {
+    taskId: "task-req-7085-pause",
+    novelId: "novel-req-7085-pause",
+    projectionHints: {
+      directorCanonicalState: {
+        task: {
+          id: "task-req-7085-pause", novelId: "novel-req-7085-pause",
+          lane: "auto_director", status: "running",
+          currentStage: null, currentItemKey: null, currentItemLabel: null,
+          progress: null, checkpointType: null, checkpointSummary: null,
+          lastError: null, pendingManualRecovery: false, cancelRequestedAt: null,
+        },
+        run: null, runtime: null, latestCommand: null, activeStep: null,
+        seedPayload: {}, chapterProgress: null,
+      },
+      directorFactBaseSummary: {
+        hasNovelProject: true,
+        candidate: { batchCount: 0, candidateCount: 0, mode: null, checkpointReady: false },
+        book: {
+          hasStoryMacro: true,
+          hasBookContract: true,
+          characterCount: 5,
+        },
+        outline: {
+          hasVolumeStrategy: true,
+          volumeCount: 1,
+          plannedChapterCount: 30,
+          beatSheetReady: true,
+          chapterListReady: true,
+          chapterDetailReady: false,
+          selectedChapterCount: 30,
+          completedDetailSteps: 10,
+          totalDetailSteps: 30,
+          syncedChapterCount: 10,
+          cursorStep: "chapter_detail_bundle",
+        },
+        chapterExecution: null,
+        repair: {
+          draftedChapterCount: 0,
+          reviewedChapterCount: 0,
+          committedChapterCount: 0,
+          needsRepairChapterCount: 0,
+          hasReviewableDrafts: false,
+        },
+        artifactSync: {
+          payoffArtifactCount: 0,
+          characterResourceArtifactCount: 0,
+        },
+      },
+    },
+  };
+
+  const isAcceptablePause = await chapterDetailBundleModule.acceptablePauseCriteria(undefined, context);
+
+  assert.equal(
+    isAcceptablePause,
+    true,
+    "chapter_detail_bundle with partial progress (10/30 chapters refined) should allow acceptable pause",
+  );
 });

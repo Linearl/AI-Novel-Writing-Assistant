@@ -522,6 +522,7 @@ export class NovelDirectorContinueRuntime {
       hasExecutableRange: Boolean(takeoverState.executableRange),
       hasAutoExecutionState: Boolean(takeoverState.latestAutoExecutionState?.enabled) || generatedChapterCount > 0,
       hasMissingExecutionContractInRange: Boolean(takeoverState.snapshot.hasUnpreparedChaptersInRange),
+      hasAnyUnpreparedChapters: Boolean(takeoverState.snapshot.hasAnyUnpreparedChapters),
       latestCheckpointType: (
         latestCheckpointType === "replan_required"
         || latestCheckpointType === "chapter_batch_ready"
@@ -572,6 +573,12 @@ export class NovelDirectorContinueRuntime {
       return { type: "phase", phase: "structured_outline" };
     }
     if (!input.executableRange && (input.snapshot.chapterCount ?? 0) === 0) {
+      return { type: "phase", phase: "structured_outline" };
+    }
+    // REQ-7085: 全书层面仍有未细化章节时，回到 structured_outline 补齐。
+    // 该分支是 resolveAssetFirstRecoveryFromSnapshot 的安全网，
+    // 确保即使 auto_execution 路径未被触发，也不会误判为"恢复完成"。
+    if (input.snapshot.hasAnyUnpreparedChapters) {
       return { type: "phase", phase: "structured_outline" };
     }
     return null;

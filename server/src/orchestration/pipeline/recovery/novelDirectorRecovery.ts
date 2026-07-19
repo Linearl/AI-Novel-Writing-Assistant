@@ -95,6 +95,13 @@ export function resolveAssetFirstRecoveryFromSnapshot(input: {
   hasExecutableRange: boolean;
   hasAutoExecutionState: boolean;
   hasMissingExecutionContractInRange?: boolean;
+  /**
+   * 全书层面是否存在「未处理且缺少完整章节细化」的章节。
+   * REQ-7085: 当当前范围已耗尽（hasMissingExecutionContractInRange=false）
+   * 但全书仍有未细化章节时，回到 structured_outline 补齐下一批细化，
+   * 而非进入 auto_execution 导致 runFromReady 标记 succeeded 并循环。
+   */
+  hasAnyUnpreparedChapters?: boolean;
   latestCheckpointType?: "chapter_batch_ready" | "replan_required" | null;
 }):
   | {
@@ -130,6 +137,26 @@ export function resolveAssetFirstRecoveryFromSnapshot(input: {
       || !input.hasExecutableRange
     )
     && input.structuredOutlineRecoveryStep !== "completed"
+  ) {
+    return {
+      type: "phase",
+      phase: "structured_outline",
+    };
+  }
+
+  // REQ-7085: 当前范围已耗尽（范围内全部细化完成）但全书仍有未细化章节时，
+  // 回到 structured_outline 补齐下一批细化。
+  // 场景：1-10 已细化且已写，11-30 未细化。
+  // 此时 hasMissingExecutionContractInRange=false（范围内无缺），
+  // hasAnyUnpreparedChapters=true（全书有缺），不应进入 auto_execution，
+  // 否则 runFromReady 会因 remainingChapterCount=0 标记 succeeded 并循环。
+  // 不打断进行中的批次（hasActivePipelineJob=true 时仍走 auto_execution）。
+  if (
+    isDirectorAutoExecutionRunMode(normalizeDirectorRunMode(input.runMode))
+    && input.hasVolumeStrategyPlan
+    && input.hasAnyUnpreparedChapters
+    && !input.hasMissingExecutionContractInRange
+    && !input.hasActivePipelineJob
   ) {
     return {
       type: "phase",

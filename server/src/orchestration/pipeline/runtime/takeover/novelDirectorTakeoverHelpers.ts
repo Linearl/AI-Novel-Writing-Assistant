@@ -56,6 +56,16 @@ export interface DirectorTakeoverAssetSnapshot {
   hasUnpreparedChaptersInRange?: boolean;
   /** 缺少完整细化的章节序（调试/展示用）。 */
   missingExecutionContractOrders?: number[];
+  /**
+   * 全书层面是否存在「未处理且缺少完整章节细化」的章节。
+   * 与 hasUnpreparedChaptersInRange 不同，该信号不限定于自动执行 plan 的范围，
+   * 而是覆盖执行区全部持久化章节。用于在当前范围已耗尽（全部已写）
+   * 但全书仍有未细化章节时，触发回到 structured_outline 补齐下一批细化。
+   * REQ-7085: 避免 1-10 已写、11-30 未细化时 recovery 返回 auto_execution 并循环。
+   */
+  hasAnyUnpreparedChapters?: boolean;
+  /** 全书层面缺少完整细化的章节序（调试/展示用）。 */
+  anyMissingExecutionContractOrders?: number[];
 }
 
 export interface DirectorTakeoverDecisionInput {

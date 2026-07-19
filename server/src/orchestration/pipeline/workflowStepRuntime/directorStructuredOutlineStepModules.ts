@@ -23,6 +23,9 @@ export const DIRECTOR_STRUCTURED_OUTLINE_STEP_MODULES = {
   }),
   chapter_detail_bundle: createStructuredOutlineFactModule({
     step: "chapter_detail_bundle",
+    // REQ-7085: chapter_detail_bundle 在多章批量细化场景下允许部分完成，
+    // 避免缺失 execution contracts 时抛出硬错误阻断自动导演全书流程。
+    allowPartialCompletion: true,
     descriptor: buildStructuredOutlineStepDescriptor({
       id: DIRECTOR_STRUCTURED_OUTLINE_STEP_IDS.chapter_detail_bundle,
       nodeKey: "volume_chapter_detail_bundle_generate",

@@ -254,6 +254,24 @@ function computeMissingExecutionContractOrders(input: {
     .sort((left, right) => left - right);
 }
 
+/**
+ * 计算全书层面「仍缺少完整章节细化」的章节序。
+ * 与 computeMissingExecutionContractOrders 不同，该函数不限定于 plan 的范围，
+ * 而是覆盖执行区全部持久化章节。用于在当前范围已耗尽（全部已写）
+ * 但全书仍有未细化章节时，触发回到 structured_outline 补齐下一批细化。
+ * REQ-7085: 避免 1-10 已写、11-30 未细化时 recovery 返回 auto_execution 并循环。
+ */
+function computeAnyMissingExecutionContractOrders(input: {
+  chapterRows: TakeoverChapterRow[];
+  allowLazyChapterPlanning?: boolean;
+}): number[] {
+  return input.chapterRows
+    .filter((chapter) => isPendingAutoExecutionChapter(chapter))
+    .filter((chapter) => !hasExecutableChapterPlanningContext(chapter, input.allowLazyChapterPlanning))
+    .map((chapter) => chapter.order)
+    .sort((left, right) => left - right);
+}
+
 function buildPreparedRangeFromSyncedChapters(
   chapterRows: TakeoverChapterRow[],
   expectedOrders: number[],
@@ -457,6 +475,10 @@ export async function loadDirectorTakeoverState(input: {
     volumeChapterRanges: assets.volumeChapterRanges,
     allowLazyChapterPlanning,
   });
+  const anyMissingExecutionContractOrders = computeAnyMissingExecutionContractOrders({
+    chapterRows: chapterRows as TakeoverChapterRow[],
+    allowLazyChapterPlanning,
+  });
   const chapterOrderMap = new Map(chapterRows.map((chapter) => [chapter.id, chapter.order]));
   const activePipelineSnapshot = activePipelineJob ? {
     id: activePipelineJob.id, status: activePipelineJob.status,
@@ -490,6 +512,8 @@ export async function loadDirectorTakeoverState(input: {
       generatedChapterCount, approvedChapterCount, pendingRepairChapterCount,
       hasUnpreparedChaptersInRange: missingExecutionContractOrders.length > 0,
       missingExecutionContractOrders,
+      hasAnyUnpreparedChapters: anyMissingExecutionContractOrders.length > 0,
+      anyMissingExecutionContractOrders,
     },
     activeTaskId: activeTask?.id ?? null, hasActiveTask: Boolean(activeTask),
     latestTaskId: latestTask?.id ?? null, activePipelineJob: activePipelineSnapshot,

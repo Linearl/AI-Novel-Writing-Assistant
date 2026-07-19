@@ -249,3 +249,167 @@ test("asset-first recovery does not jump into structured outline with placeholde
 
   assert.equal(recovery, null);
 });
+
+// ---------------------------------------------------------------------------
+// REQ-7085: 自动导演自主处理未细化章节
+// 1-10 已细化且已写，11-30 未细化 -> 不应返回 auto_execution 卡死循环
+// ---------------------------------------------------------------------------
+
+test("REQ-7085: asset-first recovery routes to structured outline when range is exhausted but book has unrefined chapters", () => {
+  // 场景：auto_to_execution + 默认范围 1-10 已全部细化且已写。
+  // 11-30 章存在于执行区但缺少 taskSheet/sceneCards。
+  // 当前范围检测认为 hasMissingExecutionContractInRange=false，
+  // 但全书层面仍有未细化章节 -> 必须回到 structured_outline 补齐。
+  const recovery = resolveAssetFirstRecoveryFromSnapshot({
+    runMode: "auto_to_execution",
+    structuredOutlineRecoveryStep: "completed",
+    volumeCount: 3,
+    hasVolumeStrategyPlan: true,
+    hasActivePipelineJob: false,
+    hasExecutableRange: true,
+    hasAutoExecutionState: true,
+    hasMissingExecutionContractInRange: false,
+    hasAnyUnpreparedChapters: true,
+    latestCheckpointType: "chapter_batch_ready",
+  });
+
+  assert.deepEqual(recovery, {
+    type: "phase",
+    phase: "structured_outline",
+  });
+});
+
+test("REQ-7085: asset-first recovery does not interrupt active batch when book has unrefined chapters outside range", () => {
+  // 有进行中的批次时，即使全书层面有未细化章节，也不打断当前批次。
+  const recovery = resolveAssetFirstRecoveryFromSnapshot({
+    runMode: "auto_to_execution",
+    structuredOutlineRecoveryStep: "completed",
+    volumeCount: 3,
+    hasVolumeStrategyPlan: true,
+    hasActivePipelineJob: true,
+    hasExecutableRange: true,
+    hasAutoExecutionState: true,
+    hasMissingExecutionContractInRange: false,
+    hasAnyUnpreparedChapters: true,
+    latestCheckpointType: "chapter_batch_ready",
+  });
+
+  assert.equal(recovery.type, "auto_execution");
+});
+
+test("REQ-7085: asset-first recovery resumes auto execution when all book chapters are refined", () => {
+  // 全书所有章节均已细化 -> 回归 auto_execution，不误回到 structured_outline。
+  const recovery = resolveAssetFirstRecoveryFromSnapshot({
+    runMode: "auto_to_execution",
+    structuredOutlineRecoveryStep: "completed",
+    volumeCount: 3,
+    hasVolumeStrategyPlan: true,
+    hasActivePipelineJob: false,
+    hasExecutableRange: true,
+    hasAutoExecutionState: true,
+    hasMissingExecutionContractInRange: false,
+    hasAnyUnpreparedChapters: false,
+    latestCheckpointType: "chapter_batch_ready",
+  });
+
+  assert.equal(recovery.type, "auto_execution");
+});
+
+test("REQ-7085: asset-first recovery keeps structured outline priority when range lacks contracts and book has unrefined chapters", () => {
+  // 范围内也缺细化时，优先走原有 hasMissingExecutionContractInRange 分支，
+  // hasAnyUnpreparedChapters 不应改变该优先级。
+  const recovery = resolveAssetFirstRecoveryFromSnapshot({
+    runMode: "auto_to_execution",
+    structuredOutlineRecoveryStep: "chapter_sync",
+    volumeCount: 2,
+    hasVolumeStrategyPlan: true,
+    hasActivePipelineJob: false,
+    hasExecutableRange: true,
+    hasAutoExecutionState: true,
+    hasMissingExecutionContractInRange: true,
+    hasAnyUnpreparedChapters: true,
+    latestCheckpointType: "chapter_batch_ready",
+  });
+
+  assert.deepEqual(recovery, {
+    type: "phase",
+    phase: "structured_outline",
+  });
+});
+
+test("REQ-7085: asset-first recovery routes to structured outline for full-book autopilot when book has unrefined chapters", () => {
+  // full_book_autopilot 模式下，全书范围检测已能覆盖，
+  // 但 hasAnyUnpreparedChapters=true 时仍应回到 structured_outline。
+  const recovery = resolveAssetFirstRecoveryFromSnapshot({
+    runMode: "full_book_autopilot",
+    structuredOutlineRecoveryStep: "completed",
+    volumeCount: 3,
+    hasVolumeStrategyPlan: true,
+    hasActivePipelineJob: false,
+    hasExecutableRange: true,
+    hasAutoExecutionState: true,
+    hasMissingExecutionContractInRange: false,
+    hasAnyUnpreparedChapters: true,
+    latestCheckpointType: "chapter_batch_ready",
+  });
+
+  assert.deepEqual(recovery, {
+    type: "phase",
+    phase: "structured_outline",
+  });
+});
+
+test("REQ-7085 regression: asset-first recovery does not re-refine when all chapters are refined (EARS-3)", () => {
+  // 回归：全部章节已细化时，hasAnyUnpreparedChapters=false，
+  // 恢复应进入 auto_execution 而非 structured_outline，避免重复细化已完成章节。
+  const recovery = resolveAssetFirstRecoveryFromSnapshot({
+    runMode: "auto_to_execution",
+    structuredOutlineRecoveryStep: "completed",
+    volumeCount: 3,
+    hasVolumeStrategyPlan: true,
+    hasActivePipelineJob: false,
+    hasExecutableRange: true,
+    hasAutoExecutionState: true,
+    hasMissingExecutionContractInRange: false,
+    hasAnyUnpreparedChapters: false,
+    latestCheckpointType: "chapter_batch_ready",
+  });
+
+  assert.equal(recovery.type, "auto_execution");
+  assert.equal(recovery.resumeCheckpointType, "chapter_batch_ready");
+});
+
+test("REQ-7085 regression: asset-first recovery distinguishes partial vs all complete (EARS-4)", () => {
+  // EARS-4: 恢复逻辑能区分"规划完成但未执行"和"全部完成"
+  // 场景 A: 部分完成 - 1-10 已写，11-30 未细化 -> structured_outline
+  const partialRecovery = resolveAssetFirstRecoveryFromSnapshot({
+    runMode: "full_book_autopilot",
+    structuredOutlineRecoveryStep: "completed",
+    volumeCount: 3,
+    hasVolumeStrategyPlan: true,
+    hasActivePipelineJob: false,
+    hasExecutableRange: true,
+    hasAutoExecutionState: true,
+    hasMissingExecutionContractInRange: false,
+    hasAnyUnpreparedChapters: true,
+    latestCheckpointType: "chapter_batch_ready",
+  });
+
+  // 场景 B: 全部完成 - 全书所有章节均已细化 -> auto_execution
+  const allCompleteRecovery = resolveAssetFirstRecoveryFromSnapshot({
+    runMode: "full_book_autopilot",
+    structuredOutlineRecoveryStep: "completed",
+    volumeCount: 3,
+    hasVolumeStrategyPlan: true,
+    hasActivePipelineJob: false,
+    hasExecutableRange: true,
+    hasAutoExecutionState: true,
+    hasMissingExecutionContractInRange: false,
+    hasAnyUnpreparedChapters: false,
+    latestCheckpointType: "chapter_batch_ready",
+  });
+
+  assert.equal(partialRecovery.type, "phase", "部分完成时应回到 structured_outline");
+  assert.equal(allCompleteRecovery.type, "auto_execution", "全部完成时应进入 auto_execution");
+  assert.notEqual(partialRecovery.type, allCompleteRecovery.type, "部分完成与全部完成的恢复策略必须不同");
+});

@@ -169,7 +169,16 @@ async function inspectStructuredOutlineFactState(
 export function createStructuredOutlineFactModule(input: {
   step: StructuredOutlineFactStep;
   descriptor: WorkflowStepModuleDescriptor;
+  /**
+   * REQ-7085: 允许部分完成时优雅暂停，而非抛出硬错误。
+   * chapter_detail_bundle 在多章批量细化场景下可能只完成部分章节，
+   * 此时 validateOutput 应返回 valid:true，交由 completeCriteria +
+   * acceptablePauseCriteria 决定是否暂停。避免 "did not produce the
+   * expected structured outline facts" 硬错误阻断自动导演全书流程。
+   */
+  allowPartialCompletion?: boolean;
 }): WorkflowStepModule<{ taskId: string; novelId: string; request: DirectorConfirmRequest }, void> {
+  const allowPartialCompletion = input.allowPartialCompletion ?? false;
   return createWorkflowStepModule(
     input.descriptor,
     async (moduleInput) => getDirectorCoreStepRuntime().executeStructuredOutlineFactStep(moduleInput),
@@ -186,6 +195,22 @@ export function createStructuredOutlineFactModule(input: {
       },
       validateOutput: async (_output, context) => {
         const result = await inspectStructuredOutlineFactState(context, input.step);
+        // REQ-7085: chapter_detail_bundle 允许部分完成。
+        // 当步骤已产出部分细化（completedDetailSteps > 0）但尚未全部完成时，
+        // validateOutput 返回 valid:true，交由 completeCriteria +
+        // acceptablePauseCriteria 决定是否暂停，而非抛出硬错误。
+        if (allowPartialCompletion && !result.completion.completed) {
+          const evidence = result.completion.evidence as Record<string, unknown> | undefined;
+          const completedDetailSteps = typeof evidence?.completedDetailSteps === "number"
+            ? evidence.completedDetailSteps
+            : 0;
+          if (completedDetailSteps > 0) {
+            return {
+              valid: true,
+              evidence: result.completion.evidence,
+            };
+          }
+        }
         return {
           valid: result.completion.completed,
           reason: result.completion.completed ? undefined : `${input.descriptor.id} did not produce the expected structured outline facts.`,
@@ -220,6 +245,21 @@ export function createStructuredOutlineFactModule(input: {
           };
       },
       completeCriteria: async (_output, context) => (await inspectStructuredOutlineFactState(context, input.step)).completion.completed,
+      acceptablePauseCriteria: allowPartialCompletion
+        ? async (_output, context) => {
+            const result = await inspectStructuredOutlineFactState(context, input.step);
+            if (result.completion.completed) {
+              return false;
+            }
+            // REQ-7085: 已产出部分细化（completedDetailSteps > 0）时，
+            // 允许优雅暂停，pipeline 将在下次 continueTask 时恢复。
+            const evidence = result.completion.evidence as Record<string, unknown> | undefined;
+            const completedDetailSteps = typeof evidence?.completedDetailSteps === "number"
+              ? evidence.completedDetailSteps
+              : 0;
+            return completedDetailSteps > 0;
+          }
+        : undefined,
     },
   );
 }
