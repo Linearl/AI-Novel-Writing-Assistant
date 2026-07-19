@@ -316,15 +316,23 @@ export default function GlobalReviewPage() {
   }, [issues]);
 
   const filteredIssues = useMemo(() => {
-    if (!keyword.trim()) return issues;
-    const kw = keyword.trim().toLowerCase();
-    return issues.filter(
-      (i) =>
-        i.description.toLowerCase().includes(kw) ||
-        i.fixDirection.toLowerCase().includes(kw) ||
-        CATEGORY_LABEL[i.category].includes(kw),
-    );
-  }, [issues, keyword]);
+    let result = issues;
+    // 按状态筛选
+    if (filterStatus !== "all") {
+      result = result.filter((i) => i.status === filterStatus);
+    }
+    // 按关键词筛选
+    if (keyword.trim()) {
+      const kw = keyword.trim().toLowerCase();
+      result = result.filter(
+        (i) =>
+          i.description.toLowerCase().includes(kw) ||
+          i.fixDirection.toLowerCase().includes(kw) ||
+          CATEGORY_LABEL[i.category].includes(kw),
+      );
+    }
+    return result;
+  }, [issues, filterStatus, keyword]);
 
   const [adjustDialogOpen, setAdjustDialogOpen] = useState(false);
   const [adjustingIssue, setAdjustingIssue] = useState<GlobalReviewIssue | null>(null);
