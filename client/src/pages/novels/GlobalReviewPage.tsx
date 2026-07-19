@@ -520,19 +520,11 @@ export default function GlobalReviewPage() {
     <div className="mx-auto flex w-full max-w-5xl flex-col gap-4 p-4">
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-3">
-          <Button asChild variant="ghost" size="sm">
-            <Link to={`/novels/${id}/edit`}>
-              <ArrowLeft className="mr-1 h-4 w-4" />
-              返回编辑
-            </Link>
-          </Button>
-          <div>
-            <h1 className="text-xl font-semibold">全局审校</h1>
-            {novelTitle && (
-              <p className="text-sm text-muted-foreground">{novelTitle}</p>
-            )}
-          </div>
+        <div>
+          <h1 className="text-xl font-semibold">全局审校</h1>
+          {novelTitle && (
+            <p className="text-sm text-muted-foreground">{novelTitle}</p>
+          )}
         </div>
       </div>
 
