@@ -338,6 +338,7 @@ export default function GlobalReviewPage() {
   const [adjustingIssue, setAdjustingIssue] = useState<GlobalReviewIssue | null>(null);
   const [batchRepairingChapterIds, setBatchRepairingChapterIds] = useState<string[]>([]);
   const [batchRepairCompletedCount, setBatchRepairCompletedCount] = useState(0);
+  const [isBatchRepairing, setIsBatchRepairing] = useState(false);
 
   const acknowledgedIssues = useMemo(
     () => issues.filter((i) => i.status === "acknowledged"),
@@ -378,6 +379,7 @@ export default function GlobalReviewPage() {
       const chapterIds = Array.from(groups.keys()).sort();
       setBatchRepairingChapterIds(chapterIds);
       setBatchRepairCompletedCount(0);
+      setIsBatchRepairing(true);
 
       const repairedIssueIds: string[] = [];
       for (const chapterId of chapterIds) {
@@ -418,6 +420,7 @@ export default function GlobalReviewPage() {
     onSettled: () => {
       setBatchRepairingChapterIds([]);
       setBatchRepairCompletedCount(0);
+      setIsBatchRepairing(false);
     },
   });
 
@@ -755,7 +758,7 @@ export default function GlobalReviewPage() {
               isUpdating={updateStatusMutation.isPending}
               isRepairing={singleRepairMutation.isPending && singleRepairMutation.variables === issue.id}
               isVerifying={verifyMutation.isPending && verifyMutation.variables?.id === issue.id}
-              isBatchRepairing={batchRepairMutation.isPending && issue.primaryFixChapter !== null && batchRepairingChapterIds.includes(issue.primaryFixChapter)}
+              isBatchRepairing={isBatchRepairing && issue.primaryFixChapter !== null && batchRepairingChapterIds.includes(issue.primaryFixChapter)}
             />
           ))}
         </div>
@@ -764,7 +767,7 @@ export default function GlobalReviewPage() {
       )}
 
       {/* Batch repair progress */}
-      {batchRepairMutation.isPending && batchRepairingChapterIds.length > 0 && (
+      {isBatchRepairing && batchRepairingChapterIds.length > 0 && (
         <Card>
           <CardContent className="space-y-3 py-4">
             <div className="flex items-center gap-2 text-sm font-medium">
