@@ -91,11 +91,13 @@ interface IssueCardProps {
   onStatusChange: (issueId: string, status: GlobalReviewIssueStatus) => void;
   onRepair: (issueId: string) => void;
   onAdjustPlan: (issue: GlobalReviewIssue) => void;
+  onVerify: (issue: GlobalReviewIssue) => void;
   isUpdating: boolean;
   isRepairing: boolean;
+  isVerifying: boolean;
 }
 
-function IssueCard({ issue, novelId, onStatusChange, onRepair, onAdjustPlan, isUpdating, isRepairing }: IssueCardProps) {
+function IssueCard({ issue, novelId, onStatusChange, onRepair, onAdjustPlan, onVerify, isUpdating, isRepairing, isVerifying }: IssueCardProps) {
   const navigate = useNavigate();
 
   const handleChapterClick = (chapterId: string) => {
@@ -205,6 +207,21 @@ function IssueCard({ issue, novelId, onStatusChange, onRepair, onAdjustPlan, isU
               忽略
             </Button>
           </div>
+        )}
+        {issue.status === "fixed" && (
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => onVerify(issue)}
+            disabled={isVerifying}
+          >
+            {isVerifying ? (
+              <Loader2 className="mr-1 h-3.5 w-3.5 animate-spin" />
+            ) : (
+              <Eye className="mr-1 h-3.5 w-3.5" />
+            )}
+            AI 复核
+          </Button>
         )}
       </CardContent>
     </Card>
@@ -351,14 +368,14 @@ export default function GlobalReviewPage() {
     onSuccess: (result) => {
       toast.success(
         result.repairedIssueIds.length > 0
-          ? `已修复 ${result.totalChapters} 个章节，共 ${result.repairedIssueIds.length} 个问题`
-          : "批量修复完成",
+          ? `已触发 ${result.totalChapters} 个章节的修复，共 ${result.repairedIssueIds.length} 个问题。修复为异步过程，请稍后刷新查看结果。`
+          : "批量修复已触发",
       );
       void queryClient.invalidateQueries({
         queryKey: ["novels", "global-review-issues", id],
       });
     },
-    onError: () => toast.error("批量修复失败，请稍后重试"),
+    onError: () => toast.error("批量修复触发失败，请稍后重试"),
     onSettled: () => {
       setBatchRepairingChapterIds([]);
       setBatchRepairCompletedCount(0);
@@ -399,6 +416,56 @@ export default function GlobalReviewPage() {
     if (acknowledgedIssues.length === 0) return;
     batchRepairMutation.mutate(acknowledgedIssues.map((i) => i.id));
   }, [acknowledgedIssues, batchRepairMutation]);
+
+  const verifyMutation = useMutation({
+    mutationFn: async (issue: GlobalReviewIssue) => {
+      // 对受影响章节执行审校，检查问题是否仍然存在
+      const affectedChapterIds = issue.affectedChapters;
+      const results: Array<{ chapterId: string; hasIssue: boolean }> = [];
+
+      for (const chapterId of affectedChapterIds) {
+        try {
+          // 调用章节审校 API
+          const response = await fetch(`/api/novels/${id}/chapters/${chapterId}/audit-reports`, {
+            headers: { "Authorization": `Bearer ${localStorage.getItem("token") || ""}` },
+          });
+          const data = await response.json();
+
+          // 检查最新的审校报告是否有相关问题
+          const reports = data.data || [];
+          const latestReport = reports[0];
+          const hasIssue = latestReport?.issues?.some((issue: { description: string; status: string }) =>
+            issue.status === "open" && issue.description.includes(issue.description.substring(0, 20))
+          ) ?? false;
+
+          results.push({ chapterId, hasIssue });
+        } catch {
+          results.push({ chapterId, hasIssue: true }); // 出错时假设有问题
+        }
+      }
+
+      return results;
+    },
+    onSuccess: (results) => {
+      const issuesStillPresent = results.filter(r => r.hasIssue).length;
+      if (issuesStillPresent === 0) {
+        toast.success("AI 复核通过：问题已修复");
+      } else {
+        toast.warning(`AI 复核发现 ${issuesStillPresent} 个章节仍存在问题`);
+      }
+      void queryClient.invalidateQueries({
+        queryKey: ["novels", "global-review-issues", id],
+      });
+    },
+    onError: () => toast.error("AI 复核失败，请稍后重试"),
+  });
+
+  const handleVerifyIssue = useCallback(
+    (issue: GlobalReviewIssue) => {
+      verifyMutation.mutate(issue);
+    },
+    [verifyMutation],
+  );
 
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-col gap-4 p-4">
@@ -640,8 +707,10 @@ export default function GlobalReviewPage() {
               }
               onRepair={handleRepairIssue}
               onAdjustPlan={handleAdjustPlan}
+              onVerify={handleVerifyIssue}
               isUpdating={updateStatusMutation.isPending}
               isRepairing={singleRepairMutation.isPending && singleRepairMutation.variables === issue.id}
+              isVerifying={verifyMutation.isPending && verifyMutation.variables?.id === issue.id}
             />
           ))}
         </div>
