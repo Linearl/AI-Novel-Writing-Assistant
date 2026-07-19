@@ -8,7 +8,7 @@ complexity: C2
 estimatedEffort: "2天"
 version: v0.2
 created: 2026-07-18
-updated: 2026-07-18
+updated: 2026-07-19T14:50:47.000Z
 ---
 
 ## 概要
