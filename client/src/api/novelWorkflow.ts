@@ -56,3 +56,12 @@ export async function syncNovelWorkflowStage(payload: {
   const { data } = await apiClient.post<ApiResponse<UnifiedTaskDetail | null>>("/novel-workflows/sync-stage", payload);
   return data;
 }
+
+export async function updateAutoDirectorModel(directorTaskId: string, payload: {
+  provider?: string;
+  model?: string;
+  temperature?: number;
+}) {
+  const { data } = await apiClient.post<ApiResponse<null>>(`/novel-workflows/${directorTaskId}/update-model`, payload);
+  return data;
+}

@@ -143,8 +143,8 @@ export default function BookAnalysisSidebar(props: BookAnalysisSidebarProps) {
               value={llmConfig}
               onChange={(next) =>
                 onLlmConfigChange({
-                  provider: next.provider,
-                  model: next.model,
+                  provider: next.provider ?? llmConfig.provider,
+                  model: next.model ?? llmConfig.model,
                   temperature: next.temperature ?? llmConfig.temperature,
                   maxTokens: next.maxTokens ?? llmConfig.maxTokens,
                 })

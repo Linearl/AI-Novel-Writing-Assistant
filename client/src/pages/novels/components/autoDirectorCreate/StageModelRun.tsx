@@ -66,9 +66,16 @@ export default function StageModelRun({ controller, onBasicFormChange }: StageMo
       <div className="min-w-0 space-y-4">
         {/* Model Settings */}
         <section className="min-w-0 rounded-xl border bg-background/70 p-3 sm:p-4">
-          <div className="text-sm font-medium text-foreground">模型设置</div>
+          <div className="text-sm font-medium text-foreground">模型与质量</div>
+          <div className="mt-1 text-xs text-muted-foreground">
+            默认跟随路由配置，系统会根据任务类型自动选择最优模型。
+          </div>
           <div className="mt-3">
-            <LLMSelector />
+            <LLMSelector
+              allowRouteModel
+              showTemperature
+              showHelperText={false}
+            />
           </div>
         </section>
 

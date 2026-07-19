@@ -164,13 +164,17 @@ export default function StageModelRun({
 
         <details className="group pt-1">
           <summary className="cursor-pointer list-none">
-            <div className="text-sm font-medium text-foreground">模型设置</div>
+            <div className="text-sm font-medium text-foreground">模型与质量</div>
             <div className={`mt-1 text-xs leading-5 text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>
-              默认使用顶部已选模型；需要临时换模型时再展开调整。
+              默认跟随路由配置，系统会根据任务类型自动选择最优模型。需要临时换模型时再展开调整。
             </div>
           </summary>
           <div className="mt-4">
-            <LLMSelector />
+            <LLMSelector
+              allowRouteModel
+              showTemperature
+              showHelperText={false}
+            />
           </div>
         </details>
       </div>

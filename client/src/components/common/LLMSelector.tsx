@@ -24,10 +24,11 @@ import SearchableSelect from "./SearchableSelect";
 const NO_PROVIDER_VALUE = "__no_runnable_provider__";
 
 export interface LLMSelectorValue {
-  provider: LLMProvider;
-  model: string;
+  provider?: LLMProvider;
+  model?: string;
   temperature?: number;
   maxTokens?: number;
+  useRouteModel?: boolean; // true = 跟随路由配置，provider/model 为 undefined
 }
 
 interface LLMSelectorProps {
@@ -35,6 +36,8 @@ interface LLMSelectorProps {
   onChange?: (value: LLMSelectorValue) => void;
   showModel?: boolean;
   showParameters?: boolean;
+  showTemperature?: boolean; // 独立显示 temperature 控件
+  allowRouteModel?: boolean; // 允许选择"跟随路由配置"
   compact?: boolean;
   showBadge?: boolean;
   showHelperText?: boolean;
@@ -54,6 +57,8 @@ export default function LLMSelector({
   onChange,
   showModel = true,
   showParameters = false,
+  showTemperature = false,
+  allowRouteModel = false,
   compact = false,
   showBadge = true,
   showHelperText = true,
@@ -67,7 +72,11 @@ export default function LLMSelector({
     model: store.model,
     temperature: store.temperature,
     maxTokens: store.maxTokens,
+    useRouteModel: false,
   };
+
+  // 如果允许路由模型且未设置 provider，则使用路由模式
+  const isRouteMode = allowRouteModel && (currentValue.useRouteModel === true || (!currentValue.provider && currentValue.useRouteModel !== false));
 
   const resolvedTemperature = currentValue.temperature ?? store.temperature;
   const resolvedMaxTokens = currentValue.maxTokens ?? store.maxTokens;
@@ -144,15 +153,16 @@ export default function LLMSelector({
   const hasRunnableProviders = providerOptions.length > 0;
 
   const effectiveProvider = useMemo(() => {
-    if (providerOptions.includes(currentValue.provider)) {
+    if (currentValue.provider && providerOptions.includes(currentValue.provider)) {
       return currentValue.provider;
     }
-    return providerOptions[0] ?? currentValue.provider;
+    return providerOptions[0] ?? currentValue.provider ?? (providerOptions[0] as LLMProvider | undefined);
   }, [currentValue.provider, providerOptions]);
 
-  const models = useMemo(() => {
+  const models: string[] = useMemo(() => {
+    if (!effectiveProvider) return [];
     const providerModels = providerModelsMap[effectiveProvider] ?? [];
-    const currentModel = currentValue.model.trim();
+    const currentModel = currentValue.model?.trim() ?? "";
     if (!currentModel || providerModels.includes(currentModel)) {
       return providerModels;
     }
@@ -160,14 +170,14 @@ export default function LLMSelector({
   }, [currentValue.model, effectiveProvider, providerModelsMap]);
 
   const resolvedModel = useMemo(
-    () => resolveModel(currentValue.model, models),
+    () => resolveModel(currentValue.model ?? "", models),
     [currentValue.model, models],
   );
   const providerSelectValue = hasRunnableProviders ? effectiveProvider : NO_PROVIDER_VALUE;
   const shouldWaitForGlobalHydration = !value && !onChange && !store.hasHydratedSelection;
 
   const updateValue = useCallback((next: LLMSelectorValue) => {
-    const normalizedModel = resolveModel(next.model, providerModelsMap[next.provider] ?? []);
+    const normalizedModel = resolveModel(next.model ?? "", providerModelsMap[next.provider ?? ""] ?? []);
     const normalizedTemperature = next.temperature !== undefined
       ? clampTemperature(next.temperature)
       : undefined;
@@ -185,14 +195,14 @@ export default function LLMSelector({
       return;
     }
     store.setSelection({
-      provider: normalizedNext.provider,
-      model: normalizedNext.model,
+      provider: normalizedNext.provider ?? store.provider,
+      model: normalizedNext.model ?? store.model,
       temperature: normalizedNext.temperature,
       maxTokens: normalizedNext.maxTokens,
     });
     saveSelectionMutation.mutate({
-      provider: normalizedNext.provider,
-      model: normalizedNext.model,
+      provider: normalizedNext.provider ?? store.provider,
+      model: normalizedNext.model ?? store.model,
       temperature: normalizedNext.temperature ?? store.temperature,
       ...(normalizedNext.maxTokens !== undefined ? { maxTokens: normalizedNext.maxTokens } : {}),
     });
@@ -262,36 +272,91 @@ export default function LLMSelector({
       model,
       temperature: resolvedTemperature,
       maxTokens: resolvedMaxTokens,
+      useRouteModel: false,
     });
+  };
+
+  const onRouteModeChange = (useRoute: boolean) => {
+    if (useRoute) {
+      // 切换到路由模式：清除 provider/model
+      onChange?.({
+        provider: undefined,
+        model: undefined,
+        temperature: resolvedTemperature,
+        maxTokens: resolvedMaxTokens,
+        useRouteModel: true,
+      });
+    } else {
+      // 切换到自定义模式：使用当前选中的 provider
+      onChange?.({
+        provider: effectiveProvider,
+        model: resolvedModel,
+        temperature: resolvedTemperature,
+        maxTokens: resolvedMaxTokens,
+        useRouteModel: false,
+      });
+    }
   };
 
   return (
     <div className={cn("space-y-2", compact && "space-y-1", className)}>
       <div className={cn("flex min-w-0 items-center gap-2", compact ? "flex-nowrap gap-1.5" : "flex-wrap")}>
         {showBadge ? <Badge variant="secondary">模型</Badge> : null}
-        <Select
-          value={providerSelectValue}
-          onValueChange={onProviderChange}
-          disabled={!hasRunnableProviders}
-        >
-          <SelectTrigger className={cn(compact ? "h-9 w-[148px] lg:w-[164px]" : "w-full sm:w-[180px]")}>
-            <SelectValue placeholder={hasRunnableProviders ? "选择厂商" : "请先配置可用厂商"} />
-          </SelectTrigger>
-          <SelectContent>
-            {!hasRunnableProviders ? (
-              <SelectItem value={NO_PROVIDER_VALUE} disabled>
-                请先配置可用厂商
-              </SelectItem>
-            ) : null}
-            {providerOptions.map((provider) => (
-              <SelectItem key={provider} value={provider}>
-                {providerNameMap.get(provider) ?? provider}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
 
-        {showModel ? (
+        {allowRouteModel ? (
+          // 带路由模式的 Select
+          <Select
+            value={isRouteMode ? "__route__" : providerSelectValue}
+            onValueChange={(val) => {
+              if (val === "__route__") {
+                onRouteModeChange(true);
+              } else {
+                onRouteModeChange(false);
+                onProviderChange(val);
+              }
+            }}
+            disabled={!hasRunnableProviders}
+          >
+            <SelectTrigger className={cn(compact ? "h-9 w-[148px] lg:w-[164px]" : "w-full sm:w-[180px]")}>
+              <SelectValue placeholder={hasRunnableProviders ? "选择厂商" : "请先配置可用厂商"} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="__route__">
+                跟随路由配置（推荐）
+              </SelectItem>
+              {providerOptions.map((provider) => (
+                <SelectItem key={provider} value={provider}>
+                  {providerNameMap.get(provider) ?? provider}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        ) : (
+          // 原始 Select
+          <Select
+            value={providerSelectValue}
+            onValueChange={onProviderChange}
+            disabled={!hasRunnableProviders}
+          >
+            <SelectTrigger className={cn(compact ? "h-9 w-[148px] lg:w-[164px]" : "w-full sm:w-[180px]")}>
+              <SelectValue placeholder={hasRunnableProviders ? "选择厂商" : "请先配置可用厂商"} />
+            </SelectTrigger>
+            <SelectContent>
+              {!hasRunnableProviders ? (
+                <SelectItem value={NO_PROVIDER_VALUE} disabled>
+                  请先配置可用厂商
+                </SelectItem>
+              ) : null}
+              {providerOptions.map((provider) => (
+                <SelectItem key={provider} value={provider}>
+                  {providerNameMap.get(provider) ?? provider}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
+
+        {showModel && !isRouteMode ? (
           <SearchableSelect
             value={resolvedModel}
             onValueChange={onModelChange}
@@ -306,9 +371,46 @@ export default function LLMSelector({
         ) : null}
       </div>
 
+      {isRouteMode && showHelperText ? (
+        <div className="text-xs text-muted-foreground">
+          将根据任务类型自动选择最优模型（可在 设置 → 模型路由 中配置）。
+        </div>
+      ) : null}
+
       {showHelperText && !hasRunnableProviders && !apiKeySettingsQuery.isLoading ? (
         <div className="text-xs text-muted-foreground">
           当前没有已配置且启用的模型厂商，请先到系统设置里完成 API Key 和模型配置。
+        </div>
+      ) : null}
+
+      {showTemperature && !isRouteMode ? (
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-muted-foreground">temperature:</span>
+          <Input
+            type="number"
+            step="0.1"
+            min={0}
+            max={2}
+            value={resolvedTemperature}
+            onChange={(event) => {
+              const parsed = Number(event.target.value);
+              if (!Number.isFinite(parsed)) {
+                return;
+              }
+              onChange?.({
+                ...currentValue,
+                temperature: parsed,
+              });
+            }}
+            onBlur={() => {
+              onChange?.({
+                ...currentValue,
+                temperature: clampTemperature(resolvedTemperature),
+              });
+            }}
+            className="h-8 w-20"
+            disabled={!hasRunnableProviders}
+          />
         </div>
       ) : null}
 

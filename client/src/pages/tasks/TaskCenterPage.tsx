@@ -24,6 +24,7 @@ import TaskCenterFilterPanel from "./components/TaskCenterFilterPanel";
 import TaskCenterDetailSummary from "./components/TaskCenterDetailSummary";
 import TaskCenterListPanel from "./components/TaskCenterListPanel";
 import TaskCenterMilestoneHistory from "./components/TaskCenterMilestoneHistory";
+import TaskCenterModelSwitchCard from "./components/TaskCenterModelSwitchCard";
 import TaskCenterSummaryCards from "./components/TaskCenterSummaryCards";
 import {
   ACTIVE_STATUSES,
@@ -589,9 +590,12 @@ export default function TaskCenterPage() {
                 {isAutoDirectorTask ? (
                   <DirectorRuntimeProjectionCard projection={selectedDirectorRuntimeProjectionForDisplay} />
                 ) : null}
+                {isAutoDirectorTask && isActiveAutoDirectorTask ? (
+                  <TaskCenterModelSwitchCard task={selectedTask} isActive={isActiveAutoDirectorTask} />
+                ) : null}
                 {isAutoDirectorTask ? (
                   <div className="rounded-md border border-primary/20 bg-primary/5 p-3 text-sm text-muted-foreground">
-                    继续导演、恢复任务、切换模型、推进策略和改动影响检查，请回到小说页面右侧的执行详情面板处理。这里保留任务记录、状态摘要以及取消、归档、打开来源页等基础操作。
+                    继续导演、恢复任务、推进策略和改动影响检查，请回到小说页面右侧的执行详情面板处理。这里保留任务记录、状态摘要以及切换模型、取消、归档、打开来源页等操作。
                   </div>
                 ) : null}
                 <div className="flex flex-wrap gap-2">

@@ -165,4 +165,29 @@ router.post("/sync-stage", validate({ body: syncStageSchema }), async (req, res,
   }
 });
 
+const updateModelBodySchema = z.object({
+  provider: z.string().trim().optional(),
+  model: z.string().trim().optional(),
+  temperature: z.number().finite().min(0).max(2).optional(),
+});
+
+router.post("/:id/update-model", validate({ params: continueParamsSchema, body: updateModelBodySchema }), async (req, res, next) => {
+  try {
+    const { id } = req.params as z.infer<typeof continueParamsSchema>;
+    const body = req.body as z.infer<typeof updateModelBodySchema>;
+    await workflowService.applyAutoDirectorLlmOverride(id, {
+      provider: body.provider,
+      model: body.model,
+      temperature: body.temperature,
+    });
+    res.status(200).json({
+      success: true,
+      data: null,
+      message: "模型配置已更新，将在下一步骤生效。",
+    } satisfies ApiResponse<null>);
+  } catch (error) {
+    next(error);
+  }
+});
+
 export default router;
