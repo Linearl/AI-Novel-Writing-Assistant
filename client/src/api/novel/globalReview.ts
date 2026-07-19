@@ -66,10 +66,11 @@ export async function updateGlobalReviewIssueStatus(
   novelId: string,
   issueId: string,
   status: GlobalReviewIssueStatus,
+  fixDirection?: string,
 ) {
   const { data } = await apiClient.post<ApiResponse<GlobalReviewIssue>>(
     `/novels/${novelId}/global-review-issues/${issueId}/status`,
-    { status },
+    { status, fixDirection },
   );
   return data;
 }

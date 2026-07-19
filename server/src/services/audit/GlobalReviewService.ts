@@ -143,6 +143,7 @@ export class GlobalReviewService {
     novelId: string,
     issueId: string,
     status: string,
+    fixDirection?: string,
   ): Promise<void> {
     const validStatuses = ["pending", "acknowledged", "fixed", "dismissed"];
     if (!validStatuses.includes(status)) {
@@ -158,7 +159,10 @@ export class GlobalReviewService {
 
     await prisma.globalReviewIssue.update({
       where: { id: issueId },
-      data: { status },
+      data: {
+        status,
+        ...(fixDirection !== undefined && { fixDirection }),
+      },
     });
   }
 

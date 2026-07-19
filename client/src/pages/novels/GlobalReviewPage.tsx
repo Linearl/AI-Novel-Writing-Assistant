@@ -452,15 +452,16 @@ export default function GlobalReviewPage() {
       }
 
       const issuesStillPresent = results.filter(r => r.hasIssue).length;
-      return { results, issuesStillPresent, issueId: issue.id };
+      return { results, issuesStillPresent, issueId: issue.id, fixDirection: issue.fixDirection };
     },
     onSuccess: async (result) => {
       if (result.issuesStillPresent === 0) {
         toast.success("AI 复核通过：问题已修复");
       } else {
-        // 自动重新打开问题
-        await updateGlobalReviewIssueStatus(id, result.issueId, "acknowledged");
-        toast.warning(`AI 复核发现 ${result.issuesStillPresent} 个章节仍存在问题，已重新打开`);
+        // 自动重新打开问题，并在修复方案中添加提示
+        const updatedFixDirection = `${result.fixDirection}\n\n⚠️ 上次修复未通过复核（${result.issuesStillPresent} 个章节仍存在问题），建议调整修复方案后重试。`;
+        await updateGlobalReviewIssueStatus(id, result.issueId, "acknowledged", updatedFixDirection);
+        toast.warning(`AI 复核发现 ${result.issuesStillPresent} 个章节仍存在问题，已重新打开并建议调整方案`);
       }
       void queryClient.invalidateQueries({
         queryKey: ["novels", "global-review-issues", id],
