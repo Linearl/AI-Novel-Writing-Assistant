@@ -720,19 +720,21 @@ export default function GlobalReviewPage() {
             />
           </CardContent>
         </Card>
-      ) : filteredIssues.length === 0 ? (
-        <Card>
-          <CardContent>
-            <EmptyState
-              title="没有匹配的问题"
-              description="尝试调整筛选条件或搜索关键词。"
-            />
-          </CardContent>
-        </Card>
       ) : (
-        <div className="flex flex-col gap-3">
-          {filteredIssues.map((issue) => (
-            <IssueCard
+        <>
+          {filteredIssues.length === 0 ? (
+            <Card>
+              <CardContent>
+                <EmptyState
+                  title="没有匹配的问题"
+                  description="尝试调整筛选条件或搜索关键词。"
+                />
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="flex flex-col gap-3">
+              {filteredIssues.map((issue) => (
+                <IssueCard
               key={issue.id}
               issue={issue}
               novelId={id}
@@ -749,6 +751,8 @@ export default function GlobalReviewPage() {
             />
           ))}
         </div>
+          )}
+        </>
       )}
 
       {/* Batch repair progress */}
