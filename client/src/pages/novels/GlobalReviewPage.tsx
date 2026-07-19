@@ -749,6 +749,9 @@ export default function GlobalReviewPage() {
             <div className="flex items-center gap-2 text-sm font-medium">
               <Loader2 className="h-4 w-4 animate-spin text-primary" />
               <span>批量修复进行中</span>
+              <span className="text-muted-foreground">
+                ({batchRepairCompletedCount}/{batchRepairingChapterIds.length})
+              </span>
             </div>
             <div className="space-y-1 text-sm text-muted-foreground">
               {batchRepairingChapterIds.map((chapterId, index) => (
@@ -763,13 +766,16 @@ export default function GlobalReviewPage() {
                   <span className="font-mono text-xs">{chapterId.slice(0, 8)}</span>
                   <span className="text-xs">
                     {index < batchRepairCompletedCount
-                      ? "已完成"
+                      ? "✓ 已完成"
                       : index === batchRepairCompletedCount
-                        ? "修复中..."
-                        : "等待中"}
+                        ? "⏳ 修复中..."
+                        : "○ 等待中"}
                   </span>
                 </div>
               ))}
+            </div>
+            <div className="text-xs text-muted-foreground pt-2 border-t">
+              提示：修复为异步过程，每章约需 1-3 分钟。修复完成后问题状态将自动更新。
             </div>
           </CardContent>
         </Card>
