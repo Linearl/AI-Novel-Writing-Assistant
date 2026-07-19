@@ -341,4 +341,82 @@ export function registerNovelReviewRoutes(input: RegisterNovelReviewRoutesInput)
       }
     },
   );
+
+  // REQ-2060: 批量修复全局审校问题
+  const batchRepairSchema = z.object({
+    globalReviewIssueIds: z.array(z.string().trim().min(1)).min(1),
+    userInstruction: z.string().trim().max(4000).optional(),
+  });
+
+  router.post(
+    "/:id/global-review-issues/repair",
+    validate({ params: idParamsSchema, body: batchRepairSchema }),
+    async (req, res, next) => {
+      try {
+        const { id } = req.params as z.infer<typeof idParamsSchema>;
+        const body = req.body as z.infer<typeof batchRepairSchema>;
+
+        // 获取全局审校问题并按 primaryFixChapter 分组
+        const issues = await globalReviewService.listGlobalReviewIssues(id);
+        const targetIssues = issues.filter(
+          (issue) => body.globalReviewIssueIds.includes(issue.id)
+            && (issue.status === "pending" || issue.status === "acknowledged"),
+        );
+
+        if (targetIssues.length === 0) {
+          res.status(200).json({
+            success: true,
+            data: { repairedChapterIds: [], repairedIssueIds: [] },
+            message: "没有可修复的问题。",
+          });
+          return;
+        }
+
+        // 按 primaryFixChapter 分组
+        const groups = new Map<string, string[]>();
+        for (const issue of targetIssues) {
+          const chapterId = issue.primaryFixChapter;
+          if (!chapterId) continue;
+          if (!groups.has(chapterId)) {
+            groups.set(chapterId, []);
+          }
+          groups.get(chapterId)!.push(issue.id);
+        }
+
+        const repairedChapterIds: string[] = [];
+        const repairedIssueIds: string[] = [];
+
+        // 逐章节修复
+        for (const [chapterId, issueIds] of groups) {
+          try {
+            await stepModuleRunner.runStep(
+              DIRECTOR_EXECUTION_STEP_IDS.chapter_repair,
+              {
+                novelId: id,
+                mode: "manual",
+                targetType: "chapter",
+                targetChapterId: chapterId,
+                stepInput: {
+                  globalReviewIssueIds: issueIds,
+                  userInstruction: body.userInstruction,
+                },
+              },
+            );
+            repairedChapterIds.push(chapterId);
+            repairedIssueIds.push(...issueIds);
+          } catch {
+            // 单个章节修复失败不阻断其他章节
+          }
+        }
+
+        res.status(200).json({
+          success: true,
+          data: { repairedChapterIds, repairedIssueIds },
+          message: `已触发 ${repairedChapterIds.length} 个章节的修复，共 ${repairedIssueIds.length} 个问题。`,
+        } satisfies ApiResponse<{ repairedChapterIds: string[]; repairedIssueIds: string[] }>);
+      } catch (error) {
+        next(error);
+      }
+    },
+  );
 }
