@@ -262,6 +262,7 @@ export interface ReviewOptions extends LLMGenerateOptions {
 export interface RepairOptions extends LLMGenerateOptions {
   reviewIssues?: ReviewIssue[];
   auditIssueIds?: string[];
+  globalReviewIssueIds?: string[];
   userInstruction?: string;
   repairMode?: "detect_only" | "light_repair" | "heavy_repair" | "continuity_only" | "character_only" | "ending_only";
   /** REQ-2022: 关联自动执行 taskId，用于 debug buffer 采集 */

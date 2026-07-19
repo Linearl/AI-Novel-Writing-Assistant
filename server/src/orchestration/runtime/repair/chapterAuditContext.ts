@@ -2,6 +2,7 @@ import type { GenerationContextPackage } from "@ai-novel/shared";
 import type { ReviewOptions } from "../../../services/novel/novelCoreShared/index"
 import { logPipelineError } from "../../../services/novel/novelCoreShared/index"
 import { GenerationContextAssembler } from "../GenerationContextAssembler";
+import { fetchGlobalReviewFeedbackForChapter } from "../../../services/audit/auditContextBuilder";
 
 export type AuditContextOperation = "review" | "audit" | "repair";
 
@@ -40,13 +41,13 @@ export async function assembleChapterAuditContextPackage(input: {
   assembler?: Pick<GenerationContextAssembler, "assemble">;
 }): Promise<GenerationContextPackage> {
   const assembler = input.assembler ?? new GenerationContextAssembler();
+  let assembled;
   try {
-    const assembled = await assembler.assemble(input.novelId, input.chapterId, {
+    assembled = await assembler.assemble(input.novelId, input.chapterId, {
       provider: input.options.provider,
       model: input.options.model,
       temperature: input.options.temperature,
     });
-    return assembled.contextPackage;
   } catch (error) {
     logPipelineError("Failed to assemble chapter context package.", {
       novelId: input.novelId,
@@ -58,4 +59,32 @@ export async function assembleChapterAuditContextPackage(input: {
     });
     throw new ChapterContextAssemblyError(input.novelId, input.chapterId, input.operation, error);
   }
+
+  const contextPackage = assembled.contextPackage;
+
+  // REQ-2060: 修复操作时注入全局审校反馈（跨章节问题回灌到章节修复）
+  if (input.operation === "repair") {
+    try {
+      const globalFeedbackBlocks = await fetchGlobalReviewFeedbackForChapter(
+        input.novelId,
+        input.chapterId,
+        10,
+      );
+      if (globalFeedbackBlocks.length > 0) {
+        const feedbackContent = globalFeedbackBlocks
+          .map((block) => block.content.trim())
+          .filter(Boolean)
+          .join("\n\n");
+        const existingRag = contextPackage.ragContext || "";
+        const mergedRag = existingRag === "none"
+          ? feedbackContent
+          : `${existingRag}\n\n${feedbackContent}`;
+        contextPackage.ragContext = mergedRag;
+      }
+    } catch {
+      // 全局审校反馈获取失败不阻断章节修复
+    }
+  }
+
+  return contextPackage;
 }

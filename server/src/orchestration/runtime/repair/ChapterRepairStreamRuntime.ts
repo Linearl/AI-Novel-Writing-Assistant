@@ -5,6 +5,7 @@ import { prisma } from "../../../db/prisma"
 import { streamTextPrompt } from "../../../prompting/core/promptRunner"
 import { withChapterRepairContext } from "../../../prompting/prompts/novel/chapterLayeredContext"
 import { auditService } from "../../../services/audit/AuditService"
+import { globalReviewService } from "../../../services/audit/GlobalReviewService"
 import { ChapterPatchRepairFailedError } from "../../../services/novel/chapterPatchRepairService"
 import {
   isPass,
@@ -22,6 +23,30 @@ import {
   createHeavyRepairPromptExecution,
   prepareChapterRepairExecution,
 } from "./chapterRepairRuntime";
+
+// ─── GlobalReviewIssue → ReviewIssue 映射 ────────────────────────────────────
+
+/** GlobalReviewIssue.severity (critical|major|minor) → ReviewIssue.severity */
+export function mapGlobalSeverity(globalSeverity: string): ReviewIssue["severity"] {
+  switch (globalSeverity) {
+    case "critical": return "critical";
+    case "major": return "high";
+    case "minor": return "medium";
+    default: return "medium";
+  }
+}
+
+/** GlobalReviewIssue.category → ReviewIssue.category */
+export function mapGlobalCategory(globalCategory: string): ReviewIssue["category"] {
+  switch (globalCategory) {
+    case "character_consistency": return "logic";
+    case "plot_continuity": return "coherence";
+    case "foreshadowing": return "coherence";
+    case "pacing": return "pacing";
+    case "worldbuilding": return "logic";
+    default: return "coherence";
+  }
+}
 
 interface RepairReviewResult {
   score: QualityScore;
@@ -162,6 +187,34 @@ export class ChapterRepairStreamRuntime {
       }));
     }
 
+    // REQ-2060: 查询 GlobalReviewIssue 并转换为 ReviewIssue 格式追加
+    const globalIssues = options.globalReviewIssueIds?.length
+      ? await prisma.globalReviewIssue.findMany({
+        where: {
+          id: { in: options.globalReviewIssueIds },
+          status: { in: ["pending", "confirmed"] },
+        },
+        orderBy: { createdAt: "asc" },
+      })
+      : [];
+
+    if (globalIssues.length > 0) {
+      const mappedGlobalIssues: ReviewIssue[] = globalIssues.map((item) => ({
+        severity: mapGlobalSeverity(item.severity),
+        category: mapGlobalCategory(item.category),
+        evidence: item.description,
+        fixSuggestion: item.fixDirection,
+      }));
+
+      // 若同时有 auditIssueIds 未匹配到（已在上面 return），这里追加到空列表
+      // 若 reviewIssues 也未指定，fallback review 之后与全局问题合并
+      const fallbackReview = await this.deps.reviewChapterAfterRepair(novelId, chapterId, {
+        ...options,
+        directorDebugTaskId: options.directorDebugTaskId,
+      });
+      return [...fallbackReview.issues, ...mappedGlobalIssues];
+    }
+
     const fallbackReview = await this.deps.reviewChapterAfterRepair(novelId, chapterId, {
       ...options,
       directorDebugTaskId: options.directorDebugTaskId,
@@ -266,6 +319,34 @@ export class ChapterRepairStreamRuntime {
         await resolveAuditIssues(input.novelId, input.options.auditIssueIds).catch(() => null);
         console.log("[RepairStream] Audit issues resolved");
       }
+
+      // REQ-2060: 修复通过后标记全局审校问题为 fixed，并检查关联章节
+      if (input.options.globalReviewIssueIds?.length && isPass(review.score)) {
+        try {
+          await globalReviewService.updateIssueStatus(
+            input.novelId,
+            input.options.globalReviewIssueIds[0],
+            "fixed",
+          ).catch(() => null);
+          // 批量标记剩余的全局问题为 fixed
+          for (const issueId of input.options.globalReviewIssueIds.slice(1)) {
+            await globalReviewService.updateIssueStatus(
+              input.novelId,
+              issueId,
+              "fixed",
+            ).catch(() => null);
+          }
+          console.log("[RepairStream] Global review issues marked as fixed");
+        } catch {
+          // 全局审校问题状态更新失败不阻断修复流程
+        }
+
+        // 检查其他关联问题是否也应标记为 fixed
+        await checkGlobalReviewIssuesAfterChapterRepair(
+          input.novelId,
+          input.chapterId,
+        ).catch(() => null);
+      }
     } else {
       console.log("[RepairStream] isPass=false, chapter status NOT updated");
     }
@@ -284,4 +365,53 @@ export class ChapterRepairStreamRuntime {
 
 async function* createSingleChunkStream(content: string): AsyncIterable<BaseMessageChunk> {
   yield { content } as BaseMessageChunk;
+}
+
+/**
+ * REQ-2060: 修复通过后检查其他关联的 GlobalReviewIssue，
+ * 若其 affectedChapters 中所有章节均已 approved + completed，则标记为 fixed。
+ */
+async function checkGlobalReviewIssuesAfterChapterRepair(
+  novelId: string,
+  repairedChapterId: string,
+): Promise<void> {
+  const relatedIssues = await prisma.globalReviewIssue.findMany({
+    where: {
+      novelId,
+      status: { in: ["pending", "confirmed"] },
+      affectedChapters: { contains: repairedChapterId },
+    },
+  });
+
+  for (const issue of relatedIssues) {
+    const affectedChapterIds: string[] = JSON.parse(issue.affectedChapters);
+    if (affectedChapterIds.length === 0) continue;
+
+    const allApproved = await areAllChaptersApproved(novelId, affectedChapterIds);
+    if (allApproved) {
+      await globalReviewService.updateIssueStatus(novelId, issue.id, "fixed").catch(() => null);
+    }
+  }
+}
+
+/**
+ * 检查指定章节列表是否全部处于 approved + completed 状态。
+ */
+async function areAllChaptersApproved(
+  novelId: string,
+  chapterIds: string[],
+): Promise<boolean> {
+  const chapters = await prisma.chapter.findMany({
+    where: {
+      id: { in: chapterIds },
+      novelId,
+    },
+    select: { id: true, generationState: true, chapterStatus: true },
+  });
+
+  if (chapters.length !== chapterIds.length) return false;
+
+  return chapters.every(
+    (ch) => ch.generationState === "approved" && ch.chapterStatus === "completed",
+  );
 }

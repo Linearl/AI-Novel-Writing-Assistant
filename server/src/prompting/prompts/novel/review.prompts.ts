@@ -218,6 +218,7 @@ export const chapterRepairPrompt: PromptAsset<ChapterRepairPromptInput, string, 
       "chapter_mission",
       "repair_boundaries",
       "world_rules",
+      "global_review_feedback",
     ],
     dropOrder: [
       "recent_chapters",
