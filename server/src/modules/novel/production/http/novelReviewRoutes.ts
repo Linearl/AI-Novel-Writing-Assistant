@@ -292,8 +292,12 @@ export function registerNovelReviewRoutes(input: RegisterNovelReviewRoutesInput)
     async (req, res, next) => {
       try {
         const { id, issueId } = req.params as z.infer<typeof globalReviewIssueParamsSchema>;
-        const { status, fixDirection } = req.body as { status: string; fixDirection?: string };
-        await globalReviewService.updateIssueStatus(id, issueId, status, fixDirection);
+        const { status, fixDirection, verificationFeedback } = req.body as {
+          status: string;
+          fixDirection?: string;
+          verificationFeedback?: string;
+        };
+        await globalReviewService.updateIssueStatus(id, issueId, status, fixDirection, verificationFeedback);
         res.status(200).json({
           success: true,
           data: null,

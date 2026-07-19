@@ -330,11 +330,9 @@ export default function GlobalReviewPage() {
 
   const singleRepairMutation = useMutation({
     mutationFn: (issueId: string) => {
-      // 获取存储的复核反馈
-      const feedbackKey = `globalReview_feedback_${issueId}`;
-      const feedback = localStorage.getItem(feedbackKey);
-      // 清除已使用的反馈
-      if (feedback) localStorage.removeItem(feedbackKey);
+      // 获取问题的复核反馈
+      const issue = issues.find(i => i.id === issueId);
+      const feedback = issue?.verificationFeedback;
       return repairGlobalReviewIssues(id, {
         globalReviewIssueIds: [issueId],
         userInstruction: feedback ? `复核反馈：${feedback}` : undefined,
@@ -372,11 +370,9 @@ export default function GlobalReviewPage() {
           // 收集该章节所有问题的复核反馈
           const feedbacks: string[] = [];
           for (const issueId of chapterIssueIds) {
-            const feedbackKey = `globalReview_feedback_${issueId}`;
-            const feedback = localStorage.getItem(feedbackKey);
-            if (feedback) {
-              feedbacks.push(`[${issueId.slice(0, 8)}] ${feedback}`);
-              localStorage.removeItem(feedbackKey);
+            const issue = issues.find(i => i.id === issueId);
+            if (issue?.verificationFeedback) {
+              feedbacks.push(`[${issueId.slice(0, 8)}] ${issue.verificationFeedback}`);
             }
           }
           const result = await repairGlobalReviewIssues(id, {
@@ -478,13 +474,9 @@ export default function GlobalReviewPage() {
       if (result.issuesStillPresent === 0) {
         toast.success("AI 复核通过：问题已修复");
       } else {
-        // 重新打开问题，记录复核反馈
+        // 重新打开问题，记录复核反馈到数据库
         const feedback = `[复核反馈 ${new Date().toLocaleDateString()}] 复核发现 ${result.issuesStillPresent} 个章节仍存在问题。`;
-        await updateGlobalReviewIssueStatus(id, result.issueId, "acknowledged");
-        // 将反馈存储到 localStorage，下次修复时注入
-        const feedbackKey = `globalReview_feedback_${result.issueId}`;
-        const existingFeedback = localStorage.getItem(feedbackKey) || "";
-        localStorage.setItem(feedbackKey, existingFeedback ? `${existingFeedback}\n${feedback}` : feedback);
+        await updateGlobalReviewIssueStatus(id, result.issueId, "acknowledged", undefined, feedback);
         toast.warning(`AI 复核发现 ${result.issuesStillPresent} 个章节仍存在问题，已重新打开`);
       }
       void queryClient.invalidateQueries({

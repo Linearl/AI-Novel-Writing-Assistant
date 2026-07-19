@@ -21,6 +21,7 @@ export interface GlobalReviewIssue {
   affectedChapters: string[];
   primaryFixChapter: string | null;
   status: GlobalReviewIssueStatus;
+  verificationFeedback?: string;
   reviewRunId?: string;
   createdAt?: string;
   updatedAt?: string;
@@ -67,10 +68,11 @@ export async function updateGlobalReviewIssueStatus(
   issueId: string,
   status: GlobalReviewIssueStatus,
   fixDirection?: string,
+  verificationFeedback?: string,
 ) {
   const { data } = await apiClient.post<ApiResponse<GlobalReviewIssue>>(
     `/novels/${novelId}/global-review-issues/${issueId}/status`,
-    { status, fixDirection },
+    { status, fixDirection, verificationFeedback },
   );
   return data;
 }

@@ -3418,18 +3418,19 @@ model WorldLocationConnection {
 // ---------------------------------------------------------------------------
 
 model GlobalReviewIssue {
-  id                String   @id @default(cuid())
-  novelId           String
-  reviewRunId       String
-  severity          String   // critical | major | minor
-  category          String   // character_consistency | plot_continuity | foreshadowing | pacing | worldbuilding
-  description       String
-  fixDirection      String
-  affectedChapters  String   // JSON array of chapter IDs
-  primaryFixChapter String?  // chapter ID where main fix should happen
-  status            String   @default("pending") // pending | acknowledged | fixed | dismissed
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  id                  String   @id @default(cuid())
+  novelId             String
+  reviewRunId         String
+  severity            String   // critical | major | minor
+  category            String   // character_consistency | plot_continuity | foreshadowing | pacing | worldbuilding
+  description         String
+  fixDirection        String
+  affectedChapters    String   // JSON array of chapter IDs
+  primaryFixChapter   String?  // chapter ID where main fix should happen
+  status              String   @default("pending") // pending | acknowledged | fixed | dismissed
+  verificationFeedback String? // 复核反馈：记录上次修复未通过的原因
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
 
   novel Novel @relation(fields: [novelId], references: [id], onDelete: Cascade)
 

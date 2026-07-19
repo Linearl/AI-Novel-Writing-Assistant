@@ -144,6 +144,7 @@ export class GlobalReviewService {
     issueId: string,
     status: string,
     fixDirection?: string,
+    verificationFeedback?: string,
   ): Promise<void> {
     const validStatuses = ["pending", "acknowledged", "fixed", "dismissed"];
     if (!validStatuses.includes(status)) {
@@ -162,6 +163,7 @@ export class GlobalReviewService {
       data: {
         status,
         ...(fixDirection !== undefined && { fixDirection }),
+        ...(verificationFeedback !== undefined && { verificationFeedback }),
       },
     });
   }
