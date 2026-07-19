@@ -226,6 +226,7 @@ export function registerNovelReviewRoutes(input: RegisterNovelReviewRoutesInput)
     mode: z.enum(["currentVolume", "range"]).default("currentVolume"),
     startChapterOrder: z.number().int().min(1).optional(),
     endChapterOrder: z.number().int().min(1).optional(),
+    volumeId: z.string().optional(),
     provider: z.string().optional(),
     model: z.string().optional(),
     temperature: z.number().min(0).max(2).optional(),
@@ -246,6 +247,7 @@ export function registerNovelReviewRoutes(input: RegisterNovelReviewRoutesInput)
             mode: body.mode,
             startChapterOrder: body.startChapterOrder,
             endChapterOrder: body.endChapterOrder,
+            volumeId: body.volumeId,
           },
           {
             provider: body.provider as LLMProvider | undefined,

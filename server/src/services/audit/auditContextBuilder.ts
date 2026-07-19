@@ -19,6 +19,8 @@ export interface GlobalReviewScope {
   startChapterOrder?: number;
   /** 仅 range 模式使用：结束章节 order（含） */
   endChapterOrder?: number;
+  /** 仅 currentVolume 模式使用：指定卷 ID */
+  volumeId?: string;
 }
 
 interface ChapterSlice {
@@ -249,13 +251,19 @@ async function resolveChapters(
     return mapChapterRows(rows);
   }
 
-  // currentVolume: 找到最新有章节的卷，返回该卷所有章节
-  const volume = await prisma.volumePlan.findFirst({
-    where: { novelId },
-    orderBy: { sortOrder: "desc" },
-    select: { sortOrder: true, id: true },
-  });
-  if (!volume) {
+  // currentVolume: 如果指定了 volumeId，使用指定的卷；否则找最新有章节的卷
+  let volumeId = scope.volumeId;
+  if (!volumeId) {
+    const volume = await prisma.volumePlan.findFirst({
+      where: { novelId },
+      orderBy: { sortOrder: "desc" },
+      select: { id: true },
+    });
+    volumeId = volume?.id;
+  }
+
+  if (!volumeId) {
+    // 没有卷计划，返回所有章节
     const rows = await prisma.chapter.findMany({
       where: { novelId },
       include: chapterInclude,
@@ -265,7 +273,7 @@ async function resolveChapters(
   }
 
   const volumeChapters = await prisma.volumeChapterPlan.findMany({
-    where: { volumeId: volume.id, chapterId: { not: null } },
+    where: { volumeId, chapterId: { not: null } },
     select: { chapterId: true },
   });
   const chapterIds = volumeChapters

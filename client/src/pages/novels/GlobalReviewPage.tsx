@@ -25,6 +25,7 @@ import {
   type GlobalReviewIssueStatus,
 } from "@/api/novel/globalReview";
 import { getNovelDetail } from "@/api/novel/core";
+import { getNovelVolumeWorkspace } from "@/api/novel/volumes";
 import { queryKeys } from "@/api/queryKeys";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -215,6 +216,7 @@ export default function GlobalReviewPage() {
   const queryClient = useQueryClient();
 
   const [reviewMode, setReviewMode] = useState<"currentVolume" | "range">("currentVolume");
+  const [selectedVolumeId, setSelectedVolumeId] = useState<string>("");
   const [startChapter, setStartChapter] = useState<number>(1);
   const [endChapter, setEndChapter] = useState<number>(10);
   const [filterStatus, setFilterStatus] = useState<GlobalReviewIssueStatus | "all">("all");
@@ -226,6 +228,13 @@ export default function GlobalReviewPage() {
     enabled: !!id,
   });
   const novelTitle = novelQuery.data?.data?.title ?? "";
+
+  const volumesQuery = useQuery({
+    queryKey: queryKeys.novels.volumeWorkspace(id),
+    queryFn: () => getNovelVolumeWorkspace(id),
+    enabled: !!id,
+  });
+  const volumes = volumesQuery.data?.data?.volumes ?? [];
 
   const issuesQuery = useQuery({
     queryKey: queryKeys.novels.globalReviewIssues(id, filterStatus === "all" ? undefined : filterStatus),
@@ -241,6 +250,7 @@ export default function GlobalReviewPage() {
       mode: reviewMode,
       startChapterOrder: reviewMode === "range" ? startChapter : undefined,
       endChapterOrder: reviewMode === "range" ? endChapter : undefined,
+      volumeId: reviewMode === "currentVolume" ? selectedVolumeId : undefined,
     }),
     onSuccess: (res) => {
       toast.success(`审校完成，共发现 ${res.data?.issueCount ?? 0} 个问题`);
@@ -457,6 +467,27 @@ export default function GlobalReviewPage() {
                   />
                 </div>
               </>
+            )}
+
+            {reviewMode === "currentVolume" && (
+              <div className="flex-1 min-w-[160px]">
+                <label className="mb-1 block text-sm font-medium text-foreground">选择卷</label>
+                <Select
+                  value={selectedVolumeId}
+                  onValueChange={setSelectedVolumeId}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="选择要审校的卷" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {volumes.map((v) => (
+                      <SelectItem key={v.id} value={v.id}>
+                        第{v.sortOrder}卷：{v.title}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             )}
 
             <Button

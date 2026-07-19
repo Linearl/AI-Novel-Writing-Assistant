@@ -37,6 +37,7 @@ export interface RunGlobalReviewPayload {
   mode?: "currentVolume" | "range";
   startChapterOrder?: number;
   endChapterOrder?: number;
+  volumeId?: string;
 }
 
 export async function runGlobalReview(
