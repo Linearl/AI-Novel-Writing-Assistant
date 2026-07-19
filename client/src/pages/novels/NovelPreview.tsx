@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { Chapter, ChapterStatus } from "@ai-novel/shared";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, BookOpen, Check, Copy, Edit3, FileText, ListTree } from "lucide-react";
@@ -85,6 +85,7 @@ export default function NovelPreview() {
   const [copiedChapterId, setCopiedChapterId] = useState<string | null>(null);
   const selectedChapterId = searchParams.get("chapterId") ?? "";
   const { settings, onUpdate } = usePreviewSettings();
+  const contentRef = useRef<HTMLDivElement>(null);
 
   const novelQuery = useQuery({
     queryKey: queryKeys.novels.detail(id),
@@ -186,6 +187,11 @@ export default function NovelPreview() {
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, [chapters, activeChapter, selectChapter]);
+
+  // 切换章节时将阅读区域滚动到顶部
+  useEffect(() => {
+    contentRef.current?.scrollTo({ top: 0 });
+  }, [activeChapter?.id]);
 
   const copyActiveChapter = async () => {
     if (!activeChapter || !activeContent) {
@@ -413,7 +419,7 @@ export default function NovelPreview() {
               </div>
               <ControlPanel settings={settings} onUpdate={onUpdate} className="mt-3" />
             </CardHeader>
-            <CardContent className="flex min-h-0 flex-1 flex-col overflow-y-auto p-0">
+            <CardContent ref={contentRef} className="flex min-h-0 flex-1 flex-col overflow-y-auto p-0">
               {activeContent ? (
                 <article
                   className="mx-auto whitespace-pre-wrap px-5 py-6 leading-8 md:px-8"
