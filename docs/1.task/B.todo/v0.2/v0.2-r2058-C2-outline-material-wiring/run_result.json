@@ -1,0 +1,17 @@
+{
+  "reqId": "REQ-2058",
+  "title": "卷生成链路 outline + material_index 接线",
+  "priority": "P0",
+  "version": "v0.2",
+  "status": "done",
+  "createdAt": "2026-07-18",
+  "completedAt": null,
+  "source": "REQ-2054 T4.3/T4.4 遗留 + 运行时诊断",
+  "note": "承接 material-import-system 未完成的卷生成接线工作",
+  "tasks": {
+    "total": 7,
+    "completed": 0,
+    "pending": 7
+  },
+  "updated": "2026-07-19T14:50:47.000Z"
+}
