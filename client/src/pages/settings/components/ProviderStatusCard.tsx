@@ -180,6 +180,8 @@ export default function ProviderStatusCard(props: {
           <ProviderRequestLimitSummary
             concurrencyLimit={provider.concurrencyLimit}
             requestIntervalMs={provider.requestIntervalMs}
+            rpm={provider.rpm}
+            tpm={provider.tpm}
           />
           <div className="flex flex-col gap-3 rounded-md border bg-background/60 px-3 py-2 sm:flex-row sm:items-center sm:justify-between">
             <div className="min-w-0 space-y-1">

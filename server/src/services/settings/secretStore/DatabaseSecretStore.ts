@@ -121,7 +121,7 @@ async function migrateExistingKeys(): Promise<void> {
   const records = await prisma.aPIKey.findMany();
   let encryptedCount = 0;
   let migratedFromLegacyCount = 0;
-  let clearedCount = 0;
+  let skippedCount = 0;
 
   for (const record of records) {
     if (!record.key) continue;
@@ -166,15 +166,13 @@ async function migrateExistingKeys(): Promise<void> {
       continue;
     }
 
-    // Case 4: neither key works - clear the unusable key
-    await prisma.aPIKey.update({
-      where: { provider: record.provider },
-      data: { key: null } as never,
-    });
-    clearedCount += 1;
+    // Case 4: neither key works - preserve ciphertext, skip clearing
+    // Data protection: do NOT destroy un-decryptable records; the read path
+    // already returns null, so the UI will prompt the user to re-configure.
+    skippedCount += 1;
     logger.warn(
       `[secretStore] Could not decrypt key for provider "${record.provider}" with either current or legacy key. ` +
-      `Cleared the stored key — please re-configure via the settings page.`,
+      `Original ciphertext preserved — please re-configure via the settings page.`,
     );
   }
 
@@ -184,9 +182,9 @@ async function migrateExistingKeys(): Promise<void> {
   if (migratedFromLegacyCount > 0) {
     logger.info(`[secretStore] Re-encrypted ${migratedFromLegacyCount} API key(s) from legacy MAC-based fingerprint.`);
   }
-  if (clearedCount > 0) {
+  if (skippedCount > 0) {
     logger.warn(
-      `[secretStore] Cleared ${clearedCount} API key(s) that could not be decrypted. ` +
+      `[secretStore] Skipped ${skippedCount} API key(s) that could not be decrypted — ciphertext preserved. ` +
       `Please re-configure them via the settings page.`,
     );
   }
@@ -202,6 +200,8 @@ function toPrismaWriteInput(input: SecretStoreWriteInput): Record<string, unknow
     ...(input.reasoningEnabled !== undefined ? { reasoningEnabled: input.reasoningEnabled } : {}),
     ...(input.concurrencyLimit !== undefined ? { concurrencyLimit: input.concurrencyLimit } : {}),
     ...(input.requestIntervalMs !== undefined ? { requestIntervalMs: input.requestIntervalMs } : {}),
+    ...(input.rpm !== undefined ? { rpm: input.rpm } : {}),
+    ...(input.tpm !== undefined ? { tpm: input.tpm } : {}),
   };
 }
 

@@ -62,6 +62,8 @@ export default function SettingsPage() {
     baseURL: "",
     concurrencyLimit: "0",
     requestIntervalMs: "0",
+    rpm: "60",
+    tpm: "120000",
   });
   const [dialogTestResult, setDialogTestResult] = useState("");
   const [testingProvider, setTestingProvider] = useState<string | undefined>();
@@ -144,6 +146,8 @@ export default function SettingsPage() {
       baseURL: "",
       concurrencyLimit: "0",
       requestIntervalMs: "0",
+      rpm: "60",
+      tpm: "120000",
     });
     setDialogTestResult("");
     setTestingProvider(undefined);
@@ -200,6 +204,8 @@ export default function SettingsPage() {
       baseURL?: string;
       concurrencyLimit?: number;
       requestIntervalMs?: number;
+      rpm?: number;
+      tpm?: number;
     }) =>
       saveAPIKeySetting(payload.provider, {
         displayName: payload.displayName,
@@ -209,6 +215,8 @@ export default function SettingsPage() {
         baseURL: payload.baseURL,
         concurrencyLimit: payload.concurrencyLimit,
         requestIntervalMs: payload.requestIntervalMs,
+        rpm: payload.rpm,
+        tpm: payload.tpm,
       }),
     onSuccess: async (response) => {
       resetDialogState();
@@ -229,6 +237,8 @@ export default function SettingsPage() {
       baseURL: string;
       concurrencyLimit?: number;
       requestIntervalMs?: number;
+      rpm?: number;
+      tpm?: number;
     }) => createCustomProvider(payload),
     onSuccess: async (response) => {
       resetDialogState();
@@ -343,6 +353,8 @@ export default function SettingsPage() {
       baseURL: config.currentBaseURL,
       concurrencyLimit: String(config.concurrencyLimit ?? 0),
       requestIntervalMs: String(config.requestIntervalMs ?? 0),
+      rpm: String(config.rpm ?? 60),
+      tpm: String(config.tpm ?? 120000),
     });
     setDialogTestResult("");
     setActionResult("");
@@ -361,6 +373,8 @@ export default function SettingsPage() {
       baseURL: "",
       concurrencyLimit: "0",
       requestIntervalMs: "0",
+      rpm: "60",
+      tpm: "120000",
     });
     setDialogTestResult("");
     setActionResult("");
@@ -391,6 +405,8 @@ export default function SettingsPage() {
         baseURL: form.baseURL.trim(),
         concurrencyLimit: Number.parseInt(form.concurrencyLimit, 10) || 0,
         requestIntervalMs: Number.parseInt(form.requestIntervalMs, 10) || 0,
+        rpm: Number.parseInt(form.rpm, 10) || 60,
+        tpm: Number.parseInt(form.tpm, 10) || 120000,
       });
       return;
     }
@@ -406,6 +422,8 @@ export default function SettingsPage() {
       baseURL: form.baseURL,
       concurrencyLimit: Number.parseInt(form.concurrencyLimit, 10) || 0,
       requestIntervalMs: Number.parseInt(form.requestIntervalMs, 10) || 0,
+      rpm: Number.parseInt(form.rpm, 10) || 60,
+      tpm: Number.parseInt(form.tpm, 10) || 120000,
     });
   };
 

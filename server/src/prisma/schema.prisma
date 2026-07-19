@@ -1530,6 +1530,8 @@ model APIKey {
   reasoningEnabled Boolean @default(true)
   concurrencyLimit Int @default(0)
   requestIntervalMs Int @default(0)
+  rpm         Int @default(60)
+  tpm         Int @default(120000)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

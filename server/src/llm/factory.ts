@@ -53,6 +53,8 @@ export interface ProviderSecret {
   reasoningEnabled?: boolean;
   concurrencyLimit?: number | null;
   requestIntervalMs?: number | null;
+  rpm?: number | null;
+  tpm?: number | null;
 }
 
 export interface ResolvedLLMClientOptions {
@@ -67,6 +69,8 @@ export interface ResolvedLLMClientOptions {
   timeoutMs?: number;
   concurrencyLimit: number;
   requestIntervalMs: number;
+  rpm: number;
+  tpm: number;
   reasoningEnabled: boolean;
   modelKwargs?: Record<string, unknown>;
   includeRawResponse: boolean;
@@ -114,6 +118,8 @@ function normalizeProviderSecret(secret: ProviderSecret): ProviderSecret {
     reasoningEnabled: secret.reasoningEnabled ?? true,
     concurrencyLimit: normalizeLimitValue(secret.concurrencyLimit),
     requestIntervalMs: normalizeLimitValue(secret.requestIntervalMs),
+    rpm: normalizeLimitValue(secret.rpm),
+    tpm: normalizeLimitValue(secret.tpm),
   };
 }
 
@@ -132,6 +138,8 @@ function toProviderSecret(item: {
   reasoningEnabled?: boolean | null;
   concurrencyLimit?: number | null;
   requestIntervalMs?: number | null;
+  rpm?: number | null;
+  tpm?: number | null;
 }): ProviderSecret {
   return normalizeProviderSecret({
     key: item.key ?? undefined,
@@ -141,6 +149,8 @@ function toProviderSecret(item: {
     reasoningEnabled: item.reasoningEnabled ?? undefined,
     concurrencyLimit: normalizeLimitValue(item.concurrencyLimit),
     requestIntervalMs: normalizeLimitValue(item.requestIntervalMs),
+    rpm: normalizeLimitValue(item.rpm),
+    tpm: normalizeLimitValue(item.tpm),
   });
 }
 
@@ -268,6 +278,8 @@ export async function resolveLLMClientOptions(
   const timeoutMs = normalizeOptionalTimeoutMs(options.timeoutMs);
   const concurrencyLimit = normalizeLimitValue(dbSecret?.concurrencyLimit);
   const requestIntervalMs = normalizeLimitValue(dbSecret?.requestIntervalMs);
+  const rpm = normalizeLimitValue(dbSecret?.rpm) || 60;
+  const tpm = normalizeLimitValue(dbSecret?.tpm) || 120000;
   const requestProtocol = options.requestProtocol === "anthropic" ? "anthropic" : "openai_compatible";
   const structuredStrategy = options.structuredStrategy;
   const executionMode = options.executionMode ?? "plain";
@@ -325,6 +337,8 @@ export async function resolveLLMClientOptions(
     timeoutMs,
     concurrencyLimit,
     requestIntervalMs,
+    rpm,
+    tpm,
     reasoningEnabled: reasoningBehavior.reasoningEnabled,
     modelKwargs: Object.keys(modelKwargs).length > 0 ? modelKwargs : undefined,
     includeRawResponse: reasoningBehavior.includeRawResponse,
@@ -381,6 +395,9 @@ export function createLLMFromResolvedOptions(resolved: ResolvedLLMClientOptions)
     model: resolved.model,
     concurrencyLimit: resolved.concurrencyLimit,
     requestIntervalMs: resolved.requestIntervalMs,
+    rpm: resolved.rpm,
+    tpm: resolved.tpm,
+    callerTag: resolved.promptMeta?.novelId ?? "default",
   });
   (limited as ChatOpenAIWithResolvedOptions)[RESOLVED_LLM_OPTIONS] = resolved;
   return limited;

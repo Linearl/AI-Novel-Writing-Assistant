@@ -7,6 +7,8 @@ export interface SecretStoreRecord {
   isActive: boolean;
   reasoningEnabled: boolean | null;
   concurrencyLimit: number | null;
+  rpm: number | null;
+  tpm: number | null;
   requestIntervalMs: number | null;
   createdAt: Date;
   updatedAt: Date;
@@ -21,6 +23,8 @@ export interface SecretStoreWriteInput {
   reasoningEnabled?: boolean;
   concurrencyLimit?: number | null;
   requestIntervalMs?: number | null;
+  rpm?: number | null;
+  tpm?: number | null;
 }
 
 export interface SecretStoreListOptions {

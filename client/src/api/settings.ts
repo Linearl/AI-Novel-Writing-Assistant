@@ -32,6 +32,8 @@ export interface APIKeyStatus {
   reasoningEnabled: boolean;
   concurrencyLimit: number;
   requestIntervalMs: number;
+  rpm: number;
+  tpm: number;
   supportsImageGeneration: boolean;
 }
 
@@ -317,6 +319,8 @@ export async function saveAPIKeySetting(
     reasoningEnabled?: boolean;
     concurrencyLimit?: number;
     requestIntervalMs?: number;
+    rpm?: number;
+    tpm?: number;
   },
 ) {
   const { data } = await apiClient.put<
@@ -330,6 +334,8 @@ export async function saveAPIKeySetting(
       reasoningEnabled: boolean;
       concurrencyLimit: number;
       requestIntervalMs: number;
+      rpm: number;
+      tpm: number;
       models: string[];
       imageModels: string[];
       supportsImageGeneration: boolean;
@@ -348,6 +354,8 @@ export async function createCustomProvider(payload: {
   reasoningEnabled?: boolean;
   concurrencyLimit?: number;
   requestIntervalMs?: number;
+  rpm?: number;
+  tpm?: number;
 }) {
   const { data } = await apiClient.post<
     ApiResponse<{
@@ -360,6 +368,8 @@ export async function createCustomProvider(payload: {
       reasoningEnabled: boolean;
       concurrencyLimit: number;
       requestIntervalMs: number;
+      rpm: number;
+      tpm: number;
       models: string[];
       imageModels: string[];
       supportsImageGeneration: boolean;

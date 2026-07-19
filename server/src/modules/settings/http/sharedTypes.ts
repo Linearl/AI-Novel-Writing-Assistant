@@ -24,6 +24,8 @@ export const upsertApiKeySchema = z.object({
   reasoningEnabled: z.boolean().optional(),
   concurrencyLimit: z.coerce.number().int().min(0).max(MAX_PROVIDER_CONCURRENCY_LIMIT).optional(),
   requestIntervalMs: z.coerce.number().int().min(0).max(MAX_PROVIDER_REQUEST_INTERVAL_MS).optional(),
+  rpm: z.coerce.number().int().min(0).max(10000).optional(),
+  tpm: z.coerce.number().int().min(0).max(10_000_000).optional(),
 });
 
 export type APIKeyRecordLike = {
@@ -36,6 +38,8 @@ export type APIKeyRecordLike = {
   reasoningEnabled?: boolean | null;
   concurrencyLimit?: number | null;
   requestIntervalMs?: number | null;
+  rpm?: number | null;
+  tpm?: number | null;
 };
 
 export type BuiltInProviderStatus = {
@@ -57,6 +61,8 @@ export type BuiltInProviderStatus = {
   reasoningEnabled: boolean;
   concurrencyLimit: number;
   requestIntervalMs: number;
+  rpm: number;
+  tpm: number;
   supportsImageGeneration: boolean;
 };
 
@@ -79,6 +85,8 @@ export type CustomProviderStatus = {
   reasoningEnabled: boolean;
   concurrencyLimit: number;
   requestIntervalMs: number;
+  rpm: number;
+  tpm: number;
   supportsImageGeneration: boolean;
 };
 

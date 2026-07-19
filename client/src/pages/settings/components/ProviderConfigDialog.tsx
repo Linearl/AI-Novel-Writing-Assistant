@@ -14,6 +14,8 @@ export interface ProviderFormState {
   baseURL: string;
   concurrencyLimit: string;
   requestIntervalMs: string;
+  rpm: string;
+  tpm: string;
 }
 
 interface ProviderConfigDialogProps {
@@ -273,6 +275,8 @@ export default function ProviderConfigDialog({
           <ProviderRequestLimitFields
             concurrencyLimit={form.concurrencyLimit}
             requestIntervalMs={form.requestIntervalMs}
+            rpm={form.rpm}
+            tpm={form.tpm}
             onChange={(value) => setForm((prev) => ({ ...prev, ...value }))}
           />
 

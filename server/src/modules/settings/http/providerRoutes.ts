@@ -47,6 +47,8 @@ function buildBuiltInProviderStatus(
     reasoningEnabled?: boolean | null;
     concurrencyLimit?: number | null;
     requestIntervalMs?: number | null;
+    rpm?: number | null;
+    tpm?: number | null;
   } | undefined,
   imageModel: string | undefined,
   persistedModels: string[] = [],
@@ -87,6 +89,8 @@ function buildBuiltInProviderStatus(
     reasoningEnabled: item?.reasoningEnabled ?? true,
     concurrencyLimit: normalizeProviderLimit(item?.concurrencyLimit),
     requestIntervalMs: normalizeProviderLimit(item?.requestIntervalMs),
+    rpm: normalizeProviderLimit(item?.rpm) || 60,
+    tpm: normalizeProviderLimit(item?.tpm) || 120000,
     supportsImageGeneration: Boolean(currentImageModel),
   };
 }
@@ -101,6 +105,8 @@ function buildCustomProviderStatus(item: {
   reasoningEnabled?: boolean | null;
   concurrencyLimit?: number | null;
   requestIntervalMs?: number | null;
+  rpm?: number | null;
+  tpm?: number | null;
 }, imageModel: string | undefined): CustomProviderStatus {
   const currentModel = normalizeOptionalText(item.model) ?? "";
   const currentBaseURL = normalizeOptionalText(item.baseURL) ?? "";
@@ -124,6 +130,8 @@ function buildCustomProviderStatus(item: {
     reasoningEnabled: item.reasoningEnabled ?? true,
     concurrencyLimit: normalizeProviderLimit(item.concurrencyLimit),
     requestIntervalMs: normalizeProviderLimit(item.requestIntervalMs),
+    rpm: normalizeProviderLimit(item.rpm) || 60,
+    tpm: normalizeProviderLimit(item.tpm) || 120000,
     supportsImageGeneration: Boolean(imageModel),
   };
 }
@@ -205,6 +213,8 @@ export function registerProviderRoutes(router: Router): void {
         const nextReasoningEnabled = body.reasoningEnabled ?? existingRecord?.reasoningEnabled ?? true;
         const nextConcurrencyLimit = body.concurrencyLimit ?? normalizeProviderLimit(existingRecord?.concurrencyLimit);
         const nextRequestIntervalMs = body.requestIntervalMs ?? normalizeProviderLimit(existingRecord?.requestIntervalMs);
+        const nextRpm = body.rpm ?? (normalizeProviderLimit(existingRecord?.rpm) || 60);
+        const nextTpm = body.tpm ?? (normalizeProviderLimit(existingRecord?.tpm) || 120000);
         const requiresApiKey = providerRequiresApiKey(provider);
 
         if (requiresApiKey && !effectiveKey) {
@@ -226,6 +236,8 @@ export function registerProviderRoutes(router: Router): void {
             reasoningEnabled: nextReasoningEnabled,
             concurrencyLimit: nextConcurrencyLimit,
             requestIntervalMs: nextRequestIntervalMs,
+            rpm: nextRpm,
+            tpm: nextTpm,
           })
           : await secretStore.updateProvider(provider, {
             displayName: nextDisplayName,
@@ -236,6 +248,8 @@ export function registerProviderRoutes(router: Router): void {
             reasoningEnabled: nextReasoningEnabled,
             concurrencyLimit: nextConcurrencyLimit,
             requestIntervalMs: nextRequestIntervalMs,
+            rpm: nextRpm,
+            tpm: nextTpm,
           })) as APIKeyRecordLike;
 
         const currentImageModel = body.imageModel !== undefined
@@ -254,6 +268,8 @@ export function registerProviderRoutes(router: Router): void {
           reasoningEnabled: data.reasoningEnabled ?? true,
           concurrencyLimit: data.concurrencyLimit ?? 0,
           requestIntervalMs: data.requestIntervalMs ?? 0,
+          rpm: data.rpm ?? 60,
+          tpm: data.tpm ?? 120000,
         } : null);
 
         let models = getFallbackModels(provider, data.model ?? undefined);
@@ -276,6 +292,8 @@ export function registerProviderRoutes(router: Router): void {
             reasoningEnabled: data.reasoningEnabled ?? true,
             concurrencyLimit: normalizeProviderLimit(data.concurrencyLimit),
             requestIntervalMs: normalizeProviderLimit(data.requestIntervalMs),
+            rpm: normalizeProviderLimit(data.rpm) || 60,
+            tpm: normalizeProviderLimit(data.tpm) || 120000,
             models,
             imageModels,
             supportsImageGeneration: Boolean(currentImageModel),
@@ -291,6 +309,8 @@ export function registerProviderRoutes(router: Router): void {
           reasoningEnabled: boolean;
           concurrencyLimit: number;
           requestIntervalMs: number;
+          rpm: number;
+          tpm: number;
           models: string[];
           imageModels: string[];
           supportsImageGeneration: boolean;

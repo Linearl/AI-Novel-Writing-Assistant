@@ -32,6 +32,8 @@ const createCustomProviderSchema = z.object({
   reasoningEnabled: z.boolean().optional(),
   concurrencyLimit: z.coerce.number().int().min(0).max(MAX_PROVIDER_CONCURRENCY_LIMIT).optional(),
   requestIntervalMs: z.coerce.number().int().min(0).max(MAX_PROVIDER_REQUEST_INTERVAL_MS).optional(),
+  rpm: z.coerce.number().int().min(0).max(10000).optional(),
+  tpm: z.coerce.number().int().min(0).max(10_000_000).optional(),
 });
 
 const customProviderModelsSchema = z.object({
@@ -133,6 +135,8 @@ export function registerCustomProviderRoutes(router: Router): void {
           reasoningEnabled: body.reasoningEnabled ?? true,
           concurrencyLimit: body.concurrencyLimit ?? 0,
           requestIntervalMs: body.requestIntervalMs ?? 0,
+          rpm: body.rpm ?? 60,
+          tpm: body.tpm ?? 120000,
         }) as APIKeyRecordLike;
         setProviderSecretCache(provider, data.isActive ? {
           displayName: data.displayName ?? undefined,
@@ -142,6 +146,8 @@ export function registerCustomProviderRoutes(router: Router): void {
           reasoningEnabled: data.reasoningEnabled ?? true,
           concurrencyLimit: data.concurrencyLimit ?? 0,
           requestIntervalMs: data.requestIntervalMs ?? 0,
+          rpm: data.rpm ?? 60,
+          tpm: data.tpm ?? 120000,
         } : null);
         const imageModel = await saveProviderImageModel(provider, body.imageModel);
         const imageModels = Array.from(new Set([
@@ -160,6 +166,8 @@ export function registerCustomProviderRoutes(router: Router): void {
             reasoningEnabled: data.reasoningEnabled ?? true,
             concurrencyLimit: normalizeProviderLimit(data.concurrencyLimit),
             requestIntervalMs: normalizeProviderLimit(data.requestIntervalMs),
+            rpm: normalizeProviderLimit(data.rpm) || 60,
+            tpm: normalizeProviderLimit(data.tpm) || 120000,
             models,
             imageModels,
             supportsImageGeneration: Boolean(imageModel),
@@ -175,6 +183,8 @@ export function registerCustomProviderRoutes(router: Router): void {
           reasoningEnabled: boolean;
           concurrencyLimit: number;
           requestIntervalMs: number;
+          rpm: number;
+          tpm: number;
           models: string[];
           imageModels: string[];
           supportsImageGeneration: boolean;
