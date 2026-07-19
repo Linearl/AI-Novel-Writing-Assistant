@@ -329,8 +329,17 @@ export default function GlobalReviewPage() {
   );
 
   const singleRepairMutation = useMutation({
-    mutationFn: (issueId: string) =>
-      repairGlobalReviewIssues(id, { globalReviewIssueIds: [issueId] }),
+    mutationFn: (issueId: string) => {
+      // 获取存储的复核反馈
+      const feedbackKey = `globalReview_feedback_${issueId}`;
+      const feedback = localStorage.getItem(feedbackKey);
+      // 清除已使用的反馈
+      if (feedback) localStorage.removeItem(feedbackKey);
+      return repairGlobalReviewIssues(id, {
+        globalReviewIssueIds: [issueId],
+        userInstruction: feedback ? `复核反馈：${feedback}` : undefined,
+      });
+    },
     onSuccess: () => {
       toast.success("修复已触发，请前往章节编辑页面查看进度");
       void queryClient.invalidateQueries({
@@ -360,8 +369,19 @@ export default function GlobalReviewPage() {
       for (const chapterId of chapterIds) {
         const chapterIssueIds = groups.get(chapterId) ?? [];
         try {
+          // 收集该章节所有问题的复核反馈
+          const feedbacks: string[] = [];
+          for (const issueId of chapterIssueIds) {
+            const feedbackKey = `globalReview_feedback_${issueId}`;
+            const feedback = localStorage.getItem(feedbackKey);
+            if (feedback) {
+              feedbacks.push(`[${issueId.slice(0, 8)}] ${feedback}`);
+              localStorage.removeItem(feedbackKey);
+            }
+          }
           const result = await repairGlobalReviewIssues(id, {
             globalReviewIssueIds: chapterIssueIds,
+            userInstruction: feedbacks.length > 0 ? `复核反馈：\n${feedbacks.join("\n")}` : undefined,
           });
           repairedIssueIds.push(...(result.data?.repairedIssueIds ?? chapterIssueIds));
         } catch {
@@ -452,16 +472,20 @@ export default function GlobalReviewPage() {
       }
 
       const issuesStillPresent = results.filter(r => r.hasIssue).length;
-      return { results, issuesStillPresent, issueId: issue.id, fixDirection: issue.fixDirection };
+      return { results, issuesStillPresent, issueId: issue.id };
     },
     onSuccess: async (result) => {
       if (result.issuesStillPresent === 0) {
         toast.success("AI 复核通过：问题已修复");
       } else {
-        // 自动重新打开问题，并在修复方案中添加提示
-        const updatedFixDirection = `${result.fixDirection}\n\n⚠️ 上次修复未通过复核（${result.issuesStillPresent} 个章节仍存在问题），建议调整修复方案后重试。`;
-        await updateGlobalReviewIssueStatus(id, result.issueId, "acknowledged", updatedFixDirection);
-        toast.warning(`AI 复核发现 ${result.issuesStillPresent} 个章节仍存在问题，已重新打开并建议调整方案`);
+        // 重新打开问题，记录复核反馈
+        const feedback = `[复核反馈 ${new Date().toLocaleDateString()}] 复核发现 ${result.issuesStillPresent} 个章节仍存在问题。`;
+        await updateGlobalReviewIssueStatus(id, result.issueId, "acknowledged");
+        // 将反馈存储到 localStorage，下次修复时注入
+        const feedbackKey = `globalReview_feedback_${result.issueId}`;
+        const existingFeedback = localStorage.getItem(feedbackKey) || "";
+        localStorage.setItem(feedbackKey, existingFeedback ? `${existingFeedback}\n${feedback}` : feedback);
+        toast.warning(`AI 复核发现 ${result.issuesStillPresent} 个章节仍存在问题，已重新打开`);
       }
       void queryClient.invalidateQueries({
         queryKey: ["novels", "global-review-issues", id],
