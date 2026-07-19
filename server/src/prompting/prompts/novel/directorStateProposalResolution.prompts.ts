@@ -2,6 +2,7 @@ import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 import type { DirectorStateProposalResolution } from "@ai-novel/shared";
 import { directorStateProposalResolutionSchema } from "@ai-novel/shared";
 import type { PromptAsset } from "../../core/promptTypes";
+import { NOVEL_PROMPT_BUDGETS } from "./promptBudgetProfiles";
 
 export interface DirectorStateProposalResolutionPromptInput {
   runMode: string;
@@ -24,7 +25,7 @@ export const directorStateProposalResolutionPrompt: PromptAsset<
   mode: "structured",
   language: "zh",
   contextPolicy: {
-    maxTokensBudget: 2600,
+    maxTokensBudget: NOVEL_PROMPT_BUDGETS.chapterWriter,
     preferredGroups: ["canonical_state", "state_proposals", "protected_content"],
     dropOrder: ["protected_content"],
   },

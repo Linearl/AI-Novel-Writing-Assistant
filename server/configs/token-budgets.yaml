@@ -1,0 +1,132 @@
+# REQ-2059 Token 预算配置
+#
+# 所有 token 预算收拢到此文件，由 promptBudgetProfiles.ts 加载。
+# 估算函数 estimateTextTokens 改为返回 normalized.length（1 字符 = 1 token），
+# 因此所有预算值相对旧值 ×4，保持实际容量不变。
+# 预算紧张步骤额外放大（详见 docs/1.task/B.todo/v0.2/v0.2-r2059-C2-token-budget-overhaul/）。
+
+version: "1.0"
+updated: "2026-07-18"
+
+# INPUT 上下文预算（原 NOVEL_PROMPT_BUDGETS，已 ×4 补偿）
+context_budgets:
+  directorCandidates: 4800
+  directorCandidatePatch: 4800
+  directorBookContract: 5600
+  directorBlueprint: 9600
+  storyMacroDecomposition: 7200
+  storyMacroFieldRegeneration: 6400
+  volumeStrategy: 7200
+  volumeStrategyCritique: 7200
+  volumeSkeleton: 8000
+  volumeBeatSheet: 25600       # 原 1600×4, 再 ×2 放大（接入 outline+material）
+  volumeChapterList: 25600     # 原 1600×4, 再 ×2 放大（利用率 94%）
+  volumeChapterDetail: 25600   # 原 1600×4, 再 ×2 放大（利用率 106%）
+  volumeRebalance: 6400
+  chapterWriter: 10400
+  chapterAcceptance: 19200     # 原 1200×4, 再 ×2 放大（利用率 92%）
+  chapterArtifactDelta: 5600
+  chapterEditorWorkspaceDiagnosis: 5600
+  chapterEditorUserIntent: 3600
+  chapterEditorRewrite: 20000
+  chapterLightAudit: 14400     # 原 900×4, 再 ×2 放大（利用率 161%）
+  chapterReview: 10400
+  chapterRepair: 8800
+  chapterSummary: 4000
+  chapterCompress: 10400
+  chapterExpand: 10400
+  waterContentDetection: 10400
+  globalReview: 120000
+  # 新增收拢的硬编码预算
+  themeAnalysis: 8000
+  characterConsistency: 32000
+  feedbackIssueGeneration: 32000
+
+# 运行时上下文选择策略（原 RUNTIME_PROMPT_BUDGET_PROFILES）
+runtime_profiles:
+  novel.chapter.writer:
+    maxTokensBudget: 10400
+    preferredGroups:
+      - chapter_boundary
+      - chapter_mission
+      - previous_chapter_tail
+      - timeline_context
+      - previous_chapter_hook
+      - character_hard_facts
+      - payoff_directives
+      - style_contract
+      - volume_window
+      - participant_subset
+      - local_state
+      - open_conflicts
+      - recent_chapters
+    dropOrder:
+      - rag_facts
+      - world_rules
+      - continuation_constraints
+      - opening_constraints
+  novel.chapter.acceptance_assessment:
+    maxTokensBudget: 19200
+    preferredGroups:
+      - chapter_mission
+      - structure_obligations
+      - character_hard_facts
+      - local_state
+      - style_contract
+      - open_conflicts
+    dropOrder:
+      - recent_chapters
+      - participant_subset
+      - world_rules
+      - historical_issues
+  novel.chapter.artifact_delta.extract:
+    maxTokensBudget: 5600
+    preferredGroups:
+      - chapter_mission
+      - local_state
+      - character_hard_facts
+      - payoff_directives
+      - open_conflicts
+    dropOrder:
+      - recent_chapters
+      - world_rules
+      - historical_issues
+      - participant_subset
+  audit.chapter.light:
+    maxTokensBudget: 14400
+    preferredGroups:
+      - chapter_mission
+      - structure_obligations
+      - character_hard_facts
+      - local_state
+    dropOrder:
+      - recent_chapters
+      - participant_subset
+      - historical_issues
+      - world_rules
+  audit.chapter.full:
+    maxTokensBudget: 10400
+    preferredGroups:
+      - chapter_mission
+      - structure_obligations
+      - character_hard_facts
+      - world_rules
+      - historical_issues
+    dropOrder:
+      - rag_facts
+      - recent_chapters
+      - participant_subset
+  novel.review.repair:
+    maxTokensBudget: 8800
+    preferredGroups:
+      - style_contract
+      - repair_issues
+      - chapter_mission
+      - previous_chapter_tail
+      - repair_boundaries
+      - character_hard_facts
+      - world_rules
+    dropOrder:
+      - recent_chapters
+      - participant_subset
+      - continuation_constraints

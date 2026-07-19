@@ -9,6 +9,7 @@ import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 import { z } from "zod";
 import type { PromptAsset } from "../../core/promptTypes";
 import { renderSelectedContextBlocks } from "../../core/renderContextBlocks";
+import { NOVEL_PROMPT_BUDGETS } from "../novel/promptBudgetProfiles";
 
 // ---------------------------------------------------------------------------
 // Output schema
@@ -96,7 +97,7 @@ export const globalReviewPrompt: PromptAsset<GlobalReviewPromptInput, GlobalRevi
   mode: "structured",
   language: "zh",
   contextPolicy: {
-    maxTokensBudget: 30000,
+    maxTokensBudget: NOVEL_PROMPT_BUDGETS.globalReview,
     preferredGroups: [
       "book_contract",
       "story_macro",

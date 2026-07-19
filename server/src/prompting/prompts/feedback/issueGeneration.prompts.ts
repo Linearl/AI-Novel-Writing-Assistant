@@ -8,6 +8,7 @@
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 import { z } from "zod";
 import type { PromptAsset } from "../../core/promptTypes";
+import { NOVEL_PROMPT_BUDGETS } from "../novel/promptBudgetProfiles";
 
 // ---------------------------------------------------------------------------
 // Output schema
@@ -74,7 +75,7 @@ export const issueGenerationPrompt: PromptAsset<IssueGenerationPromptInput, Issu
   mode: "structured",
   language: "zh",
   contextPolicy: {
-    maxTokensBudget: 8000,
+    maxTokensBudget: NOVEL_PROMPT_BUDGETS.feedbackIssueGeneration,
     preferredGroups: [],
   },
   structuredOutputHint: {

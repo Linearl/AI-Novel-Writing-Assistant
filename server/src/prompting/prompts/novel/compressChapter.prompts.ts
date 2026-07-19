@@ -27,7 +27,7 @@ export const compressChapterPrompt: PromptAsset<
   mode: "structured",
   language: "zh",
   contextPolicy: {
-    maxTokensBudget: NOVEL_PROMPT_BUDGETS.chapterWriter,
+    maxTokensBudget: NOVEL_PROMPT_BUDGETS.chapterCompress,
   },
   outputSchema: compressChapterOutputSchema,
   render: (input) => [

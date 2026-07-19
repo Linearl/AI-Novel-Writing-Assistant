@@ -701,7 +701,7 @@ test("compression log separates summarized blocks from dropped blocks", () => {
     requiredBlock,
     summarizableBlock,
     nonSummarizableBlock,
-  ], requiredBlock.estimatedTokens + 6);
+  ], requiredBlock.estimatedTokens + 30);
 
   assert.deepEqual(log.summarized, ["long_optional"]);
   assert.deepEqual(log.dropped, ["raw_dump"]);
@@ -1059,7 +1059,7 @@ test("runStructuredPrompt forwards repair policy and context telemetry", async (
 
   genreTreePrompt.repairPolicy = { maxAttempts: 3 };
   genreTreePrompt.contextPolicy = {
-    maxTokensBudget: 8,
+    maxTokensBudget: 32,
     requiredGroups: ["core"],
     dropOrder: ["overflow"],
   };
@@ -1223,7 +1223,7 @@ test("streamTextPrompt buffers streamed output and resolves completion metadata"
   resetPromptQualityTelemetryForTests();
   const originalContextPolicy = { ...styleRewritePrompt.contextPolicy };
   styleRewritePrompt.contextPolicy = {
-    maxTokensBudget: 8,
+    maxTokensBudget: 32,
     requiredGroups: ["core"],
     dropOrder: ["overflow"],
   };
@@ -1467,7 +1467,7 @@ test("prompt runner skips custom addendums for prompts outside the allowlist", a
 test("streamStructuredPrompt parses streamed JSON and preserves telemetry", async () => {
   const originalContextPolicy = { ...genreTreePrompt.contextPolicy };
   genreTreePrompt.contextPolicy = {
-    maxTokensBudget: 8,
+    maxTokensBudget: 32,
     requiredGroups: ["core"],
     dropOrder: ["overflow"],
   };

@@ -1,7 +1,7 @@
 import { novelProductionStatusService } from "../../services/novel/NovelProductionStatusService";
 import { novelSetupStatusService } from "../../services/novel/NovelSetupStatusService";
 import type { PromptContextBlock } from "../core/promptTypes";
-import { estimateContextTokens } from "./ContextBroker";
+import { estimateTextTokens } from "../core/contextBudget";
 import type { PromptContextResolver, PromptExecutionContext } from "./types";
 
 function safeJsonStringify(value: unknown): string {
@@ -36,7 +36,7 @@ function createContextBlock(input: {
 }): PromptContextBlock {
   return {
     ...input,
-    estimatedTokens: estimateContextTokens(input.content),
+    estimatedTokens: estimateTextTokens(input.content),
   };
 }
 

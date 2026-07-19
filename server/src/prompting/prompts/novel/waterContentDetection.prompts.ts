@@ -31,7 +31,7 @@ export const waterContentDetectionPrompt: PromptAsset<
   mode: "structured",
   language: "zh",
   contextPolicy: {
-    maxTokensBudget: NOVEL_PROMPT_BUDGETS.chapterReview,
+    maxTokensBudget: NOVEL_PROMPT_BUDGETS.waterContentDetection,
   },
   outputSchema: waterContentDetectionOutputSchema,
   render: (input) => [

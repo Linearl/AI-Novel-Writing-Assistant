@@ -56,7 +56,7 @@ export const themeAnalysisPrompt: PromptAsset<
   mode: "structured",
   language: "zh",
   contextPolicy: {
-    maxTokensBudget: 2000,
+    maxTokensBudget: NOVEL_PROMPT_BUDGETS.themeAnalysis,
   },
   outputSchema: themeAnalysisOutputSchema,
   render: (input) => [
@@ -101,7 +101,7 @@ export const motifTrackingPrompt: PromptAsset<
   mode: "structured",
   language: "zh",
   contextPolicy: {
-    maxTokensBudget: 2000,
+    maxTokensBudget: NOVEL_PROMPT_BUDGETS.themeAnalysis,
   },
   outputSchema: motifTrackingOutputSchema,
   render: (input) => [

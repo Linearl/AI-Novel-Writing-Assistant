@@ -1,11 +1,8 @@
 import { selectContextBlocks } from "../core/contextSelection";
+import { estimateTextTokens } from "../core/contextBudget";
 import type { ContextPolicy, PromptContextBlock, PromptContextRequirement } from "../core/promptTypes";
 import { ContextResolverRegistry } from "./ContextResolverRegistry";
 import type { ContextBrokerResolution, ContextBrokerResolveInput, PromptContextResolverResult } from "./types";
-
-export function estimateContextTokens(content: string): number {
-  return Math.max(1, Math.ceil(content.trim().length / 3));
-}
 
 function stringifyContextError(error: unknown): string {
   if (error instanceof Error && error.message.trim().length > 0) {
@@ -59,7 +56,7 @@ function normalizeBlock(block: PromptContextBlock, requirement: PromptContextReq
     group: block.group || requirement.group,
     priority: Number.isFinite(block.priority) ? block.priority : requirement.priority,
     required: Boolean(block.required || requirement.required),
-    estimatedTokens: block.estimatedTokens > 0 ? block.estimatedTokens : estimateContextTokens(content),
+    estimatedTokens: block.estimatedTokens > 0 ? block.estimatedTokens : estimateTextTokens(content),
     content,
   };
 }

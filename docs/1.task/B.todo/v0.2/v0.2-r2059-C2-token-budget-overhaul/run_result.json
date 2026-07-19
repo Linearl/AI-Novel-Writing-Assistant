@@ -1,0 +1,17 @@
+{
+  "reqId": "REQ-2059",
+  "title": "Token 预算控制系统重构",
+  "priority": "P0",
+  "version": "v0.2",
+  "status": "done",
+  "createdAt": "2026-07-18",
+  "completedAt": null,
+  "source": "2026-07-18 Token 预算诊断报告",
+  "note": "修复 CJK 估算偏差 + 统一估算函数 + YAML 配置收拢 + 清理硬编码",
+  "tasks": {
+    "total": 7,
+    "completed": 0,
+    "pending": 7
+  },
+  "updated": "2026-07-19T14:50:47.000Z"
+}

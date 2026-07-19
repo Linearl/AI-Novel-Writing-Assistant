@@ -1,11 +1,19 @@
 import type { PromptContextBlock } from "./promptTypes";
 
+/**
+ * REQ-2059: 估算文本 token 数。
+ *
+ * 改为返回 normalized.length（1 字符 = 1 token）。
+ * 旧逻辑 `Math.ceil(length / 4)` 基于英文（1 token ≈ 4 字符），
+ * 对中文系统性低估 4 倍。新逻辑对 CJK 文本更准确，
+ * 所有 token 预算值已同步 ×4 补偿，保持实际容量不变。
+ */
 export function estimateTextTokens(text: string): number {
   const normalized = text.replace(/\s+/g, " ").trim();
   if (!normalized) {
     return 0;
   }
-  return Math.max(1, Math.ceil(normalized.length / 4));
+  return Math.max(1, normalized.length);
 }
 
 export function createContextBlock(input: {

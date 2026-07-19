@@ -27,7 +27,7 @@ export const expandChapterPrompt: PromptAsset<
   mode: "structured",
   language: "zh",
   contextPolicy: {
-    maxTokensBudget: NOVEL_PROMPT_BUDGETS.chapterWriter,
+    maxTokensBudget: NOVEL_PROMPT_BUDGETS.chapterExpand,
   },
   outputSchema: expandChapterOutputSchema,
   render: (input) => [

@@ -1,5 +1,6 @@
 import type { GenerationContextPackage } from "@ai-novel/shared";
 import { buildCompressionLog } from "../../prompting/core/contextBudget"
+import { NOVEL_PROMPT_BUDGETS } from "../../prompting/prompts/novel/promptBudgetProfiles"
 import { prisma } from "../../db/prisma"
 import { ragServices } from "../../services/rag/index"
 import { plannerMediator } from "../../services/mediation/NovelPlannerMediator"
@@ -539,7 +540,7 @@ export class GenerationContextAssembler {
     };
     const compressionLog = buildCompressionLog(
       contextPackage.chapterWriteContext ? getAllContextBlocks(contextPackage) : [],
-      2600,
+      NOVEL_PROMPT_BUDGETS.chapterWriter,
     );
     logger.debug("[ctx-budget]", compressionLog);
 

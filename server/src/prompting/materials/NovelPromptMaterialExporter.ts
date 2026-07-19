@@ -1,5 +1,5 @@
 import { prisma } from "../../db/prisma";
-import { estimateContextTokens } from "../context/ContextBroker";
+import { estimateTextTokens } from "../core/contextBudget";
 import { listNovelMaterialGroupDefinitions, resolveNovelMaterialGroup } from "./materialGroups";
 import { parseBookFramingJson } from "../../services/novel/novelCoreShared";
 import type {
@@ -83,7 +83,7 @@ function block(input: {
       id: input.sourceId,
       updatedAt: formatDate(input.updatedAt),
     },
-    estimatedTokens: estimateContextTokens(content),
+    estimatedTokens: estimateTextTokens(content),
   };
 }
 
@@ -751,13 +751,14 @@ function applyTokenLimit(input: {
       remaining -= item.estimatedTokens;
       continue;
     }
-    const allowedChars = Math.max(60, remaining * 3);
+    // estimateTextTokens 改为 1 字符 = 1 token，因此 allowedChars 直接等于 remaining
+    const allowedChars = Math.max(60, remaining);
     const content = truncateText(item.content, allowedChars);
     input.warnings.push(`${item.title} 已裁剪：超过本次资料预算。`);
     limited.push({
       ...item,
       content,
-      estimatedTokens: estimateContextTokens(content),
+      estimatedTokens: estimateTextTokens(content),
     });
     remaining = 0;
   }
