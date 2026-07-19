@@ -43,6 +43,13 @@ export default function AppLayout() {
         chapterId: chapterMatch.params.chapterId ?? "",
       };
     }
+    const globalReviewMatch = matchPath("/novels/:id/global-review", location.pathname);
+    if (globalReviewMatch?.params.id) {
+      return {
+        novelId: globalReviewMatch.params.id,
+        chapterId: "",
+      };
+    }
     return null;
   }, [location.pathname]);
 
