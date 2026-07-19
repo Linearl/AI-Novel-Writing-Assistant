@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Chapter, ChapterStatus } from "@ai-novel/shared";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, BookOpen, Check, Copy, Edit3, FileText, ListTree } from "lucide-react";
+import { ArrowLeft, BookOpen, Check, ChevronLeft, ChevronRight, Copy, Edit3, FileText, ListTree } from "lucide-react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import { getNovelChapters, getNovelDetail } from "@/api/novel";
@@ -83,6 +83,7 @@ export default function NovelPreview() {
   const { id = "" } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const [copiedChapterId, setCopiedChapterId] = useState<string | null>(null);
+  const [isChapterListCollapsed, setIsChapterListCollapsed] = useState(false);
   const selectedChapterId = searchParams.get("chapterId") ?? "";
   const { settings, onUpdate } = usePreviewSettings();
   const contentRef = useRef<HTMLDivElement>(null);
@@ -328,13 +329,28 @@ export default function NovelPreview() {
           </CardContent>
         </Card>
       ) : (
-        <div className="grid min-h-[70vh] gap-4 lg:grid-cols-[320px_minmax(0,1fr)]">
-          <Card className="min-h-0 lg:h-[calc(100vh-13rem)]">
+        <div className="grid min-h-[70vh] gap-4 lg:grid-cols-[320px_minmax(0,1fr)]" style={isChapterListCollapsed ? { gridTemplateColumns: "0px 1fr" } : undefined}>
+          <Card className={cn(
+            "min-h-0 overflow-hidden transition-all duration-300 lg:h-[calc(100vh-13rem)]",
+            isChapterListCollapsed ? "w-0 opacity-0 lg:border-0" : "w-auto opacity-100"
+          )}>
             <CardHeader className="pb-3">
-              <CardTitle className="flex items-center gap-2 text-base">
-                <ListTree className="h-4 w-4" aria-hidden="true" />
-                章节目录
-              </CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <ListTree className="h-4 w-4" aria-hidden="true" />
+                  章节目录
+                </CardTitle>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="h-6 w-6 p-0"
+                  onClick={() => setIsChapterListCollapsed(true)}
+                  title="收起目录"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+              </div>
               <CardDescription>
                 已生成正文 {generatedChapters.length}/{chapters.length} 章，约 {formatCount(totalWordCount)} 字。
               </CardDescription>
@@ -379,18 +395,25 @@ export default function NovelPreview() {
           <Card className="flex min-h-0 flex-col overflow-hidden lg:h-[calc(100vh-13rem)]">
             <CardHeader className="shrink-0 border-b">
               <div className="flex flex-wrap items-start justify-between gap-3">
-                <div className="min-w-0">
+                <div className="min-w-0 flex items-center gap-2">
+                  {isChapterListCollapsed ? (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="h-6 w-6 shrink-0 p-0"
+                      onClick={() => setIsChapterListCollapsed(false)}
+                      title="展开目录"
+                    >
+                      <ChevronRight className="h-4 w-4" />
+                    </Button>
+                  ) : null}
                   <CardTitle className="flex items-center gap-2 text-xl">
                     <BookOpen className="h-5 w-5 shrink-0" aria-hidden="true" />
                     <span className="break-words">
                       {activeChapter ? `第 ${activeChapter.order} 章：${activeChapter.title || "未命名章节"}` : "选择章节"}
                     </span>
                   </CardTitle>
-                  {activeChapter ? (
-                    <CardDescription className="mt-2">
-                      {formatChapterStatus(activeChapter.chapterStatus)} · {formatCount(countWords(activeChapter.content))} 字
-                    </CardDescription>
-                  ) : null}
                 </div>
                 {activeChapter ? (
                   <div className="flex flex-wrap gap-2">
