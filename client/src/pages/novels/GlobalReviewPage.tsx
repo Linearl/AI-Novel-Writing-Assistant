@@ -95,9 +95,10 @@ interface IssueCardProps {
   isUpdating: boolean;
   isRepairing: boolean;
   isVerifying: boolean;
+  isBatchRepairing?: boolean;
 }
 
-function IssueCard({ issue, novelId, onStatusChange, onRepair, onAdjustPlan, onVerify, isUpdating, isRepairing, isVerifying }: IssueCardProps) {
+function IssueCard({ issue, novelId, onStatusChange, onRepair, onAdjustPlan, onVerify, isUpdating, isRepairing, isVerifying, isBatchRepairing }: IssueCardProps) {
   const navigate = useNavigate();
 
   const handleChapterClick = (chapterId: string) => {
@@ -118,6 +119,12 @@ function IssueCard({ issue, novelId, onStatusChange, onRepair, onAdjustPlan, onV
             <Badge variant={STATUS_BADGE_VARIANT[issue.status]}>
               {STATUS_LABEL[issue.status]}
             </Badge>
+            {isBatchRepairing && (
+              <Badge variant="outline" className="gap-1">
+                <Loader2 className="h-3 w-3 animate-spin" />
+                修复中
+              </Badge>
+            )}
           </div>
         </div>
         <CardTitle className="text-base font-medium leading-snug text-foreground">
@@ -214,13 +221,14 @@ function IssueCard({ issue, novelId, onStatusChange, onRepair, onAdjustPlan, onV
             variant="outline"
             onClick={() => onVerify(issue)}
             disabled={isVerifying}
+            title={`将检查 ${issue.affectedChapters.length} 个受影响章节`}
           >
             {isVerifying ? (
               <Loader2 className="mr-1 h-3.5 w-3.5 animate-spin" />
             ) : (
               <Eye className="mr-1 h-3.5 w-3.5" />
             )}
-            AI 复核
+            AI 复核 ({issue.affectedChapters.length}章)
           </Button>
         )}
       </CardContent>
@@ -737,6 +745,7 @@ export default function GlobalReviewPage() {
               isUpdating={updateStatusMutation.isPending}
               isRepairing={singleRepairMutation.isPending && singleRepairMutation.variables === issue.id}
               isVerifying={verifyMutation.isPending && verifyMutation.variables?.id === issue.id}
+              isBatchRepairing={batchRepairMutation.isPending && issue.primaryFixChapter !== null && batchRepairingChapterIds.includes(issue.primaryFixChapter)}
             />
           ))}
         </div>
