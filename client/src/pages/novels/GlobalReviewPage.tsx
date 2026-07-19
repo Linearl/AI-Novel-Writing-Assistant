@@ -259,6 +259,13 @@ export default function GlobalReviewPage() {
       status: filterStatus === "all" ? undefined : filterStatus,
     }),
     enabled: !!id,
+    // 自动刷新：每 10 秒检查一次，直到没有 acknowledged 状态的问题
+    refetchInterval: (query) => {
+      const data = query.state.data?.data;
+      if (!data) return false;
+      const hasAcknowledged = data.some(i => i.status === "acknowledged");
+      return hasAcknowledged ? 10000 : false;
+    },
   });
   const issues = issuesQuery.data?.data ?? [];
 
