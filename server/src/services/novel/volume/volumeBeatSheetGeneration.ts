@@ -1,7 +1,8 @@
 import type { VolumeBeat, VolumePlanDocument } from "@ai-novel/shared";
-import { runStructuredPrompt } from "../../../prompting/core/promptRunner";
+import type { PromptContextBlock } from "../../../prompting/core/promptTypes";
 import { volumeBeatSheetPrompt } from "../../../prompting/prompts/novel/volume/beatSheet.prompts";
 import { buildVolumeBeatSheetContextBlocks } from "../../../prompting/prompts/novel/volume/contextBlocks";
+import { runWithTwoRoundMaterialLoading } from "./volumeMaterialLoading";
 import type { StoryMacroPlanService } from "../storyMacro/StoryMacroPlanService";
 import {
   allocateChapterBudgets,
@@ -171,8 +172,9 @@ export async function generateBeatSheet(params: {
     label: string;
     options: VolumeGenerateOptions;
   }) => Promise<void>;
+  materialIndexBlock?: PromptContextBlock | null;
 }): Promise<VolumePlanDocument> {
-  const { document, novel, workspace, storyMacroPlan, options } = params;
+  const { document, novel, workspace, storyMacroPlan, options, materialIndexBlock } = params;
   const targetVolume = getTargetVolume(document, options.targetVolumeId);
   const chapterBudget = deriveChapterBudget({ novel, workspace, options });
   const chapterBudgets = allocateChapterBudgets({
@@ -205,12 +207,16 @@ export async function generateBeatSheet(params: {
     guidance: options.guidance,
     referenceExisting: options.referenceExisting,
   };
-  const generated = await runStructuredPrompt({
+  const beatSheetContextBlocks = buildVolumeBeatSheetContextBlocks(promptInput, {
+    referenceExisting: options.referenceExisting,
+  });
+  const allBeatSheetContextBlocks = materialIndexBlock
+    ? [...beatSheetContextBlocks, materialIndexBlock]
+    : beatSheetContextBlocks;
+  const generated = await runWithTwoRoundMaterialLoading({
     asset: volumeBeatSheetPrompt,
     promptInput,
-    contextBlocks: buildVolumeBeatSheetContextBlocks(promptInput, {
-      referenceExisting: options.referenceExisting,
-    }),
+    contextBlocks: allBeatSheetContextBlocks,
     options: {
       provider: options.provider,
       model: options.model,
@@ -224,6 +230,7 @@ export async function generateBeatSheet(params: {
       entrypoint: options.entrypoint,
       signal: options.signal,
     },
+    novelId: document.novelId,
   });
 
   // Structural preservation validation and retry when regenerating existing beat sheet
@@ -250,12 +257,16 @@ export async function generateBeatSheet(params: {
           ...promptInput,
           guidance: retryGuidance,
         };
-        const retryGenerated = await runStructuredPrompt({
+        const retryBeatSheetContextBlocks = buildVolumeBeatSheetContextBlocks(retryPromptInput, {
+          referenceExisting: options.referenceExisting,
+        });
+        const retryAllBeatSheetContextBlocks = materialIndexBlock
+          ? [...retryBeatSheetContextBlocks, materialIndexBlock]
+          : retryBeatSheetContextBlocks;
+        const retryGenerated = await runWithTwoRoundMaterialLoading({
           asset: volumeBeatSheetPrompt,
           promptInput: retryPromptInput,
-          contextBlocks: buildVolumeBeatSheetContextBlocks(retryPromptInput, {
-            referenceExisting: options.referenceExisting,
-          }),
+          contextBlocks: retryAllBeatSheetContextBlocks,
           options: {
             provider: options.provider,
             model: options.model,
@@ -269,6 +280,7 @@ export async function generateBeatSheet(params: {
             entrypoint: options.entrypoint,
             signal: options.signal,
           },
+          novelId: document.novelId,
         });
 
         const retryValidation = validateBeatStructurePreservation(

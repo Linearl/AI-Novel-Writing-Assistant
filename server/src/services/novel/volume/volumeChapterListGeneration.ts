@@ -5,10 +5,11 @@ import type {
   VolumePlanDocument,
 } from "@ai-novel/shared";
 import type { StoryMacroPlan } from "@ai-novel/shared";
-import { runStructuredPrompt } from "../../../prompting/core/promptRunner";
+import type { PromptContextBlock } from "../../../prompting/core/promptTypes";
 import { logMemoryUsage } from "../../../runtime/memoryTelemetry";
 import { createVolumeChapterListPrompt } from "../../../prompting/prompts/novel/volume/chapterList.prompts";
 import { buildVolumeChapterListContextBlocks } from "../../../prompting/prompts/novel/volume/contextBlocks";
+import { runWithTwoRoundMaterialLoading } from "./volumeMaterialLoading";
 import {
   inferRequiredChapterCountFromBeatSheet,
   resolveTargetChapterCount,
@@ -186,6 +187,7 @@ async function generateBeatChapterBlock(params: {
   novel: VolumeGenerationNovel;
   storyMacroPlan: StoryMacroPlanResult;
   options: VolumeGenerateOptions;
+  materialIndexBlock?: PromptContextBlock | null;
   targetVolume: VolumePlan;
   targetBeatSheet: VolumeBeatSheet;
   beatPlan: BeatGenerationPlan;
@@ -218,14 +220,18 @@ async function generateBeatChapterBlock(params: {
     preservedBeatChapterSummary: params.preservedBeatChapterSummary,
   };
 
-  const generated = await runStructuredPrompt({
+  const chapterListContextBlocks = buildVolumeChapterListContextBlocks(promptInput);
+  const allChapterListContextBlocks = params.materialIndexBlock
+    ? [...chapterListContextBlocks, params.materialIndexBlock]
+    : chapterListContextBlocks;
+  const generated = await runWithTwoRoundMaterialLoading({
     asset: createVolumeChapterListPrompt({
       targetChapterCount: params.beatPlan.chapterCount,
       targetBeatKey: params.beatPlan.beat.key,
       targetBeatLabel: params.beatPlan.beat.label,
     }),
     promptInput,
-    contextBlocks: buildVolumeChapterListContextBlocks(promptInput),
+    contextBlocks: allChapterListContextBlocks,
     options: {
       provider: params.options.provider,
       model: params.options.model,
@@ -240,6 +246,7 @@ async function generateBeatChapterBlock(params: {
       entrypoint: params.options.entrypoint,
       signal: params.options.signal,
     },
+    novelId: params.document.novelId,
   });
 
   return generated.output;
@@ -252,6 +259,7 @@ async function generateChapterBlocksForPlans(params: {
   workspace: VolumeWorkspace;
   storyMacroPlan: StoryMacroPlanResult;
   options: VolumeGenerateOptions;
+  materialIndexBlock?: PromptContextBlock | null;
   targetVolume: any;
   targetBeatSheet: any;
   beatPlans: any[];
@@ -262,7 +270,7 @@ async function generateChapterBlocksForPlans(params: {
   notifyPhase: (label: string) => Promise<void>;
   notifyIntermediateDocument?: (event: VolumeIntermediateDocumentEvent) => void | Promise<void>;
 }): Promise<GeneratedVolumeChapterBlock[]> {
-  const { document, novel, workspace, storyMacroPlan, options, targetVolume, targetBeatSheet, beatPlans, plansToRun, existingBeatBlocks, fullVolumeResumeState, generationMode, notifyPhase, notifyIntermediateDocument } = params;
+  const { document, novel, workspace, storyMacroPlan, options, materialIndexBlock, targetVolume, targetBeatSheet, beatPlans, plansToRun, existingBeatBlocks, fullVolumeResumeState, generationMode, notifyPhase, notifyIntermediateDocument } = params;
   const generatedBlocks: GeneratedVolumeChapterBlock[] = [];
 
   for (const beatPlan of plansToRun) {
@@ -274,7 +282,7 @@ async function generateChapterBlocksForPlans(params: {
 
     const currentBeatIndex = beatPlans.findIndex((plan) => plan.beat.key === beatPlan.beat.key);
     const generatedBlock = await generateBeatChapterBlock({
-      document, workspace, novel, storyMacroPlan, options, targetVolume, targetBeatSheet, beatPlan,
+      document, workspace, novel, storyMacroPlan, options, materialIndexBlock, targetVolume, targetBeatSheet, beatPlan,
       previousBeat: currentBeatIndex > 0 ? beatPlans[currentBeatIndex - 1]?.beat ?? null : null,
       nextBeat: currentBeatIndex < beatPlans.length - 1 ? beatPlans[currentBeatIndex + 1]?.beat ?? null : null,
       previousBeatChapterSummary: buildPreviousBeatSummary({ generationMode, generatedBlocks, existingBeatBlocks, preservedBeatBlocks: fullVolumeResumeState?.preservedBeatBlocks, targetBeatIndex: currentBeatIndex }),
@@ -297,13 +305,14 @@ export async function generateBeatChunkedChapterList(params: {
   workspace: VolumeWorkspace;
   storyMacroPlan: StoryMacroPlanResult;
   options: VolumeGenerateOptions;
+  materialIndexBlock?: PromptContextBlock | null;
   notifyPhase: (label: string) => Promise<void>;
   notifyIntermediateDocument?: (event: VolumeIntermediateDocumentEvent) => void | Promise<void>;
 }): Promise<{
   mergedDocument: VolumePlanDocument;
   mergedWorkspace: VolumeWorkspace;
 }> {
-  const { document, novel, workspace, storyMacroPlan, options } = params;
+  const { document, novel, workspace, storyMacroPlan, options, materialIndexBlock } = params;
   const targetVolume = getTargetVolume(document, options.targetVolumeId);
   const targetBeatSheet = getBeatSheet(document, targetVolume.id);
   logMemoryUsage({ event: "start", component: "generateBeatChunkedChapterList", taskId: options.taskId, novelId: document.novelId, stage: "structured_outline", itemKey: "chapter_list", scope: options.generationMode ?? "full_volume", entrypoint: options.entrypoint, volumeId: targetVolume.id, volumeCount: document.volumes.length, chapterCount: document.volumes.reduce((sum, volume) => sum + volume.chapters.length, 0), beatSheetCount: document.beatSheets.length });
@@ -335,7 +344,7 @@ export async function generateBeatChunkedChapterList(params: {
   }
 
   const generatedBlocks = await generateChapterBlocksForPlans({
-    document, novel, workspace, storyMacroPlan, options, targetVolume, targetBeatSheet, beatPlans, plansToRun, existingBeatBlocks, fullVolumeResumeState, generationMode, notifyPhase: params.notifyPhase, notifyIntermediateDocument: params.notifyIntermediateDocument,
+    document, novel, workspace, storyMacroPlan, options, materialIndexBlock, targetVolume, targetBeatSheet, beatPlans, plansToRun, existingBeatBlocks, fullVolumeResumeState, generationMode, notifyPhase: params.notifyPhase, notifyIntermediateDocument: params.notifyIntermediateDocument,
   });
 
   logMemoryUsage({ event: "before_merge", component: "mergeChapterList", taskId: options.taskId, novelId: document.novelId, stage: "structured_outline", itemKey: "chapter_list", scope: generationMode, entrypoint: options.entrypoint, volumeId: targetVolume.id, chapterCount: generatedBlocks.reduce((sum, block) => sum + block.chapters.length, 0) });

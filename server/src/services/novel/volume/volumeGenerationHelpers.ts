@@ -9,9 +9,10 @@ import {
   normalizeChapterScenePlan,
   serializeChapterScenePlan,
 } from "@ai-novel/shared";
-import { runStructuredPrompt } from "../../../prompting/core/promptRunner";
+import type { PromptContextBlock } from "../../../prompting/core/promptTypes";
 import { volumeChapterExecutionContractPrompt } from "../../../prompting/prompts/novel/volume/chapterDetail.prompts";
 import { buildVolumeChapterDetailContextBlocks } from "../../../prompting/prompts/novel/volume/contextBlocks";
+import { runWithTwoRoundMaterialLoading } from "./volumeMaterialLoading";
 import type { StoryMacroPlanService } from "../storyMacro/StoryMacroPlanService";
 import {
   ChapterTaskSheetQualityGateService,
@@ -159,6 +160,7 @@ export async function generateChapterTaskSheetDetail(params: {
     detailMode: "task_sheet";
   };
   options: VolumeGenerateOptions;
+  materialIndexBlock?: PromptContextBlock | null;
 }): Promise<{
   purpose: string;
   exclusiveEvent: string;
@@ -216,10 +218,14 @@ export async function generateChapterTaskSheetDetail(params: {
           ].filter(Boolean).join("\n"),
         }
         : params.promptInput;
-      const generated = await runStructuredPrompt({
+      const executionContextBlocks = buildVolumeChapterDetailContextBlocks(promptInput);
+      const allExecutionContextBlocks = params.materialIndexBlock
+        ? [...executionContextBlocks, params.materialIndexBlock]
+        : executionContextBlocks;
+      const generated = await runWithTwoRoundMaterialLoading({
         asset: volumeChapterExecutionContractPrompt,
         promptInput,
-        contextBlocks: buildVolumeChapterDetailContextBlocks(promptInput),
+        contextBlocks: allExecutionContextBlocks,
         options: {
           provider: params.options.provider,
           model: params.options.model,
@@ -235,6 +241,7 @@ export async function generateChapterTaskSheetDetail(params: {
           triggerReason: "chapter_detail_generation",
           signal: params.options.signal,
         },
+        novelId: promptInput.workspace.novelId,
       });
       const scenePlan = normalizeChapterScenePlan(
         generated.output.sceneCards,

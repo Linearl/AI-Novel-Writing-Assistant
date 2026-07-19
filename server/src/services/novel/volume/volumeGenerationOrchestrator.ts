@@ -4,6 +4,7 @@ import type {
 } from "@ai-novel/shared";
 import { prisma } from "../../../db/prisma";
 import { runStructuredPrompt } from "../../../prompting/core/promptRunner";
+import type { PromptContextBlock } from "../../../prompting/core/promptTypes";
 import {
   volumeChapterBoundaryPrompt,
   volumeChapterPurposePrompt,
@@ -61,6 +62,10 @@ import {
   MAX_VOLUME_COUNT,
   buildVolumeCountGuidance,
 } from "@ai-novel/shared";
+import {
+  loadMaterialIndexBlock,
+  runWithTwoRoundMaterialLoading,
+} from "./volumeMaterialLoading";
 
 type StoryMacroPlanResult = Awaited<ReturnType<StoryMacroPlanService["getPlan"]>> | null;
 
@@ -181,8 +186,9 @@ async function generateStrategy(params: {
   workspace: VolumeWorkspace;
   storyMacroPlan: StoryMacroPlanResult;
   options: VolumeGenerateOptions;
+  materialIndexBlock?: PromptContextBlock | null;
 }): Promise<VolumePlanDocument> {
-  const { document, novel, workspace, storyMacroPlan, options } = params;
+  const { document, novel, workspace, storyMacroPlan, options, materialIndexBlock } = params;
   const chapterBudget = deriveChapterBudget({ novel, workspace, options });
   const volumeCountGuidance = buildVolumeCountGuidance({
     chapterBudget,
@@ -198,27 +204,28 @@ async function generateStrategy(params: {
     label: "正在生成卷战略",
     options,
   });
-  const generated = await runStructuredPrompt({
-    asset: createVolumeStrategyPrompt({
-      maxVolumeCount: MAX_VOLUME_COUNT,
-      allowedVolumeCountRange: volumeCountGuidance.allowedVolumeCountRange,
-      fixedRecommendedVolumeCount: volumeCountGuidance.userPreferredVolumeCount,
-      hardPlannedVolumeRange: volumeCountGuidance.hardPlannedVolumeRange,
-    }),
-    promptInput: {
-      novel,
-      workspace,
-      storyMacroPlan,
-      guidance: options.guidance,
-      volumeCountGuidance,
-    },
-    contextBlocks: buildVolumeStrategyContextBlocks({
-      novel,
-      workspace,
-      storyMacroPlan,
-      guidance: options.guidance,
-      volumeCountGuidance,
-    }),
+  const strategyAsset = createVolumeStrategyPrompt({
+    maxVolumeCount: MAX_VOLUME_COUNT,
+    allowedVolumeCountRange: volumeCountGuidance.allowedVolumeCountRange,
+    fixedRecommendedVolumeCount: volumeCountGuidance.userPreferredVolumeCount,
+    hardPlannedVolumeRange: volumeCountGuidance.hardPlannedVolumeRange,
+  });
+  const strategyPromptInput = {
+    novel,
+    workspace,
+    storyMacroPlan,
+    guidance: options.guidance,
+    volumeCountGuidance,
+  };
+  const strategyContextBlocks = buildVolumeStrategyContextBlocks(strategyPromptInput);
+  const allStrategyContextBlocks = materialIndexBlock
+    ? [...strategyContextBlocks, materialIndexBlock]
+    : strategyContextBlocks;
+
+  const generated = await runWithTwoRoundMaterialLoading({
+    asset: strategyAsset,
+    promptInput: strategyPromptInput,
+    contextBlocks: allStrategyContextBlocks,
     options: {
       provider: options.provider,
       model: options.model,
@@ -231,6 +238,7 @@ async function generateStrategy(params: {
       entrypoint: options.entrypoint,
       signal: options.signal,
     },
+    novelId: document.novelId,
   });
   return mergeStrategyPlan(document, generated.output);
 }
@@ -414,8 +422,9 @@ async function generateChapterList(params: {
   workspace: VolumeWorkspace;
   storyMacroPlan: StoryMacroPlanResult;
   options: VolumeGenerateOptions;
+  materialIndexBlock?: PromptContextBlock | null;
 }): Promise<VolumePlanDocument> {
-  const { document, novel, workspace, storyMacroPlan, options } = params;
+  const { document, novel, workspace, storyMacroPlan, options, materialIndexBlock } = params;
   const targetVolume = getTargetVolume(document, options.targetVolumeId);
   const { mergedDocument, mergedWorkspace } = await generateBeatChunkedChapterList({
     document,
@@ -423,6 +432,7 @@ async function generateChapterList(params: {
     workspace,
     storyMacroPlan,
     options,
+    materialIndexBlock,
     notifyPhase: async (label) => notifyVolumeGenerationPhase({
       novelId: document.novelId,
       scope: "chapter_list",
@@ -466,8 +476,9 @@ async function generateChapterDetail(params: {
   workspace: VolumeWorkspace;
   storyMacroPlan: StoryMacroPlanResult;
   options: VolumeGenerateOptions;
+  materialIndexBlock?: PromptContextBlock | null;
 }): Promise<VolumePlanDocument> {
-  const { document, novel, workspace, storyMacroPlan, options } = params;
+  const { document, novel, workspace, storyMacroPlan, options, materialIndexBlock } = params;
   const targetVolume = getTargetVolume(document, options.targetVolumeId);
   const targetChapter = getTargetChapter(targetVolume, options.targetChapterId);
   const detailMode = options.detailMode;
@@ -493,47 +504,46 @@ async function generateChapterDetail(params: {
     label: `正在细化第 ${targetVolume.sortOrder} 卷第 ${targetChapter.chapterOrder} 章 ${formatChapterDetailModeLabel(detailMode)}`,
     options,
   });
+  const detailContextBlocks = buildVolumeChapterDetailContextBlocks(promptInput);
+  const allDetailContextBlocks = materialIndexBlock
+    ? [...detailContextBlocks, materialIndexBlock]
+    : detailContextBlocks;
+  const chapterDetailOptions = {
+    provider: options.provider,
+    model: options.model,
+    temperature: options.temperature ?? 0.35,
+    taskId: options.taskId,
+    entrypoint: options.entrypoint,
+    novelId: document.novelId,
+    volumeId: targetVolume.id,
+    chapterId: targetChapter.id,
+    scope: "chapter_detail" as const,
+    itemKey: "chapter_detail_bundle",
+    triggerReason: "chapter_detail_generation" as const,
+    signal: options.signal,
+  };
+
   const generated = detailMode === "purpose"
-    ? await runStructuredPrompt({
+    ? await runWithTwoRoundMaterialLoading({
       asset: volumeChapterPurposePrompt,
       promptInput,
-      contextBlocks: buildVolumeChapterDetailContextBlocks(promptInput),
+      contextBlocks: allDetailContextBlocks,
       options: {
-        provider: options.provider,
-        model: options.model,
-        temperature: options.temperature ?? 0.35,
-        taskId: options.taskId,
-        entrypoint: options.entrypoint,
-        novelId: document.novelId,
-        volumeId: targetVolume.id,
-        chapterId: targetChapter.id,
+        ...chapterDetailOptions,
         stage: "chapter_detail_purpose",
-        itemKey: "chapter_detail_bundle",
-        scope: "chapter_detail",
-        triggerReason: "chapter_detail_generation",
-        signal: options.signal,
       },
+      novelId: document.novelId,
     })
     : detailMode === "boundary"
-      ? await runStructuredPrompt({
+      ? await runWithTwoRoundMaterialLoading({
         asset: volumeChapterBoundaryPrompt,
         promptInput,
-        contextBlocks: buildVolumeChapterDetailContextBlocks(promptInput),
+        contextBlocks: allDetailContextBlocks,
         options: {
-          provider: options.provider,
-          model: options.model,
-          temperature: options.temperature ?? 0.35,
-          taskId: options.taskId,
-          entrypoint: options.entrypoint,
-          novelId: document.novelId,
-          volumeId: targetVolume.id,
-          chapterId: targetChapter.id,
+          ...chapterDetailOptions,
           stage: "chapter_detail_boundary",
-          itemKey: "chapter_detail_bundle",
-          scope: "chapter_detail",
-          triggerReason: "chapter_detail_generation",
-          signal: options.signal,
         },
+        novelId: document.novelId,
       })
       : {
         output: await generateChapterTaskSheetDetail({
@@ -542,6 +552,7 @@ async function generateChapterDetail(params: {
             detailMode: "task_sheet",
           },
           options,
+          materialIndexBlock,
         }),
       };
 
@@ -597,6 +608,10 @@ export async function generateVolumePlanDocument(params: {
     workspace,
     storyMacroPlanService,
   });
+
+  // REQ-2058: Load material_index block for B2 two-round material loading
+  const materialIndexBlock = await loadMaterialIndexBlock(novelId).catch(() => null);
+
   const currentWorkspace: VolumeWorkspace = {
     ...workspace,
     ...baseDocument,
@@ -609,6 +624,7 @@ export async function generateVolumePlanDocument(params: {
       workspace: currentWorkspace,
       storyMacroPlan,
       options,
+      materialIndexBlock,
     });
   }
   if (scope === "strategy_critique") {
@@ -637,6 +653,7 @@ export async function generateVolumePlanDocument(params: {
       storyMacroPlan,
       options,
       notifyVolumeGenerationPhase,
+      materialIndexBlock,
     });
   }
   if (scope === "chapter_list") {
@@ -646,6 +663,7 @@ export async function generateVolumePlanDocument(params: {
       workspace: currentWorkspace,
       storyMacroPlan,
       options,
+      materialIndexBlock,
     });
   }
   if (scope === "rebalance") {
@@ -663,5 +681,6 @@ export async function generateVolumePlanDocument(params: {
     workspace: currentWorkspace,
     storyMacroPlan,
     options,
+    materialIndexBlock,
   });
 }

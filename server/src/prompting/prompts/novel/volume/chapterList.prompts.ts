@@ -271,6 +271,7 @@ export function createVolumeChapterListPrompt(
         "preserved_beat_chapters",
         "adjacent_volumes",
         "soft_future_summary",
+        "material_index",
       ],
       dropOrder: ["soft_future_summary"],
     },

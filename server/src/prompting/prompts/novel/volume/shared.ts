@@ -134,6 +134,9 @@ export function buildCommonNovelContext(novel: VolumeGenerationNovel): string {
     `情绪强度: ${compactText(novel.emotionIntensity, "未设置")}`,
     `商业标签: ${commercialTags.join(" | ") || "无"}`,
     `character context:\n${summarizeCharacters(novel)}`,
+    novel.outline?.trim()
+      ? `用户提供的完整素材（世界观、角色、大纲、章节梗概等）：\n${novel.outline.trim()}`
+      : "",
   ].filter(Boolean).join("\n");
 }
 

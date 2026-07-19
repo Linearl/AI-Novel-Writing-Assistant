@@ -51,7 +51,7 @@ export function createVolumeStrategyPrompt(
     contextPolicy: {
       maxTokensBudget: NOVEL_PROMPT_BUDGETS.volumeStrategy,
       requiredGroups: ["book_contract", "volume_count_guidance"],
-      preferredGroups: ["macro_constraints", "existing_volume_window", "guidance"],
+      preferredGroups: ["macro_constraints", "existing_volume_window", "guidance", "material_index"],
       dropOrder: ["existing_volume_window"],
     },
     outputSchema: createVolumeStrategySchema({
@@ -140,7 +140,7 @@ export const volumeStrategyCritiquePrompt: PromptAsset<
   contextPolicy: {
     maxTokensBudget: NOVEL_PROMPT_BUDGETS.volumeStrategyCritique,
     requiredGroups: ["book_contract", "strategy_context"],
-    preferredGroups: ["macro_constraints", "existing_volume_window", "guidance"],
+    preferredGroups: ["macro_constraints", "existing_volume_window", "guidance", "material_index"],
   },
   outputSchema: createVolumeStrategyCritiqueSchema(),
   render: (_input, context) => [

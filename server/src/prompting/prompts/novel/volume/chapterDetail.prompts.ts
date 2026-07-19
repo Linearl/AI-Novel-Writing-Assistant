@@ -317,7 +317,7 @@ function buildChapterDetailPrompt(contextText: string, detailMode: VolumeChapter
 const baseContextPolicy = {
   maxTokensBudget: NOVEL_PROMPT_BUDGETS.volumeChapterDetail,
   requiredGroups: ["book_contract", "target_volume", "chapter_neighbors", "chapter_detail_draft"],
-  preferredGroups: ["recent_execution_contracts", "macro_constraints", "target_beat_sheet", "volume_window"],
+  preferredGroups: ["recent_execution_contracts", "macro_constraints", "target_beat_sheet", "volume_window", "material_index"],
   dropOrder: ["volume_window"],
 };
 
