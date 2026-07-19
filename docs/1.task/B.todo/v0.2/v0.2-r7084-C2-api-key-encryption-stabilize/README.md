@@ -2,13 +2,13 @@
 description: "REQ-7084: API Key 加密密钥源稳定化 — 用 MachineGuid 替代 MAC 地址"
 reqId: 7084
 title: "API Key 加密密钥源稳定化"
-status: pass
+status: done
 priority: P1
 complexity: C2
 estimatedEffort: "1天"
 version: v0.2
 created: 2026-07-18
-updated: 2026-07-18T11:55:00.000Z
+updated: 2026-07-19T14:49:53.000Z
 ---
 
 ## 概要
