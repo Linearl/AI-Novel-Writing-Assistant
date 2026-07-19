@@ -120,9 +120,9 @@ function IssueCard({ issue, novelId, onStatusChange, onRepair, onAdjustPlan, onV
               {STATUS_LABEL[issue.status]}
             </Badge>
             {isBatchRepairing && (
-              <Badge variant="outline" className="gap-1">
-                <Loader2 className="h-3 w-3 animate-spin" />
-                修复中
+              <Badge variant="outline" className="gap-1 border-blue-500 text-blue-500">
+                <CheckCircle2 className="h-3 w-3" />
+                已触发修复
               </Badge>
             )}
           </div>
@@ -415,12 +415,16 @@ export default function GlobalReviewPage() {
       void queryClient.invalidateQueries({
         queryKey: ["novels", "global-review-issues", id],
       });
+      // 不在 onSuccess 重置 isBatchRepairing，让进度卡片持续显示直到问题状态更新
     },
-    onError: () => toast.error("批量修复触发失败，请稍后重试"),
+    onError: () => {
+      toast.error("批量修复触发失败，请稍后重试");
+      setIsBatchRepairing(false);
+    },
     onSettled: () => {
+      // 只重置进度数据，不重置 isBatchRepairing
       setBatchRepairingChapterIds([]);
       setBatchRepairCompletedCount(0);
-      setIsBatchRepairing(false);
     },
   });
 
@@ -767,39 +771,28 @@ export default function GlobalReviewPage() {
       )}
 
       {/* Batch repair progress */}
-      {isBatchRepairing && batchRepairingChapterIds.length > 0 && (
-        <Card>
+      {isBatchRepairing && (
+        <Card className="border-l-4 border-l-blue-500">
           <CardContent className="space-y-3 py-4">
-            <div className="flex items-center gap-2 text-sm font-medium">
-              <Loader2 className="h-4 w-4 animate-spin text-primary" />
-              <span>批量修复进行中</span>
-              <span className="text-muted-foreground">
-                ({batchRepairCompletedCount}/{batchRepairingChapterIds.length})
-              </span>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-sm font-medium">
+                <CheckCircle2 className="h-4 w-4 text-blue-500" />
+                <span>批量修复已触发</span>
+              </div>
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => setIsBatchRepairing(false)}
+              >
+                关闭
+              </Button>
             </div>
-            <div className="space-y-1 text-sm text-muted-foreground">
-              {batchRepairingChapterIds.map((chapterId, index) => (
-                <div key={chapterId} className="flex items-center gap-2">
-                  {index < batchRepairCompletedCount ? (
-                    <CheckCircle2 className="h-3.5 w-3.5 text-green-500" />
-                  ) : index === batchRepairCompletedCount ? (
-                    <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" />
-                  ) : (
-                    <div className="h-3.5 w-3.5 rounded-full border border-muted-foreground/30" />
-                  )}
-                  <span className="font-mono text-xs">{chapterId.slice(0, 8)}</span>
-                  <span className="text-xs">
-                    {index < batchRepairCompletedCount
-                      ? "✓ 已完成"
-                      : index === batchRepairCompletedCount
-                        ? "⏳ 修复中..."
-                        : "○ 等待中"}
-                  </span>
-                </div>
-              ))}
+            <div className="text-sm text-muted-foreground">
+              修复为异步过程，每章约需 1-3 分钟。
+              问题状态会在修复完成后自动更新（每 10 秒刷新一次）。
             </div>
-            <div className="text-xs text-muted-foreground pt-2 border-t">
-              提示：修复为异步过程，每章约需 1-3 分钟。修复完成后问题状态将自动更新。
+            <div className="text-xs text-muted-foreground">
+              提示：您可以继续浏览其他内容，修复会在后台进行。
             </div>
           </CardContent>
         </Card>
