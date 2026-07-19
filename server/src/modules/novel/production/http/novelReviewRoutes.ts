@@ -3,6 +3,7 @@ import type { ApiResponse, LLMProvider } from "@ai-novel/shared";
 import { z } from "zod";
 import { streamToSSE } from "../../../../llm/streaming";
 import { validate } from "../../../../middleware/validate";
+import { prisma } from "../../../../db/prisma";
 import type { NovelApplicationServices } from "../../../../services/novel/application/NovelApplicationContracts";
 import type { ChapterRuntimeCoordinator } from "../../../../services/novel/runtime/ChapterRuntimeCoordinator";
 import { stepModuleRunner } from "../../../../services/novel/director/workflowStepRuntime/StepModuleRunner";
@@ -376,11 +377,22 @@ export function registerNovelReviewRoutes(input: RegisterNovelReviewRoutesInput)
           return;
         }
 
-        // 按 primaryFixChapter 分组
+        // 将章节编号（如 ch_11）转换为实际章节 ID
+        const chapterNumberToId = new Map<string, string>();
+        const allChapters = await prisma.chapter.findMany({
+          where: { novelId: id },
+          select: { id: true, order: true },
+        });
+        for (const ch of allChapters) {
+          chapterNumberToId.set(`ch_${ch.order}`, ch.id);
+        }
+
+        // 按 primaryFixChapter 分组（转换为实际章节 ID）
         const groups = new Map<string, string[]>();
         for (const issue of targetIssues) {
-          const chapterId = issue.primaryFixChapter;
-          if (!chapterId) continue;
+          const chapterNumber = issue.primaryFixChapter;
+          if (!chapterNumber) continue;
+          const chapterId = chapterNumberToId.get(chapterNumber) ?? chapterNumber;
           if (!groups.has(chapterId)) {
             groups.set(chapterId, []);
           }

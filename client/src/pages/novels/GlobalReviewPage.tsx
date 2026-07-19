@@ -674,53 +674,51 @@ export default function GlobalReviewPage() {
         </div>
       )}
 
-      {/* Filter bar */}
-      {issues.length > 0 && (
-        <div className="flex flex-wrap items-center gap-3">
-          <div className="flex flex-wrap gap-1.5">
-            {FILTER_CHIPS.map((chip) => (
-              <button
-                key={chip.key}
-                onClick={() => setFilterStatus(chip.key)}
-                className={`rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${
-                  filterStatus === chip.key
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-muted text-muted-foreground hover:bg-muted/80"
-                }`}
-              >
-                {chip.label}
-              </button>
-            ))}
-          </div>
-          <div className="flex items-center gap-2 ml-auto">
-            {acknowledgedIssues.length > 0 && (
-              <Button
-                size="sm"
-                variant="default"
-                onClick={handleBatchRepair}
-                disabled={batchRepairMutation.isPending}
-                className="gap-1.5"
-              >
-                {batchRepairMutation.isPending ? (
-                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                ) : (
-                  <Zap className="h-3.5 w-3.5" />
-                )}
-                批量修复（{acknowledgedIssues.length}）
-              </Button>
-            )}
-            <div className="relative w-full max-w-[200px]">
-              <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                placeholder="搜索问题..."
-                value={keyword}
-                onChange={(e) => setKeyword(e.target.value)}
-                className="pl-8 h-9"
-              />
-            </div>
+      {/* Filter bar - 始终显示，不依赖 issues.length */}
+      <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-wrap gap-1.5">
+          {FILTER_CHIPS.map((chip) => (
+            <button
+              key={chip.key}
+              onClick={() => setFilterStatus(chip.key)}
+              className={`rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${
+                filterStatus === chip.key
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-muted text-muted-foreground hover:bg-muted/80"
+              }`}
+            >
+              {chip.label}
+            </button>
+          ))}
+        </div>
+        <div className="flex items-center gap-2 ml-auto">
+          {acknowledgedIssues.length > 0 && (
+            <Button
+              size="sm"
+              variant="default"
+              onClick={handleBatchRepair}
+              disabled={batchRepairMutation.isPending}
+              className="gap-1.5"
+            >
+              {batchRepairMutation.isPending ? (
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              ) : (
+                <Zap className="h-3.5 w-3.5" />
+              )}
+              批量修复（{acknowledgedIssues.length}）
+            </Button>
+          )}
+          <div className="relative w-full max-w-[200px]">
+            <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              placeholder="搜索问题..."
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+              className="pl-8 h-9"
+            />
           </div>
         </div>
-      )}
+      </div>
 
       {/* Issues list */}
       {issuesQuery.isLoading ? (
