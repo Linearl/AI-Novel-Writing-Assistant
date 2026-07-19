@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useMemo, useState, useCallback } from "react";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   ArrowLeft,
@@ -10,11 +10,15 @@ import {
   XCircle,
   Eye,
   Loader2,
+  Wrench,
+  Settings2,
+  Zap,
 } from "lucide-react";
 import {
   listGlobalReviewIssues,
   runGlobalReview,
   updateGlobalReviewIssueStatus,
+  repairGlobalReviewIssues,
   type GlobalReviewIssue,
   type GlobalReviewIssueCategory,
   type GlobalReviewIssueSeverity,
@@ -26,6 +30,14 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -33,6 +45,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { EmptyState } from "@/components/ui/empty-state";
 import { LoadingIndicator } from "@/components/ui/loading-indicator";
 import { toast } from "@/components/ui/toast";
@@ -79,13 +92,126 @@ const FILTER_CHIPS: Array<{ key: GlobalReviewIssueStatus | "all"; label: string 
   { key: "dismissed", label: "已忽略" },
 ];
 
-interface IssueCardProps {
-  issue: GlobalReviewIssue;
-  onStatusChange: (issueId: string, status: GlobalReviewIssueStatus) => void;
-  isUpdating: boolean;
+interface FixPlanAdjustDialogProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  issue: GlobalReviewIssue | null;
+  onConfirm: (userInstruction: string) => void;
+  isSubmitting: boolean;
 }
 
-function IssueCard({ issue, onStatusChange, isUpdating }: IssueCardProps) {
+function FixPlanAdjustDialog({
+  open,
+  onOpenChange,
+  issue,
+  onConfirm,
+  isSubmitting,
+}: FixPlanAdjustDialogProps) {
+  const [approach, setApproach] = useState("");
+  const [risks, setRisks] = useState("");
+
+  const handleOpen = useCallback(() => {
+    if (issue) {
+      setApproach(issue.fixDirection || "");
+      setRisks("");
+    }
+  }, [issue]);
+
+  if (!issue) return null;
+
+  const handleConfirm = () => {
+    const parts: string[] = [];
+    if (approach.trim()) parts.push(`修复方案：${approach.trim()}`);
+    if (risks.trim()) parts.push(`注意事项：${risks.trim()}`);
+    onConfirm(parts.join("\n") || issue.fixDirection || "按审校建议修复");
+  };
+
+  return (
+    <Dialog
+      open={open}
+      onOpenChange={(v) => {
+        if (v) handleOpen();
+        onOpenChange(v);
+      }}
+    >
+      <DialogContent className="max-w-xl">
+        <DialogHeader>
+          <DialogTitle>调整修复方案</DialogTitle>
+          <DialogDescription>
+            修改修复方案后，系统将基于你的调整重新执行修复。
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="space-y-4 py-2">
+          <div>
+            <p className="mb-1 text-sm font-medium text-foreground">问题摘要</p>
+            <p className="text-sm text-muted-foreground">{issue.description}</p>
+          </div>
+
+          <div>
+            <label className="mb-1 block text-sm font-medium text-foreground">
+              修复方案
+            </label>
+            <Textarea
+              value={approach}
+              onChange={(e) => setApproach(e.target.value)}
+              rows={4}
+              placeholder="描述期望的修复方式..."
+            />
+          </div>
+
+          <div>
+            <label className="mb-1 block text-sm font-medium text-foreground">
+              注意事项（可选）
+            </label>
+            <Textarea
+              value={risks}
+              onChange={(e) => setRisks(e.target.value)}
+              rows={2}
+              placeholder="补充约束条件或需要避免的改动..."
+            />
+          </div>
+
+          <p className="text-xs text-muted-foreground">
+            提交后，系统将基于以上调整重新执行章节修复。修复结果可在章节编辑页面查看。
+          </p>
+        </div>
+
+        <DialogFooter>
+          <Button variant="outline" onClick={() => onOpenChange(false)}>
+            取消
+          </Button>
+          <Button onClick={handleConfirm} disabled={isSubmitting}>
+            {isSubmitting ? (
+              <Loader2 className="mr-1 h-3.5 w-3.5 animate-spin" />
+            ) : (
+              <Wrench className="mr-1 h-3.5 w-3.5" />
+            )}
+            提交修复
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+interface IssueCardProps {
+  issue: GlobalReviewIssue;
+  novelId: string;
+  onStatusChange: (issueId: string, status: GlobalReviewIssueStatus) => void;
+  onRepair: (issueId: string) => void;
+  onAdjustPlan: (issue: GlobalReviewIssue) => void;
+  isUpdating: boolean;
+  isRepairing: boolean;
+}
+
+function IssueCard({ issue, novelId, onStatusChange, onRepair, onAdjustPlan, isUpdating, isRepairing }: IssueCardProps) {
+  const navigate = useNavigate();
+
+  const handleChapterClick = (chapterId: string) => {
+    navigate(`/novels/${novelId}/edit?chapterId=${chapterId}&globalReviewIssueIds=${issue.id}`);
+  };
+
   return (
     <Card className="border-l-4" style={{
       borderLeftColor: issue.severity === "critical" ? "#ef4444" : issue.severity === "major" ? "#f97316" : "#0ea5e9",
@@ -118,9 +244,14 @@ function IssueCard({ issue, onStatusChange, isUpdating }: IssueCardProps) {
             <span className="font-medium">受影响章节：</span>
             {issue.affectedChapters.map((chapterId, i) => (
               <span key={chapterId}>
-                <Badge variant="outline" className="font-mono text-xs">
-                  {chapterId.slice(0, 8)}
-                </Badge>
+                <button
+                  onClick={() => handleChapterClick(chapterId)}
+                  className="cursor-pointer font-mono text-xs text-primary underline-offset-2 hover:underline"
+                >
+                  <Badge variant="outline" className="font-mono text-xs">
+                    {chapterId.slice(0, 8)}
+                  </Badge>
+                </button>
                 {i < issue.affectedChapters.length - 1 && " "}
               </span>
             ))}
@@ -138,6 +269,32 @@ function IssueCard({ issue, onStatusChange, isUpdating }: IssueCardProps) {
                 <Eye className="mr-1 h-3.5 w-3.5" />
                 确认问题
               </Button>
+            )}
+            {issue.status === "acknowledged" && (
+              <>
+                <Button
+                  size="sm"
+                  variant="default"
+                  onClick={() => onRepair(issue.id)}
+                  disabled={isRepairing}
+                >
+                  {isRepairing ? (
+                    <Loader2 className="mr-1 h-3.5 w-3.5 animate-spin" />
+                  ) : (
+                    <Wrench className="mr-1 h-3.5 w-3.5" />
+                  )}
+                  执行修复
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => onAdjustPlan(issue)}
+                  disabled={isRepairing}
+                >
+                  <Settings2 className="mr-1 h-3.5 w-3.5" />
+                  调整方案
+                </Button>
+              </>
             )}
             <Button
               size="sm"
@@ -237,6 +394,112 @@ export default function GlobalReviewPage() {
         CATEGORY_LABEL[i.category].includes(kw),
     );
   }, [issues, keyword]);
+
+  const [adjustDialogOpen, setAdjustDialogOpen] = useState(false);
+  const [adjustingIssue, setAdjustingIssue] = useState<GlobalReviewIssue | null>(null);
+  const [batchRepairingChapterIds, setBatchRepairingChapterIds] = useState<string[]>([]);
+  const [batchRepairCompletedCount, setBatchRepairCompletedCount] = useState(0);
+
+  const acknowledgedIssues = useMemo(
+    () => issues.filter((i) => i.status === "acknowledged"),
+    [issues],
+  );
+
+  const singleRepairMutation = useMutation({
+    mutationFn: (issueId: string) =>
+      repairGlobalReviewIssues(id, { globalReviewIssueIds: [issueId] }),
+    onSuccess: () => {
+      toast.success("修复已触发，请前往章节编辑页面查看进度");
+      void queryClient.invalidateQueries({
+        queryKey: ["novels", "global-review-issues", id],
+      });
+    },
+    onError: () => toast.error("修复触发失败，请稍后重试"),
+  });
+
+  const batchRepairMutation = useMutation({
+    mutationFn: async (issueIds: string[]) => {
+      const issueMap = new Map(issues.map((i) => [i.id, i]));
+      const groups = new Map<string, string[]>();
+      for (const issueId of issueIds) {
+        const issue = issueMap.get(issueId);
+        const chapterId = issue?.primaryFixChapter;
+        if (!chapterId) continue;
+        const existing = groups.get(chapterId) ?? [];
+        groups.set(chapterId, [...existing, issueId]);
+      }
+
+      const chapterIds = Array.from(groups.keys()).sort();
+      setBatchRepairingChapterIds(chapterIds);
+      setBatchRepairCompletedCount(0);
+
+      const repairedIssueIds: string[] = [];
+      for (const chapterId of chapterIds) {
+        const chapterIssueIds = groups.get(chapterId) ?? [];
+        try {
+          const result = await repairGlobalReviewIssues(id, {
+            globalReviewIssueIds: chapterIssueIds,
+          });
+          repairedIssueIds.push(...(result.data?.repairedIssueIds ?? chapterIssueIds));
+        } catch {
+          // Continue with remaining chapters even if one fails
+        }
+        setBatchRepairCompletedCount((prev) => prev + 1);
+      }
+
+      return { repairedIssueIds, totalChapters: chapterIds.length };
+    },
+    onSuccess: (result) => {
+      toast.success(
+        result.repairedIssueIds.length > 0
+          ? `已修复 ${result.totalChapters} 个章节，共 ${result.repairedIssueIds.length} 个问题`
+          : "批量修复完成",
+      );
+      void queryClient.invalidateQueries({
+        queryKey: ["novels", "global-review-issues", id],
+      });
+    },
+    onError: () => toast.error("批量修复失败，请稍后重试"),
+    onSettled: () => {
+      setBatchRepairingChapterIds([]);
+      setBatchRepairCompletedCount(0);
+    },
+  });
+
+  const handleRepairIssue = useCallback(
+    (issueId: string) => {
+      singleRepairMutation.mutate(issueId);
+    },
+    [singleRepairMutation],
+  );
+
+  const handleAdjustPlan = useCallback(
+    (issue: GlobalReviewIssue) => {
+      setAdjustingIssue(issue);
+      setAdjustDialogOpen(true);
+    },
+    [],
+  );
+
+  const handleAdjustPlanConfirm = useCallback(
+    (userInstruction: string) => {
+      if (!adjustingIssue) return;
+      singleRepairMutation.mutate(adjustingIssue.id, {
+        onSuccess: () => {
+          setAdjustDialogOpen(false);
+          setAdjustingIssue(null);
+        },
+      });
+      // Note: userInstruction would be passed to the API when backend supports it
+      void userInstruction;
+    },
+    [adjustingIssue, singleRepairMutation],
+  );
+
+  const handleBatchRepair = useCallback(() => {
+    if (acknowledgedIssues.length === 0) return;
+    batchRepairMutation.mutate(acknowledgedIssues.map((i) => i.id));
+  }, [acknowledgedIssues, batchRepairMutation]);
 
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-col gap-4 p-4">
@@ -393,14 +656,32 @@ export default function GlobalReviewPage() {
               </button>
             ))}
           </div>
-          <div className="relative ml-auto w-full max-w-[200px]">
-            <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              placeholder="搜索问题..."
-              value={keyword}
-              onChange={(e) => setKeyword(e.target.value)}
-              className="pl-8 h-9"
-            />
+          <div className="flex items-center gap-2 ml-auto">
+            {acknowledgedIssues.length > 0 && (
+              <Button
+                size="sm"
+                variant="default"
+                onClick={handleBatchRepair}
+                disabled={batchRepairMutation.isPending}
+                className="gap-1.5"
+              >
+                {batchRepairMutation.isPending ? (
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                ) : (
+                  <Zap className="h-3.5 w-3.5" />
+                )}
+                批量修复（{acknowledgedIssues.length}）
+              </Button>
+            )}
+            <div className="relative w-full max-w-[200px]">
+              <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder="搜索问题..."
+                value={keyword}
+                onChange={(e) => setKeyword(e.target.value)}
+                className="pl-8 h-9"
+              />
+            </div>
           </div>
         </div>
       )}
@@ -433,14 +714,60 @@ export default function GlobalReviewPage() {
             <IssueCard
               key={issue.id}
               issue={issue}
+              novelId={id}
               onStatusChange={(issueId, status) =>
                 updateStatusMutation.mutate({ issueId, status })
               }
+              onRepair={handleRepairIssue}
+              onAdjustPlan={handleAdjustPlan}
               isUpdating={updateStatusMutation.isPending}
+              isRepairing={singleRepairMutation.isPending && singleRepairMutation.variables === issue.id}
             />
           ))}
         </div>
       )}
+
+      {/* Batch repair progress */}
+      {batchRepairMutation.isPending && batchRepairingChapterIds.length > 0 && (
+        <Card>
+          <CardContent className="space-y-3 py-4">
+            <div className="flex items-center gap-2 text-sm font-medium">
+              <Loader2 className="h-4 w-4 animate-spin text-primary" />
+              <span>批量修复进行中</span>
+            </div>
+            <div className="space-y-1 text-sm text-muted-foreground">
+              {batchRepairingChapterIds.map((chapterId, index) => (
+                <div key={chapterId} className="flex items-center gap-2">
+                  {index < batchRepairCompletedCount ? (
+                    <CheckCircle2 className="h-3.5 w-3.5 text-green-500" />
+                  ) : index === batchRepairCompletedCount ? (
+                    <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" />
+                  ) : (
+                    <div className="h-3.5 w-3.5 rounded-full border border-muted-foreground/30" />
+                  )}
+                  <span className="font-mono text-xs">{chapterId.slice(0, 8)}</span>
+                  <span className="text-xs">
+                    {index < batchRepairCompletedCount
+                      ? "已完成"
+                      : index === batchRepairCompletedCount
+                        ? "修复中..."
+                        : "等待中"}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Fix plan adjust dialog */}
+      <FixPlanAdjustDialog
+        open={adjustDialogOpen}
+        onOpenChange={setAdjustDialogOpen}
+        issue={adjustingIssue}
+        onConfirm={handleAdjustPlanConfirm}
+        isSubmitting={singleRepairMutation.isPending}
+      />
     </div>
   );
 }

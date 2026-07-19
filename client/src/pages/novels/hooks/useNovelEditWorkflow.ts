@@ -15,6 +15,10 @@ export function useNovelEditWorkflow(novelId: string) {
   const { directorTaskId, workspaceTaskId: workflowTaskId } = readNovelEditWorkflowTaskIds(searchParams);
   const selectedVolumeId = searchParams.get("volumeId") ?? "";
   const taskPanelOpen = searchParams.get("taskPanel") === "1";
+  const globalReviewIssueIds = useMemo(
+    () => (searchParams.get("globalReviewIssueIds") ?? "").split(",").filter(Boolean),
+    [searchParams],
+  );
 
   useEffect(() => {
     const canonicalDirectorTaskId = searchParams.get("directorTaskId")?.trim() ?? "";
@@ -128,5 +132,6 @@ export function useNovelEditWorkflow(novelId: string) {
     workflowTaskId,
     taskPanelOpen,
     clearTaskPanelOpen,
+    globalReviewIssueIds,
   };
 }

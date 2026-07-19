@@ -27,6 +27,7 @@ interface UseNovelEditChapterRuntimeArgs {
   chapterStrategy: ChapterExecutionStrategy;
   reviewResult: ChapterReviewResult | null;
   openAuditIssueIds: string[];
+  globalReviewIssueIds: string[];
   queryClient: QueryClient;
   invalidateNovelDetail: () => Promise<void>;
   setChapterOperationMessage: (value: string) => void;
@@ -54,6 +55,7 @@ export function useNovelEditChapterRuntime({
   chapterStrategy,
   reviewResult,
   openAuditIssueIds,
+  globalReviewIssueIds,
   queryClient,
   invalidateNovelDetail,
   setChapterOperationMessage,
@@ -182,6 +184,7 @@ export function useNovelEditChapterRuntime({
       model: llm.model,
       reviewIssues: issues,
       auditIssueIds: openAuditIssueIds,
+      ...(globalReviewIssueIds.length > 0 ? { globalReviewIssueIds } : {}),
       ...(userInstruction ? { userInstruction } : {}),
     });
   };

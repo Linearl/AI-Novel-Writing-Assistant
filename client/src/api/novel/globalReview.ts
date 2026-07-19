@@ -72,3 +72,24 @@ export async function updateGlobalReviewIssueStatus(
   );
   return data;
 }
+
+export interface RepairGlobalReviewIssuesPayload {
+  globalReviewIssueIds: string[];
+  userInstruction?: string;
+}
+
+export interface RepairGlobalReviewIssuesResult {
+  repairedChapterIds: string[];
+  repairedIssueIds: string[];
+}
+
+export async function repairGlobalReviewIssues(
+  novelId: string,
+  payload: RepairGlobalReviewIssuesPayload,
+) {
+  const { data } = await apiClient.post<ApiResponse<RepairGlobalReviewIssuesResult>>(
+    `/novels/${novelId}/global-review-issues/repair`,
+    payload,
+  );
+  return data;
+}
