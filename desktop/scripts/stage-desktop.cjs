@@ -271,7 +271,8 @@ function patchMigrationSqlForFreshDb(appDir) {
 }
 
 /**
- * 创建种子数据库 — 使用 server/dev.db 并确保所有迁移标记为已完成。
+ * 创建种子数据库 — 使用 server/dev.db 清理后的副本。
+ * 清理过程：复制原始数据库 → 清空用户数据 → 保留产品预设
  */
 function createSeedDatabase(appDir) {
   const seedDbPath = path.join(appDir, "dist", "seed-dev.db");
@@ -282,40 +283,87 @@ function createSeedDatabase(appDir) {
     path.join(repoRoot, "server", "dev.db"),
     path.join(repoRoot, "server", "src", "prisma", "dev.db"),
   ];
-  for (const candidate of devDbCandidates) {
+
+  // 检查清理脚本是否存在
+  const cleanScriptPath = path.join(repoRoot, "scripts", "clean-dev-db.js");
+  if (fs.existsSync(cleanScriptPath)) {
+    // 使用清理脚本生成干净的种子数据库
+    console.log(`[stage:desktop] using clean-dev-db.js to create sanitized seed database`);
+    try {
+      const { execSync } = require("node:child_process");
+      execSync(`node "${cleanScriptPath}"`, {
+        cwd: repoRoot,
+        stdio: "inherit",
+        env: process.env,
+      });
+      if (fs.existsSync(seedDbPath)) {
+        console.log(`[stage:desktop] seed database created via clean-dev-db.js`);
+      } else {
+        console.warn(`[stage:desktop] clean-dev-db.js did not produce output, falling back to direct copy`);
+        fallbackCopySeed(devDbCandidates, seedDbPath);
+      }
+    } catch (err) {
+      console.warn(`[stage:desktop] clean-dev-db.js failed: ${err.message}, falling back to direct copy`);
+      fallbackCopySeed(devDbCandidates, seedDbPath);
+    }
+  } else {
+    // 回退到直接复制
+    console.log(`[stage:desktop] clean-dev-db.js not found, using direct copy`);
+    fallbackCopySeed(devDbCandidates, seedDbPath);
+  }
+
+  // 确保所有迁移都标记为已完成（避免运行时重试失败的迁移）
+  ensureMigrationsApplied(seedDbPath, appDir);
+}
+
+/**
+ * 回退方案：直接复制数据库
+ */
+function fallbackCopySeed(candidates, seedDbPath) {
+  for (const candidate of candidates) {
     if (fs.existsSync(candidate)) {
       fs.copyFileSync(candidate, seedDbPath);
-      console.log(`[stage:desktop] seed database copied from ${candidate}`);
+      console.log(`[stage:desktop] seed database copied from ${candidate} (un sanitized)`);
+      return;
+    }
+  }
+}
 
-      // 确保所有迁移都标记为已完成（避免运行时重试失败的迁移）
-      let Database;
-      try {
-        Database = require(path.join(repoRoot, "node_modules", ".pnpm", "better-sqlite3@12.6.2", "node_modules", "better-sqlite3"));
-      } catch {
-        try { Database = require(path.join(repoRoot, "node_modules", "better-sqlite3")); } catch { return; }
+/**
+ * 确保所有迁移都标记为已完成
+ */
+function ensureMigrationsApplied(seedDbPath, appDir) {
+  if (!fs.existsSync(seedDbPath)) return;
+
+  let Database;
+  try {
+    Database = require(path.join(repoRoot, "node_modules", ".pnpm", "better-sqlite3@12.6.2", "node_modules", "better-sqlite3"));
+  } catch {
+    try { Database = require(path.join(repoRoot, "node_modules", "better-sqlite3")); } catch { return; }
+  }
+
+  try {
+    const db = new Database(seedDbPath);
+    const migrationsDir = path.join(appDir, "node_modules", "@ai-novel", "server", "src", "prisma", "migrations.sqlite");
+    if (fs.existsSync(migrationsDir)) {
+      const migrationDirs = fs.readdirSync(migrationsDir).filter(d => {
+        try { return fs.statSync(path.join(migrationsDir, d)).isDirectory(); } catch { return false; }
+      });
+
+      // 从迁移 SQL 中创建缺失的表（server/dev.db 可能被 init 迁移删除了某些表）
+      for (const name of migrationDirs) {
+        const sqlPath = path.join(migrationsDir, name, "migration.sql");
+        if (!fs.existsSync(sqlPath)) continue;
+        const sql = fs.readFileSync(sqlPath, "utf8");
+        const createStmts = sql.match(/CREATE TABLE IF NOT EXISTS "[^"]+"\s*\(.*?\);/gs) || [];
+        for (const stmt of createStmts) {
+          try { db.exec(stmt + ";"); } catch {}
+        }
+        const indexStmts = sql.match(/CREATE (UNIQUE )?INDEX IF NOT EXISTS "[^"]+"\s+ON\s+[^;]+;/g) || [];
+        for (const stmt of indexStmts) {
+          try { db.exec(stmt); } catch {}
+        }
       }
-      try {
-        const db = new Database(seedDbPath);
-        const migrationsDir = path.join(appDir, "node_modules", "@ai-novel", "server", "src", "prisma", "migrations.sqlite");
-        if (fs.existsSync(migrationsDir)) {
-          const migrationDirs = fs.readdirSync(migrationsDir).filter(d => {
-            try { return fs.statSync(path.join(migrationsDir, d)).isDirectory(); } catch { return false; }
-          });
-
-          // 从迁移 SQL 中创建缺失的表（server/dev.db 可能被 init 迁移删除了某些表）
-          for (const name of migrationDirs) {
-            const sqlPath = path.join(migrationsDir, name, "migration.sql");
-            if (!fs.existsSync(sqlPath)) continue;
-            const sql = fs.readFileSync(sqlPath, "utf8");
-            const createStmts = sql.match(/CREATE TABLE IF NOT EXISTS "[^"]+"\s*\(.*?\);/gs) || [];
-            for (const stmt of createStmts) {
-              try { db.exec(stmt + ";"); } catch {}
-            }
-            const indexStmts = sql.match(/CREATE (UNIQUE )?INDEX IF NOT EXISTS "[^"]+"\s+ON\s+[^;]+;/g) || [];
-            for (const stmt of indexStmts) {
-              try { db.exec(stmt); } catch {}
-            }
-          }
 
           // 标记所有迁移为已完成
           for (const name of migrationDirs) {

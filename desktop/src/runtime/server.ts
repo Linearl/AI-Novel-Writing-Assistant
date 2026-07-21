@@ -43,8 +43,18 @@ function resolveConfiguredPort(): number | undefined {
   return Math.floor(parsed);
 }
 
+/**
+ * External 模式默认端口 — 与 Web 开发 server 保持一致
+ */
+const EXTERNAL_DEFAULT_PORT = 13000;
+
+/**
+ * Managed 模式默认端口 — Web 端口 + 1250 偏移，避免与开发端口冲突
+ */
+const MANAGED_DEFAULT_PORT = 14250;
+
 function resolveExternalServerPort(): number {
-  return resolveConfiguredPort() ?? 3000;
+  return resolveConfiguredPort() ?? EXTERNAL_DEFAULT_PORT;
 }
 
 async function resolveManagedServerPort(): Promise<number> {
@@ -53,23 +63,18 @@ async function resolveManagedServerPort(): Promise<number> {
     return configuredPort;
   }
 
+  // 优先使用固定端口，避免随机端口导致的不确定性
   return new Promise((resolve, reject) => {
     const server = net.createServer();
     server.unref();
     server.once("error", reject);
-    server.listen(0, "127.0.0.1", () => {
-      const address = server.address();
-      const port = typeof address === "object" && address ? address.port : null;
+    server.listen(MANAGED_DEFAULT_PORT, "127.0.0.1", () => {
       server.close((error) => {
         if (error) {
           reject(error);
           return;
         }
-        if (typeof port !== "number" || port <= 0) {
-          reject(new Error("Failed to allocate a free loopback port for the desktop server."));
-          return;
-        }
-        resolve(port);
+        resolve(MANAGED_DEFAULT_PORT);
       });
     });
   });
