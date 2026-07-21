@@ -365,31 +365,26 @@ function ensureMigrationsApplied(seedDbPath, appDir) {
         }
       }
 
-          // 标记所有迁移为已完成
-          for (const name of migrationDirs) {
-            db.prepare(
-              `UPDATE "_prisma_migrations" SET finished_at = datetime('now'), applied_steps_count = 1, logs = NULL
-               WHERE migration_name = ? AND (finished_at IS NULL OR applied_steps_count = 0)`
-            ).run(name);
-            const exists = db.prepare("SELECT id FROM _prisma_migrations WHERE migration_name = ?").get(name);
-            if (!exists) {
-              db.prepare(
-                `INSERT INTO "_prisma_migrations" (id, checksum, finished_at, migration_name, started_at, applied_steps_count)
-                 VALUES (?, ?, datetime('now'), ?, datetime('now'), 1)`
-              ).run(require("crypto").randomUUID(), "seed", name);
-            }
-          }
-          console.log("[stage:desktop] ensured all migrations marked as applied in seed database");
+      // 标记所有迁移为已完成
+      for (const name of migrationDirs) {
+        db.prepare(
+          `UPDATE "_prisma_migrations" SET finished_at = datetime('now'), applied_steps_count = 1, logs = NULL
+           WHERE migration_name = ? AND (finished_at IS NULL OR applied_steps_count = 0)`
+        ).run(name);
+        const exists = db.prepare("SELECT id FROM _prisma_migrations WHERE migration_name = ?").get(name);
+        if (!exists) {
+          db.prepare(
+            `INSERT INTO "_prisma_migrations" (id, checksum, finished_at, migration_name, started_at, applied_steps_count)
+             VALUES (?, ?, datetime('now'), ?, datetime('now'), 1)`
+          ).run(require("crypto").randomUUID(), "seed", name);
         }
-        db.close();
-      } catch (err) {
-        console.warn("[stage:desktop] warning: failed to patch seed migration records:", err.message);
       }
-      return;
+      console.log("[stage:desktop] ensured all migrations marked as applied in seed database");
     }
+    db.close();
+  } catch (err) {
+    console.warn("[stage:desktop] warning: failed to patch seed migration records:", err.message);
   }
-
-  console.log("[stage:desktop] no dev.db found, skipping seed database creation");
 }
 
 function deployManually() {

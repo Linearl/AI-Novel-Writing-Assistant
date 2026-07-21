@@ -2,7 +2,7 @@
   "reqId": "2062",
   "slug": "desktop-seed-cleanup-port-fix",
   "title": "桌面端种子数据库清理与端口配置优化",
-  "status": "pass",
+  "status": "done",
   "version": "v0.2",
   "category": 2,
   "complexity": "medium",
@@ -45,7 +45,7 @@
     {
       "id": "T4.2",
       "title": "桌面构建测试",
-      "status": "pending"
+      "status": "done"
     }
   ]
 }
