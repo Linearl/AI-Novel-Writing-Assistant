@@ -63,17 +63,53 @@ async function resolveManagedServerPort(): Promise<number> {
     return configuredPort;
   }
 
-  // 优先使用固定端口，避免随机端口导致的不确定性
+  // 优先尝试固定端口，失败则回退到随机端口
   return new Promise((resolve, reject) => {
     const server = net.createServer();
     server.unref();
-    server.once("error", reject);
+
+    // 先尝试固定端口
+    server.once("error", (err: NodeJS.ErrnoException) => {
+      if (err.code === "EADDRINUSE") {
+        // 端口被占用，回退到随机端口
+        console.log(`[desktop] Port ${MANAGED_DEFAULT_PORT} in use, falling back to random port`);
+        const fallbackServer = net.createServer();
+        fallbackServer.unref();
+        fallbackServer.once("error", reject);
+        fallbackServer.listen(0, "127.0.0.1", () => {
+          const address = fallbackServer.address();
+          const port = typeof address === "object" && address ? address.port : null;
+          fallbackServer.close(() => {
+            if (typeof port === "number" && port > 0) {
+              resolve(port);
+            } else {
+              reject(new Error("Failed to allocate a free loopback port"));
+            }
+          });
+        });
+      } else {
+        // 其他错误（如 EACCES），也回退到随机端口
+        console.log(`[desktop] Port ${MANAGED_DEFAULT_PORT} error: ${err.code}, falling back to random port`);
+        const fallbackServer = net.createServer();
+        fallbackServer.unref();
+        fallbackServer.once("error", reject);
+        fallbackServer.listen(0, "127.0.0.1", () => {
+          const address = fallbackServer.address();
+          const port = typeof address === "object" && address ? address.port : null;
+          fallbackServer.close(() => {
+            if (typeof port === "number" && port > 0) {
+              resolve(port);
+            } else {
+              reject(new Error("Failed to allocate a free loopback port"));
+            }
+          });
+        });
+      }
+    });
+
     server.listen(MANAGED_DEFAULT_PORT, "127.0.0.1", () => {
-      server.close((error) => {
-        if (error) {
-          reject(error);
-          return;
-        }
+      // 端口可用，关闭测试服务器，返回固定端口
+      server.close(() => {
         resolve(MANAGED_DEFAULT_PORT);
       });
     });
