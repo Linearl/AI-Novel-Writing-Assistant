@@ -41,7 +41,9 @@ export const ControlPanel = React.memo<ControlPanelProps>(
 
         <WidthSlider
           value={settings.pageWidth}
+          autoFit={settings.autoFit}
           onChange={onUpdate.pageWidth}
+          onAutoFitChange={onUpdate.autoFit}
         />
 
         <div className="h-6 w-px bg-border" />

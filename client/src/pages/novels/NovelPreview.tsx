@@ -455,7 +455,7 @@ export default function NovelPreview() {
                       : settings.fontFamily === 'yahei' ? '"Microsoft YaHei", "微软雅黑", sans-serif'
                       : 'system-ui, -apple-system, sans-serif',
                     fontWeight: settings.isBold ? 'bold' : 'normal',
-                    maxWidth: `${settings.pageWidth}px`,
+                    maxWidth: settings.autoFit ? '100%' : `${settings.pageWidth}px`,
                     backgroundColor: settings.backgroundColor.background,
                     color: settings.backgroundColor.text,
                   }}

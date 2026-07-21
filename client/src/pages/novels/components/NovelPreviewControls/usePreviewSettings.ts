@@ -73,7 +73,7 @@ export function usePreviewSettings() {
   }, []);
 
   const updatePageWidth = useCallback((width: number) => {
-    const clamped = Math.max(500, Math.min(2000, width));
+    const clamped = Math.max(500, Math.min(4000, width));
     setSettings((prev) => {
       const next = { ...prev, pageWidth: clamped };
       saveSettings(next);
@@ -84,6 +84,14 @@ export function usePreviewSettings() {
   const updateBackground = useCallback((theme: ThemeColors) => {
     setSettings((prev) => {
       const next = { ...prev, backgroundColor: theme };
+      saveSettings(next);
+      return next;
+    });
+  }, []);
+
+  const toggleAutoFit = useCallback(() => {
+    setSettings((prev) => {
+      const next = { ...prev, autoFit: !prev.autoFit };
       saveSettings(next);
       return next;
     });
@@ -100,9 +108,10 @@ export function usePreviewSettings() {
       fontFamily: updateFontFamily,
       bold: toggleBold,
       pageWidth: updatePageWidth,
+      autoFit: toggleAutoFit,
       background: updateBackground,
     }),
-    [updateFontSize, updateFontFamily, toggleBold, updatePageWidth, updateBackground]
+    [updateFontSize, updateFontFamily, toggleBold, updatePageWidth, toggleAutoFit, updateBackground]
   );
 
   return useMemo(

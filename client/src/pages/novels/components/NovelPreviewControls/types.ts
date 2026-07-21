@@ -18,6 +18,7 @@ export interface PreviewSettings {
   fontFamily: FontFamily;
   isBold: boolean;
   pageWidth: number;
+  autoFit: boolean;
   backgroundColor: ThemeColors;
 }
 
@@ -27,6 +28,7 @@ export interface PreviewSettingsUpdate {
   fontFamily: (family: FontFamily) => void;
   bold: () => void;
   pageWidth: (width: number) => void;
+  autoFit: () => void;
   background: (theme: ThemeColors) => void;
 }
 
@@ -50,6 +52,7 @@ export const DEFAULT_PREVIEW_SETTINGS: PreviewSettings = {
   fontFamily: 'song',
   isBold: false,
   pageWidth: 800,
+  autoFit: false,
   backgroundColor: {
     background: '#FFFFFF',
     text: '#000000',
