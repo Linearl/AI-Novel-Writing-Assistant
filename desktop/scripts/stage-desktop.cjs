@@ -186,31 +186,29 @@ if (process.env.AI_NOVEL_RUNTIME === "desktop") {
       // 确保所有迁移目录中的迁移都有记录
       var migrationsDir = path.join(__dirname, "..", "src", "prisma", "migrations.sqlite");
       if (!fs.existsSync(migrationsDir)) {
-        // 尝试从 node_modules 中找
         migrationsDir = path.join(path.dirname(path.dirname(__dirname)), "node_modules", "@ai-novel", "server", "src", "prisma", "migrations.sqlite");
       }
       if (fs.existsSync(migrationsDir)) {
-          var dirs = fs.readdirSync(migrationsDir).filter(function(d) {
-            try { return fs.statSync(path.join(migrationsDir, d)).isDirectory(); } catch(e) { return false; }
-          });
-          for (var i = 0; i < dirs.length; i++) {
-            var name = dirs[i];
-            var exists = db.prepare("SELECT id FROM _prisma_migrations WHERE migration_name = ?").get(name);
-            if (!exists) {
-              db.prepare("INSERT INTO _prisma_migrations (id, checksum, finished_at, migration_name, started_at, applied_steps_count) VALUES (?, 'seed', datetime('now'), ?, datetime('now'), 1)").run(
-                require("crypto").randomUUID(), name
-              );
-            }
+        var dirs = fs.readdirSync(migrationsDir).filter(function(d) {
+          try { return fs.statSync(path.join(migrationsDir, d)).isDirectory(); } catch(e) { return false; }
+        });
+        for (var i = 0; i < dirs.length; i++) {
+          var name = dirs[i];
+          var exists = db.prepare("SELECT id FROM _prisma_migrations WHERE migration_name = ?").get(name);
+          if (!exists) {
+            db.prepare("INSERT INTO _prisma_migrations (id, checksum, finished_at, migration_name, started_at, applied_steps_count) VALUES (?, 'seed', datetime('now'), ?, datetime('now'), 1)").run(
+              require("crypto").randomUUID(), name
+            );
           }
         }
-        db.close();
-        console.log("[desktop-bootstrap] migration records patched");
-      } catch(e) {
-        console.log("[desktop-bootstrap] migration patch failed:", e.message);
       }
-    } else {
-      console.log("[desktop-bootstrap] seed database NOT found at", seedDb);
+      db.close();
+      console.log("[desktop-bootstrap] migration records patched");
+    } catch(e) {
+      console.log("[desktop-bootstrap] migration patch failed:", e.message);
     }
+  } else {
+    console.log("[desktop-bootstrap] seed database NOT found at", seedDb);
   }
 
   // 启动 bootstrap
