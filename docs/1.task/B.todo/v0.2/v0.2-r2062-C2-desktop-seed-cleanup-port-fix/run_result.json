@@ -1,0 +1,51 @@
+{
+  "reqId": "2062",
+  "slug": "desktop-seed-cleanup-port-fix",
+  "title": "桌面端种子数据库清理与端口配置优化",
+  "status": "in_progress",
+  "version": "v0.2",
+  "category": 2,
+  "complexity": "medium",
+  "priority": "P1",
+  "createdAt": "2026-07-21T04:50:00.000Z",
+  "updatedAt": "2026-07-21T04:50:00.000Z",
+  "paths": {
+    "taskDir": "docs/1.task/B.todo/v0.2/v0.2-r2062-C2-desktop-seed-cleanup-port-fix",
+    "reqFile": "REQ-2062-desktop-seed-cleanup-port-fix.md",
+    "tasksFile": "tasks.md",
+    "designFile": "design.md",
+    "decisionLogFile": "decision_log.md"
+  },
+  "tasks": [
+    {
+      "id": "T1.1",
+      "title": "创建清理脚本",
+      "status": "pending"
+    },
+    {
+      "id": "T2.1",
+      "title": "修改 stage-desktop.cjs",
+      "status": "pending"
+    },
+    {
+      "id": "T3.1",
+      "title": "修改 external 模式端口",
+      "status": "pending"
+    },
+    {
+      "id": "T3.2",
+      "title": "修改 managed 模式端口",
+      "status": "pending"
+    },
+    {
+      "id": "T4.1",
+      "title": "类型检查",
+      "status": "pending"
+    },
+    {
+      "id": "T4.2",
+      "title": "桌面构建测试",
+      "status": "pending"
+    }
+  ]
+}
