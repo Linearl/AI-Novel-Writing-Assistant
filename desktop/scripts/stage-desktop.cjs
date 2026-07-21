@@ -164,36 +164,32 @@ if (process.env.AI_NOVEL_RUNTIME === "desktop") {
   var path = require("path");
 
   // 从 asar 复制种子数据库（始终覆盖，因为旧数据库可能有损坏的迁移记录）
+  // process.cwd() 已经是 data 目录，所以直接使用 appDataDir/dev.db
   var appDataDir = process.env.AI_NOVEL_APP_DATA_DIR || process.cwd();
-  var dbPath = path.join(appDataDir, "data", "dev.db");
+  var dbPath = path.join(appDataDir, "dev.db");
   var seedDb = path.join(__dirname, "..", "..", "..", "..", "dist", "seed-dev.db");
   if (fs.existsSync(seedDb)) {
     fs.mkdirSync(path.dirname(dbPath), { recursive: true });
     fs.copyFileSync(seedDb, dbPath);
     console.log("[desktop-bootstrap] copied seed database to", dbPath);
-    var seedDb = path.join(__dirname, "..", "..", "..", "..", "dist", "seed-dev.db");
-    if (fs.existsSync(seedDb)) {
-      fs.mkdirSync(path.dirname(dbPath), { recursive: true });
-      fs.copyFileSync(seedDb, dbPath);
-      console.log("[desktop-bootstrap] copied seed database to", dbPath);
 
-      // 直接 patch 数据库：标记所有迁移为已完成
-      // ensureRuntimeDatabaseReady 会在启动时检查这些记录
-      try {
-        var Database = require("better-sqlite3");
-        var db = new Database(dbPath);
-        var failed = db.prepare("SELECT migration_name FROM _prisma_migrations WHERE applied_steps_count = 0 OR finished_at IS NULL").all();
-        if (failed.length > 0) {
-          console.log("[desktop-bootstrap] fixing", failed.length, "migration records");
-          db.prepare("UPDATE _prisma_migrations SET applied_steps_count = 1, finished_at = datetime('now'), logs = NULL WHERE applied_steps_count = 0 OR finished_at IS NULL").run();
-        }
-        // 确保所有迁移目录中的迁移都有记录
-        var migrationsDir = path.join(__dirname, "..", "src", "prisma", "migrations.sqlite");
-        if (!fs.existsSync(migrationsDir)) {
-          // 尝试从 node_modules 中找
-          migrationsDir = path.join(path.dirname(path.dirname(__dirname)), "node_modules", "@ai-novel", "server", "src", "prisma", "migrations.sqlite");
-        }
-        if (fs.existsSync(migrationsDir)) {
+    // 直接 patch 数据库：标记所有迁移为已完成
+    // ensureRuntimeDatabaseReady 会在启动时检查这些记录
+    try {
+      var Database = require("better-sqlite3");
+      var db = new Database(dbPath);
+      var failed = db.prepare("SELECT migration_name FROM _prisma_migrations WHERE applied_steps_count = 0 OR finished_at IS NULL").all();
+      if (failed.length > 0) {
+        console.log("[desktop-bootstrap] fixing", failed.length, "migration records");
+        db.prepare("UPDATE _prisma_migrations SET applied_steps_count = 1, finished_at = datetime('now'), logs = NULL WHERE applied_steps_count = 0 OR finished_at IS NULL").run();
+      }
+      // 确保所有迁移目录中的迁移都有记录
+      var migrationsDir = path.join(__dirname, "..", "src", "prisma", "migrations.sqlite");
+      if (!fs.existsSync(migrationsDir)) {
+        // 尝试从 node_modules 中找
+        migrationsDir = path.join(path.dirname(path.dirname(__dirname)), "node_modules", "@ai-novel", "server", "src", "prisma", "migrations.sqlite");
+      }
+      if (fs.existsSync(migrationsDir)) {
           var dirs = fs.readdirSync(migrationsDir).filter(function(d) {
             try { return fs.statSync(path.join(migrationsDir, d)).isDirectory(); } catch(e) { return false; }
           });
@@ -453,10 +449,25 @@ function deployManually() {
     }
   }
 
-  // 复制 server 的 .env 文件（如果有）
+  // 创建干净的 .env 文件（移除敏感的 API Key）
   const serverEnv = path.join(serverSourceDir, ".env");
+  const targetEnv = path.join(serverTargetDir, ".env");
   if (fs.existsSync(serverEnv)) {
-    fs.copyFileSync(serverEnv, path.join(serverTargetDir, ".env"));
+    const envContent = fs.readFileSync(serverEnv, "utf8");
+    // 移除 API Key 相关配置，只保留非敏感配置
+    const sanitizedEnv = envContent
+      .split("\n")
+      .map((line) => {
+        // 跳过 API Key 行
+        if (/^(DEEPSEEK_API_KEY|OPENAI_API_KEY|ANTHROPIC_API_KEY|SILICONFLOW_API_KEY|XAI_API_KEY|KIMI_API_KEY|GOOGLE_API_KEY|AZURE_API_KEY|REPLICATE_API_TOKEN|HF_API_TOKEN|DASHSCOPE_API_KEY|MISTRAL_API_KEY|GROQ_API_KEY|TOGETHER_API_KEY|FIREWORKS_API_KEY|DEEPGRAM_API_KEY|ELEVEN_API_KEY|STABILITY_API_KEY|MIDJOURNEY_API_KEY|COHERE_API_KEY|VOYAGE_API_KEY|JINA_API_KEY|GEMINI_API_KEY|WOLFRAM_APP_ID|BRUNCH_API_KEY|SEARCHAPI_API_KEY|SERPAPI_KEY|TAVILY_API_KEY|PERPLEXITY_API_KEY)/i.test(line.trim())) {
+          return null;
+        }
+        return line;
+      })
+      .filter((line) => line !== null)
+      .join("\n");
+    fs.writeFileSync(targetEnv, sanitizedEnv, "utf8");
+    console.log("[stage:desktop] created sanitized .env file (API keys removed)");
   }
 
   // 4. 先在 app/ 目录安装生产依赖（better-sqlite3、electron-updater）
