@@ -1,5 +1,5 @@
 import { useMemo, useState, useCallback } from "react";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   ArrowLeft,
@@ -13,6 +13,9 @@ import {
   Wrench,
   Settings2,
   Zap,
+  Filter,
+  SlidersHorizontal,
+  RefreshCw,
 } from "lucide-react";
 import {
   listGlobalReviewIssues,
@@ -29,7 +32,13 @@ import { getNovelVolumeWorkspace } from "@/api/novel/volumes";
 import { queryKeys } from "@/api/queryKeys";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -43,6 +52,8 @@ import { LoadingIndicator } from "@/components/ui/loading-indicator";
 import { toast } from "@/components/ui/toast";
 import { FixPlanAdjustDialog } from "./components/FixPlanAdjustDialog";
 
+// ── Constants ────────────────────────────────────────────────────────────────
+
 const SEVERITY_LABEL: Record<GlobalReviewIssueSeverity, string> = {
   critical: "严重",
   major: "重要",
@@ -50,10 +61,22 @@ const SEVERITY_LABEL: Record<GlobalReviewIssueSeverity, string> = {
 };
 
 const SEVERITY_BADGE_CLASS: Record<GlobalReviewIssueSeverity, string> = {
-  critical: "border-transparent bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300",
+  critical:
+    "border-transparent bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300",
   major: "border-transparent bg-orange-100 text-orange-800 dark:bg-orange-900/40 dark:text-orange-300",
   minor: "border-transparent bg-sky-100 text-sky-800 dark:bg-sky-900/40 dark:text-sky-300",
 };
+
+const SEVERITY_FILTER_OPTIONS: Array<{
+  key: GlobalReviewIssueSeverity | "all";
+  label: string;
+  color: string;
+}> = [
+  { key: "all", label: "全部", color: "text-muted-foreground" },
+  { key: "critical", label: "严重", color: "text-red-500" },
+  { key: "major", label: "重要", color: "text-orange-500" },
+  { key: "minor", label: "轻微", color: "text-sky-500" },
+];
 
 const CATEGORY_LABEL: Record<GlobalReviewIssueCategory, string> = {
   character_consistency: "角色一致性",
@@ -70,20 +93,28 @@ const STATUS_LABEL: Record<GlobalReviewIssueStatus, string> = {
   dismissed: "已忽略",
 };
 
-const STATUS_BADGE_VARIANT: Record<GlobalReviewIssueStatus, "secondary" | "default" | "outline" | "destructive"> = {
-  pending: "destructive",
-  acknowledged: "default",
-  fixed: "secondary",
-  dismissed: "outline",
-};
-
-const FILTER_CHIPS: Array<{ key: GlobalReviewIssueStatus | "all"; label: string }> = [
+const STATUS_FILTER_OPTIONS: Array<{
+  key: GlobalReviewIssueStatus | "all";
+  label: string;
+}> = [
   { key: "all", label: "全部" },
   { key: "pending", label: "待处理" },
   { key: "acknowledged", label: "已确认" },
   { key: "fixed", label: "已修复" },
   { key: "dismissed", label: "已忽略" },
 ];
+
+const STATUS_BADGE_VARIANT: Record<
+  GlobalReviewIssueStatus,
+  "secondary" | "default" | "outline" | "destructive"
+> = {
+  pending: "destructive",
+  acknowledged: "default",
+  fixed: "secondary",
+  dismissed: "outline",
+};
+
+// ── IssueCard ────────────────────────────────────────────────────────────────
 
 interface IssueCardProps {
   issue: GlobalReviewIssue;
@@ -98,14 +129,26 @@ interface IssueCardProps {
   isBatchRepairing?: boolean;
 }
 
-function IssueCard({ issue, novelId, onStatusChange, onRepair, onAdjustPlan, onVerify, isUpdating, isRepairing, isVerifying, isBatchRepairing }: IssueCardProps) {
+function IssueCard({
+  issue,
+  novelId,
+  onStatusChange,
+  onRepair,
+  onAdjustPlan,
+  onVerify,
+  isUpdating,
+  isRepairing,
+  isVerifying,
+  isBatchRepairing,
+}: IssueCardProps) {
   const navigate = useNavigate();
 
   const handleChapterClick = (chapterId: string) => {
-    navigate(`/novels/${novelId}/edit?chapterId=${chapterId}&globalReviewIssueIds=${issue.id}`);
+    navigate(
+      `/novels/${novelId}/edit?chapterId=${chapterId}&globalReviewIssueIds=${issue.id}`,
+    );
   };
 
-  // 格式化章节显示文本：优先使用 order，fallback 到 ID 截断
   const formatChapterLabel = (index: number): string => {
     const orders = issue.affectedChapterOrders ?? [];
     if (orders[index] != null) {
@@ -116,9 +159,17 @@ function IssueCard({ issue, novelId, onStatusChange, onRepair, onAdjustPlan, onV
   };
 
   return (
-    <Card className="border-l-4" style={{
-      borderLeftColor: issue.severity === "critical" ? "#ef4444" : issue.severity === "major" ? "#f97316" : "#0ea5e9",
-    }}>
+    <Card
+      className="border-l-4"
+      style={{
+        borderLeftColor:
+          issue.severity === "critical"
+            ? "#ef4444"
+            : issue.severity === "major"
+              ? "#f97316"
+              : "#0ea5e9",
+      }}
+    >
       <CardHeader className="pb-3">
         <div className="flex flex-wrap items-start justify-between gap-2">
           <div className="flex flex-wrap items-center gap-2">
@@ -127,15 +178,23 @@ function IssueCard({ issue, novelId, onStatusChange, onRepair, onAdjustPlan, onV
                 #G{String(issue.issueNumber).padStart(3, "0")}
               </Badge>
             )}
-            <Badge className={SEVERITY_BADGE_CLASS[issue.severity]} variant="outline">
+            <Badge
+              className={SEVERITY_BADGE_CLASS[issue.severity]}
+              variant="outline"
+            >
               {SEVERITY_LABEL[issue.severity]}
             </Badge>
-            <Badge variant="secondary">{CATEGORY_LABEL[issue.category]}</Badge>
+            <Badge variant="secondary">
+              {CATEGORY_LABEL[issue.category]}
+            </Badge>
             <Badge variant={STATUS_BADGE_VARIANT[issue.status]}>
               {STATUS_LABEL[issue.status]}
             </Badge>
             {isBatchRepairing && (
-              <Badge variant="outline" className="gap-1 border-blue-500 text-blue-500">
+              <Badge
+                variant="outline"
+                className="gap-1 border-blue-500 text-blue-500"
+              >
                 <CheckCircle2 className="h-3 w-3" />
                 已触发修复
               </Badge>
@@ -171,6 +230,7 @@ function IssueCard({ issue, novelId, onStatusChange, onRepair, onAdjustPlan, onV
             ))}
           </div>
         )}
+        {/* Action buttons for pending / acknowledged issues */}
         {issue.status !== "fixed" && issue.status !== "dismissed" && (
           <div className="flex flex-wrap gap-2 pt-1">
             {issue.status === "pending" && (
@@ -230,37 +290,54 @@ function IssueCard({ issue, novelId, onStatusChange, onRepair, onAdjustPlan, onV
             </Button>
           </div>
         )}
+        {/* AI复核按钮 (fixed 状态) */}
         {issue.status === "fixed" && (
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={() => onVerify(issue)}
-            disabled={isVerifying}
-            title={`将检查 ${issue.affectedChapters.length} 个受影响章节`}
-          >
-            {isVerifying ? (
-              <Loader2 className="mr-1 h-3.5 w-3.5 animate-spin" />
-            ) : (
-              <Eye className="mr-1 h-3.5 w-3.5" />
-            )}
-            AI 复核 ({issue.affectedChapters.length}章)
-          </Button>
+          <div className="flex flex-wrap gap-2 pt-1">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => onVerify(issue)}
+              disabled={isVerifying}
+              title={`将检查 ${issue.affectedChapters.length} 个受影响章节`}
+            >
+              {isVerifying ? (
+                <Loader2 className="mr-1 h-3.5 w-3.5 animate-spin" />
+              ) : (
+                <Eye className="mr-1 h-3.5 w-3.5" />
+              )}
+              AI 复核 ({issue.affectedChapters.length}章)
+            </Button>
+          </div>
         )}
       </CardContent>
     </Card>
   );
 }
 
+// ── Main Page ────────────────────────────────────────────────────────────────
+
 export default function GlobalReviewPage() {
   const { id = "" } = useParams<{ id: string }>();
   const queryClient = useQueryClient();
 
-  const [reviewMode, setReviewMode] = useState<"currentVolume" | "range">("currentVolume");
+  // Review trigger form state
+  const [reviewMode, setReviewMode] = useState<"currentVolume" | "range">(
+    "currentVolume",
+  );
   const [selectedVolumeId, setSelectedVolumeId] = useState<string>("");
   const [startChapter, setStartChapter] = useState<number>(1);
   const [endChapter, setEndChapter] = useState<number>(10);
-  const [filterStatus, setFilterStatus] = useState<GlobalReviewIssueStatus | "all">("all");
+
+  // Filter state (left column)
+  const [filterStatus, setFilterStatus] = useState<
+    GlobalReviewIssueStatus | "all"
+  >("all");
+  const [filterSeverity, setFilterSeverity] = useState<
+    GlobalReviewIssueSeverity | "all"
+  >("all");
   const [keyword, setKeyword] = useState("");
+
+  // ── Data queries ─────────────────────────────────────────────────────────
 
   const novelQuery = useQuery({
     queryKey: queryKeys.novels.detail(id),
@@ -277,66 +354,82 @@ export default function GlobalReviewPage() {
   const volumes = volumesQuery.data?.data?.volumes ?? [];
 
   const issuesQuery = useQuery({
-    queryKey: queryKeys.novels.globalReviewIssues(id, filterStatus === "all" ? undefined : filterStatus),
-    queryFn: () => listGlobalReviewIssues(id, {
-      status: filterStatus === "all" ? undefined : filterStatus,
-    }),
+    queryKey: queryKeys.novels.globalReviewIssues(
+      id,
+      filterStatus === "all" ? undefined : filterStatus,
+    ),
+    queryFn: () =>
+      listGlobalReviewIssues(id, {
+        status: filterStatus === "all" ? undefined : filterStatus,
+      }),
     enabled: !!id,
-    // 自动刷新：每 10 秒检查一次，直到没有 acknowledged 状态的问题
     refetchInterval: (query) => {
       const data = query.state.data?.data;
       if (!data) return false;
-      const hasAcknowledged = data.some(i => i.status === "acknowledged");
+      const hasAcknowledged = data.some((i) => i.status === "acknowledged");
       return hasAcknowledged ? 10000 : false;
     },
   });
   const issues = issuesQuery.data?.data ?? [];
 
+  // ── Mutations ─────────────────────────────────────────────────────────────
+
   const runReviewMutation = useMutation({
-    mutationFn: () => runGlobalReview(id, {
-      mode: reviewMode,
-      startChapterOrder: reviewMode === "range" ? startChapter : undefined,
-      endChapterOrder: reviewMode === "range" ? endChapter : undefined,
-      volumeId: reviewMode === "currentVolume" ? selectedVolumeId : undefined,
-    }),
+    mutationFn: () =>
+      runGlobalReview(id, {
+        mode: reviewMode,
+        startChapterOrder: reviewMode === "range" ? startChapter : undefined,
+        endChapterOrder: reviewMode === "range" ? endChapter : undefined,
+        volumeId: reviewMode === "currentVolume" ? selectedVolumeId : undefined,
+      }),
     onSuccess: (res) => {
-      toast.success(`审校完成，共发现 ${res.data?.issueCount ?? 0} 个问题`);
+      toast.success(
+        `审校完成，共发现 ${res.data?.issueCount ?? 0} 个问题`,
+      );
       queryClient.invalidateQueries({
         queryKey: ["novels", "global-review-issues", id],
       });
       setFilterStatus("all");
+      setFilterSeverity("all");
       issuesQuery.refetch();
     },
     onError: () => toast.error("全局审校失败，请稍后重试"),
   });
 
   const updateStatusMutation = useMutation({
-    mutationFn: ({ issueId, status }: { issueId: string; status: GlobalReviewIssueStatus }) =>
-      updateGlobalReviewIssueStatus(id, issueId, status),
+    mutationFn: ({
+      issueId,
+      status,
+    }: {
+      issueId: string;
+      status: GlobalReviewIssueStatus;
+    }) => updateGlobalReviewIssueStatus(id, issueId, status),
     onSuccess: () => {
       issuesQuery.refetch();
     },
     onError: () => toast.error("状态更新失败"),
   });
 
+  // ── Derived state ─────────────────────────────────────────────────────────
+
   const stats = useMemo(() => {
-    const all = issues;
     return {
-      total: all.length,
-      critical: all.filter((i) => i.severity === "critical").length,
-      major: all.filter((i) => i.severity === "major").length,
-      minor: all.filter((i) => i.severity === "minor").length,
-      pending: all.filter((i) => i.status === "pending").length,
+      total: issues.length,
+      critical: issues.filter((i) => i.severity === "critical").length,
+      major: issues.filter((i) => i.severity === "major").length,
+      minor: issues.filter((i) => i.severity === "minor").length,
+      pending: issues.filter((i) => i.status === "pending").length,
     };
   }, [issues]);
 
   const filteredIssues = useMemo(() => {
     let result = issues;
-    // 按状态筛选
     if (filterStatus !== "all") {
       result = result.filter((i) => i.status === filterStatus);
     }
-    // 按关键词筛选
+    if (filterSeverity !== "all") {
+      result = result.filter((i) => i.severity === filterSeverity);
+    }
     if (keyword.trim()) {
       const kw = keyword.trim().toLowerCase();
       result = result.filter(
@@ -347,28 +440,41 @@ export default function GlobalReviewPage() {
       );
     }
     return result;
-  }, [issues, filterStatus, keyword]);
+  }, [issues, filterStatus, filterSeverity, keyword]);
+
+  // ── Dialog state ──────────────────────────────────────────────────────────
 
   const [adjustDialogOpen, setAdjustDialogOpen] = useState(false);
-  const [adjustingIssue, setAdjustingIssue] = useState<GlobalReviewIssue | null>(null);
-  const [batchRepairingChapterIds, setBatchRepairingChapterIds] = useState<string[]>([]);
+  const [adjustingIssue, setAdjustingIssue] =
+    useState<GlobalReviewIssue | null>(null);
+
+  // ── Batch repair state ────────────────────────────────────────────────────
+
+  const [batchRepairingChapterIds, setBatchRepairingChapterIds] = useState<
+    string[]
+  >([]);
   const [batchRepairCompletedCount, setBatchRepairCompletedCount] = useState(0);
   const [isBatchRepairing, setIsBatchRepairing] = useState(false);
-  const [batchRepairChapterIssueMap, setBatchRepairChapterIssueMap] = useState<Map<string, string[]>>(new Map());
+  const [batchRepairChapterIssueMap, setBatchRepairChapterIssueMap] = useState<
+    Map<string, string[]>
+  >(new Map());
 
   const acknowledgedIssues = useMemo(
     () => issues.filter((i) => i.status === "acknowledged"),
     [issues],
   );
 
+  // ── Mutations (repair) ────────────────────────────────────────────────────
+
   const singleRepairMutation = useMutation({
     mutationFn: (issueId: string) => {
-      // 获取问题的复核反馈
-      const issue = issues.find(i => i.id === issueId);
+      const issue = issues.find((i) => i.id === issueId);
       const feedback = issue?.verificationFeedback;
       return repairGlobalReviewIssues(id, {
         globalReviewIssueIds: [issueId],
-        userInstruction: feedback ? `复核反馈：${feedback}` : undefined,
+        userInstruction: feedback
+          ? `复核反馈：${feedback}`
+          : undefined,
       });
     },
     onSuccess: () => {
@@ -402,19 +508,25 @@ export default function GlobalReviewPage() {
       for (const chapterId of chapterIds) {
         const chapterIssueIds = groups.get(chapterId) ?? [];
         try {
-          // 收集该章节所有问题的复核反馈
           const feedbacks: string[] = [];
           for (const issueId of chapterIssueIds) {
-            const issue = issues.find(i => i.id === issueId);
+            const issue = issues.find((i) => i.id === issueId);
             if (issue?.verificationFeedback) {
-              feedbacks.push(`[${issueId.slice(0, 8)}] ${issue.verificationFeedback}`);
+              feedbacks.push(
+                `[${issueId.slice(0, 8)}] ${issue.verificationFeedback}`,
+              );
             }
           }
           const result = await repairGlobalReviewIssues(id, {
             globalReviewIssueIds: chapterIssueIds,
-            userInstruction: feedbacks.length > 0 ? `复核反馈：\n${feedbacks.join("\n")}` : undefined,
+            userInstruction:
+              feedbacks.length > 0
+                ? `复核反馈：\n${feedbacks.join("\n")}`
+                : undefined,
           });
-          repairedIssueIds.push(...(result.data?.repairedIssueIds ?? chapterIssueIds));
+          repairedIssueIds.push(
+            ...(result.data?.repairedIssueIds ?? chapterIssueIds),
+          );
         } catch {
           // Continue with remaining chapters even if one fails
         }
@@ -432,19 +544,19 @@ export default function GlobalReviewPage() {
       void queryClient.invalidateQueries({
         queryKey: ["novels", "global-review-issues", id],
       });
-      // 不在 onSuccess 重置 isBatchRepairing，让进度卡片持续显示直到问题状态更新
     },
     onError: () => {
       toast.error("批量修复触发失败，请稍后重试");
       setIsBatchRepairing(false);
     },
     onSettled: () => {
-      // 只重置进度数据，不重置 isBatchRepairing
       setBatchRepairingChapterIds([]);
       setBatchRepairCompletedCount(0);
       setBatchRepairChapterIssueMap(new Map());
     },
   });
+
+  // ── Handlers ──────────────────────────────────────────────────────────────
 
   const handleRepairIssue = useCallback(
     (issueId: string) => {
@@ -453,13 +565,10 @@ export default function GlobalReviewPage() {
     [singleRepairMutation],
   );
 
-  const handleAdjustPlan = useCallback(
-    (issue: GlobalReviewIssue) => {
-      setAdjustingIssue(issue);
-      setAdjustDialogOpen(true);
-    },
-    [],
-  );
+  const handleAdjustPlan = useCallback((issue: GlobalReviewIssue) => {
+    setAdjustingIssue(issue);
+    setAdjustDialogOpen(true);
+  }, []);
 
   const handleAdjustPlanConfirm = useCallback(
     (userInstruction: string) => {
@@ -470,7 +579,6 @@ export default function GlobalReviewPage() {
           setAdjustingIssue(null);
         },
       });
-      // Note: userInstruction would be passed to the API when backend supports it
       void userInstruction;
     },
     [adjustingIssue, singleRepairMutation],
@@ -478,47 +586,67 @@ export default function GlobalReviewPage() {
 
   const handleBatchRepair = useCallback(() => {
     if (acknowledgedIssues.length === 0) return;
-    batchRepairMutation.mutate(acknowledgedIssues.map((i) => i.id));
+    batchRepairMutation.mutate(
+      acknowledgedIssues.map((i) => i.id),
+    );
   }, [acknowledgedIssues, batchRepairMutation]);
+
+  // ── Verify mutation (AI 复核) ─────────────────────────────────────────────
 
   const verifyMutation = useMutation({
     mutationFn: async (issue: GlobalReviewIssue) => {
-      // 对受影响章节执行审校，检查问题是否仍然存在
       const affectedChapterIds = issue.affectedChapters;
       const results: Array<{ chapterId: string; hasIssue: boolean }> = [];
 
       for (const chapterId of affectedChapterIds) {
         try {
-          // 调用章节审校 API
-          const response = await fetch(`/api/novels/${id}/chapters/${chapterId}/audit-reports`, {
-            headers: { "Authorization": `Bearer ${localStorage.getItem("token") || ""}` },
-          });
+          const response = await fetch(
+            `/api/novels/${id}/chapters/${chapterId}/audit-reports`,
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+              },
+            },
+          );
           const data = await response.json();
 
-          // 检查最新的审校报告是否有相关问题
           const reports = data.data || [];
           const latestReport = reports[0];
-          const hasIssue = latestReport?.issues?.some((issue: { description: string; status: string }) =>
-            issue.status === "open" && issue.description.includes(issue.description.substring(0, 20))
-          ) ?? false;
+          const hasIssue =
+            latestReport?.issues?.some(
+              (
+                reportIssue: { description: string; status: string },
+              ) =>
+                reportIssue.status === "open" &&
+                reportIssue.description.includes(
+                  issue.description.substring(0, 20),
+                ),
+            ) ?? false;
 
           results.push({ chapterId, hasIssue });
         } catch {
-          results.push({ chapterId, hasIssue: true }); // 出错时假设有问题
+          results.push({ chapterId, hasIssue: true });
         }
       }
 
-      const issuesStillPresent = results.filter(r => r.hasIssue).length;
+      const issuesStillPresent = results.filter((r) => r.hasIssue).length;
       return { results, issuesStillPresent, issueId: issue.id };
     },
     onSuccess: async (result) => {
       if (result.issuesStillPresent === 0) {
         toast.success("AI 复核通过：问题已修复");
       } else {
-        // 重新打开问题，记录复核反馈到数据库
         const feedback = `[复核反馈 ${new Date().toLocaleDateString()}] 复核发现 ${result.issuesStillPresent} 个章节仍存在问题。`;
-        await updateGlobalReviewIssueStatus(id, result.issueId, "acknowledged", undefined, feedback);
-        toast.warning(`AI 复核发现 ${result.issuesStillPresent} 个章节仍存在问题，已重新打开`);
+        await updateGlobalReviewIssueStatus(
+          id,
+          result.issueId,
+          "acknowledged",
+          undefined,
+          feedback,
+        );
+        toast.warning(
+          `AI 复核发现 ${result.issuesStillPresent} 个章节仍存在问题，已重新打开`,
+        );
       }
       void queryClient.invalidateQueries({
         queryKey: ["novels", "global-review-issues", id],
@@ -534,8 +662,47 @@ export default function GlobalReviewPage() {
     [verifyMutation],
   );
 
+  // ── Derived: batch repair progress labels ──────────────────────────────────
+
+  /** Map of chapterId -> "#G001 #G002 ..." for all issues in the batch repair */
+  const allIssueLabelsByChapter = useMemo(() => {
+    const map = new Map<string, string[]>();
+    for (const [chapterId, issueIds] of batchRepairChapterIssueMap.entries()) {
+      const labels = issueIds
+        .map((iid) => issues.find((i) => i.id === iid))
+        .filter((i) => i?.issueNumber != null)
+        .map((i) => `#G${String(i!.issueNumber).padStart(3, "0")}`);
+      map.set(chapterId, labels);
+    }
+    return map;
+  }, [batchRepairChapterIssueMap, issues]);
+
+  /** Flat list of all affected issue labels across all chapters */
+  const allAffectedIssueLabels = useMemo(() => {
+    const labels: string[] = [];
+    for (const chapterId of batchRepairingChapterIds) {
+      const chapterLabels = allIssueLabelsByChapter.get(chapterId) ?? [];
+      labels.push(...chapterLabels);
+    }
+    return labels;
+  }, [batchRepairingChapterIds, allIssueLabelsByChapter]);
+
+  /** Labels for the chapter currently being processed */
+  const currentChapterIssueLabels = useMemo(() => {
+    const currentChapterId =
+      batchRepairingChapterIds[batchRepairCompletedCount];
+    if (!currentChapterId) return [];
+    return allIssueLabelsByChapter.get(currentChapterId) ?? [];
+  }, [
+    batchRepairCompletedCount,
+    batchRepairingChapterIds,
+    allIssueLabelsByChapter,
+  ]);
+
+  // ── Render ────────────────────────────────────────────────────────────────
+
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col gap-4 p-4">
+    <div className="mx-auto flex w-full max-w-7xl flex-col gap-4 p-4">
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
@@ -556,11 +723,15 @@ export default function GlobalReviewPage() {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex flex-wrap items-end gap-3">
-            <div className="flex-1 min-w-[160px]">
-              <label className="mb-1 block text-sm font-medium text-foreground">审校范围</label>
+            <div className="min-w-[160px] flex-1">
+              <label className="mb-1 block text-sm font-medium text-foreground">
+                审校范围
+              </label>
               <Select
                 value={reviewMode}
-                onValueChange={(v) => setReviewMode(v as "currentVolume" | "range")}
+                onValueChange={(v) =>
+                  setReviewMode(v as "currentVolume" | "range")
+                }
               >
                 <SelectTrigger>
                   <SelectValue />
@@ -575,29 +746,43 @@ export default function GlobalReviewPage() {
             {reviewMode === "range" && (
               <>
                 <div className="w-24">
-                  <label className="mb-1 block text-sm font-medium text-foreground">起始章</label>
+                  <label className="mb-1 block text-sm font-medium text-foreground">
+                    起始章
+                  </label>
                   <Input
                     type="number"
                     min={1}
                     value={startChapter}
-                    onChange={(e) => setStartChapter(Math.max(1, Number(e.target.value) || 1))}
+                    onChange={(e) =>
+                      setStartChapter(
+                        Math.max(1, Number(e.target.value) || 1),
+                      )
+                    }
                   />
                 </div>
                 <div className="w-24">
-                  <label className="mb-1 block text-sm font-medium text-foreground">结束章</label>
+                  <label className="mb-1 block text-sm font-medium text-foreground">
+                    结束章
+                  </label>
                   <Input
                     type="number"
                     min={1}
                     value={endChapter}
-                    onChange={(e) => setEndChapter(Math.max(1, Number(e.target.value) || 1))}
+                    onChange={(e) =>
+                      setEndChapter(
+                        Math.max(1, Number(e.target.value) || 1),
+                      )
+                    }
                   />
                 </div>
               </>
             )}
 
             {reviewMode === "currentVolume" && (
-              <div className="flex-1 min-w-[160px]">
-                <label className="mb-1 block text-sm font-medium text-foreground">选择卷</label>
+              <div className="min-w-[160px] flex-1">
+                <label className="mb-1 block text-sm font-medium text-foreground">
+                  选择卷
+                </label>
                 <Select
                   value={selectedVolumeId}
                   onValueChange={setSelectedVolumeId}
@@ -641,9 +826,11 @@ export default function GlobalReviewPage() {
       {/* Loading state */}
       {runReviewMutation.isPending && (
         <Card>
-          <CardContent className="flex flex-col items-center justify-center py-12 gap-3">
+          <CardContent className="flex flex-col items-center justify-center gap-3 py-12">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            <p className="text-sm text-muted-foreground">正在进行全局审校，这可能需要几分钟...</p>
+            <p className="text-sm text-muted-foreground">
+              正在进行全局审校，这可能需要几分钟...
+            </p>
           </CardContent>
         </Card>
       )}
@@ -653,99 +840,178 @@ export default function GlobalReviewPage() {
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
           <Card>
             <CardContent className="flex flex-col items-center justify-center p-4">
-              <span className="text-2xl font-bold text-foreground">{stats.total}</span>
+              <span className="text-2xl font-bold text-foreground">
+                {stats.total}
+              </span>
               <span className="text-xs text-muted-foreground">总问题数</span>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="flex flex-col items-center justify-center p-4">
-              <span className="text-2xl font-bold text-red-500">{stats.critical}</span>
+              <span className="text-2xl font-bold text-red-500">
+                {stats.critical}
+              </span>
               <span className="text-xs text-muted-foreground">严重</span>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="flex flex-col items-center justify-center p-4">
-              <span className="text-2xl font-bold text-orange-500">{stats.major}</span>
+              <span className="text-2xl font-bold text-orange-500">
+                {stats.major}
+              </span>
               <span className="text-xs text-muted-foreground">重要</span>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="flex flex-col items-center justify-center p-4">
-              <span className="text-2xl font-bold text-sky-500">{stats.minor}</span>
+              <span className="text-2xl font-bold text-sky-500">
+                {stats.minor}
+              </span>
               <span className="text-xs text-muted-foreground">轻微</span>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="flex flex-col items-center justify-center p-4">
-              <span className="text-2xl font-bold text-amber-500">{stats.pending}</span>
+              <span className="text-2xl font-bold text-amber-500">
+                {stats.pending}
+              </span>
               <span className="text-xs text-muted-foreground">待处理</span>
             </CardContent>
           </Card>
         </div>
       )}
 
-      {/* Filter bar - 始终显示，不依赖 issues.length */}
-      <div className="flex flex-wrap items-center gap-3">
-        <div className="flex flex-wrap gap-1.5">
-          {FILTER_CHIPS.map((chip) => (
-            <button
-              key={chip.key}
-              onClick={() => setFilterStatus(chip.key)}
-              className={`rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${
-                filterStatus === chip.key
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-muted text-muted-foreground hover:bg-muted/80"
-              }`}
-            >
-              {chip.label}
-            </button>
-          ))}
-        </div>
-        <div className="flex items-center gap-2 ml-auto">
+      {/* Three-column layout */}
+      {/* ── Left column: Filter Panel (240px) | Center: Issues (1fr) | Right: Progress (280px) ── */}
+      <div className="grid gap-4 lg:grid-cols-[240px_1fr] xl:grid-cols-[240px_1fr_280px]">
+        {/* ── LEFT: Filter panel ── */}
+        <aside className="space-y-4 lg:sticky lg:top-4 lg:h-fit lg:self-start">
+          <Card className="overflow-hidden">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-sm font-medium">
+                <SlidersHorizontal className="h-4 w-4" />
+                筛选
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {/* Status filter */}
+              <div>
+                <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                  状态
+                </p>
+                <div className="flex flex-wrap gap-1.5">
+                  {STATUS_FILTER_OPTIONS.map((opt) => (
+                    <button
+                      key={opt.key}
+                      onClick={() => setFilterStatus(opt.key)}
+                      className={`rounded-full px-2.5 py-1 text-xs font-medium transition-colors ${
+                        filterStatus === opt.key
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-muted text-muted-foreground hover:bg-muted/80"
+                      }`}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Severity filter */}
+              <div>
+                <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                  严重程度
+                </p>
+                <div className="flex flex-wrap gap-1.5">
+                  {SEVERITY_FILTER_OPTIONS.map((opt) => (
+                    <button
+                      key={opt.key}
+                      onClick={() => setFilterSeverity(opt.key)}
+                      className={`rounded-full px-2.5 py-1 text-xs font-medium transition-colors ${
+                        filterSeverity === opt.key
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-muted text-muted-foreground hover:bg-muted/80"
+                      }`}
+                    >
+                      {opt.key !== "all" && (
+                        <span className={`mr-1 inline-block h-1.5 w-1.5 rounded-full ${opt.color === "text-red-500" ? "bg-red-500" : opt.color === "text-orange-500" ? "bg-orange-500" : opt.color === "text-sky-500" ? "bg-sky-500" : ""}`} />
+                      )}
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Keyword search */}
+              <div>
+                <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                  搜索
+                </p>
+                <div className="relative">
+                  <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+                  <Input
+                    placeholder="搜索问题..."
+                    value={keyword}
+                    onChange={(e) => setKeyword(e.target.value)}
+                    className="h-8 pl-8 text-sm"
+                  />
+                </div>
+              </div>
+
+              {/* Active filter count */}
+              {(filterStatus !== "all" || filterSeverity !== "all" || keyword.trim()) && (
+                <div className="flex items-center justify-between border-t border-border pt-3">
+                  <span className="text-xs text-muted-foreground">
+                    已筛选 {filteredIssues.length}/{issues.length} 个问题
+                  </span>
+                  <button
+                    onClick={() => {
+                      setFilterStatus("all");
+                      setFilterSeverity("all");
+                      setKeyword("");
+                    }}
+                    className="text-xs font-medium text-primary hover:underline"
+                  >
+                    清除筛选
+                  </button>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Batch repair trigger button (mobile-friendly placement in left panel) */}
           {acknowledgedIssues.length > 0 && (
             <Button
-              size="sm"
-              variant="default"
               onClick={handleBatchRepair}
               disabled={batchRepairMutation.isPending}
-              className="gap-1.5"
+              className="w-full gap-2"
             >
               {batchRepairMutation.isPending ? (
-                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
-                <Zap className="h-3.5 w-3.5" />
+                <Zap className="h-4 w-4" />
               )}
               批量修复（{acknowledgedIssues.length}）
             </Button>
           )}
-          <div className="relative w-full max-w-[200px]">
-            <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              placeholder="搜索问题..."
-              value={keyword}
-              onChange={(e) => setKeyword(e.target.value)}
-              className="pl-8 h-9"
-            />
-          </div>
-        </div>
-      </div>
+        </aside>
 
-      {/* Issues list */}
-      {issuesQuery.isLoading ? (
-        <LoadingIndicator className="py-12" />
-      ) : issues.length === 0 ? (
-        <Card>
-          <CardContent>
-            <EmptyState
-              title="暂无审校记录"
-              description="点击「开始审校」对当前作品进行全局一致性检查。"
-              icon={<AlertTriangle className="h-8 w-8 text-muted-foreground/50" />}
-            />
-          </CardContent>
-        </Card>
-      ) : (
-        <>
-          {filteredIssues.length === 0 ? (
+        {/* ── CENTER: Issue list ── */}
+        <main className="min-w-0">
+          {issuesQuery.isLoading ? (
+            <LoadingIndicator className="py-12" />
+          ) : issues.length === 0 ? (
+            <Card>
+              <CardContent>
+                <EmptyState
+                  title="暂无审校记录"
+                  description="点击「开始审校」对当前作品进行全局一致性检查。"
+                  icon={
+                    <AlertTriangle className="h-8 w-8 text-muted-foreground/50" />
+                  }
+                />
+              </CardContent>
+            </Card>
+          ) : filteredIssues.length === 0 ? (
             <Card>
               <CardContent>
                 <EmptyState
@@ -758,90 +1024,157 @@ export default function GlobalReviewPage() {
             <div className="flex flex-col gap-3">
               {filteredIssues.map((issue) => (
                 <IssueCard
-              key={issue.id}
-              issue={issue}
-              novelId={id}
-              onStatusChange={(issueId, status) =>
-                updateStatusMutation.mutate({ issueId, status })
-              }
-              onRepair={handleRepairIssue}
-              onAdjustPlan={handleAdjustPlan}
-              onVerify={handleVerifyIssue}
-              isUpdating={updateStatusMutation.isPending}
-              isRepairing={singleRepairMutation.isPending && singleRepairMutation.variables === issue.id}
-              isVerifying={verifyMutation.isPending && verifyMutation.variables?.id === issue.id}
-              isBatchRepairing={isBatchRepairing && issue.primaryFixChapter !== null && batchRepairingChapterIds.includes(issue.primaryFixChapter)}
-            />
-          ))}
-        </div>
+                  key={issue.id}
+                  issue={issue}
+                  novelId={id}
+                  onStatusChange={(issueId, status) =>
+                    updateStatusMutation.mutate({ issueId, status })
+                  }
+                  onRepair={handleRepairIssue}
+                  onAdjustPlan={handleAdjustPlan}
+                  onVerify={handleVerifyIssue}
+                  isUpdating={updateStatusMutation.isPending}
+                  isRepairing={
+                    singleRepairMutation.isPending &&
+                    singleRepairMutation.variables === issue.id
+                  }
+                  isVerifying={
+                    verifyMutation.isPending &&
+                    verifyMutation.variables?.id === issue.id
+                  }
+                  isBatchRepairing={
+                    isBatchRepairing &&
+                    issue.primaryFixChapter !== null &&
+                    batchRepairingChapterIds.includes(
+                      issue.primaryFixChapter,
+                    )
+                  }
+                />
+              ))}
+            </div>
           )}
-        </>
-      )}
+        </main>
 
-      {/* Batch repair progress */}
-      {isBatchRepairing && (
-        <Card className="border-l-4 border-l-blue-500">
-          <CardContent className="space-y-3 py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-sm font-medium">
-                {batchRepairMutation.isPending ? (
-                  <Loader2 className="h-4 w-4 animate-spin text-blue-500" />
-                ) : (
-                  <CheckCircle2 className="h-4 w-4 text-blue-500" />
-                )}
-                <span>批量修复{batchRepairMutation.isPending ? "进行中" : "已触发"}</span>
-              </div>
-              <Button
-                size="sm"
-                variant="ghost"
-                onClick={() => setIsBatchRepairing(false)}
-              >
-                关闭
-              </Button>
-            </div>
-            {batchRepairMutation.isPending && batchRepairingChapterIds.length > 0 && (
-              <div className="space-y-2">
-                <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
-                  <div
-                    className="h-full rounded-full bg-blue-500 transition-all duration-300"
-                    style={{
-                      width: `${batchRepairingChapterIds.length > 0
-                        ? (batchRepairCompletedCount / batchRepairingChapterIds.length) * 100
-                        : 0}%`,
-                    }}
-                  />
+        {/* ── RIGHT: Repair progress panel ── */}
+        <aside className="xl:block">
+          <Card className="sticky top-4">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-sm font-medium">
+                <Wrench className="h-4 w-4" />
+                修复进度
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {isBatchRepairing ? (
+                /* ── Active batch repair progress ── */
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 text-sm font-medium">
+                    {batchRepairMutation.isPending ? (
+                      <Loader2 className="h-4 w-4 animate-spin text-blue-500" />
+                    ) : (
+                      <CheckCircle2 className="h-4 w-4 text-blue-500" />
+                    )}
+                    <span>
+                      批量修复
+                      {batchRepairMutation.isPending ? "进行中" : "已触发"}
+                    </span>
+                  </div>
+
+                  {batchRepairMutation.isPending &&
+                    batchRepairingChapterIds.length > 0 && (
+                      <>
+                        {/* Progress bar */}
+                        <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
+                          <div
+                            className="h-full rounded-full bg-blue-500 transition-all duration-300"
+                            style={{
+                              width: `${(batchRepairCompletedCount / batchRepairingChapterIds.length) * 100}%`,
+                            }}
+                          />
+                        </div>
+
+                        {/* Chapter progress with issue labels */}
+                        <div className="space-y-1.5 text-sm">
+                          <p className="text-foreground">
+                            正在修复第 {batchRepairCompletedCount + 1}/
+                            {batchRepairingChapterIds.length} 章
+                            {currentChapterIssueLabels.length > 0 && (
+                              <span className="text-muted-foreground">
+                                ，包含问题{" "}
+                                {currentChapterIssueLabels.join(" ")}
+                              </span>
+                            )}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            本章涉及{" "}
+                            {(
+                              batchRepairChapterIssueMap.get(
+                                batchRepairingChapterIds[
+                                  batchRepairCompletedCount
+                                ],
+                              ) ?? []
+                            ).length}{" "}
+                            个问题，每章约需 1-3 分钟
+                          </p>
+                        </div>
+
+                        {/* All affected issues summary */}
+                        {allAffectedIssueLabels.length > 0 && (
+                          <div className="rounded-md bg-muted/60 p-2">
+                            <p className="mb-1 text-xs font-medium text-muted-foreground">
+                              全部受影响问题（{allAffectedIssueLabels.length}）
+                            </p>
+                            <div className="flex flex-wrap gap-1">
+                              {allAffectedIssueLabels.map((label) => (
+                                <Badge
+                                  key={label}
+                                  variant="outline"
+                                  className="text-xs"
+                                >
+                                  {label}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </>
+                    )}
+
+                  {!batchRepairMutation.isPending && (
+                    <div className="text-xs text-muted-foreground">
+                      修复为异步过程，问题状态会在完成后自动更新。
+                    </div>
+                  )}
+
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="w-full"
+                    onClick={() => setIsBatchRepairing(false)}
+                  >
+                    关闭面板
+                  </Button>
                 </div>
-                <div className="text-sm text-muted-foreground">
-                  正在修复第 {batchRepairCompletedCount + 1}/{batchRepairingChapterIds.length} 章
-                  {(() => {
-                    const currentChapterId = batchRepairingChapterIds[batchRepairCompletedCount];
-                    const chapterIssueIds = batchRepairChapterIssueMap.get(currentChapterId) ?? [];
-                    if (chapterIssueIds.length === 0) return null;
-                    const issueLabels = chapterIssueIds
-                      .map((iid) => issues.find((i) => i.id === iid))
-                      .filter((i) => i?.issueNumber != null)
-                      .map((i) => `#G${String(i!.issueNumber).padStart(3, "0")}`);
-                    return issueLabels.length > 0
-                      ? <span> — 问题 {issueLabels.join(" ")}</span>
-                      : null;
-                  })()}
+              ) : (
+                /* ── Idle state ── */
+                <div className="flex flex-col items-center gap-3 py-6 text-center">
+                  <div className="rounded-full bg-muted p-3">
+                    <Wrench className="h-5 w-5 text-muted-foreground" />
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    选择问题后点击修复开始
+                  </p>
+                  {acknowledgedIssues.length > 0 && (
+                    <p className="text-xs text-muted-foreground">
+                      当前有 {acknowledgedIssues.length} 个已确认问题待修复
+                    </p>
+                  )}
                 </div>
-                <div className="text-xs text-muted-foreground">
-                  每章约需 1-3 分钟，修复为异步过程。
-                </div>
-              </div>
-            )}
-            {!batchRepairMutation.isPending && (
-              <div className="text-sm text-muted-foreground">
-                修复为异步过程。问题状态会在修复完成后自动更新（每 10 秒刷新一次）。
-              </div>
-            )}
-            <div className="text-xs text-muted-foreground">
-              提示：您可以继续浏览其他内容，修复会在后台进行。
-            </div>
-          </CardContent>
-        </Card>
-      )}
+              )}
+            </CardContent>
+          </Card>
+        </aside>
+      </div>
 
       {/* Fix plan adjust dialog */}
       <FixPlanAdjustDialog
