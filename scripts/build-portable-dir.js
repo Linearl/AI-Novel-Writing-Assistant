@@ -25,7 +25,7 @@
  *     └── README.txt                          ← 使用说明
  */
 
-const { execSync, spawn } = require("child_process");
+const { execSync, execFileSync, spawn } = require("child_process");
 const fs = require("fs");
 const path = require("path");
 
@@ -52,9 +52,15 @@ function log(msg) {
   console.log(`\x1b[36m[${ts}]\x1b[0m ${msg}`);
 }
 
-function run(cmd, opts = {}) {
-  log(`exec: ${cmd}`);
-  execSync(cmd, { stdio: "inherit", cwd: ROOT, ...opts });
+function run(cmdOrExec, argsOrOpts, opts) {
+  if (Array.isArray(argsOrOpts)) {
+    log(`exec: ${cmdOrExec} ${argsOrOpts.join(" ")}`);
+    execFileSync(cmdOrExec, argsOrOpts, { cwd: ROOT, stdio: "inherit", ...opts });
+  } else {
+    const o = argsOrOpts || {};
+    log(`exec: ${cmdOrExec}`);
+    execSync(cmdOrExec, { cwd: ROOT, stdio: "inherit", ...o });
+  }
 }
 
 function mkdirp(dir) {
@@ -95,7 +101,7 @@ if (reuseStage) {
   }
 
   log("🔨 Step 1/4: 完整构建链（shared → prisma → server → client → desktop）");
-  run("pnpm run build:desktop:all");
+  run("pnpm", ["run", "build:desktop:all"]);
 }
 
 // ---------------------------------------------------------------------------
@@ -117,7 +123,7 @@ if (reuseStage) {
       }
     }
   }
-  run("node desktop/scripts/stage-desktop.cjs");
+  run(process.execPath, ["desktop/scripts/stage-desktop.cjs"]);
 }
 
 // ---------------------------------------------------------------------------
@@ -143,7 +149,7 @@ const electronBuilderArgs = [
   "--config.npmRebuild=false",
 ];
 log(`exec: ${electronBuilderCli} ${electronBuilderArgs.join(" ")}`);
-execSync(`"${process.execPath}" "${electronBuilderCli}" ${electronBuilderArgs.join(" ")}`, {
+execFileSync(process.execPath, [electronBuilderCli, ...electronBuilderArgs], {
   cwd: path.join(ROOT, "desktop"),
   stdio: "inherit",
   env: process.env,
@@ -178,7 +184,7 @@ const targetDir = path.join(RELEASE_DIR, DIR_NAME);
   try {
     fs.rmSync(tmpExtractDir, { recursive: true, force: true });
     mkdirp(tmpExtractDir);
-    execSync(`"${process.execPath}" "${asarCli}" e "${asarPath}" "${tmpExtractDir}"`, { stdio: "pipe" });
+    execFileSync(process.execPath, [asarCli, "e", asarPath, tmpExtractDir], { stdio: "pipe" });
 
     const pkgFile = path.join(tmpExtractDir, patchTarget);
     if (fs.existsSync(pkgFile)) {
@@ -190,7 +196,7 @@ const targetDir = path.join(RELEASE_DIR, DIR_NAME);
         };
         fs.writeFileSync(pkgFile, JSON.stringify(pkgJson, null, 2));
         fs.rmSync(asarPath, { force: true });
-        execSync(`"${process.execPath}" "${asarCli}" p "${tmpExtractDir}" "${asarPath}"`, { stdio: "pipe" });
+        execFileSync(process.execPath, [asarCli, "p", tmpExtractDir, asarPath], { stdio: "pipe" });
         log("🩹 Patched @langchain/core exports in asar");
       } else {
         log("🩹 @langchain/core exports already patched or no exports field");
@@ -205,7 +211,7 @@ const targetDir = path.join(RELEASE_DIR, DIR_NAME);
 
 rimraf(targetDir);
 try {
-  execSync(`robocopy "${BUILDER_OUTPUT}" "${targetDir}" /E /COPY:DAT /R:1 /W:1 /NFL /NDL /NJH /NJS`, { stdio: "pipe" });
+  execFileSync("robocopy", [BUILDER_OUTPUT, targetDir, "/E", "/COPY:DAT", "/R:1", "/W:1", "/NFL", "/NDL", "/NJH", "/NJS"], { stdio: "pipe" });
 } catch (err) {
   if (err.status === undefined || err.status >= 16) throw err;
 }
@@ -228,7 +234,7 @@ if (fs.existsSync(serverNodeModulesSrc)) {
   // 再复制到 release
   log("📦 复制 server 生产依赖到 resources/node_modules/");
   try {
-    execSync(`robocopy "${serverNodeModulesSrc}" "${serverNodeModulesDest}" /E /COPY:DAT /R:1 /W:1 /NFL /NDL /NJH /NJS`, { stdio: "pipe" });
+    execFileSync("robocopy", [serverNodeModulesSrc, serverNodeModulesDest, "/E", "/COPY:DAT", "/R:1", "/W:1", "/NFL", "/NDL", "/NJH", "/NJS"], { stdio: "pipe" });
   } catch (err) {
     if (err.status === undefined || err.status >= 16) throw err;
   }
@@ -240,8 +246,8 @@ if (fs.existsSync(serverNodeModulesSrc)) {
     log("📦 补充 native 模块到 resources/app/node_modules/...");
     // 只复制 .node 文件和 prebuilds 目录
     try {
-      execSync(
-        `robocopy "${serverNodeModulesDest}" "${appNodeModulesDest}" *.node /S /COPY:DAT /R:1 /W:1 /NFL /NDL /NJH /NJS`,
+      execFileSync(
+        "robocopy", [serverNodeModulesDest, appNodeModulesDest, "*.node", "/S", "/COPY:DAT", "/R:1", "/W:1", "/NFL", "/NDL", "/NJH", "/NJS"],
         { stdio: "pipe" }
       );
     } catch (err) {
@@ -249,8 +255,8 @@ if (fs.existsSync(serverNodeModulesSrc)) {
     }
     // 也复制 prebuilds 目录
     try {
-      execSync(
-        `robocopy "${serverNodeModulesDest}" "${appNodeModulesDest}" prebuilds /S /COPY:DAT /R:1 /W:1 /NFL /NDL /NJH /NJS`,
+      execFileSync(
+        "robocopy", [serverNodeModulesDest, appNodeModulesDest, "prebuilds", "/S", "/COPY:DAT", "/R:1", "/W:1", "/NFL", "/NDL", "/NJH", "/NJS"],
         { stdio: "pipe" }
       );
     } catch (err) {

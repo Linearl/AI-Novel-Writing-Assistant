@@ -1,6 +1,6 @@
 const fs = require("node:fs");
 const path = require("node:path");
-const { execSync } = require("node:child_process");
+const { execSync, execFileSync } = require("node:child_process");
 
 const repoRoot = path.resolve(__dirname, "..", "..");
 const desktopDir = path.resolve(__dirname, "..");
@@ -21,12 +21,10 @@ const prismaClientEntrypointFiles = [
 ];
 
 function runPnpm(args, cwd = repoRoot) {
-  const command = `pnpm ${args.map((arg) => `"${arg}"`).join(" ")}`;
-  execSync(command, {
+  execFileSync("pnpm", args, {
     cwd,
     stdio: "inherit",
     env: process.env,
-    shell: true,
   });
 }
 
@@ -284,8 +282,8 @@ function createSeedDatabase(appDir) {
     // 使用清理脚本生成干净的种子数据库
     console.log(`[stage:desktop] using clean-dev-db.js to create sanitized seed database`);
     try {
-      const { execSync } = require("node:child_process");
-      execSync(`node "${cleanScriptPath}"`, {
+      const { execFileSync } = require("node:child_process");
+      execFileSync(process.execPath, [cleanScriptPath], {
         cwd: repoRoot,
         stdio: "inherit",
         env: process.env,
@@ -470,7 +468,7 @@ function deployManually() {
 
   // 4. 先在 app/ 目录安装生产依赖（better-sqlite3、electron-updater）
   console.log("[stage:desktop] manual deploy: installing app production dependencies...");
-  execSync("npm install --production --ignore-scripts", {
+  execFileSync("npm", ["install", "--production", "--ignore-scripts"], {
     cwd: appDir,
     stdio: "inherit",
     env: process.env,
@@ -500,7 +498,7 @@ function deployManually() {
     .map(([name, ver]) => `${name}@${ver}`)
     .join(" ");
   if (installArgs) {
-    execSync(`npm install --no-save --ignore-scripts --legacy-peer-deps ${installArgs}`, {
+    execFileSync("npm", ["install", "--no-save", "--ignore-scripts", "--legacy-peer-deps", ...installArgs.split(" ")], {
       cwd: appDir,
       stdio: "inherit",
       env: process.env,
@@ -544,8 +542,8 @@ function copyDirectory(sourceDir, targetDir) {
   // 目录复制
   if (process.platform === "win32") {
     try {
-      execSync(
-        `robocopy "${sourceDir}" "${targetDir}" /E /COPY:DAT /R:1 /W:1 /NFL /NDL /NJH /NJS`,
+      execFileSync(
+        "robocopy", [sourceDir, targetDir, "/E", "/COPY:DAT", "/R:1", "/W:1", "/NFL", "/NDL", "/NJH", "/NJS"],
         { stdio: "pipe" }
       );
     } catch (err) {
@@ -569,14 +567,14 @@ function replaceDirectoryWithPhysicalCopy(targetDir) {
   if (process.platform === "win32") {
     // robocopy 复制到临时目录
     try {
-      execSync(`robocopy "${targetDir}" "${tempDir}" /E /COPY:DAT /R:1 /W:1 /NFL /NDL /NJH /NJS`, { stdio: "pipe" });
+      execFileSync("robocopy", [targetDir, tempDir, "/E", "/COPY:DAT", "/R:1", "/W:1", "/NFL", "/NDL", "/NJH", "/NJS"], { stdio: "pipe" });
     } catch (err) {
       if (err.status === undefined || err.status > 7) throw err;
     }
     fs.rmSync(targetDir, { recursive: true, force: true });
     // robocopy 从临时目录复制回来（避免 renameSync 的 EPERM 问题）
     try {
-      execSync(`robocopy "${tempDir}" "${targetDir}" /E /COPY:DAT /R:1 /W:1 /NFL /NDL /NJH /NJS`, { stdio: "pipe" });
+      execFileSync("robocopy", [tempDir, targetDir, "/E", "/COPY:DAT", "/R:1", "/W:1", "/NFL", "/NDL", "/NJH", "/NJS"], { stdio: "pipe" });
     } catch (err) {
       if (err.status === undefined || err.status > 7) throw err;
     }
