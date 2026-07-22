@@ -475,7 +475,10 @@ export function registerNovelReviewRoutes(input: RegisterNovelReviewRoutesInput)
               },
             });
 
-            await stepModuleRunner.runStep(
+            const { stream, onDone } = await stepModuleRunner.runStep<{
+              stream: AsyncIterable<import("@langchain/core/messages").BaseMessageChunk>;
+              onDone: (fullContent: string, helpers: import("../../../../llm/streaming").StreamDoneHelpers) => Promise<void | import("../../../../llm/streaming").StreamDonePayload>;
+            }>(
               DIRECTOR_EXECUTION_STEP_IDS.chapter_repair,
               {
                 novelId: id,
@@ -488,6 +491,18 @@ export function registerNovelReviewRoutes(input: RegisterNovelReviewRoutesInput)
                 },
               },
             );
+
+            // Consume the stream (required to trigger onDone which marks issues as fixed)
+            let fullContent = "";
+            for await (const chunk of stream) {
+              const text = typeof chunk.content === "string" ? chunk.content : "";
+              if (text) fullContent += text;
+            }
+            if (onDone) {
+              // Provide a no-op writeFrame since we don't have SSE in batch context
+              await onDone(fullContent, { writeFrame: () => {} });
+            }
+
             repairedChapterIds.push(chapterId);
             repairedIssueIds.push(...issueIds);
           } catch {
