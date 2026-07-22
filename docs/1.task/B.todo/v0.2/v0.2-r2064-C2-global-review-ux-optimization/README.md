@@ -2,13 +2,13 @@
 description: "REQ-2064 全局审校用户体验优化 — README"
 reqId: 2064
 title: "全局审校用户体验优化"
-status: pending
+status: done
 priority: P1
 complexity: C2
 estimatedEffort: "1天"
 version: v0.2
 created: 2026-07-19
-updated: 2026-07-19T15:00:00.000Z
+updated: 2026-07-22T10:04:41.000Z
 ---
 
 # REQ-2064: 全局审校用户体验优化
