@@ -1,4 +1,4 @@
-export type NovelWorkflowLane = "manual_create" | "auto_director";
+export type NovelWorkflowLane = "manual_create" | "auto_director" | "global_review";
 
 export type NovelWorkflowStage =
   | "project_setup"

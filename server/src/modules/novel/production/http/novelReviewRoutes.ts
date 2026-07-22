@@ -242,25 +242,62 @@ export function registerNovelReviewRoutes(input: RegisterNovelReviewRoutesInput)
       try {
         const { id } = req.params as z.infer<typeof idParamsSchema>;
         const body = req.body as z.infer<typeof globalReviewSchema>;
-        const data = await globalReviewService.runGlobalReview(
-          id,
-          {
-            mode: body.mode,
-            startChapterOrder: body.startChapterOrder,
-            endChapterOrder: body.endChapterOrder,
-            volumeId: body.volumeId,
+
+        // 在任务中心注册全局审校任务
+        const scopeLabel = body.mode === "range"
+          ? `第${body.startChapterOrder}-${body.endChapterOrder}章`
+          : "当前卷";
+        const task = await prisma.novelWorkflowTask.create({
+          data: {
+            novelId: id,
+            lane: "global_review",
+            title: `全局审校（${scopeLabel}）`,
+            status: "running",
+            progress: 0,
+            currentStage: "global_review",
           },
-          {
-            provider: body.provider as LLMProvider | undefined,
-            model: body.model,
-            temperature: body.temperature,
-          },
-        );
-        res.status(200).json({
-          success: true,
-          data,
-          message: "Global review completed.",
-        } satisfies ApiResponse<typeof data>);
+        });
+
+        try {
+          const data = await globalReviewService.runGlobalReview(
+            id,
+            {
+              mode: body.mode,
+              startChapterOrder: body.startChapterOrder,
+              endChapterOrder: body.endChapterOrder,
+              volumeId: body.volumeId,
+            },
+            {
+              provider: body.provider as LLMProvider | undefined,
+              model: body.model,
+              temperature: body.temperature,
+            },
+          );
+          await prisma.novelWorkflowTask.update({
+            where: { id: task.id },
+            data: {
+              status: "succeeded",
+              progress: 1,
+              checkpointSummary: `发现 ${data.issueCount} 个跨章节问题`,
+              finishedAt: new Date(),
+            },
+          });
+          res.status(200).json({
+            success: true,
+            data,
+            message: "Global review completed.",
+          } satisfies ApiResponse<typeof data>);
+        } catch (reviewError) {
+          await prisma.novelWorkflowTask.update({
+            where: { id: task.id },
+            data: {
+              status: "failed",
+              lastError: reviewError instanceof Error ? reviewError.message : String(reviewError),
+              finishedAt: new Date(),
+            },
+          });
+          throw reviewError;
+        }
       } catch (error) {
         next(error);
       }
@@ -377,6 +414,21 @@ export function registerNovelReviewRoutes(input: RegisterNovelReviewRoutesInput)
           return;
         }
 
+        // 在任务中心注册批量修复任务
+        const issueNumbers = targetIssues
+          .filter((i) => i.issueNumber != null)
+          .map((i) => `#G${String(i.issueNumber).padStart(3, "0")}`);
+        const task = await prisma.novelWorkflowTask.create({
+          data: {
+            novelId: id,
+            lane: "global_review",
+            title: `批量修复（${targetIssues.length}个问题${issueNumbers.length > 0 ? `: ${issueNumbers.join(" ")}` : ""}）`,
+            status: "running",
+            progress: 0,
+            currentStage: "global_review_batch_repair",
+          },
+        });
+
         // 将章节编号（如 ch_11）转换为实际章节 ID
         const chapterNumberToId = new Map<string, string>();
         const allChapters = await prisma.chapter.findMany({
@@ -401,10 +453,28 @@ export function registerNovelReviewRoutes(input: RegisterNovelReviewRoutesInput)
 
         const repairedChapterIds: string[] = [];
         const repairedIssueIds: string[] = [];
+        const totalGroups = groups.size;
+        let completedGroups = 0;
 
-        // 逐章节修复
+        // 逐章节修复，并更新进度
         for (const [chapterId, issueIds] of groups) {
           try {
+            // 查找当前章节的 order 用于进度显示
+            const chapterInfo = allChapters.find((ch) => ch.id === chapterId);
+            const chapterOrder = chapterInfo?.order ?? completedGroups + 1;
+            const chapterIssueNums = issueIds
+              .map((iid) => targetIssues.find((ti) => ti.id === iid))
+              .filter((ti) => ti?.issueNumber != null)
+              .map((ti) => `#G${String(ti!.issueNumber).padStart(3, "0")}`);
+
+            await prisma.novelWorkflowTask.update({
+              where: { id: task.id },
+              data: {
+                currentItemLabel: `正在修复第${chapterOrder}章 — 问题 ${chapterIssueNums.join(" ")}`,
+                progress: completedGroups / totalGroups,
+              },
+            });
+
             await stepModuleRunner.runStep(
               DIRECTOR_EXECUTION_STEP_IDS.chapter_repair,
               {
@@ -423,7 +493,18 @@ export function registerNovelReviewRoutes(input: RegisterNovelReviewRoutesInput)
           } catch {
             // 单个章节修复失败不阻断其他章节
           }
+          completedGroups++;
         }
+
+        await prisma.novelWorkflowTask.update({
+          where: { id: task.id },
+          data: {
+            status: "succeeded",
+            progress: 1,
+            checkpointSummary: `已修复 ${repairedChapterIds.length} 个章节，共 ${repairedIssueIds.length} 个问题`,
+            finishedAt: new Date(),
+          },
+        });
 
         res.status(200).json({
           success: true,

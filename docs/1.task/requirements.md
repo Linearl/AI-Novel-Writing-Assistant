@@ -72,6 +72,11 @@ description: "需求任务总清单（SSOT）"
 | 2054 | 多素材导入与按需加载系统 | p1 | ✅ 已完成 | - | 0.2 | - | - | `B.2.done/v0.2-r2054-C2-material-import-system/README.md` |  |
 | 2055 | 导演步骤间推理链路传递 | p2 | ✅ 已完成 | - | 0.2 | - | - | `B.2.done/v0.2-r2055-S2-director-reasoning-trace/README.md` |  |
 | 2056 | 自动导演暂停按钮 | c2 | ✅ 已完成 | - | 0.2 | - | - | `B.2.done/v0.2-r2056-C2-director-pause-button/README.md` |  |
+| 2057 | LLM 限流器增强：TPM/RPM 支持 | p2 | ✅ 已完成 | - | 0.2 | - | - | `B.2.done/v0.2-r2057-C2-rate-limiter-tpm-rpm/README.md` |  |
+| 2058 | 卷生成链路 outline + material_index 接线 | p0 | ✅ 已完成 | REQ-2054 T4.3/T4.4 遗留 + 运行时诊断 | 0.2 | 2026-07-18 | - | `B.2.done/v0.2-r2058-C2-outline-material-wiring/README.md` | 承接 material-import-system 未完成的卷生成接线工作 |
+| 2059 | Token 预算控制系统重构 | p0 | ✅ 已完成 | 2026-07-18 Token 预算诊断报告 | 0.2 | 2026-07-18 | - | `B.2.done/v0.2-r2059-C2-token-budget-overhaul/README.md` | 修复 CJK 估算偏差 + 统一估算函数 + YAML 配置收拢 + 清理硬编码 |
+| 2060 | 全局审校问题驱动章节修复闭环 | p1 | ✅ 已完成 | - | 0.2 | - | - | `B.2.done/v0.2-r2060-C1-global-review-to-chapter-repair/README.md` |  |
+| 2061 | 自动导演创建面板模型路由与温度设置修复 | p2 | 📋 待办 | - | 0.2 | - | - | `B.todo/v0.2-r2061-C2-director-creation-panel-model-routing-fix/README.md` |  |
 | 2013 | Director Failed Retry Entry | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2013-medium-director-failed-retry-entry/README.md` |  |
 | 2014 | Chapter Token Budget Dynamic | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2014-medium-chapter-token-budget-dynamic/README.md` |  |
 
@@ -191,9 +196,11 @@ description: "需求任务总清单（SSOT）"
 | 7078 | setting/ 与 settings/ 目录合并 | c2 | ✅ 已完成 | - | 0.2 | - | - | `B.2.done/v0.2-r7078-C2-setting-settings-merge/README.md` |  |
 | 7079 | Prompts YAML 清理 — 遗留 prompt 迁移到 prompting/ 体系 | s3 | ✅ 已完成 | - | 0.2 | - | - | `B.2.done/v0.2-r7079-S3-prompts-yaml-cleanup/README.md` |  |
 | 7080 | Director 子系统模块化拆分 | c1 | ✅ 已完成 | - | 0.2 | - | - | `B.2.done/v0.2-r7080-C1-director-system-split/README.md` |  |
-| 7081 | Orchestration Unification | high | ✅ 已完成 | - | 0.2 | - | - | `B.todo/v0.2-r7081-C1-orchestration-unification/README.md` |  |
+| 7081 | Orchestration Unification | high | ✅ 已完成 | - | 0.2 | - | - | `B.2.done/v0.2-r7081-C1-orchestration-unification/README.md` |  |
 | 7082 | Pipeline 服务清理与合并 | c2 | ✅ 已完成 | - | 0.2 | - | - | `B.2.done/v0.2-r7082-C2-pipeline-cleanup/README.md` |  |
 | 7083 | Character Service Consolidation | c1 | ✅ 已完成 | - | 0.2 | - | - | `B.2.done/v0.2-r7083-C1-character-service-consolidation/README.md` |  |
+| 7084 | API Key 加密密钥源稳定化 | p1 | ✅ 已完成 | - | 0.2 | - | - | `B.2.done/v0.2-r7084-C2-api-key-encryption-stabilize/README.md` |  |
+| 7085 | 自动导演自主处理未细化章节 | p1 | ✅ 已完成 | - | 0.2 | - | - | `B.2.done/v0.2-r7085-C1-director-auto-detail-recovery/README.md` |  |
 | 7029 | Prisma Schema 精简 | p8 | 📋 待办 | - | 0.1 | 2026-07-10 | 2026-07-10 | `B.todo/v0.1-r7029-C2-prisma-schema-sizing/README.md` |  |
 | 7030 | Novel Application Services 门面收缩 | p1 | 📋 待办 | - | 0.1 | 2026-07-10 | 2026-07-10 | `B.todo/v0.1-r7030-M2-novel-application-services-facade-contraction/README.md` |  |
 
@@ -213,6 +220,7 @@ description: "需求任务总清单（SSOT）"
 
 | 编号 | 任务标题 | 文档 |
 | --- | --- | --- |
+| 2061 | 自动导演创建面板模型路由与温度设置修复 | `B.todo/v0.2-r2061-C2-director-creation-panel-model-routing-fix/README.md` |
 | 3011 | 小说预览页面增强控制面板 | `B.2.done/v0.1-r3011-C2-novel-preview-controls/README.md` |
 | 2013 | Director Failed Retry Entry | `B.todo/v0.1-r2013-medium-director-failed-retry-entry/README.md` |
 | 2014 | Chapter Token Budget Dynamic | `B.todo/v0.1-r2014-medium-chapter-token-budget-dynamic/README.md` |
@@ -278,6 +286,10 @@ description: "需求任务总清单（SSOT）"
 | 2054 | 多素材导入与按需加载系统 | `B.2.done/v0.2-r2054-C2-material-import-system/README.md` |
 | 2055 | 导演步骤间推理链路传递 | `B.2.done/v0.2-r2055-S2-director-reasoning-trace/README.md` |
 | 2056 | 自动导演暂停按钮 | `B.2.done/v0.2-r2056-C2-director-pause-button/README.md` |
+| 2057 | LLM 限流器增强：TPM/RPM 支持 | `B.2.done/v0.2-r2057-C2-rate-limiter-tpm-rpm/README.md` |
+| 2058 | 卷生成链路 outline + material_index 接线 | `B.2.done/v0.2-r2058-C2-outline-material-wiring/README.md` |
+| 2059 | Token 预算控制系统重构 | `B.2.done/v0.2-r2059-C2-token-budget-overhaul/README.md` |
+| 2060 | 全局审校问题驱动章节修复闭环 | `B.2.done/v0.2-r2060-C1-global-review-to-chapter-repair/README.md` |
 | 3001 | Task Batch Archive | `B.2.done/v0.1-r3001-medium-task-batch-archive/README.md` |
 | 3002 | 导演进度规划资源缺失 Checklist 可视化 | `B.2.done/v0.1-r3002-medium-director-planning-checklist/README.md` |
 | 3003 | 小说项目对话存档 | `B.2.done/v0.1-r3003-medium-repair-progress-dialog/README.md` |
@@ -377,8 +389,10 @@ description: "需求任务总清单（SSOT）"
 | 7078 | setting/ 与 settings/ 目录合并 | `B.2.done/v0.2-r7078-C2-setting-settings-merge/README.md` |
 | 7079 | Prompts YAML 清理 — 遗留 prompt 迁移到 prompting/ 体系 | `B.2.done/v0.2-r7079-S3-prompts-yaml-cleanup/README.md` |
 | 7080 | Director 子系统模块化拆分 | `B.2.done/v0.2-r7080-C1-director-system-split/README.md` |
-| 7081 | Orchestration Unification | `B.todo/v0.2-r7081-C1-orchestration-unification/README.md` |
+| 7081 | Orchestration Unification | `B.2.done/v0.2-r7081-C1-orchestration-unification/README.md` |
 | 7082 | Pipeline 服务清理与合并 | `B.2.done/v0.2-r7082-C2-pipeline-cleanup/README.md` |
 | 7083 | Character Service Consolidation | `B.2.done/v0.2-r7083-C1-character-service-consolidation/README.md` |
+| 7084 | API Key 加密密钥源稳定化 | `B.2.done/v0.2-r7084-C2-api-key-encryption-stabilize/README.md` |
+| 7085 | 自动导演自主处理未细化章节 | `B.2.done/v0.2-r7085-C1-director-auto-detail-recovery/README.md` |
 
 ---

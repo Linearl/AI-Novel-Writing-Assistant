@@ -35,11 +35,13 @@ export interface GlobalReviewResult {
   issueCount: number;
   issues: Array<{
     id: string;
+    issueNumber: number | null;
     severity: string;
     category: string;
     description: string;
     fixDirection: string;
     affectedChapters: string[];
+    affectedChapterOrders: number[];
     primaryFixChapter: string | null;
     status: string;
   }>;
@@ -99,11 +101,13 @@ export class GlobalReviewService {
   ): Promise<Array<{
     id: string;
     reviewRunId: string;
+    issueNumber: number | null;
     severity: string;
     category: string;
     description: string;
     fixDirection: string;
     affectedChapters: string[];
+    affectedChapterOrders: number[];
     primaryFixChapter: string | null;
     status: string;
     createdAt: Date;
@@ -127,11 +131,15 @@ export class GlobalReviewService {
     return issues.map((issue) => ({
       id: issue.id,
       reviewRunId: issue.reviewRunId,
+      issueNumber: issue.issueNumber,
       severity: issue.severity,
       category: issue.category,
       description: issue.description,
       fixDirection: issue.fixDirection,
       affectedChapters: JSON.parse(issue.affectedChapters) as string[],
+      affectedChapterOrders: issue.affectedChapterOrders
+        ? JSON.parse(issue.affectedChapterOrders) as number[]
+        : [],
       primaryFixChapter: issue.primaryFixChapter,
       status: issue.status,
       createdAt: issue.createdAt,
@@ -221,42 +229,104 @@ export class GlobalReviewService {
     output: GlobalReviewOutput,
   ): Promise<Array<{
     id: string;
+    issueNumber: number | null;
     severity: string;
     category: string;
     description: string;
     fixDirection: string;
     affectedChapters: string[];
+    affectedChapterOrders: number[];
     primaryFixChapter: string | null;
     status: string;
   }>> {
     const issues = output.crossChapterIssues ?? [];
     if (issues.length === 0) return [];
 
+    // 获取该小说所有章节，构建 ch_N -> CUID 映射
+    const chapters = await prisma.chapter.findMany({
+      where: { novelId },
+      select: { id: true, order: true },
+    });
+    const orderToId = new Map<number, string>();
+    const idToOrder = new Map<string, number>();
+    for (const ch of chapters) {
+      orderToId.set(ch.order, ch.id);
+      idToOrder.set(ch.id, ch.order);
+    }
+
+    // 获取当前最大 issueNumber，用于分配编号
+    const maxIssue = await prisma.globalReviewIssue.findFirst({
+      where: { novelId },
+      orderBy: { issueNumber: "desc" },
+      select: { issueNumber: true },
+    });
+    let nextIssueNumber = (maxIssue?.issueNumber ?? 0) + 1;
+
     const created = await prisma.$transaction(
-      issues.map((issue) =>
-        prisma.globalReviewIssue.create({
+      issues.map((issue) => {
+        // 解析 affectedChapters：将 ch_N 格式转为实际 CUID
+        const resolvedChapterIds: string[] = [];
+        const chapterOrders: number[] = [];
+        for (const chRef of issue.affectedChapters) {
+          const chNumMatch = chRef.match(/^ch_(\d+)$/);
+          if (chNumMatch) {
+            const order = parseInt(chNumMatch[1], 10);
+            const realId = orderToId.get(order);
+            if (realId) {
+              resolvedChapterIds.push(realId);
+              chapterOrders.push(order);
+            }
+          } else if (idToOrder.has(chRef)) {
+            // 已经是实际 CUID
+            resolvedChapterIds.push(chRef);
+            chapterOrders.push(idToOrder.get(chRef)!);
+          } else {
+            // 无法解析，保留原始值
+            resolvedChapterIds.push(chRef);
+          }
+        }
+
+        // 解析 primaryFixChapter
+        let resolvedPrimaryFixChapter = issue.primaryFixChapter ?? null;
+        if (resolvedPrimaryFixChapter) {
+          const pmNumMatch = resolvedPrimaryFixChapter.match(/^ch_(\d+)$/);
+          if (pmNumMatch) {
+            const realId = orderToId.get(parseInt(pmNumMatch[1], 10));
+            if (realId) resolvedPrimaryFixChapter = realId;
+          }
+        }
+
+        const currentIssueNumber = nextIssueNumber++;
+
+        return prisma.globalReviewIssue.create({
           data: {
             novelId,
             reviewRunId,
+            issueNumber: currentIssueNumber,
             severity: issue.severity,
             category: issue.category,
             description: issue.description,
             fixDirection: issue.fixDirection,
-            affectedChapters: JSON.stringify(issue.affectedChapters),
-            primaryFixChapter: issue.primaryFixChapter ?? null,
+            affectedChapters: JSON.stringify(resolvedChapterIds),
+            affectedChapterOrders: JSON.stringify(chapterOrders),
+            primaryFixChapter: resolvedPrimaryFixChapter,
             status: "pending",
           },
-        })
-      ),
+        });
+      }),
     );
 
     return created.map((issue) => ({
       id: issue.id,
+      issueNumber: issue.issueNumber,
       severity: issue.severity,
       category: issue.category,
       description: issue.description,
       fixDirection: issue.fixDirection,
       affectedChapters: JSON.parse(issue.affectedChapters) as string[],
+      affectedChapterOrders: issue.affectedChapterOrders
+        ? JSON.parse(issue.affectedChapterOrders) as number[]
+        : [],
       primaryFixChapter: issue.primaryFixChapter,
       status: issue.status,
     }));

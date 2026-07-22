@@ -105,6 +105,16 @@ function IssueCard({ issue, novelId, onStatusChange, onRepair, onAdjustPlan, onV
     navigate(`/novels/${novelId}/edit?chapterId=${chapterId}&globalReviewIssueIds=${issue.id}`);
   };
 
+  // 格式化章节显示文本：优先使用 order，fallback 到 ID 截断
+  const formatChapterLabel = (index: number): string => {
+    const orders = issue.affectedChapterOrders ?? [];
+    if (orders[index] != null) {
+      return `第${orders[index]}章`;
+    }
+    const id = issue.affectedChapters[index];
+    return id ? id.slice(0, 8) : "";
+  };
+
   return (
     <Card className="border-l-4" style={{
       borderLeftColor: issue.severity === "critical" ? "#ef4444" : issue.severity === "major" ? "#f97316" : "#0ea5e9",
@@ -112,6 +122,11 @@ function IssueCard({ issue, novelId, onStatusChange, onRepair, onAdjustPlan, onV
       <CardHeader className="pb-3">
         <div className="flex flex-wrap items-start justify-between gap-2">
           <div className="flex flex-wrap items-center gap-2">
+            {issue.issueNumber != null && (
+              <Badge variant="default" className="font-mono text-xs">
+                #G{String(issue.issueNumber).padStart(3, "0")}
+              </Badge>
+            )}
             <Badge className={SEVERITY_BADGE_CLASS[issue.severity]} variant="outline">
               {SEVERITY_LABEL[issue.severity]}
             </Badge>
@@ -145,10 +160,10 @@ function IssueCard({ issue, novelId, onStatusChange, onRepair, onAdjustPlan, onV
               <span key={chapterId}>
                 <button
                   onClick={() => handleChapterClick(chapterId)}
-                  className="cursor-pointer font-mono text-xs text-primary underline-offset-2 hover:underline"
+                  className="cursor-pointer text-xs text-primary underline-offset-2 hover:underline"
                 >
-                  <Badge variant="outline" className="font-mono text-xs">
-                    {chapterId.slice(0, 8)}
+                  <Badge variant="outline" className="text-xs">
+                    {formatChapterLabel(i)}
                   </Badge>
                 </button>
                 {i < issue.affectedChapters.length - 1 && " "}
@@ -339,6 +354,7 @@ export default function GlobalReviewPage() {
   const [batchRepairingChapterIds, setBatchRepairingChapterIds] = useState<string[]>([]);
   const [batchRepairCompletedCount, setBatchRepairCompletedCount] = useState(0);
   const [isBatchRepairing, setIsBatchRepairing] = useState(false);
+  const [batchRepairChapterIssueMap, setBatchRepairChapterIssueMap] = useState<Map<string, string[]>>(new Map());
 
   const acknowledgedIssues = useMemo(
     () => issues.filter((i) => i.status === "acknowledged"),
@@ -379,6 +395,7 @@ export default function GlobalReviewPage() {
       const chapterIds = Array.from(groups.keys()).sort();
       setBatchRepairingChapterIds(chapterIds);
       setBatchRepairCompletedCount(0);
+      setBatchRepairChapterIssueMap(groups);
       setIsBatchRepairing(true);
 
       const repairedIssueIds: string[] = [];
@@ -425,6 +442,7 @@ export default function GlobalReviewPage() {
       // 只重置进度数据，不重置 isBatchRepairing
       setBatchRepairingChapterIds([]);
       setBatchRepairCompletedCount(0);
+      setBatchRepairChapterIssueMap(new Map());
     },
   });
 
@@ -766,8 +784,12 @@ export default function GlobalReviewPage() {
           <CardContent className="space-y-3 py-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-sm font-medium">
-                <CheckCircle2 className="h-4 w-4 text-blue-500" />
-                <span>批量修复已触发</span>
+                {batchRepairMutation.isPending ? (
+                  <Loader2 className="h-4 w-4 animate-spin text-blue-500" />
+                ) : (
+                  <CheckCircle2 className="h-4 w-4 text-blue-500" />
+                )}
+                <span>批量修复{batchRepairMutation.isPending ? "进行中" : "已触发"}</span>
               </div>
               <Button
                 size="sm"
@@ -777,10 +799,43 @@ export default function GlobalReviewPage() {
                 关闭
               </Button>
             </div>
-            <div className="text-sm text-muted-foreground">
-              修复为异步过程，每章约需 1-3 分钟。
-              问题状态会在修复完成后自动更新（每 10 秒刷新一次）。
-            </div>
+            {batchRepairMutation.isPending && batchRepairingChapterIds.length > 0 && (
+              <div className="space-y-2">
+                <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
+                  <div
+                    className="h-full rounded-full bg-blue-500 transition-all duration-300"
+                    style={{
+                      width: `${batchRepairingChapterIds.length > 0
+                        ? (batchRepairCompletedCount / batchRepairingChapterIds.length) * 100
+                        : 0}%`,
+                    }}
+                  />
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  正在修复第 {batchRepairCompletedCount + 1}/{batchRepairingChapterIds.length} 章
+                  {(() => {
+                    const currentChapterId = batchRepairingChapterIds[batchRepairCompletedCount];
+                    const chapterIssueIds = batchRepairChapterIssueMap.get(currentChapterId) ?? [];
+                    if (chapterIssueIds.length === 0) return null;
+                    const issueLabels = chapterIssueIds
+                      .map((iid) => issues.find((i) => i.id === iid))
+                      .filter((i) => i?.issueNumber != null)
+                      .map((i) => `#G${String(i!.issueNumber).padStart(3, "0")}`);
+                    return issueLabels.length > 0
+                      ? <span> — 问题 {issueLabels.join(" ")}</span>
+                      : null;
+                  })()}
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  每章约需 1-3 分钟，修复为异步过程。
+                </div>
+              </div>
+            )}
+            {!batchRepairMutation.isPending && (
+              <div className="text-sm text-muted-foreground">
+                修复为异步过程。问题状态会在修复完成后自动更新（每 10 秒刷新一次）。
+              </div>
+            )}
             <div className="text-xs text-muted-foreground">
               提示：您可以继续浏览其他内容，修复会在后台进行。
             </div>

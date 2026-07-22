@@ -193,6 +193,7 @@ enum AgentRunStatus {
 enum NovelWorkflowLane {
   manual_create
   auto_director
+  global_review
 }
 
 enum NovelWorkflowTaskStatus {
@@ -3420,21 +3421,25 @@ model WorldLocationConnection {
 // ---------------------------------------------------------------------------
 
 model GlobalReviewIssue {
-  id                String   @id @default(cuid())
-  novelId           String
-  reviewRunId       String
-  severity          String   // critical | major | minor
-  category          String   // character_consistency | plot_continuity | foreshadowing | pacing | worldbuilding
-  description       String
-  fixDirection      String
-  affectedChapters  String   // JSON array of chapter IDs
-  primaryFixChapter String?  // chapter ID where main fix should happen
-  status            String   @default("pending") // pending | acknowledged | fixed | dismissed
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  id                    String   @id @default(cuid())
+  novelId               String
+  reviewRunId           String
+  issueNumber           Int?     // 小说内唯一编号（G001, G002...）
+  severity              String   // critical | major | minor
+  category              String   // character_consistency | plot_continuity | foreshadowing | pacing | worldbuilding
+  description           String
+  fixDirection          String
+  affectedChapters      String   // JSON array of chapter IDs (CUIDs)
+  affectedChapterOrders String?  // JSON array of chapter order numbers (e.g. [3, 7])
+  primaryFixChapter     String?  // chapter ID where main fix should happen
+  status                String   @default("pending") // pending | acknowledged | fixed | dismissed
+  verificationFeedback  String?  // 复核反馈：记录上次修复未通过的原因
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
 
   novel Novel @relation(fields: [novelId], references: [id], onDelete: Cascade)
 
+  @@unique([novelId, issueNumber])
   @@index([novelId, reviewRunId])
   @@index([novelId, status])
   @@index([primaryFixChapter, status])

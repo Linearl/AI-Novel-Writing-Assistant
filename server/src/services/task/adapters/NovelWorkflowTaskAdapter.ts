@@ -427,7 +427,7 @@ export class NovelWorkflowTaskAdapter {
             },
           }
           : {}),
-        lane: "auto_director",
+        lane: { in: ["auto_director", "global_review"] },
         ...(input.status ? { status: input.status } : {}),
         ...(input.keyword
           ? {
@@ -462,7 +462,7 @@ export class NovelWorkflowTaskAdapter {
               },
             }
             : {}),
-          lane: "auto_director",
+          lane: { in: ["auto_director", "global_review"] },
           ...(input.status ? { status: input.status } : {}),
           ...(input.keyword
             ? {

@@ -14,11 +14,13 @@ export type GlobalReviewIssueStatus = "pending" | "acknowledged" | "fixed" | "di
 
 export interface GlobalReviewIssue {
   id: string;
+  issueNumber?: number | null;
   severity: GlobalReviewIssueSeverity;
   category: GlobalReviewIssueCategory;
   description: string;
   fixDirection: string;
   affectedChapters: string[];
+  affectedChapterOrders?: number[];
   primaryFixChapter: string | null;
   status: GlobalReviewIssueStatus;
   verificationFeedback?: string;
