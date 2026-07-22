@@ -119,6 +119,7 @@ const STATUS_BADGE_VARIANT: Record<
 interface IssueCardProps {
   issue: GlobalReviewIssue;
   novelId: string;
+  chapters: Array<{ id: string; order: number }>;
   onStatusChange: (issueId: string, status: GlobalReviewIssueStatus) => void;
   onRepair: (issueId: string) => void;
   onAdjustPlan: (issue: GlobalReviewIssue) => void;
@@ -132,6 +133,7 @@ interface IssueCardProps {
 function IssueCard({
   issue,
   novelId,
+  chapters,
   onStatusChange,
   onRepair,
   onAdjustPlan,
@@ -143,9 +145,16 @@ function IssueCard({
 }: IssueCardProps) {
   const navigate = useNavigate();
 
-  const handleChapterClick = (chapterId: string) => {
+  const handleChapterClick = (chapterId: string, index: number) => {
+    // Resolve ch_N format to actual CUID using affectedChapterOrders
+    let resolvedId = chapterId;
+    const orders = issue.affectedChapterOrders ?? [];
+    if (orders[index] != null) {
+      const match = chapters.find((c) => c.order === orders[index]);
+      if (match) resolvedId = match.id;
+    }
     navigate(
-      `/novels/${novelId}/edit?chapterId=${chapterId}&globalReviewIssueIds=${issue.id}`,
+      `/novels/${novelId}/edit?chapterId=${resolvedId}&globalReviewIssueIds=${issue.id}`,
     );
   };
 
@@ -218,7 +227,7 @@ function IssueCard({
             {issue.affectedChapters.map((chapterId, i) => (
               <span key={chapterId}>
                 <button
-                  onClick={() => handleChapterClick(chapterId)}
+                  onClick={() => handleChapterClick(chapterId, i)}
                   className="cursor-pointer text-xs text-primary underline-offset-2 hover:underline"
                 >
                   <Badge variant="outline" className="text-xs">
@@ -345,6 +354,7 @@ export default function GlobalReviewPage() {
     enabled: !!id,
   });
   const novelTitle = novelQuery.data?.data?.title ?? "";
+  const chapters = novelQuery.data?.data?.chapters ?? [];
 
   const volumesQuery = useQuery({
     queryKey: queryKeys.novels.volumeWorkspace(id),
@@ -669,9 +679,13 @@ export default function GlobalReviewPage() {
     const map = new Map<string, string[]>();
     for (const [chapterId, issueIds] of batchRepairChapterIssueMap.entries()) {
       const labels = issueIds
-        .map((iid) => issues.find((i) => i.id === iid))
-        .filter((i) => i?.issueNumber != null)
-        .map((i) => `#G${String(i!.issueNumber).padStart(3, "0")}`);
+        .map((iid) => {
+          const issue = issues.find((i) => i.id === iid);
+          if (issue?.issueNumber != null) {
+            return `#G${String(issue.issueNumber).padStart(3, "0")}`;
+          }
+          return `#${iid.slice(0, 6)}`;
+        });
       map.set(chapterId, labels);
     }
     return map;
@@ -1027,6 +1041,7 @@ export default function GlobalReviewPage() {
                   key={issue.id}
                   issue={issue}
                   novelId={id}
+                  chapters={chapters}
                   onStatusChange={(issueId, status) =>
                     updateStatusMutation.mutate({ issueId, status })
                   }
