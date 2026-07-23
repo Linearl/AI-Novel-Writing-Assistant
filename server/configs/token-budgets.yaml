@@ -39,8 +39,23 @@ context_budgets:
   globalReview: 120000
   # 新增收拢的硬编码预算
   themeAnalysis: 8000
-  characterConsistency: 32000
+  characterConsistency: 32000           # 入上文预算；下文中 8000 为一个 prompt 的 context policy
   feedbackIssueGeneration: 32000
+  characterStateExtract: 8000           # 原硬编码在 character/consistency/prompts.ts
+  contradictionDetect: 8000             # 原硬编码在 character/consistency/prompts.ts
+  replanWindowDecision: 2200            # 原硬编码在 planner/replanWindowDecision.prompts.ts
+  plannerBookPlan: 1800                 # 原硬编码在 planner/plannerPlan.prompts.ts
+  plannerArcPlan: 1800                  # 原硬编码在 planner/plannerPlan.prompts.ts
+  plannerChapterPlan: 2400              # 原硬编码在 planner/plannerPlan.prompts.ts
+  ragContextualChunkPrefix: 4096        # 原硬编码在 rag/contextualChunk.prompts.ts
+  directorWorkspaceAnalysis: 3200       # 原硬编码在 novel/directorWorkspaceAnalysis.prompts.ts
+  directorManualEditImpact: 3600        # 原硬编码在 novel/directorManualEditImpact.prompts.ts
+  chapterTaskSheetQuality: 4200         # 原硬编码在 novel/volume/chapterTaskSheetQuality.prompts.ts
+  # generation stage token caps（原硬编码在 GenerationContextAssembler.ts）
+  stageTokenCapWriter: 2600
+  stageTokenCapLightAudit: 900
+  stageTokenCapFullAudit: 2600
+  stageTokenCapRepair: 2200
 
 # 运行时上下文选择策略（原 RUNTIME_PROMPT_BUDGET_PROFILES）
 runtime_profiles:
