@@ -2,6 +2,7 @@
 description: AI 小说创作工作台 Harness 审计报告 — 五种介质完备性与合理性评估
 date: 2026-06-28
 scope: project-level harness（CLAUDE.md / settings.json / Linter / CI / Git Hooks / Skills）
+verified_date: 2026-07-23
 ---
 
 # Harness 审计报告 — AI 小说创作工作台
@@ -209,3 +210,55 @@ scope: project-level harness（CLAUDE.md / settings.json / Linter / CI / Git Hoo
 | settings.json deny 规则 | 0 | 8-15 条 |
 | 循环依赖检测 | 无 | madge + CI 门禁 |
 | 模块边界成熟度 | L1（文档约定） | L3-L4（标签约束+CI 门禁） |
+
+---
+
+## 2026-07-23 追踪验证
+
+### 已修复问题
+
+| # | 优先级 | 操作 | 状态 | 说明 |
+|---|--------|------|------|------|
+| 1 | P0 | 创建 deny/allow 规则 | ✅ 已修复 | `settings.local.json` 已有 8 条 deny 规则（`.env`、`credentials`、`rm -rf .git`、`git push --force`、`git reset --hard`、`shutdown`）+ 23 条 allow 规则 |
+| 2 | P0 | PostToolUse typecheck hook | ✅ 已修复 | 编辑 `.ts/.tsx` 后自动 `pnpm typecheck` |
+| 3 | P1 | ESLint 初始化 | ❌ 未修复 | 仍无 ESLint 配置 |
+| 4 | P1 | 循环依赖检测 | ❌ 未修复 | 仍无 `madge` 或 `import/no-cycle` |
+| 5 | P1 | PR 级 CI | ❌ 未修复 | CI 仍仅桌面发布 workflow |
+| 6 | P1 | AGENTS.md 精简 | ⚠️ 部分修复 | AGENTS.md 从 299 行降至 95 行（✅）；根 CLAUDE.md 仍 189 行（⚠️） |
+| 7 | P2 | pre-commit hook | ❌ 未修复 | 无 `.husky/` 或 settings.json stop hook |
+| 8 | P2 | 项目特定 skill | ❌ 未修复 | 仅 `ll-workflow-core` |
+| 9 | P2 | no-restricted-imports | ❌ 未修复 | 无 ESLint |
+| 10 | P3 | `.editorconfig` | ✅ 已修复 | 根目录存在，UTF-8、2空格缩进、LF |
+| 11 | P3 | depcheck | ❌ 未修复 | 无 |
+| 12 | P3 | 前端 ESLint 边界规则 | ❌ 未修复 | 无 ESLint |
+
+### 增量修复
+
+审计后新增（报告未提及）：
+| 项目 | 说明 |
+|------|------|
+| PreToolUse hooks | Capability Gate 重复能力检测 + Agent Liveness 追踪 |
+| PostToolUse hooks | Diff-Size Gate 变更量检查 + Agent Liveness 清理 |
+| Agent Liveness | `active.json` 自动维护，闲置 7 天自动清理 |
+
+### 综合评分变化
+
+| 维度 | 审计时 | 现在 | 变化 |
+|------|--------|------|------|
+| CLAUDE.md | 3/5 | 3/5 | AGENTS.md 精简但根 CLAUDE.md 仍超标 |
+| settings.json | 0/5 | 3/5 | 有 deny/allow/hooks，虽在 settings.local.json |
+| Linter | 0/5 | 0/5 | 无变化 |
+| CI | 1/5 | 1/5 | 无变化 |
+| Git hooks | 0/5 | 2/5 | 有 PostToolUse hooks（settings.json 层） |
+| Skills | 1/5 | 1/5 | 无新增项目特定 skill |
+| **总分** | **5/20 (C)** | **10/20 (C+)** | +5 分 |
+
+### 待处理（按优先级）
+
+| 优先级 | 任务 | 工作量 |
+|--------|------|--------|
+| P1 | ESLint + no-restricted-imports + import/no-cycle | 1-2h |
+| P1 | PR 级 CI（typecheck + test + lint） | 30min |
+| P1 | AGENTS.md 精简完成（根 CLAUDE.md 189→150 行） | 30min |
+| P2 | pre-commit hooks（format + lint-staged） | 30min |
+| P3 | depcheck + madge CI 集成 | 30min |
