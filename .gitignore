@@ -69,3 +69,4 @@ worktree/
 # Tool configs
 .archon/
 .reasonix/
+.omc/
