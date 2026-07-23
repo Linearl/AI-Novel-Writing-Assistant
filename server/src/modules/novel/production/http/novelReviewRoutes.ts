@@ -505,8 +505,9 @@ export function registerNovelReviewRoutes(input: RegisterNovelReviewRoutesInput)
 
             repairedChapterIds.push(chapterId);
             repairedIssueIds.push(...issueIds);
-          } catch {
+          } catch (repairError) {
             // 单个章节修复失败不阻断其他章节
+            console.error(`[BatchRepair] Chapter ${chapterId} repair failed:`, repairError instanceof Error ? repairError.message : repairError);
           }
           completedGroups++;
         }
