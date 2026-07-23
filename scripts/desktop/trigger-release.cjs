@@ -43,7 +43,7 @@ function parseArgs(argv) {
 
 function printHelp() {
   console.log([
-    "Usage: node scripts/trigger-desktop-release.cjs [--dry-run] [--remote origin] [--branch main]",
+    "Usage: node scripts/desktop/trigger-release.cjs [--dry-run] [--remote origin] [--branch main]",
     "",
     "Reads desktop/package.json version, creates tag vX.Y.Z, then pushes the branch and tag",
     "to trigger the GitHub Desktop Release workflow. This script does not build locally.",

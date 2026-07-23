@@ -9,7 +9,7 @@
 #      occupied ports by scanning upward (13001, 13002, ... / 5174, 5175, ...)
 #   3. Desktop in dev mode is "external": reuses our dev server
 #      (set AI_NOVEL_DESKTOP_SERVER_MODE=external + AI_NOVEL_SERVER_PORT=<resolved>)
-#   4. Logs flow through scripts/run-with-log.cjs -> .logs\<session>\
+#   4. Logs flow through scripts/dev/run-with-log.cjs -> .logs\<session>\
 
 [CmdletBinding()]
 param(

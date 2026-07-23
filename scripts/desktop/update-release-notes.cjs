@@ -39,7 +39,7 @@ function parseArgs(argv) {
 
 function printHelp() {
   console.log([
-    "Usage: node scripts/update-desktop-release-notes.cjs [--dry-run]",
+    "Usage: node scripts/desktop/update-release-notes.cjs [--dry-run]",
     "",
     "Reads the date block for the current desktop/package.json version and writes",
     "it to the matching GitHub Release. Falls back to the latest date block.",
