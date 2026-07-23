@@ -1,6 +1,7 @@
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 import { z } from "zod";
 import type { PromptAsset } from "../../../prompting/core/promptTypes";
+import { NOVEL_PROMPT_BUDGETS } from "../../../prompting/prompts/novel/promptBudgetProfiles";
 import {
   characterStateExtractionOutputSchema,
   contradictionDetectionOutputSchema,
@@ -24,7 +25,7 @@ export const characterStateExtractPrompt: PromptAsset<
   mode: "structured",
   language: "zh",
   contextPolicy: {
-    maxTokensBudget: 8000,
+    maxTokensBudget: NOVEL_PROMPT_BUDGETS.characterStateExtract,
   },
   outputSchema: characterStateExtractionOutputSchema,
   render: (input) => [
@@ -76,7 +77,7 @@ export const contradictionDetectPrompt: PromptAsset<
   mode: "structured",
   language: "zh",
   contextPolicy: {
-    maxTokensBudget: 8000,
+    maxTokensBudget: NOVEL_PROMPT_BUDGETS.contradictionDetect,
   },
   outputSchema: contradictionDetectionOutputSchema,
   render: (input) => [
