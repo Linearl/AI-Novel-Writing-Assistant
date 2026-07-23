@@ -6,6 +6,9 @@
 /** 字体族枚举 */
 export type FontFamily = 'song' | 'hei' | 'kai' | 'fangsong' | 'yahei' | 'system';
 
+/** 行间距倍数 */
+export type LineHeight = 0.3 | 0.6 | 1.0;
+
 /** 主题颜色配置 */
 export interface ThemeColors {
   background: string;
@@ -20,6 +23,7 @@ export interface PreviewSettings {
   pageWidth: number;
   autoFit: boolean;
   backgroundColor: ThemeColors;
+  lineHeight: LineHeight;
 }
 
 /** 控制面板更新回调 */
@@ -30,6 +34,7 @@ export interface PreviewSettingsUpdate {
   pageWidth: (width: number) => void;
   autoFit: () => void;
   background: (theme: ThemeColors) => void;
+  lineHeight: (height: LineHeight) => void;
 }
 
 /** 字体选项 */
@@ -57,7 +62,22 @@ export const DEFAULT_PREVIEW_SETTINGS: PreviewSettings = {
     background: '#FFFFFF',
     text: '#000000',
   },
+  lineHeight: 0.6,
 };
+
+/** 行间距选项 */
+export interface LineHeightOption {
+  value: LineHeight;
+  label: string;
+  description: string;
+}
+
+/** 行间距选项列表 */
+export const LINE_HEIGHT_OPTIONS: LineHeightOption[] = [
+  { value: 0.3, label: '紧凑', description: '0.3倍行距' },
+  { value: 0.6, label: '适中', description: '0.6倍行距' },
+  { value: 1.0, label: '宽松', description: '1.0倍行距' },
+];
 
 /** 字体选项列表 */
 export const FONT_OPTIONS: FontOption[] = [

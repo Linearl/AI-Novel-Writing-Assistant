@@ -5,6 +5,7 @@ import { FontSelector } from './FontSelector';
 import { BoldToggle } from './BoldToggle';
 import { WidthSlider } from './WidthSlider';
 import { BackgroundPicker } from './BackgroundPicker';
+import { LineHeightSelector } from './LineHeightSelector';
 
 interface ControlPanelProps {
   settings: PreviewSettings;
@@ -35,6 +36,13 @@ export const ControlPanel = React.memo<ControlPanelProps>(
         <BoldToggle
           checked={settings.isBold}
           onChange={onUpdate.bold}
+        />
+
+        <div className="h-6 w-px bg-border" />
+
+        <LineHeightSelector
+          value={settings.lineHeight}
+          onChange={onUpdate.lineHeight}
         />
 
         <div className="h-6 w-px bg-border" />

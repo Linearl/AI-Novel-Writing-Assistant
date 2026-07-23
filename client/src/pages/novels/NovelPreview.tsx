@@ -445,7 +445,7 @@ export default function NovelPreview() {
             <CardContent ref={contentRef} className="flex min-h-0 flex-1 flex-col overflow-y-auto p-0">
               {activeContent ? (
                 <article
-                  className="mx-auto whitespace-pre-wrap px-5 py-6 leading-8 md:px-8"
+                  className="mx-auto whitespace-pre-wrap px-5 py-6 md:px-8"
                   style={{
                     fontSize: `${settings.fontSize}px`,
                     fontFamily: settings.fontFamily === 'song' ? '"SimSun", "Song", serif'
@@ -458,6 +458,9 @@ export default function NovelPreview() {
                     maxWidth: settings.autoFit ? '100%' : `${settings.pageWidth}px`,
                     backgroundColor: settings.backgroundColor.background,
                     color: settings.backgroundColor.text,
+                    lineHeight: settings.lineHeight === 0.3 ? '1.3'
+                      : settings.lineHeight === 0.6 ? '1.6'
+                      : '2.0',
                   }}
                 >
                   {activeContent}

@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import type { FontFamily, PreviewSettings, ThemeColors } from './types';
+import type { FontFamily, LineHeight, PreviewSettings, ThemeColors } from './types';
 import { DEFAULT_PREVIEW_SETTINGS } from './types';
 
 const STORAGE_KEY = 'novel-preview-settings';
@@ -97,6 +97,14 @@ export function usePreviewSettings() {
     });
   }, []);
 
+  const updateLineHeight = useCallback((height: LineHeight) => {
+    setSettings((prev) => {
+      const next = { ...prev, lineHeight: height };
+      saveSettings(next);
+      return next;
+    });
+  }, []);
+
   const resetToDefaults = useCallback(() => {
     setSettings(DEFAULT_PREVIEW_SETTINGS);
     saveSettings(DEFAULT_PREVIEW_SETTINGS);
@@ -110,8 +118,9 @@ export function usePreviewSettings() {
       pageWidth: updatePageWidth,
       autoFit: toggleAutoFit,
       background: updateBackground,
+      lineHeight: updateLineHeight,
     }),
-    [updateFontSize, updateFontFamily, toggleBold, updatePageWidth, toggleAutoFit, updateBackground]
+    [updateFontSize, updateFontFamily, toggleBold, updatePageWidth, toggleAutoFit, updateBackground, updateLineHeight]
   );
 
   return useMemo(
