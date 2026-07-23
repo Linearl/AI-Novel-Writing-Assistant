@@ -1,7 +1,7 @@
 import os from "node:os";
 import { prisma } from "../db/prisma";
-import { DirectorCommandService } from "../services/novel/director/commands/DirectorCommandService";
-import { resourceClassForCommand } from "../services/novel/director/commands/DirectorCommandServiceHelpers";
+import { DirectorCommandService } from "../orchestration/pipeline/commands/DirectorCommandService";
+import { resourceClassForCommand } from "../orchestration/pipeline/commands/DirectorCommandServiceHelpers";
 import { taskDispatcher } from "./TaskDispatcher";
 import { logger } from "../services/logging/LoggerService";
 

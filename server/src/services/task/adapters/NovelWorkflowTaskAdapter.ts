@@ -11,15 +11,15 @@ import type { ResourceRef } from "@ai-novel/shared";
 import type { TaskStatus, UnifiedTaskDetail, UnifiedTaskSummary } from "@ai-novel/shared";
 import { prisma } from "../../../db/prisma";
 import { AppError } from "../../../middleware/errorHandler";
-import { DirectorCommandService } from "../../novel/director/commands/DirectorCommandService";
-import { NovelDirectorService } from "../../novel/director/NovelDirectorService";
+import { DirectorCommandService } from "../../../orchestration/pipeline/commands/DirectorCommandService";
+import { NovelDirectorService } from "../../../orchestration/pipeline/NovelDirectorService";
 import {
   buildSkippableAutoExecutionReviewBlockingReason,
   buildSkippableAutoExecutionReviewCheckpointSummary,
   buildSkippableAutoExecutionReviewFailureSummary,
   buildSkippableAutoExecutionReviewRecoveryHint,
   isSkippableAutoExecutionReviewFailure,
-} from "../../novel/director/automation/novelDirectorAutoExecutionFailure";
+} from "../../../orchestration/pipeline/automation/novelDirectorAutoExecutionFailure";
 import { NovelWorkflowService } from "../../novel/workflow/NovelWorkflowService";
 import {
   getDirectorLlmOptionsFromSeedPayload,

@@ -1,6 +1,7 @@
 ---
 description: "2026-07-18 Token 预算控制系统全面诊断"
 update_time: 2026-07-18
+verified_date: 2026-07-23
 ---
 # Token 预算控制系统诊断报告
 
@@ -247,3 +248,36 @@ caller.maxTokens
 | `server/src/prompting/prompts/character/characterConsistency.prompts.ts` | 硬编码 8000 | 简单 |
 | `server/src/prompting/prompts/feedback/issueGeneration.prompts.ts` | 硬编码 8000 | 简单 |
 | `server/src/llm/modelRouter.ts` | 4096 静默吞掉 | 需评估 |
+
+---
+
+## 8. 2026-07-23 追踪验证
+
+### 已修复问题
+
+| 问题 | 状态 | 修复说明 |
+|------|------|----------|
+| **P1: CJK token 估算偏低** | ✅ 已修复 | `estimateTextTokens` 改为 `normalized.length`（1字符=1token） |
+| **P2: 两套估算函数不一致** | ✅ 已修复 | `ContextBroker` 统一使用 `estimateTextTokens` |
+| **P3: 4个孤儿预算键** | ✅ 已修复 | `chapterCompress`、`chapterExpand`、`waterContentDetection`、`globalReview` 已被对应 prompt 引用 |
+| **P4: 硬编码预算未纳入管理** | ✅ 已修复 | 12处硬编码预算迁移到 `token-budgets.yaml` 集中管理 |
+| **P5: 零预算prompt无过滤** | ⚠️ 待确认 | 需进一步检查 |
+| **P6: GenerationContextAssembler 硬编码2600** | ✅ 已修复 | `stageTokenCap` 改为引用 `NOVEL_PROMPT_BUDGETS.*` |
+| **P7: 无运行时预算溢出告警** | ✅ 已修复 | 新增 `overflowRatio` 字段 + `logger.warn` 结构化告警 |
+| **P8: normalizeMaxTokens 静默吞掉4096** | ✅ 已修复 | 新增 `console.warn` 提示运营人员更新配置 |
+
+### 验证总结
+
+| 维度 | 修复数 | 待确认 |
+|------|--------|--------|
+| P1-P8 问题 | 7/8 | 1 (P5) |
+
+**关键修复**：
+- CJK token 估算偏差问题已彻底解决
+- 12处硬编码预算已集中管理
+- 运行时预算溢出现在有可见告警
+- 4096 静默吞掉问题已添加警告日志
+
+---
+
+*2026-07-23 验证更新：token-budget-agent 代理完成全面验证。*

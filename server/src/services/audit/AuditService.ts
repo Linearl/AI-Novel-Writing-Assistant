@@ -18,7 +18,7 @@ import { auditChapterLightPrompt, auditChapterPrompt } from "../../prompting/pro
 import type { LightAuditOutput } from "./auditSchemas";
 import { resolveAuditChapterContextBlocks } from "./auditPromptContext";
 import { isDirectorDebugLogEnabled } from "../../config/directorDebug";
-import { directorDebugBuffer } from "../novel/director/debug/directorDebugBuffer";
+import { directorDebugBuffer } from "../../orchestration/pipeline/debug/directorDebugBuffer";
 import { vocabAuditScanner } from "../styleEngine/VocabAuditScanner";
 
 interface AuditOptions {

@@ -10,7 +10,7 @@ import type { NovelWorkflowCheckpoint } from "@ai-novel/shared";
 import { prisma } from "../../../db/prisma";
 import { AppError } from "../../../middleware/errorHandler";
 import { resolveModel, type TaskType } from "../../../llm/modelRouter";
-import { DirectorCommandService } from "../../novel/director/commands/DirectorCommandService";
+import { DirectorCommandService } from "../../../orchestration/pipeline/commands/DirectorCommandService";
 import { AutoDirectorValidationService } from "../../../orchestration/pipeline/runtime/utils/autoDirectorValidationService";
 import type { DirectorWorkflowSeedPayload } from "../../../orchestration/pipeline/runtime/core/novelDirectorHelpers";
 import { NovelWorkflowService } from "../../novel/workflow/NovelWorkflowService";

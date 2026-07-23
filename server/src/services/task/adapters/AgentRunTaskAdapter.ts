@@ -1,7 +1,7 @@
 import type { AgentRunStatus } from "@ai-novel/shared";
 import type { TaskStatus, UnifiedTaskDetail, UnifiedTaskStep, UnifiedTaskSummary } from "@ai-novel/shared";
 import { prisma } from "../../../db/prisma";
-import { agentRuntime } from "../../../agents";
+import { agentRuntime } from "../../../orchestration/agent";
 import { AppError } from "../../../middleware/errorHandler";
 import {
   buildTaskRecoveryHint,

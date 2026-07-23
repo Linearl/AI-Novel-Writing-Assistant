@@ -89,7 +89,7 @@ function isPidAlive(pid) {
   }
 }
 
-// CLI: node scripts/write-pid.cjs <name> [--port <port>]
+// CLI: node scripts/dev/write-pid.cjs <name> [--port <port>]
 if (require.main === module) {
   const name = process.argv[2];
   if (!name) {

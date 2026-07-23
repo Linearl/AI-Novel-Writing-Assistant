@@ -9,7 +9,7 @@ import { bookAnalysisService } from "../bookAnalysis/BookAnalysisService";
 import { imageGenerationService } from "../image/ImageGenerationService";
 import { NovelPipelineRuntimeService } from "../novel/NovelPipelineRuntimeService";
 import { NovelCoreService } from "../novel/NovelCoreService";
-import { DirectorCommandService } from "../novel/director/commands/DirectorCommandService";
+import { DirectorCommandService } from "../../orchestration/pipeline/commands/DirectorCommandService";
 import { NovelWorkflowRuntimeService } from "../novel/workflow/NovelWorkflowRuntimeService";
 import { styleExtractionTaskService } from "../styleEngine/StyleExtractionTaskService";
 import { logger } from "../logging/LoggerService";

@@ -17,9 +17,9 @@ const { execSync } = require("child_process");
  * - PID 文件对应的进程已退出 → 残留文件，直接清理
  *
  * 用法：
- *   node scripts/cleanup-zombie-dev.cjs [--dry-run]  预览模式
- *   node scripts/cleanup-zombie-dev.cjs --force        强制清理
- *   node scripts/cleanup-zombie-dev.cjs --port 5173    清理特定端口
+ *   node scripts/dev/cleanup-zombie.cjs [--dry-run]  预览模式
+ *   node scripts/dev/cleanup-zombie.cjs --force        强制清理
+ *   node scripts/dev/cleanup-zombie.cjs --port 5173    清理特定端口
  */
 
 const REPO_ROOT = path.resolve(__dirname, "..").toLowerCase();

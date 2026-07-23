@@ -116,13 +116,13 @@ function formatTimestampParts(date) {
 
 function printHelp() {
   console.log(
-    "Usage: node scripts/run-with-log.cjs [--name session] [--dir .logs] -- <command> [args...]",
+    "Usage: node scripts/dev/run-with-log.cjs [--name session] [--dir .logs] -- <command> [args...]",
   );
   console.log(
     "Options: --retention-days 30 --llm-retention-days 14 --max-file-mb 50 --no-cleanup",
   );
   console.log(
-    "Example: node scripts/run-with-log.cjs --name server -- pnpm --filter @ai-novel/server dev",
+    "Example: node scripts/dev/run-with-log.cjs --name server -- pnpm --filter @ai-novel/server dev",
   );
 }
 

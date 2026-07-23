@@ -2,7 +2,7 @@ import type { BaseChatModel } from "@langchain/core/language_models/chat_models"
 import type { BaseMessageChunk } from "@langchain/core/messages";
 import { featureFlags } from "../../config/featureFlags";
 import { prisma } from "../../db/prisma";
-import { createWorldBuildingGraph } from "../../graphs/worldBuildingGraph";
+import { createWorldBuildingGraph } from "../../orchestration/graph/worldBuildingGraph";
 import { getLLM } from "../../llm/factory";
 import { streamStructuredPrompt, streamTextPrompt } from "../../prompting/core/promptRunner";
 import {
