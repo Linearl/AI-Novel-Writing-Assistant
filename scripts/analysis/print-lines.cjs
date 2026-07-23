@@ -2,7 +2,7 @@ const fs = require("fs");
 
 const [filePath, startRaw, endRaw] = process.argv.slice(2);
 if (!filePath) {
-  process.stderr.write("Usage: node scripts/print-lines.js <file> [start] [end]\n");
+  process.stderr.write("Usage: node scripts/analysis/print-lines.cjs <file> [start] [end]\n");
   process.exit(1);
 }
 

@@ -2,7 +2,7 @@ const fs = require("fs");
 
 const [filePath] = process.argv.slice(2);
 if (!filePath) {
-  process.stderr.write("Usage: node scripts/list-class-methods.js <file>\n");
+  process.stderr.write("Usage: node scripts/analysis/list-class-methods.cjs <file>\n");
   process.exit(1);
 }
 

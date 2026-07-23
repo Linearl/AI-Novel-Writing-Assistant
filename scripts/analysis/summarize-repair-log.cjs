@@ -4,7 +4,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 
 function usage() {
-  console.error("Usage: node scripts/summarize-llm-repair-log.cjs <path-to-llm-repair.jsonl>");
+  console.error("Usage: node scripts/analysis/summarize-repair-log.cjs <path-to-llm-repair.jsonl>");
 }
 
 function readRows(filePath) {
