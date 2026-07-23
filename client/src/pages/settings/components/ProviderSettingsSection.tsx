@@ -14,6 +14,8 @@ export default function ProviderSettingsSection(props: {
   refreshingModelProvider?: string;
   refreshingBalanceProvider?: string;
   reasoningProvider?: string;
+  hideUnconfigured: boolean;
+  onToggleHideUnconfigured: (checked: boolean) => void;
   onCreateCustomProvider: () => void;
   onOpenConfig: (provider: LLMProvider) => void;
   onTest: (provider: APIKeyStatus) => void;
@@ -30,6 +32,8 @@ export default function ProviderSettingsSection(props: {
     refreshingModelProvider,
     refreshingBalanceProvider,
     reasoningProvider,
+    hideUnconfigured,
+    onToggleHideUnconfigured,
     onCreateCustomProvider,
     onOpenConfig,
     onTest,
@@ -38,7 +42,10 @@ export default function ProviderSettingsSection(props: {
     onToggleReasoning,
   } = props;
   const balanceMap = new Map(balances.map((item) => [item.provider, item]));
-  const viewModels: ProviderCardViewModel[] = providers.map((provider) => {
+  const filteredProviders = hideUnconfigured
+    ? providers.filter((p) => p.isConfigured)
+    : providers;
+  const viewModels: ProviderCardViewModel[] = filteredProviders.map((provider) => {
     const balance = balanceMap.get(provider.provider);
     const canRefreshBalance = Boolean(
       provider.kind === "builtin"
@@ -66,9 +73,20 @@ export default function ProviderSettingsSection(props: {
             先保证至少一个文本模型可用；余额明细、请求限制和模型列表可以在高级详情里检查。
           </CardDescription>
         </div>
-        <Button className={AUTO_DIRECTOR_MOBILE_CLASSES.fullWidthAction} onClick={onCreateCustomProvider}>
-          新增自定义厂商
-        </Button>
+        <div className="flex items-center gap-2">
+          <label className="flex cursor-pointer items-center gap-1.5 text-sm text-muted-foreground">
+            <input
+              type="checkbox"
+              className="h-4 w-4 rounded border-gray-300"
+              checked={hideUnconfigured}
+              onChange={(e) => onToggleHideUnconfigured(e.target.checked)}
+            />
+            只显示已配置 API Key 的厂商
+          </label>
+          <Button className={AUTO_DIRECTOR_MOBILE_CLASSES.fullWidthAction} onClick={onCreateCustomProvider}>
+            新增自定义厂商
+          </Button>
+        </div>
       </CardHeader>
       <CardContent className="grid min-w-0 gap-3 md:grid-cols-2">
         {viewModels.map((item) => (

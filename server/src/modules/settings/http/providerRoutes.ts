@@ -414,4 +414,41 @@ export function registerProviderRoutes(router: Router): void {
       }
     },
   );
+
+  // ── 厂商列表筛选设置 ──────────────────────────────────────────────────────
+
+  router.get("/provider-list/filter", async (_req, res, next) => {
+    try {
+      const row = await prisma.appSetting.findUnique({
+        where: { key: "providerList.hideUnconfigured" },
+      });
+      const hideUnconfigured = row?.value === "true";
+      res.status(200).json({
+        success: true,
+        data: { hideUnconfigured },
+        message: "ok",
+      });
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  router.put("/provider-list/filter", async (req, res, next) => {
+    try {
+      const { hideUnconfigured } = req.body as { hideUnconfigured?: boolean };
+      const value = hideUnconfigured ? "true" : "false";
+      await prisma.appSetting.upsert({
+        where: { key: "providerList.hideUnconfigured" },
+        update: { value },
+        create: { key: "providerList.hideUnconfigured", value },
+      });
+      res.status(200).json({
+        success: true,
+        data: { hideUnconfigured: !!hideUnconfigured },
+        message: "筛选设置已保存。",
+      });
+    } catch (error) {
+      next(error);
+    }
+  });
 }

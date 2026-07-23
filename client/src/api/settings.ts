@@ -414,6 +414,15 @@ export async function persistProviderModels(provider: LLMProvider, models: strin
   return data;
 }
 
+export async function getProviderListFilter(): Promise<{ hideUnconfigured: boolean }> {
+  const { data } = await apiClient.get<ApiResponse<{ hideUnconfigured: boolean }>>("/settings/provider-list/filter");
+  return data.data ?? { hideUnconfigured: false };
+}
+
+export async function saveProviderListFilter(hideUnconfigured: boolean): Promise<void> {
+  await apiClient.put<ApiResponse<{ hideUnconfigured: boolean }>>("/settings/provider-list/filter", { hideUnconfigured });
+}
+
 export async function getLLMProviders() {
   const { data } = await apiClient.get<ApiResponse<Record<string, unknown>>>("/llm/providers");
   return data;

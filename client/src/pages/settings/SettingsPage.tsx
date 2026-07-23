@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { ApiResponse } from "@ai-novel/shared";
 import type { LLMProvider } from "@ai-novel/shared";
@@ -9,6 +9,7 @@ import {
   getAPIKeySettings,
   getModelRoutes,
   getProviderBalances,
+  getProviderListFilter,
   getRagSettings,
   getStyleEngineRuntimeSettings,
   previewCustomProviderModels,
@@ -16,6 +17,7 @@ import {
   refreshProviderModelList,
   persistProviderModels,
   saveAPIKeySetting,
+  saveProviderListFilter,
   testLLMConnection,
   testModelRouteConnectivity,
 } from "@/api/settings";
@@ -71,6 +73,28 @@ export default function SettingsPage() {
   const [actionResult, setActionResult] = useState("");
   const [previewModels, setPreviewModels] = useState<string[]>([]);
   const [previewModelsResult, setPreviewModelsResult] = useState("");
+  const [hideUnconfigured, setHideUnconfigured] = useState(() => {
+    try { return localStorage.getItem("providerList.hideUnconfigured") === "true"; }
+    catch { return false; }
+  });
+
+  // 同步服务端筛选设置
+  useEffect(() => {
+    getProviderListFilter()
+      .then((data) => {
+        setHideUnconfigured(data.hideUnconfigured);
+        try { localStorage.setItem("providerList.hideUnconfigured", String(data.hideUnconfigured)); }
+        catch { /* ignore */ }
+      })
+      .catch(() => { /* 服务端不可用时使用 localStorage 值 */ });
+  }, []);
+
+  const handleToggleHideUnconfigured = (checked: boolean) => {
+    setHideUnconfigured(checked);
+    try { localStorage.setItem("providerList.hideUnconfigured", String(checked)); }
+    catch { /* ignore */ }
+    saveProviderListFilter(checked).catch(() => { /* 静默失败 */ });
+  };
 
   const apiKeySettingsQuery = useQuery({
     queryKey: queryKeys.settings.apiKeys,
@@ -518,6 +542,8 @@ export default function SettingsPage() {
           refreshingModelProvider={refreshModelsMutation.variables}
           refreshingBalanceProvider={refreshBalanceMutation.variables}
           reasoningProvider={toggleReasoningMutation.variables?.provider}
+          hideUnconfigured={hideUnconfigured}
+          onToggleHideUnconfigured={handleToggleHideUnconfigured}
           onCreateCustomProvider={openCreateCustomDialog}
           onOpenConfig={openBuiltInDialog}
           onTest={handleProviderCardTest}
