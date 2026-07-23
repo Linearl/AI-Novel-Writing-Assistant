@@ -7,6 +7,7 @@ import {
   aiChapterTaskSheetQualityAssessmentSchema,
 } from "@ai-novel/shared";
 import type { PromptAsset } from "../../../core/promptTypes";
+import { NOVEL_PROMPT_BUDGETS } from "../promptBudgetProfiles";
 
 export interface ChapterTaskSheetQualityPromptInput {
   candidate: ChapterExecutionContractQualityCandidate;
@@ -76,7 +77,7 @@ export const chapterTaskSheetQualityPrompt: PromptAsset<
   mode: "structured",
   language: "zh",
   contextPolicy: {
-    maxTokensBudget: 4200,
+    maxTokensBudget: NOVEL_PROMPT_BUDGETS.chapterTaskSheetQuality,
   },
   outputSchema: aiChapterTaskSheetQualityAssessmentSchema,
   render: (input) => [

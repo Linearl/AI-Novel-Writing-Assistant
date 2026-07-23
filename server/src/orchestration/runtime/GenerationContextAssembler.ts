@@ -427,10 +427,10 @@ export class GenerationContextAssembler {
       tokenBudgetPolicy: {
         chapterBudgetProfile: "balanced" as const,
         stageTokenCap: {
-          writer: 2600,
-          light_audit: 900,
-          full_audit: 2600,
-          repair: 2200,
+          writer: NOVEL_PROMPT_BUDGETS.stageTokenCapWriter,
+          light_audit: NOVEL_PROMPT_BUDGETS.stageTokenCapLightAudit,
+          full_audit: NOVEL_PROMPT_BUDGETS.stageTokenCapFullAudit,
+          repair: NOVEL_PROMPT_BUDGETS.stageTokenCapRepair,
         },
         retryCap: {
           full_audit: 1,
@@ -542,7 +542,19 @@ export class GenerationContextAssembler {
       contextPackage.chapterWriteContext ? getAllContextBlocks(contextPackage) : [],
       NOVEL_PROMPT_BUDGETS.chapterWriter,
     );
-    logger.debug("[ctx-budget]", compressionLog);
+    if (compressionLog.overflowRatio > 0) {
+      logger.warn("[ctx-budget/overflow] chapter context exceeds budget", {
+        novelId,
+        chapterOrder: chapter.order,
+        usedTokens: compressionLog.usedTokens,
+        budgetTokens: compressionLog.budgetTokens,
+        overflowRatio: compressionLog.overflowRatio,
+        droppedCount: compressionLog.dropped.length,
+        summarizedCount: compressionLog.summarized.length,
+      });
+    } else {
+      logger.debug("[ctx-budget]", compressionLog);
+    }
 
     return {
       novel: { id: novel.id, title: novel.title },

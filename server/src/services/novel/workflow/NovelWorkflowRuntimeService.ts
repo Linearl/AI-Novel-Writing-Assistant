@@ -1,5 +1,5 @@
-import { isDirectorRecoveryNotNeededError } from "../director/runtime/core/novelDirectorErrors";
-import { DirectorCommandService } from "../director/commands/DirectorCommandService";
+import { isDirectorRecoveryNotNeededError } from "../../../orchestration/pipeline/runtime/core/novelDirectorErrors";
+import { DirectorCommandService } from "../../../orchestration/pipeline/commands/DirectorCommandService";
 import { NovelWorkflowService } from "./NovelWorkflowService";
 
 const SERVER_RESTART_RECOVERY_MESSAGE = "自动导演任务因服务重启中断，正在尝试恢复。";

@@ -3,6 +3,7 @@ import type { StoryPlanLevel } from "@ai-novel/shared";
 import type { PromptAsset } from "../../core/promptTypes";
 import { normalizePlannerOutput, type PlannerOutput } from "../../../services/planner/plannerOutputNormalization";
 import { plannerOutputSchema } from "../../../services/planner/plannerSchemas";
+import { NOVEL_PROMPT_BUDGETS } from "../novel/promptBudgetProfiles";
 
 interface PlannerPlanPromptInput {
   scopeLabel: string;
@@ -210,7 +211,7 @@ export const plannerBookPlanPrompt = buildPlannerPlanAsset({
   version: "v1",
   planLevel: "book",
   includeScenes: false,
-  maxTokensBudget: 1800,
+  maxTokensBudget: NOVEL_PROMPT_BUDGETS.plannerBookPlan,
 });
 
 export const plannerArcPlanPrompt = buildPlannerPlanAsset({
@@ -218,7 +219,7 @@ export const plannerArcPlanPrompt = buildPlannerPlanAsset({
   version: "v1",
   planLevel: "arc",
   includeScenes: false,
-  maxTokensBudget: 1800,
+  maxTokensBudget: NOVEL_PROMPT_BUDGETS.plannerChapterPlan,
 });
 
 export const plannerChapterPlanPrompt = buildPlannerPlanAsset({
@@ -226,5 +227,5 @@ export const plannerChapterPlanPrompt = buildPlannerPlanAsset({
   version: "v1",
   planLevel: "chapter",
   includeScenes: true,
-  maxTokensBudget: 2400,
+  maxTokensBudget: NOVEL_PROMPT_BUDGETS.plannerChapterPlan,
 });

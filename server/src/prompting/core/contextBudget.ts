@@ -81,7 +81,7 @@ export function summarizeContextBlock(block: PromptContextBlock, maxTokens: numb
 export function buildCompressionLog(
   blocks: PromptContextBlock[],
   totalBudgetTokens: number,
-): { dropped: string[]; summarized: string[]; usedTokens: number; budgetTokens: number } {
+): { dropped: string[]; summarized: string[]; usedTokens: number; budgetTokens: number; overflowRatio: number } {
   let used = 0;
   const dropped: string[] = [];
   const summarized: string[] = [];
@@ -108,5 +108,6 @@ export function buildCompressionLog(
       used += block.estimatedTokens;
     }
   }
-  return { dropped, summarized, usedTokens: used, budgetTokens: totalBudgetTokens };
+  const overflowRatio = totalBudgetTokens > 0 ? Math.max(0, (used - totalBudgetTokens) / totalBudgetTokens) : 0;
+  return { dropped, summarized, usedTokens: used, budgetTokens: totalBudgetTokens, overflowRatio };
 }

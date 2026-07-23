@@ -2,11 +2,11 @@ import { prisma } from "../../db/prisma";
 import {
   DirectorFactSummaryService,
   type DirectorFactBaseSummary,
-} from "./director/projections/DirectorFactSummaryService";
+} from "../../orchestration/pipeline/projections/DirectorFactSummaryService";
 import {
   ChapterExecutionProgressInspector,
   type ChapterExecutionProgressSummary,
-} from "./director/runtime/utils/ChapterExecutionProgressInspector";
+} from "../../orchestration/pipeline/runtime/utils/ChapterExecutionProgressInspector";
 import { parseStructuredOutline } from "./novelProductionHelpers";
 
 export interface ProductionStatusStage {

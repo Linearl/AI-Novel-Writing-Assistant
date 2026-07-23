@@ -1,12 +1,12 @@
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 import { z } from "zod";
-import type { PlannerInput, StructuredIntent } from "../../../agents/types";
-import { normalizeIntentPayload } from "../../../agents/planner/utils";
+import type { PlannerInput, StructuredIntent } from "../../../orchestration/agent/types";
+import { normalizeIntentPayload } from "../../../orchestration/agent/planner/utils";
 import {
   buildPlannerIntentPromptParts,
   intentSchema,
   summarizeIntentValidationFailure,
-} from "../../../agents/planner/intentPromptSupport";
+} from "../../../orchestration/agent/planner/intentPromptSupport";
 import type { PromptAsset } from "../../core/promptTypes";
 
 export const plannerIntentPrompt: PromptAsset<PlannerInput, StructuredIntent, Record<string, unknown>> = {

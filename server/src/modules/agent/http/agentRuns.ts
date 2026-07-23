@@ -3,7 +3,7 @@ import type { ApiResponse } from "@ai-novel/shared";
 import type { AgentRunDetail, ReplayRequest } from "@ai-novel/shared";
 import type { TaskStatus } from "@ai-novel/shared";
 import { z } from "zod";
-import { agentRuntime } from "../../../agents";
+import { agentRuntime } from "../../../orchestration/agent";
 import { authMiddleware } from "../../../middleware/auth";
 import { validate } from "../../../middleware/validate";
 import { buildTaskRecoveryHint, normalizeFailureSummary } from "../../../services/task/taskSupport";

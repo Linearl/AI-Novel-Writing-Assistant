@@ -6,15 +6,15 @@ import type {
   CreativeHubMessage,
   CreativeHubThreadState,
 } from "@ai-novel/shared";
-import { creativeHubLangGraph } from "../../../creativeHub/CreativeHubLangGraph";
-import { creativeHubInterruptLangGraph } from "../../../creativeHub/CreativeHubInterruptLangGraph";
+import { creativeHubLangGraph } from "../../../orchestration/graph/CreativeHubLangGraph";
+import { creativeHubInterruptLangGraph } from "../../../orchestration/graph/CreativeHubInterruptLangGraph";
 import { llmProviderSchema } from "../../../llm/providerSchema";
 import {
   toBindings,
-} from "../../../creativeHub/creativeHubRuntimeHelpers";
+} from "../../../orchestration/graph/creativeHubRuntimeHelpers";
 import { authMiddleware } from "../../../middleware/auth";
 import { validate } from "../../../middleware/validate";
-import { creativeHubService } from "../../../creativeHub/CreativeHubService";
+import { creativeHubService } from "../../../orchestration/graph/CreativeHubService";
 import { PIPELINE_HEARTBEAT_INTERVAL_MS } from "../../../services/novel/novelCorePipelineHelpers";
 
 const router = Router();

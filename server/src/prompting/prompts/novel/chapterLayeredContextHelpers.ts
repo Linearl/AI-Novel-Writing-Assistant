@@ -7,6 +7,12 @@
  *   - chapterLayeredContextShared.ts     (shared text utilities, summaries)
  *
  * Types and constants live in chapterLayeredContextTypes.ts.
+ *
+ * After REQ-2071 split:
+ *   - chapterLayeredContextUtils.ts       (shared text utilities, ~100 lines)
+ *   - chapterLayeredContextSummaries.ts   (summary functions, ~160 lines)
+ *   - chapterLayeredContextCharacters.ts  (character dynamics & text rendering, ~300 lines)
+ *   - This file (~480 lines) — context builders, obligation contract, repair context.
  */
 
 import type {
@@ -26,15 +32,27 @@ import { sanitizeCreativeMustAdvanceItems } from "@ai-novel/shared";
 import type { ReviewIssue } from "@ai-novel/shared";
 import type { StoryMacroPlan } from "@ai-novel/shared";
 import type { PromptContextBlock } from "../../core/promptTypes";
-import { buildPlannerStyleContractSummaryText } from "../../../services/styleEngine/styleContractText";
-
 import {
   WRITER_FORBIDDEN_GROUPS,
   EMPTY_OBLIGATION_CONTRACT,
-  type ChapterWriterBlockOptions,
   type RuntimeVolumeSeed,
-  type CharacterDynamicsOverview,
 } from "./chapterLayeredContextTypes";
+
+// Internal imports from split files
+import { compactText, takeUnique, buildLedgerItemLine } from "./chapterLayeredContextUtils";
+import {
+  summarizeStateSnapshot,
+  summarizeOpenConflicts,
+  summarizeWorldRules,
+  summarizeHistoricalIssues,
+  summarizeStyleConstraints,
+  summarizeContinuationConstraints,
+} from "./chapterLayeredContextSummaries";
+import {
+  buildDynamicCharacterGuidance,
+  buildParticipants,
+  selectCharacterHardFactsForWriter,
+} from "./chapterLayeredContextCharacters";
 
 // ---------------------------------------------------------------------------
 // Re-exports from types
@@ -49,568 +67,40 @@ export {
   type CharacterDynamicsOverview,
 } from "./chapterLayeredContextTypes";
 
-// =========================================================================
-// SHARED TEXT UTILITIES (from chapterLayeredContextShared.ts)
-// =========================================================================
+// ---------------------------------------------------------------------------
+// Re-exports from split files (public API stability)
+// ---------------------------------------------------------------------------
 
-export function compactText(value: string | null | undefined, fallback = ""): string {
-  return value?.replace(/\s+/g, " ").trim() || fallback;
-}
+// Utils
+export {
+  compactText,
+  takeUnique,
+  splitLines,
+  toListBlock,
+  resolveTargetWordRange,
+  buildLedgerItemLine,
+} from "./chapterLayeredContextUtils";
 
-export function takeUnique(items: Array<string | null | undefined>, limit = items.length): string[] {
-  const seen = new Set<string>();
-  const results: string[] = [];
-  for (const item of items) {
-    const normalized = compactText(item);
-    if (!normalized || seen.has(normalized)) {
-      continue;
-    }
-    seen.add(normalized);
-    results.push(normalized);
-    if (results.length >= limit) {
-      break;
-    }
-  }
-  return results;
-}
+// Summaries
+export {
+  summarizeStateSnapshot,
+  summarizeOpenConflicts,
+  summarizeWorldRules,
+  summarizeHistoricalIssues,
+  summarizeStyleConstraints,
+  summarizeContinuationConstraints,
+} from "./chapterLayeredContextSummaries";
 
-export function splitLines(value: string | null | undefined, limit = 4): string[] {
-  return takeUnique(
-    (value ?? "")
-      .split(/\r?\n+/g)
-      .map((line) => line.replace(/^[-*\d.\s]+/, "").trim()),
-    limit,
-  );
-}
-
-export function toListBlock(title: string, values: string[], emptyLabel = "无"): string {
-  if (values.length === 0) {
-    return `${title}: ${emptyLabel}`;
-  }
-  return [title, ...values.map((value) => `- ${value}`)].join("\n");
-}
-
-export function resolveTargetWordRange(targetWordCount: number | null | undefined): {
-  targetWordCount: number | null;
-  minWordCount: number | null;
-  maxWordCount: number | null;
-} {
-  const budget = resolveLengthBudgetContract(targetWordCount);
-  if (!budget) {
-    return {
-      targetWordCount: null,
-      minWordCount: null,
-      maxWordCount: null,
-    };
-  }
-  return {
-    targetWordCount: budget.targetWordCount,
-    minWordCount: budget.softMinWordCount,
-    maxWordCount: budget.softMaxWordCount,
-  };
-}
-
-function formatLedgerWindow(start?: number | null, end?: number | null): string {
-  if (typeof start === "number" && typeof end === "number") {
-    return `目标窗口=${start}-${end}`;
-  }
-  if (typeof end === "number") {
-    return `目标窗口截止第${end}章`;
-  }
-  if (typeof start === "number") {
-    return `目标窗口起于第${start}章`;
-  }
-  return "";
-}
-
-export function buildLedgerItemLine(
-  item: GenerationContextPackage["ledgerPendingItems"][number],
-  label: string,
-): string {
-  return takeUnique([
-    `${label}: ${item.title}`,
-    item.summary,
-    formatLedgerWindow(item.targetStartChapterOrder, item.targetEndChapterOrder),
-    item.statusReason ?? "",
-  ], 4).join(" | ");
-}
-
-type ParticipantCharacter = ChapterWriteContext["participants"][number];
-
-function getCharacterTier(character: ParticipantCharacter): string {
-  return (character as { tier?: string | null }).tier ?? "named";
-}
-
-export function buildParticipantText(writeContext: ChapterWriteContext): string {
-  if (writeContext.participants.length === 0) {
-    return "参与角色：无";
-  }
-  const guideByCharacterId = new Map(
-    writeContext.characterBehaviorGuides.map((guide) => [guide.characterId, guide]),
-  );
-  return [
-    "参与角色：",
-    ...writeContext.participants.map((character) => {
-      const guide = guideByCharacterId.get(character.id);
-      const tier = getCharacterTier(character);
-
-      if (tier === "extra") {
-        const parts = takeUnique([
-          character.role,
-          guide?.volumeRoleLabel ? `volume role=${guide.volumeRoleLabel}` : "",
-        ].filter(Boolean), 2);
-        return `- ${character.name}: ${parts.join(" | ")}`;
-      }
-
-      if (tier === "named") {
-        const visibleProfile = takeUnique([
-          character.appearance || character.physique
-            ? `look=${compactText([character.appearance, character.physique].filter(Boolean).join("；"))}`
-            : "",
-          character.signatureDetail ? `signature=${compactText(character.signatureDetail)}` : "",
-          character.voiceTexture ? `voice=${compactText(character.voiceTexture)}` : "",
-        ], 3).join(" | ");
-        const parts = takeUnique([
-          character.role,
-          visibleProfile,
-          guide?.volumeRoleLabel ? `volume role=${guide.volumeRoleLabel}` : "",
-          character.personality,
-          character.currentState ? `state=${character.currentState}` : "",
-          character.currentGoal ? `goal=${character.currentGoal}` : "",
-        ], 4);
-        return `- ${character.name}: ${parts.join(" | ")}`;
-      }
-
-      // lead / major: full profile
-      const visibleProfile = takeUnique([
-        character.appearance || character.physique
-          ? `look=${compactText([character.appearance, character.physique].filter(Boolean).join("；"))}`
-          : "",
-        character.signatureDetail ? `signature=${compactText(character.signatureDetail)}` : "",
-        character.voiceTexture ? `voice=${compactText(character.voiceTexture)}` : "",
-      ], 3).join(" | ");
-      const parts = takeUnique([
-        character.role,
-        visibleProfile,
-        guide?.volumeRoleLabel ? `volume role=${guide.volumeRoleLabel}` : "",
-        guide?.volumeResponsibility ? `volume duty=${guide.volumeResponsibility}` : "",
-        character.personality,
-        character.currentState ? `state=${character.currentState}` : "",
-        character.currentGoal ? `goal=${character.currentGoal}` : "",
-        guide?.relationStageLabels.length ? `relation=${guide.relationStageLabels.join(" / ")}` : "",
-        guide?.absenceRisk && guide.absenceRisk !== "none"
-          ? `absence risk=${guide.absenceRisk}(span=${guide.absenceSpan})`
-          : "",
-      ], 4);
-      return `- ${character.name}: ${parts.join(" | ")}`;
-    }),
-  ].join("\n");
-}
-
-export function buildCharacterGuidanceText(writeContext: ChapterWriteContext): string {
-  if (writeContext.characterBehaviorGuides.length === 0) {
-    return "角色行为引导：无";
-  }
-  return [
-    "角色行为引导：",
-    ...writeContext.characterBehaviorGuides.map((guide) => {
-      const parts = takeUnique([
-        guide.isCoreInVolume ? "core in current volume" : "supporting in current volume",
-        guide.visibleProfileSummary ? `visible=${guide.visibleProfileSummary}` : "",
-        guide.volumeRoleLabel ? `volume role=${guide.volumeRoleLabel}` : "",
-        guide.volumeResponsibility ? `duty=${guide.volumeResponsibility}` : "",
-        guide.currentGoal ? `goal=${guide.currentGoal}` : "",
-        guide.currentState ? `state=${guide.currentState}` : "",
-        guide.relationStageLabels.length ? `relation=${guide.relationStageLabels.join(" / ")}` : "",
-        guide.absenceRisk !== "none" ? `absence=${guide.absenceRisk}(span=${guide.absenceSpan})` : "",
-        guide.factionLabel ? `faction=${guide.factionLabel}` : "",
-        guide.stanceLabel ? `stance=${guide.stanceLabel}` : "",
-        guide.shouldPreferAppearance ? "prefer appearance in this chapter" : "",
-      ], 6);
-      return `- ${guide.name}: ${parts.join(" | ")}`;
-    }),
-  ].join("\n");
-}
-
-export function buildRelationStageText(writeContext: ChapterWriteContext): string {
-  if (writeContext.activeRelationStages.length === 0) {
-    return "活跃关系阶段：无";
-  }
-  return [
-    "活跃关系阶段：",
-    ...writeContext.activeRelationStages.map((relation) => (
-      `- ${relation.sourceCharacterName} -> ${relation.targetCharacterName}: ${relation.stageLabel} | ${relation.stageSummary}${relation.nextTurnPoint ? ` | next=${relation.nextTurnPoint}` : ""}`
-    )),
-  ].join("\n");
-}
-
-export function buildPendingCandidateGuardText(writeContext: ChapterWriteContext): string {
-  if (writeContext.pendingCandidateGuards.length === 0) {
-    return "待确认候选角色守卫：无";
-  }
-  return [
-    "待确认候选角色守卫（只读，不得注入到正文生成中）：",
-    ...writeContext.pendingCandidateGuards.map((candidate) => {
-      const parts = takeUnique([
-        candidate.proposedRole ? `role=${candidate.proposedRole}` : "",
-        candidate.summary ?? "",
-        candidate.sourceChapterOrder != null ? `source chapter=${candidate.sourceChapterOrder}` : "",
-        ...candidate.evidence.slice(0, 2),
-      ], 4);
-      return `- ${candidate.proposedName}: ${parts.join(" | ")}`;
-    }),
-  ].join("\n");
-}
-
-// =========================================================================
-// SHARED SUMMARIES (from chapterLayeredContextShared.ts)
-// =========================================================================
-
-export function summarizeStateSnapshot(contextPackage: GenerationContextPackage): string {
-  if (contextPackage.canonicalState) {
-    const snapshot = contextPackage.canonicalState;
-    const fragments = takeUnique([
-      snapshot.narrative.currentChapterGoal,
-      ...snapshot.characters
-        .slice(0, 3)
-        .map((state) => {
-          const parts = takeUnique([
-            state.currentGoal ? `goal=${state.currentGoal}` : "",
-            state.currentState ? `state=${state.currentState}` : "",
-            state.emotion ? `emotion=${state.emotion}` : "",
-            state.summary,
-          ]);
-          if (parts.length === 0) {
-            return "";
-          }
-          return `${state.name}: ${parts.join(" | ")}`;
-        }),
-      ...snapshot.narrative.publicKnowledge
-        .slice(0, 2)
-        .map((fact) => `${fact} (reader)`),
-    ], 6);
-    return fragments.join("\n") || "无先前规范状态快照。";
-  }
-
-  const fragments = takeUnique([
-    contextPackage.stateSnapshot?.summary,
-    ...contextPackage.stateSnapshot?.characterStates
-      .slice(0, 3)
-      .map((state) => {
-        const parts = takeUnique([
-          state.currentGoal ? `goal=${state.currentGoal}` : "",
-          state.emotion ? `emotion=${state.emotion}` : "",
-          state.summary,
-        ]);
-        if (parts.length === 0) {
-          return "";
-        }
-        return `${state.characterId}: ${parts.join(" | ")}`;
-      }) ?? [],
-    ...contextPackage.stateSnapshot?.informationStates
-      .slice(0, 2)
-      .map((info) => `${info.fact} (${info.status})`) ?? [],
-  ], 6);
-  return fragments.join("\n") || "无先前状态快照。";
-}
-
-export function summarizeOpenConflicts(contextPackage: GenerationContextPackage): string[] {
-  if (contextPackage.canonicalState) {
-    return contextPackage.canonicalState.narrative.openConflicts
-      .slice(0, 4)
-      .map((conflict) => {
-        const parts = takeUnique([
-          conflict.title,
-          conflict.summary,
-          conflict.resolutionHint ? `resolution hint: ${conflict.resolutionHint}` : "",
-        ], 3);
-        return parts.join(" | ");
-      })
-      .filter(Boolean);
-  }
-
-  return contextPackage.openConflicts
-    .slice(0, 4)
-    .map((conflict) => {
-      const parts = takeUnique([
-        conflict.title,
-        conflict.summary,
-        conflict.resolutionHint ? `resolution hint: ${conflict.resolutionHint}` : "",
-      ], 3);
-      return parts.join(" | ");
-    })
-    .filter(Boolean);
-}
-
-export function summarizeWorldRules(contextPackage: GenerationContextPackage): string[] {
-  const worldSlice = contextPackage.storyWorldSlice;
-  if (worldSlice) {
-    return takeUnique([
-      worldSlice.coreWorldFrame,
-      ...worldSlice.appliedRules.slice(0, 3).map((rule) => `${rule.name}: ${rule.summary}`),
-      ...worldSlice.forbiddenCombinations.slice(0, 2),
-      worldSlice.storyScopeBoundary,
-    ], 6);
-  }
-
-  if (!contextPackage.canonicalState?.worldState) {
-    return [];
-  }
-  const world = contextPackage.canonicalState.worldState;
-  return takeUnique([
-    world.summary ? `连续性记录：${world.summary}` : "",
-    ...world.rules.slice(0, 3).map((rule) => `连续性规则记录：${rule}`),
-    ...world.tabooRules.slice(0, 2).map((rule) => `连续性禁忌记录：${rule}`),
-    world.currentSituation ? `当前世界状态记录：${world.currentSituation}` : "",
-  ], 6);
-}
-
-export function summarizeHistoricalIssues(contextPackage: GenerationContextPackage): string[] {
-  return contextPackage.openAuditIssues
-    .slice(0, 4)
-    .map((issue) => `${issue.severity}/${issue.auditType}: ${issue.description}`)
-    .filter(Boolean);
-}
-
-export function summarizeStyleConstraints(contextPackage: GenerationContextPackage): string[] {
-  const contract = contextPackage.styleContext?.compiledBlocks?.contract;
-  if (!contract) {
-    return [];
-  }
-  return takeUnique(
-    buildPlannerStyleContractSummaryText(contract)
-      .split(/\r?\n/g)
-      .map((line) => line.trim())
-      .filter(Boolean),
-    8,
-  );
-}
-
-export function summarizeContinuationConstraints(contextPackage: GenerationContextPackage): string[] {
-  if (!contextPackage.continuation.enabled) {
-    return [];
-  }
-  return takeUnique([
-    compactText(contextPackage.continuation.systemRule),
-    ...splitLines(contextPackage.continuation.humanBlock, 3),
-  ], 4);
-}
-
-// =========================================================================
-// CHARACTER DYNAMICS & PARTICIPANTS (from chapterLayeredContextCharacters.ts)
-// =========================================================================
-
-import type {
-  DynamicCharacterOverviewItem,
-  CharacterRelationStage,
-  RuntimeCharacterCandidate,
-} from "@ai-novel/shared";
-
-function buildVisibleProfileSummary(
-  character: GenerationContextPackage["characterRoster"][number] | undefined,
-): string | null {
-  if (!character) {
-    return null;
-  }
-  const parts = takeUnique([
-    character.appearance || character.physique
-      ? `样貌/体态=${compactText([character.appearance, character.physique].filter(Boolean).join("；"))}`
-      : "",
-    character.signatureDetail ? `标志=${compactText(character.signatureDetail)}` : "",
-    character.voiceTexture ? `声音=${compactText(character.voiceTexture)}` : "",
-  ], 3);
-  return parts.length > 0 ? parts.join(" | ") : null;
-}
-
-function absenceRiskRank(risk: "none" | "info" | "warn" | "high"): number {
-  return ["none", "info", "warn", "high"].indexOf(risk);
-}
-
-export function buildDynamicCharacterGuidance(
-  contextPackage: GenerationContextPackage,
-): Pick<ChapterWriteContext, "characterBehaviorGuides" | "activeRelationStages" | "pendingCandidateGuards"> {
-  const overview = contextPackage.characterDynamics as CharacterDynamicsOverview | null | undefined;
-  if (!overview) {
-    return {
-      characterBehaviorGuides: [],
-      activeRelationStages: [],
-      pendingCandidateGuards: [],
-    };
-  }
-
-  const currentChapterOrder = contextPackage.chapter.order;
-  const rosterById = new Map(contextPackage.characterRoster.map((character) => [character.id, character]));
-  const planParticipantNames = new Set((contextPackage.plan?.participants ?? []).map((item) => compactText(item)));
-  const conflictCharacterIds = new Set(
-    contextPackage.openConflicts.flatMap((conflict) => conflict.affectedCharacterIds ?? []),
-  );
-
-  const activeRelationStages = overview.relations
-    .slice(0, 8)
-    .map((relation) => ({
-      relationId: relation.relationId ?? null,
-      sourceCharacterId: relation.sourceCharacterId,
-      sourceCharacterName: compactText(relation.sourceCharacterName, relation.sourceCharacterId),
-      targetCharacterId: relation.targetCharacterId,
-      targetCharacterName: compactText(relation.targetCharacterName, relation.targetCharacterId),
-      stageLabel: compactText(relation.stageLabel),
-      stageSummary: compactText(relation.stageSummary),
-      nextTurnPoint: compactText(relation.nextTurnPoint, "") || null,
-      isCurrent: relation.isCurrent,
-    }));
-  const relationStageByCharacterId = new Map<string, typeof activeRelationStages>();
-  for (const relation of activeRelationStages) {
-    const sourceStages = relationStageByCharacterId.get(relation.sourceCharacterId) ?? [];
-    sourceStages.push(relation);
-    relationStageByCharacterId.set(relation.sourceCharacterId, sourceStages);
-
-    const targetStages = relationStageByCharacterId.get(relation.targetCharacterId) ?? [];
-    targetStages.push(relation);
-    relationStageByCharacterId.set(relation.targetCharacterId, targetStages);
-  }
-
-  const characterBehaviorGuides = overview.characters
-    .filter((item) => rosterById.has(item.characterId))
-    .map((item) => {
-      const roster = rosterById.get(item.characterId);
-      const relationStages = relationStageByCharacterId.get(item.characterId) ?? [];
-      const shouldPreferAppearance = item.isCoreInVolume && (
-        item.plannedChapterOrders.includes(currentChapterOrder)
-        || item.absenceRisk === "high"
-        || item.absenceRisk === "warn"
-      );
-      let score = 0;
-      if (item.isCoreInVolume) {
-        score += 40;
-      }
-      if (item.volumeResponsibility) {
-        score += 20;
-      }
-      if (item.plannedChapterOrders.includes(currentChapterOrder)) {
-        score += 25;
-      }
-      if (relationStages.length > 0) {
-        score += 24;
-      }
-      if (item.absenceRisk === "high") {
-        score += 30;
-      } else if (item.absenceRisk === "warn") {
-        score += 20;
-      } else if (item.absenceRisk === "info") {
-        score += 8;
-      }
-      if (planParticipantNames.has(item.name)) {
-        score += 16;
-      }
-      if (conflictCharacterIds.has(item.characterId)) {
-        score += 12;
-      }
-      if (item.currentGoal) {
-        score += 4;
-      }
-      return {
-        score,
-        guide: {
-          characterId: item.characterId,
-          name: item.name,
-          role: roster?.role ?? item.role,
-          castRole: item.castRole ?? null,
-          volumeRoleLabel: item.volumeRoleLabel ?? null,
-          volumeResponsibility: item.volumeResponsibility ?? null,
-          currentGoal: roster?.currentGoal ?? item.currentGoal ?? null,
-          currentState: roster?.currentState ?? item.currentState ?? null,
-          visibleProfileSummary: buildVisibleProfileSummary(roster),
-          factionLabel: item.factionLabel ?? null,
-          stanceLabel: item.stanceLabel ?? null,
-          relationStageLabels: takeUnique(
-            relationStages.map((relation) => (
-              relation.nextTurnPoint
-                ? `${relation.stageLabel} -> ${relation.nextTurnPoint}`
-                : relation.stageLabel
-            )),
-            3,
-          ),
-          relationRiskNotes: takeUnique(
-            relationStages.map((relation) => (
-              `${relation.sourceCharacterName} / ${relation.targetCharacterName}: ${relation.stageSummary}${relation.nextTurnPoint ? ` | next=${relation.nextTurnPoint}` : ""}`
-            )),
-            3,
-          ),
-          plannedChapterOrders: item.plannedChapterOrders,
-          absenceRisk: item.absenceRisk,
-          absenceSpan: item.absenceSpan,
-          isCoreInVolume: item.isCoreInVolume,
-          shouldPreferAppearance,
-        },
-      };
-    })
-    .sort((left, right) => {
-      if (left.score !== right.score) {
-        return right.score - left.score;
-      }
-      if (left.guide.shouldPreferAppearance !== right.guide.shouldPreferAppearance) {
-        return left.guide.shouldPreferAppearance ? -1 : 1;
-      }
-      if (left.guide.isCoreInVolume !== right.guide.isCoreInVolume) {
-        return left.guide.isCoreInVolume ? -1 : 1;
-      }
-      if (left.guide.absenceRisk !== right.guide.absenceRisk) {
-        return absenceRiskRank(right.guide.absenceRisk) - absenceRiskRank(left.guide.absenceRisk);
-      }
-      return left.guide.name.localeCompare(right.guide.name, "zh-Hans-CN");
-    })
-    .slice(0, 8)
-    .map((item) => item.guide);
-
-  return {
-    characterBehaviorGuides,
-    activeRelationStages,
-    pendingCandidateGuards: overview.candidates
-      .slice(0, 4)
-      .map((candidate) => ({
-        id: candidate.id,
-        proposedName: compactText(candidate.proposedName),
-        proposedRole: compactText(candidate.proposedRole, "") || null,
-        summary: compactText(candidate.summary, "") || null,
-        evidence: takeUnique(candidate.evidence, 3),
-        sourceChapterOrder: candidate.sourceChapterOrder ?? null,
-      })),
-  };
-}
-
-export function buildParticipants(
-  contextPackage: GenerationContextPackage,
-  characterBehaviorGuides: ChapterWriteContext["characterBehaviorGuides"] = [],
-): GenerationContextPackage["characterRoster"] {
-  const rosterById = new Map(contextPackage.characterRoster.map((character) => [character.id, character]));
-  const participantNames = new Set(contextPackage.plan?.participants ?? []);
-  const conflictCharacterIds = new Set(
-    contextPackage.openConflicts.flatMap((conflict) => conflict.affectedCharacterIds ?? []),
-  );
-  if (characterBehaviorGuides.length > 0) {
-    const selected = characterBehaviorGuides
-      .filter((guide) => (
-        guide.shouldPreferAppearance
-        || guide.isCoreInVolume
-        || guide.relationStageLabels.length > 0
-        || participantNames.has(guide.name)
-        || conflictCharacterIds.has(guide.characterId)
-      ))
-      .map((guide) => rosterById.get(guide.characterId))
-      .filter((character): character is NonNullable<typeof character> => Boolean(character));
-    if (selected.length > 0) {
-      return selected.slice(0, 6);
-    }
-  }
-
-  const selected = contextPackage.characterRoster.filter((character) => (
-    participantNames.has(character.name) || conflictCharacterIds.has(character.id)
-  ));
-  if (selected.length > 0) {
-    return selected.slice(0, 6);
-  }
-  return contextPackage.characterRoster.slice(0, 4);
-}
+// Character dynamics + rendering
+export {
+  buildDynamicCharacterGuidance,
+  buildParticipants,
+  buildParticipantText,
+  buildCharacterGuidanceText,
+  buildRelationStageText,
+  buildPendingCandidateGuardText,
+  selectCharacterHardFactsForWriter,
+} from "./chapterLayeredContextCharacters";
 
 // =========================================================================
 // CONTEXT BUILDERS (original chapterLayeredContextHelpers.ts)
@@ -769,28 +259,6 @@ export function buildChapterBoundaryContract(
     protectedReveals,
     allowedRevealLevel: contextPackage.chapter.revealLevel ?? null,
   };
-}
-
-export function selectCharacterHardFactsForWriter(input: {
-  hardFacts: ChapterWriteContext["characterHardFacts"];
-  participants: ChapterWriteContext["participants"];
-  characterBehaviorGuides: ChapterWriteContext["characterBehaviorGuides"];
-  currentChapterOrder: number;
-}): ChapterWriteContext["characterHardFacts"] {
-  const selectedIds = new Set(input.participants.map((character) => character.id));
-  for (const guide of input.characterBehaviorGuides) {
-    if (
-      guide.shouldPreferAppearance
-      || guide.plannedChapterOrders.includes(input.currentChapterOrder)
-      || guide.absenceRisk === "high"
-      || guide.absenceRisk === "warn"
-      || guide.relationStageLabels.length > 0
-    ) {
-      selectedIds.add(guide.characterId);
-    }
-  }
-  const selected = input.hardFacts.filter((fact) => selectedIds.has(fact.characterId));
-  return selected.length > 0 ? selected.slice(0, 8) : input.hardFacts.slice(0, 4);
 }
 
 export function buildChapterWriteContext(input: {
@@ -1006,27 +474,27 @@ export function buildChapterRepairContext(input: {
     allowedEditBoundaries: takeUnique([
       "保持当前章节已确立的目标、参与角色和主要结果方向不变。",
       "不要引入新的核心角色、新的世界规则或偏离大纲的情节转折。",
-      writeContext.volumeWindow?.missionSummary
-        ? `确保修复与当前卷任务保持一致: ${writeContext.volumeWindow.missionSummary}`
+      input.writeContext.volumeWindow?.missionSummary
+        ? `确保修复与当前卷任务保持一致: ${input.writeContext.volumeWindow.missionSummary}`
         : "",
-      ...writeContext.ledgerPendingItems.map((item) => `不要擦除待兑现伏笔的设置: ${item.title}`),
-      ...writeContext.ledgerUrgentItems.map((item) => `本章必须明显触及紧急伏笔线索: ${item.title}`),
-      ...writeContext.ledgerOverdueItems.map((item) => `必须兑现或明确解释超期伏笔压力: ${item.title}`),
-      ...(writeContext.characterResourceContext?.blockedItems ?? []).map((item) => `使用 ${item.name} 前先补全资源连续性；当前状态为 ${item.status}。`),
-      ...(writeContext.characterResourceContext?.pendingReviewItems ?? []).map((item) => `不要将未确认的资源事实变为不可逆: ${item.name}。`),
-      writeContext.chapterMission.hookTarget
-        ? `保留或加强结尾悬念: ${writeContext.chapterMission.hookTarget}`
+      ...input.writeContext.ledgerPendingItems.map((item) => `不要擦除待兑现伏笔的设置: ${item.title}`),
+      ...input.writeContext.ledgerUrgentItems.map((item) => `本章必须明显触及紧急伏笔线索: ${item.title}`),
+      ...input.writeContext.ledgerOverdueItems.map((item) => `必须兑现或明确解释超期伏笔压力: ${item.title}`),
+      ...(input.writeContext.characterResourceContext?.blockedItems ?? []).map((item) => `使用 ${item.name} 前先补全资源连续性；当前状态为 ${item.status}。`),
+      ...(input.writeContext.characterResourceContext?.pendingReviewItems ?? []).map((item) => `不要将未确认的资源事实变为不可逆: ${item.name}。`),
+      input.writeContext.chapterMission.hookTarget
+        ? `保留或加强结尾悬念: ${input.writeContext.chapterMission.hookTarget}`
         : "",
-      ...writeContext.characterBehaviorGuides
+      ...input.writeContext.characterBehaviorGuides
         .filter((guide) => guide.shouldPreferAppearance || guide.isCoreInVolume)
         .slice(0, 4)
         .map((guide) => `保持 ${guide.name} 与当前角色职责一致: ${guide.volumeResponsibility ?? guide.volumeRoleLabel ?? guide.role}`),
-      writeContext.pendingCandidateGuards.length > 0
+      input.writeContext.pendingCandidateGuards.length > 0
         ? "待确认的候选角色保持只读状态，除非在修复流程之外确认。"
         : "",
-      ...(writeContext.protectedSecrets ?? []).map((item) => `不得揭露: ${item}`),
-      ...(writeContext.chapterBoundary?.doNotCross ?? []).map((item) => `不得越过边界: ${item}`),
-      ...writeContext.chapterMission.mustPreserve.map((item) => `必须保留: ${item}`),
+      ...(input.writeContext.protectedSecrets ?? []).map((item) => `不得揭露: ${item}`),
+      ...(input.writeContext.chapterBoundary?.doNotCross ?? []).map((item) => `不得越过边界: ${item}`),
+      ...input.writeContext.chapterMission.mustPreserve.map((item) => `必须保留: ${item}`),
     ], 12),
   };
 }

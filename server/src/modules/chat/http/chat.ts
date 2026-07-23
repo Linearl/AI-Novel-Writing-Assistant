@@ -3,7 +3,7 @@ import type { ApiResponse } from "@ai-novel/shared";
 import { AIMessage, HumanMessage, SystemMessage } from "@langchain/core/messages";
 import type { BaseMessageChunk } from "@langchain/core/messages";
 import { z } from "zod";
-import { agentRuntime } from "../../../agents";
+import { agentRuntime } from "../../../orchestration/agent";
 import { createLLMFromResolvedOptions, resolveLLMClientOptions } from "../../../llm/factory";
 import { llmProviderSchema } from "../../../llm/providerSchema";
 import {

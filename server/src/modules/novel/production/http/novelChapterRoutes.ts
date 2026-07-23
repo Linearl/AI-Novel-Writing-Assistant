@@ -1,7 +1,7 @@
 import type { Router } from "express";
 import type { ApiResponse } from "@ai-novel/shared";
 import { z } from "zod";
-import { agentRuntime } from "../../../../agents";
+import { agentRuntime } from "../../../../orchestration/agent";
 import { validate } from "../../../../middleware/validate";
 import type { NovelApplicationServices } from "../../../../services/novel/application/NovelApplicationContracts";
 

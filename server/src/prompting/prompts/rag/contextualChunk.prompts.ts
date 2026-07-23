@@ -6,6 +6,7 @@
  */
 
 import type { PromptAsset } from "../../core/promptTypes";
+import { NOVEL_PROMPT_BUDGETS } from "../novel/promptBudgetProfiles";
 
 // ---------------------------------------------------------------------------
 // 输入/输出类型
@@ -29,7 +30,7 @@ export const ragContextualChunkPrefixPrompt: PromptAsset<ContextualChunkInput, s
   mode: "text",
   language: "zh",
   contextPolicy: {
-    maxTokensBudget: 4096,
+    maxTokensBudget: NOVEL_PROMPT_BUDGETS.ragContextualChunkPrefix,
   },
   render: (input) => {
     const userPrompt = [

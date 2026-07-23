@@ -9,6 +9,7 @@ import {
 } from "@ai-novel/shared";
 import type { PromptAsset } from "../../core/promptTypes";
 import { renderSelectedContextBlocks } from "../../core/renderContextBlocks";
+import { NOVEL_PROMPT_BUDGETS } from "./promptBudgetProfiles";
 
 export interface DirectorWorkspaceAnalysisPromptInput {
   inventory: DirectorWorkspaceInventory;
@@ -117,7 +118,7 @@ export const directorWorkspaceAnalysisPrompt: PromptAsset<
   mode: "structured",
   language: "zh",
   contextPolicy: {
-    maxTokensBudget: 3200,
+    maxTokensBudget: NOVEL_PROMPT_BUDGETS.directorWorkspaceAnalysis,
     requiredGroups: ["workspace_inventory"],
   },
   contextRequirements: [

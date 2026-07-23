@@ -1,6 +1,6 @@
 import { prisma } from "../../../db/prisma";
 import { withSqliteRetry } from "../../../db/sqliteRetry";
-import type { DirectorWorkflowSeedPayload } from "../director/runtime/core/novelDirectorHelpers";
+import type { DirectorWorkflowSeedPayload } from "../../../orchestration/pipeline/runtime/core/novelDirectorHelpers";
 import type { DirectorAutoExecutionState } from "@ai-novel/shared";
 import {
   buildDirectorAutoExecutionCompletedLabel,
@@ -13,7 +13,7 @@ import {
   resolveDirectorAutoExecutionRangeFromState,
   resolveDirectorAutoExecutionWorkflowState,
   type DirectorAutoExecutionChapterRef,
-} from "../director/automation/novelDirectorAutoExecution";
+} from "../../../orchestration/pipeline/automation/novelDirectorAutoExecution";
 import {
   appendMilestone,
   buildNovelEditResumeTarget,

@@ -1,4 +1,4 @@
-import type { AgentToolName } from "../../agents/types"
+import type { AgentToolName } from "../agent/types"
 
 function truncateText(value: string, max = 240): string {
   const normalized = value.replace(/\s+/g, " ").trim();

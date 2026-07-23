@@ -1,5 +1,5 @@
 import { Annotation } from "@langchain/langgraph";
-import type { PlannerResult, AgentRuntimeResult } from "../../agents/types"
+import type { PlannerResult, AgentRuntimeResult } from "../agent/types"
 import type {
   CreativeHubCheckpointRef,
   CreativeHubInterrupt,

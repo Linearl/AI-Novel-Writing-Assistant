@@ -10,7 +10,7 @@ import { runStructuredPrompt } from "../../prompting/core/promptRunner";
 import { buildChapterRepairContextBlocks } from "../../prompting/prompts/novel/chapterLayeredContext";
 import { chapterPatchRepairPrompt } from "../../prompting/prompts/novel/chapterPatchRepair.prompts";
 import { isDirectorDebugLogEnabled } from "../../config/directorDebug";
-import { directorDebugBuffer } from "./director/debug/directorDebugBuffer";
+import { directorDebugBuffer } from "../../orchestration/pipeline/debug/directorDebugBuffer";
 
 export type PatchRepairMode =
   | "detect_only"

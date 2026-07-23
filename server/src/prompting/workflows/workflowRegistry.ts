@@ -1,4 +1,4 @@
-import type { PlannerInput, StructuredIntent } from "../../agents/types";
+import type { PlannerInput, StructuredIntent } from "../../orchestration/agent/types";
 import { chapterWorkflowDefinitions } from "./chapterWorkflowDefinitions";
 import { directorWorkflowDefinitions } from "./directorWorkflowDefinitions";
 import { generalWorkflowDefinitions } from "./generalWorkflowDefinitions";

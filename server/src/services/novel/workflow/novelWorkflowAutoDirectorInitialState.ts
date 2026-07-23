@@ -3,7 +3,7 @@ import type {
   NovelWorkflowResumeTarget,
   NovelWorkflowStage,
 } from "@ai-novel/shared";
-import { DIRECTOR_PROGRESS } from "../director/projections/novelDirectorProgress";
+import { DIRECTOR_PROGRESS } from "../../../orchestration/pipeline/projections/novelDirectorProgress";
 import { NOVEL_WORKFLOW_STAGE_PROGRESS, parseResumeTarget } from "./novelWorkflow.shared";
 
 export interface AutoDirectorBootstrapInitialState {

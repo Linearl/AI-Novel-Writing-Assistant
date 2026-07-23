@@ -2,6 +2,7 @@ import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 import type { AiReplanWindowDecision } from "@ai-novel/shared";
 import { aiReplanWindowDecisionSchema } from "@ai-novel/shared";
 import type { PromptAsset } from "../../core/promptTypes";
+import { NOVEL_PROMPT_BUDGETS } from "../novel/promptBudgetProfiles";
 
 export interface ReplanWindowDecisionPromptInput {
   triggerType: string;
@@ -28,7 +29,7 @@ export const replanWindowDecisionPrompt: PromptAsset<
   mode: "structured",
   language: "zh",
   contextPolicy: {
-    maxTokensBudget: 2200,
+    maxTokensBudget: NOVEL_PROMPT_BUDGETS.replanWindowDecision,
     preferredGroups: ["canonical_state", "audit", "payoff_ledger", "chapter_goal"],
     dropOrder: ["protected_secrets"],
   },

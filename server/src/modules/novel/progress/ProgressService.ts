@@ -2,7 +2,7 @@ import { prisma } from "@/db/prisma";
 import {
   ChapterExecutionProgressInspector,
   type ChapterExecutionProgressSummary,
-} from "@/services/novel/director/runtime/utils/ChapterExecutionProgressInspector";
+} from "@/orchestration/pipeline/runtime/utils/ChapterExecutionProgressInspector";
 
 // ──────────────────── 进度类型定义 ────────────────────
 

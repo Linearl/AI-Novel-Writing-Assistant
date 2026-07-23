@@ -1,9 +1,9 @@
 import crypto from "node:crypto";
 import { END, START, StateGraph } from "@langchain/langgraph";
-import { AgentTraceStore } from "../../agents/traceStore"
-import { ApprovalContinuationService } from "../../agents/runtime/ApprovalContinuationService"
-import { RunExecutionService } from "../../agents/runtime/RunExecutionService"
-import type { AgentRuntimeCallbacks } from "../../agents/types"
+import { AgentTraceStore } from "../agent/traceStore"
+import { ApprovalContinuationService } from "../agent/runtime/ApprovalContinuationService"
+import { RunExecutionService } from "../agent/runtime/RunExecutionService"
+import type { AgentRuntimeCallbacks } from "../agent/types"
 import { novelProductionService } from "../../services/novel/NovelProductionService"
 import { sanitizeCreativeHubToolOutput } from "./toolEventPayloads";
 import { creativeHubService } from "./CreativeHubService";

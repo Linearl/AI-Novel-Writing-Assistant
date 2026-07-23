@@ -4,8 +4,8 @@ import { streamToSSE } from "../../../../llm/streaming";
 import { validate } from "../../../../middleware/validate";
 import type { ChapterRuntimeCoordinator } from "../../../../services/novel/runtime/ChapterRuntimeCoordinator";
 import { chapterRuntimeRequestSchema } from "../../../../services/novel/runtime/chapterRuntimeSchema";
-import { stepModuleRunner } from "../../../../services/novel/director/workflowStepRuntime/StepModuleRunner";
-import { DIRECTOR_EXECUTION_STEP_IDS } from "../../../../services/novel/director/workflowStepRuntime/directorWorkflowStepIds";
+import { stepModuleRunner } from "../../../../orchestration/pipeline/workflowStepRuntime/StepModuleRunner";
+import { DIRECTOR_EXECUTION_STEP_IDS } from "../../../../orchestration/pipeline/workflowStepRuntime/directorWorkflowStepIds";
 
 type ChapterStreamResult = Awaited<ReturnType<ChapterRuntimeCoordinator["createChapterStream"]>>;
 

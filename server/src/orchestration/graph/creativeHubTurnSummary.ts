@@ -1,5 +1,5 @@
-import { asObject, summarizeOutput } from "../../agents/runtime/runtimeHelpers"
-import type { AgentRuntimeResult, PlannerResult, StructuredIntent } from "../../agents/types"
+import { asObject, summarizeOutput } from "../agent/runtime/runtimeHelpers"
+import type { AgentRuntimeResult, PlannerResult, StructuredIntent } from "../agent/types"
 import type { ProductionStatusResult } from "../../services/novel/NovelProductionStatusService"
 import type { AgentStep } from "@ai-novel/shared";
 import type {

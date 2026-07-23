@@ -45,6 +45,22 @@ const FALLBACK_CONTEXT_BUDGETS = {
   themeAnalysis: 8000,
   characterConsistency: 32000,
   feedbackIssueGeneration: 32000,
+  // 从各独立 prompt 文件收拢来的硬编码预算
+  characterStateExtract: 8000,
+  contradictionDetect: 8000,
+  replanWindowDecision: 2200,
+  plannerBookPlan: 1800,
+  plannerArcPlan: 1800,
+  plannerChapterPlan: 2400,
+  ragContextualChunkPrefix: 4096,
+  directorWorkspaceAnalysis: 3200,
+  directorManualEditImpact: 3600,
+  chapterTaskSheetQuality: 4200,
+  // generation stage token caps（从 GenerationContextAssembler 收拢）
+  stageTokenCapWriter: 2600,
+  stageTokenCapLightAudit: 900,
+  stageTokenCapFullAudit: 2600,
+  stageTokenCapRepair: 2200,
 } satisfies Record<string, number>;
 
 export type NovelPromptBudgets = typeof FALLBACK_CONTEXT_BUDGETS;

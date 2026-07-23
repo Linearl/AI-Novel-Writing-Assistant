@@ -75,7 +75,9 @@ function normalizeMaxTokens(provider: LLMProvider, maxTokens?: number): number |
     return undefined;
   }
   // Historical UI defaults persisted 4096 as a placeholder for "use provider defaults".
+  // Log a warning so operators can update the stale config from the UI.
   if (normalized === 4096) {
+    console.warn("[llm/normalizeMaxTokens] 4096 treated as 'use provider defaults' — discard placeholder maxTokens for provider", provider);
     return undefined;
   }
   const providerLimit = isBuiltInProvider(provider) ? PROVIDERS[provider].maxTokens : undefined;

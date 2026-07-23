@@ -12,7 +12,9 @@
 | `NovelCoreService.ts` | 核心 facade |
 | `NovelProductionService.ts` | 生产层 facade |
 | `NovelPipelineService.ts` | 流水线 facade |
-| `novelCorePipelineService.ts` | 核心流水线编排(~37KB) |
+| `novelCorePipeline.ts` | 核心流水线编排（Job 生命周期 + 章节遍历循环）|
+| `NovelPipelineRuntimeService.ts` | 运行时恢复/看门狗 |
+| `novelCorePipelineHelpers.ts` | 流水线辅助函数 |
 
 ## Subdirectories
 | Directory | Purpose |

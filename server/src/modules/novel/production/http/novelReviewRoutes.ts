@@ -6,8 +6,8 @@ import { validate } from "../../../../middleware/validate";
 import { prisma } from "../../../../db/prisma";
 import type { NovelApplicationServices } from "../../../../services/novel/application/NovelApplicationContracts";
 import type { ChapterRuntimeCoordinator } from "../../../../services/novel/runtime/ChapterRuntimeCoordinator";
-import { stepModuleRunner } from "../../../../services/novel/director/workflowStepRuntime/StepModuleRunner";
-import { DIRECTOR_EXECUTION_STEP_IDS } from "../../../../services/novel/director/workflowStepRuntime/directorWorkflowStepIds";
+import { stepModuleRunner } from "../../../../orchestration/pipeline/workflowStepRuntime/StepModuleRunner";
+import { DIRECTOR_EXECUTION_STEP_IDS } from "../../../../orchestration/pipeline/workflowStepRuntime/directorWorkflowStepIds";
 import { chapterService } from "../../../../services/novel/ChapterService";
 import { globalReviewService } from "../../../../services/audit/GlobalReviewService";
 

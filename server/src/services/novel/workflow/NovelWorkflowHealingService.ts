@@ -1,18 +1,18 @@
 import { prisma } from "../../../db/prisma";
 import { isDirectorAutoExecutionRunMode } from "@ai-novel/shared";
-import { buildChapterDetailBundleLabel, buildChapterDetailBundleProgress, DIRECTOR_PROGRESS } from "../director/projections/novelDirectorProgress";
+import { buildChapterDetailBundleLabel, buildChapterDetailBundleProgress, DIRECTOR_PROGRESS } from "../../../orchestration/pipeline/projections/novelDirectorProgress";
 import {
   normalizeDirectorRunMode,
   type DirectorWorkflowSeedPayload,
-} from "../director/runtime/core/novelDirectorHelpers";
+} from "../../../orchestration/pipeline/runtime/core/novelDirectorHelpers";
 import {
   buildDirectorAutoExecutionScopeLabel,
   normalizeDirectorAutoExecutionPlan,
   resolveDirectorAutoExecutionBookRange,
   resolveDirectorAutoExecutionRangeFromState,
   resolveDirectorAutoExecutionWorkflowState,
-} from "../director/automation/novelDirectorAutoExecution";
-import { resolveStructuredOutlineRecoveryCursor } from "../director/recovery/novelDirectorStructuredOutlineRecovery";
+} from "../../../orchestration/pipeline/automation/novelDirectorAutoExecution";
+import { resolveStructuredOutlineRecoveryCursor } from "../../../orchestration/pipeline/recovery/novelDirectorStructuredOutlineRecovery";
 import { isChapterTitleDiversityIssue } from "../volume/chapterTitleDiversity";
 import { NovelWorkflowStoreService } from "./NovelWorkflowStoreService";
 import {

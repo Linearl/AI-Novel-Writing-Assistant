@@ -7,6 +7,7 @@ import type {
 } from "@ai-novel/shared";
 import type { PromptAsset } from "../../core/promptTypes";
 import { renderSelectedContextBlocks } from "../../core/renderContextBlocks";
+import { NOVEL_PROMPT_BUDGETS } from "./promptBudgetProfiles";
 
 export interface DirectorManualEditImpactPromptInput {
   inventory: DirectorWorkspaceInventory;
@@ -83,7 +84,7 @@ export const directorManualEditImpactPrompt: PromptAsset<
   mode: "structured",
   language: "zh",
   contextPolicy: {
-    maxTokensBudget: 3600,
+    maxTokensBudget: NOVEL_PROMPT_BUDGETS.directorManualEditImpact,
     requiredGroups: ["manual_edit_inventory"],
   },
   contextRequirements: [

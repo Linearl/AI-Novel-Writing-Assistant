@@ -1,5 +1,5 @@
 import type { AgentPlan } from "@ai-novel/shared";
-import type { AgentName, PlannerInput, StructuredIntent } from "../../agents/types";
+import type { AgentName, PlannerInput, StructuredIntent } from "../../orchestration/agent/types";
 
 export interface WorkflowActionDefinition {
   agent: AgentName;

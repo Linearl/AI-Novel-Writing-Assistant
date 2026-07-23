@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import type { ChapterRuntimePackage, GenerationContextPackage, RuntimeAuditReport } from "@ai-novel/shared";
 import { prisma } from "../../db/prisma"
 import { openConflictService } from "../../services/state/OpenConflictService"
-import { directorAutomationLedgerEventService } from "../../services/novel/director/runtime/utils/DirectorAutomationLedgerEventService"
+import { directorAutomationLedgerEventService } from "../../orchestration/pipeline/runtime/utils/DirectorAutomationLedgerEventService"
 import { filterAcceptedFactItems, type FactLedgerExcludedItem } from "../../services/novel/fact/factLedgerFilter"
 import { novelFactService } from "../../services/novel/fact/NovelFactService"
 import { ChapterArtifactSyncService } from "./ChapterArtifactSyncService";

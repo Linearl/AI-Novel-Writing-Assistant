@@ -10,7 +10,7 @@ import {
   buildDirectorBookContractContextBlocks,
   directorBookContractPrompt,
 } from "../../../../prompting/prompts/novel/directorPlanning.prompts";
-import { normalizeBookContract } from "../../../../services/novel/director/runtime/core/novelDirectorHelpers";
+import { normalizeBookContract } from "../../../../orchestration/pipeline/runtime/core/novelDirectorHelpers";
 import { prisma } from "../../../../db/prisma";
 import { logger } from "../../../../services/logging/LoggerService";
 

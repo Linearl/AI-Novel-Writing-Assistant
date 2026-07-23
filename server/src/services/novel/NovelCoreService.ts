@@ -25,7 +25,7 @@ import { NovelCoreCharacterService } from "./novelCoreCharacterService";
 import { NovelCoreChapterService } from "./novelCoreChapterService";
 import { NovelCoreCrudService } from "./novelCoreCrudService";
 import { NovelCoreGenerationService } from "./novelCoreGenerationService";
-import { NovelCorePipelineService } from "./novelCorePipelineService";
+import { NovelCorePipelineService } from "./novelCorePipeline";
 import { NovelCoreReviewService } from "./novelCoreReviewService";
 import { NovelCoreSnapshotService } from "./novelCoreSnapshotService";
 import { NovelCoreStorylineService } from "./novelCoreStorylineService";

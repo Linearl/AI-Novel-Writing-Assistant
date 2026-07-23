@@ -24,10 +24,10 @@ import {
 import { GenerationContextAssembler } from "./runtime/GenerationContextAssembler";
 import { chapterQualityLoopService } from "./quality/ChapterQualityLoopService";
 import { chapterStatePairAfterManualQualityReview } from "./chapterLifecycleState";
-import { directorAutomationLedgerEventService } from "./director/runtime/utils/DirectorAutomationLedgerEventService";
+import { directorAutomationLedgerEventService } from "../../orchestration/pipeline/runtime/utils/DirectorAutomationLedgerEventService";
 import { ChapterRuntimeCoordinator } from "./runtime/ChapterRuntimeCoordinator";
 import { isDirectorDebugLogEnabled } from "../../config/directorDebug";
-import { directorDebugBuffer } from "./director/debug/directorDebugBuffer";
+import { directorDebugBuffer } from "../../orchestration/pipeline/debug/directorDebugBuffer";
 import {
   ChapterContextAssemblyError,
   type AuditContextOperation,
