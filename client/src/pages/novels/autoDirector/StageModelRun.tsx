@@ -3,16 +3,17 @@ import type {
   DirectorAutoApprovalGroup,
   DirectorAutoApprovalPoint,
 } from "@ai-novel/shared/types/autoDirectorApproval";
-import LLMSelector from "@/components/common/LLMSelector";
-import AutoDirectorApprovalStrategyPanel from "@/components/autoDirector/AutoDirectorApprovalStrategyPanel";
+import {
+  renderModelRunExecutionRange,
+  renderModelRunStyleSwitch,
+  renderModelRunLlmSelector,
+} from "../components/autoDirectorCreate/shared/StageModelRunCore";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
 import { AUTO_DIRECTOR_MOBILE_CLASSES } from "@/mobile/autoDirector";
 import type { NovelBasicFormState } from "../novelBasicInfo.shared";
 import type { DirectorRunModeOption } from "../components/NovelAutoDirectorDialog.shared";
 import {
   type DirectorAutoExecutionDraftState,
-  DirectorAutoExecutionPlanFields,
 } from "../components/directorAutoExecutionPlan.shared";
 
 interface StageModelRunProps {
@@ -114,69 +115,26 @@ export default function StageModelRun({
             })}
           </div>
 
-          {runMode === "auto_to_execution" ? (
-            <div className="space-y-4 pt-2">
-              <div>
-                <div className="text-sm font-medium text-foreground">执行范围与自动确认</div>
-                <div className={`mt-1 text-xs leading-5 text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>
-                  只在你选择按范围执行时生效，用来控制 AI 直接推进到哪里。
-                </div>
-              </div>
-              <DirectorAutoExecutionPlanFields
-                draft={autoExecutionDraft}
-                onChange={onAutoExecutionDraftChange}
-                usage="new_book"
-                maxChapterCount={basicForm.estimatedChapterCount}
-              />
-              <AutoDirectorApprovalStrategyPanel
-                enabled={autoApprovalEnabled}
-                approvalPointCodes={autoApprovalCodes}
-                groups={autoApprovalGroups}
-                approvalPoints={autoApprovalPoints}
-                onEnabledChange={onAutoApprovalEnabledChange}
-                onApprovalPointCodesChange={onAutoApprovalCodesChange}
-              />
-            </div>
-          ) : null}
-          {runMode === "full_book_autopilot" ? (
-            <div className={`space-y-1 pt-2 text-sm leading-6 text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>
-              <div className="font-medium text-foreground">全书自动成书</div>
-              <div>
-                系统会以整本书为目标完成规划、拆章、正文生成、审校和修复。只有模型不可用、服务异常、正文保护或不可恢复风险会停下。
-              </div>
-            </div>
-          ) : null}
+          {renderModelRunExecutionRange({
+            runMode,
+            autoExecutionDraft,
+            onAutoExecutionDraftChange,
+            maxChapterCount: basicForm.estimatedChapterCount,
+            autoApprovalEnabled,
+            autoApprovalCodes,
+            autoApprovalGroups,
+            autoApprovalPoints,
+            onAutoApprovalEnabledChange,
+            onAutoApprovalCodesChange,
+          })}
         </div>
 
-        <div className="flex flex-col gap-3 pt-1 sm:flex-row sm:items-start sm:justify-between">
-          <div className="space-y-1">
-            <div className="text-sm font-medium text-foreground">正文后去 AI 检测与修正</div>
-            <div className={`text-xs leading-5 text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>
-              开启后，章节正文生成完成时会检测 AI 味风险，并在命中可修正问题时生成修订稿。
-            </div>
-          </div>
-          <Switch
-            aria-label="正文后去 AI 检测与修正"
-            checked={basicForm.postGenerationStyleReviewEnabled}
-            onCheckedChange={(checked) => onBasicFormChange({ postGenerationStyleReviewEnabled: checked })}
-          />
-        </div>
+        {renderModelRunStyleSwitch({
+          basicForm,
+          onBasicFormChange,
+        })}
 
-        <details className="group pt-1">
-          <summary className="cursor-pointer list-none">
-            <div className="text-sm font-medium text-foreground">模型与质量</div>
-            <div className={`mt-1 text-xs leading-5 text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>
-              默认跟随路由配置，系统会根据任务类型自动选择最优模型。需要临时换模型时再展开调整。
-            </div>
-          </summary>
-          <div className="mt-4">
-            <LLMSelector
-              allowRouteModel
-              showTemperature
-              showHelperText={false}
-            />
-          </div>
-        </details>
+        {renderModelRunLlmSelector()}
       </div>
 
       <div className="flex flex-col gap-2 pt-2 sm:flex-row sm:justify-between">

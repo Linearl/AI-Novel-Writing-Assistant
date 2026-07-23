@@ -1,11 +1,10 @@
 import type { AutoDirectorCreateController } from "../useAutoDirectorCreateController";
 import type { NovelBasicFormState } from "../../novelBasicInfo.shared";
 import type { DirectorAutoExecutionDraftState } from "../directorAutoExecutionPlan.shared";
-import { DirectorAutoExecutionPlanFields } from "../directorAutoExecutionPlan.shared";
-import AutoDirectorApprovalStrategyPanel from "@/components/autoDirector/AutoDirectorApprovalStrategyPanel";
+import { renderModelRunExecutionRange, renderModelRunLlmSelector } from "./shared/StageModelRunCore";
 import LLMSelector from "@/components/common/LLMSelector";
-import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { AUTO_DIRECTOR_MOBILE_CLASSES } from "@/mobile/autoDirector";
 import { RUN_MODE_OPTIONS } from "./shared/stageConstants";
@@ -137,24 +136,18 @@ export default function StageModelRun({ controller, onBasicFormChange }: StageMo
             })}
           </div>
 
-          {runMode === "auto_to_execution" ? (
-            <>
-              <DirectorAutoExecutionPlanFields
-                draft={autoExecutionDraft}
-                onChange={(patch) => setAutoExecutionDraft((prev) => ({ ...prev, ...patch } as DirectorAutoExecutionDraftState))}
-                usage="new_book"
-                maxChapterCount={basicForm.estimatedChapterCount}
-              />
-              <AutoDirectorApprovalStrategyPanel
-                enabled={autoApprovalDraft.enabled}
-                approvalPointCodes={autoApprovalDraft.codes}
-                groups={autoApprovalDraft.groups}
-                approvalPoints={autoApprovalDraft.points}
-                onEnabledChange={autoApprovalDraft.setEnabled}
-                onApprovalPointCodesChange={autoApprovalDraft.setCodes}
-              />
-            </>
-          ) : null}
+          {renderModelRunExecutionRange({
+            runMode,
+            autoExecutionDraft,
+            onAutoExecutionDraftChange: (patch) => setAutoExecutionDraft((prev) => ({ ...prev, ...patch } as DirectorAutoExecutionDraftState)),
+            maxChapterCount: basicForm.estimatedChapterCount,
+            autoApprovalEnabled: autoApprovalDraft.enabled,
+            autoApprovalCodes: autoApprovalDraft.codes,
+            autoApprovalGroups: autoApprovalDraft.groups,
+            autoApprovalPoints: autoApprovalDraft.points,
+            onAutoApprovalEnabledChange: autoApprovalDraft.setEnabled,
+            onAutoApprovalCodesChange: autoApprovalDraft.setCodes,
+          })}
 
           {runMode === "full_book_autopilot" ? (
             <div className={`mt-3 rounded-md border border-primary/15 bg-primary/5 p-3 text-xs leading-5 text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>

@@ -1,5 +1,5 @@
-import NovelAutoDirectorCandidateBatches from "../components/NovelAutoDirectorCandidateBatches";
 import NovelAutoDirectorProgressPanel from "../components/NovelAutoDirectorProgressPanel";
+import { renderCandidateBatches } from "../components/autoDirectorCreate/shared/StageCandidatesCore";
 import { Button } from "@/components/ui/button";
 import type { useAutoDirectorCreateController } from "./useAutoDirectorCreateController";
 
@@ -51,40 +51,41 @@ export default function StageCandidates({
           回改设定
         </Button>
       </div>
-      <NovelAutoDirectorCandidateBatches
-        batches={controller.batches}
-        selectedPresets={controller.selectedPresets}
-        feedback={controller.feedback}
-        onFeedbackChange={controller.setFeedback}
-        onTogglePreset={controller.togglePreset}
-        candidatePatchFeedbacks={controller.candidatePatchFeedbacks}
-        onCandidatePatchFeedbackChange={(candidateId, value) => controller.setCandidatePatchFeedbacks((prev) => ({
+
+      {renderCandidateBatches({
+        batches: controller.batches,
+        selectedPresets: controller.selectedPresets,
+        feedback: controller.feedback,
+        onFeedbackChange: controller.setFeedback,
+        onTogglePreset: controller.togglePreset,
+        candidatePatchFeedbacks: controller.candidatePatchFeedbacks,
+        onCandidatePatchFeedbackChange: (candidateId, value) => controller.setCandidatePatchFeedbacks((prev) => ({
           ...prev,
           [candidateId]: value,
-        }))}
-        titlePatchFeedbacks={controller.titlePatchFeedbacks}
-        onTitlePatchFeedbackChange={(candidateId, value) => controller.setTitlePatchFeedbacks((prev) => ({
+        })),
+        titlePatchFeedbacks: controller.titlePatchFeedbacks,
+        onTitlePatchFeedbackChange: (candidateId, value) => controller.setTitlePatchFeedbacks((prev) => ({
           ...prev,
           [candidateId]: value,
-        }))}
-        isGenerating={controller.generateMutation.isPending}
-        isPatchingCandidate={controller.patchCandidateMutation.isPending}
-        isRefiningTitle={controller.refineTitleMutation.isPending}
-        isConfirming={controller.confirmMutation.isPending}
-        onApplyCandidateTitleOption={controller.applyCandidateTitleOption}
-        onPatchCandidate={(batchId, candidate, nextFeedback) => controller.patchCandidateMutation.mutate({
+        })),
+        isGenerating: controller.generateMutation.isPending,
+        isPatchingCandidate: controller.patchCandidateMutation.isPending,
+        isRefiningTitle: controller.refineTitleMutation.isPending,
+        isConfirming: controller.confirmMutation.isPending,
+        onApplyCandidateTitleOption: controller.applyCandidateTitleOption,
+        onPatchCandidate: (batchId, candidate, nextFeedback) => controller.patchCandidateMutation.mutate({
           batchId,
           candidate,
           feedback: nextFeedback,
-        })}
-        onRefineTitle={(batchId, candidate, nextFeedback) => controller.refineTitleMutation.mutate({
+        }),
+        onRefineTitle: (batchId, candidate, nextFeedback) => controller.refineTitleMutation.mutate({
           batchId,
           candidate,
           feedback: nextFeedback,
-        })}
-        onConfirmCandidate={controller.handleConfirmCandidate}
-        onGenerateNext={() => controller.generateMutation.mutate()}
-      />
+        }),
+        onConfirmCandidate: controller.handleConfirmCandidate,
+        onGenerateNext: () => controller.generateMutation.mutate(),
+      })}
     </section>
   );
 }
