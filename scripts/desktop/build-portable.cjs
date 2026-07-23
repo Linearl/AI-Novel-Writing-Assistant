@@ -11,8 +11,8 @@
  *   4. 后处理：复制启动脚本、README，生成版本信息
  *
  * 用法（在项目根目录执行）：
- *   node scripts/build-portable-dir.js              # 完整构建 + 打包
- *   node scripts/build-portable-dir.js --reuse-stage # 跳过构建，复用 desktop/build/ 现有产物
+ *   node scripts/desktop/build-portable.cjs              # 完整构建 + 打包
+ *   node scripts/desktop/build-portable.cjs --reuse-stage # 跳过构建，复用 desktop/build/ 现有产物
  *
  * 产物：
  *   release/ai-novel-desktop-v{version}/
