@@ -490,7 +490,7 @@ client/   React + Vite 前端
 server/   Express + Prisma + Agent Runtime + Creative Hub
 shared/   前后端共享类型与协议
 desktop/  Electron 桌面壳（当前暂不发布）
-scripts/  启动和辅助脚本
+scripts/  按功能分组的辅助脚本（desktop/ dev/ data/ analysis/ docs/）
 docs/     设计文档、阶段检查点、模块计划与历史归档
 ```
 

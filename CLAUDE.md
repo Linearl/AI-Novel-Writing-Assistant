@@ -62,7 +62,7 @@ client/          React 19 + Vite + TanStack Query + Plate + Zustand
 server/          Express 5 + Prisma 7 + LangChain/LangGraph
 shared/          前后端共享类型与 Zod schema（@ai-novel/shared）
 desktop/         Electron 壳（依赖 server）
-scripts/         启动和辅助脚本
+scripts/         按功能分组的辅助脚本（desktop/ dev/ data/ analysis/ docs/）
 docs/            编号化文档体系（0.version_plan / 1.task / 2.tech / 3.analysis / 4.misc / ...）
 infra/           Docker Compose（Qdrant 等）
 ```
