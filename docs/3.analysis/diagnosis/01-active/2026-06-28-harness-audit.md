@@ -221,11 +221,11 @@ verified_date: 2026-07-23
 |---|--------|------|------|------|
 | 1 | P0 | 创建 deny/allow 规则 | ✅ 已修复 | `settings.local.json` 已有 8 条 deny 规则（`.env`、`credentials`、`rm -rf .git`、`git push --force`、`git reset --hard`、`shutdown`）+ 23 条 allow 规则 |
 | 2 | P0 | PostToolUse typecheck hook | ✅ 已修复 | 编辑 `.ts/.tsx` 后自动 `pnpm typecheck` |
-| 3 | P1 | ESLint 初始化 | ❌ 未修复 | 仍无 ESLint 配置 |
-| 4 | P1 | 循环依赖检测 | ❌ 未修复 | 仍无 `madge` 或 `import/no-cycle` |
-| 5 | P1 | PR 级 CI | ❌ 未修复 | CI 仍仅桌面发布 workflow |
-| 6 | P1 | AGENTS.md 精简 | ⚠️ 部分修复 | AGENTS.md 从 299 行降至 95 行（✅）；根 CLAUDE.md 仍 189 行（⚠️） |
-| 7 | P2 | pre-commit hook | ❌ 未修复 | 无 `.husky/` 或 settings.json stop hook |
+| 3 | P1 | ESLint 初始化 | ✅ 已修复 | `eslint.config.mjs` + typescript-eslint + eslint-plugin-import |
+| 4 | P1 | 循环依赖检测 | ✅ 已修复 | `import/no-cycle` + `import/no-self-import` 规则已启用 |
+| 5 | P1 | PR 级 CI | ❌ **已忽略** | 非本项目当前需求 |
+| 6 | P1 | AGENTS.md 精简完成（根 CLAUDE.md 189→150） | ❌ **已忽略** | CLAUDE.md 参与 AI 上下文，不宜精简 |
+| 7 | P2 | pre-commit hook | ❌ 未修复 | - |
 | 8 | P2 | 项目特定 skill | ❌ 未修复 | 仅 `ll-workflow-core` |
 | 9 | P2 | no-restricted-imports | ❌ 未修复 | 无 ESLint |
 | 10 | P3 | `.editorconfig` | ✅ 已修复 | 根目录存在，UTF-8、2空格缩进、LF |

@@ -54,7 +54,8 @@
     "llwf:sync": "node .claude/skills/ll-workflow-core/templates/scripts/generate-docs-index.js docs --apply",
     "llwf:req-sync": "node .claude/skills/ll-workflow-core/templates/scripts/req-sync.js sync --apply",
     "llwf:req-archive": "node .claude/skills/ll-workflow-core/templates/scripts/req-sync.js archive --apply",
-    "llwf:check": "node .claude/skills/ll-workflow-core/templates/scripts/generate-docs-index.js docs"
+    "llwf:check": "node .claude/skills/ll-workflow-core/templates/scripts/generate-docs-index.js docs",
+    "lint:eslint": "eslint"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
@@ -69,8 +70,14 @@
     ]
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.65.0",
+    "@typescript-eslint/parser": "^8.65.0",
     "concurrently": "^9.2.1",
+    "eslint": "^10.7.0",
+    "eslint-import-resolver-typescript": "^4.4.5",
+    "eslint-plugin-import": "^2.32.0",
     "puppeteer": "^25.3.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.65.0"
   }
 }
