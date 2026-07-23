@@ -1,7 +1,7 @@
 /**
  * 文件系统 → 数据库 全量同步脚本
  *
- * 用法：node scripts/sync-file-to-db.js [--update]
+ * 用法：node scripts/data/sync-file-to-db.mjs [--update]
  *
  * 默认模式（missing_only）：只创建数据库中不存在的新条目
  * --update 模式（sync_existing）：同时更新已存在的条目

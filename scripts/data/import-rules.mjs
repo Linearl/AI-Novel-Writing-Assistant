@@ -1,7 +1,7 @@
 /**
  * 反 AI 规则批量导入脚本
  *
- * 用法：node scripts/import-anti-ai-rules.js
+ * 用法：node scripts/data/import-rules.mjs
  *
  * 从 temp/anti-ai-rules-import.json 读取新规则，
  * 通过 AntiAiRuleService.createRule() 导入数据库。

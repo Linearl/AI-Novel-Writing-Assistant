@@ -1,7 +1,7 @@
 /**
  * 从 temp/db-backup.json 恢复用户数据
  * 在 prisma migrate reset + seed 之后运行
- * 用法：node scripts/restore-user-data.mjs
+ * 用法：node scripts/data/restore-user-data.mjs
  */
 import { readFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';

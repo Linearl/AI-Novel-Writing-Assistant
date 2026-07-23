@@ -4,7 +4,7 @@
  * clean-dev-db.js — 清理开发数据库，生成干净的种子数据库
  *
  * 用法：
- *   node scripts/clean-dev-db.js [input] [output]
+ *   node scripts/dev/clean-dev-db.cjs [input] [output]
  *
  * 参数：
  *   input  - 源数据库路径（默认：server/dev.db）
