@@ -6,7 +6,7 @@ const desktopPackagePath = path.join(repoRoot, "desktop", "package.json");
 
 function printHelp() {
   console.log([
-    "Usage: node scripts/bump-desktop-version.cjs [--dry-run] X.Y.Z",
+    "Usage: node scripts/desktop/bump-version.cjs [--dry-run] X.Y.Z",
     "",
     "Updates desktop/package.json version before a desktop package release.",
     "Use a stable semver without a leading v, for example 0.3.20.",
@@ -71,7 +71,7 @@ function printNextSteps(nextVersion) {
     "Next release steps:",
     "1. Update docs/releases/release-notes.md and README.md for user-visible changes.",
     "2. Commit the version bump and release notes, then merge the release candidate into main.",
-    "3. Run: node scripts/trigger-desktop-release.cjs --dry-run",
+    "3. Run: node scripts/desktop/trigger-release.cjs --dry-run",
     `4. Publish with tag v${nextVersion} only after the dry run passes.`,
   ].join("\n"));
 }
