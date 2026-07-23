@@ -74,9 +74,9 @@ export interface LineHeightOption {
 
 /** 行间距选项列表 */
 export const LINE_HEIGHT_OPTIONS: LineHeightOption[] = [
-  { value: 0.3, label: '紧凑', description: '0.3倍行距' },
-  { value: 0.6, label: '适中', description: '0.6倍行距' },
-  { value: 1.0, label: '宽松', description: '1.0倍行距' },
+  { value: 0.3, label: '紧凑', description: '行高0.3倍' },
+  { value: 0.6, label: '适中', description: '行高0.6倍' },
+  { value: 1.0, label: '宽松', description: '行高1.0倍' },
 ];
 
 /** 字体选项列表 */
