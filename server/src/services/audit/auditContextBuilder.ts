@@ -438,10 +438,12 @@ export function buildGlobalReviewContextBlocks(
     }));
   }
 
-  // 章节摘要
+  // 章节摘要（当 summary 为空时，用正文前300字作为回填，防止 LLM 误判章节缺失）
   const summaryText = data.chapters.map((ch) => {
     const parts: string[] = [`[第${ch.order}章 ${ch.title}]`];
-    if (ch.summary) parts.push(ch.summary);
+    const summaryContent = ch.summary
+      || (ch.content ? ch.content.slice(0, 300).replace(/\s+/g, " ").trim() : "");
+    if (summaryContent) parts.push(summaryContent);
     if (ch.keyEvents) parts.push(`关键事件: ${ch.keyEvents}`);
     if (ch.characterStates) parts.push(`角色状态: ${ch.characterStates}`);
     return parts.join("\n");
