@@ -203,7 +203,7 @@ export async function resolveLLMClientOptions(
   rawOptions: LLMOptions = {},
 ): Promise<ResolvedLLMClientOptions> {
   const options: LLMOptions = { ...rawOptions };
-  let resolvedProvider = provider ?? options.fallbackProvider ?? "deepseek";
+  let resolvedProvider = provider ?? options.fallbackProvider;
   let resolvedModel = normalizeOptionalText(options.model);
   let resolvedTemperature: number | undefined = options.temperature;
   let resolvedMaxTokens: number | undefined = options.maxTokens;
@@ -245,6 +245,10 @@ export async function resolveLLMClientOptions(
     resolvedRouteDegraded = route.routeDegraded;
   }
 
+  if (!resolvedProvider) {
+    throw new Error("未配置模型 Provider。请在「设置 → 模型路由」中配置，或在页面右上角选择模型。");
+  }
+
   const dbSecret = await resolveProviderSecret(resolvedProvider);
   const providerName = isBuiltInProvider(resolvedProvider)
     ? PROVIDERS[resolvedProvider].name
@@ -259,10 +263,9 @@ export async function resolveLLMClientOptions(
 
   const model = resolvedModel
     ?? dbSecret?.model
-    ?? getProviderEnvModel(resolvedProvider)
-    ?? (isBuiltInProvider(resolvedProvider) ? PROVIDERS[resolvedProvider].defaultModel : undefined);
+    ?? getProviderEnvModel(resolvedProvider);
   if (!model) {
-    throw new Error(`未配置 ${providerName} 的默认模型。`);
+    throw new Error(`未配置 ${providerName} 的默认模型。请在「设置 → 模型路由」中配置。`);
   }
 
   const baseURL = resolveProviderBaseUrl(

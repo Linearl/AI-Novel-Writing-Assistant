@@ -59,111 +59,11 @@ const STRICT_ROUTE_TASK_TYPES = new Set<ModelRouteTaskType>([
   "state_resolution",
 ]);
 
-const DEFAULT_ROUTES: Record<ModelRouteTaskType | "default", Omit<ResolvedModel, "routeKey" | "routeDegraded">> = {
-  planner: {
-    provider: "deepseek",
-    model: PROVIDERS.deepseek.defaultModel,
-    temperature: 0.3,
-    contextWindow: 1048576,
-    requestProtocol: "auto",
-    structuredResponseFormat: "auto",
-  },
-  writer: {
-    provider: "deepseek",
-    model: PROVIDERS.deepseek.defaultModel,
-    temperature: 0.8,
-    contextWindow: 1048576,
-    requestProtocol: "auto",
-    structuredResponseFormat: "auto",
-  },
-  review: {
-    provider: "deepseek",
-    model: PROVIDERS.deepseek.defaultModel,
-    temperature: 0.2,
-    contextWindow: 1048576,
-    requestProtocol: "auto",
-    structuredResponseFormat: "auto",
-  },
-  light_review: {
-    provider: "deepseek",
-    model: PROVIDERS.deepseek.defaultModel,
-    temperature: 0.2,
-    contextWindow: 1048576,
-    requestProtocol: "auto",
-    structuredResponseFormat: "auto",
-  },
-  critical_review: {
-    provider: "deepseek",
-    model: PROVIDERS.deepseek.defaultModel,
-    temperature: 0.1,
-    contextWindow: 1048576,
-    requestProtocol: "auto",
-    structuredResponseFormat: "auto",
-  },
-  repair: {
-    provider: "deepseek",
-    model: PROVIDERS.deepseek.defaultModel,
-    temperature: 0.4,
-    contextWindow: 1048576,
-    requestProtocol: "auto",
-    structuredResponseFormat: "auto",
-  },
-  replan: {
-    provider: "deepseek",
-    model: PROVIDERS.deepseek.defaultModel,
-    temperature: 0.2,
-    contextWindow: 1048576,
-    requestProtocol: "auto",
-    structuredResponseFormat: "auto",
-  },
-  state_resolution: {
-    provider: "deepseek",
-    model: PROVIDERS.deepseek.defaultModel,
-    temperature: 0.1,
-    contextWindow: 1048576,
-    requestProtocol: "auto",
-    structuredResponseFormat: "auto",
-  },
-  summary: {
-    provider: "deepseek",
-    model: PROVIDERS.deepseek.defaultModel,
-    temperature: 0.2,
-    contextWindow: 1048576,
-    requestProtocol: "auto",
-    structuredResponseFormat: "auto",
-  },
-  fact_extraction: {
-    provider: "deepseek",
-    model: PROVIDERS.deepseek.defaultModel,
-    temperature: 0.2,
-    contextWindow: 1048576,
-    requestProtocol: "auto",
-    structuredResponseFormat: "auto",
-  },
-  chat: {
-    provider: "deepseek",
-    model: PROVIDERS.deepseek.defaultModel,
-    temperature: 0.7,
-    contextWindow: 1048576,
-    requestProtocol: "auto",
-    structuredResponseFormat: "auto",
-  },
-  default: {
-    provider: "deepseek",
-    model: PROVIDERS.deepseek.defaultModel,
-    temperature: 0.7,
-    contextWindow: 1048576,
-    requestProtocol: "auto",
-    structuredResponseFormat: "auto",
-  },
-};
-
 function normalizeProviderId(value: string | null | undefined): LLMProvider {
-  if (typeof value !== "string") {
-    return "deepseek";
+  if (typeof value !== "string" || !value.trim()) {
+    throw new Error("模型路由配置缺少 provider。请在「设置 → 模型路由」中配置。");
   }
-  const trimmed = value.trim();
-  return trimmed || "deepseek";
+  return value.trim() as LLMProvider;
 }
 
 function normalizeMaxTokens(provider: LLMProvider, maxTokens?: number): number | undefined {
@@ -283,7 +183,6 @@ export async function resolveModel(
   },
 ): Promise<ResolvedModel> {
   const normalizedTaskType = normalizeTaskType(taskType);
-  const base = DEFAULT_ROUTES[normalizedTaskType] ?? DEFAULT_ROUTES.default;
 
   try {
     const row = await prisma.modelRouteConfig.findUnique({
@@ -308,17 +207,17 @@ export async function resolveModel(
       };
       return applyOverrides(resolved, userOverride);
     }
-  } catch {
-    // table may not exist yet
+  } catch (error) {
+    // If it's our own config error, re-throw
+    if (error instanceof Error && error.message.includes("模型路由配置")) {
+      throw error;
+    }
+    // Table may not exist yet during setup
   }
 
-  return applyOverrides({
-    ...base,
-    contextWindow: base.contextWindow ?? 1048576,
-    routeKey: normalizedTaskType,
-    routeDegraded: normalizedTaskType !== "default"
-      && STRICT_ROUTE_TASK_TYPES.has(normalizedTaskType),
-  }, userOverride);
+  throw new Error(
+    `未找到任务类型「${normalizedTaskType}」的模型路由配置。请在「设置 → 模型路由」中配置。`,
+  );
 }
 
 export async function listModelRouteConfigs(): Promise<Array<{

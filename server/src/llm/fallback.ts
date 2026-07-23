@@ -300,11 +300,18 @@ let cachedFallbackChainConfig: FallbackChainConfig | null = null;
 
 function normalizeChainProvider(value: string | undefined | null): LLMProvider {
   const trimmed = value?.trim();
-  return (trimmed || "deepseek") as LLMProvider;
+  if (!trimmed) {
+    throw new Error("模型链配置缺少 Provider。请在「设置 → 模型路由」中配置。");
+  }
+  return trimmed as LLMProvider;
 }
 
 function normalizeChainModel(value: string | undefined | null): string {
-  return value?.trim() || "deepseek-chat";
+  const trimmed = value?.trim();
+  if (!trimmed) {
+    throw new Error("模型链配置缺少 Model。请在「设置 → 模型路由」中配置。");
+  }
+  return trimmed;
 }
 
 function normalizeChainTemperature(value: number | string | undefined | null): number | undefined {

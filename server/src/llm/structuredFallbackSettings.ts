@@ -9,8 +9,8 @@ const STRUCTURED_FALLBACK_MAX_TOKENS_KEY = "structuredFallback.maxTokens";
 
 const DEFAULT_STRUCTURED_FALLBACK_SETTINGS: StructuredFallbackSettings = {
   enabled: false,
-  provider: "deepseek",
-  model: "deepseek-chat",
+  provider: "" as LLMProvider,
+  model: "",
   temperature: 0.2,
   maxTokens: null,
 };
