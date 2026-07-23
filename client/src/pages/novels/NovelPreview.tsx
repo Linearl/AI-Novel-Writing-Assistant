@@ -458,9 +458,9 @@ export default function NovelPreview() {
                     maxWidth: settings.autoFit ? '100%' : `${settings.pageWidth}px`,
                     backgroundColor: settings.backgroundColor.background,
                     color: settings.backgroundColor.text,
-                    lineHeight: settings.lineHeight === 0.3 ? '1.3'
-                      : settings.lineHeight === 0.6 ? '1.6'
-                      : '2.0',
+                    lineHeight: settings.lineHeight === 0.3 ? '1.1'
+                      : settings.lineHeight === 0.6 ? '1.25'
+                      : '1.4',
                   }}
                 >
                   {activeContent}
