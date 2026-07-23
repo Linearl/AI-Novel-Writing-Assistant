@@ -93,7 +93,7 @@ function isPidAlive(pid) {
 if (require.main === module) {
   const name = process.argv[2];
   if (!name) {
-    console.error("Usage: node scripts/write-pid.cjs <name> [--port <port>]");
+    console.error("Usage: node scripts/dev/write-pid.cjs <name> [--port <port>]");
     process.exit(1);
   }
 

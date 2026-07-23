@@ -61,7 +61,7 @@ function parseArgs(argv) {
 }
 
 function printHelp() {
-  console.log("Usage: node scripts/wait-for-port.cjs [--host 127.0.0.1,localhost,::1] [--port 13000] [--timeout 120000] [--interval 500]");
+  console.log("Usage: node scripts/dev/wait-for-port.cjs [--host 127.0.0.1,localhost,::1] [--port 13000] [--timeout 120000] [--interval 500]");
 }
 
 function wait(ms) {
