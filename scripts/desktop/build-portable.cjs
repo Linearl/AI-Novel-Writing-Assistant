@@ -55,7 +55,10 @@ function log(msg) {
 function run(cmdOrExec, argsOrOpts, opts) {
   if (Array.isArray(argsOrOpts)) {
     log(`exec: ${cmdOrExec} ${argsOrOpts.join(" ")}`);
-    execFileSync(cmdOrExec, argsOrOpts, { cwd: ROOT, stdio: "inherit", ...opts });
+    // shell: true 只用于 .cmd 命令（pnpm, npm 等需要 PATH 解析），
+    // 完整路径命令（如 process.execPath）不需要且含空格时会出错
+    const needShell = !cmdOrExec.includes(path.sep);
+    execFileSync(cmdOrExec, argsOrOpts, { cwd: ROOT, stdio: "inherit", shell: needShell, ...opts });
   } else {
     const o = argsOrOpts || {};
     log(`exec: ${cmdOrExec}`);

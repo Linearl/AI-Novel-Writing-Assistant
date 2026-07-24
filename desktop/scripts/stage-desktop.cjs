@@ -25,6 +25,7 @@ function runPnpm(args, cwd = repoRoot) {
     cwd,
     stdio: "inherit",
     env: process.env,
+    shell: true,
   });
 }
 
@@ -277,7 +278,7 @@ function createSeedDatabase(appDir) {
   ];
 
   // 检查清理脚本是否存在
-  const cleanScriptPath = path.join(repoRoot, "scripts", "clean-dev-db.js");
+  const cleanScriptPath = path.join(repoRoot, "scripts", "dev", "clean-dev-db.cjs");
   if (fs.existsSync(cleanScriptPath)) {
     // 使用清理脚本生成干净的种子数据库
     console.log(`[stage:desktop] using clean-dev-db.js to create sanitized seed database`);
@@ -472,6 +473,7 @@ function deployManually() {
     cwd: appDir,
     stdio: "inherit",
     env: process.env,
+    shell: true,
   });
 
   // 5. 为 @ai-novel/server 生成干净的 package.json（移除 workspace 协议依赖）
@@ -502,6 +504,7 @@ function deployManually() {
       cwd: appDir,
       stdio: "inherit",
       env: process.env,
+      shell: true,
     });
   }
 
