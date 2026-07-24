@@ -33,7 +33,7 @@ const path = require("path");
 // Constants
 // ---------------------------------------------------------------------------
 
-const ROOT = path.resolve(__dirname, "..");
+const ROOT = path.resolve(__dirname, "../..");
 const DESKTOP_DIR = path.join(ROOT, "desktop");
 const RELEASE_DIR = path.join(ROOT, "release");
 const DESKTOP_PKG = JSON.parse(

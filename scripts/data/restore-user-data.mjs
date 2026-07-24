@@ -8,7 +8,7 @@ import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const projectRoot = resolve(__dirname, '..');
+const projectRoot = resolve(__dirname, '../..');
 
 const RESTORE_TABLES = ['novel', 'world', 'character', 'chapter', 'characterRelation', 'knowledgeDocument'];
 

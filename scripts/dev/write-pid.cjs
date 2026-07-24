@@ -18,10 +18,10 @@ const path = require("path");
  * 3. 端口仅在 PID 文件记录的范围内清理，不会越界
  */
 
-const PIDS_DIR = path.resolve(process.cwd(), "..", "..", ".logs", ".pids");
+const PIDS_DIR = path.resolve(__dirname, "../..", ".logs", ".pids");
 
 function getRepoRoot() {
-  return path.resolve(process.cwd(), "..", "..");
+  return path.resolve(__dirname, "../..");
 }
 
 function writePidFile(name, pid, extras = {}) {

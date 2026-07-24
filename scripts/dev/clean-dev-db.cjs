@@ -29,7 +29,7 @@ const TABLES_TO_KEEP = new Set([
 ]);
 
 // 默认路径
-const REPO_ROOT = path.resolve(__dirname, "..");
+const REPO_ROOT = path.resolve(__dirname, "../..");
 const DEFAULT_INPUT = path.join(REPO_ROOT, "server", "dev.db");
 const DEFAULT_OUTPUT = path.join(REPO_ROOT, "desktop", "build", "app", "dist", "seed-dev.db");
 

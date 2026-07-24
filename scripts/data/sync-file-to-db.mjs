@@ -13,7 +13,7 @@ import { resolve, dirname } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const projectRoot = resolve(__dirname, '..');
+const projectRoot = resolve(__dirname, '../..');
 
 async function main() {
   const mode = process.argv.includes('--update') ? 'sync_existing' : 'missing_only';

@@ -30,7 +30,7 @@ $ErrorActionPreference = "Stop"
 
 # ─── Path resolution ────────────────────────────────────────────
 $ScriptDir   = Split-Path -Parent $MyInvocation.MyCommand.Path
-$ProjectRoot = Resolve-Path (Join-Path $ScriptDir "..")
+$ProjectRoot = Resolve-Path (Join-Path $ScriptDir "../..")
 $LogsDir     = Join-Path $ProjectRoot ".logs"
 $EnvFile     = Join-Path $ProjectRoot "server\.env"
 $ClientEnv   = Join-Path $ProjectRoot "client\.env"

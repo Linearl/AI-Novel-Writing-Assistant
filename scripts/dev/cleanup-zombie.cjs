@@ -22,7 +22,7 @@ const { execSync } = require("child_process");
  *   node scripts/dev/cleanup-zombie.cjs --port 5173    清理特定端口
  */
 
-const REPO_ROOT = path.resolve(__dirname, "..").toLowerCase();
+const REPO_ROOT = path.resolve(__dirname, "../..").toLowerCase();
 const PIDS_DIR = path.join(REPO_ROOT, ".logs", ".pids");
 const MIN_PROCESS_AGE_MS = 5000; // 进程必须存活超 5 秒才清理（防止误杀刚启动的）
 

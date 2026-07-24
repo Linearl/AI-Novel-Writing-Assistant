@@ -2,7 +2,7 @@ const fs = require("node:fs");
 const https = require("node:https");
 const path = require("node:path");
 
-const repoRoot = path.resolve(__dirname, "..");
+const repoRoot = path.resolve(__dirname, "../..");
 const desktopPackagePath = path.join(repoRoot, "desktop", "package.json");
 const releaseNotesPath = path.join(repoRoot, "docs", "releases", "release-notes.md");
 
