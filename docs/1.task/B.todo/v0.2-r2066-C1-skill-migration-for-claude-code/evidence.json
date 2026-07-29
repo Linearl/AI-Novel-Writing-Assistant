@@ -1,0 +1,142 @@
+{
+  "reqId": "REQ-2066",
+  "title": "Skill 版本迁移 — 面向 Claude Code 的小说生产系统蒸馏",
+  "evidenceFormat": "dual",
+  "generatedAt": "2026-07-29T10:00:00+08:00",
+  "evidence": {
+    "diagnosisReport": {
+      "path": "docs/3.analysis/diagnosis/2026-07-29-ani-book-skill-migration-diagnosis.md",
+      "conclusion": "可以做 Skill 版本，且我们的版本会更完整",
+      "keyFindings": [
+        "上游 Skill 使用 Codex + Python 脚本模式",
+        "我们有 Auto-Director、质量检查、写法资产等独特优势",
+        "建议分阶段蒸馏"
+      ]
+    },
+    "architectureDesign": {
+      "targetArchitecture": "Claude + Skill + Python scripts + Markdown/YAML",
+      "fileStructure": {
+        "skillRoot": "ai-novel-skill/",
+        "coreFiles": ["SKILL.md", "AGENTS.md", "README.md", "requirements.txt"],
+        "references": "12-15 个能力契约文档",
+        "scripts": "7-10 个 Python 脚本",
+        "templates": "模板文件",
+        "examples": "示例文件"
+      }
+    },
+    "taskBreakdown": {
+      "phases": [
+        {
+          "name": "阶段一：核心蒸馏",
+          "duration": "2-3 周",
+          "tasks": ["T1.1", "T1.2", "T1.3", "T1.4", "T1.5", "T1.6", "T1.7"]
+        },
+        {
+          "name": "阶段二：增强能力",
+          "duration": "2-3 周",
+          "tasks": ["T2.1", "T2.2", "T2.3", "T2.4", "T2.5"]
+        },
+        {
+          "name": "阶段三：测试验证",
+          "duration": "1-2 周",
+          "tasks": ["T3.1", "T3.2", "T3.3", "T3.4"]
+        }
+      ],
+      "criticalPath": ["T1.1", "T1.2", "T1.4", "T1.5", "T1.6/T1.7"]
+    },
+    "riskAssessment": {
+      "highRisk": [
+        {
+          "risk": "Python 脚本翻译困难",
+          "probability": "medium",
+          "impact": "high",
+          "mitigation": "参考上游实现，保持接口一致"
+        },
+        {
+          "risk": "Auto-Director Skill 化复杂",
+          "probability": "high",
+          "impact": "high",
+          "mitigation": "分阶段蒸馏，先核心后增强"
+        }
+      ],
+      "mediumRisk": [
+        {
+          "risk": "测试覆盖不足",
+          "probability": "medium",
+          "impact": "medium",
+          "mitigation": "强制 80% 覆盖率"
+        },
+        {
+          "risk": "用户验收不通过",
+          "probability": "low",
+          "impact": "high",
+          "mitigation": "早期收集反馈，迭代改进"
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "id": "D1",
+        "point": "选择迁移平台",
+        "choice": "Claude Code",
+        "reason": "生态成熟、配置完善、差异化"
+      },
+      {
+        "id": "D2",
+        "point": "迁移方式",
+        "choice": "蒸馏而非重写",
+        "reason": "保留核心流程、高效、完整"
+      },
+      {
+        "id": "D3",
+        "point": "跨书图谱",
+        "choice": "不做",
+        "reason": "暂无需求、降低复杂度"
+      },
+      {
+        "id": "D4",
+        "point": "组织方式",
+        "choice": "分阶段蒸馏",
+        "reason": "便于管理、可回滚"
+      },
+      {
+        "id": "D5",
+        "point": "接口设计",
+        "choice": "保持与上游 Skill 一致",
+        "reason": "降低学习成本、便于迁移"
+      },
+      {
+        "id": "D6",
+        "point": "脚本语言",
+        "choice": "Python",
+        "reason": "与上游一致、生态丰富"
+      }
+    ],
+    "acceptanceCriteria": {
+      "coreFunctionality": [
+        "Skill 可在 Claude Code 中激活",
+        "可从灵感开始执行渐进式确认",
+        "可生成 novel-brief.md",
+        "可执行角色准备、卷级规划",
+        "可生成章节计划、正文、审核报告",
+        "可更新连续性状态"
+      ],
+      "autoDirector": [
+        "可读取状态并继续",
+        "可执行质量修复",
+        "可记录质量债务",
+        "可暂停等待用户决策"
+      ],
+      "outputFormat": [
+        "工作区模式输出 Markdown/YAML",
+        "预览模式返回对话中的 bounded artifact",
+        "文件大小符合约束（<500 行）"
+      ]
+    }
+  },
+  "artifacts": {
+    "diagnosisReport": "docs/3.analysis/diagnosis/2026-07-29-ani-book-skill-migration-diagnosis.md",
+    "taskPackage": "docs/1.task/B.todo/v0.2-r2066-C1-skill-migration-for-claude-code/",
+    "upstreamSkill": "temp/ani-book-skill-analysis/ani-book-skill-main/"
+  }
+}

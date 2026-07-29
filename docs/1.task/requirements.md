@@ -77,6 +77,11 @@ description: "需求任务总清单（SSOT）"
 | 2059 | Token 预算控制系统重构 | p0 | ✅ 已完成 | 2026-07-18 Token 预算诊断报告 | 0.2 | 2026-07-18 | - | `B.2.done/v0.2-r2059-C2-token-budget-overhaul/README.md` | 修复 CJK 估算偏差 + 统一估算函数 + YAML 配置收拢 + 清理硬编码 |
 | 2060 | 全局审校问题驱动章节修复闭环 | p1 | ✅ 已完成 | - | 0.2 | - | - | `B.2.done/v0.2-r2060-C1-global-review-to-chapter-repair/README.md` |  |
 | 2061 | 自动导演创建面板模型路由与温度设置修复 | p2 | 📋 待办 | - | 0.2 | - | - | `B.todo/v0.2-r2061-C2-director-creation-panel-model-routing-fix/README.md` |  |
+| 2062 | 桌面端种子数据库清理与端口配置优化 | p1 | ✅ 已完成 | - | 0.2 | 2026-07-21T04:50:00.000Z | 2026-07-21T05:30:00.000Z | `B.2.done/v0.2-r2062-C2-desktop-seed-cleanup-port-fix/README.md` |  |
+| 2063 | 全局审校问题修复（5 项） | p1 | ✅ 已完成 | - | 0.2 | - | - | `B.2.done/v0.2-r2063-C2-global-review-bugfixes/README.md` |  |
+| 2064 | 全局审校用户体验优化 | p1 | ✅ 已完成 | - | 0.2 | - | - | `B.2.done/v0.2-r2064-C2-global-review-ux-optimization/README.md` |  |
+| 2065 | 多维度 Token 统计功能 | p2 | ✅ 已完成 | - | 0.2 | - | - | `B.todo/v0.2-r2065-C2-multi-dimensional-token-stats/README.md` |  |
+| 2066 | Skill 版本迁移 — 面向 Claude Code 的小说生产系统蒸馏 | p3 | 📋 待办 | - | 0.2 | - | - | `B.todo/v0.2-r2066-C1-skill-migration-for-claude-code/README.md` |  |
 | 2013 | Director Failed Retry Entry | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2013-medium-director-failed-retry-entry/README.md` |  |
 | 2014 | Chapter Token Budget Dynamic | p3 | 📋 待办 | - | 0.1 | - | - | `B.todo/v0.1-r2014-medium-chapter-token-budget-dynamic/README.md` |  |
 
@@ -221,6 +226,7 @@ description: "需求任务总清单（SSOT）"
 | 编号 | 任务标题 | 文档 |
 | --- | --- | --- |
 | 2061 | 自动导演创建面板模型路由与温度设置修复 | `B.todo/v0.2-r2061-C2-director-creation-panel-model-routing-fix/README.md` |
+| 2066 | Skill 版本迁移 — 面向 Claude Code 的小说生产系统蒸馏 | `B.todo/v0.2-r2066-C1-skill-migration-for-claude-code/README.md` |
 | 3011 | 小说预览页面增强控制面板 | `B.2.done/v0.1-r3011-C2-novel-preview-controls/README.md` |
 | 2013 | Director Failed Retry Entry | `B.todo/v0.1-r2013-medium-director-failed-retry-entry/README.md` |
 | 2014 | Chapter Token Budget Dynamic | `B.todo/v0.1-r2014-medium-chapter-token-budget-dynamic/README.md` |
@@ -290,6 +296,10 @@ description: "需求任务总清单（SSOT）"
 | 2058 | 卷生成链路 outline + material_index 接线 | `B.2.done/v0.2-r2058-C2-outline-material-wiring/README.md` |
 | 2059 | Token 预算控制系统重构 | `B.2.done/v0.2-r2059-C2-token-budget-overhaul/README.md` |
 | 2060 | 全局审校问题驱动章节修复闭环 | `B.2.done/v0.2-r2060-C1-global-review-to-chapter-repair/README.md` |
+| 2062 | 桌面端种子数据库清理与端口配置优化 | `B.2.done/v0.2-r2062-C2-desktop-seed-cleanup-port-fix/README.md` |
+| 2063 | 全局审校问题修复（5 项） | `B.2.done/v0.2-r2063-C2-global-review-bugfixes/README.md` |
+| 2064 | 全局审校用户体验优化 | `B.2.done/v0.2-r2064-C2-global-review-ux-optimization/README.md` |
+| 2065 | 多维度 Token 统计功能 | `B.todo/v0.2-r2065-C2-multi-dimensional-token-stats/README.md` |
 | 3001 | Task Batch Archive | `B.2.done/v0.1-r3001-medium-task-batch-archive/README.md` |
 | 3002 | 导演进度规划资源缺失 Checklist 可视化 | `B.2.done/v0.1-r3002-medium-director-planning-checklist/README.md` |
 | 3003 | 小说项目对话存档 | `B.2.done/v0.1-r3003-medium-repair-progress-dialog/README.md` |

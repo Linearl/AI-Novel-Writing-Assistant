@@ -1,0 +1,63 @@
+{
+  "reqId": "REQ-2066",
+  "title": "Skill 版本迁移 — 面向 Claude Code 的小说生产系统蒸馏",
+  "status": "requirements_ready",
+  "version": "0.2",
+  "created": "2026-07-29T10:00:00+08:00",
+  "updated": "2026-07-29T10:00:00+08:00",
+  "reqType": "core_feature",
+  "categoryCode": 2,
+  "complexity": "complex",
+  "skipClarification": false,
+  "skipDesign": false,
+  "artifacts": {
+    "readme": "docs/1.task/B.todo/v0.2-r2066-C1-skill-migration-for-claude-code/README.md",
+    "requirements": "docs/1.task/B.todo/v0.2-r2066-C1-skill-migration-for-claude-code/REQ-2066-skill-migration-for-claude-code.md",
+    "requirementsOriginal": "docs/1.task/B.todo/v0.2-r2066-C1-skill-migration-for-claude-code/REQ-2066-skill-migration-for-claude-code-original.md",
+    "design": "docs/1.task/B.todo/v0.2-r2066-C1-skill-migration-for-claude-code/design.md",
+    "tasks": "docs/1.task/B.todo/v0.2-r2066-C1-skill-migration-for-claude-code/tasks.md",
+    "decisionLog": "docs/1.task/B.todo/v0.2-r2066-C1-skill-migration-for-claude-code/decision_log.md",
+    "runResult": "docs/1.task/B.todo/v0.2-r2066-C1-skill-migration-for-claude-code/run_result.json"
+  },
+  "unresolvedItems": [
+    {
+      "id": "UI-001",
+      "description": "Python 脚本的具体实现细节需要在开发阶段确定",
+      "status": "deferred",
+      "reason": "需要在 T1.6/T1.7 阶段详细设计"
+    },
+    {
+      "id": "UI-002",
+      "description": "Claude Code Skill 的具体格式需要参考官方文档",
+      "status": "deferred",
+      "reason": "需要在 T1.1 阶段调研"
+    }
+  ],
+  "assumptions": [
+    "Claude Code 支持 SKILL.md + references 的 Skill 格式",
+    "Python 3.10+ 可以在目标环境运行",
+    "上游 Skill 的文件结构可以复用",
+    "用户熟悉 Claude Code 的交互模式"
+  ],
+  "blockingReasons": [],
+  "handoffTicket": {
+    "route": "req",
+    "ticketType": "req_to_dev",
+    "status": "ready",
+    "nextAction": "执行阶段一：核心蒸馏"
+  },
+  "stateSync": {
+    "requirementAxis": "approved",
+    "taskAxis": "requirements_ready",
+    "isConsistent": true
+  },
+  "evidence": {
+    "format": "dual",
+    "markdownPath": "docs/1.task/B.todo/v0.2-r2066-C1-skill-migration-for-claude-code/evidence.md",
+    "jsonPath": "docs/1.task/B.todo/v0.2-r2066-C1-skill-migration-for-claude-code/evidence.json"
+  },
+  "versionSelection": {
+    "targetVersion": "0.2",
+    "versionPath": "docs/1.task/B.todo/v0.2-r2066-C1-skill-migration-for-claude-code"
+  }
+}
