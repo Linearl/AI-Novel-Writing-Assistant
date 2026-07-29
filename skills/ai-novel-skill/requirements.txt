@@ -1,0 +1,31 @@
+# AI Novel Skill - Python Dependencies
+# Core dependencies for state management and export
+
+# YAML handling
+PyYAML>=6.0,<7.0
+
+# SQLite (built-in, but explicit for clarity)
+# sqlite3 is part of Python standard library
+
+# JSON handling (built-in)
+# json is part of Python standard library
+
+# File hashing (built-in)
+# hashlib is part of Python standard library
+
+# Path handling (built-in)
+# pathlib is part of Python standard library
+
+# Date/time (built-in)
+# datetime is part of Python standard library
+
+# Testing
+pytest>=7.0,<8.0
+pytest-cov>=4.0,<5.0
+
+# Code quality
+black>=23.0,<24.0
+ruff>=0.1.0,<1.0
+
+# Type checking
+mypy>=1.0,<2.0

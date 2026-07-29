@@ -1,0 +1,25 @@
+# 导演状态模板
+
+version: "1.0"
+current_phase: "planning"  # planning / writing / paused / completed
+current_volume: 0
+current_chapter: 0
+last_completed_chapter: 0
+status: "running"  # running / paused / blocked / completed
+
+checkpoints:
+  - chapter: 0
+    timestamp: ""
+    state_hash: ""
+
+quality_debt:
+  - id: ""
+    chapter: 0
+    type: ""
+    description: ""
+    priority: ""
+    status: "open"
+
+token_usage:
+  total_tokens: 0
+  last_recorded_at: ""

@@ -1,0 +1,34 @@
+# 连续性数据模板
+
+## facts.yaml
+- id: fact-001
+  text: ""
+  category: "completed"  # completed / revealed / state_changed
+  chapter_order: 0
+  source: "auto"  # auto / manual
+  status: "active"
+
+## payoffs.yaml
+- id: payoff-001
+  text: ""
+  planted_chapter: 0
+  status: "planted"  # planted / partially_revealed / resolved
+  related_facts: []
+
+## resources.yaml
+- id: resource-001
+  text: ""
+  type: "item"  # item / ability / knowledge
+  acquired_chapter: 0
+  status: "in_possession"  # in_possession / lost / consumed
+  owner: ""
+
+## character-state.yaml
+- character_id: ""
+  name: ""
+  current_status: ""
+  last_updated_chapter: 0
+  relationships:
+    - target: ""
+      type: ""
+      last_interaction_chapter: 0

@@ -1,0 +1,63 @@
+# 连续性数据
+
+## facts.yaml
+- id: fact-001
+  text: "陈建国在第3章获得了看见鬼的能力"
+  category: "completed"
+  chapter_order: 3
+  source: "auto"
+  status: "active"
+
+- id: fact-002
+  text: "陈建国在第10章打败了第一个强敌"
+  category: "completed"
+  chapter_order: 10
+  source: "auto"
+  status: "active"
+
+- id: fact-003
+  text: "陈建国身世之谜在第1章埋下"
+  category: "revealed"
+  chapter_order: 1
+  source: "auto"
+  status: "active"
+
+## payoffs.yaml
+- id: payoff-001
+  text: "陈建国身世之谜"
+  planted_chapter: 1
+  status: "planted"
+  related_facts: ["fact-003"]
+
+- id: payoff-002
+  text: "黑袍人真实身份"
+  planted_chapter: 5
+  status: "planted"
+
+## resources.yaml
+- id: resource-001
+  text: "神秘玉佩"
+  type: "item"
+  acquired_chapter: 5
+  status: "in_possession"
+  owner: "protagonist"
+
+- id: resource-002
+  text: "超能力"
+  type: "ability"
+  acquired_chapter: 3
+  status: "active"
+  owner: "protagonist"
+
+## character-state.yaml
+- character_id: "protagonist"
+  name: "陈建国"
+  current_status: "受伤恢复中"
+  last_updated_chapter: 15
+  relationships:
+    - target: "antagonist"
+      type: "敌对"
+      last_interaction_chapter: 15
+    - target: "mentor"
+      type: "师徒"
+      last_interaction_chapter: 10

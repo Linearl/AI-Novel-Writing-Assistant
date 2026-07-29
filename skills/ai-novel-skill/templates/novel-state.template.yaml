@@ -1,0 +1,26 @@
+# 小说状态模板
+
+version: "1.0"
+novel:
+  title: ""
+  status: "planning"  # planning / writing / paused / completed
+  created_at: ""
+  updated_at: ""
+
+progress:
+  current_volume: 0
+  current_chapter: 0
+  total_volumes: 0
+  total_chapters: 0
+
+confirmations:
+  reader_channel: false
+  publication_format: false
+  primary_reward: false
+  target_word_count: false
+  narrative_pov: false
+
+checkpoints:
+  - chapter: 0
+    timestamp: ""
+    state_hash: ""

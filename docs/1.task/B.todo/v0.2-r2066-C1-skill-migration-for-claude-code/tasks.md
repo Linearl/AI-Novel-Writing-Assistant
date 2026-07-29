@@ -15,66 +15,75 @@ updated: "2026-07-29"
 - **预估**：2 天
 - **依赖**：无
 - **DoD**：
-  - [ ] 创建 Skill 目录结构
-  - [ ] 编写 SKILL.md 主入口
-  - [ ] 编写 AGENTS.md 协作规范
-  - [ ] 编写 README.md 项目说明
-  - [ ] 创建 requirements.txt
+  - [x] 创建 Skill 目录结构
+  - [x] 编写 SKILL.md 主入口
+  - [x] 编写 AGENTS.md 协作规范
+  - [x] 编写 README.md 项目说明
+  - [x] 创建 requirements.txt
 
 ### T1.2 蒸馏小说创建流程
 - **优先级**：P0
 - **预估**：3 天
 - **依赖**：T1.1
 - **DoD**：
-  - [ ] 创建 references/novel-brief.md
-  - [ ] 创建 references/story-bible.md（如果需要）
-  - [ ] 创建 templates/novel-brief.template.md
-  - [ ] 创建 examples/example-novel/novel-brief.md
+  - [x] 创建 references/novel-brief.md
+  - [x] 创建 templates/novel-brief.template.md
+  - [x] 创建 examples/example-novel/novel-brief.md
+  - [x] 创建 templates/story-bible.template.md
+  - [x] 创建 examples/example-novel/story-bible.md
+  - [x] 创建 templates/novel-state.template.yaml
+  - [x] 创建 examples/example-novel/novel-state.yaml
 
 ### T1.3 蒸馏角色准备
 - **优先级**：P0
 - **预估**：2 天
 - **依赖**：T1.1
 - **DoD**：
-  - [ ] 创建 references/character-preparation.md
-  - [ ] 创建 templates/character-profile.template.md
-  - [ ] 创建 examples/example-novel/characters/
+  - [x] 创建 references/character-preparation.md
+  - [x] 创建 templates/character-profile.template.md
+  - [x] 创建 templates/character-roster.template.md
+  - [x] 创建 examples/example-novel/characters/
 
 ### T1.4 蒸馏卷级规划
 - **优先级**：P0
 - **预估**：2 天
 - **依赖**：T1.2, T1.3
 - **DoD**：
-  - [ ] 创建 references/story-and-volume-planning.md
-  - [ ] 创建 templates/volume-plan.template.md
-  - [ ] 创建 examples/example-novel/volumes/
+  - [x] 创建 references/story-and-volume-planning.md
+  - [x] 创建 templates/volume-strategy.template.md
+  - [x] 创建 templates/volume-skeleton.template.md
+  - [x] 创建 examples/example-novel/volumes/
 
 ### T1.5 蒸馏章节生产
 - **优先级**：P0
 - **预估**：3 天
 - **依赖**：T1.4
 - **DoD**：
-  - [ ] 创建 references/chapter-production.md
-  - [ ] 创建 templates/chapter-contract.template.md
-  - [ ] 创建 examples/example-novel/chapters/
+  - [x] 创建 references/chapter-production.md
+  - [x] 创建 templates/chapter-plan.template.md
+  - [x] 创建 templates/chapter-contract.template.md
+  - [x] 创建 examples/example-novel/chapters/
 
 ### T1.6 蒸馏连续性管理
 - **优先级**：P0
 - **预估**：2 天
 - **依赖**：T1.5
 - **DoD**：
-  - [ ] 创建 references/continuity-management.md
-  - [ ] 创建 scripts/continuity_store.py
-  - [ ] 创建 templates/continuity-data.template.yaml
+  - [x] 创建 references/continuity-management.md
+  - [x] 创建 references/continuity-ledgers.md
+  - [x] 创建 references/structured-continuity-store.md
+  - [x] 创建 templates/continuity-data.template.yaml
+  - [x] 创建 examples/example-novel/continuity/
 
 ### T1.7 蒸馏质量检查
 - **优先级**：P0
 - **预估**：2 天
 - **依赖**：T1.5
 - **DoD**：
-  - [ ] 创建 references/quality-and-repair.md
-  - [ ] 创建 scripts/quality_checker.py
-  - [ ] 创建 templates/quality-report.template.md
+  - [x] 创建 references/quality-and-repair.md
+  - [x] 创建 references/chinese-novel-humanization.md
+  - [x] 创建 templates/quality-report.template.md
+  - [x] 创建 examples/example-novel/quality/
 
 ## 阶段二：增强能力（2-3 周）
 

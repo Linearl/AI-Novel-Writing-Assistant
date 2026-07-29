@@ -1,0 +1,28 @@
+# 导演状态
+
+version: "1.0"
+current_phase: "chapter_execution"
+current_volume: 1
+current_chapter: 15
+last_completed_chapter: 14
+status: "running"
+
+checkpoints:
+  - chapter: 10
+    timestamp: "2026-07-29T10:30:00+08:00"
+    state_hash: "abc123"
+  - chapter: 14
+    timestamp: "2026-07-29T11:00:00+08:00"
+    state_hash: "def456"
+
+quality_debt:
+  - id: debt-001
+    chapter: 15
+    type: "local_patch_plan"
+    description: "对话缺少冲突"
+    priority: "medium"
+    status: "open"
+
+token_usage:
+  total_tokens: 1250000
+  last_recorded_at: "2026-07-29T11:00:00+08:00"
