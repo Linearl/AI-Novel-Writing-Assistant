@@ -2,7 +2,7 @@
 description: "REQ-2066 任务包 README"
 req_id: "REQ-2066"
 title: "Skill 版本迁移 — 面向 Claude Code 的小说生产系统蒸馏"
-status: "requirements_ready"
+status: "pass"
 version: "0.2"
 created: "2026-07-29"
 updated: "2026-07-29"

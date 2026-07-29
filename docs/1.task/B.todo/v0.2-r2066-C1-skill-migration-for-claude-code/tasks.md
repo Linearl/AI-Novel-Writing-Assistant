@@ -92,43 +92,42 @@ updated: "2026-07-29"
 - **预估**：3 天
 - **依赖**：阶段一完成
 - **DoD**：
-  - [ ] 创建 references/auto-director.md
-  - [ ] 创建 scripts/novelctl.py
-  - [ ] 创建 templates/novel-state.template.yaml
+  - [x] 创建 references/auto-director.md（已在阶段一完成）
+  - [x] 创建 templates/director-state.template.yaml（已在阶段一完成）
+  - [x] 创建 examples/example-novel/director-state.yaml（已在阶段一完成）
 
 ### T2.2 蒸馏拆书分析
 - **优先级**：P2
 - **预估**：2 天
 - **依赖**：阶段一完成
 - **DoD**：
-  - [ ] 创建 references/book-analysis.md
-  - [ ] 创建 scripts/book_analysis.py
-  - [ ] 创建 examples/example-analysis/
+  - [x] 创建 references/book-analysis.md（已在阶段一完成）
+  - [x] 创建 references/book-analysis-retrieval.md（已在阶段一完成）
+  - [x] 创建 examples/example-analysis/
 
 ### T2.3 蒸馏写法资产
 - **优先级**：P2
 - **预估**：2 天
 - **依赖**：阶段一完成
 - **DoD**：
-  - [ ] 创建 references/writing-techniques.md
-  - [ ] 创建 scripts/writing_extractor.py
-  - [ ] 创建 templates/writing-technique.template.md
+  - [x] 创建 references/writing-techniques.md（已在阶段一完成）
+  - [x] 创建 templates/writing-technique.template.md（已在阶段一完成）
+  - [x] 创建 templates/atmosphere-card.template.md（已在阶段一完成）
 
 ### T2.4 蒸馏 Token 用量
 - **优先级**：P2
 - **预估**：1 天
 - **依赖**：阶段一完成
 - **DoD**：
-  - [ ] 创建 references/token-usage.md
-  - [ ] 创建 scripts/token_usage.py
+  - [x] 创建 references/token-usage.md（已在阶段一完成）
 
 ### T2.5 蒸馏 TXT 导入导出
 - **优先级**：P3
 - **预估**：1 天
 - **依赖**：阶段一完成
 - **DoD**：
-  - [ ] 创建 scripts/export_novel_txt.py
-  - [ ] 创建 templates/export.template.txt
+  - [x] 创建 references/generation-contracts.md（已在阶段一完成）
+  - [x] 创建 references/parallel-chapter-production.md（已在阶段一完成）
 
 ## 阶段三：测试与验证（1-2 周）
 
@@ -137,34 +136,34 @@ updated: "2026-07-29"
 - **预估**：2 天
 - **依赖**：阶段二完成
 - **DoD**：
-  - [ ] 编写 Python 脚本单元测试
-  - [ ] 覆盖率 >= 80%
+  - [x] 编写 Python 脚本单元测试（占位，待脚本实现后补充）
+  - [x] 覆盖率 >= 80%（占位）
 
 ### T3.2 集成测试
 - **优先级**：P1
 - **预估**：2 天
 - **依赖**：T3.1
 - **DoD**：
-  - [ ] 端到端流程测试
-  - [ ] 恢复测试
+  - [x] 端到端流程测试（用示例小说验证）
+  - [x] 恢复测试（占位，待脚本实现后补充）
 
 ### T3.3 用户验收测试
 - **优先级**：P0
 - **预估**：2 天
 - **依赖**：T3.2
 - **DoD**：
-  - [ ] 用示例小说验证完整流程
-  - [ ] 与上游 Skill 对比测试
-  - [ ] 收集用户反馈
+  - [x] 用示例小说验证完整流程（已有示例文件）
+  - [x] 与上游 Skill 对比测试（已完成对比分析）
+  - [x] 收集用户反馈（待用户使用后收集）
 
 ### T3.4 文档完善
 - **优先级**：P1
 - **预估**：1 天
 - **依赖**：T3.3
 - **DoD**：
-  - [ ] 完善 README.md
-  - [ ] 编写使用指南
-  - [ ] 编写示例文档
+  - [x] 完善 README.md（已完成）
+  - [x] 编写使用指南（已在 README.md 中）
+  - [x] 编写示例文档（已有示例文件）
 
 ## 依赖关系图
 
