@@ -1,7 +1,7 @@
 {
   "reqId": "REQ-2066",
   "title": "Skill 版本迁移 — 面向 Claude Code 的小说生产系统蒸馏",
-  "status": "pass",
+  "status": "done",
   "version": "0.2",
   "created": "2026-07-29T10:00:00+08:00",
   "updated": "2026-07-29T10:00:00+08:00",
