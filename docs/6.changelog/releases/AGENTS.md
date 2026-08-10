@@ -1,7 +1,7 @@
 <!-- Parent: ../AGENTS.md -->
-<!-- Generated: 2026-06-26 | Updated: 2026-06-26 -->
+<!-- Generated: 2026-06-26 | Updated: 2026-08-08 -->
 
-# docs/releases
+# docs/6.changelog/releases
 
 ## Purpose
 完整的用户可见 release notes 历史(按日期聚合)。`README.md` 的 `## 最新更新` 只展示最新合并日期块 + 链接到此目录的完整历史。

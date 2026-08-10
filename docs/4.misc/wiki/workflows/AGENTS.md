@@ -1,7 +1,7 @@
-<!-- Parent: ../../AGENTS.md -->
-<!-- Generated: 2026-06-26 | Updated: 2026-06-26 -->
+<!-- Parent: ../AGENTS.md -->
+<!-- Generated: 2026-06-26 | Updated: 2026-08-08 -->
 
-# docs/wiki/workflows
+# docs/4.misc/wiki/workflows
 
 ## Purpose
 记录关键工作流的稳定契约:auto-director 运行时、章节生产链、Creative Hub 边界、短剧/漫画工作流、快照保留、质量债归因等。重点在"何时走哪条路径"和"中断后如何恢复"。
@@ -40,6 +40,6 @@
 ## Dependencies
 
 ### Internal
-- `docs/wiki/architecture/` — 模块边界
-- `docs/wiki/prompts/` — Prompt 治理
-- `docs/wiki/rag/` — 上下文装配
+- `docs/4.misc/wiki/architecture/` — 模块边界
+- `docs/4.misc/wiki/prompts/` — Prompt 治理
+- `docs/4.misc/wiki/rag/` — 上下文装配

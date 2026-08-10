@@ -1,7 +1,7 @@
-<!-- Parent: ../../AGENTS.md -->
-<!-- Generated: 2026-06-26 | Updated: 2026-06-26 -->
+<!-- Parent: ../AGENTS.md -->
+<!-- Generated: 2026-06-26 | Updated: 2026-08-08 -->
 
-# docs/wiki/debugging
+# docs/4.misc/wiki/debugging
 
 ## Purpose
 记录反复出现的失败模式、诊断路径与恢复方法。新人/AI agent 遇到报错时应优先查阅这里。
@@ -25,5 +25,5 @@
 ## Dependencies
 
 ### Internal
-- `docs/wiki/workflows/auto-director-runtime.md` — Director 失败模式上下文
-- `docs/wiki/workflows/chapter-production-chain.md` — 章节生产失败模式上下文
+- `docs/4.misc/wiki/workflows/auto-director-runtime.md` — Director 失败模式上下文
+- `docs/4.misc/wiki/workflows/chapter-production-chain.md` — 章节生产失败模式上下文

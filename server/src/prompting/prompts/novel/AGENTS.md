@@ -1,5 +1,5 @@
-<!-- Parent: ../../AGENTS.md -->
-<!-- Generated: 2026-06-26 | Updated: 2026-06-26 -->
+<!-- Parent: ../AGENTS.md -->
+<!-- Generated: 2026-06-26 | Updated: 2026-08-08 -->
 
 # server/src/prompting/prompts/novel
 
@@ -17,10 +17,10 @@
 ### Working In This Directory
 - 新增小说 prompt 必须遵循根 AGENTS.md "Prompt Governance" 与 `server/src/prompting/AGENTS.md`
 - 注册到 `server/src/prompting/registry.ts`,声明 taskType / mode / contextPolicy / outputSchema
-- 章节相关 prompt 改动前必读 `docs/wiki/workflows/chapter-production-chain.md`
+- 章节相关 prompt 改动前必读 `docs/4.misc/wiki/workflows/chapter-production-chain.md`
 
 ## Dependencies
 
 ### Internal
 - `server/src/prompting/AGENTS.md`
-- `docs/wiki/workflows/chapter-production-chain.md`
+- `docs/4.misc/wiki/workflows/chapter-production-chain.md`

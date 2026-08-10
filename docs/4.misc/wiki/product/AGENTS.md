@@ -1,7 +1,7 @@
-<!-- Parent: ../../AGENTS.md -->
-<!-- Generated: 2026-06-26 | Updated: 2026-06-26 -->
+<!-- Parent: ../AGENTS.md -->
+<!-- Generated: 2026-06-26 | Updated: 2026-08-08 -->
 
-# docs/wiki/product
+# docs/4.misc/wiki/product
 
 ## Purpose
 记录"新手优先"的整本完成决策与 UX 原理。这是产品定位的最高优先级档案——帮助完全不懂写作的新手在 AI 引导下完成整本长篇小说。

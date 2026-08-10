@@ -1,7 +1,7 @@
 <!-- Parent: ../AGENTS.md -->
-<!-- Generated: 2026-06-26 | Updated: 2026-06-26 -->
+<!-- Generated: 2026-06-26 | Updated: 2026-08-08 -->
 
-# docs/wiki
+# docs/4.misc/wiki
 
 ## Purpose
 持久化的项目知识库,记录架构决策、工作流契约、Prompt 治理、RAG 装配规则、调试经验、产品设计原理。这是面向"未来的开发者与 AI agent"的稳定资产,不是变更日志。

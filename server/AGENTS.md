@@ -1,5 +1,5 @@
 <!-- Parent: ../AGENTS.md -->
-<!-- Generated: 2026-06-26 | Updated: 2026-06-26 -->
+<!-- Generated: 2026-06-26 | Updated: 2026-08-08 -->
 
 # server
 
@@ -38,7 +38,7 @@
 - 服务端在保持 `server/src` 可运行的同时,逐步向 `app/`、`platform/`、`modules/` 收敛
 - 业务模块围绕"完成整本小说"工作流组织:`setup` / `planning` / `production` / `director` / `characters` / `state` / `export`
 - `routes/` 应收敛到各模块自有 `http/` 入口
-- `services/novel/director/` 应收敛到 `commands`、`runtime`、`state`、`automation`、`projections`、`recovery`、`phases`
+- 编排逻辑统一归属 `server/src/orchestration/`(agent / graph / pipeline / runtime);`services/novel/director/` 已重构为 `orchestration/pipeline/`
 
 ### Branch Workflow (来自根 AGENTS.md "Development Branch Workflow")
 - 跨阶段工作流 / 共享契约 / 自动导演链 → 先开 feature 分支 → `beta` 集成 → `main` 稳定

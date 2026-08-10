@@ -1,5 +1,5 @@
 <!-- Parent: ../AGENTS.md -->
-<!-- Generated: 2026-06-26 | Updated: 2026-06-26 -->
+<!-- Generated: 2026-06-26 | Updated: 2026-08-08 -->
 
 # server/src/services
 
@@ -9,24 +9,29 @@
 ## Subdirectories
 | Directory | Purpose |
 |-----------|---------|
-| `novel/` | 整本小说生产的全部业务服务(director/runtime/production/planning/state/characters/worldContext/storyMacro/volume/quality/dynamics 等)(see `novel/AGENTS.md`) |
+| `novel/` | 整本小说生产的全部业务服务(runtime/production/planning/state/quality/volume 等)(see `novel/AGENTS.md`) |
 | `adaptation/` | 改编能力(contracts/source) |
 | `audit/` | 审计相关 |
+| `auth/` | 认证鉴权 |
+| `backgroundTask/` | 后台任务服务 |
 | `bookAnalysis/` | 整本书分析能力 |
 | `bootstrap/` | 启动 / 引导 |
-| `character/` | 角色基础能力(被 `novel/characters/` 等复用) |
+| `character/` | 角色基础能力(arc/consistency/exit/preparation/profile/resource) |
 | `genre/` | 类型 / 题材 |
 | `image/` | 图片生成(novelCover) |
 | `knowledge/` | 知识库 |
+| `logging/` | 日志服务 |
+| `mediation/` | 调解 / 中转 |
 | `payoff/` | 伏笔 / 兑现台账 |
 | `planner/` | Planner 服务 |
 | `rag/` | RAG 检索增强 |
-| `settings/` | 设置(secretStore) |
+| `settings/` | 设置(secretStore/consistency) |
 | `state/` | 通用 state 服务 |
 | `storyMode/` | 故事模式管理 |
 | `styleEngine/` | 风格引擎 |
 | `task/` | 任务中心(adapters/autoDirectorFollowUps) |
 | `title/` | 标题相关 |
+| `txt-io/` | 文本导入导出 |
 | `world/` | 世界观 |
 | `writingFormula/` | 写法引擎 |
 
@@ -48,3 +53,4 @@
 ### Internal
 - 根 `AGENTS.md` 与 `server/src/AGENTS.md` 为权威规范
 - `server/src/prompting/` — Prompt 入口(产品级 prompt 必须走这里)
+- `server/src/orchestration/` — 编排执行层(agent/graph/pipeline/runtime)

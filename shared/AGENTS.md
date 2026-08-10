@@ -1,5 +1,5 @@
 <!-- Parent: ../AGENTS.md -->
-<!-- Generated: 2026-06-26 | Updated: 2026-06-26 -->
+<!-- Generated: 2026-06-26 | Updated: 2026-08-08 -->
 
 # shared
 
@@ -17,7 +17,8 @@
 ## Subdirectories
 | Directory | Purpose |
 |-----------|---------|
-| `types/` | 按域拆分的共享类型(agent / api / chapter / character / creativeHub / director / image / llm / novel / world 等 47 个文件) |
+| `types/` | 按域拆分的共享类型(agent / api / chapter / character / creativeHub / director / image / llm / novel / world 等,含 `directorRuntime/` 子目录) |
+| `utils/` | 共享工具函数(`text.ts` 等) |
 
 ## For AI Agents
 

@@ -1,5 +1,5 @@
 <!-- Parent: ../AGENTS.md -->
-<!-- Generated: 2026-06-26 | Updated: 2026-06-26 -->
+<!-- Generated: 2026-06-26 | Updated: 2026-08-08 -->
 
 # desktop
 
@@ -19,6 +19,7 @@
 | `builder/` | electron-builder 资源(图标等;含生成的 `app-icon-*.png`) |
 | `scripts/` | 构建/发布/校验 CJS 脚本(stage-desktop / run-electron-builder / publish-desktop-* / verify-desktop-*) |
 | `src/` | TypeScript 源码(main / preload / runtime)(see `src/AGENTS.md`) |
+| `tests/` | 桌面端测试(helpers / runtime) |
 | `src/runtime/` | 桌面端 server、state、updater、logging、paths、dataImport |
 | `src/@types/electron/` | Electron 类型补充 |
 | `src/@types/electron-updater/` | electron-updater 类型补充(stub) |

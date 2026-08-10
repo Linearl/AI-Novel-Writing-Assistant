@@ -1,7 +1,7 @@
-<!-- Parent: ../../AGENTS.md -->
-<!-- Generated: 2026-06-26 | Updated: 2026-06-26 -->
+<!-- Parent: ../AGENTS.md -->
+<!-- Generated: 2026-06-26 | Updated: 2026-08-08 -->
 
-# docs/wiki/prompts
+# docs/4.misc/wiki/prompts
 
 ## Purpose
 记录 Prompt Registry 规则、structured output schema 约定、JSON repair 边界与生成质量守卫。这是产品级 prompt 治理的"为什么这样设计"的档案。
@@ -24,7 +24,7 @@
 ### Approved Exceptions
 - `server/src/llm/structuredInvoke.ts` 内的 JSON repair
 - `server/src/llm/connectivity.ts` 内的连通性探针
-- `graphs/*`、`routes/chat.ts`、`services/novel/runtime/*` 等流桥接代码中暂留的 phase-two flow adapter
+- `server/src/orchestration/graph/*`、`routes/chat.ts`、`services/novel/runtime/*` 等流桥接代码中暂留的 phase-two flow adapter
 
 ### Naming & Registration
 - 命名与注册流程遵循 `server/src/prompting/README.md`

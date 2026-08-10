@@ -1,7 +1,7 @@
-<!-- Parent: ../../AGENTS.md -->
-<!-- Generated: 2026-06-26 | Updated: 2026-06-26 -->
+<!-- Parent: ../AGENTS.md -->
+<!-- Generated: 2026-06-26 | Updated: 2026-08-08 -->
 
-# docs/wiki/architecture
+# docs/4.misc/wiki/architecture
 
 ## Purpose
 记录架构设计、模块边界与依赖方向的稳定知识。聚焦"为什么这样切分"和"哪些边界不能跨越",而非具体的实现细节。
@@ -28,9 +28,9 @@
 - 用失败模式 / 相关模块段交叉指代其他 Wiki 条目
 
 ### Related Wiki
-- `docs/wiki/workflows/` — 工作流契约
-- `docs/wiki/prompts/` — Prompt 治理
-- `docs/wiki/rag/` — 上下文装配
+- `docs/4.misc/wiki/workflows/` — 工作流契约
+- `docs/4.misc/wiki/prompts/` — Prompt 治理
+- `docs/4.misc/wiki/rag/` — 上下文装配
 
 ## Dependencies
 

@@ -1,31 +1,28 @@
 <!-- Parent: ../AGENTS.md -->
-<!-- Generated: 2026-06-26 | Updated: 2026-06-26 -->
+<!-- Generated: 2026-06-26 | Updated: 2026-08-08 -->
 
 # server/src
 
 ## Purpose
-服务端 TypeScript 源码根目录。所有业务模块、平台基础设施、LLM 编排、Prompt Registry、routes 等都从这里发出。
+服务端 TypeScript 源码根目录。业务模块、平台基础设施、LLM 编排、Prompt Registry、orchestration 等全部从这里发出。
 
 ## Subdirectories
 | Directory | Purpose |
 |-----------|---------|
-| `app.ts` | Express 应用启动入口 |
 | `config/` | 环境配置、Provider 配置、路由常量等 |
-| `agents/` | Agent 目录(chat/character/genre/rag/knowledge/styleEngine/storyMode/writingFormula/tasks 等)(see `agents/AGENTS.md`) |
-| `chains/` | LangChain chain 组合 |
-| `creativeHub/` | Creative Hub 后端能力(对话、追问、规划、工具调用、状态卡片) |
-| `db/` | Prisma client 初始化、seed、查询工具 |
-| `events/` | 事件总线与副作用处理(handlers/sideEffects) |
-| `graphs/` | LangGraph 图编排(auto-director 流水线等) |
-| `llm/` | LLM 客户端工厂、Provider、流式、structured invoke、连通性、用法追踪(see `llm/AGENTS.md`) |
+| `data/` | 静态规则数据(antiAiRules YAML 等)(see `data/AGENTS.md`) |
+| `db/` | Prisma client 初始化、seed、restore、运行时迁移、SQLite 工具 |
+| `events/` | 事件总线与副作用处理(EventBus / handlers / sideEffects) |
+| `llm/` | LLM 客户端工厂、Provider、流式、structured invoke、fallback、用量追踪(see `llm/AGENTS.md`) |
 | `middleware/` | Express 中间件 |
-| `modules/` | 模块化业务入口(novel/export/setup/timeline,每个模块自带 `http/`)(see `modules/AGENTS.md`) |
-| `platform/` | 平台基础设施(logging 等) |
+| `modules/` | 模块化业务入口(novel/chat/creativeHub/tasks/settings 等,每个模块自带 `http/`)(see `modules/AGENTS.md`) |
+| `orchestration/` | 编排层:agent runtime、LangGraph 图、director pipeline、章节运行时(see `orchestration/AGENTS.md`) |
+| `platform/` | 平台基础设施:DI、日志、安全、加密、JSON 工具(see `platform/AGENTS.md`) |
 | `prisma/` | Prisma schema 与迁移(see `prisma/AGENTS.md`) |
 | `prompting/` | Prompt Registry、PromptAsset、上下文/工作流定义(see `prompting/AGENTS.md`) |
-| `routes/` | Express 路由(正逐步收敛到各模块 `http/` 入口) |
-| `runtime/` | Runtime orchestrator、planner、tool registry、trace store(see `runtime/AGENTS.md`) |
-| `services/` | 业务服务层(`novel/` 为主,含 director/runtime/production/planning/state/characters 等)(see `services/AGENTS.md`) |
+| `routes/` | 遗留 Express 路由(已基本收敛到模块 `http/`)(see `routes/AGENTS.md`) |
+| `runtime/` | 轻量运行时辅助(appPaths / memoryTelemetry)(see `runtime/AGENTS.md`) |
+| `services/` | 业务服务层(领域逻辑)(see `services/AGENTS.md`) |
 | `types/` | 服务端内部类型 |
 | `workers/` | 后台 worker |
 
@@ -43,8 +40,7 @@
 - 收敛到顶层:`app/`(启动 + 路由挂载)、`platform/`(db/llm/events/runtime/config 基础设施)、`modules/`(产品能力)
 - 业务模块围绕整本完成工作流组织:`setup` / `planning` / `production` / `director` / `characters` / `state` / `export`
 - `routes/` → 模块自有 `http/` 入口
-- `services/novel/` 根只保留 facade 和稳定共享入口
-- `services/novel/director/` 收敛为 `commands` / `runtime` / `state` / `automation` / `projections` / `recovery` / `phases`
+- 编排逻辑归属 `orchestration/`(agent / graph / pipeline / runtime),`services/` 只保留领域业务
 
 ### AI-First Rule (来自根 AGENTS.md)
 - 这是 AI-native 项目;意图识别/任务分类/规划/路由/工具选择等决策路径必须以 AI 结构化理解为主

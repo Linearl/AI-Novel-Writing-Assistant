@@ -1,6 +1,6 @@
 # 安全规则
 <!-- 父级: (根级，无父级) -->
-<!-- 生成: 2026-06-26 | 更新: 2026-06-28 -->
+<!-- 生成: 2026-06-26 | 更新: 2026-08-08 -->
 <!-- 备份: docs/4.misc/backup/AGENTS.md.backup-2026-06-28 -->
 
 ## 项目概况
@@ -83,13 +83,13 @@
 
 ## 详细规则索引
 
-以下章节已迁移到 `docs/wiki/`，按需查阅：
+以下章节已迁移到 `docs/4.misc/wiki/`，按需查阅：
 
 | 主题 | 位置 |
 | --- | --- |
-| Wiki 编写规范 | [`docs/wiki/README.md`](docs/wiki/README.md) |
-| 开发分支工作流（含 Beta / 桌面分支） | [`docs/wiki/workflows/branch-workflow.md`](docs/wiki/workflows/branch-workflow.md) |
-| Release Notes 工作流 + 发布标识规则 | [`docs/wiki/workflows/release-notes-workflow.md`](docs/wiki/workflows/release-notes-workflow.md) |
-| 桌面打包上传规则 | [`docs/wiki/workflows/desktop-release-versioning.md`](docs/wiki/workflows/desktop-release-versioning.md) |
-| 验证复用规则 | [`docs/wiki/workflows/verification-reuse.md`](docs/wiki/workflows/verification-reuse.md) |
+| Wiki 编写规范 | [`docs/4.misc/wiki/README.md`](docs/4.misc/wiki/README.md) |
+| 开发分支工作流（含 Beta / 桌面分支） | [`docs/4.misc/wiki/workflows/branch-workflow.md`](docs/4.misc/wiki/workflows/branch-workflow.md) |
+| Release Notes 工作流 + 发布标识规则 | [`docs/4.misc/wiki/workflows/release-notes-workflow.md`](docs/4.misc/wiki/workflows/release-notes-workflow.md) |
+| 桌面打包上传规则 | [`docs/4.misc/wiki/workflows/desktop-release-versioning.md`](docs/4.misc/wiki/workflows/desktop-release-versioning.md) |
+| 验证复用规则 | [`docs/4.misc/wiki/workflows/verification-reuse.md`](docs/4.misc/wiki/workflows/verification-reuse.md) |
 | 架构规则（文件大小、目录组织、模块化） | [`CLAUDE.md`](CLAUDE.md)「关键架构约束」章节 |

@@ -1,5 +1,5 @@
-<!-- Parent: ../../AGENTS.md -->
-<!-- Generated: 2026-06-26 | Updated: 2026-06-26 -->
+<!-- Parent: ../AGENTS.md -->
+<!-- Generated: 2026-06-26 | Updated: 2026-08-08 -->
 
 # server/src/prompting/prompts
 
@@ -42,4 +42,4 @@
 ### Internal
 - `server/src/prompting/AGENTS.md` — 注册与治理规则
 - `server/src/prompting/registry.ts` — 注册表
-- `docs/wiki/prompts/` — 设计原理
+- `docs/4.misc/wiki/prompts/` — 设计原理

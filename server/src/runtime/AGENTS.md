@@ -1,38 +1,28 @@
 <!-- Parent: ../AGENTS.md -->
-<!-- Generated: 2026-06-26 | Updated: 2026-06-26 -->
+<!-- Generated: 2026-06-26 | Updated: 2026-08-08 -->
 
 # server/src/runtime
 
 ## Purpose
-Runtime orchestrator、Planner、Tool Registry、Trace Store、approval policy、catalog。AI agent 与 tool 调用的执行引擎。
+轻量运行时辅助 — 应用路径常量与内存遥测。历史上在此的 Runtime orchestrator / Planner / Tool Registry / Trace Store 已收敛到 `server/src/orchestration/agent/`(见 `orchestration/AGENTS.md`)。
 
 ## Key Files
 | File | Description |
 |------|-------------|
-| `orchestrator.ts` | Runtime 编排器 |
-| `index.ts` | Runtime 入口 |
-| `approvalPolicy.ts` | 审批策略 |
-| `catalog.ts` | Agent catalog |
-| `toolRegistry.ts` | 工具注册表 |
-| `traceStore.ts` | Trace 存储(运行时追踪) |
-| `types.ts` | Runtime 类型 |
-
-## Subdirectories
-| Directory | Purpose |
-|-----------|---------|
-| `planner/` | Runtime 内嵌 Planner(可能未充分填充) |
-| `tools/` | Runtime 内嵌 Tools(可能未充分填充) |
+| `appPaths.ts` | 应用路径常量 |
+| `memoryTelemetry.ts` | 内存遥测 |
 
 ## For AI Agents
 
 ### Working In This Directory
-- Runtime 与 auto-director / Creative Hub 强相关 — 改动需看 `docs/wiki/workflows/auto-director-runtime.md` 与 `creative-hub-boundary.md`
-- 任何工具注册变更先在 `docs/wiki/architecture/` 留 entry
-- planner/tools 子目录若为空,先确认是否需要填充,不要凭想当然加新文件
+- 本目录只保留无依赖的轻量辅助;任何编排/工具注册/运行逻辑放到 `server/src/orchestration/`
+- 新增运行时能力先确认归属:orchestration(编排) vs 本目录(纯辅助)
 
 ## Dependencies
 
 ### Internal
+- `server/src/orchestration/` — 编排层(原 runtime orchestrator 的归属)
 - 根 `AGENTS.md` 是最高优先级
-- `docs/wiki/workflows/auto-director-runtime.md`
-- `docs/wiki/workflows/creative-hub-boundary.md`
+
+### External
+- 无

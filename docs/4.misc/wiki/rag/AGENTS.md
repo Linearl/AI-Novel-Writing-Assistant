@@ -1,7 +1,7 @@
-<!-- Parent: ../../AGENTS.md -->
-<!-- Generated: 2026-06-26 | Updated: 2026-06-26 -->
+<!-- Parent: ../AGENTS.md -->
+<!-- Generated: 2026-06-26 | Updated: 2026-08-08 -->
 
-# docs/wiki/rag
+# docs/4.misc/wiki/rag
 
 ## Purpose
 记录知识库与上下文装配规则:embedding、向量检索、上下文组装、世界观/角色/章节/写法/连续性如何被喂给 LLM。
@@ -22,5 +22,5 @@
 ## Dependencies
 
 ### Internal
-- `docs/wiki/architecture/world-context-gateway.md`
+- `docs/4.misc/wiki/architecture/world-context-gateway.md`
 - `server/src/services/rag/` — 实际 RAG 实现

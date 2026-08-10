@@ -1,5 +1,5 @@
-<!-- Parent: ../../../AGENTS.md -->
-<!-- Generated: 2026-06-26 | Updated: 2026-06-26 -->
+<!-- Parent: ../AGENTS.md -->
+<!-- Generated: 2026-06-26 | Updated: 2026-08-08 -->
 
 # server/src/prompting
 
@@ -36,7 +36,7 @@
 ### Approved Exceptions
 - `server/src/llm/structuredInvoke.ts` 内的 JSON repair
 - `server/src/llm/connectivity.ts` 内的连通性探针
-- `graphs/*`、`routes/chat.ts`、`services/novel/runtime/*` 等流桥接代码中 phase-two flow adapter
+- `server/src/orchestration/graph/*`、`server/src/routes/chat.ts`、`services/novel/runtime/*` 等流桥接代码中 phase-two flow adapter
 
 ### Migration Default
 - 触碰老的未注册 prompt 路径时,默认**迁移到本目录**而不是扩展老的内联实现
@@ -48,5 +48,5 @@
 
 ### Internal
 - 根 `AGENTS.md` "Prompt Governance" 是最高优先级
-- `docs/wiki/prompts/prompt-registry-and-structured-output.md` — 设计原理
+- `docs/4.misc/wiki/prompts/prompt-registry-and-structured-output.md` — 设计原理
 - `server/src/llm/structuredInvoke.ts` — 结构化调用实现
