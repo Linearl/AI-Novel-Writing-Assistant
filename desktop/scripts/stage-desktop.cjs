@@ -163,9 +163,12 @@ if (process.env.AI_NOVEL_RUNTIME === "desktop") {
   var path = require("path");
 
   // 从 asar 复制种子数据库（始终覆盖，因为旧数据库可能有损坏的迁移记录）
-  // process.cwd() 已经是 data 目录，所以直接使用 appDataDir/dev.db
+  // server 进程 cwd 已被 desktop runtime 设为 <appDataDir>/data（含 data 层级）
   var appDataDir = process.env.AI_NOVEL_APP_DATA_DIR || process.cwd();
-  var dbPath = path.join(appDataDir, "dev.db");
+  var dbPath = path.join(process.cwd(), "dev.db");
+  if (!fs.existsSync(path.dirname(dbPath))) {
+    dbPath = path.join(appDataDir, "data", "dev.db");
+  }
   var seedDb = path.join(__dirname, "..", "..", "..", "..", "dist", "seed-dev.db");
   if (fs.existsSync(seedDb)) {
     fs.mkdirSync(path.dirname(dbPath), { recursive: true });
