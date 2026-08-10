@@ -208,13 +208,28 @@ async function main() {
     throw new Error("GitHub token is missing. Set GH_TOKEN or GITHUB_TOKEN.");
   }
 
-  const release = await githubRequest({
-    owner,
-    repo,
-    token,
-    method: "GET",
-    path: `/releases/tags/${encodeURIComponent(tagName)}`,
-  });
+  // GitHub API 对刚创建的 release 有最终一致性延迟（可能 404），且 draft release 需先发布。
+  // 重试最多 12 次 × 15 秒 = 3 分钟。
+  let release = null;
+  for (let attempt = 1; attempt <= 12; attempt += 1) {
+    try {
+      release = await githubRequest({
+        owner,
+        repo,
+        token,
+        method: "GET",
+        path: `/releases/tags/${encodeURIComponent(tagName)}`,
+      });
+      break;
+    } catch (error) {
+      const is404 = error && (error.statusCode === 404 || /404/.test(String(error.message)));
+      if (!is404 || attempt === 12) {
+        throw error;
+      }
+      console.log(`[desktop-release-notes] release ${tagName} not ready yet (attempt ${attempt}/12), retrying in 15s...`);
+      await new Promise((resolve) => setTimeout(resolve, 15000));
+    }
+  }
 
   await githubRequest({
     owner,
