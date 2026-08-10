@@ -60,6 +60,11 @@ module.exports = {
       to: "client",
       filter: ["**/*"],
     },
+    {
+      from: "build/resources/node_modules",
+      to: "node_modules",
+      filter: ["**/*"],
+    },
   ],
   asar: true,
   asarUnpack: [

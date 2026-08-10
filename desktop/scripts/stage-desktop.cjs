@@ -821,6 +821,56 @@ function main() {
   syncPrismaRuntime();
   detachStagedNativePackages();
 
+  // 将 server 生产依赖复制到 resources/node_modules（asar 外部，供运行时 NODE_PATH require）。
+  // 便携版/安装包运行时通过 NODE_PATH 指向 resources/node_modules 加载 better-sqlite3 等原生模块。
+  // 顺序：先在 build/app（有 package.json）重建原生模块，再复制（保证 .node 编译产物在副本中）。
+  const externalNodeModulesSrc = stagedNodeModulesDir;
+  const externalNodeModulesDest = path.join(resourcesDir, "node_modules");
+  console.log("[stage:desktop] rebuilding native modules in staged app (better-sqlite3)...");
+  try {
+    const rebuildCliCandidates = [
+      path.join(repoRoot, "node_modules", ".pnpm", "@electron+rebuild@4.0.3", "node_modules", "@electron", "rebuild", "lib", "cli.js"),
+      path.join(repoRoot, "node_modules", "@electron", "rebuild", "lib", "cli.js"),
+    ];
+    const rebuildCli = rebuildCliCandidates.find((candidate) => fs.existsSync(candidate));
+    if (rebuildCli) {
+      execFileSync(process.execPath, [
+        rebuildCli,
+        "--version", "35.7.5",
+        "--arch", "x64",
+        "--module-dir", appDir,
+        "--only", "better-sqlite3",
+        "--force",
+      ], {
+        cwd: appDir,
+        stdio: "inherit",
+        env: process.env,
+      });
+      console.log("[stage:desktop] native modules rebuilt in staged app");
+    } else {
+      console.warn("[stage:desktop] WARNING: cannot locate @electron/rebuild CLI, skipping native rebuild");
+    }
+  } catch (rebuildErr) {
+    console.warn(`[stage:desktop] WARNING: native module rebuild failed (non-fatal): ${rebuildErr.message}`);
+  }
+
+  console.log("[stage:desktop] copying app node_modules to resources/node_modules (asar-external runtime deps)...");
+  if (fs.existsSync(externalNodeModulesSrc)) {
+    fs.rmSync(externalNodeModulesDest, { recursive: true, force: true });
+    if (process.platform === "win32") {
+      try {
+        execFileSync("robocopy", [externalNodeModulesSrc, externalNodeModulesDest, "/E", "/COPY:DAT", "/R:1", "/W:1", "/NFL", "/NDL", "/NJH", "/NJS"], { stdio: "pipe" });
+      } catch (err) {
+        if (err.status === undefined || err.status > 7) throw err;
+      }
+    } else {
+      fs.cpSync(externalNodeModulesSrc, externalNodeModulesDest, { recursive: true, force: true });
+    }
+    console.log(`[stage:desktop] resources/node_modules staged (${externalNodeModulesDest})`);
+  } else {
+    console.warn(`[stage:desktop] WARNING: ${externalNodeModulesSrc} not found, asar-external node_modules skipped`);
+  }
+
   assertExists(desktopMainEntry, "desktop main bundle");
   assertExists(serverEntry, "bundled server entry");
   assertExists(path.join(clientTargetDir, "index.html"), "bundled renderer entry");
