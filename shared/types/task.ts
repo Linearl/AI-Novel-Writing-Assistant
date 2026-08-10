@@ -36,6 +36,20 @@ export interface TaskTokenUsageSummary {
   lastRecordedAt?: string | null;
 }
 
+export interface StepTokenUsageSummary {
+  stepType: string;
+  inputTokens: number;
+  outputTokens: number;
+  totalTokens: number;
+  callCount: number;
+  percentage: number;
+}
+
+export interface NovelTokenStatsResponse {
+  total: TaskTokenUsageSummary;
+  byStep: StepTokenUsageSummary[];
+}
+
 export interface UnifiedTaskStep {
   key: string;
   label: string;

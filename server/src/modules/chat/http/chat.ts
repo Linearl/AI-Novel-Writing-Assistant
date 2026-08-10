@@ -14,6 +14,7 @@ import {
   isMiniMaxCompatibleProvider,
 } from "../../../llm/reasoning";
 import { initSSE, writeSSEFrame } from "../../../llm/streaming";
+import { runWithLlmUsageTracking } from "../../../llm/usageTracking";
 import { authMiddleware } from "../../../middleware/auth";
 import { validate } from "../../../middleware/validate";
 import { ragServices } from "../../../services/rag";
@@ -231,6 +232,11 @@ router.post("/", validate({ body: chatSchema }), async (req, res, next) => {
       }),
     ];
 
+    const trackingContext = body.novelId
+      ? { novelId: body.novelId, stepType: "chat" as const }
+      : null;
+
+    const doStream = async () => {
     const stream = await llm.stream(messages);
     const disposeHeartbeat = initSSE(res);
     let fullContent = "";
@@ -309,6 +315,13 @@ router.post("/", validate({ body: chatSchema }), async (req, res, next) => {
       if (!res.writableEnded) {
         res.end();
       }
+    }
+    }; // end doStream
+
+    if (trackingContext) {
+      await runWithLlmUsageTracking(trackingContext, doStream);
+    } else {
+      await doStream();
     }
   } catch (error) {
     next(error);

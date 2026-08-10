@@ -3479,6 +3479,7 @@ model LlmTokenUsage {
   novelId         String
   chapterId       String?
   promptName      String
+  stepType        String?  // draft|repair|review|outline|planning|style|chat|tool|character
   provider        String
   model           String
   inputTokens     Int
@@ -3491,6 +3492,7 @@ model LlmTokenUsage {
   createdAt       DateTime @default(now())
 
   @@index([novelId, recordedAt])
+  @@index([novelId, stepType, recordedAt])
   @@index([provider, recordedAt])
   @@index([promptName, recordedAt])
   @@index([recordedAt])

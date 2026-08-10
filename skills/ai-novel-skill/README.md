@@ -17,9 +17,20 @@
 | 质量检查 | ⚠️ 基础 | ✅ 多层次 |
 | 连续性管理 | ⚠️ 基础事实 | ✅ 事实+伏笔+资源+动态 |
 | 写法资产 | ❌ 无 | ✅ 特征提取+复用 |
-| 跨书图谱 | ✅ 有 | ❌ 暂不做 |
+| 跨书图谱 | ✅ 有 | ✅ 完整蒸馏 |
+| Python 脚本 | ✅ 9 个 | ✅ 10 个 |
 
 ## 快速开始
+
+### 环境准备
+
+```bash
+# 安装依赖
+pip install -r requirements.txt
+
+# 验证安装
+python scripts/novelctl.py --help
+```
 
 ### 从灵感开始
 
@@ -84,8 +95,10 @@ ai-novel-skill/
 ├── SKILL.md                    # Skill 主入口
 ├── AGENTS.md                   # AI 协作规范
 ├── README.md                   # 本文件
+├── GUIDE.md                    # 用户使用指南
+├── COMPATIBILITY.md            # 兼容性报告
 ├── requirements.txt            # Python 依赖
-├── references/                 # 能力契约文档
+├── references/                 # 能力契约文档（24个）
 │   ├── novel-brief.md         # 小说创建流程
 │   ├── character-preparation.md
 │   ├── story-and-volume-planning.md
@@ -97,17 +110,22 @@ ai-novel-skill/
 │   ├── token-usage.md
 │   ├── auto-director.md
 │   ├── workflow-routing.md
-│   └── artifact-contracts.md
-├── scripts/                    # Python 脚本
-│   ├── novelctl.py            # 小说状态控制
-│   ├── continuity_store.py    # 连续性存储
-│   ├── quality_checker.py     # 质量检查
-│   ├── book_analysis.py       # 拆书分析
-│   ├── writing_extractor.py   # 写法提取
-│   ├── token_usage.py         # Token 用量
-│   └── export_novel_txt.py    # 导出 TXT
-├── templates/                  # 模板文件
-└── examples/                   # 示例
+│   ├── artifact-contracts.md
+│   ├── cross-book-asset-graph.md  # 跨书资产图谱
+│   └── ...
+├── scripts/                    # Python 脚本（10个）
+│   ├── novelctl.py            # 工作区管理（6个命令）
+│   ├── continuity_store.py    # 连续性管理（4个命令）
+│   ├── asset_graph.py         # 跨书资产图谱（7个命令）
+│   ├── analysis_retrieval.py  # 分析检索（5个命令）
+│   ├── token_usage.py         # Token 统计（4个命令）
+│   ├── export_novel_txt.py    # TXT 导出
+│   ├── check_continuity_workspace.py  # 工作区检查
+│   ├── sync_skill_mirror.py   # Skill 镜像同步
+│   ├── trend_snapshot.py      # 热点趋势分析
+│   └── __init__.py
+├── templates/                  # 模板文件（12个）
+└── examples/                   # 示例小说（8个）
 ```
 
 ## 使用前提

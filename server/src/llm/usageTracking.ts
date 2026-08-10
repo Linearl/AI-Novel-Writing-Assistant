@@ -19,6 +19,7 @@ export interface LlmUsageTrackingContext {
   directorRunId?: string | null;
   directorStepIdempotencyKey?: string | null;
   directorNodeKey?: string | null;
+  stepType?: string | null;
 }
 
 export interface LlmUsageTrackingMeta {
@@ -196,6 +197,7 @@ export function runWithLlmUsageTracking<T>(
         context.directorStepIdempotencyKey,
       ),
       directorNodeKey: mergeContextValue(current?.directorNodeKey, context.directorNodeKey),
+      stepType: mergeContextValue(current?.stepType, context.stepType),
     },
     runner,
   );
@@ -285,7 +287,7 @@ export async function recordTrackedLlmUsage(
   if (!context) {
     return;
   }
-  if (!context?.workflowTaskId && !context?.generationJobId) {
+  if (!context?.novelId && !context?.workflowTaskId && !context?.generationJobId) {
     if (!context?.styleExtractionTaskId && context?.directorTelemetry !== true) {
       return;
     }
@@ -301,6 +303,7 @@ export async function recordTrackedLlmUsage(
         novelId,
         chapterId: promptMeta?.chapterId ?? null,
         promptName: promptMeta?.promptId ?? record?.meta?.taskType ?? "unnamed",
+        stepType: context.stepType ?? null,
         provider: typeof record?.meta?.provider === "string" ? record.meta.provider : "unknown",
         model: record?.meta?.model ?? "unknown",
         inputTokens: usage.promptTokens,

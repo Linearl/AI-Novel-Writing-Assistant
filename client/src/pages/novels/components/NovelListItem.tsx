@@ -5,7 +5,7 @@ import type {
   DirectorBookAutomationProjection,
 } from "@ai-novel/shared";
 import { Link } from "react-router-dom";
-import { BookOpen, Gauge } from "lucide-react";
+import { BookOpen, Gauge, Sparkles } from "lucide-react";
 import type { NovelListItem as NovelListItemData } from "@/api/novel/shared";
 import AICockpit from "@/components/autoDirector/AICockpit";
 import { Badge } from "@/components/ui/badge";
@@ -259,6 +259,13 @@ export default function NovelListItem(props: NovelListItemProps) {
             <Link to={`/novels/${novel.id}/preview`} onClick={StopCardClick}>
               <BookOpen className="h-4 w-4" aria-hidden="true" />
               预览
+            </Link>
+          </Button>
+
+          <Button asChild size="sm" variant="outline">
+            <Link to={`/creative-hub?novelId=${novel.id}`} onClick={StopCardClick}>
+              <Sparkles className="h-4 w-4" aria-hidden="true" />
+              创作中枢
             </Link>
           </Button>
 

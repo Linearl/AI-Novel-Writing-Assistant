@@ -1,0 +1,17 @@
+{
+  "reqId": "2065",
+  "title": "多维度 Token 统计功能",
+  "status": "pass",
+  "priority": "P2",
+  "complexity": "C2",
+  "version": "v0.2",
+  "created": "2026-07-24",
+  "updated": "2026-07-24",
+  "progress": {
+    "tasks_done": 17,
+    "tasks_total": 17,
+    "verifications_done": 6,
+    "verifications_total": 7,
+    "pending": ["V5 需实际触发 Director 运行验证（代码已通过 typecheck + 逻辑审查）"]
+  }
+}

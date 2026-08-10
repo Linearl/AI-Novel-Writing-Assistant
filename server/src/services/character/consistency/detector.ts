@@ -1,4 +1,5 @@
 import { invokeStructuredLlm } from "../../../llm/structuredInvoke";
+import { runWithLlmUsageTracking } from "../../../llm/usageTracking";
 import { contradictionDetectPrompt } from "./prompts";
 import type { CharacterConsistencyContradiction, ContradictionType, CharacterConsistencyStateRecord } from "./types";
 import type { ContradictionDetectionOutput } from "./schemas";
@@ -224,7 +225,9 @@ export async function detectContradictions(
   ).map((c) => ({ ...c, novelId }));
 
   // LLM-based detection (semantic, deep)
-  const llmOutput = await detectByLLM(characterName, chapterNumber, newState, historicalStates);
+  const llmOutput = await runWithLlmUsageTracking({ novelId, stepType: "character" }, () =>
+    detectByLLM(characterName, chapterNumber, newState, historicalStates),
+  );
 
   const llmContradictions: CharacterConsistencyContradiction[] = llmOutput.contradictions.map((c) => ({
     id: "",

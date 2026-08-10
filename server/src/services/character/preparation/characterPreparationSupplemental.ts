@@ -27,6 +27,7 @@ import { buildStoryModePromptBlock, normalizeStoryModeOutput } from "../../story
 import { parseCharacterProhibitionsJson } from "../arc/characterHardFacts";
 import { WorldContextGateway } from "../../novel/worldContext/WorldContextGateway";
 import { invokeStructuredLlm } from "../../../llm/structuredInvoke";
+import { runWithLlmUsageTracking } from "../../../llm/usageTracking";
 import type { LLMProvider } from "@ai-novel/shared";
 import { z } from "zod";
 
@@ -410,22 +411,24 @@ export class CharacterPreparationSupplementalService {
       console.log(`[supplemental] 校验第 ${round + 1} 轮：发现非法人名 ${invalidNames.join("、")}，请求 LLM 修正`);
 
       // 用 LLM 从描述文本中提取人名并一起校验
-      const textNamesResult = await invokeStructuredLlm<{ names: string[] }>({
-        systemPrompt: characterPrepNameExtractionSystemPrompt,
-        userPrompt: normalizedCandidates.map((c) => [
-          `角色名：${c.name}`,
-          `摘要：${c.summary}`,
-          `背景：${c.background}`,
-          `故事作用：${c.storyFunction}`,
-          `与主角关系：${c.relationToProtagonist}`,
-        ].join("\n")).join("\n---\n"),
-        schema: nameExtractionSchema,
-        label: "novel.character.supplemental.name-extract",
-        taskType: "planner",
-        temperature: 0,
-        provider: options?.provider as LLMProvider | undefined,
-        model: options?.model,
-      }).catch(() => ({ names: [] }));
+      const textNamesResult = await runWithLlmUsageTracking({ novelId, stepType: "character" }, () =>
+        invokeStructuredLlm<{ names: string[] }>({
+          systemPrompt: characterPrepNameExtractionSystemPrompt,
+          userPrompt: normalizedCandidates.map((c) => [
+            `角色名：${c.name}`,
+            `摘要：${c.summary}`,
+            `背景：${c.background}`,
+            `故事作用：${c.storyFunction}`,
+            `与主角关系：${c.relationToProtagonist}`,
+          ].join("\n")).join("\n---\n"),
+          schema: nameExtractionSchema,
+          label: "novel.character.supplemental.name-extract",
+          taskType: "planner",
+          temperature: 0,
+          provider: options?.provider as LLMProvider | undefined,
+          model: options?.model,
+        }).catch(() => ({ names: [] })),
+      );
 
       const allInvalidFromText = textNamesResult.names.filter((n) => !validNames.has(n));
       const allInvalid = [...new Set([...invalidNames, ...allInvalidFromText])];
@@ -440,16 +443,18 @@ export class CharacterPreparationSupplementalService {
       }, { blocks: [], selectedBlockIds: [], droppedBlockIds: [], summarizedBlockIds: [], estimatedInputTokens: 0 });
       const repairSystemPrompt = repairMessages.find((m) => m._getType() === "system")?.content ?? "";
       const repairUserPrompt = repairMessages.find((m) => m._getType() === "human")?.content ?? "";
-      const repairResult = await invokeStructuredLlm<SupplementalCharacterGenerationResponseParsed>({
-        systemPrompt: typeof repairSystemPrompt === "string" ? repairSystemPrompt : String(repairSystemPrompt),
-        userPrompt: typeof repairUserPrompt === "string" ? repairUserPrompt : String(repairUserPrompt),
-        schema: supplementalCharacterGenerationResponseSchema,
-        label: "novel.character.supplemental.repair",
-        taskType: "planner",
-        temperature: 0.2,
-        provider: options?.provider as LLMProvider | undefined,
-        model: options?.model,
-      }).catch(() => null);
+      const repairResult = await runWithLlmUsageTracking({ novelId, stepType: "character" }, () =>
+        invokeStructuredLlm<SupplementalCharacterGenerationResponseParsed>({
+          systemPrompt: typeof repairSystemPrompt === "string" ? repairSystemPrompt : String(repairSystemPrompt),
+          userPrompt: typeof repairUserPrompt === "string" ? repairUserPrompt : String(repairUserPrompt),
+          schema: supplementalCharacterGenerationResponseSchema,
+          label: "novel.character.supplemental.repair",
+          taskType: "planner",
+          temperature: 0.2,
+          provider: options?.provider as LLMProvider | undefined,
+          model: options?.model,
+        }).catch(() => null),
+      );
 
       if (repairResult?.candidates) {
         normalizedCandidates = repairResult.candidates
@@ -637,16 +642,18 @@ export class CharacterPreparationSupplementalService {
     const systemPrompt = refineMessages.find((m) => m._getType() === "system")?.content ?? characterRefineSystemPrompt;
     const userPrompt = refineMessages.find((m) => m._getType() === "human")?.content ?? "";
 
-    const result = await invokeStructuredLlm<SupplementalCharacterCandidate>({
-      systemPrompt: typeof systemPrompt === "string" ? systemPrompt : String(systemPrompt),
-      userPrompt: typeof userPrompt === "string" ? userPrompt : String(userPrompt),
-      schema: supplementalCharacterCandidateSchema,
-      label: "novel.character.supplemental.refine",
-      taskType: "planner",
-      temperature: 0.3,
-      provider: options?.provider as LLMProvider | undefined,
-      model: options?.model,
-    });
+    const result = await runWithLlmUsageTracking({ novelId, stepType: "character" }, () =>
+      invokeStructuredLlm<SupplementalCharacterCandidate>({
+        systemPrompt: typeof systemPrompt === "string" ? systemPrompt : String(systemPrompt),
+        userPrompt: typeof userPrompt === "string" ? userPrompt : String(userPrompt),
+        schema: supplementalCharacterCandidateSchema,
+        label: "novel.character.supplemental.refine",
+        taskType: "planner",
+        temperature: 0.3,
+        provider: options?.provider as LLMProvider | undefined,
+        model: options?.model,
+      }),
+    );
 
     // 确保姓名不被修改
     return { ...result, name: candidate.name };

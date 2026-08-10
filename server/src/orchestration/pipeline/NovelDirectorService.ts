@@ -279,6 +279,7 @@ export class NovelDirectorService {
       directorTelemetry: true,
       novelId: task?.novelId ?? null,
       directorRunId: task?.directorRun?.id ?? (normalizedTaskId || null),
+      stepType: 'director',
     };
   }
 

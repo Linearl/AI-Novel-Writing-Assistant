@@ -1,6 +1,7 @@
 import type { AgentRunDetail, ReplayRequest } from "@ai-novel/shared";
 import { createStructuredPlan } from "../orchestrator";
 import { AgentTraceStore } from "../traceStore";
+import { runWithLlmUsageTracking } from "../../../llm/usageTracking";
 import type {
   AgentApprovalDecisionInput,
   AgentRuntimeCallbacks,
@@ -145,7 +146,7 @@ export class AgentRuntime {
 
       let planner;
       try {
-        planner = await createStructuredPlan({
+        const planCall = () => createStructuredPlan({
           goal: input.goal,
           messages: input.messages ?? [],
           contextMode: input.contextMode,
@@ -157,6 +158,9 @@ export class AgentRuntime {
           currentRunStatus: "running",
           currentStep: "planning",
         });
+        planner = input.novelId
+          ? await runWithLlmUsageTracking({ novelId: input.novelId, stepType: "planning" }, planCall)
+          : await planCall();
       } catch (error) {
         const message = error instanceof Error ? error.message : "LLM 意图识别失败。";
         await this.store.addStep({
@@ -203,7 +207,7 @@ export class AgentRuntime {
         });
       }
 
-      return this.executor.runActionPlan(
+      const executePlan = () => this.executor.runActionPlan(
         run.id,
         input.goal,
         planner.actions,
@@ -219,6 +223,9 @@ export class AgentRuntime {
         this.failRun.bind(this),
         callbacks,
       );
+      return input.novelId
+        ? runWithLlmUsageTracking({ novelId: input.novelId, stepType: "tool" }, executePlan)
+        : executePlan();
     });
   }
 

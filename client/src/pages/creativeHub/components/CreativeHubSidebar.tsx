@@ -15,6 +15,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import CreativeHubNovelSetupCard from "./CreativeHubNovelSetupCard";
 import CreativeHubRunTracker from "./CreativeHubRunTracker";
+import CreativeHubTokenStatsPanel from "./CreativeHubTokenStatsPanel";
 import NovelProductionStarterCard from "./NovelProductionStarterCard";
 
 interface CreativeHubSidebarProps {
@@ -283,6 +284,8 @@ export default function CreativeHubSidebar({
             <CreativeHubRunTracker frames={trackerFrames} isRunning={!!isRunning} />
           </div>
         ) : null}
+
+        <CreativeHubTokenStatsPanel novelId={bindings.novelId ?? null} />
 
         <div className="rounded-2xl border border-border bg-muted p-3">
           <div className="mb-2 text-xs font-medium text-muted-foreground">资源绑定</div>

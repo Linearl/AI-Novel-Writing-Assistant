@@ -2,6 +2,7 @@ import type { IDatabase } from "../../platform/di";
 import { prisma } from "../../db/prisma";
 import { runStructuredPrompt } from "../../prompting/core/promptRunner";
 import { invokeStructuredLlm } from "../../llm/structuredInvoke";
+import { runWithLlmUsageTracking } from "../../llm/usageTracking";
 import {
   novelCharacterExtractionSystemPrompt,
 } from "../../prompting/prompts/novel/novelCharacterExtraction.prompts";
@@ -396,16 +397,18 @@ export class NovelCoreCharacterService {
     const systemPrompt = novelCharacterExtractionSystemPrompt;
     const userPrompt = `请从以下素材中提取所有角色和关系信息：\n\n---\n${outlineText.slice(0, 8000)}\n---`;
 
-    const result = await invokeStructuredLlm<z.infer<typeof zodImportCharactersWithRelationsSchema>>({
-      systemPrompt,
-      userPrompt,
-      schema: zodImportCharactersWithRelationsSchema,
-      label: "novel.character.import-from-outline",
-      taskType: "planner",
-      temperature: 0.2,
-      provider: options?.provider as LLMProvider | undefined,
-      model: options?.model,
-    });
+    const result = await runWithLlmUsageTracking({ novelId, stepType: "character" }, () =>
+      invokeStructuredLlm<z.infer<typeof zodImportCharactersWithRelationsSchema>>({
+        systemPrompt,
+        userPrompt,
+        schema: zodImportCharactersWithRelationsSchema,
+        label: "novel.character.import-from-outline",
+        taskType: "planner",
+        temperature: 0.2,
+        provider: options?.provider as LLMProvider | undefined,
+        model: options?.model,
+      }),
+    );
 
     const created: z.infer<typeof zodCharacterImportResult>[] = [];
     const nameToId = new Map<string, string>();

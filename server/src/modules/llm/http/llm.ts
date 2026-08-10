@@ -12,6 +12,8 @@ import { authMiddleware } from "../../../middleware/auth";
 import { AppError } from "../../../middleware/errorHandler";
 import { validate } from "../../../middleware/validate";
 import { evictSharedLimiters, getSharedLimiterCount } from "../../../llm/requestLimiter";
+import { listNovelTokenUsageByNovelIds } from "../../../services/novel/novelTokenUsageSummary";
+import { getNovelTokenUsageByStep } from "../../../services/novel/novelTokenUsageByStep";
 
 const router = Router();
 
@@ -315,6 +317,48 @@ router.get(
           },
         },
         message: "Token 用量查询完成。",
+      };
+      res.status(200).json(response);
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+/**
+ * GET /api/llm/novels/:novelId/token-stats
+ * 返回小说的 Token 统计：总量 + 按步骤分组
+ */
+router.get(
+  "/novels/:novelId/token-stats",
+  authMiddleware,
+  async (req, res, next) => {
+    try {
+      const novelId = Array.isArray(req.params.novelId) ? req.params.novelId[0] : req.params.novelId;
+      if (!novelId?.trim()) {
+        throw new AppError("novelId 不能为空。", 400);
+      }
+
+      const [totalMap, byStep] = await Promise.all([
+        listNovelTokenUsageByNovelIds([novelId]),
+        getNovelTokenUsageByStep(novelId),
+      ]);
+
+      const total = totalMap.get(novelId) ?? {
+        promptTokens: 0,
+        completionTokens: 0,
+        totalTokens: 0,
+        llmCallCount: 0,
+        lastRecordedAt: null,
+      };
+
+      const response: ApiResponse<{
+        total: typeof total;
+        byStep: typeof byStep;
+      }> = {
+        success: true,
+        data: { total, byStep },
+        message: "Token 统计查询完成。",
       };
       res.status(200).json(response);
     } catch (error) {

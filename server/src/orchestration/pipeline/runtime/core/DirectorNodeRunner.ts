@@ -16,6 +16,16 @@ function buildNodeIdempotencyKey(input: {
   return `${input.taskId}:${input.nodeKey}:${input.targetType ?? "global"}:${input.targetId ?? "global"}`;
 }
 
+function mapNodeKeyToStepType(nodeKey: string | null): string | null {
+  if (!nodeKey) return null;
+  const lower = nodeKey.toLowerCase();
+  if (lower.includes('draft') || lower.includes('generate')) return 'draft';
+  if (lower.includes('repair') || lower.includes('fix')) return 'repair';
+  if (lower.includes('review') || lower.includes('quality')) return 'review';
+  if (lower.includes('outline')) return 'outline';
+  return null;
+}
+
 export interface DirectorNodeContract<TInput, TOutput> {
   nodeKey: string;
   label: string;
@@ -138,6 +148,7 @@ export class DirectorNodeRunner {
           directorRunId: snapshot?.runId ?? input.taskId.trim(),
           directorStepIdempotencyKey: idempotencyKey,
           directorNodeKey: contract.nodeKey,
+          stepType: mapNodeKeyToStepType(contract.nodeKey),
         }, () => contract.run(input.input))
         : await contract.run(input.input);
       const producedArtifacts = collectArtifacts?.(output) ?? [];
