@@ -109,16 +109,16 @@
 
 ## 最新更新
 
-完整历史更新见 [docs/releases/release-notes.md](./docs/releases/release-notes.md)。
+完整历史更新见 [docs/6.changelog/releases/release-notes.md](./docs/6.changelog/releases/release-notes.md)。
 
-### v0.1.00（2026-07-14 定稿）
+### v0.1.00（2026-08-10 正式发布）
 
-- 审校上下文增强：补齐 book_contract、story_macro、timeline 等全局字段
-- 全局审校 + 跨章节回灌：从全书视角检测角色一致性、伏笔呼应等问题
-- 角色重要度分级：lead/major/named/extratier 贯穿数据层到前端
-- 批量润色：多章节风格检测与修复，支持进度追踪和取消
-- 反馈 → GitHub Issue：FAB 按钮 + 上下文收集 + AI Issue 生成
-- 角色资源系统、世界同步对比、日志中心、任务批量操作等 13 项功能
+- 首个公开 Release：GitHub Releases 发布 v0.1.00，含 NSIS 安装包与 portable 便携版。
+- 多维 Token 用量统计：LLM 调用按步骤类型（草稿/修复/审校/大纲/规划/风格/对话/工具/角色）拆分统计，创作工作台新增用量面板。
+- 自动导演暂停功能：运行中可一键暂停、随时恢复，暂停原因统一记录。
+- 便携版桌面端稳定性修复：启动路径、数据目录隔离、依赖与 LangChain 兼容、首次启动种子数据。
+- 章节生产链稳定性：大纲流水线死循环修复、章节 token 预算动态适配、场景卡数量下限对齐。
+- 角色准备与阵容优化：质量评估字段补齐、应用确认弹窗统一。
 
 ## 功能预览
 

@@ -1,0 +1,50 @@
+{
+  "reqId": "REQ-2067",
+  "title": "补齐 Skill Python 脚本与核心能力",
+  "status": "done",
+  "version": "0.2",
+  "created": "2026-07-29T10:00:00+08:00",
+  "updated": "2026-07-29T10:00:00+08:00",
+  "reqType": "core_feature",
+  "categoryCode": 2,
+  "complexity": "complex",
+  "skipClarification": false,
+  "skipDesign": false,
+  "artifacts": {
+    "readme": "docs/1.task/B.todo/v0.2-r2067-C1-skill-python-scripts/README.md",
+    "requirements": "docs/1.task/B.todo/v0.2-r2067-C1-skill-python-scripts/REQ-2067-skill-python-scripts.md",
+    "requirementsOriginal": "docs/1.task/B.todo/v0.2-r2067-C1-skill-python-scripts/REQ-2067-skill-python-scripts-original.md",
+    "design": "docs/1.task/B.todo/v0.2-r2067-C1-skill-python-scripts/design.md",
+    "tasks": "docs/1.task/B.todo/v0.2-r2067-C1-skill-python-scripts/tasks.md",
+    "decisionLog": "docs/1.task/B.todo/v0.2-r2067-C1-skill-python-scripts/decision_log.md",
+    "runResult": "docs/1.task/B.todo/v0.2-r2067-C1-skill-python-scripts/run_result.json"
+  },
+  "unresolvedItems": [],
+  "assumptions": [
+    "Python 3.10+ 可以在目标环境运行",
+    "PyYAML 是唯一外部依赖",
+    "上游脚本接口可以简化但保持兼容",
+    "SQLite 索引可随时重建"
+  ],
+  "blockingReasons": [],
+  "handoffTicket": {
+    "route": "dev",
+    "ticketType": "req_to_dev",
+    "status": "done",
+    "nextAction": "任务完成，可进行用户验收"
+  },
+  "stateSync": {
+    "requirementAxis": "approved",
+    "taskAxis": "done",
+    "isConsistent": true
+  },
+  "evidence": {
+    "format": "dual",
+    "markdownPath": "docs/1.task/B.todo/v0.2-r2067-C1-skill-python-scripts/evidence.md",
+    "jsonPath": "docs/1.task/B.todo/v0.2-r2067-C1-skill-python-scripts/evidence.json"
+  },
+  "versionSelection": {
+    "targetVersion": "0.2",
+    "versionPath": "docs/1.task/B.todo/v0.2-r2067-C1-skill-python-scripts"
+  }
+}

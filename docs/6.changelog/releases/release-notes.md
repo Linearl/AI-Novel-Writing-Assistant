@@ -28,8 +28,20 @@
 | v0.3.20 | 2026-06-17 | 自动导演开书推荐路径引导、顶部版本号显示 |
 | v0.3.21 | 2026-07-10 | 工程化基础配置补齐 |
 | v0.3.22 | 2026-07-16 | v0.1 定稿、v0.2 流程自动化落地与上游功能分析拆分 |
+| v0.1.00 | 2026-08-10 | 首个公开 Release（GitHub Releases 发布，含 portable 便携版） |
 
 ## 更新历史
+
+### 2026-08-10（v0.1.00 正式发布）
+
+首个公开 Release 版本（GitHub Releases 发布 v0.1.00，含 NSIS 安装包与 portable 便携版）。自 v0.1 定稿以来新增：
+
+- 多维 Token 用量统计：LLM 调用按 stepType（draft/repair/review/outline/planning/style/chat/tool/character）拆分统计，创作工作台新增用量面板，可按步骤/模型查看各环节 token 消耗。
+- 自动导演暂停功能：running 状态下可一键暂停自动导演，暂停原因记录为 user_paused，可随时恢复执行。
+- 便携版桌面端多项修复：server 启动路径、数据目录隔离、依赖包含与 LangChain 兼容、pnpm deploy EPERM、种子数据库与 bootstrap 注入，首次启动更稳定。
+- 章节生产稳定性：结构化大纲流水线死循环修复（REQ-7076）、章节列表生成按章节数动态设置 maxTokens 防止截断、sceneCards 数量下限对齐。
+- 角色准备与阵容：修复角色准备 result.output 读取 undefined、Prisma 补充 tier 字段修复角色阵容质量评估、阵容应用确认改用统一确认弹窗。
+- 配置与运维：API Token 自动写入 server/.env、schema_mismatch 允许重试一次、便携版打包发布脚本完善。
 
 ### 2026-07-16（v0.1 定稿发布、v0.2 流程自动化全面落地与上游功能分析拆分）
 
