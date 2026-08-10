@@ -43,6 +43,7 @@ server/prisma-diff-migrations-to-schema.sql
 # AI tool artifacts
 .claude/
 .github/
+!.github/workflows/
 .mimocode/
 .spec-workflow/
 .codex-backups/
