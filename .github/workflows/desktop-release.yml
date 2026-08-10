@@ -66,5 +66,25 @@ jobs:
       - name: Publish desktop release to GitHub Releases
         run: pnpm publish:desktop:release:reuse-stage
 
+      - name: Create GitHub release with assets
+        shell: pwsh
+        run: |
+          $tag = "${{ github.ref_name }}"
+          $setup = Get-ChildItem "desktop/build/dist/*setup-x64.exe" | Select-Object -First 1
+          $portable = Get-ChildItem "desktop/build/dist/*portable-x64.exe" | Select-Object -First 1
+          Write-Host "setup=$($setup.FullName) portable=$($portable.FullName)"
+          if (-not $setup -or -not $portable) {
+            Write-Error "Missing built assets"
+            exit 1
+          }
+          # 先删除可能存在的同名 release（draft 或失败残留），再创建正式 release
+          gh release delete $tag --yes --cleanup-tag 2>$null
+          gh release create $tag `
+            $setup.FullName `
+            $portable.FullName `
+            --repo "${{ github.repository }}" `
+            --title "AI Novel Writing Assistant v$tag" `
+            --notes "See release notes: https://github.com/${{ github.repository }}/blob/main/docs/6.changelog/releases/release-notes.md"
+
       - name: Update GitHub release notes
         run: node scripts/update-desktop-release-notes.cjs
