@@ -58,6 +58,9 @@
     "lint:eslint": "eslint"
   },
   "pnpm": {
+    "overrides": {
+      "node-gyp": "^13.0.1"
+    },
     "onlyBuiltDependencies": [
       "@prisma/engines",
       "better-sqlite3",
