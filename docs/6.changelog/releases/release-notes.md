@@ -29,8 +29,20 @@
 | v0.3.21 | 2026-07-10 | 工程化基础配置补齐 |
 | v0.3.22 | 2026-07-16 | v0.1 定稿、v0.2 流程自动化落地与上游功能分析拆分 |
 | v0.1.00 | 2026-08-10 | 首个公开 Release（GitHub Releases 发布，含 portable 便携版） |
+| v0.1.1 | 2026-08-11 | CI 发布链路修复：pnpm deploy 兼容（force-legacy-deploy）、桌面端启动稳定性修复 |
 
 ## 更新历史
+
+### 2026-08-11（v0.1.1 发布）
+
+修复 GitHub Actions 正式发布链路与桌面端启动稳定性：
+
+- 修复 CI 构建 pnpm deploy `ERR_PNPM_LOCKFILE_CONFIG_MISMATCH`（overrides 与 lockfile 校验冲突）：`.npmrc` 启用 `force-legacy-deploy=true`（pnpm 官方 workaround），部署不再回退 manual deploy。
+- 修复桌面端便携版启动卡"正在加载"：client 构建产物改为相对路径 base（`AI_NOVEL_CLIENT_BASE=relative`），file:// 协议下资源可正常加载。
+- 修复便携版 seed 数据库复制路径（双重 data 目录），首次启动迁移不再在空库执行。
+- 打包携带 asar 外 node_modules（better-sqlite3 等原生模块），Electron 35 ABI 匹配。
+- 升级 node-gyp 至 13 支持 VS 2026 工具链（CI 原生模块编译）。
+- Release 发布改用 `gh release create`（electron-builder `--publish` 会遗留 draft release），产物正常公开。
 
 ### 2026-08-10（v0.1.00 正式发布）
 

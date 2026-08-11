@@ -111,6 +111,14 @@
 
 完整历史更新见 [docs/6.changelog/releases/release-notes.md](./docs/6.changelog/releases/release-notes.md)。
 
+### v0.1.1（2026-08-11 发布）
+
+- 修复 CI 构建 pnpm deploy `ERR_PNPM_LOCKFILE_CONFIG_MISMATCH`：`.npmrc` 启用 `force-legacy-deploy=true`，部署不再回退 manual deploy。
+- 修复桌面端便携版启动卡"正在加载"：client 构建产物改用相对路径 base，file:// 协议下资源正常加载。
+- 修复便携版 seed 数据库复制路径（双重 data 目录），首次启动迁移正常执行。
+- 打包携带 asar 外 node_modules（better-sqlite3 等原生模块），Electron 35 ABI 匹配。
+- Release 发布改用 `gh release create`，产物正常公开下载。
+
 ### v0.1.00（2026-08-10 正式发布）
 
 - 首个公开 Release：GitHub Releases 发布 v0.1.00，含 NSIS 安装包与 portable 便携版。
