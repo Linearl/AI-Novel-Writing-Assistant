@@ -91,6 +91,8 @@ node scripts/desktop/trigger-release.cjs           # 打 tag + 推送
 | notes 脚本 `GET /releases/tags/... 404` | API 最终一致性延迟 或 版本字符串不一致 | 加重试；核对 `desktop/package.json` version 与 tag |
 | `Could not find any Visual Studio installation` | node-gyp 11 不认 VS 18 / 工具链未启用 | 升级 node-gyp 13 + `ilammy/msvc-dev-cmd` |
 | 产物名带点（`AI.Novel.Writing.Assistant.v2-...`） | electron-builder 规范化 productName | 属正常，以 release 页资产名为准 |
+| stage 日志 `ERR_PNPM_LOCKFILE_CONFIG_MISMATCH`（overrides 与 lockfile 校验冲突） | pnpm 10.6 `deploy` 强制 frozen 校验，overrides 配置与 lockfile 序列化不一致 | **不要修**：接受 stage 自动 fallback 到 manual deploy（npm install 两轮，约 6 分钟，已验证成功）。曾尝试 `.npmrc` 加 `force-legacy-deploy=true`（pnpm 官方 workaround），但 CI windows-latest 上 legacy deploy 卡死 17+ 分钟未完成（run 31478381355），必须回退该配置 |
+| Build and stage 步骤超过 10 分钟无进展 | 若最近改动含 `force-legacy-deploy=true`，即为此失败模式 | 立即 revert `.npmrc`，重新打 tag 触发 CI；用 `env -u GITHUB_TOKEN gh run cancel` 取消卡住的 run（fine-grained PAT 无 cancel 权限） |
 
 ## 相关模块
 
