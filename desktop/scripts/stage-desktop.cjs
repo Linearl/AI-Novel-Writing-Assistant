@@ -523,35 +523,19 @@ function deployManually() {
   fs.writeFileSync(path.join(sharedTargetDir, "package.json"), JSON.stringify(sharedAppPkg, null, 2));
 
   // 复制 server 核心文件（排除 package.json，后面会单独生成）
+  // .tsbuildinfo 是 tsc 增量缓存（含构建路径/时间戳），排除以保证本地与 CI 产物一致
   const serverEntriesToCopy = ["dist", "src/prisma"];
   for (const entry of serverEntriesToCopy) {
     const src = path.join(serverSourceDir, entry);
     const dest = path.join(serverTargetDir, entry);
     if (fs.existsSync(src)) {
-      copyDirectory(src, dest);
+      copyDirectory(src, dest, [".tsbuildinfo"]);
     }
   }
 
-  // 创建干净的 .env 文件（移除敏感的 API Key）
-  const serverEnv = path.join(serverSourceDir, ".env");
-  const targetEnv = path.join(serverTargetDir, ".env");
-  if (fs.existsSync(serverEnv)) {
-    const envContent = fs.readFileSync(serverEnv, "utf8");
-    // 移除 API Key 相关配置，只保留非敏感配置
-    const sanitizedEnv = envContent
-      .split("\n")
-      .map((line) => {
-        // 跳过 API Key 行
-        if (/^(DEEPSEEK_API_KEY|OPENAI_API_KEY|ANTHROPIC_API_KEY|SILICONFLOW_API_KEY|XAI_API_KEY|KIMI_API_KEY|GOOGLE_API_KEY|AZURE_API_KEY|REPLICATE_API_TOKEN|HF_API_TOKEN|DASHSCOPE_API_KEY|MISTRAL_API_KEY|GROQ_API_KEY|TOGETHER_API_KEY|FIREWORKS_API_KEY|DEEPGRAM_API_KEY|ELEVEN_API_KEY|STABILITY_API_KEY|MIDJOURNEY_API_KEY|COHERE_API_KEY|VOYAGE_API_KEY|JINA_API_KEY|GEMINI_API_KEY|WOLFRAM_APP_ID|BRUNCH_API_KEY|SEARCHAPI_API_KEY|SERPAPI_KEY|TAVILY_API_KEY|PERPLEXITY_API_KEY)/i.test(line.trim())) {
-          return null;
-        }
-        return line;
-      })
-      .filter((line) => line !== null)
-      .join("\n");
-    fs.writeFileSync(targetEnv, sanitizedEnv, "utf8");
-    console.log("[stage:desktop] created sanitized .env file (API keys removed)");
-  }
+  // 注意：不再复制 server/.env 到产物（TokenService 已改为写入用户数据目录
+  // server.env；asar 内 .env 曾导致本地/CI 产物不一致——本地有 .env 而 CI
+  // 干净 checkout 没有。产物不需要 .env，运行时配置走系统设置/secretStore）。
 
   // 4. 先在 app/ 目录安装生产依赖（better-sqlite3、electron-updater）
   console.log("[stage:desktop] manual deploy: installing app production dependencies...");
@@ -618,8 +602,9 @@ function ensureDir(targetDir) {
  * 跨平台文件/目录复制。
  * - 文件：直接用 fs.copyFileSync
  * - 目录：Windows 上用 robocopy（比 fs.cpSync 更健壮，避免 0xC0000005 崩溃）
+ * @param excludePatterns robocopy /XF 文件名模式（任意层级），非 Windows 用 filter 回调
  */
-function copyDirectory(sourceDir, targetDir) {
+function copyDirectory(sourceDir, targetDir, excludePatterns = []) {
   const stat = fs.statSync(sourceDir);
   if (stat.isFile()) {
     // 文件复制：确保目标目录存在
@@ -630,18 +615,20 @@ function copyDirectory(sourceDir, targetDir) {
 
   // 目录复制
   if (process.platform === "win32") {
+    const args = [sourceDir, targetDir, "/E", "/COPY:DAT", "/R:1", "/W:1", "/NFL", "/NDL", "/NJH", "/NJS"];
+    for (const pat of excludePatterns) args.push("/XF", pat);
     try {
-      execFileSync(
-        "robocopy", [sourceDir, targetDir, "/E", "/COPY:DAT", "/R:1", "/W:1", "/NFL", "/NDL", "/NJH", "/NJS"],
-        { stdio: "pipe" }
-      );
+      execFileSync("robocopy", args, { stdio: "pipe" });
     } catch (err) {
       // robocopy 返回码 0-7 都表示成功（部分/全部复制）
       if (err.status !== undefined && err.status <= 7) return;
       throw err;
     }
   } else {
-    fs.cpSync(sourceDir, targetDir, { recursive: true, force: true });
+    const filter = excludePatterns.length
+      ? (src) => !excludePatterns.some((pat) => path.basename(src) === pat || src.endsWith(pat))
+      : undefined;
+    fs.cpSync(sourceDir, targetDir, { recursive: true, force: true, filter });
   }
 }
 

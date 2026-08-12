@@ -132,6 +132,9 @@ function main() {
 
     // 优化数据库
     db.pragma("wal_checkpoint(TRUNCATE)");
+    // 收缩文件空洞（删除行后数据库文件大小不会自动缩小；不 VACUUM 会导致
+    // 本地 dev.db 清理出的 seed 与 CI migrate deploy 生成的 seed 大小差异巨大）
+    db.exec("VACUUM");
     db.close();
 
     // 移动到最终位置

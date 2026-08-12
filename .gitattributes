@@ -1,0 +1,27 @@
+# 统一行尾为 LF：确保本地（Windows）与 CI（actions/checkout）检出一致，
+# 桌面产物（asar 内文件）字节级一致，支持本地/CI 构建 hash 对比。
+* text=auto eol=lf
+
+# 二进制文件明确标记，避免被 text 规则误伤
+*.db binary
+*.sqlite binary
+*.exe binary
+*.dll binary
+*.node binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.icns binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.otf binary
+*.pdf binary
+*.zip binary
+*.7z binary
+*.tar binary
+*.gz binary
+*.blockmap binary
+*.asarmap binary
