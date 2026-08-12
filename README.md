@@ -111,6 +111,10 @@
 
 完整历史更新见 [docs/6.changelog/releases/release-notes.md](./docs/6.changelog/releases/release-notes.md)。
 
+### v0.1.5（2026-08-12 发布）
+
+- 修复界面接口全部报"Missing authorization header"的问题：桌面版本地服务不再要求接口令牌，界面功能可正常使用；网页部署仍保留令牌校验。
+
 ### v0.1.4（2026-08-12 发布）
 
 - 修复自动更新检查报错：发布产物保留完整的更新清单文件，更新检查不再失败。
