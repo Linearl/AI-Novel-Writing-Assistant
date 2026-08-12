@@ -66,25 +66,19 @@ jobs:
       - name: Publish desktop release to GitHub Releases
         run: pnpm publish:desktop:release:reuse-stage
 
-      - name: Create GitHub release with assets
+      - name: Finalize GitHub release (assets already uploaded by electron-builder)
         shell: pwsh
         run: |
           $tag = "${{ github.ref_name }}"
-          $setup = Get-ChildItem "desktop/build/dist/*setup-x64.exe" | Select-Object -First 1
-          $portable = Get-ChildItem "desktop/build/dist/*portable-x64.exe" | Select-Object -First 1
-          Write-Host "setup=$($setup.FullName) portable=$($portable.FullName)"
-          if (-not $setup -or -not $portable) {
-            Write-Error "Missing built assets"
-            exit 1
+          # electron-builder（--publish always）已创建 release 并上传全部资产
+          # （setup/portable/blockmap/latest.yml，文件名规范化一致）。这里只补充
+          # 标题与说明；release 不存在时兜底创建（保留 GH_TOKEN 鉴权）。
+          $title = "AI Novel Writing Assistant v$tag"
+          $notes = "See release notes: https://github.com/${{ github.repository }}/blob/main/docs/6.changelog/releases/release-notes.md"
+          gh release edit $tag --repo "${{ github.repository }}" --title $title --notes $notes 2>$null
+          if ($LASTEXITCODE -ne 0) {
+            gh release create $tag --repo "${{ github.repository }}" --title $title --notes $notes
           }
-          # 先删除可能存在的同名 release（draft 或失败残留），再创建正式 release
-          gh release delete $tag --yes --cleanup-tag 2>$null
-          gh release create $tag `
-            $setup.FullName `
-            $portable.FullName `
-            --repo "${{ github.repository }}" `
-            --title "AI Novel Writing Assistant v$tag" `
-            --notes "See release notes: https://github.com/${{ github.repository }}/blob/main/docs/6.changelog/releases/release-notes.md"
 
       - name: Update GitHub release notes
         run: node scripts/update-desktop-release-notes.cjs
