@@ -308,8 +308,81 @@ function createSeedDatabase(appDir) {
     fallbackCopySeed(devDbCandidates, seedDbPath);
   }
 
+  // 所有本地候选均不存在（如 CI 干净 checkout）：用 prisma migrate deploy + seed 现场生成
+  if (!fs.existsSync(seedDbPath) && !hasAnyCandidate(devDbCandidates)) {
+    console.log(`[stage:desktop] no local dev.db found, generating seed database via prisma migrate + seed...`);
+    try {
+      generateSeedDatabaseViaPrisma();
+      if (!fs.existsSync(seedDbPath)) {
+        console.error(`[stage:desktop] prisma-generated seed database not found at ${seedDbPath}`);
+        process.exitCode = 1;
+        return;
+      }
+      console.log(`[stage:desktop] seed database generated via prisma migrate + seed at ${seedDbPath}`);
+    } catch (err) {
+      console.error(`[stage:desktop] prisma seed generation failed: ${err.message}`);
+      process.exitCode = 1;
+      return;
+    }
+  }
+
   // 确保所有迁移都标记为已完成（避免运行时重试失败的迁移）
   ensureMigrationsApplied(seedDbPath, appDir);
+}
+
+/**
+ * 是否已有任何本地 dev.db 候选
+ */
+function hasAnyCandidate(candidates) {
+  return candidates.some((candidate) => fs.existsSync(candidate));
+}
+
+/**
+ * CI/无本地数据库场景：用 prisma db push + seed 脚本现场生成种子数据库。
+ * 为什么不用 prisma migrate deploy：migrations.sqlite 迁移链含历史遗留 SQLite
+ * DROP COLUMN（含 FK 列）问题，在干净库上从零应用必然失败（P3018）；而本地
+ * dev.db 是演进状态（迁移记录与结构不一致）。db push 直接按当前 schema 建库，
+ * 结构保证与运行时一致。
+ * 执行序列（在 server 目录）：
+ *   1. prisma db push（SQLite schema）→ 生成 server/dev.db（当前完整结构）
+ *   2. 运行 seed 脚本注入系统内置创作资源（genres/storyModes/styleTemplates/antiAiRules...）
+ *   3. clean-dev-db.cjs 清理用户数据表，保留产品预设 → 输出到 seedDbPath
+ */
+function generateSeedDatabaseViaPrisma() {
+  const { execFileSync } = require("node:child_process");
+  const serverDir = path.join(repoRoot, "server");
+
+  // 1. 按当前 schema 建库（db push，不应用历史迁移）
+  console.log(`[stage:desktop] running prisma db push in ${serverDir}`);
+  execFileSync("pnpm.cmd", ["prisma:push"], {
+    cwd: serverDir,
+    stdio: "inherit",
+    env: { ...process.env, DATABASE_URL: "file:./dev.db" },
+    shell: true,
+  });
+
+  const generatedDb = path.join(serverDir, "dev.db");
+  if (!fs.existsSync(generatedDb)) {
+    throw new Error(`prisma db push did not produce ${generatedDb}`);
+  }
+
+  // 2. 运行 seed 脚本注入预设（tsx 运行，等同 prisma db seed）
+  console.log(`[stage:desktop] running seed script to inject starter data`);
+  execFileSync("pnpm.cmd", ["db:seed"], {
+    cwd: serverDir,
+    stdio: "inherit",
+    env: { ...process.env, DATABASE_URL: "file:./dev.db" },
+    shell: true,
+  });
+
+  // 3. 清理用户数据，保留产品预设 → seed-dev.db
+  const cleanScriptPath = path.join(repoRoot, "scripts", "dev", "clean-dev-db.cjs");
+  console.log(`[stage:desktop] sanitizing generated dev.db into seed database`);
+  execFileSync(process.execPath, [cleanScriptPath], {
+    cwd: repoRoot,
+    stdio: "inherit",
+    env: process.env,
+  });
 }
 
 /**
@@ -340,6 +413,17 @@ function ensureMigrationsApplied(seedDbPath, appDir) {
 
   try {
     const db = new Database(seedDbPath);
+    // db push 生成的库没有 _prisma_migrations 表，先创建（结构与 prisma migrate 一致）
+    db.exec(`CREATE TABLE IF NOT EXISTS "_prisma_migrations" (
+      "id" TEXT PRIMARY KEY NOT NULL,
+      "checksum" TEXT NOT NULL,
+      "finished_at" DATETIME,
+      "migration_name" TEXT NOT NULL,
+      "logs" TEXT,
+      "rolled_back_at" DATETIME,
+      "started_at" DATETIME NOT NULL DEFAULT current_timestamp,
+      "applied_steps_count" INTEGER UNSIGNED NOT NULL DEFAULT 0
+    )`);
     const migrationsDir = path.join(appDir, "node_modules", "@ai-novel", "server", "src", "prisma", "migrations.sqlite");
     if (fs.existsSync(migrationsDir)) {
       const migrationDirs = fs.readdirSync(migrationsDir).filter(d => {
