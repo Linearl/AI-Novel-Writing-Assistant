@@ -338,13 +338,12 @@ function hasAnyCandidate(candidates) {
 }
 
 /**
- * CI/无本地数据库场景：用 prisma db push + seed 脚本现场生成种子数据库。
- * 为什么不用 prisma migrate deploy：migrations.sqlite 迁移链含历史遗留 SQLite
- * DROP COLUMN（含 FK 列）问题，在干净库上从零应用必然失败（P3018）；而本地
- * dev.db 是演进状态（迁移记录与结构不一致）。db push 直接按当前 schema 建库，
- * 结构保证与运行时一致。
+ * CI/无本地数据库场景：用 prisma migrate deploy + seed 脚本现场生成种子数据库。
+ * 迁移链在 2026-08-12 修复（20260710120000_novel_json_consolidation 由 DROP COLUMN
+ * 改为重建表方式，干净库上全链可跑通），因此 seed 生成与真实新用户建库路径完全一致：
+ * migrate deploy 按迁移链从零建库（替代早期 db push 绕过方案）。
  * 执行序列（在 server 目录）：
- *   1. prisma db push（SQLite schema）→ 生成 server/dev.db（当前完整结构）
+ *   1. prisma migrate deploy（SQLite 迁移链从零应用）→ 生成 server/dev.db
  *   2. 运行 seed 脚本注入系统内置创作资源（genres/storyModes/styleTemplates/antiAiRules...）
  *   3. clean-dev-db.cjs 清理用户数据表，保留产品预设 → 输出到 seedDbPath
  */
@@ -352,9 +351,9 @@ function generateSeedDatabaseViaPrisma() {
   const { execFileSync } = require("node:child_process");
   const serverDir = path.join(repoRoot, "server");
 
-  // 1. 按当前 schema 建库（db push，不应用历史迁移）
-  console.log(`[stage:desktop] running prisma db push in ${serverDir}`);
-  execFileSync("pnpm.cmd", ["prisma:push"], {
+  // 1. 按迁移链从零建库（migrate deploy，与真实新用户环境一致）
+  console.log(`[stage:desktop] running prisma migrate deploy in ${serverDir}`);
+  execFileSync("pnpm.cmd", ["prisma:deploy"], {
     cwd: serverDir,
     stdio: "inherit",
     env: { ...process.env, DATABASE_URL: "file:./dev.db" },
