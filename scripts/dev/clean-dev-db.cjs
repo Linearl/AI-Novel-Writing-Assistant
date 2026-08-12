@@ -18,6 +18,7 @@
 
 const fs = require("node:fs");
 const path = require("node:path");
+const crypto = require("node:crypto");
 
 // 需要保留的表（产品预设 + 系统表）
 const TABLES_TO_KEEP = new Set([
@@ -132,8 +133,52 @@ function main() {
 
     // 优化数据库
     db.pragma("wal_checkpoint(TRUNCATE)");
-    // 收缩文件空洞（删除行后数据库文件大小不会自动缩小；不 VACUUM 会导致
-    // 本地 dev.db 清理出的 seed 与 CI migrate deploy 生成的 seed 大小差异巨大）
+    // 迁移记录时间戳归一化：本地与 CI 的 migrate deploy 时间不同（毫秒时间戳
+    // 写入 started_at/finished_at），不抹平则 seed 库 hash 永远不一致。
+    // 运行时只按 migration_name 判断记录是否存在，时间戳不影响行为。
+    db.prepare(
+      "UPDATE _prisma_migrations SET started_at = 1735689600000, finished_at = 1735689600000"
+    ).run();
+
+    // _prisma_migrations.id 归一化：Prisma migrate 每次部署生成随机 uuid，
+    // 按 migration_name 派生固定 id，保证 seed 库字节级确定。
+    const migRows = db.prepare("SELECT id, migration_name FROM _prisma_migrations").all();
+    for (const row of migRows) {
+      const fixedMigId = "mig_" + crypto.createHash("sha256").update(row.migration_name).digest("hex").slice(0, 24);
+      if (fixedMigId !== row.id) {
+        db.prepare("UPDATE _prisma_migrations SET id = ? WHERE id = ?").run(fixedMigId, row.id);
+      }
+    }
+
+    // 预设数据时间戳归一化：seed 注入时 createdAt/updatedAt 为当前时间
+    // （每次 seed 运行不同），统一固定值以支持本地/CI 产物 hash 对比。
+    const FIXED_TS = "2026-01-01T00:00:00.000+00:00";
+    for (const tableName of TABLES_TO_KEEP) {
+      if (tableName === "_prisma_migrations" || tableName === "sqlite_sequence") continue;
+      const cols = db.prepare(`PRAGMA table_info("${tableName}")`).all().map((c) => c.name);
+      if (cols.includes("createdAt") && cols.includes("updatedAt")) {
+        db.prepare(
+          `UPDATE "${tableName}" SET "createdAt" = ?, "updatedAt" = ?`
+        ).run(FIXED_TS, FIXED_TS);
+      }
+      // 预设数据 id 归一化：seed 的 cuid 每次生成不同（随机），key 是确定性
+      // 的（文件名/规则名），用 key 派生固定 id，保证 seed 库字节级确定。
+      if (cols.includes("id") && cols.includes("key")) {
+        const rows = db.prepare(`SELECT id, key FROM "${tableName}"`).all();
+        for (const row of rows) {
+          if (typeof row.key !== "string" || !row.key) continue;
+          const fixedId = "seed_" + crypto.createHash("sha256").update(row.key).digest("hex").slice(0, 24);
+          if (fixedId !== row.id) {
+            db.prepare(`UPDATE "${tableName}" SET "id" = ? WHERE "id" = ?`).run(fixedId, row.id);
+          }
+        }
+      }
+    }
+
+    // VACUUM 必须在所有归一化 UPDATE 之后执行：UPDATE 缩短值后页面空闲区
+    // 会残留旧字节（uuid 等），VACUUM 重写页面清除残留。同时收缩删除行
+    // 产生的文件空洞（不收缩会导致本地 dev.db 清理出的 seed 与 CI migrate
+    // deploy 生成的 seed 大小差异巨大）。
     db.exec("VACUUM");
     db.close();
 

@@ -72,8 +72,11 @@ module.exports = {
     "node_modules/better-sqlite3/**/*",
     "node_modules/@ai-novel/server/src/prisma/**/*",
   ],
-  npmRebuild: true,
-  nativeRebuilder: "sequential",
+  // stage-desktop.cjs 已显式执行 @electron/rebuild（better-sqlite3，Electron ABI）
+  // 并 detach 物理化。electron-builder 不再重复 rebuild，避免对 pnpm store
+  // hardlink 副本的二次编译污染（本地多次构建后 root 的 better-sqlite3 会
+  // 变成 Electron ABI，导致后续 seed/clean 等 node 脚本 ERR_DLOPEN_FAILED）。
+  npmRebuild: false,
   extraMetadata: {
     main: "dist/main.js",
   },
