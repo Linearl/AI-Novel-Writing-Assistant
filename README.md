@@ -111,6 +111,10 @@
 
 完整历史更新见 [docs/6.changelog/releases/release-notes.md](./docs/6.changelog/releases/release-notes.md)。
 
+### v0.1.6（2026-08-12 发布）
+
+- 修复设置页 API 密钥接口报错：全新安装的数据结构补齐了模型变更（如 API 密钥限流字段），设置页可正常打开。
+
 ### v0.1.5（2026-08-12 发布）
 
 - 修复界面接口全部报"Missing authorization header"的问题：桌面版本地服务不再要求接口令牌，界面功能可正常使用；网页部署仍保留令牌校验。
